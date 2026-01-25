@@ -4,7 +4,7 @@
     <header>
       <h1 class="text-2xl font-bold text-bd-text-primary flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-bd-blue/20 flex items-center justify-center">
-          <span class="text-lg">🔖</span>
+          <Bookmark class="w-5 h-5 text-bd-blue" />
         </div>
         Plot Components
       </h1>
@@ -16,7 +16,7 @@
     <!-- Placement Guide -->
     <section class="card-elevated">
       <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-        <span>ℹ️</span>
+        <Info class="w-5 h-5 text-bd-info" />
         Understanding Plot Component Placements
       </h2>
       
@@ -27,7 +27,7 @@
           class="p-4 rounded-xl bg-bd-bg-primary border border-white/[0.06]"
         >
           <div class="flex items-center gap-3 mb-2">
-            <span class="text-bd-accent-primary">{{ getPlacementIconChar(placement.icon) }}</span>
+            <component :is="getPlacementIcon(placement.icon)" class="w-4 h-4 text-bd-accent-primary" />
             <h3 class="font-semibold text-bd-text-primary">{{ placement.name }}</h3>
             <span class="tag text-[10px]" :class="getStrengthClass(placement.strength)">
               {{ placement.strength }}
@@ -35,7 +35,7 @@
           </div>
           <p class="text-sm text-bd-text-secondary mb-2">{{ placement.description }}</p>
           <div class="text-xs text-bd-text-muted flex items-center gap-1">
-            <span class="text-[10px]">📍</span>
+            <MapPin class="w-3 h-3" />
             {{ placement.position }}
           </div>
         </div>
@@ -45,7 +45,7 @@
     <!-- Components Grid -->
     <section>
       <div class="section-header mb-4">
-        <span>📄</span>
+        <FileText class="w-4 h-4" />
         <span>Available Components</span>
       </div>
 
@@ -54,7 +54,7 @@
         <div class="card">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-8 h-8 rounded-lg bg-bd-purple/20 flex items-center justify-center">
-              <span>🪶</span>
+              <Feather class="w-4 h-4 text-bd-purple" />
             </div>
             <div>
               <h3 class="font-semibold text-bd-text-primary">Author's Note Templates</h3>
@@ -75,7 +75,7 @@
         <div class="card">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-8 h-8 rounded-lg bg-bd-green/20 flex items-center justify-center">
-              <span>📗</span>
+              <BookMarked class="w-4 h-4 text-bd-green" />
             </div>
             <div>
               <h3 class="font-semibold text-bd-text-primary">Plot Essentials Templates</h3>
@@ -96,7 +96,7 @@
         <div class="card">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-8 h-8 rounded-lg bg-bd-cyan/20 flex items-center justify-center">
-              <span>📜</span>
+              <ScrollText class="w-4 h-4 text-bd-cyan" />
             </div>
             <div>
               <h3 class="font-semibold text-bd-text-primary">Story Summary Templates</h3>
@@ -118,24 +118,24 @@
     <!-- Tips Section -->
     <section class="card-elevated">
       <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-        <span>💡</span>
+        <Lightbulb class="w-5 h-5 text-bd-warning" />
         Pro Tips
       </h2>
       <ul class="space-y-3 text-sm text-bd-text-secondary">
         <li class="flex items-start gap-2">
-          <span class="text-bd-success mt-0.5 flex-shrink-0">✓</span>
+          <Check class="w-4 h-4 text-bd-success mt-0.5 flex-shrink-0" />
           <span><strong class="text-bd-text-primary">Author's Note</strong> has the strongest influence since it appears near the end of context. Keep it concise!</span>
         </li>
         <li class="flex items-start gap-2">
-          <span class="text-bd-success mt-0.5 flex-shrink-0">✓</span>
+          <Check class="w-4 h-4 text-bd-success mt-0.5 flex-shrink-0" />
           <span><strong class="text-bd-text-primary">Plot Essentials</strong> is great for character sheets and relationship tracking.</span>
         </li>
         <li class="flex items-start gap-2">
-          <span class="text-bd-success mt-0.5 flex-shrink-0">✓</span>
+          <Check class="w-4 h-4 text-bd-success mt-0.5 flex-shrink-0" />
           <span><strong class="text-bd-text-primary">Story Summary</strong> works well with Auto Summarization to keep the AI on track.</span>
         </li>
         <li class="flex items-start gap-2">
-          <span class="text-bd-success mt-0.5 flex-shrink-0">✓</span>
+          <Check class="w-4 h-4 text-bd-success mt-0.5 flex-shrink-0" />
           <span>Don't overload any single component—spread information across appropriate locations.</span>
         </li>
       </ul>
@@ -147,19 +147,23 @@
 import { computed } from 'vue'
 import ResourceCard from '@/components/ui/ResourceCard.vue'
 import { INSTRUCTIONS, PLACEMENTS } from '@/data/repository'
+import { 
+  Bookmark, Info, MapPin, FileText, Feather, BookMarked, ScrollText, 
+  Lightbulb, Check 
+} from 'lucide-vue-next'
 
 const placements = PLACEMENTS
 
-// Icon character mapping for placements
-const placementIconCharMap = {
-  'ScrollText': '📜',
-  'Feather': '🪶',
-  'Bookmark': '🔖',
-  'FileText': '📄'
+// Icon component mapping for placements
+const placementIconMap = {
+  'ScrollText': ScrollText,
+  'Feather': Feather,
+  'Bookmark': Bookmark,
+  'FileText': FileText
 }
 
-const getPlacementIconChar = (iconName) => {
-  return placementIconCharMap[iconName] || '📄'
+const getPlacementIcon = (iconName) => {
+  return placementIconMap[iconName] || FileText
 }
 
 const getStrengthClass = (strength) => {

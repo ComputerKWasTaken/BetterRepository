@@ -4,39 +4,39 @@
     <header>
       <h1 class="text-2xl font-bold text-bd-text-primary flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-bd-accent-primary/20 flex items-center justify-center">
-          <span class="text-lg">🤝</span>
+          <GitPullRequest class="w-5 h-5 text-bd-accent-primary" />
         </div>
         Contribute
       </h1>
       <p class="text-bd-text-secondary mt-2">
-        Help build the ultimate resource collection for the AI Dungeon community.
+        Help build the ultimate resource collection for AI Dungeon players.
       </p>
     </header>
 
     <!-- Why Contribute -->
     <section class="card-elevated">
       <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-        <span>✨</span>
+        <Sparkles class="w-5 h-5 text-bd-accent-primary" />
         Why Contribute?
       </h2>
       <div class="grid md:grid-cols-3 gap-4">
         <div class="text-center p-4">
           <div class="w-12 h-12 rounded-xl bg-bd-purple/20 flex items-center justify-center mx-auto mb-3">
-            <span class="text-xl">👥</span>
+            <Users class="w-6 h-6 text-bd-purple" />
           </div>
           <h3 class="font-semibold text-bd-text-primary mb-1">Help Others</h3>
           <p class="text-sm text-bd-text-secondary">Your contributions help thousands of AI Dungeon players improve their experience.</p>
         </div>
         <div class="text-center p-4">
           <div class="w-12 h-12 rounded-xl bg-bd-green/20 flex items-center justify-center mx-auto mb-3">
-            <span class="text-xl">🏆</span>
+            <Award class="w-6 h-6 text-bd-green" />
           </div>
           <h3 class="font-semibold text-bd-text-primary mb-1">Get Credit</h3>
           <p class="text-sm text-bd-text-secondary">All contributions are credited to their authors in the repository.</p>
         </div>
         <div class="text-center p-4">
           <div class="w-12 h-12 rounded-xl bg-bd-blue/20 flex items-center justify-center mx-auto mb-3">
-            <span class="text-xl">🚀</span>
+            <Rocket class="w-6 h-6 text-bd-blue" />
           </div>
           <h3 class="font-semibold text-bd-text-primary mb-1">Shape the Future</h3>
           <p class="text-sm text-bd-text-secondary">Help define best practices and standards for the community.</p>
@@ -47,13 +47,13 @@
     <!-- What We Accept -->
     <section class="card">
       <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-        <span class="text-bd-success">✅</span>
+        <CheckCircle class="w-5 h-5 text-bd-success" />
         What We Accept
       </h2>
       <div class="grid md:grid-cols-2 gap-4">
         <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
           <div class="flex items-center gap-2 mb-2">
-            <span>📜</span>
+            <ScrollText class="w-4 h-4 text-bd-amber" />
             <h3 class="font-medium text-bd-text-primary">AI Instructions</h3>
           </div>
           <ul class="text-sm text-bd-text-secondary space-y-1">
@@ -65,7 +65,7 @@
         </div>
         <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
           <div class="flex items-center gap-2 mb-2">
-            <span>🔖</span>
+            <Bookmark class="w-4 h-4 text-bd-blue" />
             <h3 class="font-medium text-bd-text-primary">Plot Components</h3>
           </div>
           <ul class="text-sm text-bd-text-secondary space-y-1">
@@ -77,7 +77,7 @@
         </div>
         <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
           <div class="flex items-center gap-2 mb-2">
-            <span>🎭</span>
+            <Drama class="w-4 h-4 text-bd-purple" />
             <h3 class="font-medium text-bd-text-primary">Story Cards</h3>
           </div>
           <ul class="text-sm text-bd-text-secondary space-y-1">
@@ -89,7 +89,7 @@
         </div>
         <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
           <div class="flex items-center gap-2 mb-2">
-            <span>⚙️</span>
+            <Settings class="w-4 h-4 text-bd-cyan" />
             <h3 class="font-medium text-bd-text-primary">Scripts</h3>
           </div>
           <ul class="text-sm text-bd-text-secondary space-y-1">
@@ -105,7 +105,7 @@
     <!-- How to Contribute -->
     <section class="card-elevated">
       <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-        <span>🔀</span>
+        <GitMerge class="w-5 h-5 text-bd-accent-primary" />
         How to Contribute
       </h2>
       
@@ -114,7 +114,7 @@
         <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
           <div class="flex items-start gap-4">
             <div class="w-10 h-10 rounded-lg bg-[#5865F2]/20 flex items-center justify-center flex-shrink-0">
-              <span class="text-lg">💬</span>
+              <MessageCircle class="w-5 h-5 text-[#5865F2]" />
             </div>
             <div class="flex-1">
               <h3 class="font-semibold text-bd-text-primary mb-1">Option 1: Discord (Easiest)</h3>
@@ -128,9 +128,9 @@
                 rel="noopener noreferrer"
                 class="btn btn-secondary"
               >
-                <span>💬</span>
+                <MessageCircle class="w-4 h-4" />
                 Join Discord
-                <span class="text-xs">↗</span>
+                <ExternalLink class="w-3 h-3" />
               </a>
             </div>
           </div>
@@ -140,7 +140,7 @@
         <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
           <div class="flex items-start gap-4">
             <div class="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0">
-              <span class="text-lg">🐙</span>
+              <Github class="w-5 h-5 text-bd-text-primary" />
             </div>
             <div class="flex-1">
               <h3 class="font-semibold text-bd-text-primary mb-1">Option 2: GitHub Pull Request</h3>
@@ -174,7 +174,7 @@
         <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
           <div class="flex items-start gap-4">
             <div class="w-10 h-10 rounded-lg bg-bd-accent-primary/20 flex items-center justify-center flex-shrink-0">
-              <span class="text-lg">✉️</span>
+              <Mail class="w-5 h-5 text-bd-accent-primary" />
             </div>
             <div class="flex-1">
               <h3 class="font-semibold text-bd-text-primary mb-1">Option 3: Direct Submission</h3>
@@ -192,41 +192,41 @@
     <!-- Contribution Guidelines -->
     <section class="card">
       <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-        <span>📋</span>
+        <ClipboardList class="w-5 h-5 text-bd-text-primary" />
         Contribution Guidelines
       </h2>
       
       <div class="space-y-4">
         <div class="flex items-start gap-3">
-          <span class="text-bd-success flex-shrink-0 mt-0.5">✓</span>
+          <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
           <div>
             <h4 class="font-medium text-bd-text-primary">Test Your Contributions</h4>
             <p class="text-sm text-bd-text-secondary">Make sure your instructions, templates, or scripts work as intended before submitting.</p>
           </div>
         </div>
         <div class="flex items-start gap-3">
-          <span class="text-bd-success flex-shrink-0 mt-0.5">✓</span>
+          <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
           <div>
             <h4 class="font-medium text-bd-text-primary">Include Clear Descriptions</h4>
             <p class="text-sm text-bd-text-secondary">Explain what your contribution does, when to use it, and any requirements.</p>
           </div>
         </div>
         <div class="flex items-start gap-3">
-          <span class="text-bd-success flex-shrink-0 mt-0.5">✓</span>
+          <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
           <div>
             <h4 class="font-medium text-bd-text-primary">Specify Compatible Models</h4>
             <p class="text-sm text-bd-text-secondary">If your contribution works better with specific AI models, let us know.</p>
           </div>
         </div>
         <div class="flex items-start gap-3">
-          <span class="text-bd-success flex-shrink-0 mt-0.5">✓</span>
+          <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
           <div>
             <h4 class="font-medium text-bd-text-primary">Original or Credited Work</h4>
             <p class="text-sm text-bd-text-secondary">Only submit original work or properly credit the original author if adapting existing content.</p>
           </div>
         </div>
         <div class="flex items-start gap-3">
-          <span class="text-bd-error flex-shrink-0 mt-0.5">✕</span>
+          <X class="w-4 h-4 text-bd-error flex-shrink-0 mt-0.5" />
           <div>
             <h4 class="font-medium text-bd-text-primary">No Harmful Content</h4>
             <p class="text-sm text-bd-text-secondary">We do not accept content that promotes harm, violates AI Dungeon's ToS, or is otherwise inappropriate.</p>
@@ -238,7 +238,7 @@
     <!-- Format Template -->
     <section class="card-elevated">
       <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-        <span>📄</span>
+        <FileText class="w-5 h-5 text-bd-text-primary" />
         Submission Format
       </h2>
       <p class="text-sm text-bd-text-secondary mb-4">
@@ -262,5 +262,9 @@ Notes: [Any additional notes or tips]</pre>
 </template>
 
 <script setup>
-// Icons removed temporarily
+import { 
+  GitPullRequest, Sparkles, Users, Award, Rocket, CheckCircle,
+  ScrollText, Bookmark, Drama, Settings, GitMerge, MessageCircle,
+  ExternalLink, Github, Mail, ClipboardList, Check, X, FileText
+} from 'lucide-vue-next'
 </script>

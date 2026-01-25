@@ -4,7 +4,7 @@
     <header>
       <h1 class="text-2xl font-bold text-bd-text-primary flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-bd-cyan/20 flex items-center justify-center">
-          <span class="text-lg">⚙️</span>
+          <Settings class="w-5 h-5 text-bd-cyan" />
         </div>
         Scripts
       </h1>
@@ -16,7 +16,7 @@
     <!-- Warning Notice -->
     <section class="card border-bd-warning/30">
       <div class="flex items-start gap-3">
-        <span class="text-bd-warning flex-shrink-0 mt-0.5">⚠️</span>
+        <AlertTriangle class="w-5 h-5 text-bd-warning flex-shrink-0 mt-0.5" />
         <div>
           <h3 class="font-semibold text-bd-text-primary mb-1">Advanced Feature</h3>
           <p class="text-sm text-bd-text-secondary">
@@ -31,7 +31,7 @@
     <section class="card-elevated border-bd-info/30">
       <div class="flex items-start gap-4">
         <div class="w-12 h-12 rounded-xl bg-bd-info/20 flex items-center justify-center flex-shrink-0">
-          <span class="text-xl">🚧</span>
+          <Construction class="w-6 h-6 text-bd-info" />
         </div>
         <div>
           <h2 class="text-lg font-semibold text-bd-text-primary mb-2">Scripts Collection Coming Soon!</h2>
@@ -41,27 +41,27 @@
           </p>
           <ul class="space-y-2 text-sm text-bd-text-secondary">
             <li class="flex items-center gap-2">
-              <span>🎲</span>
+              <Dices class="w-4 h-4 text-bd-purple" />
               <span><strong>Dice & RNG Systems</strong> - Roll dice, random events, probability systems</span>
             </li>
             <li class="flex items-center gap-2">
-              <span>🕐</span>
+              <Clock class="w-4 h-4 text-bd-blue" />
               <span><strong>Time & Calendar</strong> - Day/night cycles, scheduling, time tracking</span>
             </li>
             <li class="flex items-center gap-2">
-              <span>❤️</span>
+              <Heart class="w-4 h-4 text-bd-error" />
               <span><strong>Relationship Trackers</strong> - NPC affinity and relationship systems</span>
             </li>
             <li class="flex items-center gap-2">
-              <span>🎒</span>
+              <Backpack class="w-4 h-4 text-bd-amber" />
               <span><strong>Inventory Systems</strong> - Item management and crafting</span>
             </li>
             <li class="flex items-center gap-2">
-              <span>⚔️</span>
+              <Swords class="w-4 h-4 text-bd-error" />
               <span><strong>Combat Enhancements</strong> - HP tracking, status effects, combat flow</span>
             </li>
             <li class="flex items-center gap-2">
-              <span>🪄</span>
+              <Wand2 class="w-4 h-4 text-bd-cyan" />
               <span><strong>Magic Systems</strong> - Mana, spell slots, cooldowns</span>
             </li>
           </ul>
@@ -72,7 +72,7 @@
     <!-- Script Categories Preview -->
     <section>
       <div class="section-header mb-4">
-        <span>📂</span>
+        <FolderOpen class="w-4 h-4" />
         <span>Script Categories</span>
       </div>
 
@@ -83,7 +83,7 @@
               class="w-10 h-10 rounded-xl flex items-center justify-center"
               :class="category.bgClass"
             >
-              <span class="text-lg">{{ category.iconChar }}</span>
+              <component :is="category.icon" class="w-5 h-5" :class="category.iconClass" />
             </div>
             <div>
               <h3 class="font-semibold text-bd-text-primary">{{ category.name }}</h3>
@@ -101,7 +101,7 @@
     <!-- Script Structure Guide -->
     <section class="card-elevated">
       <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-        <span>📖</span>
+        <BookOpen class="w-5 h-5 text-bd-text-primary" />
         Script Structure Guide
       </h2>
       
@@ -145,16 +145,16 @@
     <section class="card-elevated">
       <div class="flex items-start gap-4">
         <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/20 flex items-center justify-center flex-shrink-0">
-          <span class="text-xl">🤝</span>
+          <GitPullRequest class="w-6 h-6 text-bd-accent-primary" />
         </div>
         <div class="flex-1">
           <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Share Your Scripts!</h3>
           <p class="text-bd-text-secondary mb-4">
-            Created useful scripts for AI Dungeon? Share them with the community! 
+            Created useful scripts for AI Dungeon? Share them with others! 
             We review all submissions for quality and safety.
           </p>
           <router-link to="/contribute" class="btn btn-primary">
-            <span>🤝</span>
+            <GitPullRequest class="w-4 h-4" />
             Learn How to Contribute
           </router-link>
         </div>
@@ -164,12 +164,15 @@
 </template>
 
 <script setup>
-// Icons removed temporarily
+import { 
+  Settings, AlertTriangle, Construction, Dices, Clock, Heart, Backpack,
+  Swords, Wand2, FolderOpen, BookOpen, GitPullRequest
+} from 'lucide-vue-next'
 
 const scriptCategories = [
   {
     name: 'Game Systems',
-    iconChar: '🎲',
+    icon: Dices,
     description: 'Dice rolling, random events, and probability-based mechanics.',
     count: 0,
     bgClass: 'bg-bd-purple/20',
@@ -177,7 +180,7 @@ const scriptCategories = [
   },
   {
     name: 'Tracking & State',
-    iconChar: '🕐',
+    icon: Clock,
     description: 'Time, inventory, relationships, and persistent state management.',
     count: 0,
     bgClass: 'bg-bd-blue/20',
@@ -185,7 +188,7 @@ const scriptCategories = [
   },
   {
     name: 'Combat & Action',
-    iconChar: '⚔️',
+    icon: Swords,
     description: 'Combat systems, HP tracking, and action resolution.',
     count: 0,
     bgClass: 'bg-bd-error/20',
@@ -193,7 +196,7 @@ const scriptCategories = [
   },
   {
     name: 'Magic & Abilities',
-    iconChar: '🪄',
+    icon: Wand2,
     description: 'Spell systems, mana management, and special abilities.',
     count: 0,
     bgClass: 'bg-bd-cyan/20',
@@ -201,7 +204,7 @@ const scriptCategories = [
   },
   {
     name: 'Formatting',
-    iconChar: '⚙️',
+    icon: Settings,
     description: 'Output formatting, text processing, and display enhancements.',
     count: 0,
     bgClass: 'bg-bd-green/20',
@@ -209,8 +212,8 @@ const scriptCategories = [
   },
   {
     name: 'Utilities',
-    iconChar: '📂',
-    description: 'Helper functions, debugging tools, and general utilities.',
+    icon: FolderOpen,
+    description: 'Helper functions, debugging tools, and general utilities',
     count: 0,
     bgClass: 'bg-bd-amber/20',
     iconClass: 'text-bd-amber'

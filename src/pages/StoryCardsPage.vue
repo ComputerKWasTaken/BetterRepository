@@ -4,7 +4,7 @@
     <header>
       <h1 class="text-2xl font-bold text-bd-text-primary flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-bd-purple/20 flex items-center justify-center">
-          <span class="text-lg">🎭</span>
+          <Drama class="w-5 h-5 text-bd-purple" />
         </div>
         Story Cards
       </h1>
@@ -17,7 +17,7 @@
     <section class="card-elevated border-bd-warning/30">
       <div class="flex items-start gap-4">
         <div class="w-12 h-12 rounded-xl bg-bd-warning/20 flex items-center justify-center flex-shrink-0">
-          <span class="text-xl">🚧</span>
+          <Construction class="w-6 h-6 text-bd-warning" />
         </div>
         <div>
           <h2 class="text-lg font-semibold text-bd-text-primary mb-2">Coming Soon!</h2>
@@ -27,19 +27,19 @@
           </p>
           <ul class="space-y-2 text-sm text-bd-text-secondary">
             <li class="flex items-center gap-2">
-              <span>👥</span>
+              <Users class="w-4 h-4 text-bd-purple" />
               <span><strong>Character Cards</strong> - Ready-to-use NPCs with personalities and backstories</span>
             </li>
             <li class="flex items-center gap-2">
-              <span>📍</span>
+              <MapPin class="w-4 h-4 text-bd-blue" />
               <span><strong>Location Cards</strong> - Detailed settings and environments</span>
             </li>
             <li class="flex items-center gap-2">
-              <span>🛡️</span>
+              <Shield class="w-4 h-4 text-bd-green" />
               <span><strong>Faction Cards</strong> - Organizations, guilds, and groups</span>
             </li>
             <li class="flex items-center gap-2">
-              <span>✨</span>
+              <Sparkles class="w-4 h-4 text-bd-amber" />
               <span><strong>Item Cards</strong> - Magical artifacts and equipment</span>
             </li>
           </ul>
@@ -50,7 +50,7 @@
     <!-- Card Type Previews -->
     <section>
       <div class="section-header mb-4">
-        <span>📚</span>
+        <Layers class="w-4 h-4" />
         <span>Card Types</span>
       </div>
 
@@ -59,7 +59,7 @@
         <div class="card group hover:border-bd-purple/30">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-10 h-10 rounded-xl bg-bd-purple/20 flex items-center justify-center">
-              <span class="text-lg">👥</span>
+              <Users class="w-5 h-5 text-bd-purple" />
             </div>
             <div>
               <h3 class="font-semibold text-bd-text-primary">Character Cards</h3>
@@ -84,7 +84,7 @@ Speech: Speaks in riddles...]</pre>
         <div class="card group hover:border-bd-blue/30">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-10 h-10 rounded-xl bg-bd-blue/20 flex items-center justify-center">
-              <span class="text-lg">📍</span>
+              <MapPin class="w-5 h-5 text-bd-blue" />
             </div>
             <div>
               <h3 class="font-semibold text-bd-text-primary">Location Cards</h3>
@@ -108,7 +108,7 @@ Notable Features: Secret room...]</pre>
         <div class="card group hover:border-bd-green/30">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-10 h-10 rounded-xl bg-bd-green/20 flex items-center justify-center">
-              <span class="text-lg">🛡️</span>
+              <Shield class="w-5 h-5 text-bd-green" />
             </div>
             <div>
               <h3 class="font-semibold text-bd-text-primary">Faction Cards</h3>
@@ -132,7 +132,7 @@ Resources: Temple network...]</pre>
         <div class="card group hover:border-bd-amber/30">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-10 h-10 rounded-xl bg-bd-amber/20 flex items-center justify-center">
-              <span class="text-lg">✨</span>
+              <Sparkles class="w-5 h-5 text-bd-amber" />
             </div>
             <div>
               <h3 class="font-semibold text-bd-text-primary">Item Cards</h3>
@@ -158,16 +158,16 @@ History: Forged by...]</pre>
     <section class="card-elevated">
       <div class="flex items-start gap-4">
         <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/20 flex items-center justify-center flex-shrink-0">
-          <span class="text-xl">🤝</span>
+          <GitPullRequest class="w-6 h-6 text-bd-accent-primary" />
         </div>
         <div class="flex-1">
           <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Help Build This Collection!</h3>
           <p class="text-bd-text-secondary mb-4">
             Have great Story Cards you've created? We'd love to include them in the repository. 
-            Your contributions help the entire AI Dungeon community.
+            Your contributions help all AI Dungeon players.
           </p>
           <router-link to="/contribute" class="btn btn-primary">
-            <span>🤝</span>
+            <GitPullRequest class="w-4 h-4" />
             Learn How to Contribute
           </router-link>
         </div>
@@ -177,5 +177,7 @@ History: Forged by...]</pre>
 </template>
 
 <script setup>
-// Icons removed temporarily
+import { 
+  Drama, Construction, Users, MapPin, Shield, Sparkles, Layers, GitPullRequest 
+} from 'lucide-vue-next'
 </script>

@@ -16,7 +16,7 @@ export const REPOSITORY_META = {
   version: '1.0.0',
   lastUpdated: '2025-10-18',
   description: 'A curated collection of AI Instructions, Author\'s Notes, and Plot Essentials for AI Dungeon.',
-  credits: 'Heavily inspired by OffMetaGamer\'s AI Instructions repository. Extended and refined by computerK and other community members.'
+  credits: 'Heavily inspired by OffMetaGamer\'s AI Instructions repository. Extended and refined by computerK.'
 }
 
 // ============================================

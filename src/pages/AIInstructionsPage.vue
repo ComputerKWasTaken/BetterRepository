@@ -5,7 +5,7 @@
       <div>
         <h1 class="text-2xl font-bold text-bd-text-primary flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-bd-amber/20 flex items-center justify-center">
-            <span class="text-lg">📜</span>
+            <ScrollText class="w-5 h-5 text-bd-amber" />
           </div>
           AI Instructions
         </h1>
@@ -19,7 +19,7 @@
           class="btn btn-secondary"
           :class="{ 'ring-2 ring-bd-accent-primary': hasActiveFilters }"
         >
-          <span>⚙</span>
+          <SlidersHorizontal class="w-4 h-4" />
           Filters
           <span v-if="hasActiveFilters" class="w-2 h-2 rounded-full bg-bd-accent-primary"></span>
         </button>
@@ -89,7 +89,7 @@
             class="w-8 h-8 rounded-lg flex items-center justify-center"
             :class="getCategoryBgClass(category.id)"
           >
-            <span :class="getCategoryIconClass(category.id)">{{ getCategoryIconChar(category.id) }}</span>
+            <component :is="getCategoryIcon(category.id)" class="w-4 h-4" :class="getCategoryIconClass(category.id)" />
           </div>
           <div>
             <h2 class="text-lg font-semibold text-bd-text-primary">{{ category.name }}</h2>
@@ -118,7 +118,7 @@
       
       <!-- Empty State -->
       <div v-if="filteredInstructions.length === 0" class="text-center py-12">
-        <span class="text-4xl text-bd-text-muted block mx-auto mb-4">🔍</span>
+        <SearchX class="w-12 h-12 text-bd-text-muted mx-auto mb-4" />
         <h3 class="text-lg font-semibold text-bd-text-primary mb-2">No results found</h3>
         <p class="text-bd-text-secondary">
           Try adjusting your search or filters to find what you're looking for.
@@ -138,6 +138,10 @@ import SearchBar from '@/components/ui/SearchBar.vue'
 import ResourceCard from '@/components/ui/ResourceCard.vue'
 import { INSTRUCTIONS, CATEGORIES } from '@/data/repository'
 import { usePreferences } from '@/composables/usePreferences'
+import { 
+  ScrollText, SlidersHorizontal, SearchX, Layers, PenTool, Users, 
+  Link, Swords, Globe, FileText, Settings 
+} from 'lucide-vue-next'
 
 const route = useRoute()
 const { addToSearchHistory } = usePreferences()
@@ -149,16 +153,16 @@ const selectedCategories = ref([])
 const showFilters = ref(false)
 const sortBy = ref('name')
 
-// Icon character mapping
-const iconCharMap = {
-  'Layers': '📚',
-  'PenTool': '✍️',
-  'Users': '👥',
-  'Link': '🔗',
-  'Swords': '⚔️',
-  'Globe': '🌍',
-  'FileText': '📄',
-  'Settings': '⚙️'
+// Icon component mapping
+const iconComponentMap = {
+  'Layers': Layers,
+  'PenTool': PenTool,
+  'Users': Users,
+  'Link': Link,
+  'Swords': Swords,
+  'Globe': Globe,
+  'FileText': FileText,
+  'Settings': Settings
 }
 
 const categoryColorMap = {
@@ -172,9 +176,9 @@ const categoryColorMap = {
   'formatting': { bg: 'bg-bd-blue/20', icon: 'text-bd-blue' }
 }
 
-const getCategoryIconChar = (categoryId) => {
+const getCategoryIcon = (categoryId) => {
   const category = categories.value.find(c => c.id === categoryId)
-  return iconCharMap[category?.icon] || '📚'
+  return iconComponentMap[category?.icon] || Layers
 }
 
 const getCategoryBgClass = (categoryId) => {

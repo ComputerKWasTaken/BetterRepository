@@ -23,7 +23,7 @@
       <!-- Main Navigation -->
       <div class="mb-6">
         <div class="section-header">
-          <span class="text-xs">▦</span>
+          <LayoutGrid class="w-3 h-3" />
           <span>Resources</span>
         </div>
         
@@ -34,7 +34,7 @@
           class="nav-link"
           :class="{ 'active': isActive(item.path) }"
         >
-          <span class="text-sm">{{ item.iconChar }}</span>
+          <component :is="item.icon" class="w-4 h-4" />
           <span>{{ item.label }}</span>
           <span v-if="item.count" class="ml-auto text-xs text-bd-text-muted bg-white/[0.06] px-2 py-0.5 rounded-full">
             {{ item.count }}
@@ -42,11 +42,11 @@
         </router-link>
       </div>
 
-      <!-- Community -->
+      <!-- Links -->
       <div>
         <div class="section-header">
-          <span class="text-xs">👥</span>
-          <span>Community</span>
+          <Link2 class="w-3 h-3" />
+          <span>Links</span>
         </div>
         
         <router-link 
@@ -54,7 +54,7 @@
           class="nav-link"
           :class="{ 'active': isActive('/contribute') }"
         >
-          <span class="text-sm">🤝</span>
+          <GitPullRequest class="w-4 h-4" />
           <span>Contribute</span>
         </router-link>
         
@@ -64,9 +64,9 @@
           rel="noopener noreferrer"
           class="nav-link"
         >
-          <span class="text-sm">💬</span>
+          <MessageCircle class="w-4 h-4" />
           <span>Discord</span>
-          <span class="text-xs ml-auto opacity-50">↗</span>
+          <ExternalLink class="w-3 h-3 ml-auto opacity-50" />
         </a>
       </div>
     </nav>
@@ -75,7 +75,7 @@
     <div class="p-4 border-t border-white/[0.06]">
       <div class="text-xs text-bd-text-muted text-center">
         <p>Inspired by <a href="https://docs.google.com/document/d/1na9MeTcx0QY6MkZdQSkFQFL91sT8BSiJ_6gxrC5sNEU" target="_blank" class="text-bd-accent-primary hover:underline">OffMetaGamer's Repository</a></p>
-        <p class="mt-1">Made with ❤️ for the AI Dungeon community</p>
+        <p class="mt-1 flex items-center justify-center gap-1">Made with <Heart class="w-3 h-3 text-bd-error" /> by computerK</p>
       </div>
     </div>
   </aside>
@@ -84,14 +84,18 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { 
+  LayoutGrid, ScrollText, Bookmark, Drama, Settings,
+  Link2, GitPullRequest, MessageCircle, ExternalLink, Heart
+} from 'lucide-vue-next'
 
 const route = useRoute()
 
 const mainNavItems = [
-  { path: '/ai-instructions', label: 'AI Instructions', iconChar: '📜', count: null },
-  { path: '/plot-components', label: 'Plot Components', iconChar: '🔖', count: null },
-  { path: '/story-cards', label: 'Story Cards', iconChar: '🎭', count: null },
-  { path: '/scripts', label: 'Scripts', iconChar: '⚙️', count: null },
+  { path: '/ai-instructions', label: 'AI Instructions', icon: ScrollText, count: null },
+  { path: '/plot-components', label: 'Plot Components', icon: Bookmark, count: null },
+  { path: '/story-cards', label: 'Story Cards', icon: Drama, count: null },
+  { path: '/scripts', label: 'Scripts', icon: Settings, count: null },
 ]
 
 const isActive = (path) => {

@@ -3,7 +3,7 @@
     <!-- Hero Section -->
     <section class="text-center py-12">
       <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-bd-accent-primary/10 border border-bd-accent-primary/20 mb-6">
-        <span>✨</span>
+        <Sparkles class="w-4 h-4 text-bd-accent-primary" />
         <span class="text-sm font-medium text-bd-accent-light">Welcome to the Repository</span>
       </div>
       
@@ -19,7 +19,7 @@
       <!-- Quick Search -->
       <div class="max-w-xl mx-auto">
         <div class="relative">
-          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-bd-text-muted">🔍</span>
+          <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-bd-text-muted" />
           <input 
             v-model="searchQuery"
             type="text"
@@ -41,7 +41,7 @@
     <!-- Resource Categories -->
     <section>
       <div class="section-header mb-6">
-        <span>▦</span>
+        <LayoutGrid class="w-4 h-4" />
         <span>Browse Resources</span>
       </div>
 
@@ -56,7 +56,7 @@
             class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all group-hover:scale-110"
             :class="category.bgClass"
           >
-            <span class="text-xl">{{ category.iconChar }}</span>
+            <component :is="category.icon" class="w-6 h-6" :class="category.iconClass" />
           </div>
           <div class="flex-1 min-w-0">
             <h3 class="text-lg font-semibold text-bd-text-primary group-hover:text-gradient transition-all">
@@ -84,7 +84,7 @@
     <section class="card-elevated">
       <div class="flex items-start gap-4">
         <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/20 flex items-center justify-center flex-shrink-0">
-          <span class="text-xl">💡</span>
+          <Lightbulb class="w-6 h-6 text-bd-accent-primary" />
         </div>
         <div class="flex-1">
           <h3 class="text-lg font-semibold text-bd-text-primary mb-2">New to AI Dungeon?</h3>
@@ -93,28 +93,28 @@
             These are full instruction sets ready to use, designed for various AI models.
           </p>
           <router-link to="/ai-instructions" class="btn btn-primary">
-            <span>📜</span>
+            <ScrollText class="w-4 h-4" />
             Browse AI Instructions
           </router-link>
         </div>
       </div>
     </section>
 
-    <!-- Community Section -->
+    <!-- About Section -->
     <section class="card-elevated">
       <div class="flex items-start gap-4">
         <div class="w-12 h-12 rounded-xl bg-bd-purple/20 flex items-center justify-center flex-shrink-0">
-          <span class="text-xl">👥</span>
+          <Heart class="w-6 h-6 text-bd-purple" />
         </div>
         <div class="flex-1">
-          <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Community Driven</h3>
+          <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Open Source Project</h3>
           <p class="text-bd-text-secondary mb-4">
-            BetterRepository is built by and for the AI Dungeon community. 
-            Have something to share? Contribute your own instructions, templates, or scripts!
+            BetterRepository is a passion project built for the AI Dungeon community. 
+            Have something to share? Contributions are welcome!
           </p>
           <div class="flex flex-wrap gap-3">
             <router-link to="/contribute" class="btn btn-secondary">
-              <span>🤝</span>
+              <GitPullRequest class="w-4 h-4" />
               How to Contribute
             </router-link>
             <a 
@@ -123,9 +123,9 @@
               rel="noopener noreferrer"
               class="btn btn-ghost"
             >
-              <span>💬</span>
+              <MessageCircle class="w-4 h-4" />
               Join Discord
-              <span class="text-xs">↗</span>
+              <ExternalLink class="w-3 h-3" />
             </a>
           </div>
         </div>
@@ -145,7 +145,7 @@
         </a>
       </p>
       <p class="text-xs text-bd-text-muted mt-2">
-        Extended and refined by the AI Dungeon community
+        Extended and refined by computerK
       </p>
     </section>
   </div>
@@ -155,6 +155,10 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { INSTRUCTIONS, CATEGORIES } from '@/data/repository'
+import { 
+  Sparkles, Search, LayoutGrid, Lightbulb, ScrollText, Heart,
+  GitPullRequest, MessageCircle, ExternalLink, Bookmark, Drama, Settings
+} from 'lucide-vue-next'
 
 const router = useRouter()
 const searchQuery = ref('')
@@ -163,7 +167,7 @@ const resourceCategories = [
   { 
     path: '/ai-instructions', 
     name: 'AI Instructions', 
-    iconChar: '📜',
+    icon: ScrollText,
     description: 'Rules and guidelines for AI behavior, writing style, and narrative control.',
     count: INSTRUCTIONS.length,
     bgClass: 'bg-bd-amber/20',
@@ -172,7 +176,7 @@ const resourceCategories = [
   { 
     path: '/plot-components', 
     name: 'Plot Components', 
-    iconChar: '🔖',
+    icon: Bookmark,
     description: 'Author\'s Notes, Plot Essentials, and Story Summaries.',
     count: '12+',
     bgClass: 'bg-bd-blue/20',
@@ -181,7 +185,7 @@ const resourceCategories = [
   { 
     path: '/story-cards', 
     name: 'Story Cards', 
-    iconChar: '🎭',
+    icon: Drama,
     description: 'Pre-made character cards, location cards, and faction cards.',
     count: '8+',
     bgClass: 'bg-bd-purple/20',
@@ -190,7 +194,7 @@ const resourceCategories = [
   { 
     path: '/scripts', 
     name: 'Scripts', 
-    iconChar: '⚙️',
+    icon: Settings,
     description: 'Custom scripts and advanced automation for AI Dungeon.',
     count: '5+',
     bgClass: 'bg-bd-cyan/20',
@@ -201,7 +205,7 @@ const resourceCategories = [
 const stats = [
   { value: INSTRUCTIONS.length + '+', label: 'AI Instructions' },
   { value: CATEGORIES.length, label: 'Categories' },
-  { value: '100+', label: 'Community Members' },
+  { value: 'v1.0', label: 'Release' },
   { value: 'Free', label: 'Forever' },
 ]
 
