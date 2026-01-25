@@ -36,7 +36,7 @@
         <div>
           <h2 class="text-lg font-semibold text-bd-text-primary mb-2">Scripts Collection Coming Soon!</h2>
           <p class="text-bd-text-secondary mb-4">
-            We're curating a collection of useful scripts for AI Dungeon. 
+            I'm're curating a collection of useful scripts for AI Dungeon. 
             Planned categories include:
           </p>
           <ul class="space-y-2 text-sm text-bd-text-secondary">
@@ -151,7 +151,7 @@
           <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Share Your Scripts!</h3>
           <p class="text-bd-text-secondary mb-4">
             Created useful scripts for AI Dungeon? Share them with others! 
-            We review all submissions for quality and safety.
+            I review all submissions for quality and safety.
           </p>
           <router-link to="/contribute" class="btn btn-primary">
             <GitPullRequest class="w-4 h-4" />

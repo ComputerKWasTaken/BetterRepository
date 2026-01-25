@@ -44,11 +44,11 @@
       </div>
     </section>
 
-    <!-- What We Accept -->
+    <!-- What I Accept -->
     <section class="card">
       <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
         <CheckCircle class="w-5 h-5 text-bd-success" />
-        What We Accept
+        What I Accept
       </h2>
       <div class="grid md:grid-cols-2 gap-4">
         <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
@@ -180,7 +180,7 @@
               <h3 class="font-semibold text-bd-text-primary mb-1">Option 3: Direct Submission</h3>
               <p class="text-sm text-bd-text-secondary mb-3">
                 Fill out our submission form with your contribution details. 
-                We'll review and add it to the repository if it meets our guidelines.
+                I'll review and add it to the repository if it meets our guidelines.
               </p>
               <span class="badge badge-new">Coming Soon</span>
             </div>
@@ -229,7 +229,7 @@
           <X class="w-4 h-4 text-bd-error flex-shrink-0 mt-0.5" />
           <div>
             <h4 class="font-medium text-bd-text-primary">No Harmful Content</h4>
-            <p class="text-sm text-bd-text-secondary">We do not accept content that promotes harm, violates AI Dungeon's ToS, or is otherwise inappropriate.</p>
+            <p class="text-sm text-bd-text-secondary">I do not accept content that promotes harm, violates AI Dungeon's ToS, or is otherwise inappropriate.</p>
           </div>
         </div>
       </div>

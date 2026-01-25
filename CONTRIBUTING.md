@@ -4,7 +4,7 @@ First off, thank you for considering contributing to BetterRepository! It's peop
 
 ## Table of Contents
 
-- [What We Accept](#what-we-accept)
+- [What I Accept](#what-i-accept)
 - [How to Contribute](#how-to-contribute)
 - [Submission Guidelines](#submission-guidelines)
 - [Contribution Format](#contribution-format)
@@ -13,9 +13,9 @@ First off, thank you for considering contributing to BetterRepository! It's peop
 
 ---
 
-## What We Accept
+## What I Accept
 
-We welcome contributions in the following categories:
+I welcome contributions in the following categories:
 
 ### AI Instructions
 - Complete instruction sets for specific AI models
@@ -57,7 +57,7 @@ There are several ways to contribute to BetterRepository:
 
 1. Join the [AI Dungeon Discord](https://discord.gg/aidungeon)
 2. Share your contributions in the appropriate community channels
-3. Tag community moderators for review
+3. Tag me for review (if you're interesting in adding it to the repository)
 4. Quality submissions will be added to the repository
 
 ### Option 2: GitHub Pull Request (Preferred for Code)

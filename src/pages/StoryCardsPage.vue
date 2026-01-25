@@ -22,7 +22,7 @@
         <div>
           <h2 class="text-lg font-semibold text-bd-text-primary mb-2">Coming Soon!</h2>
           <p class="text-bd-text-secondary mb-4">
-            We're actively working on building a collection of high-quality Story Cards. 
+            I'm actively working on building a collection of high-quality Story Cards. 
             This section will include:
           </p>
           <ul class="space-y-2 text-sm text-bd-text-secondary">
@@ -163,7 +163,7 @@ History: Forged by...]</pre>
         <div class="flex-1">
           <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Help Build This Collection!</h3>
           <p class="text-bd-text-secondary mb-4">
-            Have great Story Cards you've created? We'd love to include them in the repository. 
+            Have great Story Cards you've created? I'd love to include them in the repository. 
             Your contributions help all AI Dungeon players.
           </p>
           <router-link to="/contribute" class="btn btn-primary">

@@ -111,7 +111,7 @@ BetterRepository/
 
 ## Contributing
 
-We welcome contributions from the AI Dungeon community! Whether you have AI Instructions, templates, story cards, or scripts to share, we'd love to include them.
+I welcome contributions from the AI Dungeon community! Whether you have AI Instructions, templates, story cards, or scripts to share, I'd love to include them.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contribute.
 
@@ -125,11 +125,14 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contrib
 
 BetterRepository is heavily inspired by:
 - **[OffMetaGamer's AI Instructions Repository](https://docs.google.com/document/d/1na9MeTcx0QY6MkZdQSkFQFL91sT8BSiJ_6gxrC5sNEU)** - The original comprehensive AI Instructions document
-- **BetterDungeon** - Browser extension for AI Dungeon that inspired the UI/UX design
+- **BetterDungeon** - My browser extension for AI Dungeon that inspired the UI/UX design for coherency across my various projects
 
 ### Community Contributors
 
 A huge thank you to everyone who has contributed instructions, templates, and feedback to make this resource possible.
+
+- **OffMetaGamer** - For creating the original comprehensive AI Instructions document
+- **The AI Dungeon Community** - For sharing their knowledge and creativity
 
 ## License
 
