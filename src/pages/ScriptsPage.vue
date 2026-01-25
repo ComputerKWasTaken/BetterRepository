@@ -509,12 +509,11 @@ if (card !== null) {
         <div class="flex-1">
           <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Share Your Scripts!</h3>
           <p class="text-bd-text-secondary mb-4">
-            Created useful scripts for AI Dungeon? Share them with others! 
-            I review all submissions for quality and safety.
+            Created useful scripts? Just paste them in a GitHub issue and I'll add them to the collection.
           </p>
           <router-link to="/contribute" class="btn btn-primary">
             <GitPullRequest class="w-4 h-4" />
-            Learn How to Contribute
+            Submit Your Script
           </router-link>
         </div>
       </div>

@@ -615,13 +615,13 @@
             <GitPullRequest class="w-6 h-6 text-bd-accent-primary" />
           </div>
           <div class="flex-1">
-            <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Share Your Story Cards!</h3>
+            <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Share Your Story Cards</h3>
             <p class="text-bd-text-secondary mb-4">
-              Have great Story Cards you've created? I'd love to include them in the repository.
+              Have great Story Cards? Just paste them in a GitHub issue and I'll add them to the collection.
             </p>
             <router-link to="/contribute" class="btn btn-primary">
               <GitPullRequest class="w-4 h-4" />
-              Learn How to Contribute
+              Submit Your Cards
             </router-link>
           </div>
         </div>

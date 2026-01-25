@@ -102,20 +102,20 @@
 
     <!-- Community & Contribute -->
     <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <!-- Open Source -->
+      <!-- Share Your Work -->
       <div class="card-elevated">
         <div class="flex items-start gap-4">
           <div class="w-10 h-10 rounded-xl bg-bd-purple/20 flex items-center justify-center flex-shrink-0">
             <Heart class="w-5 h-5 text-bd-purple" />
           </div>
           <div class="flex-1">
-            <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Open Source</h3>
+            <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Share Your Work</h3>
             <p class="text-sm text-bd-text-secondary mb-4">
-              BetterRepository is a passion project for the AI Dungeon community. Contributions welcome!
+              Made something cool? Just paste it in a GitHub issue and I'll add it. No coding required.
             </p>
             <router-link to="/contribute" class="btn btn-secondary btn-sm">
               <GitPullRequest class="w-4 h-4" />
-              How to Contribute
+              Submit Your Creation
             </router-link>
           </div>
         </div>
