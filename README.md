@@ -5,151 +5,118 @@
 </p>
 
 <p align="center">
-  <strong>A curated collection of AI Instructions, Plot Components, Story Cards, and Scripts for AI Dungeon.</strong>
+  <strong>The ultimate AI Dungeon resource hub.</strong><br>
+  Find AI Instructions, Plot Components, Story Cards, and Scripts; all in one place.
 </p>
 
 <p align="center">
-  <a href="#features">Features</a> •
-  <a href="#getting-started">Getting Started</a> •
-  <a href="#project-structure">Project Structure</a> •
-  <a href="#contributing">Contributing</a> •
-  <a href="#credits">Credits</a>
+  <a href="#what-you-can-find">What's Here</a> •
+  <a href="#want-to-contribute">Contribute</a> •
+  <a href="#credits">Credits</a> •
+  <a href="#for-developers">For Developers</a>
 </p>
 
 ---
 
-## Overview
+## What You Can Find
 
-BetterRepository is a community-driven resource hub for AI Dungeon players and scenario creators, created by the community for the community. 
-Find the perfect AI Instructions, templates, story cards, and scripts to enhance your adventures, all in one place.
+| Resource | Description |
+|----------|-------------|
+| **AI Instructions** | Rules that control how the AI writes — style, pacing, tone, and behavior |
+| **Plot Components** | Author's Notes, Plot Essentials, Memory Banks, and Story Summaries |
+| **Story Cards** | Ready-to-use character, location, faction, and item cards |
+| **Scripts** | Custom JavaScript to add features like dice rolls, inventory, and more |
+| **Guides** | Learn how each feature works with beginner-friendly tutorials |
 
-**The ultimate AI Dungeon resource hub**
+Everything is **free**, **tested**, and **ready to copy-paste** into your adventures.
 
-## Features
+---
 
-- **AI Instructions** - Curated rules and guidelines for AI behavior, writing style, and narrative control
-- **Plot Components** - Author's Notes, Plot Essentials, and Story Summary templates
-- **Story Cards** - Pre-made character, location, faction, and item cards
-- **Scripts** - Custom scripts and automation for advanced users
-- **Guides** - Comprehensive guides and tutorials for various aspects of AI Dungeon
-- **Smart Search** - Find exactly what you need with powerful filtering
-- **Local Preferences** - Your favorites and settings saved via cookies
+## Want to Contribute?
 
-## Getting Started
+**You don't need to know how to code.** If you've made something cool for AI Dungeon, I'd love to add it!
 
-### Prerequisites
+### The Easy Way
 
-- [Node.js](https://nodejs.org/) (v18 or higher recommended)
-- npm or yarn
+1. **Open a [GitHub Issue](https://github.com/ComputerKWasTaken/BetterRepository/issues/new)**
+2. **Paste your content** (AI Instruction, Story Card, Script, etc.)
+3. **Tell me what it does** in a sentence or two
+4. Done! I'll format it and add it to the collection.
 
-### Installation
+That's it. No pull requests, no coding, no fuss.
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/BetterRepository.git
-cd BetterRepository
-```
+> 📖 See [CONTRIBUTING.md](CONTRIBUTING.md) for more details and formatting tips.
 
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Start the development server:
-```bash
-npm run dev
-```
-
-4. Open your browser to `http://localhost:3000`
-
-### Build for Production
-
-```bash
-npm run build
-```
-
-The built files will be in the `dist` directory, ready to deploy to any static hosting provider.
-
-## Project Structure
-
-```
-BetterRepository/
-├── public/                 # Static assets
-│   └── favicon.svg
-├── src/
-│   ├── components/         # Vue components
-│   │   ├── layout/         # Layout components (Sidebar, etc.)
-│   │   └── ui/             # Reusable UI components
-│   ├── composables/        # Vue composables (usePreferences)
-│   ├── data/               # Data files (repository content)
-│   ├── pages/              # Page components
-│   │   ├── HomePage.vue
-│   │   ├── AIInstructionsPage.vue
-│   │   ├── PlotComponentsPage.vue
-│   │   ├── StoryCardsPage.vue
-│   │   ├── ScriptsPage.vue
-│   │   └── ContributePage.vue
-│   ├── router/             # Vue Router configuration
-│   ├── styles/             # Global styles
-│   ├── App.vue             # Root component
-│   └── main.js             # Application entry
-├── core/                   # Original repository data
-├── design/                 # Design assets and theme
-├── index.html              # HTML entry point
-├── package.json
-├── tailwind.config.js      # Tailwind CSS configuration
-├── vite.config.js          # Vite configuration
-└── README.md
-```
-
-## Tech Stack
-
-- **[Vue 3](https://vuejs.org/)** - Progressive JavaScript framework
-- **[Vite](https://vitejs.dev/)** - Next-generation frontend tooling
-- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
-- **[Vue Router](https://router.vuejs.org/)** - Official router for Vue.js
-- **[Lucide Icons](https://lucide.dev/)** - Beautiful & consistent icons
-- **[js-cookie](https://github.com/js-cookie/js-cookie)** - Cookie handling for preferences
-
-## Contributing
-
-I welcome contributions from the AI Dungeon community! Whether you have AI Instructions, templates, story cards, or scripts to share, I'd love to include them.
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contribute.
-
-### Quick Contribution Methods
-
-1. **GitHub** - Submit a pull request with your contributions
-2. **Direct Submission** - Use our submission form (coming soon)
+---
 
 ## Credits
 
-BetterRepository is heavily inspired by:
-- **[OffMetaGamer's AI Instructions Repository](https://docs.google.com/document/d/1na9MeTcx0QY6MkZdQSkFQFL91sT8BSiJ_6gxrC5sNEU)** - The original comprehensive AI Instructions document
-- **BetterDungeon** - My browser extension for AI Dungeon that inspired the UI/UX design for coherency across my various projects
+### Inspiration
 
-### Community Contributors
+BetterRepository was inspired by **[OffMetaGamer's AI Instructions Repository](https://docs.google.com/document/d/1na9MeTcx0QY6MkZdQSkFQFL91sT8BSiJ_6gxrC5sNEU)** — the original comprehensive collection that started it all.
 
-A huge thank you to everyone who has contributed instructions, templates, and feedback to make this resource possible.
+### Contributors
 
-- **OffMetaGamer** - For creating the original comprehensive AI Instructions collection document that BetterRepository was inspired by
+A huge thank you to everyone whose work helped build this resource:
 
-- **dragranis and BinKompliziert** - For creating the excellent AI Instructions guides that provided the foundation for my own AI Instructions guide
-
-- **Wilmar** - For creating the excellent Plot Components guide that provided the foundation for my own Plot Components guide
-
-- **wanderstar1 and GremmieGremlin** - For creating the excellent Story Cards guides that provided the foundation for my own Story Cards guide
-
-- **Oli, LewdLeah, and MrJack** - For creating the excellent Scripts guides and utility functions that provided the foundation for my own Scripts guide
-
-- **The AI Dungeon Community** - For sharing their knowledge and creativity
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
+| Contributor | Contribution |
+|-------------|--------------|
+| **OffMetaGamer** | Original AI Instructions collection |
+| **dragranis & BinKompliziert** | AI Instructions guides |
+| **Wilmar** | Plot Components guide |
+| **wanderstar1 & GremmieGremlin** | Story Cards guides |
+| **Oli, LewdLeah & MrJack** | Scripts guides & utilities |
+| **The AI Dungeon Community** | Endless creativity and feedback |
 
 ---
 
+## For Developers
+
+<details>
+<summary>Click to expand technical details</summary>
+
+### Tech Stack
+
+- **Vue 3** + **Vite** — Fast, modern frontend
+- **Tailwind CSS** — Utility-first styling
+- **Vue Router** — Client-side routing
+- **Lucide Icons** — Clean iconography
+
+### Quick Start
+
+```bash
+# Clone and install
+git clone https://github.com/ComputerKWasTaken/BetterRepository.git
+cd BetterRepository
+npm install
+
+# Run locally
+npm run dev
+
+# Build for production
+npm run build
+```
+
+### Project Structure
+
+```
+src/
+├── components/     # Reusable UI components
+├── data/           # Repository content (instructions, cards, etc.)
+├── pages/          # Main page views
+├── composables/    # Vue composables
+├── router/         # Route definitions
+└── styles/         # Global CSS
+```
+
+</details>
+
+---
+
+## License
+
+Open source under the [MIT License](LICENSE).
+
 <p align="center">
-  Made with ❤️ for the AI Dungeon community
+  Made with ❤️ by <strong>computerK</strong> for the AI Dungeon community
 </p>

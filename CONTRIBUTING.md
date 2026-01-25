@@ -1,85 +1,83 @@
 # Contributing to BetterRepository
 
-First off, thank you for considering contributing to BetterRepository! It's people like you that make this resource valuable for the entire AI Dungeon community.
-
-## Table of Contents
-
-- [What I Accept](#what-i-accept)
-- [How to Contribute](#how-to-contribute)
-- [Contribution Format](#contribution-format)
-- [Code Contributions](#code-contributions)
-- [Questions?](#questions)
+Thanks for wanting to share your work! This page explains how to contribute.
 
 ---
 
-## What I Accept
+## How to Submit
 
-I welcome contributions in the following categories:
+### Option 1: GitHub Issue (Easiest)
 
-### AI Instructions
+**No coding required.** Just paste your content and I'll handle the rest.
 
-- AI Instructions (commonly called AIN) are rules and guidelines that shape how the AI writes your story. They control writing style, pacing, character behavior, and narrative focus.
+1. Go to **[New Issue](https://github.com/ComputerKWasTaken/BetterRepository/issues/new)**
+2. Paste your content
+3. Add a short description of what it does
+4. Submit!
 
-### Plot Components
+I'll review it, format it if needed, and add it to the collection.
 
-- Plot Components are structured elements that help organize and develop your story. They are the backbone of any good scenario.
+### Option 2: Pull Request
 
-### Story Cards
+If you're comfortable with Git:
 
-- Story Cards are notes for the AI about characters, locations, concepts, or any other elements of your story. The AI only consults them when they become relevant.
-
-### Scripts
-
-- Scripts are custom code that add additional features or modify existing features by changing the model's context or output.
-
----
-
-## How to Contribute
-
-BetterRepository is a community-driven collection, which means it gets better when everyone contributes. I encourage everyone to share their work to be added to the collection!
-
-### Issue Submission
-
-1. Open an [Issue](https://github.com/yourusername/BetterRepository/issues) on GitHub
-2. Use the "Contribution Submission" template
-3. Paste your contribution in the issue body
-4. I'll review and add it for you
+1. Fork the repository
+2. Add your content to the appropriate file in `src/data/`
+3. Submit a pull request
 
 ---
 
-## Submission Guidelines
+## What Can You Submit?
 
-Please ensure your contributions meet these criteria:
+| Type | What It Is |
+|------|------------|
+| **AI Instructions** | Rules that shape how the AI writes (style, pacing, tone) |
+| **Plot Components** | Author's Notes, Plot Essentials, Memory Banks, Story Summaries |
+| **Story Cards** | Character, location, faction, or item cards |
+| **Scripts** | JavaScript code for game mechanics, tracking, formatting |
 
-### ✅ Do
+---
 
-- **Test your contributions** - Make sure they work as intended in AI Dungeon
-- **Include clear descriptions** - Explain what it does, when to use it, and any requirements
-- **Specify compatible models** - Note which AI models work best (or if it's universal)
-- **Credit original authors** - If adapting existing work, credit the original creator
-- **Keep it focused** - One contribution per submission (unless it's a related set)
-- **Use proper formatting** - Follow the format templates below
+## Submission Checklist
 
-### ❌ Don't
+Before submitting, make sure:
 
-- Submit untested content
-- Submit duplicate content (check if it already exists)
-- Submit content that violates AI Dungeon's Terms of Service
-- Submit content that promotes harm or is inappropriate
-- Submit copyrighted content without permission
-- Submit low-effort or joke submissions
+- [ ] **It works** — You've tested it in AI Dungeon
+- [ ] **It's original** — Or you have permission to share it
+- [ ] **It's described** — A sentence or two explaining what it does
+- [ ] **It's appropriate** — Nothing that violates AI Dungeon's Terms of Service
+
+That's it! Don't worry about perfect formatting, I'll clean it up.
+
+---
+
+## Example Submission
+
+Here's what a good submission looks like:
+
+```
+**Name:** Concise Writing Style
+
+**Category:** AI Instruction
+
+**Description:** Makes the AI write shorter, punchier sentences. Good for action scenes.
+
+**Content:**
+Write in a concise, punchy style. Use short sentences. Avoid purple prose.
+Favor active voice over passive. Every word should earn its place.
+```
 
 ---
 
 ## Questions?
 
-- **Discord**: Join the AI Dungeon community Discord
-- **GitHub Issues**: Open an issue for questions or discussions
+- Open a **[GitHub Issue](https://github.com/ComputerKWasTaken/BetterRepository/issues)** 
+- Join the **[AI Dungeon Discord](https://discord.gg/aidungeon)**
 
 ---
 
-## Recognition
+## You'll Be Credited
 
-All contributors are recognized in the repository. Your username/name will be credited alongside your contributions.
+All contributors are recognized in the repository. Your name will appear alongside your contributions.
 
-Thank you for helping make BetterRepository better for everyone! 🎉
+Thanks for helping make BetterRepository better! 🎉
