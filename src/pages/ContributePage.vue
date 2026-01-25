@@ -229,7 +229,7 @@
           <X class="w-4 h-4 text-bd-error flex-shrink-0 mt-0.5" />
           <div>
             <h4 class="font-medium text-bd-text-primary">No Harmful Content</h4>
-            <p class="text-sm text-bd-text-secondary">I do not accept content that promotes harm, violates AI Dungeon's ToS, or is otherwise inappropriate.</p>
+            <p class="text-sm text-bd-text-secondary">I do not accept content that promotes harm or violates AI Dungeon's terms of service. I will accept NSFW content (but it will be marked as such).</p>
           </div>
         </div>
       </div>
