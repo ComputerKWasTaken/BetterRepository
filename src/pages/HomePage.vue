@@ -133,7 +133,7 @@
               Connect with other AI Dungeon players, share creations, and get help.
             </p>
             <a 
-              href="https://discord.gg/aidungeon" 
+              href="https://discord.com/invite/HB2YBZYjyf" 
               target="_blank" 
               rel="noopener noreferrer"
               class="btn btn-secondary btn-sm"

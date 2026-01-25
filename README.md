@@ -20,9 +20,10 @@
 
 ## Overview
 
-BetterRepository is a community-driven resource hub for AI Dungeon players and scenario creators. Find the perfect AI Instructions, templates, story cards, and scripts to enhance your adventures, all in one place.
+BetterRepository is a community-driven resource hub for AI Dungeon players and scenario creators, created by the community for the community. 
+Find the perfect AI Instructions, templates, story cards, and scripts to enhance your adventures, all in one place.
 
-**No fuss. No hassle. All seamless.**
+**The ultimate AI Dungeon resource hub**
 
 ## Features
 

@@ -522,7 +522,7 @@ Instructions:
                 Official AI Instructions Guide
               </a>
               <a 
-                href="https://discord.gg/aidungeon" 
+                href="https://discord.com/invite/HB2YBZYjyf" 
                 target="_blank" 
                 class="btn btn-secondary text-sm"
               >

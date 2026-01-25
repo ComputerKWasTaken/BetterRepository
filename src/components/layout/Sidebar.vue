@@ -59,7 +59,7 @@
         </router-link>
         
         <a 
-          href="https://discord.gg/aidungeon" 
+          href="https://discord.com/invite/HB2YBZYjyf" 
           target="_blank" 
           rel="noopener noreferrer"
           class="nav-link"

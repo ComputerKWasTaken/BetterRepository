@@ -501,7 +501,7 @@
       <section class="p-4 rounded-lg bg-bd-bg-tertiary border border-white/[0.06]">
         <p class="text-sm text-bd-text-muted text-center">
           Guide based on the excellent work by <strong class="text-bd-text-secondary">wanderingstar1</strong> (Latitude Team).
-          <a href="https://discord.gg/aidungeon" target="_blank" class="text-bd-accent-primary hover:underline ml-1">
+          <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="text-bd-accent-primary hover:underline ml-1">
             Join the Discord
             <ExternalLink class="w-3 h-3 inline-block ml-1" />
           </a>

@@ -9,7 +9,7 @@
 //
 // I highly recommend checking out other community resources as well:
 // - OffMetaGamer's Repository: https://docs.google.com/document/d/1na9MeTcx0QY6MkZdQSkFQFL91sT8BSiJ_6gxrC5sNEU
-// - AI Dungeon Discord: https://discord.gg/aidungeon
+// - AI Dungeon Discord: https://discord.com/invite/HB2YBZYjyf
 // =============================================================================
 
 export const REPOSITORY_META = {
