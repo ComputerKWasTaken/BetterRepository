@@ -120,7 +120,7 @@
               <h3 class="font-semibold text-bd-text-primary mb-1">Option 1: Discord (Easiest)</h3>
               <p class="text-sm text-bd-text-secondary mb-3">
                 Join the AI Dungeon Discord and share your contributions in the appropriate channels. 
-                Community moderators will review and add quality submissions.
+                I'll review and add quality submissions.
               </p>
               <a 
                 href="https://discord.gg/aidungeon" 
