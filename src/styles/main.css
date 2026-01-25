@@ -1,0 +1,184 @@
+@import '../../design/theme-variables.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   BetterRepository - Global Styles
+   Dark Mode Stylization
+   ============================================ */
+
+/* === Base Styles === */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* === Selection === */
+::selection {
+  background-color: rgba(255, 149, 0, 0.3);
+  color: #fff;
+}
+
+/* === Scrollbar Styling === */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #16161a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3a3a45;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4a4a55;
+}
+
+/* === Custom Component Classes === */
+@layer components {
+  /* Card styles */
+  .card {
+    @apply bg-bd-bg-secondary border border-white/[0.06] rounded-xl p-4 transition-all duration-200;
+  }
+
+  .card:hover {
+    @apply bg-bd-bg-tertiary border-white/10;
+  }
+
+  .card-elevated {
+    @apply bg-bd-bg-tertiary border border-white/10 rounded-xl p-4;
+  }
+
+  /* Button styles */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-br from-bd-accent-primary to-bd-accent-secondary text-bd-text-inverse hover:from-bd-accent-light hover:to-bd-accent-primary shadow-md hover:shadow-lg;
+  }
+
+  .btn-secondary {
+    @apply bg-white/[0.08] text-bd-text-primary hover:bg-white/[0.12] border border-white/10;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-bd-text-secondary hover:text-bd-text-primary hover:bg-white/[0.06];
+  }
+
+  /* Input styles */
+  .input {
+    @apply w-full bg-bd-bg-elevated border border-white/10 rounded-lg px-4 py-2.5 text-bd-text-primary placeholder-bd-text-muted transition-all duration-200 outline-none;
+  }
+
+  .input:focus {
+    @apply border-bd-accent-primary shadow-[0_0_0_3px_rgba(255,149,0,0.12)];
+  }
+
+  /* Tag styles */
+  .tag {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white/[0.08] text-bd-text-secondary;
+  }
+
+  .tag-accent {
+    @apply bg-bd-accent-primary/20 text-bd-accent-light;
+  }
+
+  /* Navigation link */
+  .nav-link {
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg text-bd-text-secondary hover:text-bd-text-primary hover:bg-white/[0.06] transition-all duration-200;
+  }
+
+  .nav-link.active {
+    @apply bg-gradient-to-r from-bd-accent-primary to-bd-accent-secondary text-bd-text-inverse font-medium;
+  }
+
+  /* Section header */
+  .section-header {
+    @apply flex items-center gap-2 text-bd-text-muted uppercase text-xs font-semibold tracking-wider mb-3;
+  }
+
+  /* Content card for instructions/resources */
+  .resource-card {
+    @apply bg-bd-bg-secondary border border-white/[0.06] rounded-xl overflow-hidden transition-all duration-200 hover:border-bd-accent-primary/30 hover:shadow-glow cursor-pointer;
+  }
+
+  /* Copy button */
+  .copy-btn {
+    @apply flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-bd-accent-primary/20 text-bd-accent-light hover:bg-bd-accent-primary/30 transition-all duration-200;
+  }
+
+  /* Code block */
+  .code-block {
+    @apply bg-bd-bg-primary border border-white/[0.06] rounded-lg p-4 font-mono text-sm text-bd-text-secondary overflow-x-auto;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider;
+  }
+
+  .badge-new {
+    @apply bg-bd-green/20 text-bd-green;
+  }
+
+  .badge-popular {
+    @apply bg-bd-amber/20 text-bd-amber;
+  }
+}
+
+/* === Utility Classes === */
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-bd-accent-light to-bd-accent-primary bg-clip-text text-transparent;
+  }
+
+  .border-glow {
+    box-shadow: 0 0 20px rgba(255, 149, 0, 0.12);
+  }
+
+  .backdrop-blur-card {
+    backdrop-filter: blur(12px);
+  }
+}
+
+/* === Transitions === */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.slide-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
