@@ -131,7 +131,16 @@ BetterRepository is heavily inspired by:
 
 A huge thank you to everyone who has contributed instructions, templates, and feedback to make this resource possible.
 
-- **OffMetaGamer** - For creating the original comprehensive AI Instructions document
+- **OffMetaGamer** - For creating the original comprehensive AI Instructions collection document that BetterRepository was inspired by
+
+- **dragranis and BinKompliziert** - For creating the excellent AI Instructions guides that provided the foundation for my own AI Instructions guide
+
+- **Wilmar** - For creating the excellent Plot Components guide that provided the foundation for my own Plot Components guide
+
+- **wanderstar1 and GremmieGremlin** - For creating the excellent Story Cards guides that provided the foundation for my own Story Cards guide
+
+- **Oli, LewdLeah, and MrJack** - For creating the excellent Scripts guides and utility functions that provided the foundation for my own Scripts guide
+
 - **The AI Dungeon Community** - For sharing their knowledge and creativity
 
 ## License
