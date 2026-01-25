@@ -36,7 +36,7 @@
         <div>
           <h2 class="text-lg font-semibold text-bd-text-primary mb-2">Scripts Collection Coming Soon!</h2>
           <p class="text-bd-text-secondary mb-4">
-            I'm're curating a collection of useful scripts for AI Dungeon. 
+            I'm curating a collection of useful scripts for AI Dungeon. 
             Planned categories include:
           </p>
           <ul class="space-y-2 text-sm text-bd-text-secondary">
