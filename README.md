@@ -30,6 +30,7 @@ BetterRepository is a community-driven resource hub for AI Dungeon players and s
 - **Plot Components** - Author's Notes, Plot Essentials, and Story Summary templates
 - **Story Cards** - Pre-made character, location, faction, and item cards
 - **Scripts** - Custom scripts and automation for advanced users
+- **Guides** - Comprehensive guides and tutorials for various aspects of AI Dungeon
 - **Smart Search** - Find exactly what you need with powerful filtering
 - **Local Preferences** - Your favorites and settings saved via cookies
 
@@ -117,9 +118,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contrib
 
 ### Quick Contribution Methods
 
-1. **Discord** - Share in the AI Dungeon Discord community channels
-2. **GitHub** - Submit a pull request with your contributions
-3. **Direct Submission** - Use our submission form (coming soon)
+1. **GitHub** - Submit a pull request with your contributions
+2. **Direct Submission** - Use our submission form (coming soon)
 
 ## Credits
 

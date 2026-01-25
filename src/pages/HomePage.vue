@@ -100,28 +100,43 @@
       </div>
     </section>
 
-    <!-- About Section -->
-    <section class="card-elevated">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 rounded-xl bg-bd-purple/20 flex items-center justify-center flex-shrink-0">
-          <Heart class="w-6 h-6 text-bd-purple" />
-        </div>
-        <div class="flex-1">
-          <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Open Source Project</h3>
-          <p class="text-bd-text-secondary mb-4">
-            BetterRepository is a passion project built for the AI Dungeon community. 
-            Have something to share? Contributions are welcome!
-          </p>
-          <div class="flex flex-wrap gap-3">
-            <router-link to="/contribute" class="btn btn-secondary">
+    <!-- Community & Contribute -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Open Source -->
+      <div class="card-elevated">
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 rounded-xl bg-bd-purple/20 flex items-center justify-center flex-shrink-0">
+            <Heart class="w-5 h-5 text-bd-purple" />
+          </div>
+          <div class="flex-1">
+            <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Open Source</h3>
+            <p class="text-sm text-bd-text-secondary mb-4">
+              BetterRepository is a passion project for the AI Dungeon community. Contributions welcome!
+            </p>
+            <router-link to="/contribute" class="btn btn-secondary btn-sm">
               <GitPullRequest class="w-4 h-4" />
               How to Contribute
             </router-link>
+          </div>
+        </div>
+      </div>
+
+      <!-- Join Community -->
+      <div class="card-elevated">
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 rounded-xl bg-bd-cyan/20 flex items-center justify-center flex-shrink-0">
+            <MessageCircle class="w-5 h-5 text-bd-cyan" />
+          </div>
+          <div class="flex-1">
+            <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Join the Community</h3>
+            <p class="text-sm text-bd-text-secondary mb-4">
+              Connect with other AI Dungeon players, share creations, and get help.
+            </p>
             <a 
               href="https://discord.gg/aidungeon" 
               target="_blank" 
               rel="noopener noreferrer"
-              class="btn btn-ghost"
+              class="btn btn-secondary btn-sm"
             >
               <MessageCircle class="w-4 h-4" />
               Join Discord
@@ -132,22 +147,67 @@
       </div>
     </section>
 
-    <!-- Credits -->
-    <section class="text-center py-8 border-t border-white/[0.06]">
-      <p class="text-sm text-bd-text-muted">
-        Heavily inspired by 
-        <a 
-          href="https://docs.google.com/document/d/1na9MeTcx0QY6MkZdQSkFQFL91sT8BSiJ_6gxrC5sNEU" 
-          target="_blank" 
-          class="text-bd-accent-primary hover:underline"
-        >
-          OffMetaGamer's AI Instructions Repository
-        </a>
+    <!-- Credits Section -->
+    <section class="card border-t-2 border-bd-accent-primary/30">
+      <div class="text-center mb-6">
+        <h2 class="text-lg font-semibold text-bd-text-primary flex items-center justify-center gap-2">
+          <Award class="w-5 h-5 text-bd-accent-primary" />
+          Credits & Acknowledgments
+        </h2>
+        <p class="text-sm text-bd-text-muted mt-1">
+          BetterRepository wouldn't exist without these amazing contributors
+        </p>
+      </div>
+
+      <!-- Inspiration -->
+      <div class="mb-6 p-4 rounded-lg bg-bd-accent-primary/5 border border-bd-accent-primary/20">
+        <p class="text-sm text-bd-text-secondary text-center">
+          <span class="text-bd-text-muted">Heavily inspired by</span>
+          <a 
+            href="https://docs.google.com/document/d/1na9MeTcx0QY6MkZdQSkFQFL91sT8BSiJ_6gxrC5sNEU" 
+            target="_blank" 
+            class="text-bd-accent-primary hover:underline font-medium ml-1"
+          >
+            OffMetaGamer's AI Instructions Repository
+            <ExternalLink class="w-3 h-3 inline ml-0.5" />
+          </a>
+        </p>
+      </div>
+
+      <!-- Contributors Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div v-for="contributor in contributors" :key="contributor.name" 
+             class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary/50">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+               :class="contributor.bgClass">
+            <component :is="contributor.icon" class="w-4 h-4" :class="contributor.iconClass" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-bd-text-primary">{{ contributor.name }}</p>
+            <p class="text-xs text-bd-text-muted">{{ contributor.contribution }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Community Thank You -->
+      <div class="mt-6 pt-4 border-t border-white/[0.06] text-center">
+        <p class="text-sm text-bd-text-secondary flex items-center justify-center gap-2">
+          <Users class="w-4 h-4 text-bd-purple" />
+          And the entire <span class="text-bd-text-primary font-medium">AI Dungeon Community</span> for sharing their knowledge
+        </p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 border-t border-white/[0.06]">
+      <p class="text-sm text-bd-text-muted flex items-center justify-center gap-1">
+        Made with <Heart class="w-4 h-4 text-bd-error" /> by 
+        <span class="text-bd-text-secondary font-medium">computerK</span>
       </p>
       <p class="text-xs text-bd-text-muted mt-2">
-        Extended and refined by computerK
+        Part of the BetterDungeon ecosystem
       </p>
-    </section>
+    </footer>
   </div>
 </template>
 
@@ -157,7 +217,8 @@ import { useRouter } from 'vue-router'
 import { INSTRUCTIONS, CATEGORIES } from '@/data/repository'
 import { 
   Sparkles, Search, LayoutGrid, Lightbulb, ScrollText, Heart,
-  GitPullRequest, MessageCircle, ExternalLink, Bookmark, Drama, Settings
+  GitPullRequest, MessageCircle, ExternalLink, Bookmark, Drama, Settings,
+  Award, Users, Code, FileText, Layers
 } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -207,6 +268,44 @@ const stats = [
   { value: CATEGORIES.length, label: 'Categories' },
   { value: 'v1.0', label: 'Release' },
   { value: 'Free', label: 'Forever' },
+]
+
+const contributors = [
+  {
+    name: 'OffMetaGamer',
+    contribution: 'Original AI Instructions collection',
+    icon: ScrollText,
+    bgClass: 'bg-bd-amber/20',
+    iconClass: 'text-bd-amber'
+  },
+  {
+    name: 'dragranis & BinKompliziert',
+    contribution: 'AI Instructions guides',
+    icon: ScrollText,
+    bgClass: 'bg-bd-amber/20',
+    iconClass: 'text-bd-amber'
+  },
+  {
+    name: 'Wilmar',
+    contribution: 'Plot Components guide',
+    icon: Bookmark,
+    bgClass: 'bg-bd-blue/20',
+    iconClass: 'text-bd-blue'
+  },
+  {
+    name: 'wanderstar1 & GremmieGremlin',
+    contribution: 'Story Cards guides',
+    icon: Drama,
+    bgClass: 'bg-bd-purple/20',
+    iconClass: 'text-bd-purple'
+  },
+  {
+    name: 'Oli, LewdLeah & MrJack',
+    contribution: 'Scripts guides & utilities',
+    icon: Code,
+    bgClass: 'bg-bd-cyan/20',
+    iconClass: 'text-bd-cyan'
+  },
 ]
 
 const handleSearch = () => {

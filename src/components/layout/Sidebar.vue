@@ -74,7 +74,6 @@
     <!-- Footer -->
     <div class="p-4 border-t border-white/[0.06]">
       <div class="text-xs text-bd-text-muted text-center">
-        <p>Inspired by <a href="https://docs.google.com/document/d/1na9MeTcx0QY6MkZdQSkFQFL91sT8BSiJ_6gxrC5sNEU" target="_blank" class="text-bd-accent-primary hover:underline">OffMetaGamer's Repository</a></p>
         <p class="mt-1 flex items-center justify-center gap-1">Made with <Heart class="w-3 h-3 text-bd-error" /> by computerK</p>
       </div>
     </div>
