@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="story-card-item rounded-xl border border-white/[0.06] bg-bd-bg-secondary overflow-hidden transition-all"
+    class="story-card-item rounded-xl border border-bd-border-subtle bg-bd-bg-secondary overflow-hidden transition-all"
     :class="{ 'ring-2 ring-bd-accent-primary': isExpanded }"
   >
     <!-- Card Header -->
@@ -29,7 +29,7 @@
         </div>
         <button 
           @click.stop="copyEntry"
-          class="p-2 rounded-lg hover:bg-white/[0.06] transition-colors flex-shrink-0 text-bd-text-muted hover:text-bd-text-primary"
+          class="p-2 rounded-lg hover:bg-bd-bg-tertiary transition-colors flex-shrink-0 text-bd-text-muted hover:text-bd-text-primary"
           title="Copy entry"
         >
           <span class="text-sm">{{ copied ? '✓' : '📋' }}</span>
@@ -55,9 +55,9 @@
 
     <!-- Expanded Content -->
     <Transition name="slide">
-      <div v-if="isExpanded" class="border-t border-white/[0.06]">
+      <div v-if="isExpanded" class="border-t border-bd-border-subtle">
         <!-- Use Case -->
-        <div v-if="card.useCase" class="p-4 border-b border-white/[0.06]">
+        <div v-if="card.useCase" class="p-4 border-b border-bd-border-subtle">
           <div class="flex items-center gap-2 text-xs text-bd-text-muted mb-2">
             <span class="text-xs">💡</span>
             <span class="uppercase tracking-wider font-medium">When to Use</span>
@@ -66,7 +66,7 @@
         </div>
 
         <!-- Triggers -->
-        <div class="p-4 border-b border-white/[0.06]">
+        <div class="p-4 border-b border-bd-border-subtle">
           <div class="flex items-center gap-2 text-xs text-bd-text-muted mb-2">
             <span class="text-xs">⚡</span>
             <span class="uppercase tracking-wider font-medium">Triggers</span>
@@ -157,25 +157,25 @@ const categoryClass = computed(() => {
     'creature': 'bg-bd-pink/20 text-bd-pink',
     'concept': 'bg-bd-cyan/20 text-bd-cyan'
   }
-  return colorMap[props.card.category] || 'bg-white/10 text-bd-text-muted'
+  return colorMap[props.card.category] || 'bg-bd-tag-bg text-bd-text-muted'
 })
 
 const difficultyClass = computed(() => {
   const classMap = {
-    'beginner': 'bg-bd-green/20 text-bd-green',
-    'intermediate': 'bg-bd-amber/20 text-bd-amber',
-    'advanced': 'bg-bd-pink/20 text-bd-pink'
+    'beginner': 'bg-bd-green/20 text-bd-green border border-bd-green/30',
+    'intermediate': 'bg-bd-amber/20 text-bd-amber border border-bd-amber/30',
+    'advanced': 'bg-bd-pink/20 text-bd-pink border border-bd-pink/30'
   }
-  return classMap[props.card.difficulty] || 'bg-white/10 text-bd-text-muted'
+  return classMap[props.card.difficulty] || 'bg-bd-tag-bg text-bd-text-muted'
 })
 
 const impactClass = computed(() => {
   const classMap = {
-    'high': 'bg-bd-purple/20 text-bd-purple',
-    'medium': 'bg-bd-blue/20 text-bd-blue',
-    'low': 'bg-white/10 text-bd-text-muted'
+    'high': 'bg-bd-purple/20 text-bd-purple border border-bd-purple/30',
+    'medium': 'bg-bd-blue/20 text-bd-blue border border-bd-blue/30',
+    'low': 'bg-bd-tag-bg text-bd-text-muted border border-bd-border-default'
   }
-  return classMap[props.card.impact] || 'bg-white/10 text-bd-text-muted'
+  return classMap[props.card.impact] || 'bg-bd-tag-bg text-bd-text-muted'
 })
 
 const toggleExpand = () => {
@@ -199,7 +199,7 @@ const copyEntry = async () => {
 <style scoped>
 .slide-enter-active,
 .slide-leave-active {
-  transition: all 0.3s ease;
+  transition: all var(--bd-transition-slow);
 }
 
 .slide-enter-from,
@@ -212,13 +212,5 @@ const copyEntry = async () => {
 .slide-leave-from {
   opacity: 1;
   max-height: 1000px;
-}
-
-.copy-btn {
-  @apply flex items-center gap-1.5 px-2 py-1 rounded text-xs text-bd-text-muted hover:text-bd-text-primary hover:bg-white/[0.06] transition-colors;
-}
-
-.code-block {
-  @apply p-3 rounded-lg bg-bd-bg-tertiary text-bd-text-secondary font-mono;
 }
 </style>

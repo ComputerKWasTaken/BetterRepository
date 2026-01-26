@@ -14,7 +14,7 @@
     </header>
 
     <!-- Tab Navigation -->
-    <div class="flex gap-2 border-b border-white/[0.06] pb-2">
+    <div class="flex gap-2 border-b border-bd-border-subtle pb-2">
       <button
         v-for="tab in tabs"
         :key="tab.id"
@@ -22,7 +22,7 @@
         class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2"
         :class="activeTab === tab.id 
           ? 'bg-bd-accent-primary/20 text-bd-accent-light' 
-          : 'text-bd-text-muted hover:text-bd-text-primary hover:bg-white/[0.06]'"
+          : 'text-bd-text-muted hover:text-bd-text-primary hover:bg-bd-bg-tertiary'"
       >
         <component :is="tab.icon" class="w-4 h-4" />
         {{ tab.label }}
@@ -57,7 +57,7 @@
                 <li>• Control pacing and scene progression</li>
               </ul>
             </div>
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
                 <Info class="w-4 h-4 text-bd-blue" />
                 Default Instructions
@@ -84,7 +84,7 @@
             <p class="text-sm text-bd-text-secondary mb-3">
               Start by defining the AI's persona. This sets the tone for everything that follows.
             </p>
-            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-white/[0.06] font-mono text-sm">
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle font-mono text-sm">
               <span class="text-bd-green">You are a creative author, known for your dark and brutal horror books 
               that are exciting, suspenseful and thrilling. Your task is to use your skills to provide 
               matching style in this story.</span>
@@ -140,7 +140,7 @@
         </h2>
         <div class="space-y-4">
           <div class="grid md:grid-cols-3 gap-4">
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
                 <Target class="w-4 h-4 text-bd-amber" />
                 Use Commands
@@ -150,7 +150,7 @@
                 <strong>Be</strong>, <strong>Write</strong>, <strong>Remember</strong>
               </p>
             </div>
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
                 <Scissors class="w-4 h-4 text-bd-green" />
                 Be Precise
@@ -159,7 +159,7 @@
                 Avoid long, vague instructions. Break complex rules into smaller, specific ones.
               </p>
             </div>
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
                 <Scale class="w-4 h-4 text-bd-blue" />
                 Match Complexity
@@ -198,7 +198,7 @@
         
         <div class="space-y-4">
           <!-- Temperature -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <div class="flex items-center gap-3 mb-2">
               <Thermometer class="w-5 h-5 text-bd-pink" />
               <h3 class="font-semibold text-bd-text-primary">Temperature (T)</h3>
@@ -215,7 +215,7 @@
           </div>
 
           <!-- Top K -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <div class="flex items-center gap-3 mb-2">
               <ListOrdered class="w-5 h-5 text-bd-amber" />
               <h3 class="font-semibold text-bd-text-primary">Top K</h3>
@@ -232,7 +232,7 @@
           </div>
 
           <!-- Top P -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <div class="flex items-center gap-3 mb-2">
               <Percent class="w-5 h-5 text-bd-green" />
               <h3 class="font-semibold text-bd-text-primary">Top P (Nucleus Sampling)</h3>
@@ -250,7 +250,7 @@
 
           <!-- Presence & Frequency Penalties -->
           <div class="grid md:grid-cols-2 gap-4">
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <div class="flex items-center gap-3 mb-2">
                 <UserPlus class="w-5 h-5 text-bd-purple" />
                 <h3 class="font-semibold text-bd-text-primary">Presence Penalty (PP)</h3>
@@ -260,7 +260,7 @@
               </p>
               <p class="text-xs text-bd-text-muted mt-1">Typical: 0.2 - 0.8</p>
             </div>
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <div class="flex items-center gap-3 mb-2">
                 <Repeat class="w-5 h-5 text-bd-cyan" />
                 <h3 class="font-semibold text-bd-text-primary">Frequency Penalty (FP)</h3>
@@ -305,7 +305,7 @@
 
         <div class="grid md:grid-cols-2 gap-4">
           <!-- Pacing Issues -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
               <Clock class="w-4 h-4 text-bd-amber" />
               Pacing Control
@@ -327,7 +327,7 @@
           </div>
 
           <!-- AI Writing For You -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
               <UserX class="w-4 h-4 text-bd-pink" />
               AI Writing For Your Character
@@ -341,7 +341,7 @@
           </div>
 
           <!-- Repetition -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
               <Repeat class="w-4 h-4 text-bd-cyan" />
               Repetition Issues
@@ -355,7 +355,7 @@
           </div>
 
           <!-- Plot Armor -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
               <Shield class="w-4 h-4 text-bd-green" />
               Plot Armor & Stakes
@@ -369,7 +369,7 @@
           </div>
 
           <!-- Focus Issues -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
               <Focus class="w-4 h-4 text-bd-purple" />
               Focus & Attention
@@ -385,7 +385,7 @@
           </div>
 
           <!-- Style Issues -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
               <Type class="w-4 h-4 text-bd-amber" />
               Style & Formatting
@@ -401,7 +401,7 @@
           </div>
 
           <!-- Sudden Events -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
               <Zap class="w-4 h-4 text-bd-pink" />
               "Suddenly" Moments
@@ -415,7 +415,7 @@
           </div>
 
           <!-- Description Balance -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
               <FileText class="w-4 h-4 text-bd-blue" />
               Description Balance
@@ -626,7 +626,7 @@ Instructions:
               class="tag cursor-pointer transition-all"
               :class="selectedCategories.includes(category.id) 
                 ? 'bg-bd-accent-primary/20 text-bd-accent-light border border-bd-accent-primary/30' 
-                : 'hover:bg-white/[0.12]'"
+                : 'hover:bg-bd-tag-bg'"
             >
               {{ category.name }}
             </button>
@@ -644,7 +644,7 @@ Instructions:
               class="tag cursor-pointer transition-all"
               :class="selectedDifficulties.includes(diff.id) 
                 ? diff.activeClass 
-                : 'hover:bg-white/[0.12]'"
+                : 'hover:bg-bd-tag-bg'"
             >
               {{ diff.label }}
             </button>
@@ -662,7 +662,7 @@ Instructions:
               class="tag cursor-pointer transition-all"
               :class="selectedImpacts.includes(imp.id) 
                 ? imp.activeClass 
-                : 'hover:bg-white/[0.12]'"
+                : 'hover:bg-bd-tag-bg'"
             >
               {{ imp.label }}
             </button>
@@ -680,7 +680,7 @@ Instructions:
         <span class="text-bd-text-muted">Sort by:</span>
         <select 
           v-model="sortBy"
-          class="bg-bd-bg-elevated border border-white/10 rounded-lg px-3 py-1.5 text-sm text-bd-text-primary outline-none focus:border-bd-accent-primary"
+          class="select"
         >
           <option value="name">Name</option>
           <option value="category">Category</option>

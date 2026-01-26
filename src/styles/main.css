@@ -90,6 +90,15 @@ body {
     @apply border-bd-accent-primary shadow-[0_0_0_3px_rgba(255,149,0,0.12)];
   }
 
+  /* Select styles */
+  .select {
+    @apply bg-bd-bg-elevated border border-white/10 rounded-lg px-3 py-2.5 text-sm text-bd-text-primary outline-none transition-all duration-200 cursor-pointer;
+  }
+
+  .select:focus {
+    @apply border-bd-accent-primary shadow-[0_0_0_3px_rgba(255,149,0,0.12)];
+  }
+
   /* Tag styles */
   .tag {
     @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white/[0.08] text-bd-text-secondary;

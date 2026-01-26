@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="script-item rounded-xl border border-white/[0.06] bg-bd-bg-secondary overflow-hidden transition-all"
+    class="script-item rounded-xl border border-bd-border-subtle bg-bd-bg-secondary overflow-hidden transition-all"
     :class="{ 'ring-2 ring-bd-accent-primary': isExpanded }"
   >
     <!-- Card Header -->
@@ -31,7 +31,7 @@
         </div>
         <button 
           @click.stop="copyMainContent"
-          class="p-2 rounded-lg hover:bg-white/[0.06] transition-colors flex-shrink-0 text-bd-text-muted hover:text-bd-text-primary"
+          class="p-2 rounded-lg hover:bg-bd-bg-tertiary transition-colors flex-shrink-0 text-bd-text-muted hover:text-bd-text-primary"
           title="Copy script"
         >
           <span class="text-sm">{{ copied ? '✓' : '📋' }}</span>
@@ -60,9 +60,9 @@
 
     <!-- Expanded Content -->
     <Transition name="slide">
-      <div v-if="isExpanded" class="border-t border-white/[0.06]">
+      <div v-if="isExpanded" class="border-t border-bd-border-subtle">
         <!-- Purpose -->
-        <div v-if="script.purpose" class="p-4 border-b border-white/[0.06]">
+        <div v-if="script.purpose" class="p-4 border-b border-bd-border-subtle">
           <div class="flex items-center gap-2 text-xs text-bd-text-muted mb-2">
             <span class="text-xs">💡</span>
             <span class="uppercase tracking-wider font-medium">Purpose</span>
@@ -71,7 +71,7 @@
         </div>
 
         <!-- Scenario Link -->
-        <div v-if="script.scenarioLink" class="px-4 py-3 border-b border-white/[0.06]">
+        <div v-if="script.scenarioLink" class="px-4 py-3 border-b border-bd-border-subtle">
           <a 
             :href="script.scenarioLink" 
             target="_blank"
@@ -104,7 +104,7 @@
         </div>
 
         <!-- Multi-File Content -->
-        <div v-if="script.files" class="divide-y divide-white/[0.06]">
+        <div v-if="script.files" class="divide-y divide-bd-border-subtle">
           <div v-for="(content, fileType) in script.files" :key="fileType" class="p-4">
             <div class="flex items-center justify-between mb-2">
               <div class="flex items-center gap-2 text-xs text-bd-text-muted">
@@ -170,11 +170,11 @@ const copied = ref(false)
 
 const difficultyClass = computed(() => {
   const classMap = {
-    'beginner': 'bg-bd-green/20 text-bd-green',
-    'intermediate': 'bg-bd-amber/20 text-bd-amber',
-    'advanced': 'bg-bd-pink/20 text-bd-pink'
+    'beginner': 'bg-bd-green/20 text-bd-green border border-bd-green/30',
+    'intermediate': 'bg-bd-amber/20 text-bd-amber border border-bd-amber/30',
+    'advanced': 'bg-bd-pink/20 text-bd-pink border border-bd-pink/30'
   }
-  return classMap[props.script.difficulty] || 'bg-white/10 text-bd-text-muted'
+  return classMap[props.script.difficulty] || 'bg-bd-tag-bg text-bd-text-muted'
 })
 
 const fileTypeClass = computed(() => {
@@ -184,7 +184,7 @@ const fileTypeClass = computed(() => {
     'output': 'bg-bd-amber/20 text-bd-amber',
     'library': 'bg-bd-purple/20 text-bd-purple'
   }
-  return classMap[props.script.fileType] || 'bg-white/10 text-bd-text-muted'
+  return classMap[props.script.fileType] || 'bg-bd-tag-bg text-bd-text-muted'
 })
 
 const getFileIcon = (fileType) => {
@@ -224,7 +224,7 @@ const copyContent = async (content) => {
 <style scoped>
 .slide-enter-active,
 .slide-leave-active {
-  transition: all 0.3s ease;
+  transition: all var(--bd-transition-slow);
 }
 
 .slide-enter-from,
@@ -239,11 +239,8 @@ const copyContent = async (content) => {
   max-height: 2000px;
 }
 
-.copy-btn {
-  @apply flex items-center gap-1.5 px-2 py-1 rounded text-xs text-bd-text-muted hover:text-bd-text-primary hover:bg-white/[0.06] transition-colors;
-}
-
 .code-block {
-  @apply p-3 rounded-lg bg-bd-bg-tertiary text-bd-text-secondary font-mono max-h-[400px] overflow-y-auto;
+  max-height: 400px;
+  overflow-y: auto;
 }
 </style>

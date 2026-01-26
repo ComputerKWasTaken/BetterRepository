@@ -14,7 +14,7 @@
     </header>
 
     <!-- Tab Navigation -->
-    <div class="flex gap-2 border-b border-white/[0.06] pb-2">
+    <div class="flex gap-2 border-b border-bd-border-subtle pb-2">
       <button
         v-for="tab in tabs"
         :key="tab.id"
@@ -22,7 +22,7 @@
         class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2"
         :class="activeTab === tab.id 
           ? 'bg-bd-accent-primary/20 text-bd-accent-light' 
-          : 'text-bd-text-muted hover:text-bd-text-primary hover:bg-white/[0.06]'"
+          : 'text-bd-text-muted hover:text-bd-text-primary hover:bg-bd-bg-tertiary'"
       >
         <component :is="tab.icon" class="w-4 h-4" />
         {{ tab.label }}
@@ -131,7 +131,7 @@
         </p>
         
         <div class="grid md:grid-cols-2 gap-4 mb-4">
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
               <Plus class="w-4 h-4 text-bd-purple" />
               When to Create a Story Card
@@ -155,7 +155,7 @@
               </li>
             </ul>
           </div>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
               <RefreshCw class="w-4 h-4 text-bd-cyan" />
               Maintenance
@@ -169,7 +169,7 @@
           </div>
         </div>
 
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-white/[0.06]">
+        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
           <p class="text-sm text-bd-text-secondary">
             <strong class="text-bd-text-primary">Want more on Story Cards?</strong> Check out our 
             <router-link to="/story-cards" class="text-bd-accent-primary hover:underline">Story Cards Guide</router-link> 
@@ -190,28 +190,28 @@
         </p>
         
         <div class="space-y-3 mb-4">
-          <div class="p-3 rounded-lg bg-bd-bg-primary border border-white/[0.06] flex items-start gap-3">
+          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle flex items-start gap-3">
             <MessageSquare class="w-4 h-4 text-bd-amber mt-1 flex-shrink-0" />
             <div class="text-sm">
               <span class="text-bd-text-secondary">Peasants talking like modern teenagers?</span>
               <span class="text-bd-text-muted"> → Add a line about dialect/speech patterns</span>
             </div>
           </div>
-          <div class="p-3 rounded-lg bg-bd-bg-primary border border-white/[0.06] flex items-start gap-3">
+          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle flex items-start gap-3">
             <Heart class="w-4 h-4 text-bd-amber mt-1 flex-shrink-0" />
             <div class="text-sm">
               <span class="text-bd-text-secondary">Everyone too nice?</span>
               <span class="text-bd-text-muted"> → Add rules about moral ambiguity</span>
             </div>
           </div>
-          <div class="p-3 rounded-lg bg-bd-bg-primary border border-white/[0.06] flex items-start gap-3">
+          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle flex items-start gap-3">
             <Volume2 class="w-4 h-4 text-bd-amber mt-1 flex-shrink-0" />
             <div class="text-sm">
               <span class="text-bd-text-secondary">Not enough sound descriptions?</span>
               <span class="text-bd-text-muted"> → Add a line about sensory details</span>
             </div>
           </div>
-          <div class="p-3 rounded-lg bg-bd-bg-primary border border-white/[0.06] flex items-start gap-3">
+          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle flex items-start gap-3">
             <Ruler class="w-4 h-4 text-bd-amber mt-1 flex-shrink-0" />
             <div class="text-sm">
               <span class="text-bd-text-secondary">Using wrong measurement system?</span>
@@ -224,7 +224,7 @@
           With a good instruction set, you shouldn't need frequent updates. But add new rules as they emerge.
         </p>
         
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-white/[0.06] mt-4">
+        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle mt-4">
           <p class="text-sm text-bd-text-secondary">
             <strong class="text-bd-text-primary">Want more on AI Instructions?</strong> Check out our 
             <router-link to="/ai-instructions" class="text-bd-accent-primary hover:underline">AI Instructions Guide</router-link> 
@@ -332,7 +332,7 @@
           over the previous scene.
         </p>
         
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-white/[0.06]">
+        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
           <h3 class="font-semibold text-bd-text-primary mb-2">Scene Break Markers</h3>
           <p class="text-sm text-bd-text-secondary mb-3">
             Most models understand using <code class="text-bd-green">---</code> or <code class="text-bd-green">***</code> 
@@ -359,7 +359,7 @@
         
         <div class="space-y-4">
           <!-- Be Terse -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
               <Scissors class="w-4 h-4 text-bd-green" />
               Be Terse
@@ -371,7 +371,7 @@
           </div>
 
           <!-- Make AI Remember -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
               <MessageCircle class="w-4 h-4 text-bd-blue" />
               Make the AI Remember Something
@@ -393,7 +393,7 @@
           </div>
 
           <!-- Avoid Confusing AI -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
               <XCircle class="w-4 h-4 text-bd-pink" />
               Avoid Confusing the AI
@@ -405,7 +405,7 @@
           </div>
 
           <!-- Regular Updates -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
               <RefreshCw class="w-4 h-4 text-bd-cyan" />
               Regular Maintenance
@@ -418,7 +418,7 @@
           </div>
 
           <!-- Edit Outputs -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
               <Edit class="w-4 h-4 text-bd-amber" />
               Edit AI Outputs
@@ -480,7 +480,7 @@
         v-model="searchQuery"
         type="text"
         placeholder="Search templates..."
-        class="w-full bg-bd-bg-elevated border border-white/10 rounded-lg px-4 py-2.5 text-sm text-bd-text-primary placeholder-bd-text-muted outline-none focus:border-bd-accent-primary"
+        class="input"
       />
     </div>
 
@@ -509,7 +509,7 @@
               class="tag cursor-pointer transition-all"
               :class="selectedCategories.includes(category.id) 
                 ? 'bg-bd-accent-primary/20 text-bd-accent-light border border-bd-accent-primary/30' 
-                : 'hover:bg-white/[0.12]'"
+                : 'hover:bg-bd-tag-bg'"
             >
               {{ category.name }}
             </button>
@@ -527,7 +527,7 @@
               class="tag cursor-pointer transition-all"
               :class="selectedDifficulties.includes(diff.id) 
                 ? diff.activeClass 
-                : 'hover:bg-white/[0.12]'"
+                : 'hover:bg-bd-tag-bg'"
             >
               {{ diff.label }}
             </button>
@@ -545,7 +545,7 @@
               class="tag cursor-pointer transition-all"
               :class="selectedImpacts.includes(imp.id) 
                 ? imp.activeClass 
-                : 'hover:bg-white/[0.12]'"
+                : 'hover:bg-bd-tag-bg'"
             >
               {{ imp.label }}
             </button>
@@ -563,7 +563,7 @@
         <span class="text-bd-text-muted">Sort by:</span>
         <select 
           v-model="sortBy"
-          class="bg-bd-bg-elevated border border-white/10 rounded-lg px-3 py-1.5 text-sm text-bd-text-primary outline-none focus:border-bd-accent-primary"
+          class="select"
         >
           <option value="name">Name</option>
           <option value="category">Category</option>
@@ -711,7 +711,7 @@ const difficulties = [
 const impacts = [
   { id: 'high', label: 'High Impact', activeClass: 'bg-bd-purple/20 text-bd-purple border border-bd-purple/30' },
   { id: 'medium', label: 'Medium Impact', activeClass: 'bg-bd-blue/20 text-bd-blue border border-bd-blue/30' },
-  { id: 'low', label: 'Low Impact', activeClass: 'bg-white/20 text-bd-text-muted border border-white/20' }
+  { id: 'low', label: 'Low Impact', activeClass: 'bg-bd-tag-bg text-bd-text-muted border border-bd-border-default' }
 ]
 
 // Filter templates by category

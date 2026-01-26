@@ -1,7 +1,7 @@
 <template>
-  <aside class="fixed left-0 top-0 h-full w-64 bg-bd-bg-secondary border-r border-white/[0.06] flex flex-col z-50">
+  <aside class="fixed left-0 top-0 h-full w-64 bg-bd-bg-secondary border-r border-bd-border-subtle flex flex-col" style="z-index: var(--bd-z-fixed)">
     <!-- Logo Header -->
-    <div class="p-6 border-b border-white/[0.06]">
+    <div class="p-6 border-b border-bd-border-subtle">
       <router-link to="/" class="flex items-center gap-3 group">
         <div class="w-10 h-10 rounded-lg overflow-hidden shadow-glow">
           <img src="/betterrepository_logo.png" alt="BetterRepository" class="w-full h-full object-cover" />
@@ -35,7 +35,7 @@
         >
           <component :is="item.icon" class="w-4 h-4" />
           <span>{{ item.label }}</span>
-          <span v-if="item.count" class="ml-auto text-xs text-bd-text-muted bg-white/[0.06] px-2 py-0.5 rounded-full">
+          <span v-if="item.count" class="ml-auto text-xs text-bd-text-muted bg-bd-tag-bg px-2 py-0.5 rounded-full">
             {{ item.count }}
           </span>
         </router-link>
@@ -71,7 +71,7 @@
     </nav>
 
     <!-- Footer -->
-    <div class="p-4 border-t border-white/[0.06]">
+    <div class="p-4 border-t border-bd-border-subtle">
       <div class="text-xs text-bd-text-muted text-center">
         <p class="mt-1 flex items-center justify-center gap-1">Made with <Heart class="w-3 h-3 text-bd-error" /> by computerK</p>
       </div>
@@ -83,7 +83,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { 
-  LayoutGrid, ScrollText, Bookmark, Drama, Settings,
+  LayoutGrid, ScrollText, Bookmark, Drama, Code,
   Link2, GitPullRequest, MessageCircle, ExternalLink, Heart
 } from 'lucide-vue-next'
 
@@ -93,7 +93,7 @@ const mainNavItems = [
   { path: '/ai-instructions', label: 'AI Instructions', icon: ScrollText, count: null },
   { path: '/plot-components', label: 'Plot Components', icon: Bookmark, count: null },
   { path: '/story-cards', label: 'Story Cards', icon: Drama, count: null },
-  { path: '/scripts', label: 'Scripts', icon: Settings, count: null },
+  { path: '/scripts', label: 'Scripts', icon: Code, count: null },
 ]
 
 const isActive = (path) => {

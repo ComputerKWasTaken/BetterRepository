@@ -33,7 +33,7 @@
         </div>
         <button 
           @click.stop="toggleFavorite"
-          class="p-2 rounded-lg hover:bg-white/[0.06] transition-colors flex-shrink-0"
+          class="p-2 rounded-lg hover:bg-bd-bg-tertiary transition-colors flex-shrink-0"
           :class="isFavorited ? 'text-bd-accent-primary' : 'text-bd-text-muted'"
         >
           <span class="text-sm">{{ isFavorited ? '❤️' : '🤍' }}</span>
@@ -57,9 +57,9 @@
 
     <!-- Expanded Content -->
     <Transition name="slide">
-      <div v-if="isExpanded" class="border-t border-white/[0.06]">
+      <div v-if="isExpanded" class="border-t border-bd-border-subtle">
         <!-- Purpose -->
-        <div v-if="resource.purpose" class="p-4 border-b border-white/[0.06]">
+        <div v-if="resource.purpose" class="p-4 border-b border-bd-border-subtle">
           <div class="flex items-center gap-2 text-xs text-bd-text-muted mb-2">
             <span class="text-xs">ℹ</span>
             <span class="uppercase tracking-wider font-medium">Purpose</span>
@@ -158,16 +158,16 @@ const difficultyClass = computed(() => {
     'intermediate': 'bg-bd-amber/20 text-bd-amber border border-bd-amber/30',
     'advanced': 'bg-bd-pink/20 text-bd-pink border border-bd-pink/30'
   }
-  return classes[props.resource.difficulty] || 'bg-white/10 text-bd-text-muted'
+  return classes[props.resource.difficulty] || 'bg-bd-tag-bg text-bd-text-muted'
 })
 
 const impactClass = computed(() => {
   const classes = {
     'high': 'bg-bd-purple/20 text-bd-purple border border-bd-purple/30',
     'medium': 'bg-bd-blue/20 text-bd-blue border border-bd-blue/30',
-    'low': 'bg-white/10 text-bd-text-muted border border-white/10'
+    'low': 'bg-bd-tag-bg text-bd-text-muted border border-bd-border-default'
   }
-  return classes[props.resource.impact] || 'bg-white/10 text-bd-text-muted'
+  return classes[props.resource.impact] || 'bg-bd-tag-bg text-bd-text-muted'
 })
 
 const formatId = (id) => {

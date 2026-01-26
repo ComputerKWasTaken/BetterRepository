@@ -61,28 +61,28 @@
         What Can You Submit?
       </h2>
       <div class="grid md:grid-cols-2 gap-3">
-        <div class="flex items-center gap-3 p-3 rounded-lg bg-bd-bg-tertiary/50">
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
           <ScrollText class="w-5 h-5 text-bd-amber" />
           <div>
             <span class="font-medium text-bd-text-primary">AI Instructions</span>
             <span class="text-sm text-bd-text-muted ml-2">Style, pacing, tone rules</span>
           </div>
         </div>
-        <div class="flex items-center gap-3 p-3 rounded-lg bg-bd-bg-tertiary/50">
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
           <Bookmark class="w-5 h-5 text-bd-blue" />
           <div>
             <span class="font-medium text-bd-text-primary">Plot Components</span>
             <span class="text-sm text-bd-text-muted ml-2">Author's Notes, Memory Banks</span>
           </div>
         </div>
-        <div class="flex items-center gap-3 p-3 rounded-lg bg-bd-bg-tertiary/50">
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
           <Drama class="w-5 h-5 text-bd-purple" />
           <div>
             <span class="font-medium text-bd-text-primary">Story Cards</span>
             <span class="text-sm text-bd-text-muted ml-2">Characters, locations, items</span>
           </div>
         </div>
-        <div class="flex items-center gap-3 p-3 rounded-lg bg-bd-bg-tertiary/50">
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
           <Code class="w-5 h-5 text-bd-cyan" />
           <div>
             <span class="font-medium text-bd-text-primary">Scripts</span>
@@ -149,7 +149,7 @@ Favor active voice over passive. Every word should earn its place.</pre>
       </h2>
       <div class="grid md:grid-cols-2 gap-4">
         <!-- Pull Request -->
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary/50 border border-white/[0.06]">
+        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
           <div class="flex items-center gap-3 mb-2">
             <Github class="w-5 h-5 text-bd-text-primary" />
             <h3 class="font-medium text-bd-text-primary">Pull Request</h3>
@@ -168,9 +168,9 @@ Favor active voice over passive. Every word should earn its place.</pre>
         </div>
 
         <!-- Discord -->
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary/50 border border-white/[0.06]">
+        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
           <div class="flex items-center gap-3 mb-2">
-            <MessageCircle class="w-5 h-5 text-[#5865F2]" />
+            <MessageCircle class="w-5 h-5 text-bd-blue" />
             <h3 class="font-medium text-bd-text-primary">Discord</h3>
           </div>
           <p class="text-sm text-bd-text-secondary mb-3">

@@ -14,7 +14,7 @@
     </header>
 
     <!-- Tab Navigation -->
-    <div class="flex gap-2 border-b border-white/[0.06] pb-2">
+    <div class="flex gap-2 border-b border-bd-border-subtle pb-2">
       <button
         v-for="tab in tabs"
         :key="tab.id"
@@ -22,7 +22,7 @@
         class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2"
         :class="activeTab === tab.id 
           ? 'bg-bd-accent-primary/20 text-bd-accent-light' 
-          : 'text-bd-text-muted hover:text-bd-text-primary hover:bg-white/[0.06]'"
+          : 'text-bd-text-muted hover:text-bd-text-primary hover:bg-bd-bg-tertiary'"
       >
         <component :is="tab.icon" class="w-4 h-4" />
         {{ tab.label }}
@@ -92,7 +92,7 @@
           All modifiers follow the same basic structure. The <code class="text-bd-green">text</code> parameter 
           contains the content you're modifying, and you return an object with the modified text.
         </p>
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-white/[0.06]">
+        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
           <pre class="text-sm text-bd-text-secondary font-mono overflow-x-auto"><span class="text-bd-purple">const</span> <span class="text-bd-cyan">modifier</span> = (<span class="text-bd-amber">text</span>) => {
   <span class="text-bd-text-muted">// This is an empty modifier.</span>
   <span class="text-bd-text-muted">// Code normally goes here.</span>
@@ -198,7 +198,7 @@
         
         <div class="space-y-4">
           <!-- text -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2">
               <code class="text-bd-green">text</code>
             </h3>
@@ -210,7 +210,7 @@
           </div>
 
           <!-- history -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2">
               <code class="text-bd-green">history</code>
             </h3>
@@ -222,7 +222,7 @@
           </div>
 
           <!-- storyCards -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2">
               <code class="text-bd-green">storyCards</code>
             </h3>
@@ -236,7 +236,7 @@
           </div>
 
           <!-- state -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2">
               <code class="text-bd-green">state</code>
             </h3>
@@ -250,7 +250,7 @@
           </div>
 
           <!-- info -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2">
               <code class="text-bd-green">info</code>
             </h3>
@@ -283,7 +283,7 @@
         </h2>
         
         <div class="space-y-4">
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2">
               <code class="text-bd-green">log(message)</code>
             </h3>
@@ -292,7 +292,7 @@
             </p>
           </div>
 
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2">
               <code class="text-bd-green">addStoryCard(keys, entry, type)</code>
             </h3>
@@ -301,7 +301,7 @@
             </p>
           </div>
 
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2">
               <code class="text-bd-green">updateStoryCard(index, keys, entry, type)</code>
             </h3>
@@ -310,7 +310,7 @@
             </p>
           </div>
 
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2">
               <code class="text-bd-green">removeStoryCard(index)</code>
             </h3>
@@ -332,7 +332,7 @@
         </p>
         
         <div class="space-y-4">
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2">
               <code class="text-bd-green">{ text: "modified text" }</code>
             </h3>
@@ -341,7 +341,7 @@
             </p>
           </div>
 
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2">
               <code class="text-bd-green">{ stop: true }</code>
             </h3>
@@ -378,7 +378,7 @@
         </p>
 
         <!-- buildCard -->
-        <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06] mb-4">
+        <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle mb-4">
           <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
             <Plus class="w-4 h-4 text-bd-green" />
             buildCard() - Create Story Cards
@@ -424,7 +424,7 @@ log(exampleCard);</pre>
         </div>
 
         <!-- getCard -->
-        <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+        <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
           <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
             <Search class="w-4 h-4 text-bd-blue" />
             getCard() - Find Story Cards
@@ -533,7 +533,7 @@ if (card !== null) {
           <a 
             href="https://github.com/latitudegames/Scripting" 
             target="_blank"
-            class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06] hover:border-bd-accent-primary/50 transition-colors group"
+            class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle hover:border-bd-accent-primary/50 transition-colors group"
           >
             <h3 class="font-semibold text-bd-text-primary mb-1 flex items-center gap-2">
               <FileCode class="w-4 h-4 text-bd-accent-primary" />
@@ -544,7 +544,7 @@ if (card !== null) {
           <a 
             href="https://docs.google.com/document/d/1DV6b0K-a5mTBpO1-ZbMSaXFOJxGi5MnNnHQCHF0c-DQ" 
             target="_blank"
-            class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06] hover:border-bd-accent-primary/50 transition-colors group"
+            class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle hover:border-bd-accent-primary/50 transition-colors group"
           >
             <h3 class="font-semibold text-bd-text-primary mb-1 flex items-center gap-2">
               <BookOpen class="w-4 h-4 text-bd-blue" />
@@ -555,7 +555,7 @@ if (card !== null) {
           <a 
             href="https://github.com/LewdLeah/AI-Dungeon-Auto-Cards" 
             target="_blank"
-            class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06] hover:border-bd-accent-primary/50 transition-colors group"
+            class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle hover:border-bd-accent-primary/50 transition-colors group"
           >
             <h3 class="font-semibold text-bd-text-primary mb-1 flex items-center gap-2">
               <Layers class="w-4 h-4 text-bd-purple" />
@@ -592,12 +592,12 @@ if (card !== null) {
           v-model="searchQuery"
           type="text"
           placeholder="Search scripts..."
-          class="w-full bg-bd-bg-elevated border border-white/10 rounded-lg px-4 py-2.5 text-sm text-bd-text-primary placeholder-bd-text-muted outline-none focus:border-bd-accent-primary"
+          class="input"
         />
       </div>
       <select 
         v-model="selectedCategory"
-        class="bg-bd-bg-elevated border border-white/10 rounded-lg px-3 py-2.5 text-sm text-bd-text-primary outline-none focus:border-bd-accent-primary"
+        class="select"
       >
         <option value="">All Categories</option>
         <option v-for="cat in categories" :key="cat.id" :value="cat.id">
@@ -606,7 +606,7 @@ if (card !== null) {
       </select>
       <select 
         v-model="selectedDifficulty"
-        class="bg-bd-bg-elevated border border-white/10 rounded-lg px-3 py-2.5 text-sm text-bd-text-primary outline-none focus:border-bd-accent-primary"
+        class="select"
       >
         <option value="">All Difficulties</option>
         <option value="beginner">Beginner</option>
@@ -771,7 +771,7 @@ const getCategoryBgClass = (color) => {
     'bd-pink': 'bg-bd-pink/20',
     'bd-amber': 'bg-bd-amber/20'
   }
-  return map[color] || 'bg-white/10'
+  return map[color] || 'bg-bd-tag-bg'
 }
 
 const getCategoryTextClass = (color) => {

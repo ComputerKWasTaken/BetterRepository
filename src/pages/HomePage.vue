@@ -24,7 +24,7 @@
             v-model="searchQuery"
             type="text"
             placeholder="Search instructions, templates, scripts..."
-            class="w-full bg-bd-bg-elevated border border-white/10 rounded-xl pl-12 pr-4 py-3 text-sm text-bd-text-primary placeholder-bd-text-muted outline-none focus:border-bd-accent-primary transition-colors"
+            class="w-full bg-bd-bg-elevated border border-bd-border-default rounded-xl pl-12 pr-4 py-3 text-sm text-bd-text-primary placeholder-bd-text-muted outline-none focus:border-bd-accent-primary transition-colors"
             @keyup.enter="handleSearch"
           />
           <button 
@@ -178,7 +178,7 @@
       </div>
 
       <!-- Community Thank You -->
-      <div class="mt-4 pt-3 border-t border-white/[0.06] text-center">
+      <div class="mt-4 pt-3 border-t border-bd-border-subtle text-center">
         <p class="text-xs text-bd-text-muted flex items-center justify-center gap-2">
           <Users class="w-3 h-3 text-bd-purple" />
           And the entire AI Dungeon Community
@@ -187,7 +187,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="text-center py-4 border-t border-white/[0.06]">
+    <footer class="text-center py-4 border-t border-bd-border-subtle">
       <p class="text-xs text-bd-text-muted flex items-center justify-center gap-1">
         Made with <Heart class="w-3 h-3 text-bd-error" /> by 
         <span class="text-bd-text-secondary font-medium">computerK</span>

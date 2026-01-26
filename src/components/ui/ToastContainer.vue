@@ -1,6 +1,6 @@
 <template>
   <Teleport to="body">
-    <div class="fixed bottom-6 right-6 z-[999999] space-y-3">
+    <div class="fixed bottom-6 right-6 space-y-3" style="z-index: var(--bd-z-toast)">
       <TransitionGroup name="slide">
         <div
           v-for="toast in toasts"

@@ -14,17 +14,17 @@
     </header>
 
     <!-- Navigation Tabs -->
-    <div class="flex gap-2 border-b border-white/[0.06] pb-2 overflow-x-auto">
+    <div class="flex gap-2 border-b border-bd-border-subtle pb-2 overflow-x-auto">
       <button 
         v-for="tab in tabs" 
         :key="tab.id"
         @click="activeTab = tab.id"
-        class="px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+        class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap"
         :class="activeTab === tab.id 
-          ? 'bg-bd-accent-primary text-white' 
-          : 'text-bd-text-secondary hover:text-bd-text-primary hover:bg-white/5'"
+          ? 'bg-bd-accent-primary/20 text-bd-accent-light' 
+          : 'text-bd-text-muted hover:text-bd-text-primary hover:bg-bd-bg-tertiary'"
       >
-        <component :is="tab.icon" class="w-4 h-4 inline-block mr-2" />
+        <component :is="tab.icon" class="w-4 h-4" />
         {{ tab.label }}
       </button>
     </div>
@@ -41,7 +41,7 @@
           Story Cards are notes for the AI about characters, locations, concepts, or any other elements of your story. 
           The AI only consults them when they become relevant.
         </p>
-        <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+        <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
           <p class="text-sm text-bd-text-secondary">
             <strong class="text-bd-text-primary">Key concept:</strong> Their relevance is determined by keywords called 
             <strong class="text-bd-purple">triggers</strong>. Story Cards only go into context when activated because 
@@ -62,7 +62,7 @@
           the time to add them, they can help the AI maintain consistency and add depth to your story.
         </p>
         <div class="grid md:grid-cols-3 gap-4">
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <div class="flex items-center gap-2 mb-2">
               <Camera class="w-4 h-4 text-bd-blue" />
               <h3 class="font-semibold text-bd-text-primary">Capturing Elements</h3>
@@ -72,7 +72,7 @@
               it scrolls out of context, create a Story Card with the important details.
             </p>
           </div>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <div class="flex items-center gap-2 mb-2">
               <Layers class="w-4 h-4 text-bd-green" />
               <h3 class="font-semibold text-bd-text-primary">Fleshing Out Elements</h3>
@@ -82,7 +82,7 @@
               either writing details yourself or using the Story Card Generator.
             </p>
           </div>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <div class="flex items-center gap-2 mb-2">
               <Globe class="w-4 h-4 text-bd-purple" />
               <h3 class="font-semibold text-bd-text-primary">Preliminary Worldbuilding</h3>
@@ -102,7 +102,7 @@
           Anatomy of a Story Card
         </h2>
         <div class="space-y-3">
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <div class="flex items-start gap-3">
               <Tag class="w-4 h-4 text-bd-text-muted mt-1 flex-shrink-0" />
               <div>
@@ -114,7 +114,7 @@
               </div>
             </div>
           </div>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <div class="flex items-start gap-3">
               <Type class="w-4 h-4 text-bd-text-muted mt-1 flex-shrink-0" />
               <div>
@@ -150,7 +150,7 @@
               </div>
             </div>
           </div>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <div class="flex items-start gap-3">
               <StickyNote class="w-4 h-4 text-bd-text-muted mt-1 flex-shrink-0" />
               <div>
@@ -251,19 +251,19 @@
             Spaces are <strong>critical</strong> in triggers. The AI reads these differently:
           </p>
           <div class="grid md:grid-cols-2 gap-3 mb-4">
-            <div class="p-3 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <code class="text-bd-purple">elf</code>
               <p class="text-xs text-bd-text-muted mt-1">No spaces - triggers on "shelf", "self", etc.</p>
             </div>
-            <div class="p-3 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <code class="text-bd-purple"> elf</code>
               <p class="text-xs text-bd-text-muted mt-1">Space before - won't trigger at start of lines or after quotes</p>
             </div>
-            <div class="p-3 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <code class="text-bd-purple">elf </code>
               <p class="text-xs text-bd-text-muted mt-1">Space after - won't trigger "elves" or "elfish"</p>
             </div>
-            <div class="p-3 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <code class="text-bd-purple"> elf </code>
               <p class="text-xs text-bd-text-muted mt-1">Both spaces - most restrictive, cleanest match</p>
             </div>
@@ -309,14 +309,14 @@
             Capitalization & Pluralization
           </h3>
           <div class="grid md:grid-cols-2 gap-4">
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <h4 class="font-medium text-bd-text-primary mb-2">Case Insensitive</h4>
               <p class="text-sm text-bd-text-secondary">
                 <code>elf</code>, <code>Elf</code>, and <code>ELF</code> all work the same. 
                 Capitalization doesn't matter.
               </p>
             </div>
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <h4 class="font-medium text-bd-text-primary mb-2">Plurals (Usually Free)</h4>
               <p class="text-sm text-bd-text-secondary">
                 <code>boat</code> also triggers on <code>boats</code>. But <code>elf</code> won't trigger 
@@ -391,7 +391,7 @@
           <p class="text-sm text-bd-text-secondary mb-3">
             You can create card networks where one card's Entry mentions another's trigger:
           </p>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <p class="text-sm text-bd-text-secondary">
               <strong>Example:</strong> "Alan" card mentions "Order of Flug" → AI outputs "Order of Flug" → 
               That card activates <em>next turn</em>. Note: include key context in Alan's card too, so the AI 
@@ -458,7 +458,7 @@
           Pro Tips
         </h2>
         <div class="grid md:grid-cols-2 gap-4">
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <div class="flex items-center gap-2 mb-2">
               <Pencil class="w-4 h-4 text-bd-blue" />
               <h3 class="font-semibold text-bd-text-primary">Editable Anytime</h3>
@@ -467,7 +467,7 @@
               Story Cards can be edited at any time, even after starting an adventure. Update them to reflect story changes.
             </p>
           </div>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <div class="flex items-center gap-2 mb-2">
               <Download class="w-4 h-4 text-bd-green" />
               <h3 class="font-semibold text-bd-text-primary">Export & Import</h3>
@@ -476,7 +476,7 @@
               You can export and import Story Cards to use them in different scenarios (browser only).
             </p>
           </div>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <div class="flex items-center gap-2 mb-2">
               <Search class="w-4 h-4 text-bd-purple" />
               <h3 class="font-semibold text-bd-text-primary">Inspect Context</h3>
@@ -485,7 +485,7 @@
               Check if your Cards are activating correctly or triggering when they shouldn't. Common mistake: triggers that occur at wrong times.
             </p>
           </div>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <div class="flex items-center gap-2 mb-2">
               <Infinity class="w-4 h-4 text-bd-amber" />
               <h3 class="font-semibold text-bd-text-primary">No Limit</h3>
@@ -498,7 +498,7 @@
       </section>
 
       <!-- Credit -->
-      <section class="p-4 rounded-lg bg-bd-bg-tertiary border border-white/[0.06]">
+      <section class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
         <p class="text-sm text-bd-text-muted text-center">
           Guide based on the excellent work by <strong class="text-bd-text-secondary">wanderingstar1</strong> (Latitude Team).
           <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="text-bd-accent-primary hover:underline ml-1">
@@ -555,7 +555,7 @@
           v-model="searchQuery"
           type="text"
           placeholder="Search examples and templates..."
-          class="w-full bg-bd-bg-elevated border border-white/10 rounded-lg px-4 py-2.5 text-sm text-bd-text-primary placeholder-bd-text-muted outline-none focus:border-bd-accent-primary"
+          class="input"
         />
       </div>
 
@@ -584,7 +584,7 @@
                 class="tag cursor-pointer transition-all"
                 :class="selectedCategories.includes(category.id) 
                   ? 'bg-bd-accent-primary/20 text-bd-accent-light border border-bd-accent-primary/30' 
-                  : 'hover:bg-white/[0.12]'"
+                  : 'hover:bg-bd-tag-bg'"
               >
                 {{ category.name }}
               </button>
@@ -602,7 +602,7 @@
                 class="tag cursor-pointer transition-all"
                 :class="selectedDifficulties.includes(diff.id) 
                   ? diff.activeClass 
-                  : 'hover:bg-white/[0.12]'"
+                  : 'hover:bg-bd-tag-bg'"
               >
                 {{ diff.label }}
               </button>
@@ -620,7 +620,7 @@
                 class="tag cursor-pointer transition-all"
                 :class="selectedImpacts.includes(imp.id) 
                   ? imp.activeClass 
-                  : 'hover:bg-white/[0.12]'"
+                  : 'hover:bg-bd-tag-bg'"
               >
                 {{ imp.label }}
               </button>
@@ -636,7 +636,7 @@
                 class="tag cursor-pointer transition-all"
                 :class="selectedType === 'examples' 
                   ? 'bg-bd-purple/20 text-bd-purple border border-bd-purple/30' 
-                  : 'hover:bg-white/[0.12]'"
+                  : 'hover:bg-bd-tag-bg'"
               >
                 Examples
               </button>
@@ -645,7 +645,7 @@
                 class="tag cursor-pointer transition-all"
                 :class="selectedType === 'templates' 
                   ? 'bg-bd-green/20 text-bd-green border border-bd-green/30' 
-                  : 'hover:bg-white/[0.12]'"
+                  : 'hover:bg-bd-tag-bg'"
               >
                 Templates
               </button>
@@ -663,7 +663,7 @@
           <span class="text-bd-text-muted">Sort by:</span>
           <select 
             v-model="sortBy"
-            class="bg-bd-bg-elevated border border-white/10 rounded-lg px-3 py-1.5 text-sm text-bd-text-primary outline-none focus:border-bd-accent-primary"
+            class="select"
           >
             <option value="name">Name</option>
             <option value="category">Category</option>
@@ -833,7 +833,7 @@ const difficulties = [
 const impacts = [
   { id: 'high', label: 'High Impact', activeClass: 'bg-bd-purple/20 text-bd-purple border border-bd-purple/30' },
   { id: 'medium', label: 'Medium Impact', activeClass: 'bg-bd-blue/20 text-bd-blue border border-bd-blue/30' },
-  { id: 'low', label: 'Low Impact', activeClass: 'bg-white/20 text-bd-text-muted border border-white/20' }
+  { id: 'low', label: 'Low Impact', activeClass: 'bg-bd-tag-bg text-bd-text-muted border border-bd-border-default' }
 ]
 
 const allCards = computed(() => [...examples.value, ...templates.value])
