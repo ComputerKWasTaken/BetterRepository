@@ -106,7 +106,6 @@
             <div class="flex-1">
               <div class="flex items-center gap-3 mb-2">
                 <h3 class="text-lg font-semibold text-bd-text-primary">BetterDungeon</h3>
-                <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-bd-amber/20 text-bd-amber">Early Access</span>
               </div>
               <p class="text-bd-text-secondary mb-4">
                 An all-in-one browser extension that enhances AI Dungeon with QOL additions and brand new features. 
@@ -161,46 +160,45 @@
 
     <!-- Better Together Section -->
     <section class="card-elevated border-2 border-bd-purple/30">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-bd-accent-primary/10 to-bd-purple/10 flex items-center justify-center flex-shrink-0 relative">
-          <img src="/betterrepository_logo.png" alt="" class="w-6 h-6 absolute -left-1 top-1" />
-          <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="" class="w-6 h-6 absolute -right-1 bottom-1" />
+      <div class="flex items-center gap-3 mb-4">
+        <div class="flex items-center gap-2">
+          <img src="/betterrepository_logo.png" alt="" class="w-8 h-8" />
+          <span class="text-bd-text-muted text-lg">+</span>
+          <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="" class="w-8 h-8" />
         </div>
-        <div class="flex-1">
-          <h2 class="text-lg font-semibold text-bd-text-primary mb-2">Better Together</h2>
-          <p class="text-bd-text-secondary mb-4">
-            BetterDungeon and BetterRepository are designed to complement each other. Use them together for the ultimate AI Dungeon experience.
-          </p>
-          
-          <div class="grid md:grid-cols-2 gap-3 mb-4">
-            <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
-              <ArrowRight class="w-4 h-4 text-bd-accent-primary flex-shrink-0 mt-0.5" />
-              <div>
-                <span class="text-sm text-bd-text-primary font-medium">Find Resources Here</span>
-                <p class="text-xs text-bd-text-secondary mt-0.5">Browse AI Instructions, Plot Components, and Scripts on BetterRepository</p>
-              </div>
-            </div>
-            <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
-              <ArrowRight class="w-4 h-4 text-bd-purple flex-shrink-0 mt-0.5" />
-              <div>
-                <span class="text-sm text-bd-text-primary font-medium">Use Them In-Game</span>
-                <p class="text-xs text-bd-text-secondary mt-0.5">BetterDungeon's Presets let you save and quickly apply resources to your adventures</p>
-              </div>
-            </div>
-            <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
-              <ArrowRight class="w-4 h-4 text-bd-cyan flex-shrink-0 mt-0.5" />
-              <div>
-                <span class="text-sm text-bd-text-primary font-medium">Enhanced Formatting</span>
-                <p class="text-xs text-bd-text-secondary mt-0.5">BetterDungeon renders markdown syntax from BetterRepository resources</p>
-              </div>
-            </div>
-            <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
-              <ArrowRight class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-              <div>
-                <span class="text-sm text-bd-text-primary font-medium">Streamlined Workflow</span>
-                <p class="text-xs text-bd-text-secondary mt-0.5">Copy from BetterRepository, save as a Preset in BetterDungeon, apply with one click</p>
-              </div>
-            </div>
+        <h2 class="text-lg font-semibold text-bd-text-primary">Better Together</h2>
+      </div>
+      <p class="text-bd-text-secondary mb-4">
+        BetterDungeon and BetterRepository are designed to complement each other. Use them together for the ultimate AI Dungeon experience.
+      </p>
+      
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
+          <Search class="w-4 h-4 text-bd-accent-primary flex-shrink-0 mt-0.5" />
+          <div>
+            <span class="text-sm text-bd-text-primary font-medium">Find Resources Here</span>
+            <p class="text-xs text-bd-text-secondary mt-0.5">Browse AI Instructions, Plot Components, and Scripts on BetterRepository</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
+          <Save class="w-4 h-4 text-bd-purple flex-shrink-0 mt-0.5" />
+          <div>
+            <span class="text-sm text-bd-text-primary font-medium">Save as Presets</span>
+            <p class="text-xs text-bd-text-secondary mt-0.5">BetterDungeon's Presets let you save and quickly apply resources to your adventures</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
+          <Type class="w-4 h-4 text-bd-cyan flex-shrink-0 mt-0.5" />
+          <div>
+            <span class="text-sm text-bd-text-primary font-medium">Enhanced Formatting</span>
+            <p class="text-xs text-bd-text-secondary mt-0.5">BetterDungeon renders markdown syntax from BetterRepository resources</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
+          <Zap class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+          <div>
+            <span class="text-sm text-bd-text-primary font-medium">One-Click Apply</span>
+            <p class="text-xs text-bd-text-secondary mt-0.5">Copy from BetterRepository, save as a Preset, apply with one click</p>
           </div>
         </div>
       </div>
@@ -256,6 +254,6 @@
 import { 
   Puzzle, Layers, Github, ExternalLink,
   Home, Gamepad2, Keyboard, Type, Palette, StickyNote, User,
-  Rocket, Lightbulb, MessageCircle, Heart, Link, ArrowRight
+  Rocket, Lightbulb, MessageCircle, Heart, Search, Save, Zap
 } from 'lucide-vue-next'
 </script>
