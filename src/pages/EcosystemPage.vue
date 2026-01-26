@@ -1,14 +1,16 @@
 <template>
   <div class="space-y-6 animate-fade-in">
     <!-- Page Header -->
-    <header>
-      <h1 class="text-2xl font-bold text-bd-text-primary flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-bd-accent-primary/20 flex items-center justify-center">
-          <Sparkles class="w-5 h-5 text-bd-accent-primary" />
-        </div>
+    <header class="text-center py-4">
+      <div class="flex items-center justify-center gap-4 mb-3">
+        <img src="/betterrepository_logo.png" alt="BetterRepository" class="w-12 h-12 object-contain" />
+        <span class="text-3xl text-bd-text-muted">+</span>
+        <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="BetterDungeon" class="w-12 h-12 object-contain" />
+      </div>
+      <h1 class="text-2xl font-bold text-bd-text-primary">
         The "Better" Ecosystem
       </h1>
-      <p class="text-bd-text-secondary mt-2">
+      <p class="text-bd-text-secondary mt-2 max-w-lg mx-auto">
         A suite of community tools designed to enhance your AI Dungeon experience.
       </p>
     </header>
@@ -30,6 +32,26 @@
       </div>
     </section>
 
+    <!-- Quick Links Bar -->
+    <div class="flex flex-wrap gap-3 justify-center">
+      <a href="https://github.com/ComputerKWasTaken/BetterDungeon" target="_blank" rel="noopener noreferrer" 
+         class="flex items-center gap-2 px-4 py-2 rounded-full bg-bd-bg-tertiary border border-bd-border hover:border-bd-accent-primary/50 transition-all">
+        <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="" class="w-5 h-5" />
+        <span class="text-sm text-bd-text-primary font-medium">Get BetterDungeon</span>
+        <ExternalLink class="w-3 h-3 text-bd-text-muted" />
+      </a>
+      <router-link to="/" class="flex items-center gap-2 px-4 py-2 rounded-full bg-bd-bg-tertiary border border-bd-border hover:border-bd-accent-primary/50 transition-all">
+        <img src="/betterrepository_logo.png" alt="" class="w-5 h-5" />
+        <span class="text-sm text-bd-text-primary font-medium">Browse Resources</span>
+      </router-link>
+      <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" rel="noopener noreferrer"
+         class="flex items-center gap-2 px-4 py-2 rounded-full bg-bd-bg-tertiary border border-bd-border hover:border-bd-purple/50 transition-all">
+        <MessageCircle class="w-5 h-5 text-bd-purple" />
+        <span class="text-sm text-bd-text-primary font-medium">Join Discord</span>
+        <ExternalLink class="w-3 h-3 text-bd-text-muted" />
+      </a>
+    </div>
+
     <!-- Projects Grid -->
     <section class="space-y-4">
       <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
@@ -39,11 +61,9 @@
 
       <div class="grid gap-4">
         <!-- BetterRepository -->
-        <div class="card group hover:border-bd-accent-primary/30 transition-all duration-200">
+        <div class="card group hover:border-bd-accent-primary/30 transition-all duration-200 border-2 border-bd-success/30">
           <div class="flex items-start gap-4">
-            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-bd-accent-primary/20 to-bd-purple/20 flex items-center justify-center flex-shrink-0">
-              <BookOpen class="w-7 h-7 text-bd-accent-primary" />
-            </div>
+            <img src="/betterrepository_logo.png" alt="BetterRepository" class="w-14 h-14 object-contain flex-shrink-0" />
             <div class="flex-1">
               <div class="flex items-center gap-3 mb-2">
                 <h3 class="text-lg font-semibold text-bd-text-primary">BetterRepository</h3>
@@ -82,9 +102,7 @@
         <!-- BetterDungeon -->
         <div class="card group hover:border-bd-purple/30 transition-all duration-200">
           <div class="flex items-start gap-4">
-            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-bd-purple/20 to-bd-blue/20 flex items-center justify-center flex-shrink-0">
-              <Chrome class="w-7 h-7 text-bd-purple" />
-            </div>
+            <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="BetterDungeon" class="w-14 h-14 object-contain flex-shrink-0" />
             <div class="flex-1">
               <div class="flex items-center gap-3 mb-2">
                 <h3 class="text-lg font-semibold text-bd-text-primary">BetterDungeon</h3>
@@ -141,6 +159,53 @@
       </div>
     </section>
 
+    <!-- Better Together Section -->
+    <section class="card-elevated border-2 border-bd-purple/30">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-bd-accent-primary/10 to-bd-purple/10 flex items-center justify-center flex-shrink-0 relative">
+          <img src="/betterrepository_logo.png" alt="" class="w-6 h-6 absolute -left-1 top-1" />
+          <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="" class="w-6 h-6 absolute -right-1 bottom-1" />
+        </div>
+        <div class="flex-1">
+          <h2 class="text-lg font-semibold text-bd-text-primary mb-2">Better Together</h2>
+          <p class="text-bd-text-secondary mb-4">
+            BetterDungeon and BetterRepository are designed to complement each other. Use them together for the ultimate AI Dungeon experience.
+          </p>
+          
+          <div class="grid md:grid-cols-2 gap-3 mb-4">
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
+              <ArrowRight class="w-4 h-4 text-bd-accent-primary flex-shrink-0 mt-0.5" />
+              <div>
+                <span class="text-sm text-bd-text-primary font-medium">Find Resources Here</span>
+                <p class="text-xs text-bd-text-secondary mt-0.5">Browse AI Instructions, Plot Components, and Scripts on BetterRepository</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
+              <ArrowRight class="w-4 h-4 text-bd-purple flex-shrink-0 mt-0.5" />
+              <div>
+                <span class="text-sm text-bd-text-primary font-medium">Use Them In-Game</span>
+                <p class="text-xs text-bd-text-secondary mt-0.5">BetterDungeon's Presets let you save and quickly apply resources to your adventures</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
+              <ArrowRight class="w-4 h-4 text-bd-cyan flex-shrink-0 mt-0.5" />
+              <div>
+                <span class="text-sm text-bd-text-primary font-medium">Enhanced Formatting</span>
+                <p class="text-xs text-bd-text-secondary mt-0.5">BetterDungeon renders markdown syntax from BetterRepository resources</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
+              <ArrowRight class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+              <div>
+                <span class="text-sm text-bd-text-primary font-medium">Streamlined Workflow</span>
+                <p class="text-xs text-bd-text-secondary mt-0.5">Copy from BetterRepository, save as a Preset in BetterDungeon, apply with one click</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Coming Soon / Future Projects -->
     <section class="card">
       <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
@@ -189,8 +254,8 @@
 
 <script setup>
 import { 
-  Sparkles, Puzzle, Layers, BookOpen, Chrome, Github, ExternalLink,
+  Puzzle, Layers, Github, ExternalLink,
   Home, Gamepad2, Keyboard, Type, Palette, StickyNote, User,
-  Rocket, Lightbulb, MessageCircle, Heart
+  Rocket, Lightbulb, MessageCircle, Heart, Link, ArrowRight
 } from 'lucide-vue-next'
 </script>
