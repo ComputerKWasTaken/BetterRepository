@@ -588,7 +588,7 @@ Instructions:
           :class="{ 'ring-2 ring-bd-accent-primary': hasActiveFilters }"
         >
           <SlidersHorizontal class="w-4 h-4" />
-          More Filters
+          Filters
           <span v-if="hasActiveFilters" class="w-2 h-2 rounded-full bg-bd-accent-primary"></span>
         </button>
       </div>

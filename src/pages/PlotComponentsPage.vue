@@ -476,11 +476,12 @@
 
     <!-- Search Bar -->
     <div class="relative">
+      <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-bd-text-muted" />
       <input 
         v-model="searchQuery"
         type="text"
         placeholder="Search templates..."
-        class="input"
+        class="input pl-12"
       />
     </div>
 
@@ -682,7 +683,7 @@ import {
   Lightbulb, Check, BookOpen, Layers, HelpCircle, User, Globe, Plus,
   Users, Sword, Star, RefreshCw, MessageSquare, Heart, Volume2, Ruler,
   Rocket, Focus, AlertTriangle, Database, Brain, ArrowRightLeft,
-  Sparkles, Scissors, MessageCircle, XCircle, Edit, SlidersHorizontal, Zap
+  Sparkles, Scissors, MessageCircle, XCircle, Edit, SlidersHorizontal, Zap, Search
 } from 'lucide-vue-next'
 
 const activeTab = ref('templates')

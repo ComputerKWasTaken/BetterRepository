@@ -587,12 +587,13 @@ if (card !== null) {
 
     <!-- Search and Filter -->
     <div class="flex flex-wrap items-center gap-2">
-      <div class="flex-1 min-w-[200px]">
+      <div class="flex-1 min-w-[200px] relative">
+        <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-bd-text-muted" />
         <input 
           v-model="searchQuery"
           type="text"
           placeholder="Search scripts..."
-          class="input"
+          class="input pl-12"
         />
       </div>
       <select 

@@ -122,7 +122,7 @@
     </Transition>
 
     <!-- Expand indicator -->
-    <div class="px-4 pb-3 flex items-center justify-center">
+    <div class="px-4 pb-3 flex items-center justify-center cursor-pointer" @click="toggleExpand">
       <span 
         class="text-sm text-bd-text-muted transition-transform inline-block" 
         :class="{ 'rotate-180': isExpanded }"
