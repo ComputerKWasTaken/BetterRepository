@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <div class="relative">
-      <span class="absolute left-4 top-1/2 -translate-y-1/2 text-bd-text-muted">🔍</span>
+      <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-bd-text-muted" />
       <input 
         v-model="localQuery"
         type="text"
@@ -17,7 +17,7 @@
         @click="clearSearch"
         class="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted hover:text-bd-text-primary transition-colors"
       >
-        <span class="text-sm">✕</span>
+        <X class="w-4 h-4" />
       </button>
     </div>
 
@@ -44,7 +44,7 @@
             @mousedown.prevent="selectSuggestion(item)"
             class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-sm text-bd-text-secondary hover:bg-bd-bg-tertiary hover:text-bd-text-primary"
           >
-            <span class="text-sm text-bd-text-muted">🕐</span>
+            <Clock class="w-4 h-4 text-bd-text-muted" />
             {{ item }}
           </button>
         </div>
@@ -58,7 +58,7 @@
             @mousedown.prevent="selectSuggestion(item)"
             class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-sm text-bd-text-secondary hover:bg-bd-bg-tertiary hover:text-bd-text-primary"
           >
-            <span class="text-sm text-bd-text-muted">🔍</span>
+            <Search class="w-4 h-4 text-bd-text-muted" />
             {{ item }}
           </button>
         </div>
@@ -69,6 +69,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { Search, X, Clock } from 'lucide-vue-next'
 import { usePreferences } from '@/composables/usePreferences'
 
 const props = defineProps({

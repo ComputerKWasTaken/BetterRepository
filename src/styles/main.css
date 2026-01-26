@@ -26,8 +26,8 @@ body {
 
 /* === Selection === */
 ::selection {
-  background-color: rgba(255, 149, 0, 0.3);
-  color: #fff;
+  background-color: var(--bd-accent-glow);
+  color: var(--bd-text-primary);
 }
 
 /* === Scrollbar Styling === */
@@ -37,31 +37,31 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #16161a;
+  background: var(--bd-bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3a3a45;
-  border-radius: 4px;
+  background: var(--bd-bg-elevated);
+  border-radius: var(--bd-radius-sm);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #4a4a55;
+  background: var(--bd-border-strong);
 }
 
 /* === Custom Component Classes === */
 @layer components {
   /* Card styles */
   .card {
-    @apply bg-bd-bg-secondary border border-white/[0.06] rounded-xl p-4 transition-all duration-200;
+    @apply bg-bd-bg-secondary border border-bd-border-subtle rounded-xl p-4 transition-all duration-200;
   }
 
   .card:hover {
-    @apply bg-bd-bg-tertiary border-white/10;
+    @apply bg-bd-bg-tertiary border-bd-border-default;
   }
 
   .card-elevated {
-    @apply bg-bd-bg-tertiary border border-white/10 rounded-xl p-4;
+    @apply bg-bd-bg-tertiary border border-bd-border-default rounded-xl p-4;
   }
 
   /* Button styles */
@@ -74,34 +74,36 @@ body {
   }
 
   .btn-secondary {
-    @apply bg-white/[0.08] text-bd-text-primary hover:bg-white/[0.12] border border-white/10;
+    @apply bg-bd-tag-bg text-bd-text-primary hover:bg-bd-border-default border border-bd-border-default;
   }
 
   .btn-ghost {
-    @apply bg-transparent text-bd-text-secondary hover:text-bd-text-primary hover:bg-white/[0.06];
+    @apply bg-transparent text-bd-text-secondary hover:text-bd-text-primary hover:bg-bd-border-subtle;
   }
 
   /* Input styles */
   .input {
-    @apply w-full bg-bd-bg-elevated border border-white/10 rounded-lg px-4 py-2.5 text-bd-text-primary placeholder-bd-text-muted transition-all duration-200 outline-none;
+    @apply w-full bg-bd-bg-elevated border border-bd-border-default rounded-lg px-4 py-2.5 text-bd-text-primary placeholder-bd-text-muted transition-all duration-200 outline-none;
   }
 
   .input:focus {
-    @apply border-bd-accent-primary shadow-[0_0_0_3px_rgba(255,149,0,0.12)];
+    @apply border-bd-accent-primary;
+    box-shadow: var(--bd-input-focus-ring);
   }
 
   /* Select styles */
   .select {
-    @apply bg-bd-bg-elevated border border-white/10 rounded-lg px-3 py-2.5 text-sm text-bd-text-primary outline-none transition-all duration-200 cursor-pointer;
+    @apply bg-bd-bg-elevated border border-bd-border-default rounded-lg px-3 py-2.5 text-sm text-bd-text-primary outline-none transition-all duration-200 cursor-pointer;
   }
 
   .select:focus {
-    @apply border-bd-accent-primary shadow-[0_0_0_3px_rgba(255,149,0,0.12)];
+    @apply border-bd-accent-primary;
+    box-shadow: var(--bd-input-focus-ring);
   }
 
   /* Tag styles */
   .tag {
-    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white/[0.08] text-bd-text-secondary;
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-bd-tag-bg text-bd-text-secondary;
   }
 
   .tag-accent {
@@ -110,7 +112,7 @@ body {
 
   /* Navigation link */
   .nav-link {
-    @apply flex items-center gap-3 px-4 py-3 rounded-lg text-bd-text-secondary hover:text-bd-text-primary hover:bg-white/[0.06] transition-all duration-200;
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg text-bd-text-secondary hover:text-bd-text-primary hover:bg-bd-border-subtle transition-all duration-200;
   }
 
   .nav-link.active {
@@ -124,7 +126,17 @@ body {
 
   /* Content card for instructions/resources */
   .resource-card {
-    @apply bg-bd-bg-secondary border border-white/[0.06] rounded-xl overflow-hidden transition-all duration-200 hover:border-bd-accent-primary/30 hover:shadow-glow cursor-pointer;
+    @apply bg-bd-bg-secondary border border-bd-border-subtle rounded-xl overflow-hidden transition-all duration-200 hover:border-bd-accent-primary/30 hover:shadow-glow cursor-pointer;
+  }
+
+  /* Story card item */
+  .story-card-item {
+    @apply bg-bd-bg-secondary border border-bd-border-subtle rounded-xl overflow-hidden transition-all duration-200 hover:border-bd-accent-primary/30 hover:shadow-glow;
+  }
+
+  /* Script item */
+  .script-item {
+    @apply bg-bd-bg-secondary border border-bd-border-subtle rounded-xl overflow-hidden transition-all duration-200 hover:border-bd-accent-primary/30 hover:shadow-glow;
   }
 
   /* Copy button */
@@ -134,7 +146,7 @@ body {
 
   /* Code block */
   .code-block {
-    @apply bg-bd-bg-primary border border-white/[0.06] rounded-lg p-4 font-mono text-sm text-bd-text-secondary overflow-x-auto;
+    @apply bg-bd-bg-primary border border-bd-border-subtle rounded-lg p-4 font-mono text-sm text-bd-text-secondary overflow-x-auto;
   }
 
   /* Badge */
@@ -157,8 +169,16 @@ body {
     @apply bg-gradient-to-r from-bd-accent-light to-bd-accent-primary bg-clip-text text-transparent;
   }
 
+  .shadow-glow {
+    box-shadow: var(--bd-shadow-glow);
+  }
+
+  .shadow-glow-lg {
+    box-shadow: var(--bd-shadow-glow-lg);
+  }
+
   .border-glow {
-    box-shadow: 0 0 20px rgba(255, 149, 0, 0.12);
+    box-shadow: var(--bd-shadow-glow);
   }
 
   .backdrop-blur-card {

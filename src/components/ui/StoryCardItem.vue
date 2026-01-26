@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="story-card-item rounded-xl border border-bd-border-subtle bg-bd-bg-secondary overflow-hidden transition-all"
+    class="story-card-item"
     :class="{ 'ring-2 ring-bd-accent-primary': isExpanded }"
   >
     <!-- Card Header -->
@@ -196,21 +196,3 @@ const copyEntry = async () => {
 }
 </script>
 
-<style scoped>
-.slide-enter-active,
-.slide-leave-active {
-  transition: all var(--bd-transition-slow);
-}
-
-.slide-enter-from,
-.slide-leave-to {
-  opacity: 0;
-  max-height: 0;
-}
-
-.slide-enter-to,
-.slide-leave-from {
-  opacity: 1;
-  max-height: 1000px;
-}
-</style>

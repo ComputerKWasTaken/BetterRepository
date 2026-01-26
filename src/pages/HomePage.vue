@@ -24,7 +24,7 @@
             v-model="searchQuery"
             type="text"
             placeholder="Search instructions, templates, scripts..."
-            class="w-full bg-bd-bg-elevated border border-bd-border-default rounded-xl pl-12 pr-4 py-3 text-sm text-bd-text-primary placeholder-bd-text-muted outline-none focus:border-bd-accent-primary transition-colors"
+            class="input pl-12 pr-4 py-3 rounded-xl"
             @keyup.enter="handleSearch"
           />
           <button 

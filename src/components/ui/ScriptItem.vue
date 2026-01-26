@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="script-item rounded-xl border border-bd-border-subtle bg-bd-bg-secondary overflow-hidden transition-all"
+    class="script-item"
     :class="{ 'ring-2 ring-bd-accent-primary': isExpanded }"
   >
     <!-- Card Header -->
@@ -222,23 +222,6 @@ const copyContent = async (content) => {
 </script>
 
 <style scoped>
-.slide-enter-active,
-.slide-leave-active {
-  transition: all var(--bd-transition-slow);
-}
-
-.slide-enter-from,
-.slide-leave-to {
-  opacity: 0;
-  max-height: 0;
-}
-
-.slide-enter-to,
-.slide-leave-from {
-  opacity: 1;
-  max-height: 2000px;
-}
-
 .code-block {
   max-height: 400px;
   overflow-y: auto;

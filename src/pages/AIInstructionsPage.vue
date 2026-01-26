@@ -793,7 +793,7 @@ const difficulties = [
 const impacts = [
   { id: 'high', label: 'High Impact', activeClass: 'bg-bd-purple/20 text-bd-purple border border-bd-purple/30' },
   { id: 'medium', label: 'Medium Impact', activeClass: 'bg-bd-blue/20 text-bd-blue border border-bd-blue/30' },
-  { id: 'low', label: 'Low Impact', activeClass: 'bg-white/20 text-bd-text-muted border border-white/20' }
+  { id: 'low', label: 'Low Impact', activeClass: 'bg-bd-tag-bg text-bd-text-muted border border-bd-border-default' }
 ]
 
 // Icon component mapping
@@ -825,7 +825,7 @@ const getCategoryIcon = (categoryId) => {
 }
 
 const getCategoryBgClass = (categoryId) => {
-  return categoryColorMap[categoryId]?.bg || 'bg-white/10'
+  return categoryColorMap[categoryId]?.bg || 'bg-bd-tag-bg'
 }
 
 const getCategoryIconClass = (categoryId) => {

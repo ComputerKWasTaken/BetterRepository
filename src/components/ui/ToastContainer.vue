@@ -8,13 +8,13 @@
           class="flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg backdrop-blur-card animate-slide-up"
           :class="toastClasses(toast.type)"
         >
-          <span class="text-base flex-shrink-0">{{ toastIconChar(toast.type) }}</span>
+          <component :is="getToastIcon(toast.type)" class="w-4 h-4 flex-shrink-0" />
           <span class="text-sm font-medium">{{ toast.message }}</span>
           <button 
             @click="removeToast(toast.id)"
             class="ml-2 opacity-60 hover:opacity-100 transition-opacity"
           >
-            <span class="text-sm">✕</span>
+            <X class="w-4 h-4" />
           </button>
         </div>
       </TransitionGroup>
@@ -24,6 +24,7 @@
 
 <script setup>
 import { ref, provide } from 'vue'
+import { Check, X, AlertTriangle, Info } from 'lucide-vue-next'
 
 const toasts = ref([])
 let toastId = 0
@@ -54,14 +55,14 @@ const toastClasses = (type) => {
   return classes[type] || classes.info
 }
 
-const toastIconChar = (type) => {
+const getToastIcon = (type) => {
   const icons = {
-    success: '✓',
-    error: '✕',
-    warning: '⚠',
-    info: 'ℹ',
+    success: Check,
+    error: X,
+    warning: AlertTriangle,
+    info: Info,
   }
-  return icons[type] || 'ℹ'
+  return icons[type] || Info
 }
 
 // Provide toast function to all components

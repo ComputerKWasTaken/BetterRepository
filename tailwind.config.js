@@ -27,6 +27,14 @@ export default {
           secondary: '#e07800',
           light: '#ffb84d',
         },
+        // Border Colors
+        'bd-border': {
+          subtle: 'rgba(255, 255, 255, 0.06)',
+          default: 'rgba(255, 255, 255, 0.1)',
+          strong: 'rgba(255, 255, 255, 0.15)',
+        },
+        // Tag Background
+        'bd-tag-bg': 'rgba(255, 255, 255, 0.08)',
         // Category Colors
         'bd-blue': '#3b82f6',
         'bd-purple': '#a855f7',
