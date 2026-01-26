@@ -22,6 +22,8 @@ body {
   font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.5;
   min-height: 100vh;
+  background-color: var(--bd-bg-primary);
+  color: var(--bd-text-primary);
 }
 
 /* === Selection === */
@@ -147,6 +149,13 @@ body {
   /* Code block */
   .code-block {
     @apply bg-bd-bg-primary border border-bd-border-subtle rounded-lg p-4 font-mono text-sm text-bd-text-secondary overflow-x-auto;
+  }
+
+  /* Code block with scroll for longer content */
+  .code-block-scrollable {
+    @apply bg-bd-bg-primary border border-bd-border-subtle rounded-lg p-4 font-mono text-xs text-bd-text-secondary overflow-x-auto;
+    max-height: 400px;
+    overflow-y: auto;
   }
 
   /* Badge */

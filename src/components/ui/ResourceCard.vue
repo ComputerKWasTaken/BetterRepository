@@ -11,8 +11,8 @@
           <div class="flex items-center gap-2 mb-1 flex-wrap">
             <h3 class="font-semibold text-bd-text-primary truncate">{{ resource.name }}</h3>
             <!-- Essential Badge -->
-            <span v-if="resource.essential" class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-bd-amber/20 text-bd-amber border border-bd-amber/30">
-              ⭐ ESSENTIAL
+            <span v-if="resource.essential" class="badge badge-popular text-[9px]">
+              Essential
             </span>
             <!-- Model Badge -->
             <span v-if="resource.models && resource.models[0] !== 'All Models'" class="badge badge-new text-[9px]">

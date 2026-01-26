@@ -100,7 +100,7 @@
               {{ copied ? 'Copied!' : 'Copy' }}
             </button>
           </div>
-          <pre class="code-block whitespace-pre-wrap text-xs overflow-x-auto">{{ script.content }}</pre>
+          <pre class="code-block-scrollable whitespace-pre-wrap">{{ script.content }}</pre>
         </div>
 
         <!-- Multi-File Content -->
@@ -119,7 +119,7 @@
                 Copy
               </button>
             </div>
-            <pre class="code-block whitespace-pre-wrap text-xs overflow-x-auto">{{ content }}</pre>
+            <pre class="code-block-scrollable whitespace-pre-wrap">{{ content }}</pre>
           </div>
         </div>
 
@@ -221,9 +221,3 @@ const copyContent = async (content) => {
 }
 </script>
 
-<style scoped>
-.code-block {
-  max-height: 400px;
-  overflow-y: auto;
-}
-</style>

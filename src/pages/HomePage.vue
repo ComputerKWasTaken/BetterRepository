@@ -24,7 +24,7 @@
             v-model="searchQuery"
             type="text"
             placeholder="Search instructions, templates, scripts..."
-            class="input pl-12 pr-4 py-3 rounded-xl"
+            class="input pl-12 pr-4 py-3"
             @keyup.enter="handleSearch"
           />
           <button 
@@ -85,7 +85,7 @@
     <!-- Quick Start Cards -->
     <section class="grid grid-cols-1 md:grid-cols-3 gap-3">
       <!-- New Users -->
-      <div class="card p-4">
+      <div class="card">
         <div class="flex items-center gap-3 mb-3">
           <div class="w-9 h-9 rounded-lg bg-bd-green/20 flex items-center justify-center flex-shrink-0">
             <Lightbulb class="w-4 h-4 text-bd-green" />
@@ -102,7 +102,7 @@
       </div>
 
       <!-- Contribute -->
-      <div class="card p-4">
+      <div class="card">
         <div class="flex items-center gap-3 mb-3">
           <div class="w-9 h-9 rounded-lg bg-bd-purple/20 flex items-center justify-center flex-shrink-0">
             <GitPullRequest class="w-4 h-4 text-bd-purple" />
@@ -119,7 +119,7 @@
       </div>
 
       <!-- Discord -->
-      <div class="card p-4">
+      <div class="card">
         <div class="flex items-center gap-3 mb-3">
           <div class="w-9 h-9 rounded-lg bg-bd-cyan/20 flex items-center justify-center flex-shrink-0">
             <MessageCircle class="w-4 h-4 text-bd-cyan" />
