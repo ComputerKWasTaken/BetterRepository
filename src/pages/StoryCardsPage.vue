@@ -511,93 +511,245 @@
 
     <!-- Examples Tab -->
     <template v-if="activeTab === 'examples'">
-      <!-- Example Story Cards -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Users class="w-5 h-5 text-bd-purple" />
-          Character Examples
-        </h2>
-        <p class="text-sm text-bd-text-muted mb-4">
-          Examples from the community, including <strong>True Helper Mad Pumpkin</strong> (Avatar: The Last Airbender scenario).
-        </p>
-        
-        <div class="space-y-4">
-          <!-- Tingle Example -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="badge badge-popular">Character</span>
-              <span class="text-sm font-semibold text-bd-text-primary">Tingle</span>
-            </div>
-            <div class="mb-3">
-              <span class="text-xs text-bd-text-muted block mb-1">Entry:</span>
-              <p class="text-sm text-bd-text-secondary bg-bd-bg-tertiary p-3 rounded font-mono">Tingle is a strange but shrewd businessman. Despite his odd appearance, Tingle runs a successful map-making business. He can often be found in different areas around Hyrule, selling his maps to adventurers and travelers. Some speculate that Tingle may have knowledge of secret paths and locations in Hyrule due to his extensive exploration of the kingdom. Others warn that Tingle may have ulterior motives for collecting maps and information on Hyrule's terrain. Tingle wears an odd outfit consisting of a very disturbingly form fitting green body suit with a red belt and pointed hood that clings to the sides of his head.</p>
-            </div>
-            <div>
-              <span class="text-xs text-bd-text-muted block mb-1">Triggers:</span>
-              <code class="text-bd-purple text-sm">Tingle</code>
-            </div>
-          </div>
-        </div>
-      </section>
+      <!-- Quick Filter Buttons -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button 
+          @click="toggleQuickFilter('essential')"
+          class="btn text-sm"
+          :class="quickFilter === 'essential' ? 'btn-primary' : 'btn-secondary'"
+        >
+          <Star class="w-4 h-4" />
+          Essential Only
+        </button>
+        <button 
+          @click="toggleQuickFilter('starter')"
+          class="btn text-sm"
+          :class="quickFilter === 'starter' ? 'btn-primary' : 'btn-secondary'"
+        >
+          <Rocket class="w-4 h-4" />
+          Starter Set
+        </button>
+        <button 
+          @click="toggleQuickFilter('high-impact')"
+          class="btn text-sm"
+          :class="quickFilter === 'high-impact' ? 'btn-primary' : 'btn-secondary'"
+        >
+          <Zap class="w-4 h-4" />
+          High Impact
+        </button>
+        <div class="flex-1"></div>
+        <button 
+          @click="showFilters = !showFilters"
+          class="btn btn-secondary text-sm"
+          :class="{ 'ring-2 ring-bd-accent-primary': hasActiveFilters }"
+        >
+          <SlidersHorizontal class="w-4 h-4" />
+          Filters
+          <span v-if="hasActiveFilters" class="w-2 h-2 rounded-full bg-bd-accent-primary"></span>
+        </button>
+      </div>
 
-      <!-- Faction Examples -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Shield class="w-5 h-5 text-bd-green" />
-          Faction Examples
-        </h2>
-        
-        <div class="space-y-4">
-          <!-- Air Nomads Example -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="badge badge-new">Faction</span>
-              <span class="text-sm font-semibold text-bd-text-primary">Air Nomads</span>
-            </div>
-            <div class="mb-3">
-              <span class="text-xs text-bd-text-muted block mb-1">Entry:</span>
-              <p class="text-sm text-bd-text-secondary bg-bd-bg-tertiary p-3 rounded font-mono">The Air Nomads are free spirited people who value all life and peace. Air Nomads live in various large monasteries built on top of hard to reach mountain peaks. Air nomads wear loose fitting robes made of cotton and linen, often colored in Yellows and Orange shades. Male Air nomads often shave their heads completely bald, though they may have beards. Female Air nomads often keep their Hair. Female Air benders will shave their head to get their Mastery Tattoos then let their hair grow out again and Maintain just enough to let their Arrow show at their forehead. The Air Nomads Monasteries are home to the Air Benders. Master Air benders wear Arrow Tattoos that connect their 4 limbs and head. Air Nomads often Tame Sky Bison, large Mammals That can fly through the sky by manipulating air currents. Air nomads use Sky Bison to travel easier across the mountains to each of their Nomadic Monasteries using custom lightweight saddles.</p>
-            </div>
-            <div>
-              <span class="text-xs text-bd-text-muted block mb-1">Triggers:</span>
-              <code class="text-bd-purple text-sm">Air Nomads,Monastary</code>
-            </div>
-          </div>
-        </div>
-      </section>
+      <!-- Search Bar -->
+      <div class="relative">
+        <input 
+          v-model="searchQuery"
+          type="text"
+          placeholder="Search examples and templates..."
+          class="w-full bg-bd-bg-elevated border border-white/10 rounded-lg px-4 py-2.5 text-sm text-bd-text-primary placeholder-bd-text-muted outline-none focus:border-bd-accent-primary"
+        />
+      </div>
 
-      <!-- Creature Examples -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Sparkles class="w-5 h-5 text-bd-amber" />
-          Creature/Concept Examples
-        </h2>
-        
-        <div class="space-y-4">
-          <!-- Platypus Bear Example -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="badge">Creature</span>
-              <span class="text-sm font-semibold text-bd-text-primary">Platypus Bear</span>
+      <!-- Filter Panel -->
+      <Transition name="slide">
+        <div v-if="showFilters" class="card-elevated space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-semibold text-bd-text-primary">Filters</h3>
+            <button 
+              v-if="hasActiveFilters"
+              @click="clearFilters"
+              class="text-sm text-bd-accent-primary hover:underline"
+            >
+              Clear all
+            </button>
+          </div>
+
+          <!-- Category Filter -->
+          <div>
+            <h4 class="text-sm text-bd-text-muted mb-2">Category</h4>
+            <div class="flex flex-wrap gap-2">
+              <button 
+                v-for="category in categories" 
+                :key="category.id"
+                @click="toggleCategory(category.id)"
+                class="tag cursor-pointer transition-all"
+                :class="selectedCategories.includes(category.id) 
+                  ? 'bg-bd-accent-primary/20 text-bd-accent-light border border-bd-accent-primary/30' 
+                  : 'hover:bg-white/[0.12]'"
+              >
+                {{ category.name }}
+              </button>
             </div>
-            <div class="mb-3">
-              <span class="text-xs text-bd-text-muted block mb-1">Entry:</span>
-              <p class="text-sm text-bd-text-secondary bg-bd-bg-tertiary p-3 rounded font-mono">The Platypus Bear is a large and fearsome creature native to the Earth Kingdom. It has the head and bill of a platypus, the body and fur of a bear, and the tail of a beaver. Despite its awkward appearance, the Platypus Bear is an agile and powerful creature that can easily overpower its prey. It is known to be quite ferocious when provoked and is regarded as one of the most dangerous animals in the world.</p>
+          </div>
+
+          <!-- Difficulty Filter -->
+          <div>
+            <h4 class="text-sm text-bd-text-muted mb-2">Difficulty</h4>
+            <div class="flex flex-wrap gap-2">
+              <button 
+                v-for="diff in difficulties" 
+                :key="diff.id"
+                @click="toggleDifficulty(diff.id)"
+                class="tag cursor-pointer transition-all"
+                :class="selectedDifficulties.includes(diff.id) 
+                  ? diff.activeClass 
+                  : 'hover:bg-white/[0.12]'"
+              >
+                {{ diff.label }}
+              </button>
             </div>
-            <div>
-              <span class="text-xs text-bd-text-muted block mb-1">Triggers:</span>
-              <code class="text-bd-purple text-sm">Platypus Bear</code>
+          </div>
+
+          <!-- Impact Filter -->
+          <div>
+            <h4 class="text-sm text-bd-text-muted mb-2">Impact</h4>
+            <div class="flex flex-wrap gap-2">
+              <button 
+                v-for="imp in impacts" 
+                :key="imp.id"
+                @click="toggleImpact(imp.id)"
+                class="tag cursor-pointer transition-all"
+                :class="selectedImpacts.includes(imp.id) 
+                  ? imp.activeClass 
+                  : 'hover:bg-white/[0.12]'"
+              >
+                {{ imp.label }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Type Filter -->
+          <div>
+            <h4 class="text-sm text-bd-text-muted mb-2">Type</h4>
+            <div class="flex flex-wrap gap-2">
+              <button 
+                @click="toggleType('examples')"
+                class="tag cursor-pointer transition-all"
+                :class="selectedType === 'examples' 
+                  ? 'bg-bd-purple/20 text-bd-purple border border-bd-purple/30' 
+                  : 'hover:bg-white/[0.12]'"
+              >
+                Examples
+              </button>
+              <button 
+                @click="toggleType('templates')"
+                class="tag cursor-pointer transition-all"
+                :class="selectedType === 'templates' 
+                  ? 'bg-bd-green/20 text-bd-green border border-bd-green/30' 
+                  : 'hover:bg-white/[0.12]'"
+              >
+                Templates
+              </button>
             </div>
           </div>
         </div>
-      </section>
+      </Transition>
+
+      <!-- Results Summary -->
+      <div class="flex items-center justify-between text-sm">
+        <span class="text-bd-text-muted">
+          Showing {{ filteredCards.length }} of {{ allCards.length }} cards
+        </span>
+        <div class="flex items-center gap-2">
+          <span class="text-bd-text-muted">Sort by:</span>
+          <select 
+            v-model="sortBy"
+            class="bg-bd-bg-elevated border border-white/10 rounded-lg px-3 py-1.5 text-sm text-bd-text-primary outline-none focus:border-bd-accent-primary"
+          >
+            <option value="name">Name</option>
+            <option value="category">Category</option>
+            <option value="impact">Impact (High→Low)</option>
+            <option value="difficulty">Difficulty</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Category Sections (default view) -->
+      <div v-if="!hasAnyFilters" class="space-y-6">
+        <!-- Examples Section -->
+        <div class="card">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-bd-purple/20 flex items-center justify-center">
+              <Layers class="w-4 h-4 text-bd-purple" />
+            </div>
+            <div>
+              <h3 class="font-semibold text-bd-text-primary">Example Story Cards</h3>
+              <p class="text-xs text-bd-text-muted">Real examples showing effective Story Card writing.</p>
+            </div>
+            <span class="ml-auto tag bg-bd-purple/20 text-bd-purple">{{ examples.length }}</span>
+          </div>
+          
+          <div class="space-y-3">
+            <StoryCardItem 
+              v-for="card in examples" 
+              :key="card.id"
+              :card="card"
+              type="example"
+            />
+          </div>
+        </div>
+
+        <!-- Templates Section -->
+        <div class="card">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-bd-green/20 flex items-center justify-center">
+              <FileText class="w-4 h-4 text-bd-green" />
+            </div>
+            <div>
+              <h3 class="font-semibold text-bd-text-primary">Story Card Templates</h3>
+              <p class="text-xs text-bd-text-muted">Fill-in-the-blank templates to create your own cards.</p>
+            </div>
+            <span class="ml-auto tag bg-bd-green/20 text-bd-green">{{ templates.length }}</span>
+          </div>
+          
+          <div class="space-y-3">
+            <StoryCardItem 
+              v-for="card in templates" 
+              :key="card.id"
+              :card="card"
+              type="template"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtered Results -->
+      <div v-if="hasAnyFilters" class="grid gap-3">
+        <StoryCardItem 
+          v-for="card in filteredCards" 
+          :key="card.id"
+          :card="card"
+          :type="card.id.startsWith('template-') ? 'template' : 'example'"
+        />
+        
+        <!-- Empty State -->
+        <div v-if="filteredCards.length === 0" class="text-center py-12">
+          <FileText class="w-12 h-12 text-bd-text-muted mx-auto mb-4" />
+          <h3 class="text-lg font-semibold text-bd-text-primary mb-2">No cards found</h3>
+          <p class="text-bd-text-secondary">
+            Try adjusting your search or filters.
+          </p>
+          <button @click="clearAll" class="btn btn-secondary mt-4">
+            Clear Filters
+          </button>
+        </div>
+      </div>
 
       <!-- Key Takeaways -->
-      <section class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
+      <section v-if="!hasAnyFilters" class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
         <div class="flex items-start gap-3">
           <Lightbulb class="w-5 h-5 text-bd-info flex-shrink-0 mt-0.5" />
           <div>
-            <h3 class="font-semibold text-bd-text-primary mb-2">Key Takeaways from These Examples</h3>
+            <h3 class="font-semibold text-bd-text-primary mb-2">Key Takeaways</h3>
             <ul class="space-y-1 text-sm text-bd-text-secondary">
               <li>• <strong>Prose style:</strong> Written in natural English, not bullet points</li>
               <li>• <strong>Name repetition:</strong> The subject's name is mentioned throughout the Entry</li>
@@ -609,7 +761,7 @@
       </section>
 
       <!-- Contribute CTA -->
-      <section class="card-elevated">
+      <section v-if="!hasAnyFilters" class="card-elevated">
         <div class="flex items-start gap-4">
           <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/20 flex items-center justify-center flex-shrink-0">
             <GitPullRequest class="w-6 h-6 text-bd-accent-primary" />
@@ -631,19 +783,196 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import StoryCardItem from '@/components/ui/StoryCardItem.vue'
+import { 
+  STORY_CARDS, 
+  STORY_CARD_TEMPLATES,
+  STORY_CARD_CATEGORIES,
+  getEssentialExamples,
+  getEssentialTemplates,
+  getStarterExamples,
+  getStarterTemplates,
+  getHighImpactExamples,
+  getHighImpactTemplates
+} from '@/data/storyCards'
 import { 
   Drama, Users, MapPin, Shield, Sparkles, Layers, GitPullRequest,
   HelpCircle, Lightbulb, Camera, Globe, FileText, Tag, Type, Zap,
   StickyNote, Cog, AlertTriangle, Award, Check, Scale, Pencil,
   Download, Search, Infinity, ExternalLink, BookOpen, Space, Target,
-  CaseSensitive, Scissors, Quote, Clock, GitMerge, X
+  CaseSensitive, Scissors, Quote, Clock, GitMerge, X, Star, Rocket,
+  SlidersHorizontal
 } from 'lucide-vue-next'
 
 const activeTab = ref('examples')
 
 const tabs = [
-  { id: 'examples', label: 'Examples', icon: Layers },
+  { id: 'examples', label: 'Examples & Templates', icon: Layers },
   { id: 'guide', label: 'Guide', icon: BookOpen }
 ]
+
+const examples = ref(STORY_CARDS)
+const templates = ref(STORY_CARD_TEMPLATES)
+const categories = ref(STORY_CARD_CATEGORIES)
+const searchQuery = ref('')
+const selectedCategories = ref([])
+const selectedDifficulties = ref([])
+const selectedImpacts = ref([])
+const selectedType = ref(null)
+const showFilters = ref(false)
+const sortBy = ref('name')
+const quickFilter = ref(null)
+
+const difficulties = [
+  { id: 'beginner', label: 'Beginner', activeClass: 'bg-bd-green/20 text-bd-green border border-bd-green/30' },
+  { id: 'intermediate', label: 'Intermediate', activeClass: 'bg-bd-amber/20 text-bd-amber border border-bd-amber/30' },
+  { id: 'advanced', label: 'Advanced', activeClass: 'bg-bd-pink/20 text-bd-pink border border-bd-pink/30' }
+]
+
+const impacts = [
+  { id: 'high', label: 'High Impact', activeClass: 'bg-bd-purple/20 text-bd-purple border border-bd-purple/30' },
+  { id: 'medium', label: 'Medium Impact', activeClass: 'bg-bd-blue/20 text-bd-blue border border-bd-blue/30' },
+  { id: 'low', label: 'Low Impact', activeClass: 'bg-white/20 text-bd-text-muted border border-white/20' }
+]
+
+const allCards = computed(() => [...examples.value, ...templates.value])
+
+const filteredCards = computed(() => {
+  let result = [...allCards.value]
+  
+  // Apply quick filter first
+  if (quickFilter.value === 'essential') {
+    result = [...getEssentialExamples(), ...getEssentialTemplates()]
+  } else if (quickFilter.value === 'starter') {
+    result = [...getStarterExamples(), ...getStarterTemplates()]
+  } else if (quickFilter.value === 'high-impact') {
+    result = [...getHighImpactExamples(), ...getHighImpactTemplates()]
+  }
+  
+  // Filter by type
+  if (selectedType.value === 'examples') {
+    result = result.filter(c => !c.id.startsWith('template-'))
+  } else if (selectedType.value === 'templates') {
+    result = result.filter(c => c.id.startsWith('template-'))
+  }
+  
+  // Filter by search query
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase()
+    result = result.filter(c => 
+      c.name.toLowerCase().includes(query) ||
+      c.description.toLowerCase().includes(query) ||
+      c.tags.some(tag => tag.toLowerCase().includes(query)) ||
+      c.entry.toLowerCase().includes(query)
+    )
+  }
+  
+  // Filter by selected categories
+  if (selectedCategories.value.length > 0) {
+    result = result.filter(c => selectedCategories.value.includes(c.category))
+  }
+  
+  // Filter by selected difficulties
+  if (selectedDifficulties.value.length > 0) {
+    result = result.filter(c => selectedDifficulties.value.includes(c.difficulty))
+  }
+  
+  // Filter by selected impacts
+  if (selectedImpacts.value.length > 0) {
+    result = result.filter(c => selectedImpacts.value.includes(c.impact))
+  }
+  
+  // Sort
+  if (sortBy.value === 'name') {
+    result.sort((a, b) => a.name.localeCompare(b.name))
+  } else if (sortBy.value === 'category') {
+    result.sort((a, b) => a.category.localeCompare(b.category))
+  } else if (sortBy.value === 'impact') {
+    const impactOrder = { 'high': 0, 'medium': 1, 'low': 2 }
+    result.sort((a, b) => (impactOrder[a.impact] || 3) - (impactOrder[b.impact] || 3))
+  } else if (sortBy.value === 'difficulty') {
+    const diffOrder = { 'beginner': 0, 'intermediate': 1, 'advanced': 2 }
+    result.sort((a, b) => (diffOrder[a.difficulty] || 3) - (diffOrder[b.difficulty] || 3))
+  }
+  
+  return result
+})
+
+const hasActiveFilters = computed(() => 
+  selectedCategories.value.length > 0 || 
+  selectedDifficulties.value.length > 0 || 
+  selectedImpacts.value.length > 0 ||
+  selectedType.value !== null
+)
+
+const hasAnyFilters = computed(() => 
+  searchQuery.value || 
+  quickFilter.value || 
+  hasActiveFilters.value
+)
+
+const toggleQuickFilter = (filter) => {
+  if (quickFilter.value === filter) {
+    quickFilter.value = null
+  } else {
+    quickFilter.value = filter
+    selectedCategories.value = []
+    selectedDifficulties.value = []
+    selectedImpacts.value = []
+    selectedType.value = null
+  }
+}
+
+const toggleCategory = (categoryId) => {
+  quickFilter.value = null
+  const index = selectedCategories.value.indexOf(categoryId)
+  if (index > -1) {
+    selectedCategories.value.splice(index, 1)
+  } else {
+    selectedCategories.value.push(categoryId)
+  }
+}
+
+const toggleDifficulty = (difficultyId) => {
+  quickFilter.value = null
+  const index = selectedDifficulties.value.indexOf(difficultyId)
+  if (index > -1) {
+    selectedDifficulties.value.splice(index, 1)
+  } else {
+    selectedDifficulties.value.push(difficultyId)
+  }
+}
+
+const toggleImpact = (impactId) => {
+  quickFilter.value = null
+  const index = selectedImpacts.value.indexOf(impactId)
+  if (index > -1) {
+    selectedImpacts.value.splice(index, 1)
+  } else {
+    selectedImpacts.value.push(impactId)
+  }
+}
+
+const toggleType = (type) => {
+  quickFilter.value = null
+  if (selectedType.value === type) {
+    selectedType.value = null
+  } else {
+    selectedType.value = type
+  }
+}
+
+const clearFilters = () => {
+  selectedCategories.value = []
+  selectedDifficulties.value = []
+  selectedImpacts.value = []
+  selectedType.value = null
+  quickFilter.value = null
+}
+
+const clearAll = () => {
+  searchQuery.value = ''
+  clearFilters()
+}
 </script>

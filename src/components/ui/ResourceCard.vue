@@ -8,13 +8,28 @@
     <div class="p-4 cursor-pointer">
       <div class="flex items-start justify-between gap-3">
         <div class="flex-1 min-w-0">
-          <div class="flex items-center gap-2 mb-1">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
             <h3 class="font-semibold text-bd-text-primary truncate">{{ resource.name }}</h3>
-            <span v-if="resource.models" class="badge badge-new text-[9px]">
+            <!-- Essential Badge -->
+            <span v-if="resource.essential" class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-bd-amber/20 text-bd-amber border border-bd-amber/30">
+              ⭐ ESSENTIAL
+            </span>
+            <!-- Model Badge -->
+            <span v-if="resource.models && resource.models[0] !== 'All Models'" class="badge badge-new text-[9px]">
               {{ resource.models[0] }}
             </span>
           </div>
           <p class="text-sm text-bd-text-secondary line-clamp-2">{{ resource.description }}</p>
+          
+          <!-- Difficulty & Impact Badges -->
+          <div v-if="resource.difficulty || resource.impact" class="flex items-center gap-2 mt-2">
+            <span v-if="resource.difficulty" class="px-1.5 py-0.5 rounded text-[9px] font-medium" :class="difficultyClass">
+              {{ resource.difficulty }}
+            </span>
+            <span v-if="resource.impact" class="px-1.5 py-0.5 rounded text-[9px] font-medium" :class="impactClass">
+              {{ resource.impact }} impact
+            </span>
+          </div>
         </div>
         <button 
           @click.stop="toggleFavorite"
@@ -70,13 +85,37 @@
           <pre class="code-block whitespace-pre-wrap text-sm">{{ resource.content }}</pre>
         </div>
 
-        <!-- Placement hint -->
-        <div v-if="resource.placement" class="px-4 pb-4">
-          <div class="flex items-center gap-2 p-3 rounded-lg bg-bd-info/10 border border-bd-info/20">
-            <span class="text-sm text-bd-info flex-shrink-0">🔖</span>
-            <span class="text-sm text-bd-info">
-              Best used in: <strong>{{ placementName }}</strong>
-            </span>
+        <!-- Combines With -->
+        <div v-if="resource.combinesWith && resource.combinesWith.length > 0" class="px-4 pb-4">
+          <div class="flex items-start gap-2 p-3 rounded-lg bg-bd-green/10 border border-bd-green/20">
+            <span class="text-sm text-bd-green flex-shrink-0">🔗</span>
+            <div>
+              <span class="text-sm text-bd-green font-medium">Works well with:</span>
+              <div class="flex flex-wrap gap-1 mt-1">
+                <span 
+                  v-for="id in resource.combinesWith" 
+                  :key="id"
+                  class="text-[10px] px-1.5 py-0.5 rounded bg-bd-green/20 text-bd-green"
+                >{{ formatId(id) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Conflicts With -->
+        <div v-if="resource.conflicts && resource.conflicts.length > 0" class="px-4 pb-4">
+          <div class="flex items-start gap-2 p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
+            <span class="text-sm text-bd-pink flex-shrink-0">⚠️</span>
+            <div>
+              <span class="text-sm text-bd-pink font-medium">Conflicts with:</span>
+              <div class="flex flex-wrap gap-1 mt-1">
+                <span 
+                  v-for="id in resource.conflicts" 
+                  :key="id"
+                  class="text-[10px] px-1.5 py-0.5 rounded bg-bd-pink/20 text-bd-pink"
+                >{{ formatId(id) }}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -95,7 +134,6 @@
 <script setup>
 import { ref, computed, inject } from 'vue'
 import { usePreferences } from '@/composables/usePreferences'
-import { PLACEMENTS } from '@/data/repository'
 
 const props = defineProps({
   resource: {
@@ -114,10 +152,27 @@ const isFavorited = computed(() => isFavorite(props.resource.id))
 
 const displayTags = computed(() => props.resource.tags.slice(0, 3))
 
-const placementName = computed(() => {
-  const placement = PLACEMENTS.find(p => p.id === props.resource.placement)
-  return placement?.name || props.resource.placement
+const difficultyClass = computed(() => {
+  const classes = {
+    'beginner': 'bg-bd-green/20 text-bd-green border border-bd-green/30',
+    'intermediate': 'bg-bd-amber/20 text-bd-amber border border-bd-amber/30',
+    'advanced': 'bg-bd-pink/20 text-bd-pink border border-bd-pink/30'
+  }
+  return classes[props.resource.difficulty] || 'bg-white/10 text-bd-text-muted'
 })
+
+const impactClass = computed(() => {
+  const classes = {
+    'high': 'bg-bd-purple/20 text-bd-purple border border-bd-purple/30',
+    'medium': 'bg-bd-blue/20 text-bd-blue border border-bd-blue/30',
+    'low': 'bg-white/10 text-bd-text-muted border border-white/10'
+  }
+  return classes[props.resource.impact] || 'bg-white/10 text-bd-text-muted'
+})
+
+const formatId = (id) => {
+  return id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+}
 
 const toggleExpand = () => {
   isExpanded.value = !isExpanded.value

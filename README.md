@@ -23,7 +23,7 @@
 | Resource | Description |
 |----------|-------------|
 | **AI Instructions** | Rules that control how the AI writes — style, pacing, tone, and behavior |
-| **Plot Components** | Author's Notes, Plot Essentials, Memory Banks, and Story Summaries |
+| **Plot Components** | Author's Notes, Plot Essentials, and Story Summaries |
 | **Story Cards** | Ready-to-use character, location, faction, and item cards |
 | **Scripts** | Custom JavaScript to add features like dice rolls, inventory, and more |
 | **Guides** | Learn how each feature works with beginner-friendly tutorials |

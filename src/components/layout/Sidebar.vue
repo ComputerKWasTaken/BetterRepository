@@ -12,7 +12,6 @@
           </h1>
           <div class="flex items-center gap-2">
             <span class="text-xs text-bd-text-muted">v1.0.0</span>
-            <span class="badge badge-new">Beta</span>
           </div>
         </div>
       </router-link>

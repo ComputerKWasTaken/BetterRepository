@@ -547,15 +547,48 @@ Instructions:
     <!-- ==================== COLLECTION TAB ==================== -->
     <template v-if="activeTab === 'collection'">
       
-      <!-- Filter Header -->
-      <div class="flex items-center justify-between gap-4">
+      <!-- Quick Filter Buttons -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button 
+          @click="toggleQuickFilter('essential')"
+          class="btn text-sm"
+          :class="quickFilter === 'essential' ? 'btn-primary' : 'btn-secondary'"
+        >
+          <Star class="w-4 h-4" />
+          Essential Only
+        </button>
+        <button 
+          @click="toggleQuickFilter('starter')"
+          class="btn text-sm"
+          :class="quickFilter === 'starter' ? 'btn-primary' : 'btn-secondary'"
+        >
+          <Rocket class="w-4 h-4" />
+          Starter Set
+        </button>
+        <button 
+          @click="toggleQuickFilter('high-impact')"
+          class="btn text-sm"
+          :class="quickFilter === 'high-impact' ? 'btn-primary' : 'btn-secondary'"
+        >
+          <Zap class="w-4 h-4" />
+          High Impact
+        </button>
+        <button 
+          @click="toggleQuickFilter('beginner')"
+          class="btn text-sm"
+          :class="quickFilter === 'beginner' ? 'btn-primary' : 'btn-secondary'"
+        >
+          <Sparkles class="w-4 h-4" />
+          Beginner Friendly
+        </button>
+        <div class="flex-1"></div>
         <button 
           @click="showFilters = !showFilters"
-          class="btn btn-secondary"
+          class="btn btn-secondary text-sm"
           :class="{ 'ring-2 ring-bd-accent-primary': hasActiveFilters }"
         >
           <SlidersHorizontal class="w-4 h-4" />
-          Filters
+          More Filters
           <span v-if="hasActiveFilters" class="w-2 h-2 rounded-full bg-bd-accent-primary"></span>
         </button>
       </div>
@@ -570,9 +603,9 @@ Instructions:
 
     <!-- Filter Panel -->
     <Transition name="slide">
-      <div v-if="showFilters" class="card-elevated">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="font-semibold text-bd-text-primary">Filter by Category</h3>
+      <div v-if="showFilters" class="card-elevated space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="font-semibold text-bd-text-primary">Advanced Filters</h3>
           <button 
             v-if="hasActiveFilters"
             @click="clearFilters"
@@ -581,18 +614,59 @@ Instructions:
             Clear all
           </button>
         </div>
-        <div class="flex flex-wrap gap-2">
-          <button 
-            v-for="category in categories" 
-            :key="category.id"
-            @click="toggleCategory(category.id)"
-            class="tag cursor-pointer transition-all"
-            :class="selectedCategories.includes(category.id) 
-              ? 'bg-bd-accent-primary/20 text-bd-accent-light border border-bd-accent-primary/30' 
-              : 'hover:bg-white/[0.12]'"
-          >
-            {{ category.name }}
-          </button>
+
+        <!-- Category Filter -->
+        <div>
+          <h4 class="text-sm text-bd-text-muted mb-2">Category</h4>
+          <div class="flex flex-wrap gap-2">
+            <button 
+              v-for="category in categories" 
+              :key="category.id"
+              @click="toggleCategory(category.id)"
+              class="tag cursor-pointer transition-all"
+              :class="selectedCategories.includes(category.id) 
+                ? 'bg-bd-accent-primary/20 text-bd-accent-light border border-bd-accent-primary/30' 
+                : 'hover:bg-white/[0.12]'"
+            >
+              {{ category.name }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Difficulty Filter -->
+        <div>
+          <h4 class="text-sm text-bd-text-muted mb-2">Difficulty</h4>
+          <div class="flex flex-wrap gap-2">
+            <button 
+              v-for="diff in difficulties" 
+              :key="diff.id"
+              @click="toggleDifficulty(diff.id)"
+              class="tag cursor-pointer transition-all"
+              :class="selectedDifficulties.includes(diff.id) 
+                ? diff.activeClass 
+                : 'hover:bg-white/[0.12]'"
+            >
+              {{ diff.label }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Impact Filter -->
+        <div>
+          <h4 class="text-sm text-bd-text-muted mb-2">Impact</h4>
+          <div class="flex flex-wrap gap-2">
+            <button 
+              v-for="imp in impacts" 
+              :key="imp.id"
+              @click="toggleImpact(imp.id)"
+              class="tag cursor-pointer transition-all"
+              :class="selectedImpacts.includes(imp.id) 
+                ? imp.activeClass 
+                : 'hover:bg-white/[0.12]'"
+            >
+              {{ imp.label }}
+            </button>
+          </div>
         </div>
       </div>
     </Transition>
@@ -610,13 +684,14 @@ Instructions:
         >
           <option value="name">Name</option>
           <option value="category">Category</option>
-          <option value="popular">Popular</option>
+          <option value="impact">Impact (High→Low)</option>
+          <option value="difficulty">Difficulty</option>
         </select>
       </div>
     </div>
 
-    <!-- Category Sections -->
-    <div v-if="!searchQuery && selectedCategories.length === 0" class="space-y-8">
+    <!-- Category Sections (default view - no filters active) -->
+    <div v-if="!hasAnyFilters" class="space-y-8">
       <section v-for="category in categoriesWithInstructions" :key="category.id">
         <div class="flex items-center gap-3 mb-4">
           <div 
@@ -642,8 +717,8 @@ Instructions:
       </section>
     </div>
 
-    <!-- Filtered/Search Results -->
-    <div v-else class="grid gap-3">
+    <!-- Filtered/Sorted Results -->
+    <div v-if="hasAnyFilters" class="grid gap-3">
       <ResourceCard 
         v-for="instruction in filteredInstructions" 
         :key="instruction.id"
@@ -672,14 +747,21 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import SearchBar from '@/components/ui/SearchBar.vue'
 import ResourceCard from '@/components/ui/ResourceCard.vue'
-import { INSTRUCTIONS, CATEGORIES } from '@/data/repository'
+import { 
+  INSTRUCTIONS, 
+  CATEGORIES,
+  getEssentialInstructions,
+  getStarterSet,
+  getHighImpactInstructions,
+  getBeginnerInstructions
+} from '@/data/aiInstructions'
 import { usePreferences } from '@/composables/usePreferences'
 import { 
   ScrollText, SlidersHorizontal, SearchX, Layers, PenTool, Users, 
   Link, Swords, Globe, FileText, Settings, BookOpen, HelpCircle,
   Sparkles, Info, Zap, Target, Scissors, Scale, Lightbulb, Thermometer,
   ListOrdered, Percent, UserPlus, Repeat, Rocket, Wrench, Clock, UserX,
-  Shield, Focus, Type, Drama, MessageSquare, Skull, ExternalLink
+  Shield, Focus, Type, Drama, MessageSquare, Skull, ExternalLink, Star
 } from 'lucide-vue-next'
 
 const activeTab = ref('collection')
@@ -696,8 +778,23 @@ const instructions = ref(INSTRUCTIONS)
 const categories = ref(CATEGORIES)
 const searchQuery = ref('')
 const selectedCategories = ref([])
+const selectedDifficulties = ref([])
+const selectedImpacts = ref([])
 const showFilters = ref(false)
 const sortBy = ref('name')
+const quickFilter = ref(null)
+
+const difficulties = [
+  { id: 'beginner', label: 'Beginner', activeClass: 'bg-bd-green/20 text-bd-green border border-bd-green/30' },
+  { id: 'intermediate', label: 'Intermediate', activeClass: 'bg-bd-amber/20 text-bd-amber border border-bd-amber/30' },
+  { id: 'advanced', label: 'Advanced', activeClass: 'bg-bd-pink/20 text-bd-pink border border-bd-pink/30' }
+]
+
+const impacts = [
+  { id: 'high', label: 'High Impact', activeClass: 'bg-bd-purple/20 text-bd-purple border border-bd-purple/30' },
+  { id: 'medium', label: 'Medium Impact', activeClass: 'bg-bd-blue/20 text-bd-blue border border-bd-blue/30' },
+  { id: 'low', label: 'Low Impact', activeClass: 'bg-white/20 text-bd-text-muted border border-white/20' }
+]
 
 // Icon component mapping
 const iconComponentMap = {
@@ -738,6 +835,17 @@ const getCategoryIconClass = (categoryId) => {
 const filteredInstructions = computed(() => {
   let result = [...instructions.value]
   
+  // Apply quick filter first
+  if (quickFilter.value === 'essential') {
+    result = getEssentialInstructions()
+  } else if (quickFilter.value === 'starter') {
+    result = getStarterSet()
+  } else if (quickFilter.value === 'high-impact') {
+    result = getHighImpactInstructions()
+  } else if (quickFilter.value === 'beginner') {
+    result = getBeginnerInstructions()
+  }
+  
   // Filter by search query
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
@@ -753,11 +861,27 @@ const filteredInstructions = computed(() => {
     result = result.filter(i => selectedCategories.value.includes(i.category))
   }
   
+  // Filter by selected difficulties
+  if (selectedDifficulties.value.length > 0) {
+    result = result.filter(i => selectedDifficulties.value.includes(i.difficulty))
+  }
+  
+  // Filter by selected impacts
+  if (selectedImpacts.value.length > 0) {
+    result = result.filter(i => selectedImpacts.value.includes(i.impact))
+  }
+  
   // Sort
   if (sortBy.value === 'name') {
     result.sort((a, b) => a.name.localeCompare(b.name))
   } else if (sortBy.value === 'category') {
     result.sort((a, b) => a.category.localeCompare(b.category))
+  } else if (sortBy.value === 'impact') {
+    const impactOrder = { 'high': 0, 'medium': 1, 'low': 2 }
+    result.sort((a, b) => (impactOrder[a.impact] || 3) - (impactOrder[b.impact] || 3))
+  } else if (sortBy.value === 'difficulty') {
+    const diffOrder = { 'beginner': 0, 'intermediate': 1, 'advanced': 2 }
+    result.sort((a, b) => (diffOrder[a.difficulty] || 3) - (diffOrder[b.difficulty] || 3))
   }
   
   return result
@@ -772,7 +896,49 @@ const categoriesWithInstructions = computed(() => {
     .filter(cat => cat.instructions.length > 0)
 })
 
-const hasActiveFilters = computed(() => selectedCategories.value.length > 0)
+const hasActiveFilters = computed(() => 
+  selectedCategories.value.length > 0 || 
+  selectedDifficulties.value.length > 0 || 
+  selectedImpacts.value.length > 0
+)
+
+const hasAnyFilters = computed(() => 
+  searchQuery.value || 
+  quickFilter.value || 
+  hasActiveFilters.value
+)
+
+const toggleQuickFilter = (filter) => {
+  if (quickFilter.value === filter) {
+    quickFilter.value = null
+  } else {
+    quickFilter.value = filter
+    // Clear other filters when using quick filter
+    selectedCategories.value = []
+    selectedDifficulties.value = []
+    selectedImpacts.value = []
+  }
+}
+
+const toggleDifficulty = (difficultyId) => {
+  quickFilter.value = null // Clear quick filter when using manual filters
+  const index = selectedDifficulties.value.indexOf(difficultyId)
+  if (index > -1) {
+    selectedDifficulties.value.splice(index, 1)
+  } else {
+    selectedDifficulties.value.push(difficultyId)
+  }
+}
+
+const toggleImpact = (impactId) => {
+  quickFilter.value = null // Clear quick filter when using manual filters
+  const index = selectedImpacts.value.indexOf(impactId)
+  if (index > -1) {
+    selectedImpacts.value.splice(index, 1)
+  } else {
+    selectedImpacts.value.push(impactId)
+  }
+}
 
 const searchSuggestions = computed(() => {
   const allTags = [...new Set(instructions.value.flatMap(i => i.tags))]
@@ -780,6 +946,7 @@ const searchSuggestions = computed(() => {
 })
 
 const toggleCategory = (categoryId) => {
+  quickFilter.value = null // Clear quick filter when using manual filters
   const index = selectedCategories.value.indexOf(categoryId)
   if (index > -1) {
     selectedCategories.value.splice(index, 1)
@@ -790,11 +957,17 @@ const toggleCategory = (categoryId) => {
 
 const clearFilters = () => {
   selectedCategories.value = []
+  selectedDifficulties.value = []
+  selectedImpacts.value = []
+  quickFilter.value = null
 }
 
 const clearAll = () => {
   searchQuery.value = ''
   selectedCategories.value = []
+  selectedDifficulties.value = []
+  selectedImpacts.value = []
+  quickFilter.value = null
 }
 
 const handleSearch = (query) => {

@@ -214,7 +214,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { INSTRUCTIONS, CATEGORIES } from '@/data/repository'
+import { INSTRUCTIONS, CATEGORIES } from '@/data/aiInstructions'
 import { 
   Sparkles, Search, LayoutGrid, Lightbulb, ScrollText, Heart,
   GitPullRequest, MessageCircle, ExternalLink, Bookmark, Drama, Settings,

@@ -436,133 +436,232 @@
     <!-- ==================== TEMPLATES TAB ==================== -->
     <template v-if="activeTab === 'templates'">
 
-    <!-- Placement Guide -->
-    <section class="card-elevated">
-      <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-        <Info class="w-5 h-5 text-bd-info" />
-        Understanding Plot Component Placements
-      </h2>
-      
-      <div class="grid md:grid-cols-2 gap-4">
-        <div 
-          v-for="placement in placements" 
-          :key="placement.id"
-          class="p-4 rounded-xl bg-bd-bg-primary border border-white/[0.06]"
+    <!-- Quick Filter Buttons -->
+    <div class="flex flex-wrap items-center gap-2">
+      <button 
+        @click="toggleQuickFilter('essential')"
+        class="btn text-sm"
+        :class="quickFilter === 'essential' ? 'btn-primary' : 'btn-secondary'"
+      >
+        <Star class="w-4 h-4" />
+        Essential Only
+      </button>
+      <button 
+        @click="toggleQuickFilter('starter')"
+        class="btn text-sm"
+        :class="quickFilter === 'starter' ? 'btn-primary' : 'btn-secondary'"
+      >
+        <Rocket class="w-4 h-4" />
+        Starter Set
+      </button>
+      <button 
+        @click="toggleQuickFilter('high-impact')"
+        class="btn text-sm"
+        :class="quickFilter === 'high-impact' ? 'btn-primary' : 'btn-secondary'"
+      >
+        <Zap class="w-4 h-4" />
+        High Impact
+      </button>
+      <div class="flex-1"></div>
+      <button 
+        @click="showFilters = !showFilters"
+        class="btn btn-secondary text-sm"
+        :class="{ 'ring-2 ring-bd-accent-primary': hasActiveFilters }"
+      >
+        <SlidersHorizontal class="w-4 h-4" />
+        Filters
+        <span v-if="hasActiveFilters" class="w-2 h-2 rounded-full bg-bd-accent-primary"></span>
+      </button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="relative">
+      <input 
+        v-model="searchQuery"
+        type="text"
+        placeholder="Search templates..."
+        class="w-full bg-bd-bg-elevated border border-white/10 rounded-lg px-4 py-2.5 text-sm text-bd-text-primary placeholder-bd-text-muted outline-none focus:border-bd-accent-primary"
+      />
+    </div>
+
+    <!-- Filter Panel -->
+    <Transition name="slide">
+      <div v-if="showFilters" class="card-elevated space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="font-semibold text-bd-text-primary">Filters</h3>
+          <button 
+            v-if="hasActiveFilters"
+            @click="clearFilters"
+            class="text-sm text-bd-accent-primary hover:underline"
+          >
+            Clear all
+          </button>
+        </div>
+
+        <!-- Category Filter -->
+        <div>
+          <h4 class="text-sm text-bd-text-muted mb-2">Category</h4>
+          <div class="flex flex-wrap gap-2">
+            <button 
+              v-for="category in categories" 
+              :key="category.id"
+              @click="toggleCategory(category.id)"
+              class="tag cursor-pointer transition-all"
+              :class="selectedCategories.includes(category.id) 
+                ? 'bg-bd-accent-primary/20 text-bd-accent-light border border-bd-accent-primary/30' 
+                : 'hover:bg-white/[0.12]'"
+            >
+              {{ category.name }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Difficulty Filter -->
+        <div>
+          <h4 class="text-sm text-bd-text-muted mb-2">Difficulty</h4>
+          <div class="flex flex-wrap gap-2">
+            <button 
+              v-for="diff in difficulties" 
+              :key="diff.id"
+              @click="toggleDifficulty(diff.id)"
+              class="tag cursor-pointer transition-all"
+              :class="selectedDifficulties.includes(diff.id) 
+                ? diff.activeClass 
+                : 'hover:bg-white/[0.12]'"
+            >
+              {{ diff.label }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Impact Filter -->
+        <div>
+          <h4 class="text-sm text-bd-text-muted mb-2">Impact</h4>
+          <div class="flex flex-wrap gap-2">
+            <button 
+              v-for="imp in impacts" 
+              :key="imp.id"
+              @click="toggleImpact(imp.id)"
+              class="tag cursor-pointer transition-all"
+              :class="selectedImpacts.includes(imp.id) 
+                ? imp.activeClass 
+                : 'hover:bg-white/[0.12]'"
+            >
+              {{ imp.label }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Results Summary -->
+    <div class="flex items-center justify-between text-sm">
+      <span class="text-bd-text-muted">
+        Showing {{ filteredTemplates.length }} of {{ templates.length }} templates
+      </span>
+      <div class="flex items-center gap-2">
+        <span class="text-bd-text-muted">Sort by:</span>
+        <select 
+          v-model="sortBy"
+          class="bg-bd-bg-elevated border border-white/10 rounded-lg px-3 py-1.5 text-sm text-bd-text-primary outline-none focus:border-bd-accent-primary"
         >
-          <div class="flex items-center gap-3 mb-2">
-            <component :is="getPlacementIcon(placement.icon)" class="w-4 h-4 text-bd-accent-primary" />
-            <h3 class="font-semibold text-bd-text-primary">{{ placement.name }}</h3>
-            <span class="tag text-[10px]" :class="getStrengthClass(placement.strength)">
-              {{ placement.strength }}
-            </span>
+          <option value="name">Name</option>
+          <option value="category">Category</option>
+          <option value="impact">Impact (High→Low)</option>
+          <option value="difficulty">Difficulty</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Category Sections (default view) -->
+    <div v-if="!hasAnyFilters" class="grid gap-6">
+      <!-- Author's Note Section -->
+      <div class="card">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-8 rounded-lg bg-bd-purple/20 flex items-center justify-center">
+            <Feather class="w-4 h-4 text-bd-purple" />
           </div>
-          <p class="text-sm text-bd-text-secondary mb-2">{{ placement.description }}</p>
-          <div class="text-xs text-bd-text-muted flex items-center gap-1">
-            <MapPin class="w-3 h-3" />
-            {{ placement.position }}
+          <div>
+            <h3 class="font-semibold text-bd-text-primary">Author's Note</h3>
+            <p class="text-xs text-bd-text-muted">Strongest influence. Style, tone, and scene guidance.</p>
           </div>
+          <span class="ml-auto tag bg-bd-purple/20 text-bd-purple">{{ authorsNoteComponents.length }}</span>
+        </div>
+        
+        <div class="space-y-3">
+          <ResourceCard 
+            v-for="component in authorsNoteComponents" 
+            :key="component.id"
+            :resource="component"
+          />
         </div>
       </div>
-    </section>
 
-    <!-- Components Grid -->
-    <section>
-      <div class="section-header mb-4">
-        <FileText class="w-4 h-4" />
-        <span>Available Components</span>
-      </div>
-
-      <div class="grid gap-4">
-        <!-- Author's Note Section -->
-        <div class="card">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-8 h-8 rounded-lg bg-bd-purple/20 flex items-center justify-center">
-              <Feather class="w-4 h-4 text-bd-purple" />
-            </div>
-            <div>
-              <h3 class="font-semibold text-bd-text-primary">Author's Note Templates</h3>
-              <p class="text-xs text-bd-text-muted">Short guidance for style, tone, and genre</p>
-            </div>
+      <!-- Plot Essentials Section -->
+      <div class="card">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-8 rounded-lg bg-bd-green/20 flex items-center justify-center">
+            <BookMarked class="w-4 h-4 text-bd-green" />
           </div>
-          
-          <div class="space-y-3">
-            <ResourceCard 
-              v-for="component in authorsNoteComponents" 
-              :key="component.id"
-              :resource="component"
-            />
+          <div>
+            <h3 class="font-semibold text-bd-text-primary">Plot Essentials</h3>
+            <p class="text-xs text-bd-text-muted">Always-relevant info: characters, relationships, world state.</p>
           </div>
+          <span class="ml-auto tag bg-bd-green/20 text-bd-green">{{ plotEssentialsComponents.length }}</span>
         </div>
-
-        <!-- Plot Essentials Section -->
-        <div class="card">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-8 h-8 rounded-lg bg-bd-green/20 flex items-center justify-center">
-              <BookMarked class="w-4 h-4 text-bd-green" />
-            </div>
-            <div>
-              <h3 class="font-semibold text-bd-text-primary">Plot Essentials Templates</h3>
-              <p class="text-xs text-bd-text-muted">Character info, relationships, and ongoing plot points</p>
-            </div>
-          </div>
-          
-          <div class="space-y-3">
-            <ResourceCard 
-              v-for="component in plotEssentialsComponents" 
-              :key="component.id"
-              :resource="component"
-            />
-          </div>
-        </div>
-
-        <!-- Story Summary Section -->
-        <div class="card">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-8 h-8 rounded-lg bg-bd-cyan/20 flex items-center justify-center">
-              <ScrollText class="w-4 h-4 text-bd-cyan" />
-            </div>
-            <div>
-              <h3 class="font-semibold text-bd-text-primary">Story Summary Templates</h3>
-              <p class="text-xs text-bd-text-muted">Track your story's overall direction</p>
-            </div>
-          </div>
-          
-          <div class="space-y-3">
-            <ResourceCard 
-              v-for="component in storySummaryComponents" 
-              :key="component.id"
-              :resource="component"
-            />
-          </div>
+        
+        <div class="space-y-3">
+          <ResourceCard 
+            v-for="component in plotEssentialsComponents" 
+            :key="component.id"
+            :resource="component"
+          />
         </div>
       </div>
-    </section>
 
-    <!-- Tips Section -->
-    <section class="card-elevated">
-      <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-        <Lightbulb class="w-5 h-5 text-bd-warning" />
-        Pro Tips
-      </h2>
-      <ul class="space-y-3 text-sm text-bd-text-secondary">
-        <li class="flex items-start gap-2">
-          <Check class="w-4 h-4 text-bd-success mt-0.5 flex-shrink-0" />
-          <span><strong class="text-bd-text-primary">Author's Note</strong> has the strongest influence since it appears near the end of context. Keep it concise!</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <Check class="w-4 h-4 text-bd-success mt-0.5 flex-shrink-0" />
-          <span><strong class="text-bd-text-primary">Plot Essentials</strong> is great for character sheets and relationship tracking.</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <Check class="w-4 h-4 text-bd-success mt-0.5 flex-shrink-0" />
-          <span><strong class="text-bd-text-primary">Story Summary</strong> works well with Auto Summarization to keep the AI on track.</span>
-        </li>
-        <li class="flex items-start gap-2">
-          <Check class="w-4 h-4 text-bd-success mt-0.5 flex-shrink-0" />
-          <span>Don't overload any single component—spread information across appropriate locations.</span>
-        </li>
-      </ul>
-    </section>
+      <!-- Story Summary Section -->
+      <div class="card">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-8 rounded-lg bg-bd-cyan/20 flex items-center justify-center">
+            <ScrollText class="w-4 h-4 text-bd-cyan" />
+          </div>
+          <div>
+            <h3 class="font-semibold text-bd-text-primary">Story Summary</h3>
+            <p class="text-xs text-bd-text-muted">Track overall direction, arcs, and long-term goals.</p>
+          </div>
+          <span class="ml-auto tag bg-bd-cyan/20 text-bd-cyan">{{ storySummaryComponents.length }}</span>
+        </div>
+        
+        <div class="space-y-3">
+          <ResourceCard 
+            v-for="component in storySummaryComponents" 
+            :key="component.id"
+            :resource="component"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtered Results -->
+    <div v-if="hasAnyFilters" class="grid gap-3">
+      <ResourceCard 
+        v-for="template in filteredTemplates" 
+        :key="template.id"
+        :resource="template"
+      />
+      
+      <!-- Empty State -->
+      <div v-if="filteredTemplates.length === 0" class="text-center py-12">
+        <FileText class="w-12 h-12 text-bd-text-muted mx-auto mb-4" />
+        <h3 class="text-lg font-semibold text-bd-text-primary mb-2">No templates found</h3>
+        <p class="text-bd-text-secondary">
+          Try adjusting your search or filters.
+        </p>
+        <button @click="clearAll" class="btn btn-secondary mt-4">
+          Clear Filters
+        </button>
+      </div>
+    </div>
 
     </template>
   </div>
@@ -571,13 +670,19 @@
 <script setup>
 import { ref, computed } from 'vue'
 import ResourceCard from '@/components/ui/ResourceCard.vue'
-import { INSTRUCTIONS, PLACEMENTS } from '@/data/repository'
+import { 
+  TEMPLATES, 
+  TEMPLATE_CATEGORIES,
+  getEssentialTemplates,
+  getStarterSet,
+  getHighImpactTemplates
+} from '@/data/plotComponents'
 import { 
   Bookmark, Info, MapPin, FileText, Feather, BookMarked, ScrollText, 
   Lightbulb, Check, BookOpen, Layers, HelpCircle, User, Globe, Plus,
   Users, Sword, Star, RefreshCw, MessageSquare, Heart, Volume2, Ruler,
   Rocket, Focus, AlertTriangle, Database, Brain, ArrowRightLeft,
-  Sparkles, Scissors, MessageCircle, XCircle, Edit
+  Sparkles, Scissors, MessageCircle, XCircle, Edit, SlidersHorizontal, Zap
 } from 'lucide-vue-next'
 
 const activeTab = ref('templates')
@@ -587,36 +692,156 @@ const tabs = [
   { id: 'guide', label: 'Guide', icon: BookOpen }
 ]
 
-const placements = PLACEMENTS
+const templates = ref(TEMPLATES)
+const categories = ref(TEMPLATE_CATEGORIES)
+const searchQuery = ref('')
+const selectedCategories = ref([])
+const selectedDifficulties = ref([])
+const selectedImpacts = ref([])
+const showFilters = ref(false)
+const sortBy = ref('name')
+const quickFilter = ref(null)
 
-// Icon component mapping for placements
-const placementIconMap = {
-  'ScrollText': ScrollText,
-  'Feather': Feather,
-  'Bookmark': Bookmark,
-  'FileText': FileText
-}
+const difficulties = [
+  { id: 'beginner', label: 'Beginner', activeClass: 'bg-bd-green/20 text-bd-green border border-bd-green/30' },
+  { id: 'intermediate', label: 'Intermediate', activeClass: 'bg-bd-amber/20 text-bd-amber border border-bd-amber/30' },
+  { id: 'advanced', label: 'Advanced', activeClass: 'bg-bd-pink/20 text-bd-pink border border-bd-pink/30' }
+]
 
-const getPlacementIcon = (iconName) => {
-  return placementIconMap[iconName] || FileText
-}
+const impacts = [
+  { id: 'high', label: 'High Impact', activeClass: 'bg-bd-purple/20 text-bd-purple border border-bd-purple/30' },
+  { id: 'medium', label: 'Medium Impact', activeClass: 'bg-bd-blue/20 text-bd-blue border border-bd-blue/30' },
+  { id: 'low', label: 'Low Impact', activeClass: 'bg-white/20 text-bd-text-muted border border-white/20' }
+]
 
-const getStrengthClass = (strength) => {
-  if (strength === 'Strongest') return 'bg-bd-success/20 text-bd-success'
-  if (strength === 'Moderate') return 'bg-bd-info/20 text-bd-info'
-  return 'bg-white/10 text-bd-text-muted'
-}
-
-// Filter instructions that are templates with specific placements
+// Filter templates by category
 const authorsNoteComponents = computed(() => 
-  INSTRUCTIONS.filter(i => i.placement === 'authors-note' || i.tags.includes('authors-note'))
+  TEMPLATES.filter(t => t.category === 'authors-note')
 )
 
 const plotEssentialsComponents = computed(() => 
-  INSTRUCTIONS.filter(i => i.placement === 'plot-essentials' || i.tags.includes('plot-essentials'))
+  TEMPLATES.filter(t => t.category === 'plot-essentials')
 )
 
 const storySummaryComponents = computed(() => 
-  INSTRUCTIONS.filter(i => i.placement === 'story-summary' || i.tags.includes('story-summary'))
+  TEMPLATES.filter(t => t.category === 'story-summary')
 )
+
+const filteredTemplates = computed(() => {
+  let result = [...templates.value]
+  
+  // Apply quick filter first
+  if (quickFilter.value === 'essential') {
+    result = getEssentialTemplates()
+  } else if (quickFilter.value === 'starter') {
+    result = getStarterSet()
+  } else if (quickFilter.value === 'high-impact') {
+    result = getHighImpactTemplates()
+  }
+  
+  // Filter by search query
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase()
+    result = result.filter(t => 
+      t.name.toLowerCase().includes(query) ||
+      t.description.toLowerCase().includes(query) ||
+      t.tags.some(tag => tag.toLowerCase().includes(query))
+    )
+  }
+  
+  // Filter by selected categories
+  if (selectedCategories.value.length > 0) {
+    result = result.filter(t => selectedCategories.value.includes(t.category))
+  }
+  
+  // Filter by selected difficulties
+  if (selectedDifficulties.value.length > 0) {
+    result = result.filter(t => selectedDifficulties.value.includes(t.difficulty))
+  }
+  
+  // Filter by selected impacts
+  if (selectedImpacts.value.length > 0) {
+    result = result.filter(t => selectedImpacts.value.includes(t.impact))
+  }
+  
+  // Sort
+  if (sortBy.value === 'name') {
+    result.sort((a, b) => a.name.localeCompare(b.name))
+  } else if (sortBy.value === 'category') {
+    result.sort((a, b) => a.category.localeCompare(b.category))
+  } else if (sortBy.value === 'impact') {
+    const impactOrder = { 'high': 0, 'medium': 1, 'low': 2 }
+    result.sort((a, b) => (impactOrder[a.impact] || 3) - (impactOrder[b.impact] || 3))
+  } else if (sortBy.value === 'difficulty') {
+    const diffOrder = { 'beginner': 0, 'intermediate': 1, 'advanced': 2 }
+    result.sort((a, b) => (diffOrder[a.difficulty] || 3) - (diffOrder[b.difficulty] || 3))
+  }
+  
+  return result
+})
+
+const hasActiveFilters = computed(() => 
+  selectedCategories.value.length > 0 || 
+  selectedDifficulties.value.length > 0 || 
+  selectedImpacts.value.length > 0
+)
+
+const hasAnyFilters = computed(() => 
+  searchQuery.value || 
+  quickFilter.value || 
+  hasActiveFilters.value
+)
+
+const toggleQuickFilter = (filter) => {
+  if (quickFilter.value === filter) {
+    quickFilter.value = null
+  } else {
+    quickFilter.value = filter
+    selectedCategories.value = []
+    selectedDifficulties.value = []
+    selectedImpacts.value = []
+  }
+}
+
+const toggleCategory = (categoryId) => {
+  quickFilter.value = null
+  const index = selectedCategories.value.indexOf(categoryId)
+  if (index > -1) {
+    selectedCategories.value.splice(index, 1)
+  } else {
+    selectedCategories.value.push(categoryId)
+  }
+}
+
+const toggleDifficulty = (difficultyId) => {
+  quickFilter.value = null
+  const index = selectedDifficulties.value.indexOf(difficultyId)
+  if (index > -1) {
+    selectedDifficulties.value.splice(index, 1)
+  } else {
+    selectedDifficulties.value.push(difficultyId)
+  }
+}
+
+const toggleImpact = (impactId) => {
+  quickFilter.value = null
+  const index = selectedImpacts.value.indexOf(impactId)
+  if (index > -1) {
+    selectedImpacts.value.splice(index, 1)
+  } else {
+    selectedImpacts.value.push(impactId)
+  }
+}
+
+const clearFilters = () => {
+  selectedCategories.value = []
+  selectedDifficulties.value = []
+  selectedImpacts.value = []
+  quickFilter.value = null
+}
+
+const clearAll = () => {
+  searchQuery.value = ''
+  clearFilters()
+}
 </script>
