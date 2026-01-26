@@ -29,7 +29,6 @@ export {
   TEMPLATE_CATEGORIES,
   TEMPLATES,
   getTemplatesByCategory,
-  getTemplatesByPlacement,
   searchTemplates,
   getAuthorsNoteTemplates,
   getPlotEssentialsTemplates,
@@ -51,10 +50,10 @@ export {
 // Scripts
 export {
   SCRIPT_CATEGORIES,
-  UTILITY_SCRIPTS,
   SCRIPTS,
   getScriptsByCategory,
-  getUtilityScripts,
+  getAllScripts,
+  getEssentialScripts,
   searchScripts,
   getCategoryCounts,
   updateCategoryCounts

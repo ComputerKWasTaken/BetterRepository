@@ -36,11 +36,11 @@
       <section class="card">
         <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
           <HelpCircle class="w-5 h-5 text-bd-blue" />
-          What Are Scripts?
+          What Is Scripting?
         </h2>
         <p class="text-bd-text-secondary mb-4">
-          The scripting feature allows you to <strong>add additional features or modify existing features</strong> by 
-          changing the model's context or output. You can also modify the player's input and the opening story.
+          Scripting allows creators to <strong>modify the player experience</strong> beyond what is supported in the Scenario editor. 
+          Scripts use JavaScript to modify context, input, and output.
         </p>
         <div class="grid md:grid-cols-2 gap-4">
           <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
@@ -50,10 +50,11 @@
             </h3>
             <ul class="text-sm text-bd-text-secondary space-y-1">
               <li>• Modify player input before processing</li>
-              <li>• Inject dynamic content into context</li>
-              <li>• Format and post-process AI output</li>
+              <li>• Change the text sent to the AI model</li>
+              <li>• Modify the AI's output before displaying</li>
               <li>• Manage story cards programmatically</li>
-              <li>• Track game state across turns</li>
+              <li>• Track persistent game state across turns</li>
+              <li>• Display messages to the player</li>
             </ul>
           </div>
           <div class="p-4 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
@@ -62,10 +63,11 @@
               Important Notes
             </h3>
             <ul class="text-sm text-bd-text-secondary space-y-1">
-              <li>• Scripts use <strong>JavaScript</strong> (no async)</li>
-              <li>• Added to <strong>scenarios</strong>, not adventures</li>
-              <li>• All adventures inherit scenario scripts</li>
-              <li>• Updates affect all existing adventures</li>
+              <li>• Scripts use <strong>JavaScript</strong> (no async/await)</li>
+              <li>• Attached to <strong>Scenarios</strong>, not adventures</li>
+              <li>• Only <strong>Simple Start</strong> and <strong>Character Creator</strong> scenarios can have scripts</li>
+              <li>• Only the scenario creator can see the scripts</li>
+              <li>• Scripts may be reviewed for moderation</li>
             </ul>
           </div>
         </div>
@@ -74,7 +76,7 @@
             <AlertTriangle class="w-5 h-5 text-bd-pink mt-0.5 flex-shrink-0" />
             <p class="text-sm text-bd-text-secondary">
               <strong class="text-bd-text-primary">Warning:</strong> Updating scripts in a published scenario 
-              is <strong>not recommended</strong> as it affects all existing adventures using that scenario.
+              affects <strong>all existing adventures</strong> using that scenario. Back up before making changes!
             </p>
           </div>
         </div>
@@ -101,12 +103,16 @@
         </div>
       </section>
 
-      <!-- Script Files -->
+      <!-- Script Files (Hooks) -->
       <section class="card">
         <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
           <FileCode class="w-5 h-5 text-bd-cyan" />
-          Script Files
+          Script Files (Lifecycle Hooks)
         </h2>
+        <p class="text-bd-text-secondary mb-4">
+          The Scripting API consists of <strong>three lifecycle hooks</strong> plus a shared library. 
+          For non-library scripts, the last line must always be <code class="text-bd-green">modifier(text)</code>
+        </p>
         
         <div class="space-y-4">
           <!-- Library -->
@@ -117,96 +123,246 @@
               <span class="tag bg-bd-purple/20 text-bd-purple text-xs">Runs First</span>
             </h3>
             <p class="text-sm text-bd-text-secondary mb-2">
-              The library <strong>isn't a modifier</strong>, but runs before every modifier. Use it to define 
-              functions and values needed globally. You can write your entire code here and call it from modifiers.
+              A shared library of functions and values that can be used in other scripts. 
+              <strong>Not a modifier</strong> — runs before every modifier. Define helper functions and initialize state here.
             </p>
             <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
-              <span class="text-bd-text-muted">// Define helper functions here</span><br>
-              <span class="text-bd-purple">function</span> <span class="text-bd-cyan">myHelper</span>() { ... }
+              <span class="text-bd-text-muted">// Define helper functions and state</span><br>
+              state.hp = state.hp ?? 100;<br>
+              <span class="text-bd-purple">function</span> <span class="text-bd-cyan">getHPBar</span>() { ... }
             </div>
           </div>
 
-          <!-- Input -->
+          <!-- Input (onInput) -->
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
               <ArrowRightToLine class="w-4 h-4 text-bd-green" />
               Input Modifier
+              <span class="tag bg-bd-green/20 text-bd-green text-xs">onInput</span>
             </h3>
             <p class="text-sm text-bd-text-secondary mb-2">
-              Can <strong>change, view, or replace</strong> the player's input. Player actions have the format 
-              <code class="text-bd-green">\n> You ...\n</code> where <code>...</code> is the action. Story actions do not have this format.
+              Modifies the <strong>player's input text</strong> before it is used to construct the model context. 
+              The <code class="text-bd-green">text</code> parameter contains what the player entered.
             </p>
             <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
               <span class="text-bd-text-muted">// Process commands, transform input</span><br>
-              <span class="text-bd-purple">if</span> (text.includes(<span class="text-bd-green">"/roll"</span>)) { ... }
+              <span class="text-bd-purple">if</span> (text.includes(<span class="text-bd-green">":status"</span>)) { ... }
             </div>
           </div>
 
-          <!-- Context -->
+          <!-- Context (onModelContext) -->
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
               <Layers class="w-4 h-4 text-bd-blue" />
               Context Modifier
+              <span class="tag bg-bd-blue/20 text-bd-blue text-xs">onModelContext</span>
             </h3>
             <p class="text-sm text-bd-text-secondary mb-2">
-              Can <strong>change, view, or replace</strong> the context sent to the AI. 
-              <strong>Cannot</strong> view or modify AI Instructions directly.
+              Changes the <strong>text sent to the AI</strong> before the model is called. 
+              The <code class="text-bd-green">text</code> parameter is what would otherwise be sent to the AI.
             </p>
             <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
-              <span class="text-bd-text-muted">// Inject dynamic content</span><br>
-              text = <span class="text-bd-green">`[Stats: HP ${hp}]\n`</span> + text;
+              <span class="text-bd-text-muted">// Inject dynamic content into context</span><br>
+              text = <span class="text-bd-green">`[Stats: HP ${state.hp}]\n`</span> + text;
             </div>
           </div>
 
-          <!-- Output -->
+          <!-- Output (onOutput) -->
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
               <ArrowLeftToLine class="w-4 h-4 text-bd-amber" />
               Output Modifier
+              <span class="tag bg-bd-amber/20 text-bd-amber text-xs">onOutput</span>
             </h3>
             <p class="text-sm text-bd-text-secondary mb-2">
-              Similar to input modifier, but for the <strong>AI's output</strong> instead. 
-              Use for formatting and post-processing.
+              Modifies the <strong>model's output text</strong> before it is returned to the player. 
+              Use for formatting, filtering, or post-processing AI responses.
             </p>
             <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
-              <span class="text-bd-text-muted">// Format output, extract info</span><br>
-              text = text.replace(<span class="text-bd-green">/\n{3,}/g</span>, <span class="text-bd-green">"\n\n"</span>);
+              <span class="text-bd-text-muted">// Format output, clean up text</span><br>
+              text = text.replace(<span class="text-bd-green">/\n{3,}/g</span>, <span class="text-bd-green">"\\n\\n"</span>);
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Global Variables -->
+      <!-- API Parameters -->
       <section class="card">
         <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
           <Database class="w-5 h-5 text-bd-green" />
-          Global Variables & State
+          API Parameters
         </h2>
         <p class="text-bd-text-secondary mb-4">
-          AI Dungeon provides several pre-existing variables. The most useful is <code class="text-bd-green">info.actionCount</code> 
-          which contains the number of turns that have taken place.
+          Scripts have access to these parameters directly — no need to deconstruct from an object.
         </p>
         
-        <div class="p-4 rounded-lg bg-bd-amber/10 border border-bd-amber/30 mb-4">
+        <div class="space-y-4">
+          <!-- text -->
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <h3 class="font-semibold text-bd-text-primary mb-2">
+              <code class="text-bd-green">text</code>
+            </h3>
+            <ul class="text-sm text-bd-text-secondary space-y-1">
+              <li>• <strong>onInput:</strong> The text entered by the player</li>
+              <li>• <strong>onModelContext:</strong> The text that would be sent to the AI</li>
+              <li>• <strong>onOutput:</strong> The text that would be returned to the player</li>
+            </ul>
+          </div>
+
+          <!-- history -->
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <h3 class="font-semibold text-bd-text-primary mb-2">
+              <code class="text-bd-green">history</code>
+            </h3>
+            <p class="text-sm text-bd-text-secondary mb-2">Array of recent actions. Each action has:</p>
+            <ul class="text-sm text-bd-text-secondary space-y-1">
+              <li>• <code class="text-bd-cyan">text</code> - The text of the action</li>
+              <li>• <code class="text-bd-cyan">type</code> - Type: <code>start</code>, <code>continue</code>, <code>do</code>, <code>say</code>, <code>story</code>, <code>see</code></li>
+            </ul>
+          </div>
+
+          <!-- storyCards -->
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <h3 class="font-semibold text-bd-text-primary mb-2">
+              <code class="text-bd-green">storyCards</code>
+            </h3>
+            <p class="text-sm text-bd-text-secondary mb-2">Array of story cards. Each card has:</p>
+            <ul class="text-sm text-bd-text-secondary space-y-1">
+              <li>• <code class="text-bd-cyan">id</code> - Unique numerical ID</li>
+              <li>• <code class="text-bd-cyan">keys</code> - Trigger keys</li>
+              <li>• <code class="text-bd-cyan">entry</code> - The card's content</li>
+              <li>• <code class="text-bd-cyan">type</code> - Category type</li>
+            </ul>
+          </div>
+
+          <!-- state -->
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <h3 class="font-semibold text-bd-text-primary mb-2">
+              <code class="text-bd-green">state</code>
+            </h3>
+            <p class="text-sm text-bd-text-secondary mb-2">Persistent object for storing data across turns. Special fields:</p>
+            <ul class="text-sm text-bd-text-secondary space-y-1">
+              <li>• <code class="text-bd-cyan">state.memory.context</code> - Added to context beginning (replaces Memory)</li>
+              <li>• <code class="text-bd-cyan">state.memory.authorsNote</code> - Added before last AI response</li>
+              <li>• <code class="text-bd-cyan">state.memory.frontMemory</code> - Added to context end</li>
+              <li>• <code class="text-bd-cyan">state.message</code> - Shown to the user as info message</li>
+            </ul>
+          </div>
+
+          <!-- info -->
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <h3 class="font-semibold text-bd-text-primary mb-2">
+              <code class="text-bd-green">info</code>
+            </h3>
+            <p class="text-sm text-bd-text-secondary mb-2">Additional useful values:</p>
+            <ul class="text-sm text-bd-text-secondary space-y-1">
+              <li>• <code class="text-bd-cyan">info.actionCount</code> - Total number of actions</li>
+              <li>• <code class="text-bd-cyan">info.characterNames</code> - Array of player character names (multiplayer)</li>
+              <li>• <code class="text-bd-cyan">info.maxChars</code> - Max characters for context <em>(onModelContext only)</em></li>
+              <li>• <code class="text-bd-cyan">info.memoryLength</code> - Length of memory section <em>(onModelContext only)</em></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="p-4 rounded-lg bg-bd-amber/10 border border-bd-amber/30 mt-4">
           <div class="flex items-start gap-3">
             <Lightbulb class="w-5 h-5 text-bd-amber mt-0.5 flex-shrink-0" />
             <p class="text-sm text-bd-text-secondary">
-              <strong class="text-bd-text-primary">Note:</strong> The first real turn is <code class="text-bd-green">'2'</code>, 
-              not <code class="text-bd-green">'1'</code>. This can be unintuitive when you're getting started.
+              <strong class="text-bd-text-primary">Note:</strong> The first real turn is <code class="text-bd-green">2</code>, 
+              not <code class="text-bd-green">1</code>. This can be unintuitive when you're getting started.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- API Functions -->
+      <section class="card">
+        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
+          <Wrench class="w-5 h-5 text-bd-cyan" />
+          API Functions
+        </h2>
+        
+        <div class="space-y-4">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <h3 class="font-semibold text-bd-text-primary mb-2">
+              <code class="text-bd-green">log(message)</code>
+            </h3>
+            <p class="text-sm text-bd-text-secondary">
+              Logs information to the console. <code>console.log()</code> also works.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <h3 class="font-semibold text-bd-text-primary mb-2">
+              <code class="text-bd-green">addStoryCard(keys, entry, type)</code>
+            </h3>
+            <p class="text-sm text-bd-text-secondary">
+              Adds a new story card. Returns index of new card, or <code>false</code> if card with same keys exists.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <h3 class="font-semibold text-bd-text-primary mb-2">
+              <code class="text-bd-green">updateStoryCard(index, keys, entry, type)</code>
+            </h3>
+            <p class="text-sm text-bd-text-secondary">
+              Updates an existing story card. Throws error if card doesn't exist.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <h3 class="font-semibold text-bd-text-primary mb-2">
+              <code class="text-bd-green">removeStoryCard(index)</code>
+            </h3>
+            <p class="text-sm text-bd-text-secondary">
+              Removes a story card. Throws error if card doesn't exist.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Return Values -->
+      <section class="card">
+        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
+          <ArrowLeftToLine class="w-5 h-5 text-bd-amber" />
+          Return Values
+        </h2>
+        <p class="text-bd-text-secondary mb-4">
+          All modifiers must return an object. You can return these properties:
+        </p>
+        
+        <div class="space-y-4">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <h3 class="font-semibold text-bd-text-primary mb-2">
+              <code class="text-bd-green">{ text: "modified text" }</code>
+            </h3>
+            <p class="text-sm text-bd-text-secondary">
+              The modified text to use instead of the original. <strong>Required</strong> in most cases.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-white/[0.06]">
+            <h3 class="font-semibold text-bd-text-primary mb-2">
+              <code class="text-bd-green">{ stop: true }</code>
+            </h3>
+            <p class="text-sm text-bd-text-secondary">
+              If <code>stop === true</code>, the game loop will not proceed. Useful when a player input should update state but not call the AI.
             </p>
           </div>
         </div>
 
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-white/[0.06]">
-          <h3 class="font-semibold text-bd-text-primary mb-3">Defining Custom Global Variables</h3>
-          <p class="text-sm text-bd-text-secondary mb-3">Put this in your <strong>Library</strong> to initialize persistent state:</p>
-          <pre class="text-sm text-bd-text-secondary font-mono overflow-x-auto"><span class="text-bd-text-muted">// Initialize with default values if not set</span>
-state.myCustomString = state.myCustomString || <span class="text-bd-green">''</span>;
-state.myCustomBoolean = state.myCustomBoolean || <span class="text-bd-purple">false</span>;
-state.playerHP = state.playerHP || <span class="text-bd-amber">100</span>;</pre>
-          <p class="text-xs text-bd-text-muted mt-3">
-            This pattern ensures variables persist across turns without resetting.
-          </p>
+        <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/30 mt-4">
+          <div class="flex items-start gap-3">
+            <AlertTriangle class="w-5 h-5 text-bd-pink mt-0.5 flex-shrink-0" />
+            <div class="text-sm text-bd-text-secondary">
+              <p class="mb-2"><strong class="text-bd-text-primary">Warning about empty strings:</strong></p>
+              <ul class="space-y-1">
+                <li>• <strong>onInput:</strong> Empty string throws error</li>
+                <li>• <strong>onModelContext:</strong> Empty string rebuilds context without script</li>
+                <li>• <strong>onOutput:</strong> Empty string throws error</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -422,83 +578,94 @@ if (card !== null) {
         <div>
           <h3 class="font-semibold text-bd-text-primary mb-1">Advanced Feature</h3>
           <p class="text-sm text-bd-text-secondary">
-            Scripts require familiarity with AI Dungeon's scripting system. 
-            Make sure to backup your scenarios before applying scripts.
+            Scripts require JavaScript knowledge. Make sure to backup your scenarios before applying scripts.
+            Enable "Run Dangerous Scripts" in Account Settings if scripts don't work.
           </p>
         </div>
       </div>
     </section>
 
-    <!-- Coming Soon Notice -->
-    <section class="card-elevated border-bd-info/30">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 rounded-xl bg-bd-info/20 flex items-center justify-center flex-shrink-0">
-          <Construction class="w-6 h-6 text-bd-info" />
-        </div>
-        <div>
-          <h2 class="text-lg font-semibold text-bd-text-primary mb-2">Scripts Collection Coming Soon!</h2>
-          <p class="text-bd-text-secondary mb-4">
-            I'm curating a collection of useful scripts for AI Dungeon. 
-            Planned categories include:
-          </p>
-          <ul class="space-y-2 text-sm text-bd-text-secondary">
-            <li class="flex items-center gap-2">
-              <Dices class="w-4 h-4 text-bd-purple" />
-              <span><strong>Dice & RNG Systems</strong> - Roll dice, random events, probability systems</span>
-            </li>
-            <li class="flex items-center gap-2">
-              <Clock class="w-4 h-4 text-bd-blue" />
-              <span><strong>Time & Calendar</strong> - Day/night cycles, scheduling, time tracking</span>
-            </li>
-            <li class="flex items-center gap-2">
-              <Heart class="w-4 h-4 text-bd-error" />
-              <span><strong>Relationship Trackers</strong> - NPC affinity and relationship systems</span>
-            </li>
-            <li class="flex items-center gap-2">
-              <Backpack class="w-4 h-4 text-bd-amber" />
-              <span><strong>Inventory Systems</strong> - Item management and crafting</span>
-            </li>
-            <li class="flex items-center gap-2">
-              <Swords class="w-4 h-4 text-bd-error" />
-              <span><strong>Combat Enhancements</strong> - HP tracking, status effects, combat flow</span>
-            </li>
-            <li class="flex items-center gap-2">
-              <Wand2 class="w-4 h-4 text-bd-cyan" />
-              <span><strong>Magic Systems</strong> - Mana, spell slots, cooldowns</span>
-            </li>
-          </ul>
-        </div>
+    <!-- Search and Filter -->
+    <div class="flex flex-wrap items-center gap-2">
+      <div class="flex-1 min-w-[200px]">
+        <input 
+          v-model="searchQuery"
+          type="text"
+          placeholder="Search scripts..."
+          class="w-full bg-bd-bg-elevated border border-white/10 rounded-lg px-4 py-2.5 text-sm text-bd-text-primary placeholder-bd-text-muted outline-none focus:border-bd-accent-primary"
+        />
       </div>
-    </section>
+      <select 
+        v-model="selectedCategory"
+        class="bg-bd-bg-elevated border border-white/10 rounded-lg px-3 py-2.5 text-sm text-bd-text-primary outline-none focus:border-bd-accent-primary"
+      >
+        <option value="">All Categories</option>
+        <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+          {{ cat.name }} ({{ cat.count }})
+        </option>
+      </select>
+      <select 
+        v-model="selectedDifficulty"
+        class="bg-bd-bg-elevated border border-white/10 rounded-lg px-3 py-2.5 text-sm text-bd-text-primary outline-none focus:border-bd-accent-primary"
+      >
+        <option value="">All Difficulties</option>
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+    </div>
 
-    <!-- Script Categories Preview -->
-    <section>
-      <div class="section-header mb-4">
-        <FolderOpen class="w-4 h-4" />
-        <span>Script Categories</span>
-      </div>
+    <!-- Results Summary -->
+    <div class="flex items-center justify-between text-sm">
+      <span class="text-bd-text-muted">
+        Showing {{ filteredScripts.length }} of {{ scripts.length }} scripts
+      </span>
+    </div>
 
-      <div class="grid md:grid-cols-3 gap-4">
-        <div v-for="category in scriptCategories" :key="category.name" class="card group">
-          <div class="flex items-center gap-3 mb-3">
-            <div 
-              class="w-10 h-10 rounded-xl flex items-center justify-center"
-              :class="category.bgClass"
-            >
-              <component :is="category.icon" class="w-5 h-5" :class="category.iconClass" />
-            </div>
-            <div>
-              <h3 class="font-semibold text-bd-text-primary">{{ category.name }}</h3>
-              <span class="text-xs text-bd-text-muted">{{ category.count }} scripts</span>
-            </div>
+    <!-- Scripts by Category -->
+    <div v-if="!searchQuery && !selectedCategory && !selectedDifficulty" class="space-y-6">
+      <div v-for="category in categoriesWithScripts" :key="category.id" class="card">
+        <div class="flex items-center gap-3 mb-4">
+          <div 
+            class="w-8 h-8 rounded-lg flex items-center justify-center"
+            :class="getCategoryBgClass(category.color)"
+          >
+            <component :is="getCategoryIcon(category.icon)" class="w-4 h-4" :class="getCategoryTextClass(category.color)" />
           </div>
-          <p class="text-sm text-bd-text-secondary">{{ category.description }}</p>
-          <div class="mt-3 flex items-center justify-between">
-            <span class="badge badge-new">Coming Soon</span>
+          <div>
+            <h3 class="font-semibold text-bd-text-primary">{{ category.name }}</h3>
+            <p class="text-xs text-bd-text-muted">{{ category.description }}</p>
           </div>
+          <span class="ml-auto tag" :class="getCategoryBgClass(category.color) + ' ' + getCategoryTextClass(category.color)">
+            {{ category.count }}
+          </span>
+        </div>
+        
+        <div class="space-y-3">
+          <ScriptItem 
+            v-for="script in getScriptsForCategory(category.id)" 
+            :key="script.id"
+            :script="script"
+          />
         </div>
       </div>
-    </section>
+    </div>
+
+    <!-- Filtered Results -->
+    <div v-else class="space-y-3">
+      <ScriptItem 
+        v-for="script in filteredScripts" 
+        :key="script.id"
+        :script="script"
+      />
+      
+      <!-- Empty State -->
+      <div v-if="filteredScripts.length === 0" class="text-center py-12">
+        <Code class="w-12 h-12 text-bd-text-muted mx-auto mb-4" />
+        <h3 class="text-lg font-semibold text-bd-text-primary mb-2">No scripts found</h3>
+        <p class="text-bd-text-secondary">Try adjusting your search or filters.</p>
+      </div>
+    </div>
 
     <!-- Contribute CTA -->
     <section class="card-elevated">
@@ -509,7 +676,9 @@ if (card !== null) {
         <div class="flex-1">
           <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Share Your Scripts!</h3>
           <p class="text-bd-text-secondary mb-4">
-            Created useful scripts? Just paste them in a GitHub issue and I'll add them to the collection.
+            Have example scripts to share? Submit them to the 
+            <a href="mailto:support@aidungeon.com" class="text-bd-accent-primary hover:underline">official Guidebook</a> 
+            or post in a GitHub issue here.
           </p>
           <router-link to="/contribute" class="btn btn-primary">
             <GitPullRequest class="w-4 h-4" />
@@ -524,70 +693,96 @@ if (card !== null) {
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import ScriptItem from '@/components/ui/ScriptItem.vue'
 import { 
-  Code, AlertTriangle, Construction, Dices, Clock, Heart, Backpack,
-  Swords, Wand2, FolderOpen, BookOpen, GitPullRequest, HelpCircle, Check,
-  Braces, FileCode, Library, ArrowRightToLine, Layers, ArrowLeftToLine,
-  Database, Lightbulb, Wrench, Plus, Search, Bug, ShieldAlert, Eye,
-  RefreshCw, ExternalLink, Settings
+  SCRIPTS, 
+  SCRIPT_CATEGORIES,
+  getScriptsByCategory,
+  searchScripts
+} from '@/data/scripts'
+import { 
+  Code, AlertTriangle, Dices, Clock, Terminal, Wand2, FolderOpen, 
+  BookOpen, GitPullRequest, HelpCircle, Check, Braces, FileCode, 
+  Library, ArrowRightToLine, Layers, ArrowLeftToLine, Database, 
+  Lightbulb, Wrench, Plus, Search, Bug, ShieldAlert, Eye, RefreshCw, 
+  ExternalLink, Settings
 } from 'lucide-vue-next'
 
 const activeTab = ref('collection')
 
 const tabs = [
-  { id: 'collection', label: 'Collection', icon: Layers },
+  { id: 'collection', label: 'Examples', icon: Layers },
   { id: 'guide', label: 'Guide', icon: BookOpen }
 ]
 
-const scriptCategories = [
-  {
-    name: 'Game Systems',
-    icon: Dices,
-    description: 'Dice rolling, random events, and probability-based mechanics.',
-    count: 0,
-    bgClass: 'bg-bd-purple/20',
-    iconClass: 'text-bd-purple'
-  },
-  {
-    name: 'Tracking & State',
-    icon: Clock,
-    description: 'Time, inventory, relationships, and persistent state management.',
-    count: 0,
-    bgClass: 'bg-bd-blue/20',
-    iconClass: 'text-bd-blue'
-  },
-  {
-    name: 'Combat & Action',
-    icon: Swords,
-    description: 'Combat systems, HP tracking, and action resolution.',
-    count: 0,
-    bgClass: 'bg-bd-error/20',
-    iconClass: 'text-bd-error'
-  },
-  {
-    name: 'Magic & Abilities',
-    icon: Wand2,
-    description: 'Spell systems, mana management, and special abilities.',
-    count: 0,
-    bgClass: 'bg-bd-cyan/20',
-    iconClass: 'text-bd-cyan'
-  },
-  {
-    name: 'Formatting',
-    icon: Settings,
-    description: 'Output formatting, text processing, and display enhancements.',
-    count: 0,
-    bgClass: 'bg-bd-green/20',
-    iconClass: 'text-bd-green'
-  },
-  {
-    name: 'Utilities',
-    icon: FolderOpen,
-    description: 'Helper functions, debugging tools, and general utilities',
-    count: 0,
-    bgClass: 'bg-bd-amber/20',
-    iconClass: 'text-bd-amber'
+const scripts = ref(SCRIPTS)
+const categories = ref(SCRIPT_CATEGORIES)
+const searchQuery = ref('')
+const selectedCategory = ref('')
+const selectedDifficulty = ref('')
+
+const filteredScripts = computed(() => {
+  let result = [...scripts.value]
+  
+  if (searchQuery.value) {
+    result = searchScripts(searchQuery.value)
   }
-]
+  
+  if (selectedCategory.value) {
+    result = result.filter(s => s.category === selectedCategory.value)
+  }
+  
+  if (selectedDifficulty.value) {
+    result = result.filter(s => s.difficulty === selectedDifficulty.value)
+  }
+  
+  return result
+})
+
+const categoriesWithScripts = computed(() => {
+  return categories.value.filter(cat => cat.count > 0)
+})
+
+const getScriptsForCategory = (categoryId) => {
+  return getScriptsByCategory(categoryId)
+}
+
+const iconMap = {
+  'BookOpen': BookOpen,
+  'Dices': Dices,
+  'Clock': Clock,
+  'Terminal': Terminal,
+  'Wand2': Wand2,
+  'FolderOpen': FolderOpen,
+  'Settings': Settings
+}
+
+const getCategoryIcon = (iconName) => {
+  return iconMap[iconName] || FolderOpen
+}
+
+const getCategoryBgClass = (color) => {
+  const map = {
+    'bd-green': 'bg-bd-green/20',
+    'bd-purple': 'bg-bd-purple/20',
+    'bd-blue': 'bg-bd-blue/20',
+    'bd-cyan': 'bg-bd-cyan/20',
+    'bd-pink': 'bg-bd-pink/20',
+    'bd-amber': 'bg-bd-amber/20'
+  }
+  return map[color] || 'bg-white/10'
+}
+
+const getCategoryTextClass = (color) => {
+  const map = {
+    'bd-green': 'text-bd-green',
+    'bd-purple': 'text-bd-purple',
+    'bd-blue': 'text-bd-blue',
+    'bd-cyan': 'text-bd-cyan',
+    'bd-pink': 'text-bd-pink',
+    'bd-amber': 'text-bd-amber'
+  }
+  return map[color] || 'text-bd-text-muted'
+}
 </script>
