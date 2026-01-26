@@ -7,6 +7,7 @@ import PlotComponentsPage from '@/pages/PlotComponentsPage.vue'
 import StoryCardsPage from '@/pages/StoryCardsPage.vue'
 import ScriptsPage from '@/pages/ScriptsPage.vue'
 import ContributePage from '@/pages/ContributePage.vue'
+import EcosystemPage from '@/pages/EcosystemPage.vue'
 
 const routes = [
   {
@@ -44,6 +45,12 @@ const routes = [
     name: 'Contribute',
     component: ContributePage,
     meta: { title: 'Contribute - BetterRepository' }
+  },
+  {
+    path: '/ecosystem',
+    name: 'Ecosystem',
+    component: EcosystemPage,
+    meta: { title: 'Ecosystem - BetterRepository' }
   }
 ]
 

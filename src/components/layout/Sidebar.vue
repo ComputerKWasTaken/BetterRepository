@@ -56,6 +56,15 @@
           <GitPullRequest class="w-4 h-4" />
           <span>Contribute</span>
         </router-link>
+
+        <router-link 
+          to="/ecosystem"
+          class="nav-link"
+          :class="{ 'active': isActive('/ecosystem') }"
+        >
+          <Sparkles class="w-4 h-4" />
+          <span>Ecosystem</span>
+        </router-link>
         
         <a 
           href="https://discord.com/invite/HB2YBZYjyf" 
@@ -84,7 +93,7 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { 
   LayoutGrid, ScrollText, Bookmark, Drama, Code,
-  Link2, GitPullRequest, MessageCircle, ExternalLink, Heart
+  Link2, GitPullRequest, MessageCircle, ExternalLink, Heart, Sparkles
 } from 'lucide-vue-next'
 
 const route = useRoute()
