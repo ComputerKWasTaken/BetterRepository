@@ -63,7 +63,7 @@ export const TEMPLATES = [
     useCase: 'Starting any new story. Foundation for all Author\'s Notes.',
     combinesWith: ['plot-essentials-basic', 'current-scene'],
     description: 'Simple, effective Author\'s Note structure.',
-    purpose: 'Foundation template. Keep it concise—AN has the strongest influence but shouldn\'t be overloaded.',
+    purpose: 'Foundation template. Keep it concise, AN has the strongest influence but shouldn\'t be overloaded.',
     content: `Setting: [Your setting here]
 Theme: [Your theme here]
 Style: [Your preferred writing style]
@@ -399,7 +399,7 @@ Special items: [Plot-relevant items]
     useCase: 'Any story longer than a few sessions. Update every major development.',
     combinesWith: ['story-arc-tracker'],
     description: 'Track overall story direction.',
-    purpose: 'Helps the AI maintain long-term coherence. Write this yourself—auto-summary often gets things wrong.',
+    purpose: 'Helps the AI maintain long-term coherence. Write this yourself, auto-summary often gets things wrong.',
     content: `[Story So Far]
 \${character.name} is [current situation/role].
 

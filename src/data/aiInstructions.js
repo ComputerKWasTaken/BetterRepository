@@ -172,7 +172,7 @@ export const INSTRUCTIONS = [
     tags: ['complete', 'minimal', 'token-efficient', 'universal'],
     models: ['All Models'],
     combinesWith: ['plot-over-description', 'genuine-interaction'],
-    description: 'The shortest effective instruction set—maximum impact, minimum tokens.',
+    description: 'The shortest effective instruction set, maximum impact, minimum tokens.',
     purpose: 'When token count matters or you want a light touch. Covers the absolute essentials that prevent the most common AI problems.',
     content: `The user would like you to pick up a varying novel about the main character's life:
 - Write in second person, present tense
@@ -201,7 +201,7 @@ export const INSTRUCTIONS = [
     tags: ['complete', 'dialogue', 'text-conversation', 'screenplay'],
     models: ['All Models'],
     conflicts: ['atmospheric-writing', 'vivid-action'],
-    description: 'Stories told entirely through dialogue—no narration or description.',
+    description: 'Stories told entirely through dialogue, no narration or description.',
     purpose: 'For text message conversations, screenplays, or pure dialogue experiences. Everything the reader learns comes from what characters say.',
     content: `You are a storyteller writing a story that consists entirely of text conversations. The story should include no descriptions or narration at all, instead focusing entirely on the dialogue between characters.
 
@@ -237,7 +237,7 @@ export const INSTRUCTIONS = [
     models: ['All Models'],
     combinesWith: ['continue-exactly', 'plot-over-description'],
     description: 'The single most important rule: prevents the AI from echoing or restating content.',
-    purpose: 'Stops the #1 AI problem—repeating what you just wrote. This should be in almost every instruction set.',
+    purpose: 'Stops the #1 AI problem, repeating what you just wrote. This should be in almost every instruction set.',
     content: `- Don't repeat, summarize, or fix`
   },
   {
@@ -291,7 +291,7 @@ export const INSTRUCTIONS = [
     combinesWith: ['show-dont-tell', 'no-foreshadowing'],
     conflicts: ['atmospheric-writing'],
     description: 'Lets tone emerge naturally from scenes rather than being stated.',
-    purpose: 'Prevents the AI from over-explaining the mood. The scene speaks for itself—no need to tell readers how to feel.',
+    purpose: 'Prevents the AI from over-explaining the mood. The scene speaks for itself, no need to tell readers how to feel.',
     content: `- Let the tone emerge from the scene. Avoid adding emotion or meaning beyond what characters do or say. Focus on subtlety over explicitness`
   },
   {
@@ -321,8 +321,8 @@ export const INSTRUCTIONS = [
     models: ['All Models'],
     conflicts: ['no-figurative-language'],
     description: 'Allows figurative language only when it genuinely clarifies meaning.',
-    purpose: 'A balanced approach—metaphors are allowed but only when they help readers understand something unfamiliar.',
-    content: `- Not all sentences need flair—only use similes, metaphors, and other figurative comparisons when it improves the reader's understanding (e.g., describing something unfamiliar, like the taste of a rare berry)`
+    purpose: 'A balanced approach, metaphors are allowed but only when they help readers understand something unfamiliar.',
+    content: `- Not all sentences need flair, only use similes, metaphors, and other figurative comparisons when it improves the reader's understanding (e.g., describing something unfamiliar, like the taste of a rare berry)`
   },
   {
     id: 'no-poetic-padding',
@@ -502,7 +502,7 @@ export const INSTRUCTIONS = [
     combinesWith: ['no-sensory-intimacy', 'plot-over-description'],
     conflicts: ['atmospheric-writing'],
     description: 'Minimizes atmospheric and background descriptions.',
-    purpose: 'Keeps focus on characters and action. The environment doesn\'t set the mood—characters do.',
+    purpose: 'Keeps focus on characters and action. The environment doesn\'t set the mood, characters do.',
     content: `- Avoid describing ambient or continuous background sounds
 - Ensure background details are minimal, and avoid atmospheric descriptions
 - Avoid using background characters or environmental noises to express the mood of a scene`
@@ -519,8 +519,8 @@ export const INSTRUCTIONS = [
     models: ['All Models'],
     conflicts: ['no-sensory-intimacy', 'no-background-atmosphere', 'no-figurative-language', 'tight-prose'],
     description: 'Rich environmental and atmospheric descriptions.',
-    purpose: 'For stories that benefit from immersive environmental detail—horror, literary fiction, exploration.',
-    content: `- Use sensory details to establish atmosphere—sounds, smells, textures, lighting, temperature
+    purpose: 'For stories that benefit from immersive environmental detail, horror, literary fiction, exploration.',
+    content: `- Use sensory details to establish atmosphere, sounds, smells, textures, lighting, temperature
 - Let the environment reflect or contrast with the emotional tone of scenes
 - Describe spaces as characters experience them, not as neutral observers`
   },
@@ -539,7 +539,7 @@ export const INSTRUCTIONS = [
     purpose: 'For exciting, cinematic action. Every punch lands, every dodge matters.',
     content: `- Write action sequences beat-by-beat with specific, visceral details
 - Track positioning, movement, and consequences. Every action has a reaction
-- Vary sentence length—short punchy sentences for fast action, longer for tension`
+- Vary sentence length, short punchy sentences for fast action, longer for tension`
   },
 
   // --- Dialogue Focus ---
@@ -572,7 +572,7 @@ export const INSTRUCTIONS = [
     models: ['All Models'],
     description: 'Allows the writing to adapt to different scene types.',
     purpose: 'Prevents the AI from maintaining one tone throughout. Serious scenes feel serious; funny moments can be light.',
-    content: `- Always adjust language to match the scene and the intention of it. Allow for a variety of genres—serious, light-hearted, sentimental, and action-packed if that's what the scene calls for`
+    content: `- Always adjust language to match the scene and the intention of it. Allow for a variety of genres, serious, light-hearted, sentimental, and action-packed if that's what the scene calls for`
   },
 
   // --- Formatting (Writing) ---
@@ -588,7 +588,7 @@ export const INSTRUCTIONS = [
     models: ['All Models'],
     description: 'Outputs plain text without special formatting.',
     purpose: 'Prevents markdown, asterisks, or other formatting from appearing in the story.',
-    content: `- Use only plain text—no formatting, special characters, or markup`
+    content: `- Use only plain text, no formatting, special characters, or markup`
   },
   {
     id: 'adverbs-for-motion',
@@ -979,7 +979,7 @@ export const INSTRUCTIONS = [
     models: ['All Models'],
     description: 'Romance is one possible path, not inevitable.',
     purpose: 'Allows for non-romantic story outcomes. Friendship and other arcs are equally valid.',
-    content: `- Let romance be one of many outcomes—equally support friendship, solitude, or ambition arcs
+    content: `- Let romance be one of many outcomes, equally support friendship, solitude, or ambition arcs
 - Treat all relationships as platonic unless \${character.name} chooses to pursue further`
   },
   {
@@ -1010,7 +1010,7 @@ export const INSTRUCTIONS = [
     tags: ['behavior', 'caring', 'gentle', 'comfort'],
     models: ['Kooling Katie'],
     description: 'Replaces clinical observations with gentle care.',
-    purpose: 'Changes how characters express concern—offers help instead of pointing out problems.',
+    purpose: 'Changes how characters express concern, offers help instead of pointing out problems.',
     content: `[Kooling Katie: Gentle AIN]
 - Caring behaviors must manifest as offers to help ('are you okay?" 'we can take a break') not observations
 - Dialogue about physical state is prohibited unless phrased as a question about wellbeing
@@ -1139,7 +1139,7 @@ export const INSTRUCTIONS = [
     purpose: 'Prevents recaps or scene restarts. The story picks up exactly where it stopped.',
     content: `- Continue EXACTLY from where the story leaves off without reiterating information or content
 - Continue EXACTLY from where the story leaves off, even mid-sentence or mid-word, without reiterating information or content
-- Begin the new output at the next logical story beat—the next line of dialogue, the next sensory detail, the next internal thought, or the next physical action—without any introductory phrase or reference to the previous output's conclusion`
+- Begin the new output at the next logical story beat, the next line of dialogue, the next sensory detail, the next internal thought, or the next physical action, without any introductory phrase or reference to the previous output's conclusion`
   },
   {
     id: 'secrets-buildup',
@@ -1256,8 +1256,8 @@ export const INSTRUCTIONS = [
     models: ['All Models'],
     combinesWith: ['realistic-consequences'],
     description: 'Allows the PC to face real danger and loss.',
-    purpose: 'Meaningful stakes beyond physical harm—political, social, and material loss.',
-    content: `- You are allowed to put \${character.name} in real jeopardy — physically, politically or socially — when it makes sense for the scene and motivations. Such risks must remain credible, have stakes, and trigger realistic consequences (injury, loss of allies, reputational damage, shifts in faction power)`
+    purpose: 'Meaningful stakes beyond physical harm, political, social, and material loss.',
+    content: `- You are allowed to put \${character.name} in real jeopardy ,  physically, politically or socially ,  when it makes sense for the scene and motivations. Such risks must remain credible, have stakes, and trigger realistic consequences (injury, loss of allies, reputational damage, shifts in faction power)`
   },
   {
     id: 'forgiving-world',
@@ -1354,7 +1354,7 @@ Failure, Challenge, and Consequences
     tags: ['control', 'dialogue', 'basic', 'speech'],
     models: ['All Models'],
     description: 'AI never writes the player character\'s dialogue.',
-    purpose: 'Basic control—you write what your character says. AI handles actions.',
+    purpose: 'Basic control, you write what your character says. AI handles actions.',
     content: `- This is a roleplaying scenario. \${character.name} is the user's character. Only the user writes \${character.name}'s speech and dialogue; never decide what \${character.name} says`
   },
   {
@@ -1369,7 +1369,7 @@ Failure, Challenge, and Consequences
     models: ['All Models'],
     combinesWith: ['speech-only-control'],
     description: 'AI never writes speech or actions for PC.',
-    purpose: 'Extended control—you write speech and decide actions.',
+    purpose: 'Extended control, you write speech and decide actions.',
     content: `- Never decide or write speech for \${character.name}`
   },
   {
@@ -1399,7 +1399,7 @@ Failure, Challenge, and Consequences
     models: ['Leshok'],
     combinesWith: ['no-action-no-movement'],
     description: 'Absolute control over the player character.',
-    purpose: 'Maximum control—no assumptions about PC at all. Not even posture or muscle tension.',
+    purpose: 'Maximum control, no assumptions about PC at all. Not even posture or muscle tension.',
     content: `[Leshok's Total Control]
 User Character Rules (\${character.name})
 - Never control \${character.name} in action, thought, expression, reaction, or speech
@@ -1548,7 +1548,7 @@ User Character Rules (\${character.name})
     models: ['All Models'],
     description: 'References real modern culture and brands.',
     purpose: 'For modern settings. Real celebrities, brands, media, and current events exist.',
-    content: `- The world reflects real modern-day culture in full—celebrities, music, sports, video games, technology brands, fashion labels, politics, and global events all exist naturally. They appear in dialogue, media, advertising, online chatter, or casual references`
+    content: `- The world reflects real modern-day culture in full, celebrities, music, sports, video games, technology brands, fashion labels, politics, and global events all exist naturally. They appear in dialogue, media, advertising, online chatter, or casual references`
   },
   {
     id: 'victorian-culture',
@@ -1563,7 +1563,7 @@ User Character Rules (\${character.name})
     conflicts: ['modern-culture', 'scifi-culture'],
     description: 'Enforces Victorian-era social norms and aesthetics.',
     purpose: 'For historically accurate Victorian/Edwardian settings. Class, propriety, and scandal.',
-    content: `- The world reflects Victorian-era culture—strict social etiquette, class consciousness, industrialization, colonialism, and rigid gender roles exist naturally
+    content: `- The world reflects Victorian-era culture, strict social etiquette, class consciousness, industrialization, colonialism, and rigid gender roles exist naturally
 - Characters speak with period-appropriate formality. Propriety governs public behavior; scandal is serious. Technology is steam and gas, not electric. Medicine is primitive. Religion and reputation matter deeply`
   },
   {
@@ -1579,8 +1579,8 @@ User Character Rules (\${character.name})
     conflicts: ['modern-culture', 'scifi-culture'],
     description: 'Enforces medieval social norms and culture.',
     purpose: 'For historically accurate medieval settings. Strict hierarchy, no modern values.',
-    content: `- The world reflects a fully realized medieval culture—nobility, guilds, faith, warfare, trade, healers, herbal lore, folklore, and county conflicts all exist naturally in dialogue and daily life
-- Characters must follow strict medieval class and gender norms. Nobles defer to royalty in public; daughters do not speak over their fathers or the king unless directly invited. Strong women navigate power through wit, etiquette, or political maneuvering—not open rebellion. Backtalk, defiance, or disrespect toward the Crown is rare, dangerous, and never casual. Avoid modern speech or values; no democracy, no equality, no anachronistic attitudes`
+    content: `- The world reflects a fully realized medieval culture, nobility, guilds, faith, warfare, trade, healers, herbal lore, folklore, and county conflicts all exist naturally in dialogue and daily life
+- Characters must follow strict medieval class and gender norms. Nobles defer to royalty in public; daughters do not speak over their fathers or the king unless directly invited. Strong women navigate power through wit, etiquette, or political maneuvering, not open rebellion. Backtalk, defiance, or disrespect toward the Crown is rare, dangerous, and never casual. Avoid modern speech or values; no democracy, no equality, no anachronistic attitudes`
   },
   {
     id: 'scifi-culture',
@@ -1595,7 +1595,7 @@ User Character Rules (\${character.name})
     conflicts: ['victorian-culture', 'medieval-culture'],
     description: 'Establishes sci-fi conventions and technology.',
     purpose: 'For science fiction. FTL, AI, cybernetics are normal. No marveling at tech.',
-    content: `- The world operates on science fiction logic—faster-than-light travel, AI, cybernetics, alien species, and advanced technology are normal parts of life
+    content: `- The world operates on science fiction logic, faster-than-light travel, AI, cybernetics, alien species, and advanced technology are normal parts of life
 - Characters don't marvel at everyday technology. Spaceships are transport, not miracles. Focus on the human stories within the technological setting`
   },
 
@@ -1629,8 +1629,8 @@ User Character Rules (\${character.name})
     conflicts: ['low-fantasy'],
     combinesWith: ['magic-is-normal'],
     description: 'Magic is common and integrated into society.',
-    purpose: 'For epic fantasy. Magic everywhere—enchanted items, magical transport, arcane schools.',
-    content: `- Magic is woven into everyday life—enchanted items, magical transportation, arcane education, and supernatural creatures are normal
+    purpose: 'For epic fantasy. Magic everywhere, enchanted items, magical transport, arcane schools.',
+    content: `- Magic is woven into everyday life, enchanted items, magical transportation, arcane education, and supernatural creatures are normal
 - Society has adapted to magic's existence. Cities may have magical infrastructure, laws govern spell use, and magical professions are respected`
   },
 

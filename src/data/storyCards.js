@@ -109,7 +109,7 @@ export const STORY_CARDS = [
     description: 'A loyal companion character with clear personality and skills.',
     useCase: 'Creating party members or companions who travel with the protagonist.',
     triggers: 'Kira,the scout',
-    entry: `Kira is a skilled scout and tracker who joined the protagonist after they saved her village from bandits. She is practical, observant, and speaks plainly. Kira excels at finding paths, reading tracks, and spotting danger before it finds them. She carries a short bow, two hunting knives, and moves with the quiet confidence of someone who has survived alone in the wilderness. Kira is loyal but not blindly so—she will voice disagreement and expects her opinions to be heard.`
+    entry: `Kira is a skilled scout and tracker who joined the protagonist after they saved her village from bandits. She is practical, observant, and speaks plainly. Kira excels at finding paths, reading tracks, and spotting danger before it finds them. She carries a short bow, two hunting knives, and moves with the quiet confidence of someone who has survived alone in the wilderness. Kira is loyal but not blindly so, she will voice disagreement and expects her opinions to be heard.`
   },
   {
     id: 'example-antagonist',
@@ -123,7 +123,7 @@ export const STORY_CARDS = [
     description: 'A morally complex antagonist with understandable motivations.',
     useCase: 'Creating villains who are more than one-dimensional evil. Shows nuanced antagonist writing.',
     triggers: 'Lord Varen,Varen',
-    entry: `Lord Varen rules the eastern provinces with an iron grip. He believes order must be maintained at any cost—a conviction born from watching his family die in the Peasant Revolts. Varen is intelligent, patient, and ruthless when crossed. He genuinely believes his harsh methods protect the realm from chaos. Varen respects strength and cunning, even in enemies. He wears simple black attire, keeps his grey hair cropped short, and speaks softly—those who know him fear his quiet voice more than any shout.`
+    entry: `Lord Varen rules the eastern provinces with an iron grip. He believes order must be maintained at any cost, a conviction born from watching his family die in the Peasant Revolts. Varen is intelligent, patient, and ruthless when crossed. He genuinely believes his harsh methods protect the realm from chaos. Varen respects strength and cunning, even in enemies. He wears simple black attire, keeps his grey hair cropped short, and speaks softly, those who know him fear his quiet voice more than any shout.`
   },
 
   // ========== LOCATION EXAMPLES ==========
@@ -257,7 +257,7 @@ export const STORY_CARDS = [
     description: 'A cursed item with benefits and drawbacks.',
     useCase: 'Creating items with double-edged effects that create interesting choices.',
     triggers: 'Weeping Pendant,the pendant,black teardrop',
-    entry: `The Weeping Pendant is a black teardrop gemstone on a silver chain. It grants its wearer visions of the future—but only of sorrows to come. The wearer sees deaths, betrayals, and disasters before they happen. Some visions can be prevented, others cannot. The pendant cannot be removed once worn; it falls off only when its wearer dies. Many who wear it are driven mad by the weight of knowing.`
+    entry: `The Weeping Pendant is a black teardrop gemstone on a silver chain. It grants its wearer visions of the future, but only of sorrows to come. The wearer sees deaths, betrayals, and disasters before they happen. Some visions can be prevented, others cannot. The pendant cannot be removed once worn; it falls off only when its wearer dies. Many who wear it are driven mad by the weight of knowing.`
   },
 
   // ========== CONCEPT EXAMPLES ==========
@@ -287,7 +287,7 @@ export const STORY_CARDS = [
     description: 'A technology concept that defines how things work in your world.',
     useCase: 'Establishing technological rules and limitations for your setting.',
     triggers: 'Aether Engine,aether,the engines',
-    entry: `Aether Engines power the machines of the modern age. They draw energy from aether, a luminous gas mined from deep underground. Engines range from small devices that power tools to massive constructs that drive airships. Aether is expensive and controlled by the Mining Consortium. Prolonged exposure to raw aether causes "the Glow"—a wasting sickness that turns skin translucent before death. Engine workers rarely live past forty.`
+    entry: `Aether Engines power the machines of the modern age. They draw energy from aether, a luminous gas mined from deep underground. Engines range from small devices that power tools to massive constructs that drive airships. Aether is expensive and controlled by the Mining Consortium. Prolonged exposure to raw aether causes "the Glow", a wasting sickness that turns skin translucent before death. Engine workers rarely live past forty.`
   }
 ]
 
@@ -370,7 +370,7 @@ export const STORY_CARD_TEMPLATES = [
     essential: true,
     tags: ['template', 'concept', 'basic', 'worldbuilding'],
     description: 'Basic template for magic systems, technologies, or world rules.',
-    useCase: 'Establishing how things work in your world—magic, tech, social norms.',
+    useCase: 'Establishing how things work in your world, magic, tech, social norms.',
     triggers: '[Concept Name],the [concept]',
     entry: `[Concept Name] is [what it is in one sentence]. [How it works or its rules]. [Who uses it or is affected by it]. [Its limitations or costs]. [How it shapes society or the world]. [Any organizations that control or study it].`
   },
@@ -426,7 +426,7 @@ export const STORY_CARD_TEMPLATES = [
     description: 'Detailed template for creating consistent magic systems.',
     useCase: 'Establishing magic rules that the AI will follow consistently.',
     triggers: '[Magic Name],magic,the [magic type]',
-    entry: `[Magic Name] is the [primary/only] form of magic in [world/region]. [Source of power: where does magic come from]. [How one learns or gains magical ability]. [Types or schools of magic]. [What magic CAN do]. [What magic CANNOT do—hard limits]. [Cost or price of using magic]. [Organizations that regulate or teach magic]. [How common magic users are]. [How society views magic and its users].`
+    entry: `[Magic Name] is the [primary/only] form of magic in [world/region]. [Source of power: where does magic come from]. [How one learns or gains magical ability]. [Types or schools of magic]. [What magic CAN do]. [What magic CANNOT do, hard limits]. [Cost or price of using magic]. [Organizations that regulate or teach magic]. [How common magic users are]. [How society views magic and its users].`
   },
   {
     id: 'template-quest',

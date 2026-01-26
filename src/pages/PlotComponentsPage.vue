@@ -36,11 +36,11 @@
       <section class="card">
         <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
           <HelpCircle class="w-5 h-5 text-bd-blue" />
-          The Backbone of Your Story
+          What Are Plot Components?
         </h2>
         <p class="text-bd-text-secondary mb-4">
-          Want your story to stay coherent? The most important thing you can do is <strong>manage your plot components</strong>. 
-          These tools help the AI remember crucial information and follow your story's rules.
+          Plot components are tools that help the AI remember crucial information and follow your story's rules. 
+          <strong>Managing them is the most important thing you can do</strong> for story coherence.
         </p>
         <div class="p-4 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
           <p class="text-sm text-bd-text-secondary">
@@ -118,16 +118,62 @@
         </div>
       </section>
 
+      <!-- Author's Note -->
+      <section class="card">
+        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
+          <Feather class="w-5 h-5 text-bd-pink" />
+          Author's Note (AN)
+          <span class="tag bg-bd-pink/20 text-bd-pink text-xs">Scene Setup</span>
+        </h2>
+        <p class="text-bd-text-secondary mb-4">
+          Author's Note sets up the <strong>current scene</strong>, use it when the scene differs from your main theme or to temporarily shift focus.
+        </p>
+        
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-pink/30">
+            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+              <Rocket class="w-4 h-4 text-bd-pink" />
+              Setting Change
+            </h3>
+            <p class="text-sm text-bd-text-secondary">
+              Story was on Earth, now you're in space and the AI struggles? Write a prose description of the new setting in AN.
+            </p>
+          </div>
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-pink/30">
+            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+              <Focus class="w-4 h-4 text-bd-pink" />
+              Theme Shift
+            </h3>
+            <p class="text-sm text-bd-text-secondary">
+              Want to focus on politics for this scene even though it's not the main theme? Change your "Theme:" in AN.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+          <div class="flex items-start gap-3">
+            <AlertTriangle class="w-5 h-5 text-bd-amber mt-0.5 flex-shrink-0" />
+            <div>
+              <h3 class="font-semibold text-bd-text-primary">Can I Plan Future Events?</h3>
+              <p class="text-sm text-bd-text-secondary mt-1">
+                You can use AN for <strong>immediate</strong> upcoming events. But you <em>cannot</em> steer the AI long-term, if it knows what's going to happen, 
+                it wants to <strong>jump the gun and do it NOW</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Story Cards -->
       <section class="card">
         <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
           <Layers class="w-5 h-5 text-bd-purple" />
           Story Cards (SC)
-          <span class="tag bg-bd-purple/20 text-bd-purple text-xs">Occasionally Relevant</span>
+          <span class="tag bg-bd-purple/20 text-bd-purple text-xs">Triggered Info</span>
         </h2>
         <p class="text-bd-text-secondary mb-4">
-          Story Cards hold information that's relevant <strong>only when triggered</strong>. 
-          Anything that doesn't need to always be in context should go in a Story Card.
+          Story Cards hold information that's relevant <strong>only when triggered</strong> by keywords. 
+          Use them for characters, locations, and items you encounter as the story progresses.
         </p>
         
         <div class="grid md:grid-cols-2 gap-4 mb-4">
@@ -183,100 +229,16 @@
         <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
           <ScrollText class="w-5 h-5 text-bd-amber" />
           AI Instructions (AIN)
-          <span class="tag bg-bd-amber/20 text-bd-amber text-xs">Scenario Rules</span>
+          <span class="tag bg-bd-amber/20 text-bd-amber text-xs">Behavior Rules</span>
         </h2>
-        <p class="text-bd-text-secondary mb-4">
-          AI Instructions hold <strong>scenario-specific rules</strong> the AI should follow while writing.
+        <p class="text-bd-text-secondary mb-3">
+          AI Instructions hold <strong>global rules</strong> the AI follows while writing, style, pacing, behavior, and focus.
         </p>
-        
-        <div class="space-y-3 mb-4">
-          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle flex items-start gap-3">
-            <MessageSquare class="w-4 h-4 text-bd-amber mt-1 flex-shrink-0" />
-            <div class="text-sm">
-              <span class="text-bd-text-secondary">Peasants talking like modern teenagers?</span>
-              <span class="text-bd-text-muted"> → Add a line about dialect/speech patterns</span>
-            </div>
-          </div>
-          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle flex items-start gap-3">
-            <Heart class="w-4 h-4 text-bd-amber mt-1 flex-shrink-0" />
-            <div class="text-sm">
-              <span class="text-bd-text-secondary">Everyone too nice?</span>
-              <span class="text-bd-text-muted"> → Add rules about moral ambiguity</span>
-            </div>
-          </div>
-          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle flex items-start gap-3">
-            <Volume2 class="w-4 h-4 text-bd-amber mt-1 flex-shrink-0" />
-            <div class="text-sm">
-              <span class="text-bd-text-secondary">Not enough sound descriptions?</span>
-              <span class="text-bd-text-muted"> → Add a line about sensory details</span>
-            </div>
-          </div>
-          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle flex items-start gap-3">
-            <Ruler class="w-4 h-4 text-bd-amber mt-1 flex-shrink-0" />
-            <div class="text-sm">
-              <span class="text-bd-text-secondary">Using wrong measurement system?</span>
-              <span class="text-bd-text-muted"> → Specify your world's units</span>
-            </div>
-          </div>
-        </div>
-
-        <p class="text-sm text-bd-text-muted">
-          With a good instruction set, you shouldn't need frequent updates. But add new rules as they emerge.
-        </p>
-        
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle mt-4">
-          <p class="text-sm text-bd-text-secondary">
-            <strong class="text-bd-text-primary">Want more on AI Instructions?</strong> Check out our 
-            <router-link to="/ai-instructions" class="text-bd-accent-primary hover:underline">AI Instructions Guide</router-link> 
-            for comprehensive structuring and tuning tips.
-          </p>
-        </div>
-      </section>
-
-      <!-- Author's Note -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Feather class="w-5 h-5 text-bd-pink" />
-          Author's Note (AN)
-          <span class="tag bg-bd-pink/20 text-bd-pink text-xs">Scene Setup</span>
-        </h2>
-        <p class="text-bd-text-secondary mb-4">
-          Author's Note sets up the current scene when it differs from your main theme, or to temporarily shift focus.
-          <strong>This should be the last thing you touch</strong>—handle other components first.
-        </p>
-        
-        <div class="grid md:grid-cols-2 gap-4 mb-4">
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-pink/30">
-            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-              <Rocket class="w-4 h-4 text-bd-pink" />
-              Setting Change
-            </h3>
-            <p class="text-sm text-bd-text-secondary">
-              Story was on Earth, now you're in space and the AI struggles? Write a prose description of the new setting in AN.
-            </p>
-          </div>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-pink/30">
-            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-              <Focus class="w-4 h-4 text-bd-pink" />
-              Theme Shift
-            </h3>
-            <p class="text-sm text-bd-text-secondary">
-              Want to focus on politics for this scene even though it's not the main theme? Change your "Theme:" in AN.
-            </p>
-          </div>
-        </div>
-
         <div class="p-4 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
-          <div class="flex items-start gap-3">
-            <AlertTriangle class="w-5 h-5 text-bd-amber mt-0.5 flex-shrink-0" />
-            <div>
-              <h3 class="font-semibold text-bd-text-primary">Can I Plan Future Events?</h3>
-              <p class="text-sm text-bd-text-secondary mt-1">
-                You can use AN for <strong>immediate</strong> upcoming events. But you <em>cannot</em> steer the AI long-term this way—if it knows what's going to happen, 
-                it wants to <strong>jump the gun and do it NOW</strong>. The only way to lead to a desired outcome is manual tweaking along the way.
-              </p>
-            </div>
-          </div>
+          <p class="text-sm text-bd-text-secondary">
+            <router-link to="/ai-instructions" class="text-bd-accent-primary hover:underline font-medium">→ See the AI Instructions Guide</router-link> 
+            for structuring tips, model settings, token optimization, and ready-to-use instruction sets.
+          </p>
         </div>
       </section>
 
@@ -295,7 +257,7 @@
               <span class="tag bg-bd-green/20 text-bd-green text-xs">Automated</span>
             </h3>
             <p class="text-sm text-bd-text-secondary">
-              The memory bank is automated—you don't need to mess with it. It works in the background to keep your stories coherent.
+              The memory bank is automated, you don't need to mess with it. It works in the background to keep your stories coherent.
             </p>
             <p class="text-sm text-bd-text-muted mt-2">
               <strong>Note:</strong> Don't rely solely on it. There's only so much it can store before the AI starts forgetting. 
@@ -327,7 +289,7 @@
           Scene Transitions
         </h2>
         <p class="text-bd-text-secondary mb-4">
-          When transitioning to a new scene, write a <strong>longer input than usual</strong> to "set the scene"—a paragraph 
+          When transitioning to a new scene, write a <strong>longer input than usual</strong> to "set the scene", a paragraph 
           describing the new location, significance, or mood. This tells the AI what to focus on and helps it STOP obsessing 
           over the previous scene.
         </p>
@@ -413,7 +375,7 @@
             <ul class="text-sm text-bd-text-secondary space-y-1">
               <li>• <strong>Remove</strong> anything you don't want referenced again</li>
               <li>• <strong>Update</strong> with new information as it develops</li>
-              <li>• <strong>Remove</strong> info that was never mentioned—if it was needed, you'd have noticed it missing</li>
+              <li>• <strong>Remove</strong> info that was never mentioned, if it was needed, you'd have noticed it missing</li>
             </ul>
           </div>
 
@@ -429,6 +391,17 @@
             </p>
           </div>
         </div>
+      </section>
+
+      <!-- Credits -->
+      <section class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+        <p class="text-sm text-bd-text-muted text-center">
+          Guide based on community knowledge and the <strong class="text-bd-text-secondary">AI Dungeon</strong> documentation.
+          <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="text-bd-accent-primary hover:underline ml-1">
+            Join the Discord
+            <ExternalLink class="w-3 h-3 inline-block ml-1" />
+          </a>
+        </p>
       </section>
 
     </template>
@@ -683,7 +656,8 @@ import {
   Lightbulb, Check, BookOpen, Layers, HelpCircle, User, Globe, Plus,
   Users, Sword, Star, RefreshCw, MessageSquare, Heart, Volume2, Ruler,
   Rocket, Focus, AlertTriangle, Database, Brain, ArrowRightLeft,
-  Sparkles, Scissors, MessageCircle, XCircle, Edit, SlidersHorizontal, Zap, Search
+  Sparkles, Scissors, MessageCircle, XCircle, Edit, SlidersHorizontal, Zap, Search,
+  ExternalLink
 } from 'lucide-vue-next'
 
 const activeTab = ref('templates')

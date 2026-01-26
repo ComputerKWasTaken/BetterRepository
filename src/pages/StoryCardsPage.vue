@@ -49,6 +49,11 @@
             context window size.
           </p>
         </div>
+        <p class="text-sm text-bd-text-muted mt-4">
+          Story Cards are one of several 
+          <router-link to="/plot-components" class="text-bd-accent-primary hover:underline">Plot Components</router-link> 
+          you can use to guide the AI.
+        </p>
       </section>
 
       <!-- When to Use Story Cards -->
@@ -95,6 +100,33 @@
         </div>
       </section>
 
+      <!-- How Story Cards Work -->
+      <section class="card">
+        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
+          <Cog class="w-5 h-5 text-bd-blue" />
+          How Story Cards Work
+        </h2>
+        <div class="space-y-4">
+          <p class="text-bd-text-secondary">
+            When a trigger word appears in the AI's output or the player's input, the corresponding Story Card's 
+            Entry is added to context. Only the Entry is shown to the AI, prefaced by <code class="text-bd-purple">"World Lore:"</code>.
+          </p>
+          <div class="p-4 rounded-lg bg-bd-warning/10 border border-bd-warning/30">
+            <div class="flex items-start gap-3">
+              <AlertTriangle class="w-5 h-5 text-bd-warning flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 class="font-semibold text-bd-text-primary mb-1">Important Timing Note</h3>
+                <p class="text-sm text-bd-text-secondary">
+                  The AI <strong>does not know Story Cards exist</strong>. The same AI output that first activates 
+                  a Card cannot use the information in that Card. For example, if "Amanda" triggers her Card, the 
+                  AI won't have access to her info in that same output, only in subsequent ones.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Anatomy of a Story Card -->
       <section class="card">
         <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
@@ -102,30 +134,6 @@
           Anatomy of a Story Card
         </h2>
         <div class="space-y-3">
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <div class="flex items-start gap-3">
-              <Tag class="w-4 h-4 text-bd-text-muted mt-1 flex-shrink-0" />
-              <div>
-                <h3 class="font-semibold text-bd-text-primary">Type</h3>
-                <p class="text-sm text-bd-text-secondary">
-                  Relevant for Character Creator scenarios (determines if Card is available for character selection). 
-                  In other adventures, <span class="text-bd-text-muted">the AI ignores Type</span>.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <div class="flex items-start gap-3">
-              <Type class="w-4 h-4 text-bd-text-muted mt-1 flex-shrink-0" />
-              <div>
-                <h3 class="font-semibold text-bd-text-primary">Title</h3>
-                <p class="text-sm text-bd-text-secondary">
-                  For your reference only. <span class="text-bd-warning">The AI does NOT see the Title</span>, 
-                  so you must repeat the name in the Entry.
-                </p>
-              </div>
-            </div>
-          </div>
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
             <div class="flex items-start gap-3">
               <FileText class="w-4 h-4 text-bd-green mt-1 flex-shrink-0" />
@@ -152,39 +160,23 @@
           </div>
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <div class="flex items-start gap-3">
-              <StickyNote class="w-4 h-4 text-bd-text-muted mt-1 flex-shrink-0" />
+              <Type class="w-4 h-4 text-bd-text-muted mt-1 flex-shrink-0" />
               <div>
-                <h3 class="font-semibold text-bd-text-primary">Notes</h3>
+                <h3 class="font-semibold text-bd-text-primary">Title</h3>
                 <p class="text-sm text-bd-text-secondary">
-                  The AI ignores Notes. Only used in Character Creator scenarios as the description shown 
-                  to players during character selection.
+                  For your reference only. <span class="text-bd-warning">The AI does NOT see the Title</span>, 
+                  so you must repeat the name in the Entry.
                 </p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      <!-- How Story Cards Work -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Cog class="w-5 h-5 text-bd-blue" />
-          How Story Cards Work
-        </h2>
-        <div class="space-y-4">
-          <p class="text-bd-text-secondary">
-            When a trigger word appears in the AI's output or the player's input, the corresponding Story Card's 
-            Entry is added to context. Only the Entry is shown to the AI, prefaced by <code class="text-bd-purple">"World Lore:"</code>.
-          </p>
-          <div class="p-4 rounded-lg bg-bd-warning/10 border border-bd-warning/30">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <div class="flex items-start gap-3">
-              <AlertTriangle class="w-5 h-5 text-bd-warning flex-shrink-0 mt-0.5" />
+              <Tag class="w-4 h-4 text-bd-text-muted mt-1 flex-shrink-0" />
               <div>
-                <h3 class="font-semibold text-bd-text-primary mb-1">Important Timing Note</h3>
+                <h3 class="font-semibold text-bd-text-primary">Type & Notes</h3>
                 <p class="text-sm text-bd-text-secondary">
-                  The AI <strong>does not know Story Cards exist</strong>. The same AI output that first activates 
-                  a Card cannot use the information in that Card. For example, if "Amanda" triggers her Card, the 
-                  AI won't have access to her info in that same output—only in subsequent ones.
+                  The AI ignores both. Only relevant for Character Creator scenarios.
                 </p>
               </div>
             </div>
@@ -297,7 +289,7 @@
             </div>
             <div class="flex items-start gap-2 text-sm text-bd-text-secondary">
               <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-              <span>Format triggers as <code class="text-bd-purple">trigger1,trigger2,trigger3</code> — <strong>no spaces after commas</strong>.</span>
+              <span>Format triggers as <code class="text-bd-purple">trigger1,trigger2,trigger3</code> ,  <strong>no spaces after commas</strong>.</span>
             </div>
           </div>
         </div>
@@ -320,7 +312,7 @@
               <h4 class="font-medium text-bd-text-primary mb-2">Plurals (Usually Free)</h4>
               <p class="text-sm text-bd-text-secondary">
                 <code>boat</code> also triggers on <code>boats</code>. But <code>elf</code> won't trigger 
-                <code>elves</code> — add both if needed!
+                <code>elves</code> ,  add both if needed!
               </p>
             </div>
           </div>
@@ -338,7 +330,7 @@
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
             <p class="text-sm text-bd-text-secondary">
               Instead of <code>therapy,therapies,therapist,therapeutic</code>, just use 
-              <code class="text-bd-purple">therap</code> — it catches all of them!
+              <code class="text-bd-purple">therap</code> ,  it catches all of them!
             </p>
           </div>
         </div>

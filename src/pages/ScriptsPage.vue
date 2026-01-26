@@ -124,7 +124,7 @@
             </h3>
             <p class="text-sm text-bd-text-secondary mb-2">
               A shared library of functions and values that can be used in other scripts. 
-              <strong>Not a modifier</strong> — runs before every modifier. Define helper functions and initialize state here.
+              <strong>Not a modifier</strong> ,  runs before every modifier. Define helper functions and initialize state here.
             </p>
             <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
               <span class="text-bd-text-muted">// Define helper functions and state</span><br>
@@ -186,14 +186,60 @@
         </div>
       </section>
 
+      <!-- Return Values -->
+      <section class="card">
+        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
+          <ArrowLeftToLine class="w-5 h-5 text-bd-amber" />
+          Return Values
+        </h2>
+        <p class="text-bd-text-secondary mb-4">
+          All modifiers must return an object. You can return these properties:
+        </p>
+        
+        <div class="space-y-4">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+            <h3 class="font-semibold text-bd-text-primary mb-2">
+              <code class="text-bd-green">{ text: "modified text" }</code>
+            </h3>
+            <p class="text-sm text-bd-text-secondary">
+              The modified text to use instead of the original. <strong>Required</strong> in most cases.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+            <h3 class="font-semibold text-bd-text-primary mb-2">
+              <code class="text-bd-green">{ stop: true }</code>
+            </h3>
+            <p class="text-sm text-bd-text-secondary">
+              If <code>stop === true</code>, the game loop will not proceed. Useful when a player input should update state but not call the AI.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/30 mt-4">
+          <div class="flex items-start gap-3">
+            <AlertTriangle class="w-5 h-5 text-bd-pink mt-0.5 flex-shrink-0" />
+            <div class="text-sm text-bd-text-secondary">
+              <p class="mb-2"><strong class="text-bd-text-primary">Warning about empty strings:</strong></p>
+              <ul class="space-y-1">
+                <li>• <strong>onInput:</strong> Empty string throws error</li>
+                <li>• <strong>onModelContext:</strong> Empty string rebuilds context without script</li>
+                <li>• <strong>onOutput:</strong> Empty string throws error</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- API Parameters -->
       <section class="card">
         <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
           <Database class="w-5 h-5 text-bd-green" />
           API Parameters
+          <span class="tag bg-bd-green/20 text-bd-green text-xs">Reference</span>
         </h2>
         <p class="text-bd-text-secondary mb-4">
-          Scripts have access to these parameters directly — no need to deconstruct from an object.
+          Scripts have access to these parameters directly, no need to deconstruct from an object.
         </p>
         
         <div class="space-y-4">
@@ -226,7 +272,9 @@
             <h3 class="font-semibold text-bd-text-primary mb-2">
               <code class="text-bd-green">storyCards</code>
             </h3>
-            <p class="text-sm text-bd-text-secondary mb-2">Array of story cards. Each card has:</p>
+            <p class="text-sm text-bd-text-secondary mb-2">
+              Array of <router-link to="/story-cards" class="text-bd-accent-primary hover:underline">story cards</router-link>. Each card has:
+            </p>
             <ul class="text-sm text-bd-text-secondary space-y-1">
               <li>• <code class="text-bd-cyan">id</code> - Unique numerical ID</li>
               <li>• <code class="text-bd-cyan">keys</code> - Trigger keys</li>
@@ -280,6 +328,7 @@
         <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
           <Wrench class="w-5 h-5 text-bd-cyan" />
           API Functions
+          <span class="tag bg-bd-cyan/20 text-bd-cyan text-xs">Reference</span>
         </h2>
         
         <div class="space-y-4">
@@ -317,51 +366,6 @@
             <p class="text-sm text-bd-text-secondary">
               Removes a story card. Throws error if card doesn't exist.
             </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Return Values -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <ArrowLeftToLine class="w-5 h-5 text-bd-amber" />
-          Return Values
-        </h2>
-        <p class="text-bd-text-secondary mb-4">
-          All modifiers must return an object. You can return these properties:
-        </p>
-        
-        <div class="space-y-4">
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <h3 class="font-semibold text-bd-text-primary mb-2">
-              <code class="text-bd-green">{ text: "modified text" }</code>
-            </h3>
-            <p class="text-sm text-bd-text-secondary">
-              The modified text to use instead of the original. <strong>Required</strong> in most cases.
-            </p>
-          </div>
-
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <h3 class="font-semibold text-bd-text-primary mb-2">
-              <code class="text-bd-green">{ stop: true }</code>
-            </h3>
-            <p class="text-sm text-bd-text-secondary">
-              If <code>stop === true</code>, the game loop will not proceed. Useful when a player input should update state but not call the AI.
-            </p>
-          </div>
-        </div>
-
-        <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/30 mt-4">
-          <div class="flex items-start gap-3">
-            <AlertTriangle class="w-5 h-5 text-bd-pink mt-0.5 flex-shrink-0" />
-            <div class="text-sm text-bd-text-secondary">
-              <p class="mb-2"><strong class="text-bd-text-primary">Warning about empty strings:</strong></p>
-              <ul class="space-y-1">
-                <li>• <strong>onInput:</strong> Empty string throws error</li>
-                <li>• <strong>onModelContext:</strong> Empty string rebuilds context without script</li>
-                <li>• <strong>onOutput:</strong> Empty string throws error</li>
-              </ul>
-            </div>
           </div>
         </div>
       </section>

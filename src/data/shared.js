@@ -35,7 +35,7 @@ export const PLACEMENTS = [
     icon: 'Feather',
     position: 'End of context (near player input)',
     strength: 'Strongest',
-    description: 'Give the AI short guidance about style, tone, and genre. Because it appears near the end, it has the strongest influence. Keep it concise—don\'t overload it.'
+    description: 'Give the AI short guidance about style, tone, and genre. Because it appears near the end, it has the strongest influence. Keep it concise, don\'t overload it.'
   },
   { 
     id: 'plot-essentials', 
