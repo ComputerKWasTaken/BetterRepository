@@ -30,6 +30,7 @@
           <p class="text-sm text-bd-text-secondary line-clamp-2">{{ script.description }}</p>
         </div>
         <button 
+          v-if="hasCode"
           @click.stop="copyMainContent"
           class="p-2 rounded-lg hover:bg-bd-bg-tertiary transition-colors flex-shrink-0 text-bd-text-muted hover:text-bd-text-primary"
           title="Copy script"
@@ -51,6 +52,10 @@
         <span v-if="script.files" class="tag text-[10px] bg-bd-amber/20 text-bd-amber">
           Multi-file
         </span>
+        <!-- External Only Badge -->
+        <span v-if="isExternalOnly" class="tag text-[10px] bg-bd-cyan/20 text-bd-cyan">
+          External
+        </span>
         <!-- Author -->
         <span v-if="script.author" class="tag text-[10px]">
           by {{ script.author }}
@@ -68,6 +73,30 @@
             <span class="uppercase tracking-wider font-medium">Purpose</span>
           </div>
           <p class="text-sm text-bd-text-secondary">{{ script.purpose }}</p>
+        </div>
+
+        <!-- GitHub / External Links -->
+        <div v-if="script.githubUrl || script.externalUrl" class="px-4 py-3 border-b border-bd-border-subtle flex flex-wrap gap-4">
+          <a 
+            v-if="script.githubUrl"
+            :href="script.githubUrl" 
+            target="_blank"
+            class="text-sm text-bd-accent-primary hover:underline flex items-center gap-2"
+          >
+            <Github class="w-4 h-4" />
+            View on GitHub
+            <ExternalLink class="w-3 h-3" />
+          </a>
+          <a 
+            v-if="script.externalUrl"
+            :href="script.externalUrl" 
+            target="_blank"
+            class="text-sm text-bd-accent-primary hover:underline flex items-center gap-2"
+          >
+            <span>🔗</span>
+            External Site
+            <ExternalLink class="w-3 h-3" />
+          </a>
         </div>
 
         <!-- Scenario Link -->
@@ -143,18 +172,22 @@
     </Transition>
 
     <!-- Expand indicator -->
-    <div class="px-4 pb-3 flex items-center justify-center cursor-pointer" @click="toggleExpand">
-      <span 
-        class="text-sm text-bd-text-muted transition-transform inline-block" 
+    <div 
+      v-if="hasExpandableContent"
+      class="px-4 pb-3 flex items-center justify-center cursor-pointer" 
+      @click="toggleExpand"
+    >
+      <ChevronDown 
+        class="w-4 h-4 text-bd-text-muted transition-transform" 
         :class="{ 'rotate-180': isExpanded }"
-      >▼</span>
+      />
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, inject } from 'vue'
-import { ExternalLink } from 'lucide-vue-next'
+import { ExternalLink, Github, ChevronDown } from 'lucide-vue-next'
 
 const props = defineProps({
   script: {
@@ -167,6 +200,21 @@ const toast = inject('toast', () => {})
 
 const isExpanded = ref(false)
 const copied = ref(false)
+
+// Check if script has copyable code content
+const hasCode = computed(() => !!(props.script.content || props.script.files))
+
+// Check if script is external-only (links but no code)
+const isExternalOnly = computed(() => 
+  !hasCode.value && (props.script.githubUrl || props.script.externalUrl || props.script.scenarioLink)
+)
+
+// Check if there's expandable content
+const hasExpandableContent = computed(() => 
+  props.script.purpose || hasCode.value || props.script.githubUrl || 
+  props.script.externalUrl || props.script.scenarioLink || 
+  (props.script.tags && props.script.tags.length > 0)
+)
 
 const difficultyClass = computed(() => {
   const classMap = {

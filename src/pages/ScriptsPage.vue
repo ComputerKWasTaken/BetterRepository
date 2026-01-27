@@ -111,7 +111,7 @@
         </h2>
         <p class="text-bd-text-secondary mb-4">
           The Scripting API consists of <strong>three lifecycle hooks</strong> plus a shared library. 
-          For non-library scripts, the last line must always be <code class="text-bd-green">modifier(text)</code>
+          The execution order is always <code>onHook &gt; sharedLibrary &gt; Script</code>.
         </p>
         
         <div class="space-y-4">
@@ -124,8 +124,14 @@
             </h3>
             <p class="text-sm text-bd-text-secondary mb-2">
               A shared library of functions and values that can be used in other scripts. 
-              <strong>Not a modifier</strong>, runs before every modifier. Define helper functions and initialize state here.
+              <strong>Not a modifier</strong>, runs before every modifier.
             </p>
+            <div class="p-3 rounded bg-bd-amber/5 border border-bd-amber/20 mb-2">
+              <p class="text-[11px] text-bd-text-secondary">
+                <strong>Scope:</strong> Variables in <code>sharedLibrary</code> are <strong>global</strong>. 
+                Variables defined in Input/Context/Output scripts are <strong>local</strong> to those scripts.
+              </p>
+            </div>
             <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
               <span class="text-bd-text-muted">// Define helper functions and state</span><br>
               state.hp = state.hp ?? 100;<br>
@@ -157,10 +163,37 @@
               Context Modifier
               <span class="tag bg-bd-blue/20 text-bd-blue text-xs">onModelContext</span>
             </h3>
-            <p class="text-sm text-bd-text-secondary mb-2">
+            <p class="text-sm text-bd-text-secondary mb-3">
               Changes the <strong>text sent to the AI</strong> before the model is called. 
-              The <code class="text-bd-green">text</code> parameter is what would otherwise be sent to the AI.
             </p>
+            <div class="grid md:grid-cols-2 gap-4 mb-3">
+              <div class="text-xs space-y-2">
+                <p class="font-medium text-bd-text-primary uppercase tracking-wider">Full Context Order:</p>
+                <ol class="text-bd-text-muted space-y-1">
+                  <li>1. AI Instructions</li>
+                  <li>2. Plot Essentials</li>
+                  <li>3. World Lore (Story Cards)</li>
+                  <li>4. Story Summary</li>
+                  <li>5. Memories</li>
+                  <li>6. Recent Story</li>
+                  <li>7. [Author's Note]</li>
+                  <li>8. Last response/action</li>
+                  <li>9. frontMemory</li>
+                </ol>
+              </div>
+              <div class="text-xs space-y-2">
+                <p class="font-medium text-bd-text-primary uppercase tracking-wider">Available to Script:</p>
+                <ul class="text-bd-text-muted space-y-1">
+                  <li>• Plot Essentials</li>
+                  <li>• World Lore</li>
+                  <li>• Story Summary</li>
+                  <li>• Memories</li>
+                  <li>• Recent Story</li>
+                  <li>• [Author's Note]</li>
+                  <li>• Last response/action</li>
+                </ul>
+              </div>
+            </div>
             <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
               <span class="text-bd-text-muted">// Inject dynamic content into context</span><br>
               text = <span class="text-bd-green">`[Stats: HP ${state.hp}]\n`</span> + text;
@@ -333,20 +366,28 @@
         
         <div class="space-y-4">
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <h3 class="font-semibold text-bd-text-primary mb-2">
+            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center justify-between">
               <code class="text-bd-green">log(message)</code>
+              <span class="text-[10px] text-bd-text-muted uppercase">Console Quirks</span>
             </h3>
-            <p class="text-sm text-bd-text-secondary">
+            <p class="text-sm text-bd-text-secondary mb-2">
               Logs information to the console. <code>console.log()</code> also works.
             </p>
+            <div class="p-3 rounded bg-bd-amber/5 border border-bd-amber/20 text-xs text-bd-text-secondary">
+              <p><strong>Note:</strong> AI Dungeon logs are stringified through GraphQL. This causes <code>undefined</code> values to appear as <code>null</code> in the console output.</p>
+            </div>
           </div>
 
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <h3 class="font-semibold text-bd-text-primary mb-2">
+            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center justify-between">
               <code class="text-bd-green">addStoryCard(keys, entry, type)</code>
+              <span class="text-[10px] text-bd-pink uppercase">Buggy with Memory Bank OFF</span>
             </h3>
-            <p class="text-sm text-bd-text-secondary">
+            <p class="text-sm text-bd-text-secondary mb-2">
               Adds a new story card. Returns index of new card, or <code>false</code> if card with same keys exists.
+            </p>
+            <p class="text-[11px] text-bd-text-muted">
+              <strong>Tip:</strong> If <code>addStoryCard</code> fails, you can manually push to the <code>storyCards</code> array.
             </p>
           </div>
 
@@ -696,9 +737,8 @@ if (card !== null) {
         <div class="flex-1">
           <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Share Your Scripts!</h3>
           <p class="text-bd-text-secondary mb-4">
-            Have example scripts to share? Submit them to the 
-            <a href="mailto:support@aidungeon.com" class="text-bd-accent-primary hover:underline">official Guidebook</a> 
-            or post in a GitHub issue here.
+            Have a useful script to share? We'd love to add it to the collection. 
+            Just open a GitHub issue or check our contribution guide.
           </p>
           <router-link to="/contribute" class="btn btn-primary">
             <GitPullRequest class="w-4 h-4" />
@@ -738,7 +778,7 @@ const tabs = [
 
 // Contributors for credits section
 const scriptingContributors = [
-  'Latitude', 'LewdLeah', 'Oli', 'MrJack'
+  'Latitude', 'LewdLeah', 'Oli', 'MrJack', 'Magic', 'BinKompliziert'
 ]
 
 const scripts = ref(SCRIPTS)

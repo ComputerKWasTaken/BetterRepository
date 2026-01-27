@@ -9,6 +9,8 @@
 // - impact: 'high' | 'medium' | 'low'
 // - essential: boolean (recommended for new scripters)
 // - source: 'Official Guidebook' | 'Community' | 'BetterRepository'
+// - githubUrl: string (optional)
+// - externalUrl: string (optional)
 // =============================================================================
 
 // ============================================
@@ -77,7 +79,7 @@ export const SCRIPTS = [
     difficulty: 'beginner',
     impact: 'medium',
     essential: true,
-    tags: ['beginner', 'state', 'memory', 'message', 'official'],
+    tags: ['state', 'memory', 'message'],
     source: 'Official Guidebook',
     description: 'The official basic example showing core scripting concepts.',
     purpose: 'Demonstrates state management, memory modification, messages, and text modification.',
@@ -118,7 +120,7 @@ modifier(text)`
     difficulty: 'beginner',
     impact: 'low',
     essential: true,
-    tags: ['beginner', 'regex', 'text-replacement', 'official'],
+    tags: ['regex', 'text-replacement'],
     source: 'Official Guidebook',
     description: 'Simple example that removes "not" from all text.',
     purpose: 'Shows basic text replacement using regex. A humorous example that makes everything positive.',
@@ -138,7 +140,7 @@ modifier(text)`
     difficulty: 'intermediate',
     impact: 'high',
     essential: true,
-    tags: ['context', 'authors-note', 'memory', 'official'],
+    tags: ['authors-note', 'context-injection'],
     source: 'Official Guidebook',
     description: "Re-implements Author's Note functionality as an example.",
     purpose: 'Shows how to inject text at a specific position in the context, useful for understanding context structure.',
@@ -173,7 +175,7 @@ modifier(text)`
     difficulty: 'intermediate',
     impact: 'high',
     essential: true,
-    tags: ['commands', 'parser', 'input', 'official'],
+    tags: ['commands', 'parser', 'stop-action'],
     source: 'Official Guidebook',
     description: 'Parses user commands in the format :command arg1 arg2.',
     purpose: 'Foundation for building command systems. Extracts command name and arguments from player input.',
@@ -215,7 +217,7 @@ modifier(text)`
     difficulty: 'advanced',
     impact: 'high',
     essential: false,
-    tags: ['notes', 'tracking', 'context', 'official'],
+    tags: ['notes', 'context-injection', 'multi-file'],
     source: 'Official Guidebook',
     description: 'Allows players to attach notes to story text that appear to the AI but not the player.',
     purpose: 'Set a note by typing "note: " in Do mode. Notes are tagged to recent text and injected into context.',
@@ -292,7 +294,7 @@ modifier(text)`
     difficulty: 'intermediate',
     impact: 'high',
     essential: false,
-    tags: ['events', 'random', 'survival', 'horror', 'official'],
+    tags: ['random-events', 'survival', 'horror'],
     source: 'Official Guidebook',
     description: 'A survival horror system with random dangerous events.',
     purpose: 'Demonstrates random event injection, memory progression, and turn-based mechanics.',
@@ -363,7 +365,7 @@ modifier(text)`
     difficulty: 'intermediate',
     impact: 'high',
     essential: false,
-    tags: ['minigame', 'number-guessing', 'game', 'official'],
+    tags: ['minigame', 'multi-file'],
     source: 'Official Guidebook',
     description: 'A number guessing minigame with limited attempts.',
     purpose: 'Shows how to create standalone minigames using input and output modifiers together.',
@@ -415,7 +417,7 @@ modifier(text)`
     difficulty: 'advanced',
     impact: 'high',
     essential: false,
-    tags: ['quests', 'objectives', 'tracking', 'official'],
+    tags: ['quests', 'objectives', 'multi-file'],
     source: 'Official Guidebook',
     description: 'A complete quest management system with objectives and progression.',
     purpose: 'Demonstrates complex state management, quest chains, and dynamic objectives.',
@@ -548,7 +550,7 @@ modifier(text)`
     difficulty: 'intermediate',
     impact: 'high',
     essential: false,
-    tags: ['magic', 'spells', 'discovery', 'official'],
+    tags: ['spells', 'discovery', 'keywords'],
     source: 'Official Guidebook',
     description: 'A spell discovery and casting system where players learn spells.',
     purpose: 'Players discover spells through exploration. Casting learned spells triggers special effects.',
@@ -599,7 +601,7 @@ modifier(text)`
     difficulty: 'intermediate',
     impact: 'medium',
     essential: false,
-    tags: ['utility', 'story-cards', 'helper'],
+    tags: ['story-cards', 'helper-function'],
     source: 'Community',
     author: 'LewdLeah',
     description: 'Creates a new story card with all properties set properly.',
@@ -640,7 +642,7 @@ modifier(text)`
     difficulty: 'intermediate',
     impact: 'medium',
     essential: false,
-    tags: ['utility', 'story-cards', 'helper', 'search'],
+    tags: ['story-cards', 'helper-function', 'search'],
     source: 'Community',
     author: 'LewdLeah',
     description: 'Find story cards using a predicate function.',
@@ -676,7 +678,7 @@ modifier(text)`
     difficulty: 'beginner',
     impact: 'high',
     essential: true,
-    tags: ['utility', 'state', 'pattern', 'beginner'],
+    tags: ['state', 'initialization', 'pattern'],
     source: 'BetterRepository',
     description: 'Pattern for initializing persistent state variables.',
     purpose: 'Ensures variables persist across turns without resetting. Put in Library.',
@@ -688,6 +690,101 @@ state.playerMaxHP = state.playerMaxHP ?? 100;
 state.gold = state.gold ?? 0;
 state.inventory = state.inventory ?? [];
 state.flags = state.flags ?? {};`
+  },
+  {
+    id: 'auto-cards',
+    name: 'Auto-Cards',
+    category: 'tracking',
+    difficulty: 'advanced',
+    impact: 'high',
+    essential: false,
+    tags: ['automation', 'story-cards', 'memory'],
+    source: 'Community',
+    author: 'LewdLeah',
+    description: 'Automatically writes & updates plot-relevant story cards during gameplay.',
+    purpose: 'Builds a living reference of your adventure\'s world by detecting named entities and managing long-term memory updates.',
+    githubUrl: 'https://github.com/LewdLeah/Auto-Cards',
+    scenarioLink: 'https://play.aidungeon.com/scenario/Ddt0Akd-lVtj/auto-cards'
+  },
+  {
+    id: 'inner-self',
+    name: 'Inner Self',
+    category: 'game-systems',
+    difficulty: 'advanced',
+    impact: 'high',
+    essential: false,
+    tags: ['npc', 'agentic', 'memory'],
+    source: 'Community',
+    author: 'LewdLeah',
+    description: 'Improves character goals, secrets, planning, and self-reflection.',
+    purpose: 'Maintains NPC "brains" that allow them to learn from experiences, form opinions, and adapt behavior over time.',
+    githubUrl: 'https://github.com/LewdLeah/Inner-Self'
+  },
+  {
+    id: 'better-say-actions',
+    name: 'Better Say Actions',
+    category: 'commands',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: true,
+    tags: ['dialogue', 'formatting', 'say-action'],
+    source: 'Community',
+    author: 'BinKompliziert',
+    description: 'Improves the "Say" action with better formatting and custom verbs.',
+    purpose: 'Allows actions before dialogue, fixes first-person typos, and adds automatic punctuation.',
+    externalUrl: 'https://play.aidungeon.com/scenario/2eiZnXnXXzwR/better-say-actions',
+    fileType: 'input',
+    content: `const modifier = (text) => {
+  text.match(/".*,,/) ? text = text.replace(/says? "\\s*(\\S)(.*),,\\s*(\\S)/i, (m, a, b, c) => a.toLowerCase() + b.trim() + ', "' + c.toUpperCase()).replace(/(you |i )(your? |i )(\\S)/i, (m, a, b, c) => b.charAt(0).toUpperCase() + b.slice(1) + c.toLowerCase()) : text = text.replace(/\\bi says/i, 'I say').replace(/(says?) "\\s*(\\S)/i, (m, a, b) => a + ', "' + b.toUpperCase())
+  text.match(/[^.,?!]"\\n/) ? text = text.replace(/\\s*"\\n/, '."\\n') : text = text.replace(/(say)(s?, ".*)([,?!]")/i, (m, a, b, c) => (c == ',"' ? 'begin' : c == '?"' ? 'ask' : c == '!"' ? 'shout' : '') + b.trim() + c)
+  return { text }
+}
+
+modifier(text)`
+  },
+  {
+    id: 'custom-continue',
+    name: 'Custom Continue',
+    category: 'utilities',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['continue-action', 'system-prompt'],
+    source: 'Community',
+    author: 'Magic',
+    description: 'Custom instructions when the player uses the Continue action.',
+    purpose: 'Injects specific instructions when the AI is asked to continue from its last response.',
+    fileType: 'context',
+    content: `const prompt = 'Please continue from your last response';
+
+const continueInstructions = \`\\n<SYSTEM>\\n\${prompt}\\n</SYSTEM>\`;
+
+const modifier = () => {
+  return { text: history.at(-1)?.type === 'continue' ? /> [A-Z]/.test(text.split(/\\n/).filter((t) => t.trim() !== '').at(-1) || '') ? '' : continueInstructions : '' }
+}
+
+modifier(text)`
+  },
+  {
+    id: 'prevent-start-message',
+    name: 'Prevent Start Message',
+    category: 'utilities',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    tags: ['initialization', 'starting-message'],
+    source: 'Community',
+    author: 'Burnout',
+    description: 'Prevents the AI from generating an automatic starting message.',
+    purpose: 'Useful for scenarios where you want the player to start or have a custom instruction message.',
+    fileType: 'output',
+    content: `const modifier = (text) => {
+  if (info.actionCount === 0)
+    return { text: " [Place instruction here for users to edit this message.]"}
+  return { text }
+}
+
+modifier(text)`
   }
 ]
 
@@ -716,15 +813,21 @@ export const getScriptsByDifficulty = (difficulty) => {
 // Get beginner scripts
 export const getBeginnerScripts = () => getScriptsByDifficulty('beginner')
 
-// Search scripts
+// Search scripts (includes name, description, tags, purpose, author)
 export const searchScripts = (query) => {
   const lowerQuery = query.toLowerCase()
   return SCRIPTS.filter(s => 
     s.name.toLowerCase().includes(lowerQuery) ||
     s.description.toLowerCase().includes(lowerQuery) ||
     s.tags.some(tag => tag.toLowerCase().includes(lowerQuery)) ||
-    (s.purpose && s.purpose.toLowerCase().includes(lowerQuery))
+    (s.purpose && s.purpose.toLowerCase().includes(lowerQuery)) ||
+    (s.author && s.author.toLowerCase().includes(lowerQuery))
   )
+}
+
+// Check if script has copyable code content
+export const hasCodeContent = (script) => {
+  return !!(script.content || script.files)
 }
 
 // Get category by ID
