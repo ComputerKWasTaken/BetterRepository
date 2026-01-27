@@ -330,15 +330,15 @@ modifier(text)`
   
   state.turn = state.turn + 1
   
-  if(state.turn > 2){
-  state.memory = {context:  "You're probably going to die."}
-  }
-  if(state.turn > 6){
-    state.memory = {context: "You're about to die."}
-  }
-  else if(state.turn > 10){
-    state.memory = {context: "You have no hope. There are minutes left till you die."}
-  }
+    if (state.turn > 10) {
+      state.memory = { context: "You have no hope. There are minutes left till you die." }
+    }
+    else if (state.turn > 6) {
+      state.memory = { context: "You're about to die." }
+    }
+    else if (state.turn > 2) {
+      state.memory = { context: "You're probably going to die." }
+    }
 
   const nTurn = Math.floor((Math.random() * 2)) + 3
 
@@ -346,7 +346,7 @@ modifier(text)`
     const eventInd = Math.floor((Math.random() * state.events.length));
       if(eventInd < state.events.length){
         modifiedText = modifiedText + '\\n' + state.events[eventInd]
-        state.events.splice(eventInd)
+        state.events.splice(eventInd, 1)
       }
   }
   
@@ -378,12 +378,12 @@ const modifier = (text) => {
     state.remainingGuesses = 13;
   }
     
-  var match = text.match(/(\\d+)/)
-  if(match && match[1]) {
-    state.remainingGuesses--;
-    var number = parseInt(match[1]);
+    let match = text.match(/(\\d+)/)
+    if (match && match[1]) {
+      state.remainingGuesses--;
+      let number = parseInt(match[1]);
 
-    var output = "\\nYou have "+state.remainingGuesses+" guesses remaining.  ";
+      let output = "\\nYou have " + state.remainingGuesses + " guesses remaining.  ";
 
     if(number == state.randomNumber) {
       output += "\\nYou guessed the number!  Congratulations, you win!";
@@ -486,8 +486,8 @@ const modifier = (text) => {
     if (!state.finishedScenario || !state.configuration.enableSelectionOnCompletedQuest) state.message = ""
 
     if ((state.finishedScenario || !state.configuration.enableSelectionOnCompletedQuest) && state.assignedQuest == "") {
-        questNames = []
-        for (quest of state.availableQuests) {
+        let questNames = []
+        for (let quest of state.availableQuests) {
             questNames.push(quest.name)
         }
         state.message = "Available Quests: " + questNames.join(", ") + ". To take up a quest, type 'take up quest <quest number in list>'."
@@ -495,16 +495,16 @@ const modifier = (text) => {
         if (!quests[state.configuration.initialQuests].completed) {
             state.message = "Current Objective: " + quests[state.configuration.initialQuests].quest + ". To quit, type 'give up on my quest'."
         } else {
-            nextObjective = state.assignedQuest.objectives.shift()
+            let nextObjective = state.assignedQuest.objectives.shift()
             if (nextObjective == undefined) {
                 quests.splice(state.configuration.initialQuests)
                 state.availableQuests = state.availableQuests.filter(e => e.name !== state.assignedQuest.name)
-                for (nextQuest of state.assignedQuest.nextQuests) {
+                for (let nextQuest of state.assignedQuest.nextQuests) {
                     state.availableQuests.push(nextQuest)
                 }
                 state.assignedQuest = ""
-                questNames = []
-                for (quest of state.availableQuests) {
+                let questNames = []
+                for (let quest of state.availableQuests) {
                     questNames.push(quest.name)
                 }
                 state.message = "Available Quests: " + questNames.join(", ") + ". To take up a quest, type 'take up quest <quest number in list>'."
@@ -577,7 +577,7 @@ const modifier = (text) => {
   }
   
   const lowered = text.toLowerCase()
-  for(spellName in spells){
+  for (let spellName in spells) {
     if(lowered.includes('cast ' + spellName.toLowerCase())){
       if(!state.spells.includes(spellName)){
         state.spells.push(spellName)
@@ -760,7 +760,14 @@ modifier(text)`
 const continueInstructions = \`\\n<SYSTEM>\\n\${prompt}\\n</SYSTEM>\`;
 
 const modifier = (text) => {
-  return { text: history.at(-1)?.type === 'continue' ? /> [A-Z]/.test(text.split(/\n/).filter((t) => t.trim() !== '').at(-1) || '') ? '' : continueInstructions : '' }
+  const isContinue = history.at(-1)?.type === 'continue'
+  const isActionComplete = /> [A-Z]/.test(text.split(/\\n/).filter((t) => t.trim() !== '').at(-1) || '')
+  
+  if (isContinue && !isActionComplete) {
+    return { text: text + continueInstructions }
+  }
+  
+  return { text }
 }
 
 modifier(text)`
