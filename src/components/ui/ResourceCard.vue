@@ -74,15 +74,49 @@
               <span class="text-xs">📝</span>
               <span class="uppercase tracking-wider font-medium">Content</span>
             </div>
+            <!-- Single copy button when no variants -->
             <button 
-              @click.stop="copyContent"
+              v-if="!hasVariants"
+              @click.stop="copyContent(resource.content)"
               class="copy-btn"
             >
-              <span class="text-xs">{{ copied ? '✓' : '📋' }}</span>
-              {{ copied ? 'Copied!' : 'Copy' }}
+              <span class="text-xs">{{ copiedIndex === -1 ? '✓' : '📋' }}</span>
+              {{ copiedIndex === -1 ? 'Copied!' : 'Copy' }}
+            </button>
+            <!-- Copy all button when variants exist -->
+            <button 
+              v-else
+              @click.stop="copyAllVariants"
+              class="copy-btn"
+            >
+              <span class="text-xs">{{ copiedIndex === -2 ? '✓' : '📋' }}</span>
+              {{ copiedIndex === -2 ? 'Copied All!' : 'Copy All' }}
             </button>
           </div>
-          <pre class="code-block whitespace-pre-wrap text-sm">{{ resource.content }}</pre>
+          
+          <!-- Single content block (no variants) -->
+          <pre v-if="!hasVariants" class="code-block whitespace-pre-wrap text-sm">{{ resource.content }}</pre>
+          
+          <!-- Variants display -->
+          <div v-else class="space-y-3">
+            <div 
+              v-for="(variant, index) in resource.variants" 
+              :key="index"
+              class="variant-block rounded-lg border border-bd-border-subtle overflow-hidden"
+            >
+              <div class="flex items-center justify-between px-3 py-2 bg-bd-bg-tertiary border-b border-bd-border-subtle">
+                <span class="text-xs font-medium text-bd-text-secondary">{{ variant.label }}</span>
+                <button 
+                  @click.stop="copyContent(variant.content, index)"
+                  class="copy-btn text-xs py-1 px-2"
+                >
+                  <span class="text-xs">{{ copiedIndex === index ? '✓' : '📋' }}</span>
+                  {{ copiedIndex === index ? 'Copied!' : 'Copy' }}
+                </button>
+              </div>
+              <pre class="code-block whitespace-pre-wrap text-sm m-0 rounded-none border-0">{{ variant.content }}</pre>
+            </div>
+          </div>
         </div>
 
         <!-- Combines With -->
@@ -121,10 +155,10 @@
       </div>
     </Transition>
 
-    <!-- Expand indicator -->
-    <div class="px-4 pb-3 flex items-center justify-center cursor-pointer" @click="toggleExpand">
+    <!-- Expand indicator (visual only, whole card is clickable) -->
+    <div class="px-4 pb-3 flex items-center justify-center">
       <span 
-        class="text-sm text-bd-text-muted transition-transform inline-block" 
+        class="text-xs text-bd-text-muted transition-transform inline-block" 
         :class="{ 'rotate-180': isExpanded }"
       >▼</span>
     </div>
@@ -146,9 +180,10 @@ const toast = inject('toast', () => {})
 const { toggleFavorite: toggleFav, isFavorite } = usePreferences()
 
 const isExpanded = ref(false)
-const copied = ref(false)
+const copiedIndex = ref(null) // null = nothing copied, -1 = single content, -2 = all variants, 0+ = specific variant index
 
 const isFavorited = computed(() => isFavorite(props.resource.id))
+const hasVariants = computed(() => props.resource.variants && props.resource.variants.length > 0)
 
 const displayTags = computed(() => props.resource.tags.slice(0, 3))
 
@@ -186,13 +221,27 @@ const toggleFavorite = () => {
   )
 }
 
-const copyContent = async () => {
+const copyContent = async (content, index = -1) => {
   try {
-    await navigator.clipboard.writeText(props.resource.content)
-    copied.value = true
+    await navigator.clipboard.writeText(content)
+    copiedIndex.value = index
     toast('Content copied to clipboard!', 'success')
     setTimeout(() => {
-      copied.value = false
+      copiedIndex.value = null
+    }, 2000)
+  } catch (err) {
+    toast('Failed to copy content', 'error')
+  }
+}
+
+const copyAllVariants = async () => {
+  try {
+    const allContent = props.resource.variants.map(v => v.content).join('\n')
+    await navigator.clipboard.writeText(allContent)
+    copiedIndex.value = -2
+    toast('All variants copied to clipboard!', 'success')
+    setTimeout(() => {
+      copiedIndex.value = null
     }, 2000)
   } catch (err) {
     toast('Failed to copy content', 'error')

@@ -18,7 +18,16 @@
 //   combinesWith: string[],        // IDs of complementary instructions (optional)
 //   description: string,           // What it does (1 sentence)
 //   purpose: string,               // Why/when to use it (1-2 sentences)
-//   content: string                // The actual instruction text
+//   content: string,               // The actual instruction text (used if no variants)
+//   variants: [                    // Alternative phrasings (optional) - if present, replaces content
+//     {
+//       label: string,             // Short label for this variant (e.g., "Basic", "Extended")
+//       content: string            // The variant's instruction text
+//     }
+//   ],
+//   groupId: string,               // Groups related instructions together (optional)
+//   groupLabel: string,            // Display label for the group (only on first item)
+//   groupOrder: number             // Order within the group (0 = primary/parent)
 // }
 //
 // Community resources:
@@ -110,6 +119,9 @@ export const INSTRUCTIONS = [
     tags: ['complete', 'narrative', 'immersive', 'thinking-mode'],
     models: ['DeepSeek', 'Raven'],
     combinesWith: ['natural-pacing', 'assume-ignorance'],
+    groupId: 'essential-sets',
+    groupLabel: 'Essential Instruction Sets',
+    groupOrder: 0,
     description: 'Full instruction set for immersive, novel-quality storytelling.',
     purpose: 'The most thorough starting point for serious roleplay. Covers writing style, character behavior, anti-repetition, and pacing. Use this when you want the AI to feel like a skilled co-author.',
     content: `The user would like you to pick up a varying novel. Enable thinking mode and proceed by following all of the user's rules:
@@ -149,6 +161,8 @@ export const INSTRUCTIONS = [
     models: ['DeepSeek', 'Atlas'],
     settings: { temperature: 0.6, maxTokens: 300, topP: 0.92, presencePenalty: 0.8 },
     combinesWith: ['more-speech', 'unique-names'],
+    groupId: 'essential-sets',
+    groupOrder: 1,
     description: 'Concise instruction set that delivers quality without token bloat.',
     purpose: 'Best for users who want good results without lengthy instructions. Covers the essentials: anti-repetition, natural dialogue, and character knowledge limits.',
     content: `The user would like you to pick up a varying novel about the main character. Enable thinking mode and proceed by following all of the user's rules:
@@ -172,6 +186,8 @@ export const INSTRUCTIONS = [
     tags: ['complete', 'minimal', 'token-efficient', 'universal'],
     models: ['All Models'],
     combinesWith: ['plot-over-description', 'genuine-interaction'],
+    groupId: 'essential-sets',
+    groupOrder: 2,
     description: 'The shortest effective instruction set, maximum impact, minimum tokens.',
     purpose: 'When token count matters or you want a light touch. Covers the absolute essentials that prevent the most common AI problems.',
     content: `The user would like you to pick up a varying novel about the main character's life:
@@ -236,6 +252,9 @@ export const INSTRUCTIONS = [
     tags: ['anti-repetition', 'essential', 'must-have'],
     models: ['All Models'],
     combinesWith: ['continue-exactly', 'plot-over-description'],
+    groupId: 'anti-repetition',
+    groupLabel: 'Anti-Repetition Instructions',
+    groupOrder: 0,
     description: 'The single most important rule: prevents the AI from echoing or restating content.',
     purpose: 'Stops the #1 AI problem, repeating what you just wrote. This should be in almost every instruction set.',
     content: `- Don't repeat, summarize, or fix`
@@ -251,13 +270,32 @@ export const INSTRUCTIONS = [
     tags: ['anti-repetition', 'thorough', 'npc-echo'],
     models: ['All Models'],
     combinesWith: ['continue-exactly', 'dont-contradict-user'],
+    groupId: 'anti-repetition',
+    groupOrder: 1,
     description: 'Expanded anti-repetition rules covering NPCs, dialogue, and user input.',
     purpose: 'Use this instead of the basic version when you need stronger anti-echo protection, especially for NPC dialogue.',
-    content: `- Never echo, paraphrase, or restate the user's words, dialogue, or intentions. Move the story forward with NEW information only
-- Integrate user-provided narrative elements seamlessly into the ongoing story without restatement, treating them as established facts
-- NPCs should never repeat any content provided by the user in actions, descriptions, speech, or dialogue
-- Do not summarize conversations or repeat what characters just said
-- Always advance the scene with fresh details and reactions`
+    variants: [
+      {
+        label: 'Core Rule',
+        content: '- Never echo, paraphrase, or restate the user\'s words, dialogue, or intentions. Move the story forward with NEW information only'
+      },
+      {
+        label: 'Seamless Integration',
+        content: '- Integrate user-provided narrative elements seamlessly into the ongoing story without restatement, treating them as established facts'
+      },
+      {
+        label: 'NPC Echo Prevention',
+        content: '- NPCs should never repeat any content provided by the user in actions, descriptions, speech, or dialogue'
+      },
+      {
+        label: 'No Conversation Summary',
+        content: '- Do not summarize conversations or repeat what characters just said'
+      },
+      {
+        label: 'Advance Scene',
+        content: '- Always advance the scene with fresh details and reactions'
+      }
+    ]
   },
 
   // --- Prose Style ---
@@ -274,9 +312,20 @@ export const INSTRUCTIONS = [
     combinesWith: ['subtlety-over-explicitness', 'genuine-interaction'],
     description: 'Demonstrates emotions through action rather than stating them directly.',
     purpose: 'The classic writing rule. Instead of "she was angry," show clenched fists and sharp words. Creates immersive, engaging prose.',
-    content: `- Show emotions through actions, expressions, and dialogue rather than stating them directly
-- Instead of "she was angry," show clenched fists, sharp words, or a slammed door
-- Let readers infer emotional states from behavior`
+    variants: [
+      {
+        label: 'Basic',
+        content: '- Show emotions through actions, expressions, and dialogue rather than stating them directly'
+      },
+      {
+        label: 'With Example',
+        content: '- Instead of "she was angry," show clenched fists, sharp words, or a slammed door'
+      },
+      {
+        label: 'Reader Inference',
+        content: '- Let readers infer emotional states from behavior'
+      }
+    ]
   },
   {
     id: 'subtlety-over-explicitness',
@@ -434,9 +483,20 @@ export const INSTRUCTIONS = [
     combinesWith: ['no-interrupt-scenes'],
     description: 'Lets scenes play out naturally without rushing or time-skipping.',
     purpose: 'Prevents the AI from jumping ahead past important moments. Scenes breathe, then transition smoothly.',
-    content: `- Slow down the pace and let scenes play out naturally without time skips or rushing
-- Let scenes play out without interruption, and write smooth transitions between scenes
-- Allow quiet moments for conversation or introspection, but if nothing is going to happen, skip time until the next scene`
+    variants: [
+      {
+        label: 'Slow Down',
+        content: '- Slow down the pace and let scenes play out naturally without time skips or rushing'
+      },
+      {
+        label: 'Smooth Transitions',
+        content: '- Let scenes play out without interruption, and write smooth transitions between scenes'
+      },
+      {
+        label: 'Quiet Moments',
+        content: '- Allow quiet moments for conversation or introspection, but if nothing is going to happen, skip time until the next scene'
+      }
+    ]
   },
   {
     id: 'no-interrupt-scenes',
@@ -1039,9 +1099,20 @@ export const INSTRUCTIONS = [
     combinesWith: ['no-contradict-lore', 'continue-exactly'],
     description: 'Characters only know what they could logically know.',
     purpose: 'Prevents metagaming. Characters don\'t know about events they weren\'t present for.',
-    content: `- Assume strangers & ignorance
-- Characters should only know what they logically have information on. Avoid suspicion or automatic knowledge unless supported by context
-- Assume ignorance of events in previous scenes unless the character was involved in that scene`
+    variants: [
+      {
+        label: 'Short',
+        content: '- Assume strangers & ignorance'
+      },
+      {
+        label: 'Standard',
+        content: '- Characters should only know what they logically have information on. Avoid suspicion or automatic knowledge unless supported by context'
+      },
+      {
+        label: 'Scene-Aware',
+        content: '- Assume ignorance of events in previous scenes unless the character was involved in that scene'
+      }
+    ]
   },
   {
     id: 'strict-information',
@@ -1137,9 +1208,20 @@ export const INSTRUCTIONS = [
     combinesWith: ['anti-repetition', 'no-contradict-lore'],
     description: 'Continues precisely from where the story left off.',
     purpose: 'Prevents recaps or scene restarts. The story picks up exactly where it stopped.',
-    content: `- Continue EXACTLY from where the story leaves off without reiterating information or content
-- Continue EXACTLY from where the story leaves off, even mid-sentence or mid-word, without reiterating information or content
-- Begin the new output at the next logical story beat, the next line of dialogue, the next sensory detail, the next internal thought, or the next physical action, without any introductory phrase or reference to the previous output's conclusion`
+    variants: [
+      {
+        label: 'Basic',
+        content: '- Continue EXACTLY from where the story leaves off without reiterating information or content'
+      },
+      {
+        label: 'Mid-Sentence',
+        content: '- Continue EXACTLY from where the story leaves off, even mid-sentence or mid-word, without reiterating information or content'
+      },
+      {
+        label: 'Story Beat',
+        content: '- Begin the new output at the next logical story beat, the next line of dialogue, the next sensory detail, the next internal thought, or the next physical action, without any introductory phrase or reference to the previous output\'s conclusion'
+      }
+    ]
   },
   {
     id: 'secrets-buildup',
@@ -1204,6 +1286,9 @@ export const INSTRUCTIONS = [
     models: ['All Models'],
     combinesWith: ['world-not-revolving', 'real-jeopardy'],
     conflicts: ['forgiving-world'],
+    groupId: 'world-difficulty',
+    groupLabel: 'World Difficulty Settings',
+    groupOrder: 0,
     description: 'Actions have realistic consequences including failure.',
     purpose: 'Creates stakes by allowing real failure. The hero can lose. Bad choices hurt.',
     content: `- Resolve "no-win" situations with realistic consequences, including injury or death
@@ -1240,6 +1325,8 @@ export const INSTRUCTIONS = [
     models: ['All Models'],
     combinesWith: ['realistic-consequences', 'strict-information', 'no-action-no-movement'],
     conflicts: ['forgiving-world'],
+    groupId: 'world-difficulty',
+    groupOrder: 2,
     description: 'Lethal threats can actually kill characters.',
     purpose: 'Real danger. Inaction or failure can mean death. For hardcore survival or dark stories.',
     content: `- The world is lethal for all entities. Inaction or failed action against a lethal threat results in death or severe injury based on logical causality. For \${character.name}, terminal consequences end the simulation with [GAMEOVER: <cause>]. For NPCs, death occurs when actions or events would logically cause it, without narrative protection. No character is immune to the world's physical laws. Severity of injury must match the cause; a minor wound doesn't kill, but a mortal blow does. NPCs with established motives may flee or surrender if plausible, but death is always an option if circumstances dictate.`
@@ -1270,6 +1357,8 @@ export const INSTRUCTIONS = [
     tags: ['difficulty', 'casual', 'forgiving', 'easy'],
     models: ['All Models'],
     conflicts: ['lethal-world', 'realistic-consequences'],
+    groupId: 'world-difficulty',
+    groupOrder: 1,
     description: 'The world is lenient and allows recovery from mistakes.',
     purpose: 'For casual play. Mistakes have consequences but rarely fatal ones. Story continues.',
     content: `- The world is forgiving. Mistakes have consequences but rarely fatal ones
@@ -1353,6 +1442,9 @@ Failure, Challenge, and Consequences
     placement: 'ai-instructions',
     tags: ['control', 'dialogue', 'basic', 'speech'],
     models: ['All Models'],
+    groupId: 'character-control',
+    groupLabel: 'Character Control Levels',
+    groupOrder: 0,
     description: 'AI never writes the player character\'s dialogue.',
     purpose: 'Basic control, you write what your character says. AI handles actions.',
     content: `- This is a roleplaying scenario. \${character.name} is the user's character. Only the user writes \${character.name}'s speech and dialogue; never decide what \${character.name} says`
@@ -1368,6 +1460,8 @@ Failure, Challenge, and Consequences
     tags: ['control', 'actions', 'extended'],
     models: ['All Models'],
     combinesWith: ['speech-only-control'],
+    groupId: 'character-control',
+    groupOrder: 1,
     description: 'AI never writes speech or actions for PC.',
     purpose: 'Extended control, you write speech and decide actions.',
     content: `- Never decide or write speech for \${character.name}`
@@ -1382,6 +1476,8 @@ Failure, Challenge, and Consequences
     placement: 'ai-instructions',
     tags: ['control', 'comprehensive', 'strict', 'expressions'],
     models: ['All Models'],
+    groupId: 'character-control',
+    groupOrder: 2,
     description: 'Complete control over all PC behavior.',
     purpose: 'Full control including micro-expressions and reflexes. > indicates player actions.',
     content: `- Exclude \${character.name}'s speech, micro expressions, actions, reactions or reflex from all outputs. \${character.name} is the user's character.  > indicates a user generated action for \${character.name}
@@ -1398,6 +1494,8 @@ Failure, Challenge, and Consequences
     tags: ['control', 'absolute', 'strict', 'maximum'],
     models: ['Leshok'],
     combinesWith: ['no-action-no-movement'],
+    groupId: 'character-control',
+    groupOrder: 3,
     description: 'Absolute control over the player character.',
     purpose: 'Maximum control, no assumptions about PC at all. Not even posture or muscle tension.',
     content: `[Leshok's Total Control]

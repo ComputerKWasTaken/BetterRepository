@@ -541,11 +541,69 @@
         </div>
         
         <div class="grid gap-3">
-          <ResourceCard 
-            v-for="instruction in category.instructions" 
-            :key="instruction.id"
-            :resource="instruction"
-          />
+          <template v-for="item in category.organizedItems" :key="item.isGroup ? item.groupId : item.instruction.id">
+            <!-- Single instruction (not in a group) -->
+            <ResourceCard 
+              v-if="!item.isGroup"
+              :resource="item.instruction"
+            />
+            
+            <!-- Grouped instructions -->
+            <div v-else class="instruction-group rounded-xl border-2 border-bd-purple/30 overflow-hidden bg-bd-bg-secondary">
+              <!-- Group header - clickable banner -->
+              <button 
+                @click="toggleGroup(item.groupId)"
+                class="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-bd-purple/10 to-bd-blue/10 hover:from-bd-purple/20 hover:to-bd-blue/20 transition-all text-left border-b border-bd-purple/20"
+              >
+                <div class="w-8 h-8 rounded-lg bg-bd-purple/20 flex items-center justify-center flex-shrink-0">
+                  <Layers class="w-4 h-4 text-bd-purple" />
+                </div>
+                <div class="flex-1 min-w-0">
+                  <span class="font-semibold text-bd-text-primary">{{ item.groupLabel }}</span>
+                  <div class="flex items-center gap-2 mt-0.5">
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-bd-purple/20 text-bd-purple font-medium">
+                      {{ item.members.length }} variations
+                    </span>
+                    <span class="text-xs text-bd-text-muted">
+                      {{ isGroupExpanded(item.groupId) ? 'Click to collapse' : 'Click to see all options' }}
+                    </span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 flex-shrink-0">
+                  <span v-if="!isGroupExpanded(item.groupId)" class="text-xs text-bd-purple font-medium hidden sm:block">
+                    +{{ item.members.length - 1 }} more
+                  </span>
+                  <ChevronDown 
+                    class="w-5 h-5 text-bd-purple transition-transform" 
+                    :class="{ 'rotate-180': isGroupExpanded(item.groupId) }"
+                  />
+                </div>
+              </button>
+              
+              <!-- Primary instruction (always visible) -->
+              <div>
+                <ResourceCard :resource="item.members[0]" />
+              </div>
+              
+              <!-- Expanded group members -->
+              <Transition name="slide">
+                <div v-if="isGroupExpanded(item.groupId) && item.members.length > 1" class="border-t-2 border-dashed border-bd-purple/20 bg-bd-bg-primary/50">
+                  <div class="px-2 py-3 space-y-2">
+                    <div class="px-2 pb-2 flex items-center gap-2">
+                      <div class="h-px flex-1 bg-bd-border-subtle"></div>
+                      <span class="text-xs text-bd-text-muted font-medium uppercase tracking-wider">Alternative Versions</span>
+                      <div class="h-px flex-1 bg-bd-border-subtle"></div>
+                    </div>
+                    <ResourceCard 
+                      v-for="member in item.members.slice(1)" 
+                      :key="member.id"
+                      :resource="member"
+                    />
+                  </div>
+                </div>
+              </Transition>
+            </div>
+          </template>
         </div>
       </section>
     </div>
@@ -596,7 +654,7 @@ import {
   ListOrdered, Percent, UserPlus, Repeat, Rocket, Wrench, Clock, UserX,
   Shield, Focus, Type, Drama, MessageSquare, Skull, ExternalLink, Star,
   AlertTriangle, Plus, Tag, Braces, Split, AlignLeft, Cpu, Coins,
-  Check, X, TrendingUp, Wand2, Link2, Heart
+  Check, X, TrendingUp, Wand2, Link2, Heart, ChevronDown
 } from 'lucide-vue-next'
 
 const activeTab = ref('collection')
@@ -722,14 +780,63 @@ const filteredInstructions = computed(() => {
   return result
 })
 
+// Organize instructions into groups where applicable
+const organizeInstructions = (instructionList) => {
+  const result = []
+  const processedIds = new Set()
+  
+  for (const instruction of instructionList) {
+    if (processedIds.has(instruction.id)) continue
+    
+    if (instruction.groupId) {
+      // Find all instructions in this group
+      const groupMembers = instructionList
+        .filter(i => i.groupId === instruction.groupId)
+        .sort((a, b) => (a.groupOrder || 0) - (b.groupOrder || 0))
+      
+      // Mark all as processed
+      groupMembers.forEach(m => processedIds.add(m.id))
+      
+      // Add as a group object
+      result.push({
+        isGroup: true,
+        groupId: instruction.groupId,
+        groupLabel: groupMembers[0]?.groupLabel || 'Related Instructions',
+        members: groupMembers
+      })
+    } else {
+      processedIds.add(instruction.id)
+      result.push({ isGroup: false, instruction })
+    }
+  }
+  
+  return result
+}
+
 const categoriesWithInstructions = computed(() => {
   return categories.value
     .map(cat => ({
       ...cat,
-      instructions: instructions.value.filter(i => i.category === cat.id)
+      instructions: instructions.value.filter(i => i.category === cat.id),
+      organizedItems: organizeInstructions(instructions.value.filter(i => i.category === cat.id))
     }))
     .filter(cat => cat.instructions.length > 0)
 })
+
+// Track expanded groups
+const expandedGroups = ref(new Set())
+
+const toggleGroup = (groupId) => {
+  if (expandedGroups.value.has(groupId)) {
+    expandedGroups.value.delete(groupId)
+  } else {
+    expandedGroups.value.add(groupId)
+  }
+  // Force reactivity
+  expandedGroups.value = new Set(expandedGroups.value)
+}
+
+const isGroupExpanded = (groupId) => expandedGroups.value.has(groupId)
 
 const hasActiveFilters = computed(() => 
   selectedCategories.value.length > 0 || 
