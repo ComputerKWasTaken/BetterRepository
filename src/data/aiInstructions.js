@@ -1257,7 +1257,7 @@ export const INSTRUCTIONS = [
     combinesWith: ['realistic-consequences'],
     description: 'Allows the PC to face real danger and loss.',
     purpose: 'Meaningful stakes beyond physical harm, political, social, and material loss.',
-    content: `- You are allowed to put \${character.name} in real jeopardy ,  physically, politically or socially ,  when it makes sense for the scene and motivations. Such risks must remain credible, have stakes, and trigger realistic consequences (injury, loss of allies, reputational damage, shifts in faction power)`
+    content: `- You are allowed to put \${character.name} in real jeopardy, physically, politically or socially,  when it makes sense for the scene and motivations. Such risks must remain credible, have stakes, and trigger realistic consequences (injury, loss of allies, reputational damage, shifts in faction power)`
   },
   {
     id: 'forgiving-world',

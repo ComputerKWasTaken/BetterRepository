@@ -139,7 +139,7 @@
             <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <ul class="text-xs text-bd-text-secondary space-y-1">
                 <li>• <strong>Use commands:</strong> Make, Avoid, Write, Be, Remember</li>
-                <li>• <strong>One idea per line</strong> ,  keep instructions short</li>
+                <li>• <strong>One idea per line</strong>, keep instructions short</li>
                 <li>• <strong>Use brackets</strong> <code class="text-bd-amber">[ ]</code> <code class="text-bd-amber">{ }</code> to group related info</li>
               </ul>
             </div>
@@ -312,7 +312,7 @@
               Quick Start
             </h3>
             <p class="text-xs text-bd-text-secondary">
-              <strong>T: 1.2</strong> • <strong>K: 300</strong> • <strong>PP/FP: 0.7</strong> ,  then adjust as you play.
+              <strong>T: 1.2</strong> • <strong>K: 300</strong> • <strong>PP/FP: 0.7</strong>, then adjust as you play.
             </p>
           </div>
         </div>
@@ -344,7 +344,7 @@
                 <li>Paste instructions into a <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" class="text-bd-accent-primary hover:underline">tokenizer</a></li>
                 <li>Find words split into multiple tokens</li>
                 <li>Replace with single-token synonyms</li>
-                <li>Test ,  sometimes unoptimized works better</li>
+                <li>Test, sometimes unoptimized works better</li>
               </ol>
               <p class="text-xs text-bd-text-muted mt-2">Capitalization & spaces matter!</p>
             </div>

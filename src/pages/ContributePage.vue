@@ -101,19 +101,19 @@
       <div class="grid md:grid-cols-2 gap-3">
         <div class="flex items-center gap-3 p-3 rounded-lg bg-bd-success/5 border border-bd-success/20">
           <Check class="w-4 h-4 text-bd-success flex-shrink-0" />
-          <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">It works</strong> ,  You've tested it in AI Dungeon</span>
+          <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">It works</strong>, You've tested it in AI Dungeon</span>
         </div>
         <div class="flex items-center gap-3 p-3 rounded-lg bg-bd-success/5 border border-bd-success/20">
           <Check class="w-4 h-4 text-bd-success flex-shrink-0" />
-          <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">It's original</strong> ,  Or you have permission</span>
+          <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">It's original</strong>, Or you have permission</span>
         </div>
         <div class="flex items-center gap-3 p-3 rounded-lg bg-bd-success/5 border border-bd-success/20">
           <Check class="w-4 h-4 text-bd-success flex-shrink-0" />
-          <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">It's described</strong> ,  A sentence explaining what it does</span>
+          <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">It's described</strong>, A sentence explaining what it does</span>
         </div>
         <div class="flex items-center gap-3 p-3 rounded-lg bg-bd-success/5 border border-bd-success/20">
           <Check class="w-4 h-4 text-bd-success flex-shrink-0" />
-          <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">It's appropriate</strong> ,  Follows AI Dungeon ToS</span>
+          <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">It's appropriate</strong>, Follows AI Dungeon ToS</span>
         </div>
       </div>
       <p class="text-sm text-bd-text-muted mt-4 text-center">

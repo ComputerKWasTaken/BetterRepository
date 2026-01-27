@@ -155,6 +155,28 @@
             </div>
           </div>
         </div>
+
+        <!-- BetterVoyage (Coming Soon) -->
+        <div class="card group border-dashed border-2 border-bd-border opacity-75 hover:opacity-100 transition-all duration-200">
+          <div class="flex items-start gap-4">
+            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-bd-cyan/20 to-bd-blue/20 flex items-center justify-center flex-shrink-0">
+              <Ship class="w-8 h-8 text-bd-cyan" />
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-2">
+                <h3 class="text-lg font-semibold text-bd-text-primary">BetterVoyage</h3>
+                <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-bd-cyan/20 text-bd-cyan">Coming Soon</span>
+              </div>
+              <p class="text-bd-text-secondary mb-4">
+                The same "Better" experience, coming to Voyage. QOL enhancements, new features, and more — 
+                for Latitude's next-generation AI storytelling platform.
+              </p>
+              <p class="text-xs text-bd-text-muted italic">
+                Development begins after Voyage's full public release.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -254,6 +276,6 @@
 import { 
   Puzzle, Layers, Github, ExternalLink,
   Home, Gamepad2, Keyboard, Type, Palette, StickyNote, User,
-  Rocket, Lightbulb, MessageCircle, Heart, Search, Save, Zap
+  Rocket, Lightbulb, MessageCircle, Heart, Search, Save, Zap, Ship
 } from 'lucide-vue-next'
 </script>

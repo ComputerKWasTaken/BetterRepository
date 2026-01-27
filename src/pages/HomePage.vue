@@ -93,7 +93,7 @@
           <h3 class="font-semibold text-bd-text-primary">New to AI Dungeon?</h3>
         </div>
         <p class="text-sm text-bd-text-secondary mb-3">
-          Start with Complete Sets ,  full instruction sets ready for various AI models.
+          Start with Complete Sets, full instruction sets ready for various AI models.
         </p>
         <router-link to="/ai-instructions" class="text-sm text-bd-accent-primary hover:underline flex items-center gap-1">
           Browse AI Instructions
@@ -110,7 +110,7 @@
           <h3 class="font-semibold text-bd-text-primary">Share Your Work</h3>
         </div>
         <p class="text-sm text-bd-text-secondary mb-3">
-          Paste your creation in a GitHub issue ,  no coding required.
+          Paste your creation in a GitHub issue, no coding required.
         </p>
         <router-link to="/contribute" class="text-sm text-bd-accent-primary hover:underline flex items-center gap-1">
           Submit Creation

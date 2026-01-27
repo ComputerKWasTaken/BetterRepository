@@ -124,7 +124,7 @@
             </h3>
             <p class="text-sm text-bd-text-secondary mb-2">
               A shared library of functions and values that can be used in other scripts. 
-              <strong>Not a modifier</strong> ,  runs before every modifier. Define helper functions and initialize state here.
+              <strong>Not a modifier</strong>, runs before every modifier. Define helper functions and initialize state here.
             </p>
             <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
               <span class="text-bd-text-muted">// Define helper functions and state</span><br>

@@ -289,7 +289,7 @@
             </div>
             <div class="flex items-start gap-2 text-sm text-bd-text-secondary">
               <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-              <span>Format triggers as <code class="text-bd-purple">trigger1,trigger2,trigger3</code> ,  <strong>no spaces after commas</strong>.</span>
+              <span>Format triggers as <code class="text-bd-purple">trigger1,trigger2,trigger3</code>, <strong>no spaces after commas</strong>.</span>
             </div>
           </div>
         </div>
@@ -312,7 +312,7 @@
               <h4 class="font-medium text-bd-text-primary mb-2">Plurals (Usually Free)</h4>
               <p class="text-sm text-bd-text-secondary">
                 <code>boat</code> also triggers on <code>boats</code>. But <code>elf</code> won't trigger 
-                <code>elves</code> ,  add both if needed!
+                <code>elves</code>, add both if needed!
               </p>
             </div>
           </div>
@@ -330,7 +330,7 @@
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
             <p class="text-sm text-bd-text-secondary">
               Instead of <code>therapy,therapies,therapist,therapeutic</code>, just use 
-              <code class="text-bd-purple">therap</code> ,  it catches all of them!
+              <code class="text-bd-purple">therap</code>, it catches all of them!
             </p>
           </div>
         </div>
