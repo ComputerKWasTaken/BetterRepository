@@ -3,6 +3,12 @@
 // =============================================================================
 // A curated collection of AI Instructions for AI Dungeon.
 //
+// CREDITS & ATTRIBUTION:
+// Repository Maintainer: OffMetaGamer
+// Foundational Contributors: Hawk, Dirty Kurtis, Shiny, Leshok
+// Additional Contributors: BinKompliziert, Little Hat, SeinSchatten, Zoocata
+// And the AI Dungeon community.
+//
 // INSTRUCTION SCHEMA:
 // {
 //   id: string,                    // Unique identifier (kebab-case)
@@ -30,9 +36,10 @@
 //   groupOrder: number             // Order within the group (0 = primary/parent)
 // }
 //
-// Community resources:
+// RESOURCES:
 // - OffMetaGamer's Repository: https://docs.google.com/document/d/1na9MeTcx0QY6MkZdQSkFQFL91sT8BSiJ_6gxrC5sNEU
 // - AI Dungeon Discord: https://discord.com/invite/HB2YBZYjyf
+// - Official AI Instructions Guide: https://help.aidungeon.com/faq/ai-instructions
 // =============================================================================
 
 import { PLACEMENTS, searchCollection, filterByCategory } from './shared.js'

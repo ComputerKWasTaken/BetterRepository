@@ -358,11 +358,21 @@
           <Heart class="w-5 h-5 text-bd-pink" />
           Credits & Resources
         </h2>
-        <p class="text-xs text-bd-text-muted mb-3">
-          Guide compiled from: <strong>OffMetaGamer</strong>, <strong>dragranis</strong>, <strong>BinKompliziert</strong>, 
-          <strong>Wilmar</strong>, <strong>Le Onyx</strong>, and the AI Dungeon community.
-        </p>
+        <div class="space-y-2 mb-4">
+          <p class="text-xs text-bd-text-muted">
+            <strong class="text-bd-text-secondary">Repository Maintainer:</strong> <strong>OffMetaGamer</strong>
+          </p>
+          <p class="text-xs text-bd-text-muted">
+            <strong class="text-bd-text-secondary">Foundational Contributors:</strong> <strong>Hawk</strong>, <strong>Dirty Kurtis</strong>, <strong>Shiny</strong>, <strong>Leshok</strong>
+          </p>
+          <p class="text-xs text-bd-text-muted">
+            <strong class="text-bd-text-secondary">Additional Contributors:</strong> <strong>BinKompliziert</strong>, <strong>Little Hat</strong>, <strong>SeinSchatten</strong>, <strong>Zoocata</strong>, and the AI Dungeon community.
+          </p>
+        </div>
         <div class="flex flex-wrap gap-2">
+          <a href="https://docs.google.com/document/d/1na9MeTcx0QY6MkZdQSkFQFL91sT8BSiJ_6gxrC5sNEU" target="_blank" class="btn btn-secondary text-xs">
+            <ScrollText class="w-3 h-3" /> OffMetaGamer's Repo
+          </a>
           <a href="https://help.aidungeon.com/faq/ai-instructions" target="_blank" class="btn btn-secondary text-xs">
             <BookOpen class="w-3 h-3" /> Official Guide
           </a>
@@ -708,7 +718,6 @@ const categoryColorMap = {
   'coherence': { bg: 'bg-bd-green/20', icon: 'text-bd-green' },
   'gameplay': { bg: 'bg-bd-pink/20', icon: 'text-bd-pink' },
   'world-setting': { bg: 'bg-bd-cyan/20', icon: 'text-bd-cyan' },
-  'templates': { bg: 'bg-bd-amber/20', icon: 'text-bd-amber' },
   'formatting': { bg: 'bg-bd-blue/20', icon: 'text-bd-blue' }
 }
 

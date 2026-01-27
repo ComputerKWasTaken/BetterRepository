@@ -8,7 +8,7 @@ Thanks for wanting to share your work! This page explains how to contribute.
 
 ### Option 1: GitHub Issue (Easiest)
 
-**No coding required.** Just paste your content and I'll handle the rest.
+Just paste your content and I'll handle the rest.
 
 1. Go to **[New Issue](https://github.com/ComputerKWasTaken/BetterRepository/issues/new)**
 2. Paste your content
