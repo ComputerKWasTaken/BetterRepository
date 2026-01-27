@@ -778,7 +778,7 @@ const tabs = [
 
 // Contributors for credits section
 const scriptingContributors = [
-  'Latitude', 'LewdLeah', 'Oli', 'MrJack', 'Magic', 'BinKompliziert'
+  'Latitude', 'LewdLeah', 'Oli', 'Magic', 'BinKompliziert', 'MrJack'
 ]
 
 const scripts = ref(SCRIPTS)

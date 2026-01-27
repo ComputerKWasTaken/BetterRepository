@@ -759,8 +759,8 @@ modifier(text)`
 
 const continueInstructions = \`\\n<SYSTEM>\\n\${prompt}\\n</SYSTEM>\`;
 
-const modifier = () => {
-  return { text: history.at(-1)?.type === 'continue' ? /> [A-Z]/.test(text.split(/\\n/).filter((t) => t.trim() !== '').at(-1) || '') ? '' : continueInstructions : '' }
+const modifier = (text) => {
+  return { text: history.at(-1)?.type === 'continue' ? /> [A-Z]/.test(text.split(/\n/).filter((t) => t.trim() !== '').at(-1) || '') ? '' : continueInstructions : '' }
 }
 
 modifier(text)`

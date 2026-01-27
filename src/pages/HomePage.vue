@@ -365,7 +365,7 @@ const storyCardsContributors = [
 ]
 
 const scriptingContributors = [
-  'Latitude', 'LewdLeah', 'Oli', 'MrJack'
+  'Latitude', 'LewdLeah', 'Oli', 'Magic', 'BinKompliziert', 'MrJack'
 ]
 
 const handleSearch = () => {
