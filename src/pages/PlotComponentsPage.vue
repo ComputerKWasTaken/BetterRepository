@@ -257,26 +257,28 @@
               <span class="tag bg-bd-green/20 text-bd-green text-xs">Automated</span>
             </h3>
             <p class="text-sm text-bd-text-secondary">
-              The memory bank is automated, you don't need to mess with it. It works in the background to keep your stories coherent.
+              The Memory Bank automatically stores important events and details as your story progresses. 
+              While very effective, it can struggle with <strong>phrasing memories accurately</strong>.
             </p>
             <p class="text-sm text-bd-text-muted mt-2">
-              <strong>Note:</strong> Don't rely solely on it. There's only so much it can store before the AI starts forgetting. 
-              Managing plot components is still essential for longer stories.
+              Poorly phrased memories can cause confusion later. If you notice the AI misremembering events or 
+              acting on incorrect information, <strong>review and edit your Memory Bank entries</strong> to fix the wording.
             </p>
           </div>
           
-          <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+          <div class="p-4 rounded-lg bg-bd-cyan/10 border border-bd-cyan/30">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-              <AlertTriangle class="w-4 h-4 text-bd-pink" />
+              <ScrollText class="w-4 h-4 text-bd-cyan" />
               Story Summary
-              <span class="tag bg-bd-pink/20 text-bd-pink text-xs">Use Caution</span>
+              <span class="tag bg-bd-cyan/20 text-bd-cyan text-xs">Recently Improved</span>
             </h3>
             <p class="text-sm text-bd-text-secondary">
-              The auto-summary uses a small model that often misunderstands events, mixes up characters, and repeats entries. 
-              This can degrade output quality.
+              Recent updates have <strong>drastically improved</strong> the auto-summary feature, making it much more 
+              reliable at tracking your story's progression and key events.
             </p>
             <p class="text-sm text-bd-text-muted mt-2">
-              <strong>Hand-written summaries</strong> can help since YOU can see long-term patterns the AI can't.
+              Like all plot components, it still benefits from <strong>regular maintenance</strong>. Review periodically 
+              to remove outdated info and ensure accuracy.
             </p>
           </div>
         </div>
@@ -309,6 +311,20 @@
             These markers are common in training data. Tokenizers include many variations 
             (<code>---</code>, <code>------</code>, <code>--------------</code>) as single tokens.
           </p>
+        </div>
+        
+        <div class="p-4 rounded-lg bg-bd-accent-primary/10 border border-bd-accent-primary/30 mt-4">
+          <div class="flex items-start gap-3">
+            <Sparkles class="w-5 h-5 text-bd-accent-primary mt-0.5 flex-shrink-0" />
+            <div>
+              <h3 class="font-semibold text-bd-text-primary">BetterDungeon Feature</h3>
+              <p class="text-sm text-bd-text-secondary mt-1">
+                BetterDungeon's <strong>Markdown rendering</strong> automatically formats scene break markers 
+                (<code class="text-bd-green">---</code>, <code class="text-bd-green">***</code>) into styled horizontal 
+                dividers, making your story easier to read while keeping the raw markers intact for the AI.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -394,8 +410,23 @@
       </section>
 
       <!-- Credits -->
-      <section class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-        <p class="text-sm text-bd-text-muted text-center">
+      <section class="card">
+        <h2 class="text-lg font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+          <Award class="w-5 h-5 text-bd-accent-primary" />
+          Credits
+        </h2>
+        <div class="mb-4">
+          <p class="text-xs text-bd-text-muted mb-2">
+            Contributors who created PEs, SSs, and ANs, or created guides for them:
+          </p>
+          <div class="flex flex-wrap gap-1.5">
+            <span v-for="name in plotComponentsContributors" :key="name" 
+                  class="px-2 py-0.5 rounded-full text-xs font-medium bg-bd-blue/10 text-bd-blue border border-bd-blue/20">
+              {{ name }}
+            </span>
+          </div>
+        </div>
+        <p class="text-xs text-bd-text-muted">
           Guide based on community knowledge and the <strong class="text-bd-text-secondary">AI Dungeon</strong> documentation.
           <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="text-bd-accent-primary hover:underline ml-1">
             Join the Discord
@@ -657,7 +688,7 @@ import {
   Users, Sword, Star, RefreshCw, MessageSquare, Heart, Volume2, Ruler,
   Rocket, Focus, AlertTriangle, Database, Brain, ArrowRightLeft,
   Sparkles, Scissors, MessageCircle, XCircle, Edit, SlidersHorizontal, Zap, Search,
-  ExternalLink
+  ExternalLink, Award
 } from 'lucide-vue-next'
 
 const activeTab = ref('templates')
@@ -665,6 +696,11 @@ const activeTab = ref('templates')
 const tabs = [
   { id: 'templates', label: 'Templates', icon: Layers },
   { id: 'guide', label: 'Guide', icon: BookOpen }
+]
+
+// Contributors for credits section
+const plotComponentsContributors = [
+  'Wilmar', 'Le Onyx', 'Dragranis', 'Celyne', 'Monsieur Boo'
 ]
 
 const templates = ref(TEMPLATES)

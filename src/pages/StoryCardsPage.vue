@@ -489,10 +489,25 @@
         </div>
       </section>
 
-      <!-- Credit -->
-      <section class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-        <p class="text-sm text-bd-text-muted text-center">
-          Guide based on the excellent work by <strong class="text-bd-text-secondary">wanderingstar1</strong> (Latitude Team).
+      <!-- Credits -->
+      <section class="card">
+        <h2 class="text-lg font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+          <Award class="w-5 h-5 text-bd-accent-primary" />
+          Credits
+        </h2>
+        <div class="mb-4">
+          <p class="text-xs text-bd-text-muted mb-2">
+            Contributors who created the resources and guides to create, write, and use Story Cards:
+          </p>
+          <div class="flex flex-wrap gap-1.5">
+            <span v-for="name in storyCardsContributors" :key="name" 
+                  class="px-2 py-0.5 rounded-full text-xs font-medium bg-bd-purple/10 text-bd-purple border border-bd-purple/20">
+              {{ name }}
+            </span>
+          </div>
+        </div>
+        <p class="text-xs text-bd-text-muted">
+          Guide based on community knowledge and the <strong class="text-bd-text-secondary">AI Dungeon</strong> documentation.
           <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="text-bd-accent-primary hover:underline ml-1">
             Join the Discord
             <ExternalLink class="w-3 h-3 inline-block ml-1" />
@@ -803,6 +818,11 @@ const activeTab = ref('examples')
 const tabs = [
   { id: 'examples', label: 'Examples & Templates', icon: Layers },
   { id: 'guide', label: 'Guide', icon: BookOpen }
+]
+
+// Contributors for credits section
+const storyCardsContributors = [
+  'wanderingstar1', 'GremmieGremlin', 'Lavere', 'Le Onyx', 'Shiny'
 ]
 
 const examples = ref(STORY_CARDS)

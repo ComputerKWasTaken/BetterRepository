@@ -556,18 +556,33 @@ if (card !== null) {
             </h3>
             <p class="text-sm text-bd-text-muted">Comprehensive community scripting guide</p>
           </a>
-          <a 
-            href="https://github.com/LewdLeah/AI-Dungeon-Auto-Cards" 
-            target="_blank"
-            class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle hover:border-bd-accent-primary/50 transition-colors group"
-          >
-            <h3 class="font-semibold text-bd-text-primary mb-1 flex items-center gap-2">
-              <Layers class="w-4 h-4 text-bd-purple" />
-              Auto Cards
-            </h3>
-            <p class="text-sm text-bd-text-muted">Automatic story card management by LewdLeah</p>
-          </a>
         </div>
+      </section>
+
+      <!-- Credits -->
+      <section class="card">
+        <h2 class="text-lg font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+          <Award class="w-5 h-5 text-bd-accent-primary" />
+          Credits
+        </h2>
+        <div class="mb-4">
+          <p class="text-xs text-bd-text-muted mb-2">
+            Contributors who wrote scripts and other tools, or created guides and resources for scripting:
+          </p>
+          <div class="flex flex-wrap gap-1.5">
+            <span v-for="name in scriptingContributors" :key="name" 
+                  class="px-2 py-0.5 rounded-full text-xs font-medium bg-bd-cyan/10 text-bd-cyan border border-bd-cyan/20">
+              {{ name }}
+            </span>
+          </div>
+        </div>
+        <p class="text-xs text-bd-text-muted">
+          Guide based on community knowledge and the <strong class="text-bd-text-secondary">AI Dungeon</strong> documentation.
+          <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="text-bd-accent-primary hover:underline ml-1">
+            Join the Discord
+            <ExternalLink class="w-3 h-3 inline-block ml-1" />
+          </a>
+        </p>
       </section>
 
     </template>
@@ -711,7 +726,7 @@ import {
   BookOpen, GitPullRequest, HelpCircle, Check, Braces, FileCode, 
   Library, ArrowRightToLine, Layers, ArrowLeftToLine, Database, 
   Lightbulb, Wrench, Plus, Search, Bug, ShieldAlert, Eye, RefreshCw, 
-  ExternalLink, Settings
+  ExternalLink, Settings, Award
 } from 'lucide-vue-next'
 
 const activeTab = ref('collection')
@@ -719,6 +734,11 @@ const activeTab = ref('collection')
 const tabs = [
   { id: 'collection', label: 'Examples', icon: Layers },
   { id: 'guide', label: 'Guide', icon: BookOpen }
+]
+
+// Contributors for credits section
+const scriptingContributors = [
+  'Latitude', 'LewdLeah', 'Oli', 'MrJack'
 ]
 
 const scripts = ref(SCRIPTS)

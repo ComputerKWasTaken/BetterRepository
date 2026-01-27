@@ -70,18 +70,18 @@ export const STORY_CARD_CATEGORIES = [
 export const STORY_CARDS = [
   // ========== CHARACTER EXAMPLES ==========
   {
-    id: 'example-tingle',
-    name: 'Tingle',
+    id: 'example-eccentric-merchant',
+    name: 'Eccentric Merchant',
     category: 'character',
     difficulty: 'beginner',
     impact: 'medium',
     essential: false,
-    tags: ['example', 'character', 'zelda', 'npc', 'merchant'],
-    source: 'Community Example',
-    description: 'A quirky map merchant from Hyrule. Shows how to write an eccentric NPC.',
-    useCase: 'Reference for writing quirky merchant or vendor NPCs with distinct personalities.',
-    triggers: 'Tingle',
-    entry: `Tingle is a strange but shrewd businessman. Despite his odd appearance, Tingle runs a successful map-making business. He can often be found in different areas around Hyrule, selling his maps to adventurers and travelers. Some speculate that Tingle may have knowledge of secret paths and locations in Hyrule due to his extensive exploration of the kingdom. Others warn that Tingle may have ulterior motives for collecting maps and information on Hyrule's terrain. Tingle wears an odd outfit consisting of a very disturbingly form fitting green body suit with a red belt and pointed hood that clings to the sides of his head.`
+    tags: ['example', 'character', 'npc', 'merchant', 'quirky'],
+    source: 'BetterRepository',
+    description: 'A quirky merchant NPC with a distinctive personality and hidden depths.',
+    useCase: 'Template for creating memorable merchant NPCs with unique quirks and potential plot hooks.',
+    triggers: '[Merchant Name]',
+    entry: `[Merchant Name] is an eccentric but shrewd businessperson. Despite their odd appearance and mannerisms, they run a successful specialty shop. They can often be found in unexpected places, selling their unique wares to adventurers and travelers. Some speculate that [Merchant Name] may have knowledge of secret locations due to their extensive travels. Others warn that they may have ulterior motives. [Merchant Name] has a distinctive appearance: [describe unusual clothing or features that make them memorable].`
   },
   {
     id: 'example-mysterious-stranger',
@@ -172,18 +172,18 @@ export const STORY_CARDS = [
 
   // ========== FACTION EXAMPLES ==========
   {
-    id: 'example-air-nomads',
-    name: 'Air Nomads',
+    id: 'example-monastic-order',
+    name: 'Monastic Order',
     category: 'faction',
     difficulty: 'intermediate',
     impact: 'high',
     essential: false,
-    tags: ['example', 'faction', 'avatar', 'airbender', 'peaceful'],
-    source: 'True Helper Mad Pumpkin',
-    description: 'The Air Nomads from Avatar: The Last Airbender. Detailed cultural faction.',
-    useCase: 'Reference for writing cultural/religious factions with distinct customs and beliefs.',
-    triggers: 'Air Nomads,Monastery',
-    entry: `The Air Nomads are free spirited people who value all life and peace. Air Nomads live in various large monasteries built on top of hard to reach mountain peaks. Air nomads wear loose fitting robes made of cotton and linen, often colored in Yellows and Orange shades. Male Air nomads often shave their heads completely bald, though they may have beards. Female Air nomads often keep their Hair. Female Air benders will shave their head to get their Mastery Tattoos then let their hair grow out again and Maintain just enough to let their Arrow show at their forehead. The Air Nomads Monasteries are home to the Air Benders. Master Air benders wear Arrow Tattoos that connect their 4 limbs and head. Air Nomads often Tame Sky Bison, large Mammals That can fly through the sky by manipulating air currents. Air nomads use Sky Bison to travel easier across the mountains to each of their Nomadic Monasteries using custom lightweight saddles.`
+    tags: ['example', 'faction', 'religious', 'peaceful', 'monks'],
+    source: 'BetterRepository',
+    description: 'A peaceful monastic order with distinct customs, beliefs, and practices.',
+    useCase: 'Template for creating religious or philosophical factions with rich cultural details.',
+    triggers: '[Order Name],monastery,monks',
+    entry: `The [Order Name] are a peaceful people who value [core values: life, harmony, wisdom, etc.]. Members live in [type of dwelling] built in [remote/sacred locations]. They wear [distinctive clothing style and colors]. [Gender-specific customs if any]. Masters of the order bear [distinctive marks or symbols of their rank]. The [Order Name] are known for [special abilities, knowledge, or practices]. They have formed bonds with [companion creatures or allies] and use [unique tools or methods] in their daily lives.`
   },
   {
     id: 'example-shadow-guild',
@@ -202,18 +202,18 @@ export const STORY_CARDS = [
 
   // ========== CREATURE EXAMPLES ==========
   {
-    id: 'example-platypus-bear',
-    name: 'Platypus Bear',
+    id: 'example-hybrid-beast',
+    name: 'Hybrid Beast',
     category: 'creature',
     difficulty: 'beginner',
     impact: 'low',
     essential: false,
-    tags: ['example', 'creature', 'avatar', 'hybrid', 'wildlife'],
-    source: 'True Helper Mad Pumpkin',
-    description: 'A hybrid creature showing how to describe unusual wildlife.',
-    useCase: 'Creating unique creatures by combining familiar animals with fantastical elements.',
-    triggers: 'Platypus Bear',
-    entry: `The Platypus Bear is a large and fearsome creature native to the Earth Kingdom. It has the head and bill of a platypus, the body and fur of a bear, and the tail of a beaver. Despite its awkward appearance, the Platypus Bear is an agile and powerful creature that can easily overpower its prey. It is known to be quite ferocious when provoked and is regarded as one of the most dangerous animals in the world.`
+    tags: ['example', 'creature', 'hybrid', 'wildlife', 'fantasy'],
+    source: 'BetterRepository',
+    description: 'A hybrid creature combining features of multiple animals.',
+    useCase: 'Template for creating unique fantasy creatures by combining familiar animal traits.',
+    triggers: '[Creature Name]',
+    entry: `The [Creature Name] is a [size] creature native to [habitat/region]. It has [body part] of a [animal A], the [body part] of a [animal B], and [additional features]. Despite its [unusual/awkward] appearance, the [Creature Name] is [behavioral traits: agile, cunning, docile, etc.]. It is known to be [temperament when encountered] and is regarded as [reputation among locals]. [Additional details about diet, abilities, or uses].`
   },
   {
     id: 'example-undead-guardian',

@@ -84,16 +84,49 @@
           <FileText class="w-5 h-5 text-bd-blue" />
           Structuring Instructions
         </h2>
+        <p class="text-xs text-bd-text-muted mb-4">
+          Good structure helps both you and the AI understand what's expected. Follow this order for best results.
+        </p>
         <div class="space-y-4">
-          <!-- Define the AI's Role -->
+          <!-- Step 1: Define the AI's Role -->
           <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2">1. Define the AI's Persona</h3>
+            <p class="text-xs text-bd-text-secondary mb-2">Start by telling the AI what role it plays. This sets the tone for everything else.</p>
             <div class="p-3 rounded bg-bd-bg-primary font-mono text-xs text-bd-green">
               You are a creative author, known for dark and brutal horror books that are exciting and thrilling.
             </div>
             <p class="text-xs text-bd-text-muted mt-2">
               Examples: Shakespeare, evil DM, snarky narrator, noir detective writer...
             </p>
+          </div>
+
+          <!-- Step 2: Core Writing Rules -->
+          <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+            <h3 class="font-semibold text-bd-text-primary mb-2">2. Core Writing Rules</h3>
+            <p class="text-xs text-bd-text-secondary mb-2">Define the fundamental rules that apply to all writing. These should be universal to your story.</p>
+            <div class="p-3 rounded bg-bd-bg-primary font-mono text-xs text-bd-green">
+- Be descriptive and creative with prose
+- Never write dialogue or actions for the player character
+- Continue from where the story left off
+- Maintain consistency with established facts
+            </div>
+          </div>
+
+          <!-- Step 3: Topic-Specific Rules -->
+          <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+            <h3 class="font-semibold text-bd-text-primary mb-2">3. Topic-Specific Rules</h3>
+            <p class="text-xs text-bd-text-secondary mb-2">Group related instructions by topic. This helps the AI understand context and apply rules appropriately.</p>
+            <div class="p-3 rounded bg-bd-bg-primary font-mono text-xs">
+              <div class="text-bd-amber">Dialogue:</div>
+              <div class="text-bd-green">- Write natural, character-appropriate dialogue</div>
+              <div class="text-bd-green">- Each character has a distinct voice</div>
+              <div class="text-bd-amber mt-2">Combat:</div>
+              <div class="text-bd-green">- Describe fights with tactical detail</div>
+              <div class="text-bd-green">- Injuries affect character performance</div>
+              <div class="text-bd-amber mt-2">NPCs:</div>
+              <div class="text-bd-green">- NPCs have their own goals and motivations</div>
+              <div class="text-bd-green">- NPCs react realistically to player actions</div>
+            </div>
           </div>
 
           <!-- Short vs Long Sets -->
@@ -103,7 +136,7 @@
                 <Zap class="w-4 h-4 text-bd-green" />
                 Short Sets
               </h3>
-              <p class="text-xs text-bd-text-secondary mb-2">Best for specific themes (horror, comedy). Each line starts with "-".</p>
+              <p class="text-xs text-bd-text-secondary mb-2">Best for specific themes (horror, comedy). Each line starts with "-". Keep it under 10-15 lines.</p>
               <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs">
                 <div class="text-bd-green">- Be descriptive and creative</div>
                 <div class="text-bd-green">- Avoid repetition</div>
@@ -115,12 +148,26 @@
                 <Layers class="w-4 h-4 text-bd-purple" />
                 Long Sets
               </h3>
-              <p class="text-xs text-bd-text-secondary mb-2">Group related instructions under labeled sections.</p>
+              <p class="text-xs text-bd-text-secondary mb-2">For complex scenarios. Group related instructions under labeled sections for clarity.</p>
               <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs">
                 <div class="text-bd-amber">Dialogue:</div>
                 <div class="text-bd-green">- Write natural dialogue</div>
                 <div class="text-bd-amber mt-1">Combat:</div>
                 <div class="text-bd-green">- Let injuries have consequences</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Information Flow Tip -->
+          <div class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
+            <div class="flex items-start gap-3">
+              <Info class="w-5 h-5 text-bd-info flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 class="font-semibold text-bd-text-primary mb-1">Information Flow Matters</h3>
+                <p class="text-sm text-bd-text-secondary">
+                  The AI weighs instructions at the <strong>beginning and end</strong> more heavily. Put your most important rules first, 
+                  and use the end for reinforcement. Topic sections in the middle help organize without losing impact.
+                </p>
               </div>
             </div>
           </div>
@@ -160,7 +207,7 @@
           <Wrench class="w-5 h-5 text-bd-pink" />
           Quick Fixes
         </h2>
-        <p class="text-xs text-bd-text-muted mb-3">Put these in <strong>Author's Note</strong>. Replace 'Name' with your character.</p>
+        <p class="text-xs text-bd-text-muted mb-3">Add these to your <strong>AI Instructions</strong>. Replace 'Name' with your character.</p>
 
         <div class="grid md:grid-cols-2 gap-3">
           <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
@@ -168,24 +215,31 @@
             <div class="space-y-1 text-xs">
               <div><span class="text-bd-text-muted">Faster:</span> <code class="text-bd-green">- Keep scenes moving</code></div>
               <div><span class="text-bd-text-muted">Slower:</span> <code class="text-bd-green">- Let scenes play out</code></div>
+              <div><span class="text-bd-text-muted">Balanced:</span> <code class="text-bd-green">- Balance action with atmosphere</code></div>
             </div>
           </div>
           <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h4 class="text-xs font-semibold text-bd-text-primary mb-2">AI Writing For You</h4>
-            <div class="text-xs">
-              <code class="text-bd-green">- Write ensuring 'Name' can write own dialogue</code>
+            <div class="space-y-1 text-xs">
+              <div><code class="text-bd-green">- Write ensuring 'Name' can write own dialogue</code></div>
+              <div><code class="text-bd-green">- Never assume 'Name's thoughts or actions</code></div>
+              <div><code class="text-bd-green">- Stop before 'Name' would need to respond</code></div>
             </div>
           </div>
           <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Repetition</h4>
-            <div class="text-xs">
-              <code class="text-bd-green">- Continue where story left off</code>
+            <div class="space-y-1 text-xs">
+              <div><code class="text-bd-green">- Continue where story left off</code></div>
+              <div><code class="text-bd-green">- Avoid repeating recent phrases</code></div>
+              <div><code class="text-bd-green">- Vary sentence structure and vocabulary</code></div>
             </div>
           </div>
           <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Plot Armor</h4>
-            <div class="text-xs">
-              <code class="text-bd-green">- Let 'Name' take injuries</code>
+            <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Plot Armor & Consequences</h4>
+            <div class="space-y-1 text-xs">
+              <div><code class="text-bd-green">- Let 'Name' take injuries</code></div>
+              <div><code class="text-bd-green">- Actions have realistic consequences</code></div>
+              <div><code class="text-bd-green">- Bad decisions lead to bad outcomes</code></div>
             </div>
           </div>
           <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
@@ -193,13 +247,31 @@
             <div class="space-y-1 text-xs">
               <div><code class="text-bd-green">- Focus on everyone in scenes</code></div>
               <div><code class="text-bd-green">- Assume strangers & ignorance</code></div>
+              <div><code class="text-bd-green">- NPCs have their own goals and concerns</code></div>
             </div>
           </div>
           <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Style</h4>
+            <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Style & Prose</h4>
             <div class="space-y-1 text-xs">
               <div><code class="text-bd-green">- Write pure prose without symbols</code></div>
               <div><code class="text-bd-green">- Prioritize plot and dialogue over description</code></div>
+              <div><code class="text-bd-green">- Show dont tell through character actions</code></div>
+            </div>
+          </div>
+          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+            <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Dialogue Quality</h4>
+            <div class="space-y-1 text-xs">
+              <div><code class="text-bd-green">- Write natural flowing dialogue</code></div>
+              <div><code class="text-bd-green">- Give each character a distinct voice</code></div>
+              <div><code class="text-bd-green">- Avoid exposition dumps in dialogue</code></div>
+            </div>
+          </div>
+          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+            <h4 class="text-xs font-semibold text-bd-text-primary mb-2">World Consistency</h4>
+            <div class="space-y-1 text-xs">
+              <div><code class="text-bd-green">- Maintain established facts about the world</code></div>
+              <div><code class="text-bd-green">- Time passes naturally between scenes</code></div>
+              <div><code class="text-bd-green">- Remember character locations and states</code></div>
             </div>
           </div>
         </div>
@@ -211,6 +283,7 @@
           <Drama class="w-5 h-5 text-bd-amber" />
           Example Sets
         </h2>
+        <p class="text-xs text-bd-text-muted mb-4">These are complete instruction sets you can use as starting points. Customize them to fit your story.</p>
         
         <div class="grid md:grid-cols-2 gap-4">
           <!-- Snarky Narrator -->
@@ -235,6 +308,58 @@
 - Follow Murphy's Law
 - Actions fail unless no sensible way to fail
 - Introduce plot twists when things go well</div>
+          </div>
+
+          <!-- Dark Fantasy -->
+          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
+            <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
+              <Swords class="w-4 h-4 text-bd-amber" />
+              Dark Fantasy
+            </h3>
+            <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are a dark fantasy author inspired by George R.R. Martin.
+- The world is morally grey, no pure heroes or villains
+- Actions have lasting consequences
+- Death is permanent and can happen to anyone
+- Magic is rare and comes with a cost</div>
+          </div>
+
+          <!-- Cozy Adventure -->
+          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30">
+            <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
+              <Lightbulb class="w-4 h-4 text-bd-green" />
+              Cozy Adventure
+            </h3>
+            <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are a wholesome storyteller writing cozy adventures.
+- Focus on friendships and small victories
+- Conflicts resolve through understanding
+- Describe comforting details like warm meals and safe havens
+- Maintain an optimistic tone even in challenges</div>
+          </div>
+
+          <!-- Mystery Thriller -->
+          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
+            <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
+              <Target class="w-4 h-4 text-bd-blue" />
+              Mystery Thriller
+            </h3>
+            <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are a mystery thriller author.
+- Plant clues and red herrings throughout the story
+- Build suspense through pacing and atmosphere
+- Characters have secrets and hidden motives
+- Revelations should feel earned and logical</div>
+          </div>
+
+          <!-- Combat Focused -->
+          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-cyan/30">
+            <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
+              <Swords class="w-4 h-4 text-bd-cyan" />
+              Combat Focused
+            </h3>
+            <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">Combat:
+- Describe fights with tactical detail
+- Injuries affect performance realistically
+- Environment can be used strategically
+- Opponents fight intelligently based on their abilities</div>
           </div>
         </div>
       </section>
@@ -327,47 +452,96 @@
         </h2>
         
         <div class="space-y-4">
+          <!-- What Are Tokens -->
+          <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+            <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
+              <Info class="w-4 h-4 text-bd-blue" />
+              What Are Tokens?
+            </h3>
+            <p class="text-xs text-bd-text-secondary">
+              Tokens are word chunks the AI reads. Common words = 1 token. Unusual words, punctuation, or special characters often split into multiple tokens, using more of your context limit.
+            </p>
+          </div>
+
           <div class="grid md:grid-cols-2 gap-4">
+            <!-- Why It Matters -->
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/30">
+              <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
+                <AlertTriangle class="w-4 h-4 text-bd-pink" />
+                Why It Matters
+              </h3>
+              <ul class="text-xs text-bd-text-secondary space-y-1">
+                <li>• <strong>Wasted tokens</strong> = less room for story context</li>
+                <li>• <strong>Split words</strong> can confuse the AI</li>
+                <li>• <strong>Lower reach</strong> for players on smaller context limits</li>
+              </ul>
+            </div>
+
+            <!-- Token Examples -->
             <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-              <h3 class="font-semibold text-bd-text-primary text-sm mb-2">What & Why</h3>
-              <p class="text-xs text-bd-text-secondary mb-2">
-                Tokens are word chunks the AI processes. Unknown words split into multiple tokens, costing more and reducing clarity.
-              </p>
-              <div class="text-xs">
-                <span class="text-bd-green"><code>dont</code> = 1 token</span> • 
-                <span class="text-bd-pink"><code>don't</code> = 2 tokens</span>
+              <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
+                <Zap class="w-4 h-4 text-bd-amber" />
+                Examples
+              </h3>
+              <div class="space-y-1 text-xs">
+                <div class="flex justify-between">
+                  <code class="text-bd-green">dont</code>
+                  <span class="text-bd-text-muted">→ 1 token ✓</span>
+                </div>
+                <div class="flex justify-between">
+                  <code class="text-bd-pink">don't</code>
+                  <span class="text-bd-text-muted">→ 2 tokens ✗</span>
+                </div>
+                <div class="flex justify-between">
+                  <code class="text-bd-green">cannot</code>
+                  <span class="text-bd-text-muted">→ 1 token ✓</span>
+                </div>
+                <div class="flex justify-between">
+                  <code class="text-bd-pink">can't</code>
+                  <span class="text-bd-text-muted">→ 2 tokens ✗</span>
+                </div>
               </div>
             </div>
-            <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-              <h3 class="font-semibold text-bd-text-primary text-sm mb-2">How to Optimize</h3>
-              <ol class="text-xs text-bd-text-secondary space-y-1 list-decimal list-inside">
-                <li>Paste instructions into a <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" class="text-bd-accent-primary hover:underline">tokenizer</a></li>
-                <li>Find words split into multiple tokens</li>
-                <li>Replace with single-token synonyms</li>
-                <li>Test, sometimes unoptimized works better</li>
-              </ol>
-              <p class="text-xs text-bd-text-muted mt-2">Capitalization & spaces matter!</p>
+          </div>
+
+          <!-- How to Optimize -->
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
+            <h3 class="font-semibold text-bd-text-primary text-sm mb-3 flex items-center gap-2">
+              <Wrench class="w-4 h-4 text-bd-green" />
+              How to Optimize
+            </h3>
+            <ol class="text-xs text-bd-text-secondary space-y-2 list-decimal list-inside">
+              <li>Paste your instructions into a <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" class="text-bd-accent-primary hover:underline font-medium">tokenizer tool</a></li>
+              <li>Look for words highlighted as multiple tokens</li>
+              <li>Replace with simpler, single-token alternatives</li>
+              <li>Test both versions; sometimes unoptimized reads better</li>
+            </ol>
+            <div class="mt-3 p-2 rounded bg-bd-bg-tertiary">
+              <p class="text-xs text-bd-text-muted flex items-center gap-1">
+                <Info class="w-3 h-3" />
+                Capitalization and spacing affect tokenization!
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Credits & Resources -->
-      <section class="card bg-gradient-to-br from-bd-purple/10 to-bd-blue/10 border-bd-purple/30">
+      <!-- Credits -->
+      <section class="card">
         <h2 class="text-lg font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-          <Heart class="w-5 h-5 text-bd-pink" />
+          <Award class="w-5 h-5 text-bd-accent-primary" />
           Credits & Resources
         </h2>
-        <div class="space-y-2 mb-4">
-          <p class="text-xs text-bd-text-muted">
-            <strong class="text-bd-text-secondary">Repository Maintainer:</strong> <strong>OffMetaGamer</strong>
+        <div class="mb-4">
+          <p class="text-xs text-bd-text-muted mb-2">
+            Contributors who created AI Instructions, or created repositories, guides, or other resources:
           </p>
-          <p class="text-xs text-bd-text-muted">
-            <strong class="text-bd-text-secondary">Foundational Contributors:</strong> <strong>Hawk</strong>, <strong>Dirty Kurtis</strong>, <strong>Shiny</strong>, <strong>Leshok</strong>
-          </p>
-          <p class="text-xs text-bd-text-muted">
-            <strong class="text-bd-text-secondary">Additional Contributors:</strong> <strong>BinKompliziert</strong>, <strong>Little Hat</strong>, <strong>SeinSchatten</strong>, <strong>Zoocata</strong>, and the AI Dungeon community.
-          </p>
+          <div class="flex flex-wrap gap-1.5">
+            <span v-for="name in aiInstructionsContributors" :key="name" 
+                  class="px-2 py-0.5 rounded-full text-xs font-medium bg-bd-amber/10 text-bd-amber border border-bd-amber/20">
+              {{ name }}
+            </span>
+          </div>
         </div>
         <div class="flex flex-wrap gap-2">
           <a href="https://docs.google.com/document/d/1na9MeTcx0QY6MkZdQSkFQFL91sT8BSiJ_6gxrC5sNEU" target="_blank" class="btn btn-secondary text-xs">
@@ -684,7 +858,7 @@ const selectedCategories = ref([])
 const selectedDifficulties = ref([])
 const selectedImpacts = ref([])
 const showFilters = ref(false)
-const sortBy = ref('name')
+const sortBy = ref('category')
 const quickFilter = ref(null)
 
 const difficulties = [
@@ -856,7 +1030,8 @@ const hasActiveFilters = computed(() =>
 const hasAnyFilters = computed(() => 
   searchQuery.value || 
   quickFilter.value || 
-  hasActiveFilters.value
+  hasActiveFilters.value ||
+  sortBy.value !== 'category'
 )
 
 const toggleQuickFilter = (filter) => {
@@ -919,7 +1094,15 @@ const clearAll = () => {
   selectedDifficulties.value = []
   selectedImpacts.value = []
   quickFilter.value = null
+  sortBy.value = 'category'
 }
+
+// Contributors for credits section
+const aiInstructionsContributors = [
+  'OffMetaGamer', 'Hawk', 'Dirty Kurtis', 'Shiny', 'Leshok', 'Dragranis', 
+  'BinKompliziert', 'Wilmar', 'Le Onyx', 'Little Hat', 'SeinSchetten', 
+  'Zoocata', 'Monsieur Boo', 'CamSift'
+]
 
 const handleSearch = (query) => {
   if (query.trim()) {

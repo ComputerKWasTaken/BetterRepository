@@ -199,7 +199,7 @@
           <Search class="w-4 h-4 text-bd-accent-primary flex-shrink-0 mt-0.5" />
           <div>
             <span class="text-sm text-bd-text-primary font-medium">Find Resources Here</span>
-            <p class="text-xs text-bd-text-secondary mt-0.5">Browse AI Instructions, Plot Components, and Scripts on BetterRepository</p>
+            <p class="text-xs text-bd-text-secondary mt-0.5">Browse AI Instructions, Plot Components, Story Card templates, and Scripts on BetterRepository</p>
           </div>
         </div>
         <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">

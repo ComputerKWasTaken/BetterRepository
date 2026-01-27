@@ -65,28 +65,28 @@
           <ScrollText class="w-5 h-5 text-bd-amber" />
           <div>
             <span class="font-medium text-bd-text-primary">AI Instructions</span>
-            <span class="text-sm text-bd-text-muted ml-2">Style, pacing, tone rules</span>
+            <span class="text-sm text-bd-text-muted ml-2">Style, pacing, tone rules, etc.</span>
           </div>
         </div>
         <div class="flex items-center gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
           <Bookmark class="w-5 h-5 text-bd-blue" />
           <div>
             <span class="font-medium text-bd-text-primary">Plot Components</span>
-            <span class="text-sm text-bd-text-muted ml-2">Author's Notes, Memory Banks</span>
+            <span class="text-sm text-bd-text-muted ml-2">Plot Essentials, Story Summary Templates, Author's Notes</span>
           </div>
         </div>
         <div class="flex items-center gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
           <Drama class="w-5 h-5 text-bd-purple" />
           <div>
             <span class="font-medium text-bd-text-primary">Story Cards</span>
-            <span class="text-sm text-bd-text-muted ml-2">Characters, locations, items</span>
+            <span class="text-sm text-bd-text-muted ml-2">Templates for characters, locations, items, etc.</span>
           </div>
         </div>
         <div class="flex items-center gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
           <Code class="w-5 h-5 text-bd-cyan" />
           <div>
             <span class="font-medium text-bd-text-primary">Scripts</span>
-            <span class="text-sm text-bd-text-muted ml-2">Game mechanics, utilities</span>
+            <span class="text-sm text-bd-text-muted ml-2">Game mechanics, utilities, etc.</span>
           </div>
         </div>
       </div>

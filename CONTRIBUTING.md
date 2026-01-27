@@ -33,8 +33,21 @@ If you're comfortable with Git:
 |------|------------|
 | **AI Instructions** | Rules that shape how the AI writes (style, pacing, tone) |
 | **Plot Components** | Author's Notes, Plot Essentials, Memory Banks, Story Summaries |
-| **Story Cards** | Character, location, faction, or item cards |
+| **Story Card Templates** | Reusable templates for character archetypes, location types, faction structures |
 | **Scripts** | JavaScript code for game mechanics, tracking, formatting |
+
+### About Story Cards
+
+We focus on **templates and archetypes** rather than specific characters from existing media. This keeps the repository useful for everyone and avoids an endless list of niche characters.
+
+**What we're looking for:**
+- Templates for character archetypes (e.g., "Wise Mentor", "Rival Adventurer", "Corrupt Official")
+- Location templates (e.g., "Frontier Town", "Ancient Ruins", "Thieves' Den")
+- Faction structures (e.g., "Criminal Syndicate", "Religious Order", "Merchant Guild")
+
+**What we're NOT looking for:**
+- Specific characters from games, movies, or books (e.g., specific named characters from franchises)
+- Highly specialized cards that only work in one particular scenario
 
 ---
 
