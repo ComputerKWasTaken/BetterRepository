@@ -92,8 +92,17 @@
           <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2">1. Define the AI's Persona</h3>
             <p class="text-xs text-bd-text-secondary mb-2">Start by telling the AI what role it plays. This sets the tone for everything else.</p>
-            <div class="p-3 rounded bg-bd-bg-primary font-mono text-xs text-bd-green">
-              You are a creative author, known for dark and brutal horror books that are exciting and thrilling.
+            <div class="space-y-2">
+              <div class="p-3 rounded bg-bd-bg-primary font-mono text-xs text-bd-green">
+                You are a creative author, known for dark and brutal horror books that are exciting and thrilling.
+              </div>
+              <div class="p-3 rounded bg-bd-bg-primary font-mono text-xs border border-bd-accent-primary/20">
+                <div class="text-bd-accent-light mb-1">// Advanced patterns:</div>
+                <div class="text-bd-green">"The user would like you to pick up a varying novel..."</div>
+                <div class="text-bd-text-muted mt-1 italic text-[10px]">Also works with "talented novelist" or "expert author". This role assignment encourages the AI to treat the session as a professional book project.</div>
+                <div class="text-bd-green mt-2">"Enable thinking mode..."</div>
+                <div class="text-bd-text-muted mt-1 italic text-[10px]">While AI Dungeon doesn't natively support Thinking Mode, this "gaslights" the model into a more analytical state. It works on most models, but has the strongest impact on DeepSeek.</div>
+              </div>
             </div>
             <p class="text-xs text-bd-text-muted mt-2">
               Examples: Shakespeare, evil DM, snarky narrator, noir detective writer...
@@ -465,12 +474,12 @@
 
           <div class="grid md:grid-cols-2 gap-4">
             <!-- Why It Matters -->
-            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/30">
-              <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
-                <AlertTriangle class="w-4 h-4 text-bd-pink" />
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-pink/30 flex flex-col justify-center">
+              <h3 class="font-semibold text-bd-text-primary text-base mb-3 flex items-center gap-2">
+                <AlertTriangle class="w-5 h-5 text-bd-pink" />
                 Why It Matters
               </h3>
-              <ul class="text-xs text-bd-text-secondary space-y-1">
+              <ul class="text-sm text-bd-text-secondary space-y-3">
                 <li>• <strong>Wasted tokens</strong> = less room for story context</li>
                 <li>• <strong>Split words</strong> can confuse the AI</li>
                 <li>• <strong>Lower reach</strong> for players on smaller context limits</li>
@@ -481,24 +490,24 @@
             <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
                 <Zap class="w-4 h-4 text-bd-amber" />
-                Examples
+                Optimization Examples
               </h3>
-              <div class="space-y-1 text-xs">
-                <div class="flex justify-between">
-                  <code class="text-bd-green">dont</code>
-                  <span class="text-bd-text-muted">→ 1 token ✓</span>
+              <div class="space-y-3">
+                <div class="p-2 rounded bg-bd-bg-tertiary">
+                  <div class="text-[10px] text-bd-pink font-semibold mb-1 uppercase">Fluffy (Wastes Tokens)</div>
+                  <code class="text-[10px] text-bd-text-secondary">Please try to avoid using any metaphors, similes, or other flowery figurative comparisons in your prose.</code>
                 </div>
-                <div class="flex justify-between">
-                  <code class="text-bd-pink">don't</code>
-                  <span class="text-bd-text-muted">→ 2 tokens ✗</span>
+                <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-green/20">
+                  <div class="text-[10px] text-bd-green font-semibold mb-1 uppercase">Direct (Optimized)</div>
+                  <code class="text-[10px] text-bd-text-secondary">Avoid similes, metaphors, or figurative comparisons.</code>
                 </div>
-                <div class="flex justify-between">
-                  <code class="text-bd-green">cannot</code>
-                  <span class="text-bd-text-muted">→ 1 token ✓</span>
+                <div class="p-2 rounded bg-bd-bg-tertiary">
+                  <div class="text-[10px] text-bd-pink font-semibold mb-1 uppercase">Vague (Wastes Tokens)</div>
+                  <code class="text-[10px] text-bd-text-secondary">Make sure that you are writing in a way that characters only know things that they would realistically know in that moment.</code>
                 </div>
-                <div class="flex justify-between">
-                  <code class="text-bd-pink">can't</code>
-                  <span class="text-bd-text-muted">→ 2 tokens ✗</span>
+                <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-green/20">
+                  <div class="text-[10px] text-bd-green font-semibold mb-1 uppercase">Action-Oriented (Optimized)</div>
+                  <code class="text-[10px] text-bd-text-secondary">Assume ignorance: NPCs only know what is logically supported by context.</code>
                 </div>
               </div>
             </div>
@@ -511,9 +520,9 @@
               How to Optimize
             </h3>
             <ol class="text-xs text-bd-text-secondary space-y-2 list-decimal list-inside">
-              <li>Paste your instructions into a <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" class="text-bd-accent-primary hover:underline font-medium">tokenizer tool</a></li>
-              <li>Look for words highlighted as multiple tokens</li>
-              <li>Replace with simpler, single-token alternatives</li>
+              <li>Paste your instructions into the <a href="https://platform.openai.com/tokenizer" target="_blank" class="text-bd-accent-primary hover:underline font-medium">OpenAI Tokenizer</a></li>
+              <li>Look for words highlighted as multiple tokens (common with punctuation)</li>
+              <li>Replace with simpler, single-token alternatives where possible</li>
               <li>Test both versions; sometimes unoptimized reads better</li>
             </ol>
             <div class="mt-3 p-2 rounded bg-bd-bg-tertiary">
@@ -529,11 +538,11 @@
       <!-- Credits -->
       <section class="card">
         <h2 class="text-lg font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-          <Award class="w-5 h-5 text-bd-accent-primary" />
+          <Info class="w-5 h-5 text-bd-amber" />
           Credits & Resources
         </h2>
         <div class="mb-4">
-          <p class="text-xs text-bd-text-muted mb-2">
+          <p class="text-xs text-bd-text-muted mb-2 flex items-center gap-1.5">
             Contributors who created AI Instructions, or created repositories, guides, or other resources:
           </p>
           <div class="flex flex-wrap gap-1.5">

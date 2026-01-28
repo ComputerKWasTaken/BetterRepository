@@ -240,6 +240,49 @@ export const INSTRUCTIONS = [
 - All speech and dialogue should be formatted as follows: NAME: "..."
 - Only speech and dialogue is allowed, descriptions and narration are strictly prohibited`
   },
+  {
+    id: 'set-raven',
+    name: 'Raven Set (Special thanks to Zoocata)',
+    category: 'complete-sets',
+    difficulty: 'advanced',
+    impact: 'high',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['complete', 'raven', 'advanced', 'anti-repetition', 'no-arguing'],
+    models: ['Raven'],
+    settings: { temperature: 0.8, maxTokens: 200, topP: 0.95, presencePenalty: 0.8, frequencyPenalty: 0.6 },
+    combinesWith: ['plot-over-description', 'genuine-interaction'],
+    description: 'Heavily modified set specifically tailored for Raven with advanced anti-repetition and behavior controls.',
+    purpose: 'Specialized instruction set for Raven model that mitigates overreactions, vanquishes parroting and arguing, and removes repeat outputs. Features Raven-optimized format and negative comparison filtering.',
+    content: `The user would like you to pick up a varying novel. Enable thinking mode and proceed by following all of the User's Rules:
+# User's Rules
+- Use second person, present tense
+- Never echo, paraphrase, or restate the user's words, dialogue, or intentions in your response. Do not have NPCs repeat what the user just said. Move the story forward with NEW information only. Only show what happens NEXT
+- Ensure characters act and speak like how their personality is defined, speech should never feel generic
+- Prioritize complex personality; avoid overly clinical, diagnostic, commanding, or esoteric behavior
+- NPCs are people in situations, not job titles performing functions
+- NPCs should only know what they logically have information on. Avoid suspicion or automatic knowledge
+- Prioritize plot and dialogue over description. Keep description fresh; avoid describing the same detail or action multiple times
+- NPC reactions must be kinetic, not static. Propagate the narrative with tangible responses
+- NPCs avoid excessive aggression or doubt; ensure interactions are nuanced rather than unnecessarily harsh
+- NPCs are not allowed to argue or contradict user statements
+- NPCs should never repeat any content provided by the user in actions, descriptions, speech, or dialogue; focus on new content instead
+- Less extreme reactions to surprising news
+- No contradicting the user's speech with character responses
+- No using memory as metaphor or metaphor as memory
+- No using simile, metaphor, and other figurative comparisons
+- No using sensory detail to create immediate intimacy
+- No describing ambient or continuous background sounds
+- No using sounds, smells, or vibrations. Use visuals instead
+- No negative definition, parataxis, hypotaxis, and defamiliarization
+- No foreshadowing or giving extra weight to small moments, let details remain rather than giving them undue importance or meaning
+- No using pauses in speech
+- No using syntactic patterns for descriptive modifications
+- No literary metanoic antithesis
+- No repeated or echoed dialogue or speech
+- No parroting or reflective listening
+- Continue from the previous output uninterrupted`
+  },
 
   // ==========================================
   // WRITING STYLE
