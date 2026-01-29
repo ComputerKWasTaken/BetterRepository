@@ -321,7 +321,7 @@ const resourceCategories = [
     path: '/story-cards', 
     name: 'Story Cards', 
     icon: Drama,
-    description: 'Example cards and templates for characters, locations, and factions.',
+    description: 'Templates for Story Cards, including characters, locations, factions, abilities, and more.',
     count: STORY_CARDS.length + STORY_CARD_TEMPLATES.length,
     bgClass: 'bg-bd-purple/20',
     iconClass: 'text-bd-purple'

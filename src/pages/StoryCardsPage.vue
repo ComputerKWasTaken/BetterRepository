@@ -31,42 +31,97 @@
 
     <!-- Guide Tab -->
     <template v-if="activeTab === 'guide'">
+      <!-- Table of Contents - Sticky Sidebar -->
+      <div class="flex gap-6">
+        <aside class="hidden lg:block w-56 flex-shrink-0">
+          <div class="sticky top-4 space-y-2">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider">Contents</h3>
+              <div class="flex gap-1">
+                <button @click="expandAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Expand all">
+                  <ChevronDown class="w-3 h-3" />
+                </button>
+                <button @click="collapseAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Collapse all">
+                  <ChevronUp class="w-3 h-3" />
+                </button>
+              </div>
+            </div>
+            <button
+              v-for="section in guideSections"
+              :key="section.id"
+              @click="scrollToGuideSection(section.id)"
+              class="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors hover:bg-bd-bg-tertiary"
+              :class="[
+                isGuideSectionExpanded(section.id) ? 'text-bd-text-primary' : 'text-bd-text-muted'
+              ]"
+            >
+              {{ section.label }}
+            </button>
+          </div>
+        </aside>
+
+        <div class="flex-1 space-y-4 min-w-0">
+
       <!-- What Are Story Cards -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <HelpCircle class="w-5 h-5 text-bd-purple" />
-          What Are Story Cards?
-        </h2>
-        <p class="text-bd-text-secondary mb-4">
-          Story Cards are notes for the AI about characters, locations, concepts, or any other elements of your story. 
-          The AI only consults them when they become relevant.
-        </p>
-        <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-          <p class="text-sm text-bd-text-secondary">
-            <strong class="text-bd-text-primary">Key concept:</strong> Their relevance is determined by keywords called 
-            <strong class="text-bd-purple">triggers</strong>. Story Cards only go into context when activated because 
-            their triggers occur in input or output, and they stay in context for a variable period depending on 
-            context window size.
-          </p>
-        </div>
-        <p class="text-sm text-bd-text-muted mt-4">
-          Story Cards are one of several 
-          <router-link to="/plot-components" class="text-bd-accent-primary hover:underline">Plot Components</router-link> 
-          you can use to guide the AI.
-        </p>
+      <section id="guide-what-are" class="card">
+        <button
+          @click="toggleGuideSection('what-are')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <HelpCircle class="w-5 h-5 text-bd-purple" />
+            What Are Story Cards?
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('what-are') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('what-are')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              Story Cards are notes for the AI about characters, locations, concepts, or any other elements of your story. 
+              The AI only consults them when they become relevant.
+            </p>
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+              <p class="text-sm text-bd-text-secondary">
+                <strong class="text-bd-text-primary">Key concept:</strong> Their relevance is determined by keywords called 
+                <strong class="text-bd-purple">triggers</strong>. Story Cards only go into context when activated because 
+                their triggers occur in input or output, and they stay in context for a variable period depending on 
+                context window size.
+              </p>
+            </div>
+            <p class="text-sm text-bd-text-muted">
+              Story Cards are one of several 
+              <router-link to="/plot-components" class="text-bd-accent-primary hover:underline">Plot Components</router-link> 
+              you can use to guide the AI.
+            </p>
+          </div>
+        </Transition>
       </section>
 
       <!-- When to Use Story Cards -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Lightbulb class="w-5 h-5 text-bd-amber" />
-          When Should I Use Story Cards?
-        </h2>
-        <p class="text-bd-text-secondary mb-4">
-          You don't have to use Story Cards to enjoy AI Dungeon; they're optional. But if you're willing to take 
-          the time to add them, they can help the AI maintain consistency and add depth to your story.
-        </p>
-        <div class="grid md:grid-cols-3 gap-4">
+      <section id="guide-when-to-use" class="card">
+        <button
+          @click="toggleGuideSection('when-to-use')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Lightbulb class="w-5 h-5 text-bd-amber" />
+            When Should I Use Story Cards?
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('when-to-use') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('when-to-use')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              You don't have to use Story Cards to enjoy AI Dungeon; they're optional. But if you're willing to take 
+              the time to add them, they can help the AI maintain consistency and add depth to your story.
+            </p>
+            <div class="grid md:grid-cols-3 gap-4">
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <div class="flex items-center gap-2 mb-2">
               <Camera class="w-4 h-4 text-bd-blue" />
@@ -97,43 +152,66 @@
               ensure the AI has access to your custom worldbuilding.
             </p>
           </div>
-        </div>
+            </div>
+          </div>
+        </Transition>
       </section>
 
       <!-- How Story Cards Work -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Cog class="w-5 h-5 text-bd-blue" />
-          How Story Cards Work
-        </h2>
-        <div class="space-y-4">
-          <p class="text-bd-text-secondary">
-            When a trigger word appears in the AI's output or the player's input, the corresponding Story Card's 
-            Entry is added to context. Only the Entry is shown to the AI, prefaced by <code class="text-bd-purple">"World Lore:"</code>.
-          </p>
-          <div class="p-4 rounded-lg bg-bd-warning/10 border border-bd-warning/30">
-            <div class="flex items-start gap-3">
-              <AlertTriangle class="w-5 h-5 text-bd-warning flex-shrink-0 mt-0.5" />
-              <div>
-                <h3 class="font-semibold text-bd-text-primary mb-1">Important Timing Note</h3>
-                <p class="text-sm text-bd-text-secondary">
-                  The AI <strong>does not know Story Cards exist</strong>. The same AI output that first activates 
-                  a Card cannot use the information in that Card. For example, if "Amanda" triggers her Card, the 
-                  AI won't have access to her info in that same output, only in subsequent ones.
-                </p>
+      <section id="guide-how-it-works" class="card">
+        <button
+          @click="toggleGuideSection('how-it-works')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Cog class="w-5 h-5 text-bd-blue" />
+            How Story Cards Work
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('how-it-works') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('how-it-works')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              When a trigger word appears in the AI's output or the player's input, the corresponding Story Card's 
+              Entry is added to context. Only the Entry is shown to the AI, prefaced by <code class="text-bd-purple">"World Lore:"</code>.
+            </p>
+            <div class="p-4 rounded-lg bg-bd-warning/10 border border-bd-warning/30">
+              <div class="flex items-start gap-3">
+                <AlertTriangle class="w-5 h-5 text-bd-warning flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 class="font-semibold text-bd-text-primary mb-1">Important Timing Note</h3>
+                  <p class="text-sm text-bd-text-secondary">
+                    The AI <strong>does not know Story Cards exist</strong>. The same AI output that first activates 
+                    a Card cannot use the information in that Card. For example, if "Amanda" triggers her Card, the 
+                    AI won't have access to her info in that same output, only in subsequent ones.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </Transition>
       </section>
 
       <!-- Anatomy of a Story Card -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <FileText class="w-5 h-5 text-bd-blue" />
-          Anatomy of a Story Card
-        </h2>
-        <div class="space-y-3">
+      <section id="guide-anatomy" class="card">
+        <button
+          @click="toggleGuideSection('anatomy')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <FileText class="w-5 h-5 text-bd-blue" />
+            Anatomy of a Story Card
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('anatomy') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('anatomy')" class="mt-4 space-y-3">
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
             <div class="flex items-start gap-3">
               <FileText class="w-4 h-4 text-bd-green mt-1 flex-shrink-0" />
@@ -181,275 +259,311 @@
               </div>
             </div>
           </div>
-        </div>
+          </div>
+        </Transition>
       </section>
 
       <!-- Best Practices -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Award class="w-5 h-5 text-bd-amber" />
-          Best Practices
-        </h2>
-        
-        <!-- Composing Entries -->
-        <div class="mb-6">
-          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-            <FileText class="w-4 h-4 text-bd-green" />
-            Composing Entries
-          </h3>
-          <ul class="space-y-2">
-            <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
-              <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-              <span>Use plain English with natural syntax. Short, simple, unambiguous sentences.</span>
-            </li>
-            <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
-              <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-              <span>Be brief to save context space. Story Cards are among the first elements removed when context is full.</span>
-            </li>
-            <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
-              <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-              <span><strong>Place the most important info at the beginning and end.</strong> The AI has a bias towards these positions.</span>
-            </li>
-            <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
-              <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-              <span>Mention and repeat the name of the thing you're describing. The AI doesn't see the Title!</span>
-            </li>
-            <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
-              <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-              <span>Avoid excessive physical description details unless relevant to the story.</span>
-            </li>
-          </ul>
-        </div>
+      <section id="guide-best-practices" class="card">
+        <button
+          @click="toggleGuideSection('best-practices')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Award class="w-5 h-5 text-bd-amber" />
+            Best Practices
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('best-practices') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('best-practices')" class="mt-4">
+            <!-- Composing Entries -->
+            <div class="mb-6">
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <FileText class="w-4 h-4 text-bd-green" />
+                Composing Entries
+              </h3>
+              <ul class="space-y-2">
+                <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
+                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+                  <span>Use plain English with natural syntax. Short, simple, unambiguous sentences.</span>
+                </li>
+                <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
+                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+                  <span>Be brief to save context space. Story Cards are among the first elements removed when context is full.</span>
+                </li>
+                <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
+                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+                  <span><strong>Place the most important info at the beginning and end.</strong> The AI has a bias towards these positions.</span>
+                </li>
+                <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
+                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+                  <span>Mention and repeat the name of the thing you're describing. The AI doesn't see the Title!</span>
+                </li>
+                <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
+                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+                  <span>Avoid excessive physical description details unless relevant to the story.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </Transition>
 
       </section>
 
       <!-- Trigger Mastery Section -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Zap class="w-5 h-5 text-bd-purple" />
-          Trigger Mastery
-        </h2>
-        <p class="text-sm text-bd-text-muted mb-4">
-          Deep dive into triggers based on <strong>GremmieGremlin</strong>'s comprehensive guide.
-        </p>
-
-        <!-- Spacing Matters -->
-        <div class="mb-6">
-          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-            <Space class="w-4 h-4 text-bd-blue" />
-            Understanding Spaces
-          </h3>
-          <p class="text-sm text-bd-text-secondary mb-3">
-            Spaces are <strong>critical</strong> in triggers. The AI reads these differently:
-          </p>
-          <div class="grid md:grid-cols-2 gap-3 mb-4">
-            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-              <code class="text-bd-purple">elf</code>
-              <p class="text-xs text-bd-text-muted mt-1">No spaces - triggers on "shelf", "self", etc.</p>
-            </div>
-            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-              <code class="text-bd-purple"> elf</code>
-              <p class="text-xs text-bd-text-muted mt-1">Space before - won't trigger at start of lines or after quotes</p>
-            </div>
-            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-              <code class="text-bd-purple">elf </code>
-              <p class="text-xs text-bd-text-muted mt-1">Space after - won't trigger "elves" or "elfish"</p>
-            </div>
-            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-              <code class="text-bd-purple"> elf </code>
-              <p class="text-xs text-bd-text-muted mt-1">Both spaces - most restrictive, cleanest match</p>
-            </div>
-          </div>
-          <div class="p-3 rounded-lg bg-bd-warning/10 border border-bd-warning/30">
-            <p class="text-sm text-bd-text-secondary">
-              <strong class="text-bd-warning">Warning:</strong> A space on the left means it <strong>won't trigger</strong> 
-              at the start of a new line or after quotation marks. <code>" elf"</code> won't trigger <code>"elf</code> in dialogue!
+      <section id="guide-trigger-mastery" class="card">
+        <button
+          @click="toggleGuideSection('trigger-mastery')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Zap class="w-5 h-5 text-bd-purple" />
+            Trigger Mastery
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('trigger-mastery') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('trigger-mastery')" class="mt-4">
+            <p class="text-sm text-bd-text-muted mb-4">
+              Deep dive into triggers based on <strong>GremmieGremlin</strong>'s comprehensive guide.
             </p>
-          </div>
-        </div>
 
-        <!-- Practical Recommendations -->
-        <div class="mb-6">
-          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-            <Target class="w-4 h-4 text-bd-green" />
-            Practical Recommendations
-          </h3>
-          <div class="space-y-3">
-            <div class="flex items-start gap-2 text-sm text-bd-text-secondary">
-              <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-              <span>For <code>elf</code>: Use <code class="text-bd-purple"> elf</code> (space on left only). Words starting with "elf" are usually elf-related.</span>
-            </div>
-            <div class="flex items-start gap-2 text-sm text-bd-text-secondary">
-              <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-              <span>For <code>orc</code>: Use <code class="text-bd-purple">orc </code> (space on right only). Avoids "torch", "porch", "divorce".</span>
-            </div>
-            <div class="flex items-start gap-2 text-sm text-bd-text-secondary">
-              <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-              <span><strong>Minimum 5 characters</strong> recommended. 4 is okay if unique enough to avoid false positives.</span>
-            </div>
-            <div class="flex items-start gap-2 text-sm text-bd-text-secondary">
-              <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-              <span>Format triggers as <code class="text-bd-purple">trigger1,trigger2,trigger3</code>, <strong>no spaces after commas</strong>.</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Capitalization & Pluralization -->
-        <div class="mb-6">
-          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-            <CaseSensitive class="w-4 h-4 text-bd-amber" />
-            Capitalization & Pluralization
-          </h3>
-          <div class="grid md:grid-cols-2 gap-4">
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-              <h4 class="font-medium text-bd-text-primary mb-2">Case Insensitive</h4>
-              <p class="text-sm text-bd-text-secondary">
-                <code>elf</code>, <code>Elf</code>, and <code>ELF</code> all work the same. 
-                Capitalization doesn't matter.
+            <!-- Spacing Matters -->
+            <div class="mb-6">
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <Space class="w-4 h-4 text-bd-blue" />
+                Understanding Spaces
+              </h3>
+              <p class="text-sm text-bd-text-secondary mb-3">
+                Spaces are <strong>critical</strong> in triggers. The AI reads these differently:
               </p>
+              <div class="grid md:grid-cols-2 gap-3 mb-4">
+                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                  <code class="text-bd-purple">elf</code>
+                  <p class="text-xs text-bd-text-muted mt-1">No spaces - triggers on "shelf", "self", etc.</p>
+                </div>
+                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                  <code class="text-bd-purple"> elf</code>
+                  <p class="text-xs text-bd-text-muted mt-1">Leading space - only triggers on " elf"</p>
+                </div>
+                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                  <code class="text-bd-purple">elf </code>
+                  <p class="text-xs text-bd-text-muted mt-1">Trailing space - only triggers on "elf "</p>
+                </div>
+                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                  <code class="text-bd-purple"> elf </code>
+                  <p class="text-xs text-bd-text-muted mt-1">Both - only triggers on " elf "</p>
+                </div>
+              </div>
             </div>
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-              <h4 class="font-medium text-bd-text-primary mb-2">Plurals (Usually Free)</h4>
-              <p class="text-sm text-bd-text-secondary">
-                <code>boat</code> also triggers on <code>boats</code>. But <code>elf</code> won't trigger 
-                <code>elves</code>, add both if needed!
+
+            <!-- Practical Recommendations -->
+            <div class="mb-6">
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <Target class="w-4 h-4 text-bd-green" />
+                Practical Recommendations
+              </h3>
+              <div class="space-y-3">
+                <div class="flex items-start gap-2 text-sm text-bd-text-secondary">
+                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+                  <span>For <code>elf</code>: Use <code class="text-bd-purple"> elf</code> (space on left only). Words starting with "elf" are usually elf-related.</span>
+                </div>
+                <div class="flex items-start gap-2 text-sm text-bd-text-secondary">
+                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+                  <span>For <code>orc</code>: Use <code class="text-bd-purple">orc </code> (space on right only). Avoids "torch", "porch", "divorce".</span>
+                </div>
+                <div class="flex items-start gap-2 text-sm text-bd-text-secondary">
+                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+                  <span><strong>Minimum 5 characters</strong> recommended. 4 is okay if unique enough to avoid false positives.</span>
+                </div>
+                <div class="flex items-start gap-2 text-sm text-bd-text-secondary">
+                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+                  <span>Format triggers as <code class="text-bd-purple">trigger1,trigger2,trigger3</code>, <strong>no spaces after commas</strong>.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Capitalization & Pluralization -->
+            <div class="mb-6">
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <CaseSensitive class="w-4 h-4 text-bd-amber" />
+                Capitalization & Pluralization
+              </h3>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                  <h4 class="font-medium text-bd-text-primary mb-2">Case Insensitive</h4>
+                  <p class="text-sm text-bd-text-secondary">
+                    <code>elf</code>, <code>Elf</code>, and <code>ELF</code> all work the same. 
+                    Capitalization doesn't matter.
+                  </p>
+                </div>
+                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                  <h4 class="font-medium text-bd-text-primary mb-2">Plurals (Usually Free)</h4>
+                  <p class="text-sm text-bd-text-secondary">
+                    <code>boat</code> also triggers on <code>boats</code>. But <code>elf</code> won't trigger 
+                    <code>elves</code>, add both if needed!
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Word Stubbing -->
+            <div class="mb-6">
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <Scissors class="w-4 h-4 text-bd-purple" />
+                Word Stubbing (Pro Technique)
+              </h3>
+              <p class="text-sm text-bd-text-secondary mb-3">
+                Stub words to a common root to catch all variations with one trigger:
               </p>
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
+                <p class="text-sm text-bd-text-secondary">
+                  Instead of <code>therapy,therapies,therapist,therapeutic</code>, just use 
+                  <code class="text-bd-purple">therap</code>, it catches all of them!
+                </p>
+              </div>
+            </div>
+
+            <!-- Punctuation & Edge Cases -->
+            <div class="mb-6">
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <Quote class="w-4 h-4 text-bd-blue" />
+                Punctuation & Edge Cases
+              </h3>
+              <ul class="space-y-2">
+                <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
+                  <AlertTriangle class="w-4 h-4 text-bd-warning flex-shrink-0 mt-0.5" />
+                  <span>If trigger has space on left, <code>"elf</code> in dialogue <strong>won't trigger</strong>. Add <code class="text-bd-purple">"elf</code> as a separate trigger.</span>
+                </li>
+                <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
+                  <AlertTriangle class="w-4 h-4 text-bd-warning flex-shrink-0 mt-0.5" />
+                  <span>Apostrophes vary! The AI may use different symbols. For "Andover's Inn", add: <code class="text-bd-purple">Andover's,Andover's,Andoverʼs</code></span>
+                </li>
+                <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
+                  <AlertTriangle class="w-4 h-4 text-bd-warning flex-shrink-0 mt-0.5" />
+                  <span>Hyphenated words: <code>Yellow-Dragon</code> is one word, so <code> Dragon</code> won't trigger on it.</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Trigger Timing -->
+            <div class="mb-6">
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <Clock class="w-4 h-4 text-bd-green" />
+                Trigger Timing
+              </h3>
+              <div class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
+                <p class="text-sm text-bd-text-secondary mb-2">
+                  <strong>Two ways to trigger a Story Card:</strong>
+                </p>
+                <ol class="space-y-2 text-sm text-bd-text-secondary list-decimal list-inside">
+                  <li><strong>Player input:</strong> Triggers immediately, used in the same response.</li>
+                  <li><strong>AI output:</strong> Triggers for the <em>next</em> response only. The AI can't use the info in the same output that triggered it.</li>
+                </ol>
+              </div>
+            </div>
+
+            <!-- Cascading Cards -->
+            <div class="mb-6">
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <GitMerge class="w-4 h-4 text-bd-purple" />
+                Cascading Cards
+              </h3>
+              <p class="text-sm text-bd-text-secondary mb-3">
+                You can create card networks where one card's Entry mentions another's trigger:
+              </p>
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <p class="text-sm text-bd-text-secondary">
+                  <strong>Example:</strong> "Alan" card mentions "Order of Flug" → AI outputs "Order of Flug" → 
+                  That card activates <em>next turn</em>. Note: include key context in Alan's card too, so the AI 
+                  understands his motivations even without the faction card.
+                </p>
+              </div>
+            </div>
+
+            <!-- Why False Triggers Matter -->
+            <div>
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <X class="w-4 h-4 text-bd-error" />
+                Why False Triggers Matter
+              </h3>
+              <div class="p-4 rounded-lg bg-bd-error/10 border border-bd-error/30">
+                <p class="text-sm text-bd-text-secondary mb-2">
+                  If <code>orc</code> triggers when your guy goes up on the <strong>porch</strong> to give his wife 
+                  <strong>orchids</strong>, the AI might turn her into an orc! Irrelevant entries can quickly eat up 
+                  context space and confuse the AI.
+                </p>
+                <p class="text-sm text-bd-text-muted mt-2">
+                  <strong>Pro tip:</strong> Use <a href="https://www.merriam-webster.com/wordfinder/classic/contains/common/-1/a/1" 
+                  target="_blank" class="text-bd-accent-primary hover:underline">Merriam-Webster's Word Finder</a> to check 
+                  for words containing your trigger.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-
-        <!-- Word Stubbing -->
-        <div class="mb-6">
-          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-            <Scissors class="w-4 h-4 text-bd-purple" />
-            Word Stubbing (Pro Technique)
-          </h3>
-          <p class="text-sm text-bd-text-secondary mb-3">
-            Stub words to a common root to catch all variations with one trigger:
-          </p>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
-            <p class="text-sm text-bd-text-secondary">
-              Instead of <code>therapy,therapies,therapist,therapeutic</code>, just use 
-              <code class="text-bd-purple">therap</code>, it catches all of them!
-            </p>
-          </div>
-        </div>
-
-        <!-- Punctuation & Edge Cases -->
-        <div class="mb-6">
-          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-            <Quote class="w-4 h-4 text-bd-blue" />
-            Punctuation & Edge Cases
-          </h3>
-          <ul class="space-y-2">
-            <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
-              <AlertTriangle class="w-4 h-4 text-bd-warning flex-shrink-0 mt-0.5" />
-              <span>If trigger has space on left, <code>"elf</code> in dialogue <strong>won't trigger</strong>. Add <code class="text-bd-purple">"elf</code> as a separate trigger.</span>
-            </li>
-            <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
-              <AlertTriangle class="w-4 h-4 text-bd-warning flex-shrink-0 mt-0.5" />
-              <span>Apostrophes vary! The AI may use different symbols. For "Andover's Inn", add: <code class="text-bd-purple">Andover's,Andover's,Andoverʼs</code></span>
-            </li>
-            <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
-              <AlertTriangle class="w-4 h-4 text-bd-warning flex-shrink-0 mt-0.5" />
-              <span>Hyphenated words: <code>Yellow-Dragon</code> is one word, so <code> Dragon</code> won't trigger on it.</span>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Trigger Timing -->
-        <div class="mb-6">
-          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-            <Clock class="w-4 h-4 text-bd-green" />
-            Trigger Timing
-          </h3>
-          <div class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
-            <p class="text-sm text-bd-text-secondary mb-2">
-              <strong>Two ways to trigger a Story Card:</strong>
-            </p>
-            <ol class="space-y-2 text-sm text-bd-text-secondary list-decimal list-inside">
-              <li><strong>Player input:</strong> Triggers immediately, used in the same response.</li>
-              <li><strong>AI output:</strong> Triggers for the <em>next</em> response only. The AI can't use the info in the same output that triggered it.</li>
-            </ol>
-          </div>
-        </div>
-
-        <!-- Cascading Cards -->
-        <div class="mb-6">
-          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-            <GitMerge class="w-4 h-4 text-bd-purple" />
-            Cascading Cards
-          </h3>
-          <p class="text-sm text-bd-text-secondary mb-3">
-            You can create card networks where one card's Entry mentions another's trigger:
-          </p>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <p class="text-sm text-bd-text-secondary">
-              <strong>Example:</strong> "Alan" card mentions "Order of Flug" → AI outputs "Order of Flug" → 
-              That card activates <em>next turn</em>. Note: include key context in Alan's card too, so the AI 
-              understands his motivations even without the faction card.
-            </p>
-          </div>
-        </div>
-
-        <!-- Why False Triggers Matter -->
-        <div>
-          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-            <X class="w-4 h-4 text-bd-error" />
-            Why False Triggers Matter
-          </h3>
-          <div class="p-4 rounded-lg bg-bd-error/10 border border-bd-error/30">
-            <p class="text-sm text-bd-text-secondary mb-2">
-              If <code>orc</code> triggers when your guy goes up on the <strong>porch</strong> to give his wife 
-              <strong>orchids</strong>, the AI might turn her into an orc! Irrelevant entries can quickly eat up 
-              context space and confuse the AI.
-            </p>
-            <p class="text-sm text-bd-text-muted mt-2">
-              <strong>Pro tip:</strong> Use <a href="https://www.merriam-webster.com/wordfinder/classic/contains/common/-1/a/1" 
-              target="_blank" class="text-bd-accent-primary hover:underline">Merriam-Webster's Word Finder</a> to check 
-              for words containing your trigger.
-            </p>
-          </div>
-        </div>
+        </Transition>
       </section>
 
       <!-- Balancing Information -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Scale class="w-5 h-5 text-bd-blue" />
-          Balancing Information
-        </h2>
-        <ul class="space-y-2">
-          <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
-            <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-            <span>Aim for Story Cards to activate only when needed, not taking up space constantly.</span>
-          </li>
-          <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
-            <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-            <span>Create Card networks by having Cards refer to each other through Entry information.</span>
-          </li>
-          <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
-            <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-            <span>If an Entry is very long, the AI might not relay all the information in a single output.</span>
-          </li>
-          <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
-            <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-            <span>Context space is limited. More context = more room for cards = they stay active longer.</span>
-          </li>
-          <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
-            <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-            <span>To temporarily disable a card, put gibberish in its trigger. Remember to change it back!</span>
-          </li>
-        </ul>
+      <section id="guide-balancing" class="card">
+        <button
+          @click="toggleGuideSection('balancing')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Scale class="w-5 h-5 text-bd-blue" />
+            Balancing Information
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('balancing') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('balancing')" class="mt-4">
+            <ul class="space-y-2">
+              <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
+                <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+                <span>Aim for Story Cards to activate only when needed, not taking up space constantly.</span>
+              </li>
+              <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
+                <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+                <span>Context space is limited. More context = more room for cards = they stay active longer.</span>
+              </li>
+              <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
+                <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+                <span>To temporarily disable a card, put gibberish in its trigger. Remember to change it back!</span>
+              </li>
+            </ul>
+          </div>
+        </Transition>
       </section>
 
       <!-- Pro Tips -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Lightbulb class="w-5 h-5 text-bd-amber" />
-          Pro Tips
-        </h2>
-        <div class="grid md:grid-cols-2 gap-4">
+      <section id="guide-pro-tips" class="card">
+        <button
+          @click="toggleGuideSection('pro-tips')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Lightbulb class="w-5 h-5 text-bd-amber" />
+            Pro Tips
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('pro-tips') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('pro-tips')" class="mt-4">
+            <div class="grid md:grid-cols-2 gap-4">
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <div class="flex items-center gap-2 mb-2">
               <Pencil class="w-4 h-4 text-bd-blue" />
@@ -486,34 +600,51 @@
               You can have thousands of Story Cards in a single scenario. The limit is effectively limitless!
             </p>
           </div>
-        </div>
+            </div>
+          </div>
+        </Transition>
       </section>
 
       <!-- Credits -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-          <Award class="w-5 h-5 text-bd-accent-primary" />
-          Credits
-        </h2>
-        <div class="mb-4">
-          <p class="text-xs text-bd-text-muted mb-2">
-            Contributors who created the resources and guides to create, write, and use Story Cards:
-          </p>
-          <div class="flex flex-wrap gap-1.5">
-            <span v-for="name in storyCardsContributors" :key="name" 
-                  class="px-2 py-0.5 rounded-full text-xs font-medium bg-bd-purple/10 text-bd-purple border border-bd-purple/20">
-              {{ name }}
-            </span>
+      <section id="guide-credits" class="card">
+        <button
+          @click="toggleGuideSection('credits')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Award class="w-5 h-5 text-bd-accent-primary" />
+            Credits
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('credits') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('credits')" class="mt-4 space-y-4">
+            <div>
+              <p class="text-xs text-bd-text-muted mb-2">
+                Contributors who created the resources and guides to create, write, and use Story Cards:
+              </p>
+              <div class="flex flex-wrap gap-1.5">
+                <span v-for="name in storyCardsContributors" :key="name" 
+                      class="px-2 py-0.5 rounded-full text-xs font-medium bg-bd-purple/10 text-bd-purple border border-bd-purple/20">
+                  {{ name }}
+                </span>
+              </div>
+            </div>
+            <p class="text-xs text-bd-text-muted">
+              Guide based on community knowledge and the <strong class="text-bd-text-secondary">AI Dungeon</strong> documentation.
+              <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="text-bd-accent-primary hover:underline ml-1">
+                Join the Discord
+                <ExternalLink class="w-3 h-3 inline-block ml-1" />
+              </a>
+            </p>
           </div>
-        </div>
-        <p class="text-xs text-bd-text-muted">
-          Guide based on community knowledge and the <strong class="text-bd-text-secondary">AI Dungeon</strong> documentation.
-          <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="text-bd-accent-primary hover:underline ml-1">
-            Join the Discord
-            <ExternalLink class="w-3 h-3 inline-block ml-1" />
-          </a>
-        </p>
+        </Transition>
       </section>
+        </div>
+      </div>
     </template>
 
     <!-- Examples Tab -->
@@ -683,29 +814,6 @@
 
       <!-- Category Sections (default view) -->
       <div v-if="!hasAnyFilters" class="space-y-6">
-        <!-- Examples Section -->
-        <div class="card">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-8 h-8 rounded-lg bg-bd-purple/20 flex items-center justify-center">
-              <Layers class="w-4 h-4 text-bd-purple" />
-            </div>
-            <div>
-              <h3 class="font-semibold text-bd-text-primary">Example Story Cards</h3>
-              <p class="text-xs text-bd-text-muted">Real examples showing effective Story Card writing.</p>
-            </div>
-            <span class="ml-auto tag bg-bd-purple/20 text-bd-purple">{{ examples.length }}</span>
-          </div>
-          
-          <div class="space-y-3">
-            <StoryCardItem 
-              v-for="card in examples" 
-              :key="card.id"
-              :card="card"
-              type="example"
-            />
-          </div>
-        </div>
-
         <!-- Templates Section -->
         <div class="card">
           <div class="flex items-center gap-3 mb-4">
@@ -775,13 +883,13 @@
             <GitPullRequest class="w-6 h-6 text-bd-accent-primary" />
           </div>
           <div class="flex-1">
-            <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Share Your Story Cards</h3>
+            <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Improve Our Templates</h3>
             <p class="text-bd-text-secondary mb-4">
-              Have great Story Cards? Just paste them in a GitHub issue and I'll add them to the collection.
+              Story Cards are deeply personal to each scenario. If you refine a template or make it clearer, submit the revision so we can improve the shared template library.
             </p>
             <router-link to="/contribute" class="btn btn-primary">
               <GitPullRequest class="w-4 h-4" />
-              Submit Your Cards
+              Submit a Template Revision
             </router-link>
           </div>
         </div>
@@ -811,13 +919,13 @@ import {
   StickyNote, Cog, AlertTriangle, Award, Check, Scale, Pencil,
   Download, Search, Infinity, ExternalLink, BookOpen, Space, Target,
   CaseSensitive, Scissors, Quote, Clock, GitMerge, X, Star, Rocket,
-  SlidersHorizontal
+  SlidersHorizontal, ChevronDown, ChevronUp
 } from 'lucide-vue-next'
 
 const activeTab = ref('examples')
 
 const tabs = [
-  { id: 'examples', label: 'Examples & Templates', icon: Layers },
+  { id: 'examples', label: 'Templates', icon: Layers },
   { id: 'guide', label: 'Guide', icon: BookOpen }
 ]
 
@@ -850,6 +958,53 @@ const impacts = [
   { id: 'low', label: 'Low Impact', activeClass: 'bg-bd-tag-bg text-bd-text-muted border border-bd-border-default' }
 ]
 
+// ===========================================
+// GUIDE TABLE OF CONTENTS
+// ===========================================
+const guideSections = [
+  { id: 'what-are', label: 'What Are Story Cards?' },
+  { id: 'when-to-use', label: 'When to Use' },
+  { id: 'how-it-works', label: 'How It Works' },
+  { id: 'anatomy', label: 'Anatomy' },
+  { id: 'best-practices', label: 'Best Practices' },
+  { id: 'trigger-mastery', label: 'Trigger Mastery' },
+  { id: 'balancing', label: 'Balancing Info' },
+  { id: 'pro-tips', label: 'Pro Tips' },
+  { id: 'credits', label: 'Credits' }
+]
+
+const expandedGuideSections = ref(new Set(guideSections.map(section => section.id)))
+
+const toggleGuideSection = (sectionId) => {
+  if (expandedGuideSections.value.has(sectionId)) {
+    expandedGuideSections.value.delete(sectionId)
+  } else {
+    expandedGuideSections.value.add(sectionId)
+  }
+  expandedGuideSections.value = new Set(expandedGuideSections.value)
+}
+
+const isGuideSectionExpanded = (sectionId) => expandedGuideSections.value.has(sectionId)
+
+const scrollToGuideSection = (sectionId) => {
+  const element = document.getElementById(`guide-${sectionId}`)
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (!expandedGuideSections.value.has(sectionId)) {
+      expandedGuideSections.value.add(sectionId)
+      expandedGuideSections.value = new Set(expandedGuideSections.value)
+    }
+  }
+}
+
+const expandAllGuideSections = () => {
+  expandedGuideSections.value = new Set(guideSections.map(section => section.id))
+}
+
+const collapseAllGuideSections = () => {
+  expandedGuideSections.value = new Set()
+}
+
 const allCards = computed(() => [...examples.value, ...templates.value])
 
 const filteredCards = computed(() => {
@@ -873,7 +1028,12 @@ const filteredCards = computed(() => {
   
   // Filter by search query using fuzzy search
   if (searchQuery.value) {
-    const searchResults = searchCollectionWithScores(result, searchQuery.value, ['name', 'description', 'tags', 'entry'])
+    const searchResults = searchCollectionWithScores(
+      result,
+      searchQuery.value,
+      ['name', 'description', 'tags', 'entry'],
+      { useTagAliases: true }
+    )
     result = searchResults.map(r => r.item)
   }
   

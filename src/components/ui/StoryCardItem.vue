@@ -98,15 +98,14 @@
             <span class="text-xs">🏷️</span>
             <span class="uppercase tracking-wider font-medium">Tags</span>
           </div>
-          <div class="flex flex-wrap gap-1.5">
-            <span 
-              v-for="tag in card.tags" 
-              :key="tag"
-              class="tag text-[10px]"
-            >
-              {{ tag }}
-            </span>
-          </div>
+          <SmartTagList
+            :tags="card.tags"
+            gap="xs"
+            :max-visible="10"
+            :show-core="true"
+            :show-icons="false"
+            :deduplicate="true"
+          />
         </div>
 
       </div>
@@ -124,6 +123,7 @@
 
 <script setup>
 import { ref, computed, inject } from 'vue'
+import SmartTagList from '@/components/ui/SmartTagList.vue'
 import { STORY_CARD_CATEGORIES } from '@/data/storyCards'
 
 const props = defineProps({

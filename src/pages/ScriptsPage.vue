@@ -5,7 +5,7 @@
       <h1 class="text-2xl font-bold text-bd-text-primary flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-bd-cyan/20 flex items-center justify-center">
           <Code class="w-5 h-5 text-bd-cyan" />
-        </div>
+            </div>
         Scripts
       </h1>
       <p class="text-bd-text-secondary mt-2">
@@ -32,89 +32,157 @@
     <!-- ==================== GUIDE TAB ==================== -->
     <template v-if="activeTab === 'guide'">
 
+      <!-- Table of Contents - Sticky Sidebar -->
+      <div class="flex gap-6">
+        <aside class="hidden lg:block w-56 flex-shrink-0">
+          <div class="sticky top-4 space-y-2">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider">Contents</h3>
+              <div class="flex gap-1">
+                <button @click="expandAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Expand all">
+                  <ChevronDown class="w-3 h-3" />
+                </button>
+                <button @click="collapseAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Collapse all">
+                  <ChevronUp class="w-3 h-3" />
+                </button>
+              </div>
+            </div>
+            <button
+              v-for="section in guideSections"
+              :key="section.id"
+              @click="scrollToGuideSection(section.id)"
+              class="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors hover:bg-bd-bg-tertiary"
+              :class="[
+                isGuideSectionExpanded(section.id) ? 'text-bd-text-primary' : 'text-bd-text-muted'
+              ]"
+            >
+              {{ section.label }}
+            </button>
+          </div>
+        </aside>
+
+        <div class="flex-1 space-y-4 min-w-0">
+
       <!-- Introduction -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <HelpCircle class="w-5 h-5 text-bd-blue" />
-          What Is Scripting?
-        </h2>
-        <p class="text-bd-text-secondary mb-4">
-          Scripting allows creators to <strong>modify the player experience</strong> beyond what is supported in the Scenario editor. 
-          Scripts use JavaScript to modify context, input, and output.
-        </p>
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
-            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-              <Check class="w-4 h-4 text-bd-green" />
-              What Scripts Can Do
-            </h3>
-            <ul class="text-sm text-bd-text-secondary space-y-1">
-              <li>• Modify player input before processing</li>
-              <li>• Change the text sent to the AI model</li>
-              <li>• Modify the AI's output before displaying</li>
-              <li>• Manage story cards programmatically</li>
-              <li>• Track persistent game state across turns</li>
-              <li>• Display messages to the player</li>
-            </ul>
-          </div>
-          <div class="p-4 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
-            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-              <AlertTriangle class="w-4 h-4 text-bd-amber" />
-              Important Notes
-            </h3>
-            <ul class="text-sm text-bd-text-secondary space-y-1">
-              <li>• Scripts use <strong>JavaScript</strong> (no async/await)</li>
-              <li>• Attached to <strong>Scenarios</strong>, not adventures</li>
-              <li>• Only <strong>Simple Start</strong> and <strong>Character Creator</strong> scenarios can have scripts</li>
-              <li>• Only the scenario creator can see the scripts</li>
-              <li>• Scripts may be reviewed for moderation</li>
-            </ul>
-          </div>
-        </div>
-        <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/30 mt-4">
-          <div class="flex items-start gap-3">
-            <AlertTriangle class="w-5 h-5 text-bd-pink mt-0.5 flex-shrink-0" />
-            <p class="text-sm text-bd-text-secondary">
-              <strong class="text-bd-text-primary">Warning:</strong> Updating scripts in a published scenario 
-              affects <strong>all existing adventures</strong> using that scenario. Back up before making changes!
+      <section id="guide-intro" class="card">
+        <button
+          @click="toggleGuideSection('intro')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <HelpCircle class="w-5 h-5 text-bd-blue" />
+            What Is Scripting?
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('intro') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('intro')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              Scripting allows creators to <strong>modify the player experience</strong> beyond what is supported in the Scenario editor. 
+              Scripts use JavaScript to modify context, input, and output.
             </p>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <Check class="w-4 h-4 text-bd-green" />
+                  What Scripts Can Do
+                </h3>
+                <ul class="text-sm text-bd-text-secondary space-y-1">
+                  <li>• Modify player input before processing</li>
+                  <li>• Change the text sent to the AI model</li>
+                  <li>• Modify the AI's output before displaying</li>
+                  <li>• Manage story cards programmatically</li>
+                  <li>• Track persistent game state across turns</li>
+                  <li>• Display messages to the player</li>
+                </ul>
+              </div>
+              <div class="p-4 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <AlertTriangle class="w-4 h-4 text-bd-amber" />
+                  Important Notes
+                </h3>
+                <ul class="text-sm text-bd-text-secondary space-y-1">
+                  <li>• Scripts use <strong>JavaScript</strong> (no async/await)</li>
+                  <li>• Attached to <strong>Scenarios</strong>, not adventures</li>
+                  <li>• Only <strong>Simple Start</strong> and <strong>Character Creator</strong> scenarios can have scripts</li>
+                  <li>• Only the scenario creator can see the scripts</li>
+                  <li>• Scripts may be reviewed for moderation</li>
+                </ul>
+              </div>
+            </div>
+            <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+              <div class="flex items-start gap-3">
+                <AlertTriangle class="w-5 h-5 text-bd-pink mt-0.5 flex-shrink-0" />
+                <p class="text-sm text-bd-text-secondary">
+                  <strong class="text-bd-text-primary">Warning:</strong> Updating scripts in a published scenario 
+                  affects <strong>all existing adventures</strong> using that scenario. Back up before making changes!
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
+        </Transition>
       </section>
 
       <!-- Modifier Structure -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Braces class="w-5 h-5 text-bd-purple" />
-          Modifier Structure
-        </h2>
-        <p class="text-bd-text-secondary mb-4">
-          All modifiers follow the same basic structure. The <code class="text-bd-green">text</code> parameter 
-          contains the content you're modifying, and you return an object with the modified text.
-        </p>
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-          <pre class="text-sm text-bd-text-secondary font-mono overflow-x-auto"><span class="text-bd-purple">const</span> <span class="text-bd-cyan">modifier</span> = (<span class="text-bd-amber">text</span>) => {
+      <section id="guide-modifier-structure" class="card">
+        <button
+          @click="toggleGuideSection('modifier-structure')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Braces class="w-5 h-5 text-bd-purple" />
+            Modifier Structure
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('modifier-structure') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('modifier-structure')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              All modifiers follow the same basic structure. The <code class="text-bd-green">text</code> parameter 
+              contains the content you're modifying, and you return an object with the modified text.
+            </p>
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <pre class="text-sm text-bd-text-secondary font-mono overflow-x-auto"><span class="text-bd-purple">const</span> <span class="text-bd-cyan">modifier</span> = (<span class="text-bd-amber">text</span>) => {
   <span class="text-bd-text-muted">// This is an empty modifier.</span>
   <span class="text-bd-text-muted">// Code normally goes here.</span>
   <span class="text-bd-purple">return</span> { <span class="text-bd-amber">text</span> };
 };
 
 <span class="text-bd-cyan">modifier</span>(<span class="text-bd-amber">text</span>)</pre>
-        </div>
+            </div>
+          </div>
+        </Transition>
       </section>
 
       <!-- Script Files (Hooks) -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <FileCode class="w-5 h-5 text-bd-cyan" />
-          Script Files (Lifecycle Hooks)
-        </h2>
-        <p class="text-bd-text-secondary mb-4">
-          The Scripting API consists of <strong>three lifecycle hooks</strong> plus a shared library. 
-          The execution order is always <code>onHook &gt; sharedLibrary &gt; Script</code>.
-        </p>
-        
-        <div class="space-y-4">
+      <section id="guide-script-files" class="card">
+        <button
+          @click="toggleGuideSection('script-files')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <FileCode class="w-5 h-5 text-bd-cyan" />
+            Script Files (Lifecycle Hooks)
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('script-files') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('script-files')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              The Scripting API consists of <strong>three lifecycle hooks</strong> plus a shared library. 
+              The execution order is always <code>onHook &gt; sharedLibrary &gt; Script</code>.
+            </p>
+            
+            <div class="space-y-4">
           <!-- Library -->
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
             <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
@@ -216,21 +284,34 @@
               text = text.replace(<span class="text-bd-green">/\n{3,}/g</span>, <span class="text-bd-green">"\\n\\n"</span>);
             </div>
           </div>
-        </div>
+            </div>
+          </div>
+        </Transition>
       </section>
 
       <!-- Return Values -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <ArrowLeftToLine class="w-5 h-5 text-bd-amber" />
-          Return Values
-        </h2>
-        <p class="text-bd-text-secondary mb-4">
-          All modifiers must return an object. You can return these properties:
-        </p>
-        
-        <div class="space-y-4">
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+      <section id="guide-return-values" class="card">
+        <button
+          @click="toggleGuideSection('return-values')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <ArrowLeftToLine class="w-5 h-5 text-bd-amber" />
+            Return Values
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('return-values') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('return-values')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              All modifiers must return an object. You can return these properties:
+            </p>
+            
+            <div class="space-y-4">
+                  <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2">
               <code class="text-bd-green">{ text: "modified text" }</code>
             </h3>
@@ -247,35 +328,48 @@
               If <code>stop === true</code>, the game loop will not proceed. Useful when a player input should update state but not call the AI.
             </p>
           </div>
-        </div>
+            </div>
 
-        <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/30 mt-4">
-          <div class="flex items-start gap-3">
-            <AlertTriangle class="w-5 h-5 text-bd-pink mt-0.5 flex-shrink-0" />
-            <div class="text-sm text-bd-text-secondary">
-              <p class="mb-2"><strong class="text-bd-text-primary">Warning about empty strings:</strong></p>
-              <ul class="space-y-1">
-                <li>• <strong>onInput:</strong> Empty string throws error</li>
-                <li>• <strong>onModelContext:</strong> Empty string rebuilds context without script</li>
-                <li>• <strong>onOutput:</strong> Empty string throws error</li>
-              </ul>
+            <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+              <div class="flex items-start gap-3">
+                <AlertTriangle class="w-5 h-5 text-bd-pink mt-0.5 flex-shrink-0" />
+                <div class="text-sm text-bd-text-secondary">
+                  <p class="mb-2"><strong class="text-bd-text-primary">Warning about empty strings:</strong></p>
+                  <ul class="space-y-1">
+                    <li>• <strong>onInput:</strong> Empty string throws error</li>
+                    <li>• <strong>onModelContext:</strong> Empty string rebuilds context without script</li>
+                    <li>• <strong>onOutput:</strong> Empty string throws error</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </Transition>
       </section>
 
       <!-- API Parameters -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Database class="w-5 h-5 text-bd-green" />
-          API Parameters
-          <span class="tag bg-bd-green/20 text-bd-green text-xs">Reference</span>
-        </h2>
-        <p class="text-bd-text-secondary mb-4">
-          Scripts have access to these parameters directly, no need to deconstruct from an object.
-        </p>
-        
-        <div class="space-y-4">
+      <section id="guide-api-parameters" class="card">
+        <button
+          @click="toggleGuideSection('api-parameters')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Database class="w-5 h-5 text-bd-green" />
+            API Parameters
+            <span class="tag bg-bd-green/20 text-bd-green text-xs">Reference</span>
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('api-parameters') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('api-parameters')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              Scripts have access to these parameters directly, no need to deconstruct from an object.
+            </p>
+            
+            <div class="space-y-4">
           <!-- text -->
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2">
@@ -343,96 +437,121 @@
               <li>• <code class="text-bd-cyan">info.memoryLength</code> - Length of memory section <em>(onModelContext only)</em></li>
             </ul>
           </div>
-        </div>
-        
-        <div class="p-4 rounded-lg bg-bd-amber/10 border border-bd-amber/30 mt-4">
-          <div class="flex items-start gap-3">
-            <Lightbulb class="w-5 h-5 text-bd-amber mt-0.5 flex-shrink-0" />
-            <p class="text-sm text-bd-text-secondary">
-              <strong class="text-bd-text-primary">Note:</strong> The first real turn is <code class="text-bd-green">2</code>, 
-              not <code class="text-bd-green">1</code>. This can be unintuitive when you're getting started.
-            </p>
+            </div>
+            
+            <div class="p-4 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+              <div class="flex items-start gap-3">
+                <Lightbulb class="w-5 h-5 text-bd-amber mt-0.5 flex-shrink-0" />
+                <p class="text-sm text-bd-text-secondary">
+                  <strong class="text-bd-text-primary">Note:</strong> The first real turn is <code class="text-bd-green">2</code>, 
+                  not <code class="text-bd-green">1</code>. This can be unintuitive when you're getting started.
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
+        </Transition>
       </section>
 
       <!-- API Functions -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Wrench class="w-5 h-5 text-bd-cyan" />
-          API Functions
-          <span class="tag bg-bd-cyan/20 text-bd-cyan text-xs">Reference</span>
-        </h2>
-        
-        <div class="space-y-4">
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center justify-between">
-              <code class="text-bd-green">log(message)</code>
-              <span class="text-[10px] text-bd-text-muted uppercase">Console Quirks</span>
-            </h3>
-            <p class="text-sm text-bd-text-secondary mb-2">
-              Logs information to the console. <code>console.log()</code> also works.
-            </p>
-            <div class="p-3 rounded bg-bd-amber/5 border border-bd-amber/20 text-xs text-bd-text-secondary">
-              <p><strong>Note:</strong> AI Dungeon logs are stringified through GraphQL. This causes <code>undefined</code> values to appear as <code>null</code> in the console output.</p>
+      <section id="guide-api-functions" class="card">
+        <button
+          @click="toggleGuideSection('api-functions')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Wrench class="w-5 h-5 text-bd-cyan" />
+            API Functions
+            <span class="tag bg-bd-cyan/20 text-bd-cyan text-xs">Reference</span>
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('api-functions') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('api-functions')" class="mt-4">
+            <div class="space-y-4">
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center justify-between">
+                  <code class="text-bd-green">log(message)</code>
+                  <span class="text-[10px] text-bd-text-muted uppercase">Console Quirks</span>
+                </h3>
+                <p class="text-sm text-bd-text-secondary mb-2">
+                  Logs information to the console. <code>console.log()</code> also works.
+                </p>
+                <div class="p-3 rounded bg-bd-amber/5 border border-bd-amber/20 text-xs text-bd-text-secondary">
+                  <p><strong>Note:</strong> AI Dungeon logs are stringified through GraphQL. This causes <code>undefined</code> values to appear as <code>null</code> in the console output.</p>
+                </div>
+              </div>
+
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center justify-between">
+                  <code class="text-bd-green">addStoryCard(keys, entry, type)</code>
+                  <span class="text-[10px] text-bd-pink uppercase">Buggy with Memory Bank OFF</span>
+                </h3>
+                <p class="text-sm text-bd-text-secondary mb-2">
+                  Adds a new story card. Returns index of new card, or <code>false</code> if card with same keys exists.
+                </p>
+                <p class="text-[11px] text-bd-text-muted">
+                  <strong>Tip:</strong> If <code>addStoryCard</code> fails, you can manually push to the <code>storyCards</code> array.
+                </p>
+              </div>
+
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h3 class="font-semibold text-bd-text-primary mb-2">
+                  <code class="text-bd-green">updateStoryCard(index, keys, entry, type)</code>
+                </h3>
+                <p class="text-sm text-bd-text-secondary">
+                  Updates an existing story card. Throws error if card doesn't exist.
+                </p>
+              </div>
+
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h3 class="font-semibold text-bd-text-primary mb-2">
+                  <code class="text-bd-green">removeStoryCard(index)</code>
+                </h3>
+                <p class="text-sm text-bd-text-secondary">
+                  Removes a story card. Throws error if card doesn't exist.
+                </p>
+              </div>
             </div>
           </div>
-
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center justify-between">
-              <code class="text-bd-green">addStoryCard(keys, entry, type)</code>
-              <span class="text-[10px] text-bd-pink uppercase">Buggy with Memory Bank OFF</span>
-            </h3>
-            <p class="text-sm text-bd-text-secondary mb-2">
-              Adds a new story card. Returns index of new card, or <code>false</code> if card with same keys exists.
-            </p>
-            <p class="text-[11px] text-bd-text-muted">
-              <strong>Tip:</strong> If <code>addStoryCard</code> fails, you can manually push to the <code>storyCards</code> array.
-            </p>
-          </div>
-
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <h3 class="font-semibold text-bd-text-primary mb-2">
-              <code class="text-bd-green">updateStoryCard(index, keys, entry, type)</code>
-            </h3>
-            <p class="text-sm text-bd-text-secondary">
-              Updates an existing story card. Throws error if card doesn't exist.
-            </p>
-          </div>
-
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <h3 class="font-semibold text-bd-text-primary mb-2">
-              <code class="text-bd-green">removeStoryCard(index)</code>
-            </h3>
-            <p class="text-sm text-bd-text-secondary">
-              Removes a story card. Throws error if card doesn't exist.
-            </p>
-          </div>
-        </div>
+        </Transition>
       </section>
 
       <!-- Utility Functions -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Wrench class="w-5 h-5 text-bd-cyan" />
-          Useful Utility Functions
-          <span class="tag bg-bd-cyan/20 text-bd-cyan text-xs">By LewdLeah</span>
-        </h2>
-        <p class="text-bd-text-secondary mb-4">
-          These functions make story card management much easier. Add them to your <strong>Library</strong>.
-        </p>
+      <section id="guide-utility-functions" class="card">
+        <button
+          @click="toggleGuideSection('utility-functions')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Wrench class="w-5 h-5 text-bd-cyan" />
+            Useful Utility Functions
+            <span class="tag bg-bd-cyan/20 text-bd-cyan text-xs">By LewdLeah</span>
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('utility-functions') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('utility-functions')" class="mt-4">
+            <p class="text-bd-text-secondary mb-4">
+              These functions make story card management much easier. Add them to your <strong>Library</strong>.
+            </p>
 
-        <!-- buildCard -->
-        <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle mb-4">
-          <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-            <Plus class="w-4 h-4 text-bd-green" />
-            buildCard() - Create Story Cards
-          </h3>
-          <p class="text-sm text-bd-text-secondary mb-3">
-            Creates a new story card with all properties set properly:
-          </p>
-          <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto mb-3">
-            <pre>function buildCard(title = "", entry = "", type = "character", 
+            <!-- buildCard -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle mb-4">
+              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                <Plus class="w-4 h-4 text-bd-green" />
+                buildCard() - Create Story Cards
+              </h3>
+              <p class="text-sm text-bd-text-secondary mb-3">
+                Creates a new story card with all properties set properly:
+              </p>
+              <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto mb-3">
+                <pre>function buildCard(title = "", entry = "", type = "character", 
                   keys = title, description = "", insertionIndex = 0) {
     if (![type, title, keys, entry, description].every(arg => 
         (typeof arg === "string"))) {
@@ -459,26 +578,26 @@
     }
     throw new Error("An unexpected error occurred with buildCard");
 }</pre>
-          </div>
-          <div class="p-3 rounded bg-bd-green/10 border border-bd-green/30">
-            <p class="text-xs text-bd-text-muted mb-2">Example usage:</p>
-            <pre class="text-xs text-bd-text-secondary font-mono">const exampleCard = buildCard("Example!");
+              </div>
+              <div class="p-3 rounded bg-bd-green/10 border border-bd-green/30">
+                <p class="text-xs text-bd-text-muted mb-2">Example usage:</p>
+                <pre class="text-xs text-bd-text-secondary font-mono">const exampleCard = buildCard("Example!");
 exampleCard.entry = "Hello, world!";
 log(exampleCard);</pre>
-          </div>
-        </div>
+              </div>
+            </div>
 
-        <!-- getCard -->
-        <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-          <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-            <Search class="w-4 h-4 text-bd-blue" />
-            getCard() - Find Story Cards
-          </h3>
-          <p class="text-sm text-bd-text-secondary mb-3">
-            Like <code class="text-bd-green">Array.find</code> but specialized for story cards:
-          </p>
-          <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto mb-3">
-            <pre>function getCard(predicate, getAll = false) {
+            <!-- getCard -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                <Search class="w-4 h-4 text-bd-blue" />
+                getCard() - Find Story Cards
+              </h3>
+              <p class="text-sm text-bd-text-secondary mb-3">
+                Like <code class="text-bd-green">Array.find</code> but specialized for story cards:
+              </p>
+              <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto mb-3">
+                <pre>function getCard(predicate, getAll = false) {
     if (typeof predicate !== "function") {
         throw new Error("getCard: function required");
     } else if (typeof getAll !== "boolean") {
@@ -500,132 +619,174 @@ log(exampleCard);</pre>
     }
     return null;
 }</pre>
-          </div>
-          <div class="p-3 rounded bg-bd-blue/10 border border-bd-blue/30">
-            <p class="text-xs text-bd-text-muted mb-2">Example usage:</p>
-            <pre class="text-xs text-bd-text-secondary font-mono">const card = getCard(c => c.title === "Example!");
+              </div>
+              <div class="p-3 rounded bg-bd-blue/10 border border-bd-blue/30">
+                <p class="text-xs text-bd-text-muted mb-2">Example usage:</p>
+                <pre class="text-xs text-bd-text-secondary font-mono">const card = getCard(c => c.title === "Example!");
 if (card !== null) {
     card.entry = "Goodbye, cruel world!";
 }</pre>
+              </div>
+            </div>
           </div>
-        </div>
+        </Transition>
       </section>
 
       <!-- Troubleshooting -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Bug class="w-5 h-5 text-bd-pink" />
-          Troubleshooting
-        </h2>
-        
-        <div class="space-y-4">
-          <!-- Dangerous Scripts -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
-            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-              <ShieldAlert class="w-4 h-4 text-bd-amber" />
-              "Dangerous Scripts" Setting
-            </h3>
-            <p class="text-sm text-bd-text-secondary mb-2">
-              New accounts have "dangerous scripts" <strong>disabled by default</strong>. Many useful scripts 
-              (including Auto Cards) are classified as "dangerous" even though they're safe.
-            </p>
-            <p class="text-sm text-bd-text-muted">
-              <strong>Fix:</strong> Go to Account Settings → Enable "Run Dangerous Scripts"
-            </p>
-          </div>
+      <section id="guide-troubleshooting" class="card">
+        <button
+          @click="toggleGuideSection('troubleshooting')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Bug class="w-5 h-5 text-bd-pink" />
+            Troubleshooting
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('troubleshooting') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('troubleshooting')" class="mt-4">
+            <div class="space-y-4">
+              <!-- Dangerous Scripts -->
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <ShieldAlert class="w-4 h-4 text-bd-amber" />
+                  "Dangerous Scripts" Setting
+                </h3>
+                <p class="text-sm text-bd-text-secondary mb-2">
+                  New accounts have "dangerous scripts" <strong>disabled by default</strong>. Many useful scripts 
+                  (including Auto Cards) are classified as "dangerous" even though they're safe.
+                </p>
+                <p class="text-sm text-bd-text-muted">
+                  <strong>Fix:</strong> Go to Account Settings → Enable "Run Dangerous Scripts"
+                </p>
+              </div>
 
-          <!-- Context Viewer Bug -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-pink/30">
-            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-              <Eye class="w-4 h-4 text-bd-pink" />
-              Context Viewer Shows Wrong Data
-            </h3>
-            <p class="text-sm text-bd-text-secondary mb-2">
-              The context viewer can be misleading! <code class="text-bd-green">state.memory</code> modifications 
-              (like <code>frontMemory</code>, <code>authorsNote</code>) may not appear in "Show Context" even when working.
-            </p>
-            <p class="text-sm text-bd-text-muted">
-              <strong>Note:</strong> This commonly confuses new scripters. If your <code>log()</code> output shows 
-              the correct values, your script is likely working even if the viewer doesn't show it.
-            </p>
-          </div>
+              <!-- Context Viewer Bug -->
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-pink/30">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <Eye class="w-4 h-4 text-bd-pink" />
+                  Context Viewer Shows Wrong Data
+                </h3>
+                <p class="text-sm text-bd-text-secondary mb-2">
+                  The context viewer can be misleading! <code class="text-bd-green">state.memory</code> modifications 
+                  (like <code>frontMemory</code>, <code>authorsNote</code>) may not appear in "Show Context" even when working.
+                </p>
+                <p class="text-sm text-bd-text-muted">
+                  <strong>Note:</strong> This commonly confuses new scripters. If your <code>log()</code> output shows 
+                  the correct values, your script is likely working even if the viewer doesn't show it.
+                </p>
+              </div>
 
-          <!-- Take a Turn vs Continue -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-cyan/30">
-            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-              <RefreshCw class="w-4 h-4 text-bd-cyan" />
-              Take a Turn vs Continue
-            </h3>
-            <p class="text-sm text-bd-text-secondary mb-2">
-              Some <code class="text-bd-green">state.memory</code> modifications may only work on <strong>Continue</strong> 
-              and not on <strong>Take a Turn</strong>. This is a known quirk.
-            </p>
-            <p class="text-sm text-bd-text-muted">
-              <strong>Workaround:</strong> Modify <code>text</code> directly in the context modifier instead of 
-              relying solely on <code>state.memory</code>.
-            </p>
+              <!-- Take a Turn vs Continue -->
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-cyan/30">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <RefreshCw class="w-4 h-4 text-bd-cyan" />
+                  Take a Turn vs Continue
+                </h3>
+                <p class="text-sm text-bd-text-secondary mb-2">
+                  Some <code class="text-bd-green">state.memory</code> modifications may only work on <strong>Continue</strong> 
+                  and not on <strong>Take a Turn</strong>. This is a known quirk.
+                </p>
+                <p class="text-sm text-bd-text-muted">
+                  <strong>Workaround:</strong> Modify <code>text</code> directly in the context modifier instead of 
+                  relying solely on <code>state.memory</code>.
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
+        </Transition>
       </section>
 
       <!-- Useful Links -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <ExternalLink class="w-5 h-5 text-bd-accent-primary" />
-          Useful Links
-        </h2>
-        <div class="grid md:grid-cols-2 gap-4">
-          <a 
-            href="https://github.com/latitudegames/Scripting" 
-            target="_blank"
-            class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle hover:border-bd-accent-primary/50 transition-colors group"
-          >
-            <h3 class="font-semibold text-bd-text-primary mb-1 flex items-center gap-2">
-              <FileCode class="w-4 h-4 text-bd-accent-primary" />
-              Official Documentation
-            </h3>
-            <p class="text-sm text-bd-text-muted">Latitude's official scripting repository and examples</p>
-          </a>
-          <a 
-            href="https://docs.google.com/document/d/1DV6b0K-a5mTBpO1-ZbMSaXFOJxGi5MnNnHQCHF0c-DQ" 
-            target="_blank"
-            class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle hover:border-bd-accent-primary/50 transition-colors group"
-          >
-            <h3 class="font-semibold text-bd-text-primary mb-1 flex items-center gap-2">
-              <BookOpen class="w-4 h-4 text-bd-blue" />
-              Scripting Guidebook
-            </h3>
-            <p class="text-sm text-bd-text-muted">Comprehensive community scripting guide</p>
-          </a>
-        </div>
+      <section id="guide-links" class="card">
+        <button
+          @click="toggleGuideSection('links')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <ExternalLink class="w-5 h-5 text-bd-accent-primary" />
+            Useful Links
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('links') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('links')" class="mt-4">
+            <div class="grid md:grid-cols-2 gap-4">
+              <a 
+                href="https://github.com/latitudegames/Scripting" 
+                target="_blank"
+                class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle hover:border-bd-accent-primary/50 transition-colors group"
+              >
+                <h3 class="font-semibold text-bd-text-primary mb-1 flex items-center gap-2">
+                  <FileCode class="w-4 h-4 text-bd-accent-primary" />
+                  Official Documentation
+                </h3>
+                <p class="text-sm text-bd-text-muted">Latitude's official scripting repository and examples</p>
+              </a>
+              <a 
+                href="https://docs.google.com/document/d/1DV6b0K-a5mTBpO1-ZbMSaXFOJxGi5MnNnHQCHF0c-DQ" 
+                target="_blank"
+                class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle hover:border-bd-accent-primary/50 transition-colors group"
+              >
+                <h3 class="font-semibold text-bd-text-primary mb-1 flex items-center gap-2">
+                  <BookOpen class="w-4 h-4 text-bd-blue" />
+                  Scripting Guidebook
+                </h3>
+                <p class="text-sm text-bd-text-muted">Comprehensive community scripting guide</p>
+              </a>
+            </div>
+          </div>
+        </Transition>
       </section>
 
       <!-- Credits -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-          <Award class="w-5 h-5 text-bd-accent-primary" />
-          Credits
-        </h2>
-        <div class="mb-4">
-          <p class="text-xs text-bd-text-muted mb-2">
-            Contributors who wrote scripts and other tools, or created guides and resources for scripting:
-          </p>
-          <div class="flex flex-wrap gap-1.5">
-            <span v-for="name in scriptingContributors" :key="name" 
-                  class="px-2 py-0.5 rounded-full text-xs font-medium bg-bd-cyan/10 text-bd-cyan border border-bd-cyan/20">
-              {{ name }}
-            </span>
+      <section id="guide-credits" class="card">
+        <button
+          @click="toggleGuideSection('credits')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Award class="w-5 h-5 text-bd-accent-primary" />
+            Credits
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('credits') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('credits')" class="mt-4 space-y-4">
+            <div>
+              <p class="text-xs text-bd-text-muted mb-2">
+                Contributors who wrote scripts and other tools, or created guides and resources for scripting:
+              </p>
+              <div class="flex flex-wrap gap-1.5">
+                <span v-for="name in scriptingContributors" :key="name" 
+                      class="px-2 py-0.5 rounded-full text-xs font-medium bg-bd-cyan/10 text-bd-cyan border border-bd-cyan/20">
+                  {{ name }}
+                </span>
+              </div>
+            </div>
+            <p class="text-xs text-bd-text-muted">
+              Guide based on community knowledge and the <strong class="text-bd-text-secondary">AI Dungeon</strong> documentation.
+              <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="text-bd-accent-primary hover:underline ml-1">
+                Join the Discord
+                <ExternalLink class="w-3 h-3 inline-block ml-1" />
+              </a>
+            </p>
           </div>
-        </div>
-        <p class="text-xs text-bd-text-muted">
-          Guide based on community knowledge and the <strong class="text-bd-text-secondary">AI Dungeon</strong> documentation.
-          <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="text-bd-accent-primary hover:underline ml-1">
-            Join the Discord
-            <ExternalLink class="w-3 h-3 inline-block ml-1" />
-          </a>
-        </p>
+        </Transition>
       </section>
 
+        </div>
+      </div>
     </template>
 
     <!-- ==================== COLLECTION TAB ==================== -->
@@ -766,7 +927,7 @@ import {
   BookOpen, GitPullRequest, HelpCircle, Check, Braces, FileCode, 
   Library, ArrowRightToLine, Layers, ArrowLeftToLine, Database, 
   Lightbulb, Wrench, Plus, Search, Bug, ShieldAlert, Eye, RefreshCw, 
-  ExternalLink, Settings, Award
+  ExternalLink, Settings, Award, ChevronDown, ChevronUp
 } from 'lucide-vue-next'
 
 const activeTab = ref('collection')
@@ -786,6 +947,54 @@ const categories = ref(SCRIPT_CATEGORIES)
 const searchQuery = ref('')
 const selectedCategory = ref('')
 const selectedDifficulty = ref('')
+
+// ===========================================
+// GUIDE TABLE OF CONTENTS
+// ===========================================
+const guideSections = [
+  { id: 'intro', label: 'Intro' },
+  { id: 'modifier-structure', label: 'Modifier Structure' },
+  { id: 'script-files', label: 'Script Files' },
+  { id: 'return-values', label: 'Return Values' },
+  { id: 'api-parameters', label: 'API Parameters' },
+  { id: 'api-functions', label: 'API Functions' },
+  { id: 'utility-functions', label: 'Utility Functions' },
+  { id: 'troubleshooting', label: 'Troubleshooting' },
+  { id: 'links', label: 'Useful Links' },
+  { id: 'credits', label: 'Credits' }
+]
+
+const expandedGuideSections = ref(new Set(guideSections.map(section => section.id)))
+
+const toggleGuideSection = (sectionId) => {
+  if (expandedGuideSections.value.has(sectionId)) {
+    expandedGuideSections.value.delete(sectionId)
+  } else {
+    expandedGuideSections.value.add(sectionId)
+  }
+  expandedGuideSections.value = new Set(expandedGuideSections.value)
+}
+
+const isGuideSectionExpanded = (sectionId) => expandedGuideSections.value.has(sectionId)
+
+const scrollToGuideSection = (sectionId) => {
+  const element = document.getElementById(`guide-${sectionId}`)
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (!expandedGuideSections.value.has(sectionId)) {
+      expandedGuideSections.value.add(sectionId)
+      expandedGuideSections.value = new Set(expandedGuideSections.value)
+    }
+  }
+}
+
+const expandAllGuideSections = () => {
+  expandedGuideSections.value = new Set(guideSections.map(section => section.id))
+}
+
+const collapseAllGuideSections = () => {
+  expandedGuideSections.value = new Set()
+}
 
 const filteredScripts = computed(() => {
   let result = [...scripts.value]

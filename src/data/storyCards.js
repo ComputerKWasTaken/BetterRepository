@@ -61,6 +61,48 @@ export const STORY_CARD_CATEGORIES = [
     icon: 'Lightbulb', 
     color: 'bd-cyan',
     description: 'Magic systems, technologies, and world rules'
+  },
+  { 
+    id: 'event', 
+    name: 'Events', 
+    icon: 'Clock', 
+    color: 'bd-amber',
+    description: 'Major incidents, disasters, festivals, or milestones'
+  },
+  { 
+    id: 'culture', 
+    name: 'Cultures', 
+    icon: 'Drama', 
+    color: 'bd-purple',
+    description: 'Societies, customs, values, and traditions'
+  },
+  { 
+    id: 'vehicle', 
+    name: 'Vehicles', 
+    icon: 'Rocket', 
+    color: 'bd-blue',
+    description: 'Ships, mounts, vehicles, and travel methods'
+  },
+  { 
+    id: 'role', 
+    name: 'Roles & Titles', 
+    icon: 'Award', 
+    color: 'bd-green',
+    description: 'Recurring positions, titles, or archetypal roles'
+  },
+  { 
+    id: 'rumor', 
+    name: 'Rumors', 
+    icon: 'MessageSquare', 
+    color: 'bd-pink',
+    description: 'Whispers, legends, and misleading information'
+  },
+  { 
+    id: 'relationship', 
+    name: 'Relationships', 
+    icon: 'Heart', 
+    color: 'bd-purple',
+    description: 'Dynamics between characters or groups'
   }
 ]
 
@@ -453,6 +495,97 @@ export const STORY_CARD_TEMPLATES = [
     useCase: 'Tracking major conflicts that shape the world and story.',
     triggers: '[Conflict Name],the war,the conflict',
     entry: `[Conflict Name] is an ongoing [war/dispute/tension] between [parties involved]. [Root cause of the conflict]. [What each side wants]. [Current state: who is winning, recent events]. [Key battles or turning points]. [How it affects common people]. [How the protagonist is involved or affected]. [Potential ways it could end]. [What would happen if one side won].`
+  },
+  {
+    id: 'template-event',
+    name: 'Major Event Template',
+    category: 'event',
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: true,
+    tags: ['template', 'event', 'milestone', 'timeline'],
+    description: 'Template for world-shaping events or recent incidents.',
+    useCase: 'Establishing incidents that the story references repeatedly.',
+    triggers: '[Event Name],the event,the incident',
+    entry: `[Event Name] happened on [date/era] in [location]. [What occurred in 1-2 sentences]. [Primary cause or trigger]. [Who was involved]. [Immediate consequences]. [Long-term effects on the world or factions]. [Why it matters to the protagonist].`
+  },
+  {
+    id: 'template-festival',
+    name: 'Festival Template',
+    category: 'event',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    tags: ['template', 'event', 'festival', 'culture'],
+    description: 'Template for seasonal festivals, rituals, or celebrations.',
+    useCase: 'Adding atmosphere and social context to a region or culture.',
+    triggers: '[Festival Name],the festival',
+    entry: `[Festival Name] is a [seasonal/annual] celebration held in [location]. [Purpose of the festival]. [Key rituals or activities]. [Typical foods, music, or dress]. [How locals feel about it]. [Any conflicts, dangers, or political tensions surrounding it].`
+  },
+  {
+    id: 'template-culture',
+    name: 'Culture Template',
+    category: 'culture',
+    difficulty: 'intermediate',
+    impact: 'high',
+    essential: true,
+    tags: ['template', 'culture', 'society', 'worldbuilding'],
+    description: 'Template for describing a people, culture, or society.',
+    useCase: 'Defining values and customs that influence dialogue and behavior.',
+    triggers: '[Culture Name],the [people]',
+    entry: `[Culture Name] are a [people/society] known for [core values]. [Where they live and how they survive]. [Social structure and leadership]. [Customs, taboos, and etiquette]. [Typical clothing, art, or architecture]. [How they view outsiders]. [Conflicts or alliances they maintain].`
+  },
+  {
+    id: 'template-vehicle',
+    name: 'Vehicle Template',
+    category: 'vehicle',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    tags: ['template', 'vehicle', 'travel', 'gear'],
+    description: 'Template for ships, mounts, or major vehicles.',
+    useCase: 'Keeping travel methods consistent in long adventures.',
+    triggers: '[Vehicle Name],the [vehicle type]',
+    entry: `[Vehicle Name] is a [type of vehicle/mount] used by [owner or group]. [Appearance and distinctive features]. [Capabilities: speed, cargo, weaponry]. [Limitations or weaknesses]. [Crew or handler details]. [Current condition and location].`
+  },
+  {
+    id: 'template-role',
+    name: 'Role/Title Template',
+    category: 'role',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    tags: ['template', 'role', 'title', 'position'],
+    description: 'Template for recurring positions or titles in a setting.',
+    useCase: 'Keeping titles and expected duties consistent.',
+    triggers: '[Title Name],the [title]',
+    entry: `[Title Name] is a [rank/position] within [organization or society]. [Typical duties and authority]. [How someone earns the title]. [Symbols, regalia, or identifiers]. [How people respond to the title]. [Any current holder, if known].`
+  },
+  {
+    id: 'template-rumor',
+    name: 'Rumor Template',
+    category: 'rumor',
+    difficulty: 'beginner',
+    impact: 'low',
+    essential: false,
+    tags: ['template', 'rumor', 'mystery', 'lead'],
+    description: 'Template for hearsay, legends, or misleading information.',
+    useCase: 'Feeding investigation hooks or red herrings.',
+    triggers: '[Rumor],the rumor,they say',
+    entry: `[Rumor] is a piece of hearsay circulating in [location or group]. [What the rumor claims]. [Who spreads it and why]. [How reliable it is]. [What it might actually mean]. [Potential consequences if believed].`
+  },
+  {
+    id: 'template-relationship-detailed',
+    name: 'Detailed Relationship Template',
+    category: 'relationship',
+    difficulty: 'intermediate',
+    impact: 'high',
+    essential: false,
+    tags: ['template', 'relationship', 'character', 'dynamics'],
+    description: 'Expanded relationship card for complex dynamics.',
+    useCase: 'Tracking evolving bonds, rivalries, and emotional stakes.',
+    triggers: '[Character A] and [Character B]',
+    entry: `[Character A] and [Character B] share a [relationship type]. [How the relationship started]. [What each believes about the other]. [Emotional tone: trust, resentment, obligation]. [Recent changes or conflicts]. [How their bond affects other characters]. [How it might evolve next].`
   }
 ]
 

@@ -13,6 +13,8 @@
 // - externalUrl: string (optional)
 // =============================================================================
 
+import { searchCollectionSmart } from './shared'
+
 // ============================================
 // SCRIPT CATEGORIES
 // ============================================
@@ -822,14 +824,16 @@ export const getBeginnerScripts = () => getScriptsByDifficulty('beginner')
 
 // Search scripts (includes name, description, tags, purpose, author)
 export const searchScripts = (query) => {
-  const lowerQuery = query.toLowerCase()
-  return SCRIPTS.filter(s => 
-    s.name.toLowerCase().includes(lowerQuery) ||
-    s.description.toLowerCase().includes(lowerQuery) ||
-    s.tags.some(tag => tag.toLowerCase().includes(lowerQuery)) ||
-    (s.purpose && s.purpose.toLowerCase().includes(lowerQuery)) ||
-    (s.author && s.author.toLowerCase().includes(lowerQuery))
+  if (!query || !query.trim()) {
+    return SCRIPTS
+  }
+  const results = searchCollectionSmart(
+    SCRIPTS,
+    query,
+    ['name', 'description', 'tags', 'purpose', 'author'],
+    { useTagAliases: true }
   )
+  return results.map(result => result.item)
 }
 
 // Check if script has copyable code content

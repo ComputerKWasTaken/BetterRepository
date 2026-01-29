@@ -880,7 +880,7 @@
     <Transition name="slide">
       <div v-if="showFilters" class="card-elevated space-y-4">
         <div class="flex items-center justify-between">
-          <h3 class="font-semibold text-bd-text-primary">Advanced Filters</h3>
+          <h3 class="font-semibold text-bd-text-primary">Filters</h3>
           <button 
             v-if="hasActiveFilters"
             @click="clearFilters"
