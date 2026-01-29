@@ -327,7 +327,8 @@ export const searchCollection = (collection, query, options = {}) => {
     fieldWeights = DEFAULT_FIELD_WEIGHTS,
     minScore = 0,
     limit = 0,
-    sortByScore = true
+    sortByScore = true,
+    useTagAliases = true
   } = options
 
   if (!query || !query.trim()) {
@@ -337,7 +338,7 @@ export const searchCollection = (collection, query, options = {}) => {
   const results = []
 
   for (const item of collection) {
-    const result = searchItem(item, query, { fields, fieldWeights, minScore })
+    const result = searchItem(item, query, { fields, fieldWeights, minScore, useTagAliases })
     if (result.matched) {
       results.push(result)
     }
