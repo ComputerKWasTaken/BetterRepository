@@ -854,7 +854,7 @@ import {
   ListOrdered, Percent, UserPlus, Repeat, Rocket, Wrench, Clock, UserX,
   Shield, Focus, Type, Drama, MessageSquare, Skull, ExternalLink, Star,
   AlertTriangle, Plus, Tag, Braces, Split, AlignLeft, Cpu, Coins,
-  Check, X, TrendingUp, Wand2, Link2, Heart, ChevronDown
+  Check, X, TrendingUp, Wand2, Link2, Heart, ChevronDown, UserCog
 } from 'lucide-vue-next'
 
 const activeTab = ref('collection')
@@ -893,6 +893,7 @@ const impacts = [
 // Icon component mapping
 const iconComponentMap = {
   'Layers': Layers,
+  'UserCog': UserCog,
   'PenTool': PenTool,
   'Users': Users,
   'Link': Link,
@@ -904,6 +905,7 @@ const iconComponentMap = {
 
 const categoryColorMap = {
   'complete-sets': { bg: 'bg-bd-amber/20', icon: 'text-bd-amber' },
+  'role-persona': { bg: 'bg-bd-amber/20', icon: 'text-bd-amber' },
   'writing-style': { bg: 'bg-bd-blue/20', icon: 'text-bd-blue' },
   'characterization': { bg: 'bg-bd-purple/20', icon: 'text-bd-purple' },
   'coherence': { bg: 'bg-bd-green/20', icon: 'text-bd-green' },
