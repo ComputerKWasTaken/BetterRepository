@@ -37,58 +37,195 @@
     <!-- ==================== GUIDE TAB ==================== -->
     <template v-if="activeTab === 'guide'">
 
-      <!-- What Are AI Instructions -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <HelpCircle class="w-5 h-5 text-bd-amber" />
-          What Are AI Instructions?
-        </h2>
-        <div class="space-y-4">
-          <p class="text-bd-text-secondary">
-            AI Instructions (<strong>AIN</strong>) are rules that shape how the AI writes, style, pacing, behavior, and focus. 
-            <strong>Pick specific lines</strong> that solve your problems; don't copy everything at once.
-          </p>
-          <div class="grid md:grid-cols-3 gap-4">
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
-              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-                <Sparkles class="w-4 h-4 text-bd-amber" />
-                What They Do
-              </h3>
-              <ul class="text-xs text-bd-text-secondary space-y-1">
-                <li>• Enforce writing styles</li>
-                <li>• Control pacing & focus</li>
-                <li>• Set world rules & NPC behavior</li>
-                <li>• Break 4th wall if desired</li>
-              </ul>
+      <!-- Table of Contents - Sticky Sidebar -->
+      <div class="flex gap-6">
+        <!-- TOC Sidebar -->
+        <aside class="hidden lg:block w-56 flex-shrink-0">
+          <div class="sticky top-4 space-y-2">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider">Contents</h3>
+              <div class="flex gap-1">
+                <button @click="expandAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Expand all">
+                  <ChevronDown class="w-3 h-3" />
+                </button>
+              </div>
             </div>
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-                <Info class="w-4 h-4 text-bd-blue" />
-                Defaults
-              </h3>
-              <p class="text-xs text-bd-text-secondary">
-                Each model has Latitude's default instructions. View them: <strong>Click output → View Context → AI Instructions</strong>
-              </p>
+            <button
+              v-for="section in guideSections"
+              :key="section.id"
+              @click="scrollToGuideSection(section.id)"
+              class="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors hover:bg-bd-bg-tertiary"
+              :class="[
+                isGuideSectionExpanded(section.id) ? 'text-bd-text-primary' : 'text-bd-text-muted'
+              ]"
+            >
+              {{ section.label }}
+            </button>
+          </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 space-y-4 min-w-0">
+
+      <!-- ===================== QUICK START SECTION ===================== -->
+      <section id="guide-quick-start" class="card">
+        <button 
+          @click="toggleGuideSection('quick-start')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Rocket class="w-5 h-5 text-bd-green" />
+            Quick Start: Build Your First Instruction
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('quick-start') }" />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('quick-start')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              New to AI Instructions? Follow these 3 steps to create your first effective instruction set.
+            </p>
+            
+            <!-- Step 1 -->
+            <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
+              <div class="flex items-start gap-3">
+                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-green/20 text-bd-green font-bold flex items-center justify-center">1</span>
+                <div class="flex-1">
+                  <h3 class="font-semibold text-bd-text-primary mb-1">Give the AI a Role</h3>
+                  <p class="text-xs text-bd-text-secondary mb-2">Start with WHO the AI should be. This is the most important part.</p>
+                  <div class="p-2 rounded bg-bd-bg-primary font-mono text-xs text-bd-green">
+                    You are a talented novelist writing an exciting dark fantasy story.
+                  </div>
+                  <button 
+                    @click="goToCollectionWithFilter('category', 'role-persona')"
+                    class="mt-2 text-xs text-bd-accent-primary hover:underline flex items-center gap-1"
+                  >
+                    <ExternalLink class="w-3 h-3" /> Browse Role Instructions →
+                  </button>
+                </div>
+              </div>
             </div>
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-                <Plus class="w-4 h-4 text-bd-green" />
-                How to Add
-              </h3>
-              <p class="text-xs text-bd-text-secondary">
-                <strong>Sidebar → Plot → Add Plot Component → AI Instructions</strong>
-              </p>
+
+            <!-- Step 2 -->
+            <div class="p-4 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
+              <div class="flex items-start gap-3">
+                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-blue/20 text-bd-blue font-bold flex items-center justify-center">2</span>
+                <div class="flex-1">
+                  <h3 class="font-semibold text-bd-text-primary mb-1">Add 2-3 Core Rules</h3>
+                  <p class="text-xs text-bd-text-secondary mb-2">Pick rules that solve your biggest frustrations. Don't overload.</p>
+                  <div class="p-2 rounded bg-bd-bg-primary font-mono text-xs text-bd-green">
+- Never write dialogue or actions for the player character
+- Continue from where the story left off
+- Vary sentence structure to avoid repetition
+                  </div>
+                  <button 
+                    @click="goToCollectionWithFilter('essential')"
+                    class="mt-2 text-xs text-bd-accent-primary hover:underline flex items-center gap-1"
+                  >
+                    <ExternalLink class="w-3 h-3" /> Browse Essential Instructions →
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="p-4 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
+              <div class="flex items-start gap-3">
+                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center">3</span>
+                <div class="flex-1">
+                  <h3 class="font-semibold text-bd-text-primary mb-1">Test & Iterate</h3>
+                  <p class="text-xs text-bd-text-secondary mb-2">Play for a bit. Notice what's wrong. Add ONE instruction to fix it. Repeat.</p>
+                  <div class="p-2 rounded bg-bd-bg-primary text-xs text-bd-text-secondary">
+                    <strong>Common additions:</strong> Pacing too fast? Add "Let scenes breathe". AI too wordy? Add "Be concise". NPCs too agreeable? Add "NPCs have their own goals."
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Try the Builder CTA -->
+            <div class="p-4 rounded-lg bg-bd-accent-primary/10 border border-bd-accent-primary/30 flex items-center justify-between">
+              <div>
+                <h3 class="font-semibold text-bd-text-primary">Ready to build?</h3>
+                <p class="text-xs text-bd-text-secondary">Use our Instruction Builder to assemble and save your instruction sets.</p>
+              </div>
+              <button @click="activeTab = 'builder'" class="btn btn-primary text-sm">
+                <Wrench class="w-4 h-4" /> Open Builder
+              </button>
             </div>
           </div>
-        </div>
+        </Transition>
       </section>
 
-      <!-- How to Structure Instructions -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <FileText class="w-5 h-5 text-bd-blue" />
-          Structuring Instructions
-        </h2>
+      <!-- ===================== WHAT ARE AI INSTRUCTIONS ===================== -->
+      <section id="guide-what-are-instructions" class="card">
+        <button 
+          @click="toggleGuideSection('what-are-instructions')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <HelpCircle class="w-5 h-5 text-bd-amber" />
+            What Are AI Instructions?
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('what-are-instructions') }" />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('what-are-instructions')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              AI Instructions (<strong>AIN</strong>) are rules that shape how the AI writes: style, pacing, behavior, and focus. 
+              <strong>Pick specific lines</strong> that solve your problems; don't copy everything at once.
+            </p>
+            <div class="grid md:grid-cols-3 gap-4">
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <Sparkles class="w-4 h-4 text-bd-amber" />
+                  What They Do
+                </h3>
+                <ul class="text-xs text-bd-text-secondary space-y-1">
+                  <li>• Enforce writing styles</li>
+                  <li>• Control pacing & focus</li>
+                  <li>• Set world rules & NPC behavior</li>
+                  <li>• Break 4th wall if desired</li>
+                </ul>
+              </div>
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <Info class="w-4 h-4 text-bd-blue" />
+                  Defaults
+                </h3>
+                <p class="text-xs text-bd-text-secondary">
+                  Each model has Latitude's default instructions. View them: <strong>Click output → View Context → AI Instructions</strong>
+                </p>
+              </div>
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <Plus class="w-4 h-4 text-bd-green" />
+                  How to Add
+                </h3>
+                <p class="text-xs text-bd-text-secondary">
+                  <strong>Sidebar → Plot → Add Plot Component → AI Instructions</strong>
+                </p>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
+      <!-- ===================== STRUCTURING SECTION ===================== -->
+      <section id="guide-structuring" class="card">
+        <button 
+          @click="toggleGuideSection('structuring')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <FileText class="w-5 h-5 text-bd-blue" />
+            Structuring Instructions
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('structuring') }" />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('structuring')" class="mt-4">
         <p class="text-xs text-bd-text-muted mb-4">
           Good structure helps both you and the AI understand what's expected. Follow this order for best results.
         </p>
@@ -186,44 +323,108 @@
             </div>
           </div>
         </div>
+          </div>
+        </Transition>
       </section>
 
-      <!-- Writing Tips + AIN vs AN -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <PenTool class="w-5 h-5 text-bd-purple" />
-          Writing Tips
-        </h2>
-        <div class="space-y-4">
-          <!-- Quick Tips -->
-          <div class="grid md:grid-cols-2 gap-4">
-            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-              <ul class="text-xs text-bd-text-secondary space-y-1">
-                <li>• <strong>Use commands:</strong> Make, Avoid, Write, Be, Remember</li>
-                <li>• <strong>One idea per line</strong>, keep instructions short</li>
-                <li>• <strong>Use brackets</strong> <code class="text-bd-amber">[ ]</code> <code class="text-bd-amber">{ }</code> to group related info</li>
-              </ul>
-            </div>
-            <div class="p-3 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
-              <h4 class="text-xs font-semibold text-bd-text-primary mb-1">Scope</h4>
-              <p class="text-xs text-bd-text-secondary">
-                AIN = global rules (whole story). For scene-specific tweaks, use 
-                <router-link to="/plot-components" class="text-bd-accent-primary hover:underline">Author's Note</router-link>.
-              </p>
+      <!-- ===================== COMMON MISTAKES SECTION ===================== -->
+      <section id="guide-common-mistakes" class="card">
+        <button 
+          @click="toggleGuideSection('common-mistakes')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <AlertTriangle class="w-5 h-5 text-bd-pink" />
+            Common Mistakes
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('common-mistakes') }" />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('common-mistakes')" class="mt-4 space-y-3">
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> Too Many Instructions
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Adding 50 lines hoping something sticks. The AI gets confused, and you don't know what's working.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Start with 3-5 lines. Add one at a time.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> Contradicting Instructions
+                </h4>
+                <p class="text-xs text-bd-text-secondary">"Be concise" + "Write detailed descriptions" = AI doesn't know what to do.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Pick one style. Be specific about when to apply each.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> Vague Instructions
+                </h4>
+                <p class="text-xs text-bd-text-secondary">"Write better" or "Be more interesting" - the AI doesn't know what that means.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Be specific. "Use varied sentence lengths" or "Include sensory details."</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> No Role Assignment
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Jumping straight to rules without telling the AI WHO it should be.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Start with "You are a [role]..." - it sets the foundation.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> Negative-Only Instructions
+                </h4>
+                <p class="text-xs text-bd-text-secondary">"Don't do X, don't do Y, never do Z" - tells the AI what NOT to do, but not what TO do.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Balance negatives with positives. "Instead of X, do Y."</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> Copying Without Understanding
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Pasting someone's entire instruction set without knowing what each line does.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Read each instruction. Only add what solves YOUR problems.</p>
+              </div>
             </div>
           </div>
-        </div>
+        </Transition>
       </section>
 
-      <!-- Common Problems & Fixes -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Wrench class="w-5 h-5 text-bd-pink" />
-          Quick Fixes
-        </h2>
-        <p class="text-xs text-bd-text-muted mb-3">Add these to your <strong>AI Instructions</strong>. Replace 'Name' with your character.</p>
+      <!-- ===================== QUICK FIXES SECTION ===================== -->
+      <section id="guide-quick-fixes" class="card">
+        <button 
+          @click="toggleGuideSection('quick-fixes')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Wrench class="w-5 h-5 text-bd-purple" />
+            Quick Fixes
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('quick-fixes') }" />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('quick-fixes')" class="mt-4">
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <ul class="text-xs text-bd-text-secondary space-y-1">
+                  <li>• <strong>Use commands:</strong> Make, Avoid, Write, Be, Remember</li>
+                  <li>• <strong>One idea per line</strong>, keep instructions short</li>
+                  <li>• <strong>Use brackets</strong> <code class="text-bd-amber">[ ]</code> <code class="text-bd-amber">{ }</code> to group related info</li>
+                </ul>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-1">Scope</h4>
+                <p class="text-xs text-bd-text-secondary">
+                  AIN = global rules (whole story). For scene-specific tweaks, use 
+                  <router-link to="/plot-components" class="text-bd-accent-primary hover:underline">Author's Note</router-link>.
+                </p>
+              </div>
+            </div>
 
-        <div class="grid md:grid-cols-2 gap-3">
+            <p class="text-xs text-bd-text-muted mb-3">Click any fix to find related instructions. Replace 'Name' with your character.</p>
+
+            <div class="grid md:grid-cols-2 gap-3">
           <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Pacing</h4>
             <div class="space-y-1 text-xs">
@@ -288,18 +489,29 @@
               <div><code class="text-bd-green">- Remember character locations and states</code></div>
             </div>
           </div>
-        </div>
+            </div>
+          </div>
+        </Transition>
       </section>
 
-      <!-- Example Instruction Sets -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Drama class="w-5 h-5 text-bd-amber" />
-          Example Sets
-        </h2>
-        <p class="text-xs text-bd-text-muted mb-4">These are complete instruction sets you can use as starting points. Customize them to fit your story.</p>
+      <!-- ===================== GENRE GUIDES SECTION ===================== -->
+      <section id="guide-genre-guides" class="card">
+        <button 
+          @click="toggleGuideSection('genre-guides')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Drama class="w-5 h-5 text-bd-amber" />
+            Genre Guides & Example Sets
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('genre-guides') }" />
+        </button>
         
-        <div class="grid md:grid-cols-2 gap-4">
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('genre-guides')" class="mt-4">
+            <p class="text-xs text-bd-text-muted mb-4">Complete instruction sets for different genres. Use as starting points and customize to fit your story.</p>
+            
+            <div class="grid md:grid-cols-2 gap-4">
           <!-- Snarky Narrator -->
           <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
             <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
@@ -374,19 +586,28 @@
 - Injuries affect performance realistically
 - Environment can be used strategically
 - Opponents fight intelligently based on their abilities</div>
+              </div>
+            </div>
           </div>
-        </div>
+        </Transition>
       </section>
 
-      <!-- Model Settings (Advanced) -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <SlidersHorizontal class="w-5 h-5 text-bd-cyan" />
-          Model Settings
-          <span class="tag bg-bd-cyan/20 text-bd-cyan text-xs">Advanced</span>
-        </h2>
+      <!-- ===================== MODEL SETTINGS SECTION ===================== -->
+      <section id="guide-model-settings" class="card">
+        <button 
+          @click="toggleGuideSection('model-settings')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <SlidersHorizontal class="w-5 h-5 text-bd-cyan" />
+            Model Settings
+            <span class="tag bg-bd-cyan/20 text-bd-cyan text-xs">Advanced</span>
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('model-settings') }" />
+        </button>
         
-        <div class="space-y-4">
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('model-settings')" class="mt-4 space-y-4">
           <!-- Parameters Overview -->
           <div class="grid md:grid-cols-2 gap-3">
             <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
@@ -454,18 +675,26 @@
               <strong>T: 1.2</strong> • <strong>K: 300</strong> • <strong>PP/FP: 0.7</strong>, then adjust as you play.
             </p>
           </div>
-        </div>
+          </div>
+        </Transition>
       </section>
 
-      <!-- Token Optimization (Advanced) -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-          <Coins class="w-5 h-5 text-bd-amber" />
-          Token Optimization
-          <span class="tag bg-bd-amber/20 text-bd-amber text-xs">Advanced</span>
-        </h2>
+      <!-- ===================== TOKEN OPTIMIZATION SECTION ===================== -->
+      <section id="guide-tokens" class="card">
+        <button 
+          @click="toggleGuideSection('tokens')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Coins class="w-5 h-5 text-bd-amber" />
+            Token Optimization
+            <span class="tag bg-bd-amber/20 text-bd-amber text-xs">Advanced</span>
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('tokens') }" />
+        </button>
         
-        <div class="space-y-4">
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('tokens')" class="mt-4 space-y-4">
           <!-- What Are Tokens -->
           <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
@@ -537,16 +766,26 @@
               </p>
             </div>
           </div>
-        </div>
+          </div>
+        </Transition>
       </section>
 
-      <!-- Credits -->
-      <section class="card">
-        <h2 class="text-lg font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-          <Info class="w-5 h-5 text-bd-amber" />
-          Credits & Resources
-        </h2>
-        <div class="mb-4">
+      <!-- ===================== CREDITS SECTION ===================== -->
+      <section id="guide-credits" class="card">
+        <button 
+          @click="toggleGuideSection('credits')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Info class="w-5 h-5 text-bd-amber" />
+            Credits & Resources
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('credits') }" />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('credits')" class="mt-4">
+            <div class="mb-4">
           <p class="text-xs text-bd-text-muted mb-2 flex items-center gap-1.5">
             Contributors who created AI Instructions, or created repositories, guides, or other resources:
           </p>
@@ -570,8 +809,13 @@
           <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" class="btn btn-secondary text-xs">
             <Coins class="w-3 h-3" /> Tokenizer
           </a>
-        </div>
+            </div>
+          </div>
+        </Transition>
       </section>
+
+        </div><!-- End main content -->
+      </div><!-- End flex container -->
 
     </template>
 
@@ -1118,6 +1362,78 @@ const aiInstructionsContributors = [
   'BinKompliziert', 'Wilmar', 'Le Onyx', 'Little Hat', 'SeinSchetten', 
   'Zoocata', 'Monsieur Boo', 'CamSift'
 ]
+
+// ===========================================
+// GUIDE SECTION STATE & FUNCTIONS
+// ===========================================
+
+// Guide table of contents sections
+const guideSections = [
+  { id: 'quick-start', label: 'Quick Start', icon: 'Rocket', color: 'green' },
+  { id: 'what-are-instructions', label: 'What Are AI Instructions?', icon: 'HelpCircle', color: 'amber' },
+  { id: 'structuring', label: 'Structuring Instructions', icon: 'FileText', color: 'blue' },
+  { id: 'common-mistakes', label: 'Common Mistakes', icon: 'AlertTriangle', color: 'pink' },
+  { id: 'quick-fixes', label: 'Quick Fixes', icon: 'Wrench', color: 'purple' },
+  { id: 'genre-guides', label: 'Genre Guides', icon: 'Drama', color: 'amber' },
+  { id: 'model-settings', label: 'Model Settings', icon: 'SlidersHorizontal', color: 'cyan' },
+  { id: 'tokens', label: 'Token Optimization', icon: 'Coins', color: 'amber' },
+  { id: 'credits', label: 'Credits', icon: 'Info', color: 'amber' }
+]
+
+// Track which guide sections are expanded (all expanded by default)
+const expandedGuideSections = ref(new Set(guideSections.map(s => s.id)))
+
+const toggleGuideSection = (sectionId) => {
+  if (expandedGuideSections.value.has(sectionId)) {
+    expandedGuideSections.value.delete(sectionId)
+  } else {
+    expandedGuideSections.value.add(sectionId)
+  }
+  // Force reactivity
+  expandedGuideSections.value = new Set(expandedGuideSections.value)
+}
+
+const isGuideSectionExpanded = (sectionId) => {
+  return expandedGuideSections.value.has(sectionId)
+}
+
+const scrollToGuideSection = (sectionId) => {
+  const element = document.getElementById(`guide-${sectionId}`)
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    // Ensure section is expanded
+    if (!expandedGuideSections.value.has(sectionId)) {
+      expandedGuideSections.value.add(sectionId)
+      expandedGuideSections.value = new Set(expandedGuideSections.value)
+    }
+  }
+}
+
+// Navigate to collection with a specific search/filter
+const goToCollectionWithFilter = (filterType, filterValue) => {
+  activeTab.value = 'collection'
+  
+  if (filterType === 'search') {
+    searchQuery.value = filterValue
+  } else if (filterType === 'category') {
+    clearFilters()
+    selectedCategories.value = [filterValue]
+  } else if (filterType === 'tag') {
+    searchQuery.value = filterValue
+  } else if (filterType === 'essential') {
+    clearFilters()
+    quickFilter.value = 'essential'
+  }
+}
+
+// Expand/collapse all guide sections
+const expandAllGuideSections = () => {
+  expandedGuideSections.value = new Set(guideSections.map(s => s.id))
+}
+
+const collapseAllGuideSections = () => {
+  expandedGuideSections.value = new Set()
+}
 
 const handleSearch = (query) => {
   if (query.trim()) {
