@@ -12,11 +12,24 @@ export {
   getPlacementById,
   searchCollection,
   searchCollectionWithScores,
+  searchCollectionSmart,
   filterByCategory,
   filterByTags,
   filterByTagsFuzzy,
+  filterByTagSmart,
   fuzzyMatch,
-  DEFAULT_FIELD_WEIGHTS
+  DEFAULT_FIELD_WEIGHTS,
+  // Tag system utilities
+  tagMatchesQuery,
+  getCoreTag,
+  getTagConfig,
+  getTagColor,
+  getTagClasses,
+  normalizeTagsToCore,
+  getAllCoreTags,
+  getTagStats,
+  TAG_SYSTEM,
+  TAG_ALIAS_MAP
 } from './shared.js'
 
 // AI Instructions

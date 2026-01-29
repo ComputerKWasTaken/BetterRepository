@@ -41,18 +41,14 @@
       </div>
 
       <!-- Tags -->
-      <div class="flex flex-wrap gap-1.5 mt-3">
-        <span 
-          v-for="tag in displayTags" 
-          :key="tag"
-          class="tag text-[10px]"
-        >
-          {{ tag }}
-        </span>
-        <span v-if="resource.tags.length > 3" class="tag text-[10px]">
-          +{{ resource.tags.length - 3 }}
-        </span>
-      </div>
+      <SmartTagList
+        :tags="resource.tags"
+        :max-visible="4"
+        :show-core="true"
+        :deduplicate="true"
+        gap="xs"
+        class="mt-3"
+      />
     </div>
 
     <!-- Expanded Content -->
@@ -168,6 +164,7 @@
 <script setup>
 import { ref, computed, inject } from 'vue'
 import { usePreferences } from '@/composables/usePreferences'
+import SmartTagList from './SmartTagList.vue'
 
 const props = defineProps({
   resource: {
@@ -184,8 +181,6 @@ const copiedIndex = ref(null) // null = nothing copied, -1 = single content, -2 
 
 const isFavorited = computed(() => isFavorite(props.resource.id))
 const hasVariants = computed(() => props.resource.variants && props.resource.variants.length > 0)
-
-const displayTags = computed(() => props.resource.tags.slice(0, 3))
 
 const difficultyClass = computed(() => {
   const classes = {

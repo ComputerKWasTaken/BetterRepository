@@ -12,6 +12,19 @@ import {
   DEFAULT_FIELD_WEIGHTS 
 } from '@/composables/useSearch'
 
+import {
+  tagMatchesQuery,
+  getCoreTag,
+  getTagConfig,
+  getTagColor,
+  getTagClasses,
+  normalizeTagsToCore,
+  getAllCoreTags,
+  getTagStats,
+  TAG_SYSTEM,
+  TAG_ALIAS_MAP
+} from './tagSystem'
+
 export const REPOSITORY_META = {
   version: '1.1.0',
   lastUpdated: '2025-01-25',
@@ -146,3 +159,82 @@ export const filterByTagsFuzzy = (collection, tagQuery, minScore = 5) => {
 
 // Re-export fuzzy match for direct use
 export { fuzzyMatch, DEFAULT_FIELD_WEIGHTS }
+
+// Re-export tag system utilities
+export {
+  tagMatchesQuery,
+  getCoreTag,
+  getTagConfig,
+  getTagColor,
+  getTagClasses,
+  normalizeTagsToCore,
+  getAllCoreTags,
+  getTagStats,
+  TAG_SYSTEM,
+  TAG_ALIAS_MAP
+}
+
+/**
+ * Filter collection by tag with smart alias matching.
+ * Searches for a tag and matches against core tags and all aliases.
+ * 
+ * @param {Array} collection - Array of items to search
+ * @param {string} tagQuery - Tag search query
+ * @returns {Array} - Matching items
+ */
+export const filterByTagSmart = (collection, tagQuery) => {
+  if (!tagQuery || !tagQuery.trim()) {
+    return collection
+  }
+  
+  return collection.filter(item => {
+    if (!item.tags || !Array.isArray(item.tags)) return false
+    return tagMatchesQuery(tagQuery, item.tags)
+  })
+}
+
+/**
+ * Enhanced search that understands tag aliases.
+ * When searching tags, it matches against core tags AND their aliases.
+ * 
+ * @param {Array} collection - Array of items to search
+ * @param {string} query - Search query
+ * @param {Array} fields - Fields to search in
+ * @param {Object} options - Additional options
+ * @returns {Array} - Matching items sorted by relevance
+ */
+export const searchCollectionSmart = (collection, query, fields = ['name', 'description', 'tags'], options = {}) => {
+  if (!query || !query.trim()) {
+    return collection
+  }
+  
+  const normalizedQuery = query.toLowerCase().trim()
+  
+  // First, check if query matches a tag alias - if so, boost items with that tag
+  const queryCoreTag = getCoreTag(normalizedQuery)
+  const isTagSearch = TAG_SYSTEM[queryCoreTag] !== undefined
+  
+  // Get base fuzzy search results
+  let results = fuzzySearchCollection(collection, query, { fields, ...options })
+  
+  // If the query is a recognized tag/alias, also include items with that tag
+  if (isTagSearch) {
+    const tagMatches = collection.filter(item => {
+      if (!item.tags || !Array.isArray(item.tags)) return false
+      return item.tags.some(t => getCoreTag(t) === queryCoreTag)
+    })
+    
+    // Merge tag matches with fuzzy results, avoiding duplicates
+    const resultIds = new Set(results.map(r => r.item.id))
+    for (const item of tagMatches) {
+      if (!resultIds.has(item.id)) {
+        results.push({ item, score: 40, matched: true }) // Tag match score
+      }
+    }
+    
+    // Re-sort by score
+    results.sort((a, b) => b.score - a.score)
+  }
+  
+  return results
+}
