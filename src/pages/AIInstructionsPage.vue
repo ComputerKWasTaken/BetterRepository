@@ -1141,13 +1141,13 @@ const iconComponentMap = {
 
 const categoryColorMap = {
   'complete-sets': { bg: 'bg-bd-amber/20', icon: 'text-bd-amber' },
-  'role-persona': { bg: 'bg-bd-amber/20', icon: 'text-bd-amber' },
+  'role-persona': { bg: 'bg-bd-orange/20', icon: 'text-bd-orange' },
   'writing-style': { bg: 'bg-bd-blue/20', icon: 'text-bd-blue' },
   'characterization': { bg: 'bg-bd-purple/20', icon: 'text-bd-purple' },
   'coherence': { bg: 'bg-bd-green/20', icon: 'text-bd-green' },
   'gameplay': { bg: 'bg-bd-pink/20', icon: 'text-bd-pink' },
   'world-setting': { bg: 'bg-bd-cyan/20', icon: 'text-bd-cyan' },
-  'formatting': { bg: 'bg-bd-blue/20', icon: 'text-bd-blue' }
+  'formatting': { bg: 'bg-bd-gray/20', icon: 'text-bd-gray' }
 }
 
 const getCategoryIcon = (categoryId) => {

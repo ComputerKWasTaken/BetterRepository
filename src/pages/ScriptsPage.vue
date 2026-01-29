@@ -846,7 +846,7 @@ if (card !== null) {
 
     <!-- Scripts by Category -->
     <div v-if="!searchQuery && !selectedCategory && !selectedDifficulty" class="space-y-6">
-      <div v-for="category in categoriesWithScripts" :key="category.id" class="card">
+      <section v-for="category in categoriesWithScripts" :key="category.id">
         <div class="flex items-center gap-3 mb-4">
           <div 
             class="w-8 h-8 rounded-lg flex items-center justify-center"
@@ -858,9 +858,7 @@ if (card !== null) {
             <h3 class="font-semibold text-bd-text-primary">{{ category.name }}</h3>
             <p class="text-xs text-bd-text-muted">{{ category.description }}</p>
           </div>
-          <span class="ml-auto tag" :class="getCategoryBgClass(category.color) + ' ' + getCategoryTextClass(category.color)">
-            {{ category.count }}
-          </span>
+          <span class="ml-auto tag">{{ category.count }}</span>
         </div>
         
         <div class="space-y-3">
@@ -870,7 +868,7 @@ if (card !== null) {
             :script="script"
           />
         </div>
-      </div>
+      </section>
     </div>
 
     <!-- Filtered Results -->

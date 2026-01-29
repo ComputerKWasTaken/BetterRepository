@@ -815,7 +815,7 @@
       <!-- Category Sections (default view) -->
       <div v-if="!hasAnyFilters" class="space-y-6">
         <!-- Templates Section -->
-        <div class="card">
+        <section>
           <div class="flex items-center gap-3 mb-4">
             <div class="w-8 h-8 rounded-lg bg-bd-green/20 flex items-center justify-center">
               <FileText class="w-4 h-4 text-bd-green" />
@@ -824,7 +824,7 @@
               <h3 class="font-semibold text-bd-text-primary">Story Card Templates</h3>
               <p class="text-xs text-bd-text-muted">Fill-in-the-blank templates to create your own cards.</p>
             </div>
-            <span class="ml-auto tag bg-bd-green/20 text-bd-green">{{ templates.length }}</span>
+            <span class="ml-auto tag">{{ templates.length }}</span>
           </div>
           
           <div class="space-y-3">
@@ -835,7 +835,7 @@
               type="template"
             />
           </div>
-        </div>
+        </section>
       </div>
 
       <!-- Filtered Results -->

@@ -1460,7 +1460,7 @@
 
       <!-- Author's Note Section -->
 
-      <div class="card">
+      <section>
 
         <div class="flex items-center gap-3 mb-4">
 
@@ -1478,7 +1478,7 @@
 
           </div>
 
-          <span class="ml-auto tag bg-bd-purple/20 text-bd-purple">{{ authorsNoteComponents.length }}</span>
+          <span class="ml-auto tag">{{ authorsNoteComponents.length }}</span>
 
         </div>
 
@@ -1498,13 +1498,11 @@
 
         </div>
 
-      </div>
-
-
+      </section>
 
       <!-- Plot Essentials Section -->
 
-      <div class="card">
+      <section>
 
         <div class="flex items-center gap-3 mb-4">
 
@@ -1522,7 +1520,7 @@
 
           </div>
 
-          <span class="ml-auto tag bg-bd-green/20 text-bd-green">{{ plotEssentialsComponents.length }}</span>
+          <span class="ml-auto tag">{{ plotEssentialsComponents.length }}</span>
 
         </div>
 
@@ -1542,13 +1540,11 @@
 
         </div>
 
-      </div>
-
-
+      </section>
 
       <!-- Story Summary Section -->
 
-      <div class="card">
+      <section>
 
         <div class="flex items-center gap-3 mb-4">
 
@@ -1566,7 +1562,7 @@
 
           </div>
 
-          <span class="ml-auto tag bg-bd-cyan/20 text-bd-cyan">{{ storySummaryComponents.length }}</span>
+          <span class="ml-auto tag">{{ storySummaryComponents.length }}</span>
 
         </div>
 
@@ -1586,7 +1582,7 @@
 
         </div>
 
-      </div>
+      </section>
 
     </div>
 
