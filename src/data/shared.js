@@ -126,10 +126,10 @@ export const filterByTags = (collection, tags) => {
  * 
  * @param {Array} collection - Array of items to search
  * @param {string} tagQuery - Tag search query
- * @param {number} threshold - Minimum match score (0-1, default: 0.6)
+ * @param {number} minScore - Minimum match score (default: 5, fuzzy matches score ~9-15)
  * @returns {Array} - Matching items
  */
-export const filterByTagsFuzzy = (collection, tagQuery, threshold = 0.6) => {
+export const filterByTagsFuzzy = (collection, tagQuery, minScore = 5) => {
   if (!tagQuery || !tagQuery.trim()) {
     return collection
   }
@@ -139,7 +139,7 @@ export const filterByTagsFuzzy = (collection, tagQuery, threshold = 0.6) => {
     
     return item.tags.some(tag => {
       const result = fuzzyMatch(tagQuery, tag)
-      return result.matched && result.score >= threshold * 50
+      return result.matched && result.score >= minScore
     })
   })
 }
