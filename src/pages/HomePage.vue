@@ -1,19 +1,25 @@
 <template>
   <div class="space-y-6 animate-fade-in">
     <!-- Hero Section -->
-    <section class="text-center py-8">
-      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-bd-accent-primary/10 border border-bd-accent-primary/20 mb-4">
-        <Sparkles class="w-4 h-4 text-bd-accent-primary" />
-        <span class="text-sm font-medium text-bd-accent-light">AI Dungeon Resource Hub</span>
+    <section class="text-center py-10">
+      <!-- Logo & Branding -->
+      <div class="flex items-center justify-center gap-4 mb-6">
+        <img 
+          src="/betterrepository_logo.png" 
+          alt="BetterRepository" 
+          class="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-lg"
+        />
+        <div class="text-left">
+          <h1 class="text-2xl md:text-3xl font-bold text-bd-text-primary">
+            BetterRepository
+          </h1>
+          <p class="text-sm text-bd-accent-light font-medium">AI Dungeon Resource Hub</p>
+        </div>
       </div>
       
-      <h1 class="text-3xl md:text-4xl font-bold text-bd-text-primary mb-3">
-        Your <span class="text-gradient">AI Dungeon</span> Toolkit
-      </h1>
-      
-      <p class="text-bd-text-secondary max-w-2xl mx-auto mb-6">
-        A curated collection of AI Instructions, Plot Components, Story Cards, and Scripts. 
-        Everything you need to craft better adventures.
+      <p class="text-bd-text-secondary max-w-xl mx-auto mb-6">
+        A curated collection of AI Instructions, Plot Components, Story Cards, and Scripts.
+        Everything you need to craft <span class="text-gradient font-medium">better adventures</span>.
       </p>
 
       <!-- Quick Search -->
@@ -140,130 +146,36 @@
       </div>
     </section>
 
-    <!-- Credits Section -->
+    <!-- Credits Section (Condensed) -->
     <section class="card">
-      <div class="flex items-center gap-2 mb-4">
-        <Award class="w-5 h-5 text-bd-accent-primary" />
-        <h2 class="text-xl font-bold text-bd-text-primary">Credits & Acknowledgments</h2>
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <Award class="w-5 h-5 text-bd-accent-primary" />
+          <h2 class="text-lg font-semibold text-bd-text-primary">Community Contributors</h2>
+        </div>
+        <router-link to="/credits" class="text-sm text-bd-accent-primary hover:underline flex items-center gap-1">
+          View All
+          <ChevronRight class="w-3 h-3" />
+        </router-link>
       </div>
 
-      <!-- Introduction -->
-      <div class="mb-6 p-4 rounded-lg bg-bd-accent-primary/5 border border-bd-accent-primary/20">
-        <p class="text-sm text-bd-text-secondary text-center leading-relaxed">
-          BetterRepository is built on the shoulders of giants. The community members listed below have contributed 
-          invaluable guides, resources, and knowledge that directly shaped the comprehensive guides you see here. 
-          Their pioneering work in the AI Dungeon community made this project possible.
-        </p>
-      </div>
+      <p class="text-sm text-bd-text-secondary mb-4">
+        BetterRepository is built on the work of amazing community members who created guides, resources, and knowledge.
+      </p>
 
-      <!-- Major Contributors -->
-      <div class="mb-6 p-4 rounded-lg bg-gradient-to-r from-bd-accent-primary/10 to-bd-purple/10 border border-bd-accent-primary/30">
-        <div class="flex items-center gap-2 mb-3">
-          <div class="w-8 h-8 rounded-lg bg-bd-accent-primary/20 flex items-center justify-center">
-            <Star class="w-4 h-4 text-bd-accent-primary" />
-          </div>
-          <div>
-            <h3 class="font-semibold text-bd-text-primary">Major Contributors</h3>
-            <p class="text-xs text-bd-text-muted">Contributors whose work significantly shaped BetterRepository</p>
-          </div>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <span v-for="name in majorContributors" :key="name" 
-                class="px-3 py-1.5 rounded-full text-xs font-semibold bg-bd-accent-primary/15 text-bd-accent-light border border-bd-accent-primary/30">
-            {{ name }}
-          </span>
-        </div>
-      </div>
-
-      <!-- Contributor Categories -->
-      <div class="space-y-5">
-        
-        <!-- AI Instructions Contributors -->
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary/30 border border-bd-border-subtle">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="w-8 h-8 rounded-lg bg-bd-amber/20 flex items-center justify-center">
-              <ScrollText class="w-4 h-4 text-bd-amber" />
-            </div>
-            <div>
-              <h3 class="font-semibold text-bd-text-primary">AI Instructions</h3>
-              <p class="text-xs text-bd-text-muted">Contributors who created AI Instructions, or created repositories, guides, or other resources</p>
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <span v-for="name in aiInstructionsContributors" :key="name" 
-                  class="px-2.5 py-1 rounded-full text-xs font-medium bg-bd-amber/10 text-bd-amber border border-bd-amber/20">
-              {{ name }}
-            </span>
-          </div>
-        </div>
-
-        <!-- Plot Components Contributors -->
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary/30 border border-bd-border-subtle">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="w-8 h-8 rounded-lg bg-bd-blue/20 flex items-center justify-center">
-              <Bookmark class="w-4 h-4 text-bd-blue" />
-            </div>
-            <div>
-              <h3 class="font-semibold text-bd-text-primary">Plot Components</h3>
-              <p class="text-xs text-bd-text-muted">Contributors who created PEs, SSs, and ANs, or created guides for them</p>
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <span v-for="name in plotComponentsContributors" :key="name" 
-                  class="px-2.5 py-1 rounded-full text-xs font-medium bg-bd-blue/10 text-bd-blue border border-bd-blue/20">
-              {{ name }}
-            </span>
-          </div>
-        </div>
-
-        <!-- Story Cards Contributors -->
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary/30 border border-bd-border-subtle">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="w-8 h-8 rounded-lg bg-bd-purple/20 flex items-center justify-center">
-              <Drama class="w-4 h-4 text-bd-purple" />
-            </div>
-            <div>
-              <h3 class="font-semibold text-bd-text-primary">Story Cards</h3>
-              <p class="text-xs text-bd-text-muted">Contributors who created the resources and guides to create, write, and use Story Cards</p>
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <span v-for="name in storyCardsContributors" :key="name" 
-                  class="px-2.5 py-1 rounded-full text-xs font-medium bg-bd-purple/10 text-bd-purple border border-bd-purple/20">
-              {{ name }}
-            </span>
-          </div>
-        </div>
-
-        <!-- Scripting Contributors -->
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary/30 border border-bd-border-subtle">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="w-8 h-8 rounded-lg bg-bd-cyan/20 flex items-center justify-center">
-              <Code class="w-4 h-4 text-bd-cyan" />
-            </div>
-            <div>
-              <h3 class="font-semibold text-bd-text-primary">Scripting</h3>
-              <p class="text-xs text-bd-text-muted">Contributors who wrote scripts and other tools, or created guides and resources for scripting</p>
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <span v-for="name in scriptingContributors" :key="name" 
-                  class="px-2.5 py-1 rounded-full text-xs font-medium bg-bd-cyan/10 text-bd-cyan border border-bd-cyan/20">
-              {{ name }}
-            </span>
-          </div>
-        </div>
-
+      <!-- Major Contributors Highlight -->
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span v-for="name in majorContributors" :key="name" 
+              class="px-3 py-1.5 rounded-full text-xs font-semibold bg-bd-accent-primary/15 text-bd-accent-light border border-bd-accent-primary/30">
+          {{ name }}
+        </span>
       </div>
 
       <!-- Community Thank You -->
-      <div class="mt-6 pt-4 border-t border-bd-border-subtle">
-        <div class="flex items-center justify-center gap-3 mb-2">
-          <Users class="w-5 h-5 text-bd-accent-primary" />
-          <p class="text-sm font-medium text-bd-text-primary">And the Entire AI Dungeon Community</p>
-        </div>
-        <p class="text-xs text-bd-text-muted text-center max-w-md mx-auto">
-          Thank you to everyone who has shared their knowledge, answered questions, and helped make AI Dungeon a better experience for all.
+      <div class="flex items-center justify-center gap-2 pt-3 border-t border-bd-border-subtle">
+        <Users class="w-4 h-4 text-bd-text-muted" />
+        <p class="text-xs text-bd-text-muted">
+          And the entire AI Dungeon community. Thank you!
         </p>
       </div>
     </section>
@@ -286,9 +198,9 @@ import { TEMPLATES } from '@/data/plotComponents'
 import { STORY_CARDS, STORY_CARD_TEMPLATES } from '@/data/storyCards'
 import { SCRIPTS } from '@/data/scripts'
 import { 
-  Sparkles, Search, LayoutGrid, Lightbulb, ScrollText, Heart,
+  Search, LayoutGrid, Lightbulb, ScrollText, Heart,
   GitPullRequest, MessageCircle, ExternalLink, Bookmark, Drama, Code,
-  Award, Users, ChevronRight, Star
+  Award, Users, ChevronRight
 } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -347,25 +259,6 @@ const stats = [
 // Major contributors whose work significantly shaped BetterRepository
 const majorContributors = [
   'OffMetaGamer', 'Wilmar', 'Le Onyx', 'LewdLeah', 'Dragranis', 'Monsieur Boo'
-]
-
-// Contributors organized by category
-const aiInstructionsContributors = [
-  'OffMetaGamer', 'Hawk', 'Dirty Kurtis', 'Shiny', 'Leshok', 'Dragranis', 
-  'BinKompliziert', 'Wilmar', 'Le Onyx', 'Little Hat', 'SeinSchetten', 
-  'Zoocata', 'Monsieur Boo', 'CamSift'
-]
-
-const plotComponentsContributors = [
-  'Wilmar', 'Le Onyx', 'Dragranis', 'Celyne', 'Monsieur Boo'
-]
-
-const storyCardsContributors = [
-  'wanderingstar1', 'GremmieGremlin', 'Lavere', 'Le Onyx', 'Shiny'
-]
-
-const scriptingContributors = [
-  'Latitude', 'LewdLeah', 'Oli', 'Magic', 'BinKompliziert', 'MrJack'
 ]
 
 const handleSearch = () => {

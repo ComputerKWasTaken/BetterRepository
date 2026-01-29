@@ -8,6 +8,7 @@ import StoryCardsPage from '@/pages/StoryCardsPage.vue'
 import ScriptsPage from '@/pages/ScriptsPage.vue'
 import ContributePage from '@/pages/ContributePage.vue'
 import EcosystemPage from '@/pages/EcosystemPage.vue'
+import CreditsPage from '@/pages/CreditsPage.vue'
 
 const routes = [
   {
@@ -51,6 +52,12 @@ const routes = [
     name: 'Ecosystem',
     component: EcosystemPage,
     meta: { title: 'Ecosystem - BetterRepository' }
+  },
+  {
+    path: '/credits',
+    name: 'Credits',
+    component: CreditsPage,
+    meta: { title: 'Credits - BetterRepository' }
   }
 ]
 

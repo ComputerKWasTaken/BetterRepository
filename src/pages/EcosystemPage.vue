@@ -1,16 +1,27 @@
 <template>
   <div class="space-y-6 animate-fade-in">
     <!-- Page Header -->
-    <header class="text-center py-4">
-      <div class="flex items-center justify-center gap-4 mb-3">
-        <img src="/betterrepository_logo.png" alt="BetterRepository" class="w-12 h-12 object-contain" />
-        <span class="text-3xl text-bd-text-muted">+</span>
-        <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="BetterDungeon" class="w-12 h-12 object-contain" />
+    <header class="text-center py-8">
+      <div class="relative inline-block mb-6">
+        <div class="flex items-center justify-center gap-4">
+          <div class="relative">
+            <div class="absolute inset-0 bg-bd-accent-primary/20 rounded-2xl blur-xl"></div>
+            <img src="/betterrepository_logo.png" alt="BetterRepository" class="relative w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-lg" />
+          </div>
+          <div class="flex flex-col items-center">
+            <Sparkles class="w-5 h-5 text-bd-accent-primary mb-1" />
+            <span class="text-xl text-bd-text-muted font-light">+</span>
+          </div>
+          <div class="relative">
+            <div class="absolute inset-0 bg-bd-purple/20 rounded-2xl blur-xl"></div>
+            <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="BetterDungeon" class="relative w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-lg" />
+          </div>
+        </div>
       </div>
-      <h1 class="text-2xl font-bold text-bd-text-primary">
-        The "Better" Ecosystem
+      <h1 class="text-2xl md:text-3xl font-bold text-bd-text-primary mb-2">
+        The <span class="text-gradient">"Better"</span> Ecosystem
       </h1>
-      <p class="text-bd-text-secondary mt-2 max-w-lg mx-auto">
+      <p class="text-bd-text-secondary max-w-lg mx-auto">
         A suite of community tools designed to enhance your AI Dungeon experience.
       </p>
     </header>
@@ -54,10 +65,10 @@
 
     <!-- Projects Grid -->
     <section class="space-y-4">
-      <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-        <Layers class="w-5 h-5 text-bd-accent-primary" />
-        Projects
-      </h2>
+      <div class="section-header">
+        <Layers class="w-4 h-4" />
+        <span>Projects</span>
+      </div>
 
       <div class="grid gap-4">
         <!-- BetterRepository -->
@@ -181,15 +192,17 @@
     </section>
 
     <!-- Better Together Section -->
-    <section class="card-elevated border-2 border-bd-purple/30">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="flex items-center gap-2">
-          <img src="/betterrepository_logo.png" alt="" class="w-8 h-8" />
-          <span class="text-bd-text-muted text-lg">+</span>
-          <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="" class="w-8 h-8" />
+    <section class="card-elevated border-2 border-bd-purple/30 relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-bd-purple/10 to-transparent rounded-bl-full"></div>
+      <div class="relative">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="flex items-center gap-2 p-2 rounded-xl bg-bd-bg-tertiary/50">
+            <img src="/betterrepository_logo.png" alt="" class="w-7 h-7" />
+            <Heart class="w-4 h-4 text-bd-error" />
+            <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="" class="w-7 h-7" />
+          </div>
+          <h2 class="text-lg font-semibold text-bd-text-primary">Better Together</h2>
         </div>
-        <h2 class="text-lg font-semibold text-bd-text-primary">Better Together</h2>
-      </div>
       <p class="text-bd-text-secondary mb-4">
         BetterDungeon and BetterRepository are designed to complement each other. Use them together for the ultimate AI Dungeon experience.
       </p>
@@ -224,14 +237,15 @@
           </div>
         </div>
       </div>
+      </div>
     </section>
 
     <!-- Coming Soon / Future Projects -->
     <section class="card">
-      <h2 class="text-lg font-semibold text-bd-text-primary mb-4 flex items-center gap-2">
-        <Rocket class="w-5 h-5 text-bd-text-primary" />
-        What's Next?
-      </h2>
+      <div class="flex items-center gap-2 mb-4">
+        <Rocket class="w-5 h-5 text-bd-accent-primary" />
+        <h2 class="text-lg font-semibold text-bd-text-primary">What's Next?</h2>
+      </div>
       <p class="text-bd-text-secondary mb-4">
         The "Better" ecosystem is always growing. Have an idea for a new tool or feature? 
         I'd love to hear it!
@@ -274,7 +288,7 @@
 
 <script setup>
 import { 
-  Puzzle, Layers, Github, ExternalLink,
+  Puzzle, Layers, Github, ExternalLink, Sparkles,
   Home, Gamepad2, Keyboard, Type, Palette, StickyNote, User,
   Rocket, Lightbulb, MessageCircle, Heart, Search, Save, Zap, Ship
 } from 'lucide-vue-next'
