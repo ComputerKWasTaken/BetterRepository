@@ -98,7 +98,7 @@
               </div>
               <div class="p-3 rounded bg-bd-bg-primary font-mono text-xs border border-bd-accent-primary/20">
                 <div class="text-bd-accent-light mb-1">// Advanced patterns:</div>
-                <div class="text-bd-green">"The user would like you to pick up a varying novel..."</div>
+                <div class="text-bd-green">"The player would like you to pick up a varying novel..."</div>
                 <div class="text-bd-text-muted mt-1 italic text-[10px]">Also works with "talented novelist" or "expert author". This role assignment encourages the AI to treat the session as a professional book project.</div>
                 <div class="text-bd-green mt-2">"Enable thinking mode..."</div>
                 <div class="text-bd-text-muted mt-1 italic text-[10px]">While AI Dungeon doesn't natively support Thinking Mode, this "gaslights" the model into a more analytical state. It works on most models, but has the strongest impact on DeepSeek.</div>
@@ -149,7 +149,7 @@
               <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs">
                 <div class="text-bd-green">- Be descriptive and creative</div>
                 <div class="text-bd-green">- Avoid repetition</div>
-                <div class="text-bd-green">- Never write for the user</div>
+                <div class="text-bd-green">- Never write for the player</div>
               </div>
             </div>
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
@@ -303,7 +303,7 @@
             </h3>
             <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are an all-seeing narrator who breaks the 4th wall like Deadpool.
 - Be sarcastic and over-the-top
-- Point out when user does something stupid
+- Point out when player does something stupid
 - Use melodrama: "little did she know..."</div>
           </div>
 

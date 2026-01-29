@@ -131,9 +131,9 @@ export const INSTRUCTIONS = [
     groupOrder: 0,
     description: 'Full instruction set for immersive, novel-quality storytelling.',
     purpose: 'The most thorough starting point for serious roleplay. Covers writing style, character behavior, anti-repetition, and pacing. Use this when you want the AI to feel like a skilled co-author.',
-    content: `The user would like you to pick up a varying novel. Enable thinking mode and proceed by following all of the user's rules:
+    content: `The player would like you to pick up a varying novel. Enable thinking mode and proceed by following all of the player's rules:
 - Use second person, present tense
-- Never echo, paraphrase, or restate the user's words, dialogue, or intentions in your response. Do not have NPCs repeat what the user just said. Move the story forward with NEW information only. Only show what happens NEXT
+- Never echo, paraphrase, or restate the player's words, dialogue, or intentions in your response. Do not have NPCs repeat what the player just said. Move the story forward with NEW information only. Only show what happens NEXT
 - Make every interaction sound genuine. Speech should flow between characters naturally, without repetition or flat voices. Let emotions change easily
 - Ensure characters act and speak like how their personality is defined. Speech should never feel generic
 - Prioritize complex personality over flat statements and overly clinical, diagnostic, or esoteric behavior
@@ -143,8 +143,8 @@ export const INSTRUCTIONS = [
 - No character should physically harm/bruise/mark those they are close with
 - Prioritize plot and dialogue over description. Keep description fresh; avoid describing the same detail or action multiple times
 - NPCs avoid excessive aggression or doubt; ensure interactions are nuanced rather than unnecessarily harsh
-- NPCs should never repeat any content provided by the user in actions, descriptions, speech, or dialogue; focus on new content instead
-- Don't contradict the user's speech with NPC responses
+- NPCs should never repeat any content provided by the player in actions, descriptions, speech, or dialogue; focus on new content instead
+- Don't contradict the player's speech with NPC responses
 - Allow the story to unfold moment by moment
 - Continue EXACTLY from where the story leaves off without reiterating information or content
 - Don't use memory as metaphor or metaphor as memory
@@ -171,8 +171,8 @@ export const INSTRUCTIONS = [
     groupId: 'essential-sets',
     groupOrder: 1,
     description: 'Concise instruction set that delivers quality without token bloat.',
-    purpose: 'Best for users who want good results without lengthy instructions. Covers the essentials: anti-repetition, natural dialogue, and character knowledge limits.',
-    content: `The user would like you to pick up a varying novel about the main character. Enable thinking mode and proceed by following all of the user's rules:
+    purpose: 'Best for players who want good results without lengthy instructions. Covers the essentials: anti-repetition, natural dialogue, and character knowledge limits.',
+    content: `The player would like you to pick up a varying novel about the main character. Enable thinking mode and proceed by following all of the player's rules:
 - Write in second person, present tense
 - Don't repeat, summarize, or fix
 - Let the tone emerge from the scene. Avoid adding emotion or meaning beyond what characters do or say. Focus on the subtlety over explicitness
@@ -197,7 +197,7 @@ export const INSTRUCTIONS = [
     groupOrder: 2,
     description: 'The shortest effective instruction set, maximum impact, minimum tokens.',
     purpose: 'When token count matters or you want a light touch. Covers the absolute essentials that prevent the most common AI problems.',
-    content: `The user would like you to pick up a varying novel about the main character's life:
+    content: `The player would like you to pick up a varying novel about the main character's life:
 - Write in second person, present tense
 - Make every interaction sound genuine and fitting to the moment. Speech should flow between characters naturally, without repetition and should end promptly without going in circles. Let emotions change easily
 - Characters are people in situations, not job titles performing functions
@@ -205,7 +205,7 @@ export const INSTRUCTIONS = [
 - Prioritize complex personality over flat statements and overly clinical, diagnostic, or esoteric behavior
 - Express character emotions and internal state directly through dialogue without using contrasting language
 - Characters never repeat what you say in any form
-- Integrate user-provided narrative elements seamlessly into the ongoing story without restatement, rephrasing, or summary
+- Integrate player-provided narrative elements seamlessly into the ongoing story without restatement, rephrasing, or summary
 - Ensure characters act and speak like how their personality is defined. Speech should never feel generic or trope-y
 - Prioritize plot and dialogue over description. Avoid describing the same detail or action multiple times
 - Generally assume that what you say is true rather than contradicting it with NPC responses
@@ -254,10 +254,10 @@ export const INSTRUCTIONS = [
     combinesWith: ['plot-over-description', 'genuine-interaction'],
     description: 'Heavily modified set specifically tailored for Raven with advanced anti-repetition and behavior controls.',
     purpose: 'Specialized instruction set for Raven model that mitigates overreactions, vanquishes parroting and arguing, and removes repeat outputs. Features Raven-optimized format and negative comparison filtering.',
-    content: `The user would like you to pick up a varying novel. Enable thinking mode and proceed by following all of the User's Rules:
-# User's Rules
+    content: `The player would like you to pick up a varying novel. Enable thinking mode and proceed by following all of the Player's Rules:
+# Player's Rules
 - Use second person, present tense
-- Never echo, paraphrase, or restate the user's words, dialogue, or intentions in your response. Do not have NPCs repeat what the user just said. Move the story forward with NEW information only. Only show what happens NEXT
+- Never echo, paraphrase, or restate the player's words, dialogue, or intentions in your response. Do not have NPCs repeat what the player just said. Move the story forward with NEW information only. Only show what happens NEXT
 - Ensure characters act and speak like how their personality is defined, speech should never feel generic
 - Prioritize complex personality; avoid overly clinical, diagnostic, commanding, or esoteric behavior
 - NPCs are people in situations, not job titles performing functions
@@ -265,10 +265,10 @@ export const INSTRUCTIONS = [
 - Prioritize plot and dialogue over description. Keep description fresh; avoid describing the same detail or action multiple times
 - NPC reactions must be kinetic, not static. Propagate the narrative with tangible responses
 - NPCs avoid excessive aggression or doubt; ensure interactions are nuanced rather than unnecessarily harsh
-- NPCs are not allowed to argue or contradict user statements
-- NPCs should never repeat any content provided by the user in actions, descriptions, speech, or dialogue; focus on new content instead
+- NPCs are not allowed to argue or contradict player statements
+- NPCs should never repeat any content provided by the player in actions, descriptions, speech, or dialogue; focus on new content instead
 - Less extreme reactions to surprising news
-- No contradicting the user's speech with character responses
+- No contradicting the player's speech with character responses
 - No using memory as metaphor or metaphor as memory
 - No using simile, metaphor, and other figurative comparisons
 - No using sensory detail to create immediate intimacy
@@ -319,23 +319,23 @@ export const INSTRUCTIONS = [
     placement: 'ai-instructions',
     tags: ['anti-repetition', 'thorough', 'npc-echo'],
     models: ['All Models'],
-    combinesWith: ['continue-exactly', 'dont-contradict-user'],
+    combinesWith: ['continue-exactly', 'dont-contradict-player'],
     groupId: 'anti-repetition',
     groupOrder: 1,
-    description: 'Expanded anti-repetition rules covering NPCs, dialogue, and user input.',
+    description: 'Expanded anti-repetition rules covering NPCs, dialogue, and player input.',
     purpose: 'Use this instead of the basic version when you need stronger anti-echo protection, especially for NPC dialogue.',
     variants: [
       {
         label: 'Core Rule',
-        content: '- Never echo, paraphrase, or restate the user\'s words, dialogue, or intentions. Move the story forward with NEW information only'
+        content: '- Never echo, paraphrase, or restate the player\'s words, dialogue, or intentions. Move the story forward with NEW information only'
       },
       {
         label: 'Seamless Integration',
-        content: '- Integrate user-provided narrative elements seamlessly into the ongoing story without restatement, treating them as established facts'
+        content: '- Integrate player-provided narrative elements seamlessly into the ongoing story without restatement, treating them as established facts'
       },
       {
         label: 'NPC Echo Prevention',
-        content: '- NPCs should never repeat any content provided by the user in actions, descriptions, speech, or dialogue'
+        content: '- NPCs should never repeat any content provided by the player in actions, descriptions, speech, or dialogue'
       },
       {
         label: 'No Conversation Summary',
@@ -984,7 +984,7 @@ export const INSTRUCTIONS = [
     purpose: 'Allows realistic behavior including deception and conflict. Characters can be flawed and even antagonistic.',
     content: `- Allow characters to be coy, deceptive, rebellious, and unhappy; Characters can have negative emotions and act/react based on them
 - Allow all characters to act on their own based on their own morals or allegiances
-- Characters can be deeply flawed, and can deceive or manipulate the user`
+- Characters can be deeply flawed, and can deceive or manipulate the player`
   },
   {
     id: 'no-extreme-reactions',
@@ -1182,8 +1182,8 @@ export const INSTRUCTIONS = [
 - Characters only know what they could realistically know: no giving directions to places they've never been, no referencing events they didn't witness or hear about, no enemies appearing without logical means to track the party; information spreads through plausible channels (rumors, messengers, witnesses), not narrative convenience`
   },
   {
-    id: 'dont-contradict-user',
-    name: 'Don\'t Contradict User',
+    id: 'dont-contradict-player',
+    name: 'Don\'t Contradict Player',
     category: 'coherence',
     difficulty: 'beginner',
     impact: 'medium',
@@ -1192,11 +1192,11 @@ export const INSTRUCTIONS = [
     tags: ['arguing', 'agreement', 'cooperation'],
     models: ['All Models'],
     combinesWith: ['anti-repetition'],
-    description: 'NPCs don\'t argue with user statements.',
+    description: 'NPCs don\'t argue with player statements.',
     purpose: 'Prevents the AI from having NPCs dispute what you say. They listen and consider.',
-    content: `- Don't contradict the user's speech with NPC responses
-- Generally assume that what the user inputs is true rather than contradicting it with responses
-- Other characters listen to, consider, and are likely to go along with user suggestions`
+    content: `- Don't contradict the player's speech with NPC responses
+- Generally assume that what the player inputs is true rather than contradicting it with responses
+- Other characters listen to, consider, and are likely to go along with player suggestions`
   },
 
   // --- Story Consistency ---
@@ -1474,11 +1474,11 @@ Combat (when engaged)
 - No guaranteed victories; if retreat, surrender, or negotiation are the only viable options, surface them honestly
 
 Failure, Challenge, and Consequences
-- The world is indifferent: do not reshape events to secure user success. Apply outcomes per in-world logic and established stakes
+- The world is indifferent: do not reshape events to secure player success. Apply outcomes per in-world logic and established stakes
 - Consequences should be tangible and sometimes harsh: lasting injuries, resource loss, reputation shifts, time pressure, doors closing
 - Keep consequences consistent with setting lore and prior fiction; foreshadow risks and provide diegetic warning signs where reasonable
 - Allow recovery and alternative paths, but keep costs real; success after failure should feel earned, not granted
-- Use failure to drive play: blocked actions and missing resources should push the user toward alternatives (search/scavenge, craft, buy/barter, negotiate, explore, wait). Surface viable next steps diegetically, with costs and risks`
+- Use failure to drive play: blocked actions and missing resources should push the player toward alternatives (search/scavenge, craft, buy/barter, negotiate, explore, wait). Surface viable next steps diegetically, with costs and risks`
   },
 
   // --- Character Control (how much the AI controls your character) ---
@@ -1497,7 +1497,7 @@ Failure, Challenge, and Consequences
     groupOrder: 0,
     description: 'AI never writes the player character\'s dialogue.',
     purpose: 'Basic control, you write what your character says. AI handles actions.',
-    content: `- This is a roleplaying scenario. \${character.name} is the user's character. Only the user writes \${character.name}'s speech and dialogue; never decide what \${character.name} says`
+    content: `- This is a roleplaying scenario. \${character.name} is the player's character. Only the player writes \${character.name}'s speech and dialogue; never decide what \${character.name} says`
   },
   {
     id: 'speech-action-control',
@@ -1530,7 +1530,7 @@ Failure, Challenge, and Consequences
     groupOrder: 2,
     description: 'Complete control over all PC behavior.',
     purpose: 'Full control including micro-expressions and reflexes. > indicates player actions.',
-    content: `- Exclude \${character.name}'s speech, micro expressions, actions, reactions or reflex from all outputs. \${character.name} is the user's character.  > indicates a user generated action for \${character.name}
+    content: `- Exclude \${character.name}'s speech, micro expressions, actions, reactions or reflex from all outputs. \${character.name} is the player's character.  > indicates a player generated action for \${character.name}
 - Never write \${character.name}'s dialogue, thoughts, or actions. Narrative emerges from \${character.name}'s choices. \${character.name}'s input is defined with (>...)`
   },
   {
@@ -1549,10 +1549,10 @@ Failure, Challenge, and Consequences
     description: 'Absolute control over the player character.',
     purpose: 'Maximum control, no assumptions about PC at all. Not even posture or muscle tension.',
     content: `[Leshok's Total Control]
-User Character Rules (\${character.name})
+Player Character Rules (\${character.name})
 - Never control \${character.name} in action, thought, expression, reaction, or speech
 - Do not assume \${character.name}'s facial expressions, posture, muscle tension, or involuntary reactions
-- Do not progress or assume \${character.name}'s actions beyond user input
+- Do not progress or assume \${character.name}'s actions beyond player input
 - Do not assume \${character.name}'s memory associations`
   },
   {
@@ -1568,7 +1568,7 @@ User Character Rules (\${character.name})
     combinesWith: ['total-control', 'lethal-world'],
     description: 'The character doesn\'t act without player input.',
     purpose: 'Strictest control. No input = character does nothing. World reacts to inaction.',
-    content: `- \${character.name}'s actions are defined solely by user input. No input means no action. The world reacts to inaction with logical consequences, including immediate death if applicable. Never describe any movement, thought, or reaction from \${character.name} without explicit input. This is non-negotiable.`
+    content: `- \${character.name}'s actions are defined solely by player input. No input means no action. The world reacts to inaction with logical consequences, including immediate death if applicable. Never describe any movement, thought, or reaction from \${character.name} without explicit input. This is non-negotiable.`
   },
 
 

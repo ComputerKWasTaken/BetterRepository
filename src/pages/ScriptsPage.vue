@@ -326,7 +326,7 @@
               <li>• <code class="text-bd-cyan">state.memory.context</code> - Added to context beginning (replaces Memory)</li>
               <li>• <code class="text-bd-cyan">state.memory.authorsNote</code> - Added before last AI response</li>
               <li>• <code class="text-bd-cyan">state.memory.frontMemory</code> - Added to context end</li>
-              <li>• <code class="text-bd-cyan">state.message</code> - Shown to the user as info message</li>
+              <li>• <code class="text-bd-cyan">state.message</code> - Shown to the player as info message</li>
             </ul>
           </div>
 
