@@ -203,40 +203,40 @@
           </div>
           <h2 class="text-lg font-semibold text-bd-text-primary">Better Together</h2>
         </div>
-      <p class="text-bd-text-secondary mb-4">
-        BetterDungeon and BetterRepository are designed to complement each other. Use them together for the ultimate AI Dungeon experience.
-      </p>
-      
-      <div class="grid md:grid-cols-2 gap-3">
-        <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
-          <Search class="w-4 h-4 text-bd-accent-primary flex-shrink-0 mt-0.5" />
-          <div>
-            <span class="text-sm text-bd-text-primary font-medium">Find Resources Here</span>
-            <p class="text-xs text-bd-text-secondary mt-0.5">Browse AI Instructions, Plot Components, Story Card templates, and Scripts on BetterRepository</p>
+        <p class="text-bd-text-secondary mb-4">
+          BetterDungeon and BetterRepository are designed to complement each other. Use them together for the ultimate AI Dungeon experience.
+        </p>
+        
+        <div class="grid md:grid-cols-2 gap-3">
+          <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
+            <Search class="w-4 h-4 text-bd-accent-primary flex-shrink-0 mt-0.5" />
+            <div>
+              <span class="text-sm text-bd-text-primary font-medium">Find Resources Here</span>
+              <p class="text-xs text-bd-text-secondary mt-0.5">Browse AI Instructions, Plot Components, Story Card templates, and Scripts on BetterRepository</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
+            <Save class="w-4 h-4 text-bd-purple flex-shrink-0 mt-0.5" />
+            <div>
+              <span class="text-sm text-bd-text-primary font-medium">Save as Presets</span>
+              <p class="text-xs text-bd-text-secondary mt-0.5">BetterDungeon's Presets let you save and quickly apply resources to your adventures</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
+            <Type class="w-4 h-4 text-bd-cyan flex-shrink-0 mt-0.5" />
+            <div>
+              <span class="text-sm text-bd-text-primary font-medium">Enhanced Formatting</span>
+              <p class="text-xs text-bd-text-secondary mt-0.5">BetterDungeon renders markdown syntax from BetterRepository resources</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
+            <Zap class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+            <div>
+              <span class="text-sm text-bd-text-primary font-medium">One-Click Apply</span>
+              <p class="text-xs text-bd-text-secondary mt-0.5">Copy from BetterRepository, save as a Preset, apply with one click</p>
+            </div>
           </div>
         </div>
-        <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
-          <Save class="w-4 h-4 text-bd-purple flex-shrink-0 mt-0.5" />
-          <div>
-            <span class="text-sm text-bd-text-primary font-medium">Save as Presets</span>
-            <p class="text-xs text-bd-text-secondary mt-0.5">BetterDungeon's Presets let you save and quickly apply resources to your adventures</p>
-          </div>
-        </div>
-        <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
-          <Type class="w-4 h-4 text-bd-cyan flex-shrink-0 mt-0.5" />
-          <div>
-            <span class="text-sm text-bd-text-primary font-medium">Enhanced Formatting</span>
-            <p class="text-xs text-bd-text-secondary mt-0.5">BetterDungeon renders markdown syntax from BetterRepository resources</p>
-          </div>
-        </div>
-        <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
-          <Zap class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-          <div>
-            <span class="text-sm text-bd-text-primary font-medium">One-Click Apply</span>
-            <p class="text-xs text-bd-text-secondary mt-0.5">Copy from BetterRepository, save as a Preset, apply with one click</p>
-          </div>
-        </div>
-      </div>
       </div>
     </section>
 

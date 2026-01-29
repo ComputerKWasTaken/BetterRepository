@@ -2,11 +2,11 @@
   <div class="space-y-6 animate-fade-in">
     <!-- Page Header -->
     <header class="text-center py-6">
-      <div class="flex items-center justify-center gap-3 mb-4">
-        <Award class="w-10 h-10 text-bd-accent-primary" />
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-bd-accent-primary/20 to-bd-amber/20 mb-4">
+        <Award class="w-8 h-8 text-bd-accent-primary" />
       </div>
       <h1 class="text-2xl md:text-3xl font-bold text-bd-text-primary mb-2">
-        Credits & Acknowledgments
+        Credits & <span class="text-gradient">Acknowledgments</span>
       </h1>
       <p class="text-bd-text-secondary max-w-xl mx-auto">
         BetterRepository is built on the shoulders of giants. Thank you to everyone who contributed.
@@ -43,10 +43,10 @@
 
     <!-- Contributors by Category -->
     <section class="space-y-4">
-      <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-        <Users class="w-5 h-5 text-bd-text-muted" />
-        Contributors by Category
-      </h2>
+      <div class="section-header">
+        <Users class="w-4 h-4" />
+        <span>Contributors by Category</span>
+      </div>
 
       <!-- AI Instructions Contributors -->
       <div class="card">

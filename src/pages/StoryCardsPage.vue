@@ -693,7 +693,7 @@
         <input 
           v-model="searchQuery"
           type="text"
-          placeholder="Search examples and templates..."
+          placeholder="Search templates..."
           class="input pl-12"
         />
       </div>
