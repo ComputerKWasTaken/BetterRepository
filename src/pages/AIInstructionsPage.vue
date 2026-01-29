@@ -848,14 +848,6 @@
           <Zap class="w-4 h-4" />
           High Impact
         </button>
-        <button 
-          @click="toggleQuickFilter('beginner')"
-          class="btn text-sm"
-          :class="quickFilter === 'beginner' ? 'btn-primary' : 'btn-secondary'"
-        >
-          <Sparkles class="w-4 h-4" />
-          Beginner Friendly
-        </button>
         <div class="flex-1"></div>
         <button 
           @click="showFilters = !showFilters"
