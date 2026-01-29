@@ -2,7 +2,15 @@
 // BetterRepository - Shared Data & Utilities
 // =============================================================================
 // Common metadata, constants, and helper functions used across all data modules.
+// Now includes fuzzy search integration for improved search accuracy.
 // =============================================================================
+
+import { 
+  searchCollectionSimple, 
+  searchCollection as fuzzySearchCollection,
+  fuzzyMatch,
+  DEFAULT_FIELD_WEIGHTS 
+} from '@/composables/useSearch'
 
 export const REPOSITORY_META = {
   version: '1.1.0',
@@ -64,18 +72,40 @@ export const getPlacementById = (placementId) => {
   return PLACEMENTS.find(p => p.id === placementId)
 }
 
-// Generic search function for any collection
-export const searchCollection = (collection, query, fields = ['name', 'description', 'tags']) => {
-  const lowerQuery = query.toLowerCase()
-  return collection.filter(item => 
-    fields.some(field => {
-      const value = item[field]
-      if (Array.isArray(value)) {
-        return value.some(v => v.toLowerCase().includes(lowerQuery))
-      }
-      return value && value.toLowerCase().includes(lowerQuery)
-    })
-  )
+/**
+ * Search a collection using fuzzy matching with weighted scoring.
+ * Returns items sorted by relevance score (highest first).
+ * 
+ * @param {Array} collection - Array of items to search
+ * @param {string} query - Search query (supports typos and partial matches)
+ * @param {Array} fields - Fields to search in (default: name, description, tags)
+ * @param {Object} options - Additional search options
+ * @returns {Array} - Matching items sorted by relevance
+ */
+export const searchCollection = (collection, query, fields = ['name', 'description', 'tags'], options = {}) => {
+  if (!query || !query.trim()) {
+    return collection
+  }
+  
+  return searchCollectionSimple(collection, query, { fields, ...options })
+}
+
+/**
+ * Search a collection and return results with scores for advanced use cases.
+ * Useful when you need to display match quality or implement custom sorting.
+ * 
+ * @param {Array} collection - Array of items to search
+ * @param {string} query - Search query
+ * @param {Array} fields - Fields to search in
+ * @param {Object} options - Additional search options
+ * @returns {Array} - Array of { item, score, matched } objects
+ */
+export const searchCollectionWithScores = (collection, query, fields = ['name', 'description', 'tags'], options = {}) => {
+  if (!query || !query.trim()) {
+    return collection.map(item => ({ item, score: 100, matched: true }))
+  }
+  
+  return fuzzySearchCollection(collection, query, { fields, ...options })
 }
 
 // Filter collection by category
@@ -83,9 +113,36 @@ export const filterByCategory = (collection, categoryId) => {
   return collection.filter(item => item.category === categoryId)
 }
 
-// Filter collection by tags
+// Filter collection by tags (exact match)
 export const filterByTags = (collection, tags) => {
   return collection.filter(item => 
     tags.some(tag => item.tags && item.tags.includes(tag))
   )
 }
+
+/**
+ * Filter collection by tags using fuzzy matching.
+ * More forgiving than exact tag matching - handles typos and partial matches.
+ * 
+ * @param {Array} collection - Array of items to search
+ * @param {string} tagQuery - Tag search query
+ * @param {number} threshold - Minimum match score (0-1, default: 0.6)
+ * @returns {Array} - Matching items
+ */
+export const filterByTagsFuzzy = (collection, tagQuery, threshold = 0.6) => {
+  if (!tagQuery || !tagQuery.trim()) {
+    return collection
+  }
+  
+  return collection.filter(item => {
+    if (!item.tags || !Array.isArray(item.tags)) return false
+    
+    return item.tags.some(tag => {
+      const result = fuzzyMatch(tagQuery, tag)
+      return result.matched && result.score >= threshold * 50
+    })
+  })
+}
+
+// Re-export fuzzy match for direct use
+export { fuzzyMatch, DEFAULT_FIELD_WEIGHTS }

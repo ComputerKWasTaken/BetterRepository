@@ -839,6 +839,7 @@ import {
   getHighImpactInstructions,
   getBeginnerInstructions
 } from '@/data/aiInstructions'
+import { searchCollectionWithScores } from '@/data/shared'
 import { usePreferences } from '@/composables/usePreferences'
 import { 
   ScrollText, SlidersHorizontal, SearchX, Layers, PenTool, Users, 
@@ -931,14 +932,10 @@ const filteredInstructions = computed(() => {
     result = getBeginnerInstructions()
   }
   
-  // Filter by search query
+  // Filter by search query using fuzzy search
   if (searchQuery.value) {
-    const query = searchQuery.value.toLowerCase()
-    result = result.filter(i => 
-      i.name.toLowerCase().includes(query) ||
-      i.description.toLowerCase().includes(query) ||
-      i.tags.some(t => t.toLowerCase().includes(query))
-    )
+    const searchResults = searchCollectionWithScores(result, searchQuery.value, ['name', 'description', 'tags'])
+    result = searchResults.map(r => r.item)
   }
   
   // Filter by selected categories

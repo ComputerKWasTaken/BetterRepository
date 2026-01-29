@@ -11,8 +11,12 @@ export {
   PLACEMENTS,
   getPlacementById,
   searchCollection,
+  searchCollectionWithScores,
   filterByCategory,
-  filterByTags
+  filterByTags,
+  filterByTagsFuzzy,
+  fuzzyMatch,
+  DEFAULT_FIELD_WEIGHTS
 } from './shared.js'
 
 // AI Instructions

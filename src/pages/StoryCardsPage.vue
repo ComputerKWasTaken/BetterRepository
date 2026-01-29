@@ -804,6 +804,7 @@ import {
   getHighImpactExamples,
   getHighImpactTemplates
 } from '@/data/storyCards'
+import { searchCollectionWithScores } from '@/data/shared'
 import { 
   Drama, Users, MapPin, Shield, Sparkles, Layers, GitPullRequest,
   HelpCircle, Lightbulb, Camera, Globe, FileText, Tag, Type, Zap,
@@ -870,15 +871,10 @@ const filteredCards = computed(() => {
     result = result.filter(c => c.id.startsWith('template-'))
   }
   
-  // Filter by search query
+  // Filter by search query using fuzzy search
   if (searchQuery.value) {
-    const query = searchQuery.value.toLowerCase()
-    result = result.filter(c => 
-      c.name.toLowerCase().includes(query) ||
-      c.description.toLowerCase().includes(query) ||
-      c.tags.some(tag => tag.toLowerCase().includes(query)) ||
-      c.entry.toLowerCase().includes(query)
-    )
+    const searchResults = searchCollectionWithScores(result, searchQuery.value, ['name', 'description', 'tags', 'entry'])
+    result = searchResults.map(r => r.item)
   }
   
   // Filter by selected categories
