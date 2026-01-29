@@ -13,7 +13,14 @@ const defaultPreferences = {
   favoriteIds: [],
   recentlyViewed: [],
   categoryFilters: {},
-  searchHistory: []
+  searchHistory: [],
+  // Saved instruction builds
+  // Format: { id: string, name: string, instructions: [{id, variantIndex?}], createdAt: timestamp, updatedAt: timestamp }
+  savedBuilds: [],
+  // Current working build (auto-saved)
+  currentBuild: {
+    instructions: [] // Array of { id: string, variantIndex?: number }
+  }
 }
 
 // Load preferences from cookie
@@ -86,6 +93,98 @@ export function usePreferences() {
     preferences.value = { ...defaultPreferences }
   }
 
+  // ===========================================
+  // INSTRUCTION BUILDER FUNCTIONS
+  // ===========================================
+
+  // Add instruction to current build
+  const addToBuild = (instructionId, variantIndex = null) => {
+    const existing = preferences.value.currentBuild.instructions.find(
+      i => i.id === instructionId && i.variantIndex === variantIndex
+    )
+    if (!existing) {
+      preferences.value.currentBuild.instructions.push({
+        id: instructionId,
+        variantIndex
+      })
+    }
+  }
+
+  // Remove instruction from current build
+  const removeFromBuild = (instructionId, variantIndex = null) => {
+    preferences.value.currentBuild.instructions = preferences.value.currentBuild.instructions.filter(
+      i => !(i.id === instructionId && i.variantIndex === variantIndex)
+    )
+  }
+
+  // Check if instruction is in current build
+  const isInBuild = (instructionId, variantIndex = null) => {
+    return preferences.value.currentBuild.instructions.some(
+      i => i.id === instructionId && i.variantIndex === variantIndex
+    )
+  }
+
+  // Reorder instructions in current build
+  const reorderBuild = (fromIndex, toIndex) => {
+    const instructions = [...preferences.value.currentBuild.instructions]
+    const [moved] = instructions.splice(fromIndex, 1)
+    instructions.splice(toIndex, 0, moved)
+    preferences.value.currentBuild.instructions = instructions
+  }
+
+  // Clear current build
+  const clearBuild = () => {
+    preferences.value.currentBuild.instructions = []
+  }
+
+  // Save current build with a name
+  const saveBuild = (name) => {
+    const now = Date.now()
+    const build = {
+      id: `build-${now}`,
+      name: name.trim() || `Build ${preferences.value.savedBuilds.length + 1}`,
+      instructions: [...preferences.value.currentBuild.instructions],
+      createdAt: now,
+      updatedAt: now
+    }
+    preferences.value.savedBuilds.unshift(build)
+    return build.id
+  }
+
+  // Load a saved build into current build
+  const loadBuild = (buildId) => {
+    const build = preferences.value.savedBuilds.find(b => b.id === buildId)
+    if (build) {
+      preferences.value.currentBuild.instructions = [...build.instructions]
+      return true
+    }
+    return false
+  }
+
+  // Update an existing saved build
+  const updateSavedBuild = (buildId, updates = {}) => {
+    const index = preferences.value.savedBuilds.findIndex(b => b.id === buildId)
+    if (index !== -1) {
+      preferences.value.savedBuilds[index] = {
+        ...preferences.value.savedBuilds[index],
+        ...updates,
+        updatedAt: Date.now()
+      }
+      return true
+    }
+    return false
+  }
+
+  // Delete a saved build
+  const deleteSavedBuild = (buildId) => {
+    preferences.value.savedBuilds = preferences.value.savedBuilds.filter(b => b.id !== buildId)
+  }
+
+  // Get saved build by ID
+  const getSavedBuild = (buildId) => {
+    return preferences.value.savedBuilds.find(b => b.id === buildId)
+  }
+
   return {
     preferences,
     toggleFavorite,
@@ -94,6 +193,17 @@ export function usePreferences() {
     addToSearchHistory,
     clearSearchHistory,
     setPreference,
-    resetPreferences
+    resetPreferences,
+    // Builder functions
+    addToBuild,
+    removeFromBuild,
+    isInBuild,
+    reorderBuild,
+    clearBuild,
+    saveBuild,
+    loadBuild,
+    updateSavedBuild,
+    deleteSavedBuild,
+    getSavedBuild
   }
 }

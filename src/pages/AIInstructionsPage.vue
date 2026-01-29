@@ -29,6 +29,11 @@
       </button>
     </div>
 
+    <!-- ==================== BUILDER TAB ==================== -->
+    <template v-if="activeTab === 'builder'">
+      <InstructionBuilder />
+    </template>
+
     <!-- ==================== GUIDE TAB ==================== -->
     <template v-if="activeTab === 'guide'">
 
@@ -831,6 +836,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import SearchBar from '@/components/ui/SearchBar.vue'
 import ResourceCard from '@/components/ui/ResourceCard.vue'
+import InstructionBuilder from '@/components/ui/InstructionBuilder.vue'
 import { 
   INSTRUCTIONS, 
   CATEGORIES,
@@ -855,6 +861,7 @@ const activeTab = ref('collection')
 
 const tabs = [
   { id: 'collection', label: 'Collection', icon: Layers },
+  { id: 'builder', label: 'Builder', icon: Wrench },
   { id: 'guide', label: 'Guide', icon: BookOpen }
 ]
 
