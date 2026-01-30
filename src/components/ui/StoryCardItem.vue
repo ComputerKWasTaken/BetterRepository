@@ -13,13 +13,6 @@
             <span v-if="card.essential" class="badge badge-popular text-[9px]">
               Essential
             </span>
-            <!-- Type Badge -->
-            <span 
-              class="tag text-[9px]"
-              :class="type === 'template' ? 'bg-bd-green/20 text-bd-green' : 'bg-bd-purple/20 text-bd-purple'"
-            >
-              {{ type === 'template' ? 'Template' : 'Example' }}
-            </span>
             <!-- Category Badge -->
             <span class="tag text-[9px]" :class="categoryClass">
               {{ categoryName }}

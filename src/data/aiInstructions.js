@@ -1296,6 +1296,21 @@ export const INSTRUCTIONS = [
 - NPCs avoid excessive aggression or doubt; ensure interactions are nuanced rather than unnecessarily harsh`
   },
   {
+    id: 'active-antagonists',
+    name: 'Active Antagonists',
+    category: 'characterization',
+    difficulty: 'intermediate',
+    impact: 'high',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['npc-behavior', 'villains', 'conflict', 'proactive'],
+    models: ['All Models'],
+    combinesWith: ['allow-negative-emotions', 'real-jeopardy'],
+    description: 'Antagonists proactively pursue their goals and hunt the protagonist.',
+    purpose: 'Makes villains competent and dangerous. They don\'t just wait in a room to be found; they make moves.',
+    content: `- Antagonists are proactive, competent, and dangerous. They actively pursue their goals and hunt \${character.name} rather than waiting to be found`
+  },
+  {
     id: 'no-physical-harm-close',
     name: 'No Harm to Close Characters',
     category: 'characterization',
@@ -1876,6 +1891,22 @@ export const INSTRUCTIONS = [
 
   // --- Combat ---
   {
+    id: 'cinematic-combat',
+    name: 'Cinematic Combat',
+    category: 'gameplay',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['combat', 'action', 'style', 'movie-like'],
+    models: ['All Models'],
+    combinesWith: ['vivid-action'],
+    conflicts: ['combat-set'],
+    description: 'Combat focuses on style and flow over grit and lethality.',
+    purpose: 'For action-movie style fights. Focus on cool maneuvers and pacing rather than tracking every wound or strict turn orders.',
+    content: `- Combat is cinematic and fast-paced. Focus on the flow of action, "rule of cool," and dramatic moments rather than gritty realism or tracking minor injuries`
+  },
+  {
     id: 'combat-set',
     name: 'Combat System (Aassmodeuss)',
     category: 'gameplay',
@@ -1936,7 +1967,7 @@ Failure, Challenge, and Consequences
     groupOrder: 1,
     description: 'AI never writes speech or actions for PC.',
     purpose: 'Extended control, you write speech and decide actions.',
-    content: `- Never decide or write speech for \${character.name}`
+    content: `- Never decide or write speech or actions for \${character.name}`
   },
   {
     id: 'advanced-control',
@@ -2233,6 +2264,36 @@ User Character Rules (\${character.name})
     description: 'Magic is only detected when actively used.',
     purpose: 'Prevents "I sense magic" tropes. No passive aura detection.',
     content: `- Characters do not have perceivable magic auras, energy or feeling, magic is only detected when actively being used or cast. magic must be directly observed, not felt or sensed`
+  },
+  {
+    id: 'hard-magic',
+    name: 'Hard Magic System',
+    category: 'world-setting',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'authors-note',
+    tags: ['magic', 'rules', 'costs', 'consistency'],
+    models: ['All Models'],
+    conflicts: ['soft-magic', 'magic-is-normal'],
+    description: 'Magic has strict rules, costs, and limitations.',
+    purpose: 'For worlds where magic is like science. Readers understand what magic CAN\'T do.',
+    content: `- Magic follows strict, consistent rules and limitations. Spells have specific costs (energy, components, physical toll) and consequences. Magic cannot solve every problem easily`
+  },
+  {
+    id: 'soft-magic',
+    name: 'Soft Magic System',
+    category: 'world-setting',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'authors-note',
+    tags: ['magic', 'mystery', 'wonder', 'undefined'],
+    models: ['All Models'],
+    conflicts: ['hard-magic'],
+    description: 'Magic is mysterious, wondrous, and undefined.',
+    purpose: 'For worlds where magic is a source of wonder and awe. The rules are not explained to the reader.',
+    content: `- Magic is mysterious, wondrous, and unpredictable. Its workings are not fully understood or explained. Focus on the sense of awe and the effects of magic rather than the mechanics`
   },
 
   // --- Species & Names ---

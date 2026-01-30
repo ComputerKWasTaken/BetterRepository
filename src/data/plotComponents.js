@@ -383,6 +383,66 @@ Special items: [Plot-relevant items]
 
 [Encumbrance: Light/Medium/Heavy]`
   },
+  {
+    id: 'quest-log',
+    name: 'Quest/Mission Log',
+    category: 'plot-essentials',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    tags: ['quests', 'objectives', 'missions', 'tasks'],
+    useCase: 'RPG-style stories with clear objectives.',
+    combinesWith: ['story-summary-basic'],
+    description: 'Track active quests and missions.',
+    purpose: 'Keeps the AI focused on current goals. Helps prevent "what was I doing?" moments.',
+    content: `[Active Quests]
+- [Main Quest]: [Objective] - Status: [In Progress]
+- [Side Quest]: [Objective] - Status: [Started]
+
+[Objectives]
+- Current Goal: [Immediate next step]
+- Optional: [Bonus objective]`
+  },
+  {
+    id: 'location-tracker',
+    name: 'Location/Base Tracker',
+    category: 'plot-essentials',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['location', 'base', 'rooms', 'facilities'],
+    useCase: 'Base building, ship management, or dungeon crawling.',
+    combinesWith: ['inventory-detailed'],
+    description: 'Track the status of specific locations or facilities.',
+    purpose: 'For managing a base, ship, or exploring a complex dungeon. Tracks state of specific areas.',
+    content: `[Location: Base/Ship Name]
+- [Room/Area]: [Status/Level] - [Notes]
+- [Room/Area]: [Status/Level] - [Notes]
+- [Room/Area]: [Status/Level] - [Notes]
+
+[Resources]
+- Power: [Level]
+- Supplies: [Amount]
+- Defense: [Status]`
+  },
+  {
+    id: 'glossary-terms',
+    name: 'Glossary of Terms',
+    category: 'plot-essentials',
+    difficulty: 'intermediate',
+    impact: 'low',
+    essential: false,
+    tags: ['lore', 'terms', 'definitions', 'glossary'],
+    useCase: 'Sci-Fi or Fantasy with many unique proper nouns.',
+    combinesWith: ['plot-essentials-basic'],
+    description: 'Define setting-specific terms and keywords.',
+    purpose: 'Helps the AI use made-up words correctly. Essential for hard sci-fi or high fantasy.',
+    content: `[Glossary]
+- [Term]: [Definition]
+- [Term]: [Definition]
+- [Term]: [Definition]
+- [Term]: [Definition]`
+  },
   
   // ==========================================
   // STORY SUMMARY TEMPLATES
