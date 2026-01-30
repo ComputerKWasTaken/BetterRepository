@@ -42,6 +42,7 @@ export default {
         'bd-amber': '#fbbf24',
         'bd-pink': '#ec4899',
         'bd-cyan': '#06b6d4',
+        'bd-emerald': '#10b981',
         // Status Colors
         'bd-success': '#22c55e',
         'bd-error': '#ef4444',

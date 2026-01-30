@@ -37,11 +37,11 @@
                 No saved builds yet
               </div>
               <div v-else class="max-h-64 overflow-y-auto">
-                <button
+                <div
                   v-for="build in savedBuilds"
                   :key="build.id"
                   @click="handleLoadBuild(build.id)"
-                  class="w-full flex items-center justify-between px-4 py-3 hover:bg-bd-bg-tertiary transition-colors text-left"
+                  class="w-full flex items-center justify-between px-4 py-3 hover:bg-bd-bg-tertiary transition-colors text-left cursor-pointer"
                 >
                   <div>
                     <div class="text-sm font-medium text-bd-text-primary">{{ build.name }}</div>
@@ -53,7 +53,7 @@
                   >
                     <Trash2 class="w-4 h-4" />
                   </button>
-                </button>
+                </div>
               </div>
             </div>
           </Transition>

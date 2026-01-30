@@ -701,6 +701,91 @@ if (card !== null) {
         </Transition>
       </section>
 
+      <!-- BetterScripts -->
+      <section id="guide-betterscripts" class="card">
+        <button
+          @click="toggleGuideSection('betterscripts')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Terminal class="w-5 h-5 text-bd-emerald" />
+            BetterScripts (BetterDungeon)
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('betterscripts') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('betterscripts')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              <strong>BetterScripts</strong> is a feature of the <strong>BetterDungeon</strong> browser extension that 
+              enables scripts to create <strong>dynamic UI widgets</strong> displaying HP bars, stats, and game state.
+            </p>
+            
+            <div class="p-4 rounded-lg bg-bd-emerald/10 border border-bd-emerald/30">
+              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                <Terminal class="w-4 h-4 text-bd-emerald" />
+                How It Works
+              </h3>
+              <ol class="text-sm text-bd-text-secondary space-y-1 list-decimal list-inside">
+                <li>Your script embeds protocol messages <code class="text-bd-green">[[BD:...:BD]]</code> in the output</li>
+                <li>BetterDungeon detects the message via DOM observation</li>
+                <li>The message is parsed and executed (widget created/updated)</li>
+                <li>Protocol text is stripped from the DOM before the user sees it</li>
+              </ol>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h4 class="font-semibold text-bd-text-primary mb-2">Widget Types</h4>
+                <ul class="text-sm text-bd-text-secondary space-y-1">
+                  <li><code class="text-bd-cyan">stat</code> — Label + value (e.g., "Gold: 100")</li>
+                  <li><code class="text-bd-cyan">bar</code> — Progress bar (e.g., HP bar)</li>
+                  <li><code class="text-bd-cyan">panel</code> — Multi-stat container</li>
+                  <li><code class="text-bd-cyan">text</code> — Simple text display</li>
+                </ul>
+              </div>
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h4 class="font-semibold text-bd-text-primary mb-2">Required Scripts</h4>
+                <ul class="text-sm text-bd-text-secondary space-y-1">
+                  <li><strong>Library:</strong> Define helpers + state</li>
+                  <li><strong>Context Modifier:</strong> Strip protocol tags</li>
+                  <li><strong>Output Modifier:</strong> Append widget commands</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <h4 class="font-semibold text-bd-text-primary mb-2">Example: Create a Stat Widget</h4>
+              <pre class="text-xs text-bd-text-secondary overflow-x-auto"><code>// In Output Modifier:
+const widget = `[[BD:${JSON.stringify({
+  type: 'widget',
+  widgetId: 'gold-stat',
+  action: 'create',
+  config: { type: 'stat', label: 'Gold', value: 100, color: '#fbbf24' }
+})}:BD]]`;
+
+return { text: text + widget };</code></pre>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <a 
+                href="https://github.com/AIDungeonWiXAnern/BetterDungeon" 
+                target="_blank"
+                class="btn btn-secondary text-sm"
+              >
+                <ExternalLink class="w-4 h-4" />
+                Get BetterDungeon
+              </a>
+              <span class="text-xs text-bd-text-muted">
+                See the <strong>BetterScripts</strong> category in Examples for ready-to-use scripts.
+              </span>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
       <!-- Useful Links -->
       <section id="guide-links" class="card">
         <button
@@ -925,7 +1010,7 @@ import {
   BookOpen, GitPullRequest, HelpCircle, Check, Braces, FileCode, 
   Library, ArrowRightToLine, Layers, ArrowLeftToLine, Database, 
   Lightbulb, Wrench, Plus, Search, Bug, ShieldAlert, Eye, RefreshCw, 
-  ExternalLink, Settings, Award, ChevronDown, ChevronUp
+  ExternalLink, Settings, Award, ChevronDown, ChevronUp, Blocks
 } from 'lucide-vue-next'
 
 const activeTab = ref('collection')
@@ -958,6 +1043,7 @@ const guideSections = [
   { id: 'api-functions', label: 'API Functions' },
   { id: 'utility-functions', label: 'Utility Functions' },
   { id: 'troubleshooting', label: 'Troubleshooting' },
+  { id: 'betterscripts', label: 'BetterScripts' },
   { id: 'links', label: 'Useful Links' },
   { id: 'credits', label: 'Credits' }
 ]
@@ -1041,7 +1127,8 @@ const getCategoryBgClass = (color) => {
     'bd-blue': 'bg-bd-blue/20',
     'bd-cyan': 'bg-bd-cyan/20',
     'bd-pink': 'bg-bd-pink/20',
-    'bd-amber': 'bg-bd-amber/20'
+    'bd-amber': 'bg-bd-amber/20',
+    'bd-emerald': 'bg-bd-emerald/20'
   }
   return map[color] || 'bg-bd-tag-bg'
 }
@@ -1053,7 +1140,8 @@ const getCategoryTextClass = (color) => {
     'bd-blue': 'text-bd-blue',
     'bd-cyan': 'text-bd-cyan',
     'bd-pink': 'text-bd-pink',
-    'bd-amber': 'text-bd-amber'
+    'bd-amber': 'text-bd-amber',
+    'bd-emerald': 'text-bd-emerald'
   }
   return map[color] || 'text-bd-text-muted'
 }

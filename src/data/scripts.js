@@ -66,6 +66,14 @@ export const SCRIPT_CATEGORIES = [
     color: 'bd-amber',
     description: 'Helper functions, debugging tools, and general utilities.',
     count: 0
+  },
+  {
+    id: 'betterscripts',
+    name: 'BetterScripts',
+    icon: 'Terminal',
+    color: 'bd-emerald',
+    description: 'Scripts that use BetterDungeon widgets to display game state.',
+    count: 0
   }
 ]
 
@@ -794,6 +802,376 @@ modifier(text)`
 }
 
 modifier(text)`
+  },
+
+  // ========== BETTERSCRIPTS ==========
+  {
+    id: 'betterscripts-rpg-stats',
+    name: 'RPG Stats Widget',
+    category: 'betterscripts',
+    difficulty: 'intermediate',
+    impact: 'high',
+    essential: true,
+    tags: ['widgets', 'hp', 'stats', 'betterscripts', 'betterdungeon'],
+    source: 'BetterRepository',
+    description: 'Displays HP bar, gold, level, and status using BetterDungeon widgets.',
+    purpose: 'Complete example showing how to track game state and display it via BetterScripts widgets. Requires BetterDungeon extension.',
+    requiresExtension: 'BetterDungeon',
+    files: {
+      library: `// ============================================
+// LIBRARY - Shared state and helpers
+// ============================================
+
+// Initialize game state (persists across turns)
+state.game = state.game ?? {
+  turn: 0,
+  hp: 100,
+  maxHp: 100,
+  gold: 0,
+  level: 1,
+  xp: 0,
+  xpToLevel: 100,
+  status: 'Healthy'
+};
+
+// Helper: Build a BetterScripts protocol message
+function bdMessage(message) {
+  return \`[[BD:\${JSON.stringify(message)}:BD]]\`;
+}
+
+// Helper: Create/update a widget
+function bdWidget(widgetId, config) {
+  return bdMessage({
+    type: 'widget',
+    widgetId: widgetId,
+    action: 'create',
+    config: config
+  });
+}
+
+// Helper: Destroy a widget
+function bdDestroyWidget(widgetId) {
+  return bdMessage({
+    type: 'widget',
+    widgetId: widgetId,
+    action: 'destroy'
+  });
+}
+
+// Helper: Get HP color based on percentage
+function getHpColor(current, max) {
+  const percent = (current / max) * 100;
+  if (percent > 50) return '#22c55e';
+  if (percent > 25) return '#fbbf24';
+  return '#ef4444';
+}
+
+// Helper: Get status text based on HP
+function getStatus(current, max) {
+  const percent = (current / max) * 100;
+  if (percent <= 0) return 'Dead';
+  if (percent <= 25) return 'Critical';
+  if (percent <= 50) return 'Wounded';
+  if (percent <= 75) return 'Injured';
+  return 'Healthy';
+}`,
+      context: `// ============================================
+// CONTEXT MODIFIER - Strip protocol messages
+// ============================================
+
+const modifier = (text) => {
+  // Remove all BetterScripts protocol messages from context
+  // This prevents the AI from seeing or repeating widget commands
+  text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
+  return { text };
+};
+
+modifier(text);`,
+      output: `// ============================================
+// OUTPUT MODIFIER - Update widgets
+// ============================================
+
+const modifier = (text) => {
+  const game = state.game;
+  const lowerText = text.toLowerCase();
+  
+  // Increment turn counter
+  game.turn++;
+  
+  // Detect damage taken
+  if (lowerText.includes('hit') || lowerText.includes('wound') || 
+      lowerText.includes('hurt') || lowerText.includes('damage')) {
+    const damage = Math.floor(Math.random() * 15) + 5;
+    game.hp = Math.max(0, game.hp - damage);
+  }
+  
+  // Detect healing
+  if (lowerText.includes('heal') || lowerText.includes('potion') || 
+      lowerText.includes('rest') || lowerText.includes('recover')) {
+    const healing = Math.floor(Math.random() * 20) + 10;
+    game.hp = Math.min(game.maxHp, game.hp + healing);
+  }
+  
+  // Detect gold found
+  if (lowerText.includes('gold') || lowerText.includes('coin') || 
+      lowerText.includes('treasure') || lowerText.includes('loot')) {
+    game.gold += Math.floor(Math.random() * 50) + 10;
+    game.xp += 10;
+  }
+  
+  // Level up check
+  if (game.xp >= game.xpToLevel) {
+    game.level++;
+    game.xp -= game.xpToLevel;
+    game.xpToLevel = Math.floor(game.xpToLevel * 1.5);
+    game.maxHp += 10;
+    game.hp = game.maxHp;
+  }
+  
+  // Update status
+  game.status = getStatus(game.hp, game.maxHp);
+  const hpColor = getHpColor(game.hp, game.maxHp);
+  
+  // Build widget messages
+  let widgets = '';
+  
+  // HP bar
+  widgets += bdWidget('hp-bar', {
+    type: 'bar',
+    label: 'HP',
+    value: game.hp,
+    max: game.maxHp,
+    color: hpColor,
+    showValue: true
+  });
+  
+  // Character panel
+  widgets += bdWidget('player-stats', {
+    type: 'panel',
+    title: 'Character',
+    items: [
+      { label: 'Level', value: game.level, color: '#a855f7' },
+      { label: 'XP', value: game.xp + '/' + game.xpToLevel, color: '#60a5fa' },
+      { label: 'Gold', value: game.gold, color: '#fbbf24' },
+      { label: 'Status', value: game.status, color: hpColor }
+    ]
+  });
+  
+  return { text: text + widgets };
+};
+
+modifier(text);`
+    }
+  },
+  {
+    id: 'betterscripts-simple-counter',
+    name: 'Simple Turn Counter',
+    category: 'betterscripts',
+    difficulty: 'beginner',
+    impact: 'low',
+    essential: true,
+    tags: ['widgets', 'counter', 'turn', 'betterscripts', 'minimal'],
+    source: 'BetterRepository',
+    description: 'Minimal example showing a single stat widget that counts turns.',
+    purpose: 'The simplest possible BetterScripts example. Great starting point for learning the widget system.',
+    requiresExtension: 'BetterDungeon',
+    files: {
+      library: `// Initialize turn counter
+state.turn = state.turn ?? 0;
+
+// ============================================
+// BETTERDUNGEON HELPER FUNCTIONS
+// ============================================
+
+// Helper: Build a BetterScripts protocol message
+function bdMessage(message) {
+  return \`[[BD:\${JSON.stringify(message)}:BD]]\`;
+}
+
+// Helper: Create/update a widget
+function bdWidget(widgetId, config) {
+  return bdMessage({
+    type: 'widget',
+    widgetId: widgetId,
+    action: 'create',
+    config: config
+  });
+}
+
+// Helper: Destroy a widget
+function bdDestroyWidget(widgetId) {
+  return bdMessage({
+    type: 'widget',
+    widgetId: widgetId,
+    action: 'destroy'
+  });
+}
+
+// Helper: Get HP color based on percentage
+function getHpColor(current, max) {
+  const percent = (current / max) * 100;
+  if (percent > 50) return '#22c55e';
+  if (percent > 25) return '#fbbf24';
+  return '#ef4444';
+}
+
+// Helper: Get status text based on HP
+function getStatus(current, max) {
+  const percent = (current / max) * 100;
+  if (percent <= 0) return 'Dead';
+  if (percent <= 25) return 'Critical';
+  if (percent <= 50) return 'Wounded';
+  if (percent <= 75) return 'Injured';
+  return 'Healthy';
+}`,
+      context: `const modifier = (text) => {
+  // Strip protocol messages so AI doesn't see them
+  text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
+  return { text };
+};
+
+modifier(text);`,
+      output: `const modifier = (text) => {
+  // Increment turn counter
+  state.turn++;
+  
+  // Create turn counter widget
+  const widget = bdWidget('turn-counter', {
+    type: 'stat',
+    label: 'Turn',
+    value: state.turn,
+    color: '#60a5fa'
+  });
+  
+  return { text: text + widget };
+};
+
+modifier(text);`
+    }
+  },
+  {
+    id: 'betterscripts-inventory',
+    name: 'Inventory Panel',
+    category: 'betterscripts',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['widgets', 'inventory', 'items', 'betterscripts', 'panel'],
+    source: 'BetterRepository',
+    description: 'Tracks and displays inventory items in a panel widget.',
+    purpose: 'Shows how to use panel widgets with dynamic item lists. Detects items mentioned in the story.',
+    requiresExtension: 'BetterDungeon',
+    files: {
+      library: `// Initialize inventory
+state.inventory = state.inventory ?? [];
+
+// ============================================
+// BETTERDUNGEON HELPER FUNCTIONS
+// ============================================
+
+// Helper: Build a BetterScripts protocol message
+function bdMessage(message) {
+  return \`[[BD:\${JSON.stringify(message)}:BD]]\`;
+}
+
+// Helper: Create/update a widget
+function bdWidget(widgetId, config) {
+  return bdMessage({
+    type: 'widget',
+    widgetId: widgetId,
+    action: 'create',
+    config: config
+  });
+}
+
+// Helper: Destroy a widget
+function bdDestroyWidget(widgetId) {
+  return bdMessage({
+    type: 'widget',
+    widgetId: widgetId,
+    action: 'destroy'
+  });
+}
+
+// Helper: Get HP color based on percentage
+function getHpColor(current, max) {
+  const percent = (current / max) * 100;
+  if (percent > 50) return '#22c55e';
+  if (percent > 25) return '#fbbf24';
+  return '#ef4444';
+}
+
+// Helper: Get status text based on HP
+function getStatus(current, max) {
+  const percent = (current / max) * 100;
+  if (percent <= 0) return 'Dead';
+  if (percent <= 25) return 'Critical';
+  if (percent <= 50) return 'Wounded';
+  if (percent <= 75) return 'Injured';
+  return 'Healthy';
+}
+
+// ============================================
+// INVENTORY-SPECIFIC LOGIC
+// ============================================
+
+// Item detection patterns
+const ITEM_PATTERNS = [
+  { pattern: /sword/i, name: 'Sword', icon: '⚔️' },
+  { pattern: /shield/i, name: 'Shield', icon: '🛡️' },
+  { pattern: /potion/i, name: 'Potion', icon: '🧪' },
+  { pattern: /key/i, name: 'Key', icon: '🔑' },
+  { pattern: /gold|coin/i, name: 'Gold', icon: '💰' },
+  { pattern: /torch/i, name: 'Torch', icon: '🔥' },
+  { pattern: /rope/i, name: 'Rope', icon: '🪢' },
+  { pattern: /map/i, name: 'Map', icon: '🗺️' }
+];
+
+function detectItems(text) {
+  const found = [];
+  ITEM_PATTERNS.forEach(item => {
+    if (item.pattern.test(text) && !state.inventory.includes(item.name)) {
+      found.push(item.name);
+    }
+  });
+  return found;
+}`,
+      context: `const modifier = (text) => {
+  text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
+  return { text };
+};
+
+modifier(text);`,
+      output: `const modifier = (text) => {
+  // Detect new items in the text
+  const newItems = detectItems(text);
+  newItems.forEach(item => {
+    if (!state.inventory.includes(item)) {
+      state.inventory.push(item);
+    }
+  });
+  
+  // Build inventory panel
+  const items = state.inventory.map(item => {
+    const pattern = ITEM_PATTERNS.find(p => p.name === item);
+    return { label: pattern?.icon || '•', value: item };
+  });
+  
+  // Show inventory widget (only if we have items)
+  let widgets = '';
+  if (items.length > 0) {
+    widgets = bdWidget('inventory', {
+      type: 'panel',
+      title: 'Inventory',
+      items: items
+    });
+  }
+  
+  return { text: text + widgets };
+};
+
+modifier(text);`
+    }
   }
 ]
 
