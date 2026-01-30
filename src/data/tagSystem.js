@@ -128,7 +128,7 @@ export const TAG_SYSTEM = {
   // --- Genres ---
   fantasy: {
     core: 'fantasy',
-    aliases: ['magic', 'magical', 'medieval', 'epic'],
+    aliases: ['magic', 'magical', 'epic', 'mythical'],
     description: 'Fantasy genre elements',
     color: 'violet'
   },
@@ -152,7 +152,7 @@ export const TAG_SYSTEM = {
   },
   thriller: {
     core: 'thriller',
-    aliases: ['suspense', 'action', 'tension', 'exciting'],
+    aliases: ['suspense', 'tension', 'exciting', 'fast-paced'],
     description: 'Thriller/action elements',
     color: 'orange'
   },
@@ -228,6 +228,70 @@ export const TAG_SYSTEM = {
     core: 'mystery',
     aliases: ['investigation', 'detective', 'clues', 'secrets'],
     description: 'Mystery and investigation elements',
+    color: 'indigo'
+  },
+
+  // --- Content Types ---
+  template: {
+    core: 'template',
+    aliases: ['starter', 'base', 'foundation', 'boilerplate'],
+    description: 'Starter templates and foundations',
+    color: 'blue'
+  },
+  example: {
+    core: 'example',
+    aliases: ['sample', 'demo', 'reference'],
+    description: 'Example content for reference',
+    color: 'cyan'
+  },
+  worldbuilding: {
+    core: 'worldbuilding',
+    aliases: ['lore', 'world', 'setting-creation'],
+    description: 'World and setting creation',
+    color: 'emerald'
+  },
+
+  // --- Character Types ---
+  character: {
+    core: 'character',
+    aliases: ['npc', 'person', 'individual'],
+    description: 'Character-related content',
+    color: 'purple'
+  },
+  companion: {
+    core: 'companion',
+    aliases: ['ally', 'party-member', 'friend'],
+    description: 'Companion and ally content',
+    color: 'green'
+  },
+  antagonist: {
+    core: 'antagonist',
+    aliases: ['villain', 'enemy', 'rival'],
+    description: 'Antagonist and villain content',
+    color: 'red'
+  },
+
+  // --- Location Types ---
+  location: {
+    core: 'location',
+    aliases: ['place', 'area', 'region'],
+    description: 'Location and place content',
+    color: 'teal'
+  },
+
+  // --- Item Types ---
+  item: {
+    core: 'item',
+    aliases: ['object', 'equipment', 'gear'],
+    description: 'Item and equipment content',
+    color: 'amber'
+  },
+
+  // --- Organization Types ---
+  faction: {
+    core: 'faction',
+    aliases: ['organization', 'group', 'guild', 'order'],
+    description: 'Faction and organization content',
     color: 'indigo'
   }
 }

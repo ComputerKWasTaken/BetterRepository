@@ -92,7 +92,19 @@ const TAG_ICONS = {
   'complete': Package,
   'thinking-mode': Lightbulb,
   'combat': Swords,
-  'mystery': Search
+  'mystery': Search,
+  // Content types
+  'template': BookOpen,
+  'example': Eye,
+  'worldbuilding': Globe,
+  // Character types
+  'character': Users,
+  'companion': Heart,
+  'antagonist': Skull,
+  // Location & Item types
+  'location': Globe,
+  'item': Package,
+  'faction': Users
 }
 
 // Get the core tag for this tag

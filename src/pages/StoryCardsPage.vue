@@ -688,15 +688,13 @@
       </div>
 
       <!-- Search Bar -->
-      <div class="relative">
-        <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-bd-text-muted" />
-        <input 
-          v-model="searchQuery"
-          type="text"
-          placeholder="Search templates..."
-          class="input pl-12"
-        />
-      </div>
+      <SearchBar
+        v-model="searchQuery"
+        placeholder="Search story cards..."
+        :suggestions="searchSuggestions"
+        :result-count="filteredCards.length"
+        @search="handleSearch"
+      />
 
       <!-- Filter Panel -->
       <Transition name="slide">
@@ -901,6 +899,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import StoryCardItem from '@/components/ui/StoryCardItem.vue'
+import SearchBar from '@/components/ui/SearchBar.vue'
+import { usePreferences } from '@/composables/usePreferences'
 import { 
   STORY_CARDS, 
   STORY_CARD_TEMPLATES,
@@ -945,6 +945,20 @@ const selectedType = ref(null)
 const showFilters = ref(false)
 const sortBy = ref('name')
 const quickFilter = ref(null)
+
+const { addToSearchHistory } = usePreferences()
+
+// Get unique tags for search suggestions
+const searchSuggestions = computed(() => {
+  const allTags = [...new Set(allCards.value.flatMap(c => c.tags || []))]
+  return allTags.slice(0, 20)
+})
+
+const handleSearch = (query) => {
+  if (query.trim()) {
+    addToSearchHistory(query)
+  }
+}
 
 const difficulties = [
   { id: 'beginner', label: 'Beginner', activeClass: 'bg-bd-green/20 text-bd-green border border-bd-green/30' },

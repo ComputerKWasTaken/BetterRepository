@@ -893,13 +893,13 @@ return { text: text + widget };</code></pre>
 
     <!-- Search and Filter -->
     <div class="flex flex-wrap items-center gap-2">
-      <div class="flex-1 min-w-[200px] relative">
-        <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-bd-text-muted" />
-        <input 
+      <div class="flex-1 min-w-[200px]">
+        <SearchBar
           v-model="searchQuery"
-          type="text"
           placeholder="Search scripts..."
-          class="input pl-12"
+          :suggestions="searchSuggestions"
+          :result-count="filteredScripts.length"
+          @search="handleSearch"
         />
       </div>
       <select 
@@ -999,6 +999,8 @@ return { text: text + widget };</code></pre>
 <script setup>
 import { ref, computed } from 'vue'
 import ScriptItem from '@/components/ui/ScriptItem.vue'
+import SearchBar from '@/components/ui/SearchBar.vue'
+import { usePreferences } from '@/composables/usePreferences'
 import { 
   SCRIPTS, 
   SCRIPT_CATEGORIES,
@@ -1030,6 +1032,20 @@ const categories = ref(SCRIPT_CATEGORIES)
 const searchQuery = ref('')
 const selectedCategory = ref('')
 const selectedDifficulty = ref('')
+
+const { addToSearchHistory } = usePreferences()
+
+// Get unique tags for search suggestions
+const searchSuggestions = computed(() => {
+  const allTags = [...new Set(scripts.value.flatMap(s => s.tags || []))]
+  return allTags.slice(0, 20)
+})
+
+const handleSearch = (query) => {
+  if (query.trim()) {
+    addToSearchHistory(query)
+  }
+}
 
 // ===========================================
 // GUIDE TABLE OF CONTENTS

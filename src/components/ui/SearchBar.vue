@@ -178,21 +178,21 @@ const selectedIndex = ref(-1)
 // Computed: search history from preferences
 const searchHistory = computed(() => preferences.value.searchHistory || [])
 
-// Computed: filter suggestions based on current query using fuzzy search
+// Computed: filter suggestions based on current query using fuzzy search with alias support
 const filteredSuggestions = computed(() => {
   if (!localQuery.value.trim() || !props.suggestions.length) return []
   
-  // Use fuzzy matching to find relevant suggestions
-  const results = props.suggestions.map(suggestion => {
-    const result = fuzzyMatch(localQuery.value, suggestion)
+  // Use searchTags for alias-aware fuzzy matching
+  const matchedTags = searchTags(props.suggestions, localQuery.value, 6, true)
+  
+  // Get match details for each result
+  const results = matchedTags.map(tag => {
+    const result = fuzzyMatch(localQuery.value, tag)
     return {
-      value: suggestion,
+      value: tag,
       ...result
     }
   })
-    .filter(r => r.matched)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 6)
   
   return results
 })

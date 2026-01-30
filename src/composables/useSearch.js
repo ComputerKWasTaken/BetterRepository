@@ -265,7 +265,7 @@ export const searchItem = (item, query, options = {}) => {
             const searchTerms = getTagSearchTerms(element)
             
             for (const term of searchTerms) {
-              if (term !== element.toLowerCase()) {
+              if (term.toLowerCase() !== element.toLowerCase()) {
                 const aliasResult = fuzzyMatch(query, term)
                 if (aliasResult.matched) {
                   matched = true
