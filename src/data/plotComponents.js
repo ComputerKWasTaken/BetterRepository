@@ -64,11 +64,10 @@ export const TEMPLATES = [
     combinesWith: ['plot-essentials-basic', 'current-scene'],
     description: 'Simple, effective Author\'s Note structure.',
     purpose: 'Foundation template. Keep it concise, AN has the strongest influence but shouldn\'t be overloaded.',
-    content: `Setting: [Your setting here]
-Theme: [Your theme here]
-Style: [Your preferred writing style]
+    content: `Setting: 
+Theme: 
 
-- \${character.name} is the user's character. Only the user writes \${character.name}'s speech and dialogue`
+- This is a roleplaying scenario. \${character.name} is the user's character. Only the user writes \${character.name}'s speech and dialogue; never decide what \${character.name} says`
   },
   {
     id: 'authors-note-genre',
@@ -172,17 +171,19 @@ Focus: Physical actions, positioning, consequences
     combinesWith: ['relationship-tracker', 'current-scene'],
     description: 'Core character information template.',
     purpose: 'Foundation for character consistency. Update whenever your character changes.',
-    content: `[Character: \${character.name}]
-Species: [Species]
-Age: [Age]
-Gender: [Gender]
-Appearance: [Key physical features]
-Personality: [Core traits]
-Background: [Brief history]
+    content: `{Your Name: \${character.name}
+Species: \${Species:}
+Age: \${Age:}
+Gender: \${Gender:}
+Appearance: \${Appearance:}
+Description: \${Description:}}
 
-[Current Status]
-Health: [Physical condition]
-Inventory: [Important items carried]`
+[Current Date (MM/DD): 6/1
+Schedule:
+6/1: ]
+
+[Memories:
+- ]`
   },
   {
     id: 'plot-essentials-detailed',
