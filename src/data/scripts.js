@@ -805,164 +805,8 @@ modifier(text)`
   },
 
   // ========== BETTERSCRIPTS ==========
-  {
-    id: 'betterscripts-rpg-stats',
-    name: 'RPG Stats Widget',
-    category: 'betterscripts',
-    difficulty: 'intermediate',
-    impact: 'high',
-    essential: true,
-    tags: ['widgets', 'hp', 'stats', 'betterscripts', 'betterdungeon'],
-    source: 'BetterRepository',
-    description: 'Displays HP bar, gold, level, and status using BetterDungeon widgets.',
-    purpose: 'Complete example showing how to track game state and display it via BetterScripts widgets. Requires BetterDungeon extension.',
-    requiresExtension: 'BetterDungeon',
-    files: {
-      library: `// ============================================
-// LIBRARY - Shared state and helpers
-// ============================================
-
-// Initialize game state (persists across turns)
-state.game = state.game ?? {
-  turn: 0,
-  hp: 100,
-  maxHp: 100,
-  gold: 0,
-  level: 1,
-  xp: 0,
-  xpToLevel: 100,
-  status: 'Healthy'
-};
-
-// Helper: Build a BetterScripts protocol message
-function bdMessage(message) {
-  return \`[[BD:\${JSON.stringify(message)}:BD]]\`;
-}
-
-// Helper: Create/update a widget
-function bdWidget(widgetId, config) {
-  return bdMessage({
-    type: 'widget',
-    widgetId: widgetId,
-    action: 'create',
-    config: config
-  });
-}
-
-// Helper: Destroy a widget
-function bdDestroyWidget(widgetId) {
-  return bdMessage({
-    type: 'widget',
-    widgetId: widgetId,
-    action: 'destroy'
-  });
-}
-
-// Helper: Get HP color based on percentage
-function getHpColor(current, max) {
-  const percent = (current / max) * 100;
-  if (percent > 50) return '#22c55e';
-  if (percent > 25) return '#fbbf24';
-  return '#ef4444';
-}
-
-// Helper: Get status text based on HP
-function getStatus(current, max) {
-  const percent = (current / max) * 100;
-  if (percent <= 0) return 'Dead';
-  if (percent <= 25) return 'Critical';
-  if (percent <= 50) return 'Wounded';
-  if (percent <= 75) return 'Injured';
-  return 'Healthy';
-}`,
-      context: `// ============================================
-// CONTEXT MODIFIER - Strip protocol messages
-// ============================================
-
-const modifier = (text) => {
-  // Remove all BetterScripts protocol messages from context
-  // This prevents the AI from seeing or repeating widget commands
-  text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
-  return { text };
-};
-
-modifier(text);`,
-      output: `// ============================================
-// OUTPUT MODIFIER - Update widgets
-// ============================================
-
-const modifier = (text) => {
-  const game = state.game;
-  const lowerText = text.toLowerCase();
-  
-  // Increment turn counter
-  game.turn++;
-  
-  // Detect damage taken
-  if (lowerText.includes('hit') || lowerText.includes('wound') || 
-      lowerText.includes('hurt') || lowerText.includes('damage')) {
-    const damage = Math.floor(Math.random() * 15) + 5;
-    game.hp = Math.max(0, game.hp - damage);
-  }
-  
-  // Detect healing
-  if (lowerText.includes('heal') || lowerText.includes('potion') || 
-      lowerText.includes('rest') || lowerText.includes('recover')) {
-    const healing = Math.floor(Math.random() * 20) + 10;
-    game.hp = Math.min(game.maxHp, game.hp + healing);
-  }
-  
-  // Detect gold found
-  if (lowerText.includes('gold') || lowerText.includes('coin') || 
-      lowerText.includes('treasure') || lowerText.includes('loot')) {
-    game.gold += Math.floor(Math.random() * 50) + 10;
-    game.xp += 10;
-  }
-  
-  // Level up check
-  if (game.xp >= game.xpToLevel) {
-    game.level++;
-    game.xp -= game.xpToLevel;
-    game.xpToLevel = Math.floor(game.xpToLevel * 1.5);
-    game.maxHp += 10;
-    game.hp = game.maxHp;
-  }
-  
-  // Update status
-  game.status = getStatus(game.hp, game.maxHp);
-  const hpColor = getHpColor(game.hp, game.maxHp);
-  
-  // Build widget messages
-  let widgets = '';
-  
-  // HP bar
-  widgets += bdWidget('hp-bar', {
-    type: 'bar',
-    label: 'HP',
-    value: game.hp,
-    max: game.maxHp,
-    color: hpColor,
-    showValue: true
-  });
-  
-  // Character panel
-  widgets += bdWidget('player-stats', {
-    type: 'panel',
-    title: 'Character',
-    items: [
-      { label: 'Level', value: game.level, color: '#a855f7' },
-      { label: 'XP', value: game.xp + '/' + game.xpToLevel, color: '#60a5fa' },
-      { label: 'Gold', value: game.gold, color: '#fbbf24' },
-      { label: 'Status', value: game.status, color: hpColor }
-    ]
-  });
-  
-  return { text: text + widgets };
-};
-
-modifier(text);`
-    }
-  },
+  // Scripts that use BetterDungeon widgets to display game state.
+  // Requires the BetterDungeon browser extension.
   {
     id: 'betterscripts-simple-counter',
     name: 'Simple Turn Counter',
@@ -970,25 +814,30 @@ modifier(text);`
     difficulty: 'beginner',
     impact: 'low',
     essential: true,
-    tags: ['widgets', 'counter', 'turn', 'betterscripts', 'minimal'],
+    tags: ['widgets', 'counter', 'turn', 'betterscripts', 'stat-widget', 'minimal'],
     source: 'BetterRepository',
     description: 'Minimal example showing a single stat widget that counts turns.',
-    purpose: 'The simplest possible BetterScripts example. Great starting point for learning the widget system.',
+    purpose: 'The simplest BetterScripts example. Demonstrates the "stat" widget type. Great starting point for learning.',
     requiresExtension: 'BetterDungeon',
     files: {
-      library: `// Initialize turn counter
+      library: `// ============================================
+// LIBRARY - Simple Turn Counter
+// ============================================
+// Demonstrates the "stat" widget type.
+// This is the simplest possible BetterScripts example.
+
 state.turn = state.turn ?? 0;
 
 // ============================================
-// BETTERDUNGEON HELPER FUNCTIONS
+// BETTERSCRIPTS PROTOCOL HELPERS
 // ============================================
+// These helpers create the protocol messages that
+// BetterDungeon detects and processes into widgets.
 
-// Helper: Build a BetterScripts protocol message
 function bdMessage(message) {
   return \`[[BD:\${JSON.stringify(message)}:BD]]\`;
 }
 
-// Helper: Create/update a widget
 function bdWidget(widgetId, config) {
   return bdMessage({
     type: 'widget',
@@ -996,36 +845,9 @@ function bdWidget(widgetId, config) {
     action: 'create',
     config: config
   });
-}
-
-// Helper: Destroy a widget
-function bdDestroyWidget(widgetId) {
-  return bdMessage({
-    type: 'widget',
-    widgetId: widgetId,
-    action: 'destroy'
-  });
-}
-
-// Helper: Get HP color based on percentage
-function getHpColor(current, max) {
-  const percent = (current / max) * 100;
-  if (percent > 50) return '#22c55e';
-  if (percent > 25) return '#fbbf24';
-  return '#ef4444';
-}
-
-// Helper: Get status text based on HP
-function getStatus(current, max) {
-  const percent = (current / max) * 100;
-  if (percent <= 0) return 'Dead';
-  if (percent <= 25) return 'Critical';
-  if (percent <= 50) return 'Wounded';
-  if (percent <= 75) return 'Injured';
-  return 'Healthy';
 }`,
       context: `const modifier = (text) => {
-  // Strip protocol messages so AI doesn't see them
+  // Strip protocol messages so AI doesn't see or repeat them
   text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
   return { text };
 };
@@ -1035,7 +857,7 @@ modifier(text);`,
   // Increment turn counter
   state.turn++;
   
-  // Create turn counter widget
+  // Create stat widget showing turn count
   const widget = bdWidget('turn-counter', {
     type: 'stat',
     label: 'Turn',
@@ -1050,31 +872,43 @@ modifier(text);`
     }
   },
   {
-    id: 'betterscripts-inventory',
-    name: 'Inventory Panel',
+    id: 'betterscripts-rpg-stats',
+    name: 'RPG Stats Widget',
     category: 'betterscripts',
     difficulty: 'intermediate',
-    impact: 'medium',
-    essential: false,
-    tags: ['widgets', 'inventory', 'items', 'betterscripts', 'panel'],
+    impact: 'high',
+    essential: true,
+    tags: ['widgets', 'hp', 'stats', 'betterscripts', 'bar-widget', 'panel-widget'],
     source: 'BetterRepository',
-    description: 'Tracks and displays inventory items in a panel widget.',
-    purpose: 'Shows how to use panel widgets with dynamic item lists. Detects items mentioned in the story.',
+    description: 'Displays HP bar, gold, level, and status using BetterDungeon widgets.',
+    purpose: 'Demonstrates "bar" and "panel" widget types. Tracks game state and updates widgets based on story content.',
     requiresExtension: 'BetterDungeon',
     files: {
-      library: `// Initialize inventory
-state.inventory = state.inventory ?? [];
+      library: `// ============================================
+// LIBRARY - RPG Stats Widget
+// ============================================
+// Demonstrates "bar", "panel" widgets, and notifications.
+// Tracks HP, gold, XP, and level progression.
+
+state.game = state.game ?? {
+  turn: 0,
+  hp: 100,
+  maxHp: 100,
+  gold: 0,
+  level: 1,
+  xp: 0,
+  xpToLevel: 100,
+  status: 'Healthy'
+};
 
 // ============================================
-// BETTERDUNGEON HELPER FUNCTIONS
+// BETTERSCRIPTS PROTOCOL HELPERS
 // ============================================
 
-// Helper: Build a BetterScripts protocol message
 function bdMessage(message) {
   return \`[[BD:\${JSON.stringify(message)}:BD]]\`;
 }
 
-// Helper: Create/update a widget
 function bdWidget(widgetId, config) {
   return bdMessage({
     type: 'widget',
@@ -1084,16 +918,21 @@ function bdWidget(widgetId, config) {
   });
 }
 
-// Helper: Destroy a widget
-function bdDestroyWidget(widgetId) {
+function bdNotify(text, options) {
+  options = options || {};
   return bdMessage({
-    type: 'widget',
-    widgetId: widgetId,
-    action: 'destroy'
+    type: 'notify',
+    text: text,
+    title: options.title,
+    notifyType: options.notifyType || 'info',
+    duration: options.duration || 3000
   });
 }
 
-// Helper: Get HP color based on percentage
+// ============================================
+// GAME HELPERS
+// ============================================
+
 function getHpColor(current, max) {
   const percent = (current / max) * 100;
   if (percent > 50) return '#22c55e';
@@ -1101,7 +940,6 @@ function getHpColor(current, max) {
   return '#ef4444';
 }
 
-// Helper: Get status text based on HP
 function getStatus(current, max) {
   const percent = (current / max) * 100;
   if (percent <= 0) return 'Dead';
@@ -1109,32 +947,6 @@ function getStatus(current, max) {
   if (percent <= 50) return 'Wounded';
   if (percent <= 75) return 'Injured';
   return 'Healthy';
-}
-
-// ============================================
-// INVENTORY-SPECIFIC LOGIC
-// ============================================
-
-// Item detection patterns
-const ITEM_PATTERNS = [
-  { pattern: /sword/i, name: 'Sword', icon: '⚔️' },
-  { pattern: /shield/i, name: 'Shield', icon: '🛡️' },
-  { pattern: /potion/i, name: 'Potion', icon: '🧪' },
-  { pattern: /key/i, name: 'Key', icon: '🔑' },
-  { pattern: /gold|coin/i, name: 'Gold', icon: '💰' },
-  { pattern: /torch/i, name: 'Torch', icon: '🔥' },
-  { pattern: /rope/i, name: 'Rope', icon: '🪢' },
-  { pattern: /map/i, name: 'Map', icon: '🗺️' }
-];
-
-function detectItems(text) {
-  const found = [];
-  ITEM_PATTERNS.forEach(item => {
-    if (item.pattern.test(text) && !state.inventory.includes(item.name)) {
-      found.push(item.name);
-    }
-  });
-  return found;
 }`,
       context: `const modifier = (text) => {
   text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
@@ -1143,31 +955,669 @@ function detectItems(text) {
 
 modifier(text);`,
       output: `const modifier = (text) => {
-  // Detect new items in the text
-  const newItems = detectItems(text);
-  newItems.forEach(item => {
-    if (!state.inventory.includes(item)) {
-      state.inventory.push(item);
-    }
-  });
+  const game = state.game;
+  const lowerText = text.toLowerCase();
+  let protocol = '';
   
-  // Build inventory panel
-  const items = state.inventory.map(item => {
-    const pattern = ITEM_PATTERNS.find(p => p.name === item);
-    return { label: pattern?.icon || '•', value: item };
-  });
+  game.turn++;
   
-  // Show inventory widget (only if we have items)
-  let widgets = '';
-  if (items.length > 0) {
-    widgets = bdWidget('inventory', {
-      type: 'panel',
-      title: 'Inventory',
-      items: items
+  // Detect damage
+  if (lowerText.includes('hit') || lowerText.includes('wound') || 
+      lowerText.includes('hurt') || lowerText.includes('damage')) {
+    const damage = Math.floor(Math.random() * 15) + 5;
+    game.hp = Math.max(0, game.hp - damage);
+    protocol += bdNotify('Took ' + damage + ' damage!', { notifyType: 'error' });
+  }
+  
+  // Detect healing
+  if (lowerText.includes('heal') || lowerText.includes('potion') || 
+      lowerText.includes('rest') || lowerText.includes('recover')) {
+    const healing = Math.floor(Math.random() * 20) + 10;
+    game.hp = Math.min(game.maxHp, game.hp + healing);
+    protocol += bdNotify('Healed ' + healing + ' HP', { notifyType: 'success' });
+  }
+  
+  // Detect loot
+  if (lowerText.includes('gold') || lowerText.includes('coin') || 
+      lowerText.includes('treasure') || lowerText.includes('loot')) {
+    const gold = Math.floor(Math.random() * 50) + 10;
+    game.gold += gold;
+    game.xp += 10;
+    protocol += bdNotify('Found ' + gold + ' gold!', { notifyType: 'success', title: 'Loot' });
+  }
+  
+  // Level up check
+  if (game.xp >= game.xpToLevel) {
+    game.level++;
+    game.xp -= game.xpToLevel;
+    game.xpToLevel = Math.floor(game.xpToLevel * 1.5);
+    game.maxHp += 10;
+    game.hp = game.maxHp;
+    protocol += bdNotify('You are now level ' + game.level + '!', { 
+      notifyType: 'success', 
+      title: 'Level Up!',
+      duration: 5000
     });
   }
   
-  return { text: text + widgets };
+  game.status = getStatus(game.hp, game.maxHp);
+  const hpColor = getHpColor(game.hp, game.maxHp);
+  
+  // HP bar widget (priority 10 = appears first)
+  protocol += bdWidget('hp-bar', {
+    type: 'bar',
+    label: 'HP',
+    value: game.hp,
+    max: game.maxHp,
+    color: hpColor,
+    showValue: true,
+    priority: 10
+  });
+  
+  // Character panel widget (priority 5 = appears second)
+  protocol += bdWidget('player-stats', {
+    type: 'panel',
+    title: 'Character',
+    priority: 5,
+    items: [
+      { label: 'Level', value: game.level, color: '#a855f7' },
+      { label: 'XP', value: game.xp + '/' + game.xpToLevel, color: '#60a5fa' },
+      { label: 'Gold', value: game.gold, color: '#fbbf24' },
+      { label: 'Status', value: game.status, color: hpColor }
+    ]
+  });
+  
+  return { text: text + protocol };
+};
+
+modifier(text);`
+    }
+  },
+  {
+    id: 'betterscripts-inventory',
+    name: 'Inventory Panel',
+    category: 'betterscripts',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['widgets', 'inventory', 'items', 'betterscripts', 'panel-widget', 'notifications'],
+    source: 'BetterRepository',
+    description: 'Tracks inventory items with add/remove detection and notifications.',
+    purpose: 'Demonstrates "panel" widget with icon support and notifications. Detects items picked up or dropped.',
+    requiresExtension: 'BetterDungeon',
+    files: {
+      library: `// ============================================
+// LIBRARY - BetterScripts Inventory
+// ============================================
+// Demonstrates panel widget with icons and notifications.
+// Tracks items picked up and dropped.
+
+state.inventory = state.inventory ?? [];
+
+// ============================================
+// BETTERSCRIPTS PROTOCOL HELPERS
+// ============================================
+
+function bdMessage(message) {
+  return \`[[BD:\${JSON.stringify(message)}:BD]]\`;
+}
+
+function bdWidget(widgetId, config) {
+  return bdMessage({
+    type: 'widget',
+    widgetId: widgetId,
+    action: 'create',
+    config: config
+  });
+}
+
+function bdDestroyWidget(widgetId) {
+  return bdMessage({
+    type: 'widget',
+    widgetId: widgetId,
+    action: 'destroy'
+  });
+}
+
+function bdNotify(text, options) {
+  options = options || {};
+  return bdMessage({
+    type: 'notify',
+    text: text,
+    title: options.title,
+    notifyType: options.notifyType || 'info',
+    duration: options.duration || 3000
+  });
+}
+
+// ============================================
+// ITEM DEFINITIONS
+// ============================================
+
+const ITEMS = [
+  { pattern: /sword/i, name: 'Sword', icon: '⚔️' },
+  { pattern: /shield/i, name: 'Shield', icon: '🛡️' },
+  { pattern: /potion/i, name: 'Potion', icon: '🧪' },
+  { pattern: /key/i, name: 'Key', icon: '🔑' },
+  { pattern: /torch/i, name: 'Torch', icon: '🔥' },
+  { pattern: /rope/i, name: 'Rope', icon: '🪢' },
+  { pattern: /map/i, name: 'Map', icon: '🗺️' },
+  { pattern: /bow/i, name: 'Bow', icon: '🏹' },
+  { pattern: /armor|armour/i, name: 'Armor', icon: '🛡️' },
+  { pattern: /staff/i, name: 'Staff', icon: '🪄' }
+];
+
+function getItemByName(name) {
+  return ITEMS.find(i => i.name === name);
+}`,
+      context: `const modifier = (text) => {
+  text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
+  return { text };
+};
+
+modifier(text);`,
+      output: `const modifier = (text) => {
+  const lowerText = text.toLowerCase();
+  let protocol = '';
+  
+  // Detect item pickups
+  const pickupPatterns = [/pick(?:ed)? up/i, /grab(?:bed)?/i, /take(?:s)?/i, /found/i, /receive(?:d)?/i, /obtain(?:ed)?/i];
+  const isPickup = pickupPatterns.some(p => p.test(lowerText));
+  
+  // Detect item drops/use
+  const dropPatterns = [/drop(?:ped)?/i, /use(?:d)?/i, /lose(?:s)?/i, /lost/i, /gave/i, /throw(?:s)?/i];
+  const isDrop = dropPatterns.some(p => p.test(lowerText));
+  
+  // Check for items in text
+  ITEMS.forEach(item => {
+    if (item.pattern.test(lowerText)) {
+      const hasItem = state.inventory.includes(item.name);
+      
+      if (isPickup && !hasItem) {
+        state.inventory.push(item.name);
+        protocol += bdNotify(item.icon + ' ' + item.name + ' added', { notifyType: 'success' });
+      } else if (isDrop && hasItem) {
+        state.inventory = state.inventory.filter(i => i !== item.name);
+        protocol += bdNotify(item.icon + ' ' + item.name + ' removed', { notifyType: 'warning' });
+      }
+    }
+  });
+  
+  // Build inventory widget
+  if (state.inventory.length > 0) {
+    const items = state.inventory.map(name => {
+      const item = getItemByName(name);
+      return { icon: item?.icon, label: '', value: name };
+    });
+    
+    protocol += bdWidget('inventory', {
+      type: 'panel',
+      title: 'Inventory (' + state.inventory.length + ')',
+      items: items
+    });
+  } else {
+    protocol += bdDestroyWidget('inventory');
+  }
+  
+  return { text: text + protocol };
+};
+
+modifier(text);`
+    }
+  },
+  {
+    id: 'betterscripts-location',
+    name: 'Location Tracker',
+    category: 'betterscripts',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    tags: ['widgets', 'location', 'betterscripts', 'text-widget'],
+    source: 'BetterRepository',
+    description: 'Tracks and displays current location using a text widget.',
+    purpose: 'Demonstrates the "text" widget type. Detects location changes from story content.',
+    requiresExtension: 'BetterDungeon',
+    files: {
+      library: `// ============================================
+// LIBRARY - Location Tracker
+// ============================================
+// Demonstrates the "text" widget type.
+// Tracks current location from story context.
+
+state.location = state.location ?? 'Unknown';
+
+// ============================================
+// BETTERSCRIPTS PROTOCOL HELPERS
+// ============================================
+
+function bdMessage(message) {
+  return \`[[BD:\${JSON.stringify(message)}:BD]]\`;
+}
+
+function bdWidget(widgetId, config) {
+  return bdMessage({
+    type: 'widget',
+    widgetId: widgetId,
+    action: 'create',
+    config: config
+  });
+}
+
+// ============================================
+// LOCATION DEFINITIONS
+// ============================================
+
+const LOCATIONS = [
+  { pattern: /tavern|inn|bar/i, name: 'Tavern', icon: '🍺' },
+  { pattern: /forest|woods|trees/i, name: 'Forest', icon: '🌲' },
+  { pattern: /castle|palace|throne/i, name: 'Castle', icon: '🏰' },
+  { pattern: /cave|cavern|underground/i, name: 'Cave', icon: '🕳️' },
+  { pattern: /village|town|market/i, name: 'Village', icon: '🏘️' },
+  { pattern: /dungeon|prison|cell/i, name: 'Dungeon', icon: '⛓️' },
+  { pattern: /mountain|peak|cliff/i, name: 'Mountain', icon: '⛰️' },
+  { pattern: /river|lake|water|stream/i, name: 'Waterside', icon: '🌊' },
+  { pattern: /road|path|trail/i, name: 'Road', icon: '🛤️' },
+  { pattern: /home|house|cottage/i, name: 'Home', icon: '🏠' }
+];`,
+      context: `const modifier = (text) => {
+  text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
+  return { text };
+};
+
+modifier(text);`,
+      output: `const modifier = (text) => {
+  const lowerText = text.toLowerCase();
+  
+  // Detect location from text
+  for (const loc of LOCATIONS) {
+    if (loc.pattern.test(lowerText)) {
+      state.location = loc.icon + ' ' + loc.name;
+      break;
+    }
+  }
+  
+  // Create text widget showing location
+  const widget = bdWidget('location', {
+    type: 'text',
+    text: state.location,
+    style: {
+      fontSize: '14px',
+      fontWeight: 'bold',
+      color: '#a3e635'
+    }
+  });
+  
+  return { text: text + widget };
+};
+
+modifier(text);`
+    }
+  },
+  {
+    id: 'betterscripts-quest-log',
+    name: 'Quest Log',
+    category: 'betterscripts',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['widgets', 'quests', 'betterscripts', 'list-widget', 'notifications'],
+    source: 'BetterRepository',
+    description: 'Tracks active quests using the list widget with notifications.',
+    purpose: 'Demonstrates the "list" widget type and notifications for quest events.',
+    requiresExtension: 'BetterDungeon',
+    files: {
+      library: `// ============================================
+// LIBRARY - Quest Log
+// ============================================
+// Demonstrates the "list" widget and notifications.
+// Tracks quest objectives detected from story.
+
+state.quests = state.quests ?? [];
+state.completedQuests = state.completedQuests ?? [];
+
+// ============================================
+// BETTERSCRIPTS PROTOCOL HELPERS
+// ============================================
+
+function bdMessage(message) {
+  return \`[[BD:\${JSON.stringify(message)}:BD]]\`;
+}
+
+function bdWidget(widgetId, config) {
+  return bdMessage({
+    type: 'widget',
+    widgetId: widgetId,
+    action: 'create',
+    config: config
+  });
+}
+
+function bdDestroyWidget(widgetId) {
+  return bdMessage({
+    type: 'widget',
+    widgetId: widgetId,
+    action: 'destroy'
+  });
+}
+
+function bdNotify(text, options) {
+  options = options || {};
+  return bdMessage({
+    type: 'notify',
+    text: text,
+    title: options.title,
+    notifyType: options.notifyType || 'info',
+    duration: options.duration || 3000
+  });
+}
+
+// ============================================
+// QUEST DEFINITIONS
+// ============================================
+
+const QUESTS = [
+  { pattern: /find.*sword|retrieve.*blade/i, name: 'Find the Ancient Sword' },
+  { pattern: /defeat.*dragon|slay.*dragon/i, name: 'Defeat the Dragon' },
+  { pattern: /rescue.*princess|save.*princess/i, name: 'Rescue the Princess' },
+  { pattern: /explore.*dungeon|enter.*dungeon/i, name: 'Explore the Dungeon' },
+  { pattern: /deliver.*message|bring.*letter/i, name: 'Deliver the Message' },
+  { pattern: /find.*treasure|locate.*treasure/i, name: 'Find the Hidden Treasure' },
+  { pattern: /escape from|flee the|run away from/i, name: 'Escape to Safety' }
+];
+
+const COMPLETE_PATTERNS = [/complete|finished|done|succeeded|accomplished|fulfilled/i];`,
+      context: `const modifier = (text) => {
+  text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
+  return { text };
+};
+
+modifier(text);`,
+      output: `const modifier = (text) => {
+  const lowerText = text.toLowerCase();
+  let protocol = '';
+  const isComplete = COMPLETE_PATTERNS.some(p => p.test(lowerText));
+  
+  // Check for new quests or completions
+  QUESTS.forEach(quest => {
+    if (quest.pattern.test(lowerText)) {
+      const hasQuest = state.quests.includes(quest.name);
+      const wasCompleted = state.completedQuests.includes(quest.name);
+      
+      if (isComplete && hasQuest && !wasCompleted) {
+        // Complete the quest
+        state.quests = state.quests.filter(q => q !== quest.name);
+        state.completedQuests.push(quest.name);
+        protocol += bdNotify(quest.name, { 
+          title: 'Quest Complete!', 
+          notifyType: 'success',
+          duration: 5000
+        });
+      } else if (!hasQuest && !wasCompleted) {
+        // Add new quest
+        state.quests.push(quest.name);
+        protocol += bdNotify(quest.name, { 
+          title: 'New Quest!', 
+          notifyType: 'info',
+          duration: 4000
+        });
+      }
+    }
+  });
+  
+  // Build quest log widget
+  if (state.quests.length > 0) {
+    // Active quests in yellow, show as list
+    const items = state.quests.map(q => ({ text: q, color: '#fbbf24' }));
+    
+    protocol += bdWidget('quest-log', {
+      type: 'list',
+      title: 'Active Quests',
+      items: items
+    });
+  } else {
+    protocol += bdDestroyWidget('quest-log');
+  }
+  
+  return { text: text + protocol };
+};
+
+modifier(text);`
+    }
+  },
+  {
+    id: 'betterscripts-test-suite',
+    name: 'BetterScripts Test Suite',
+    category: 'betterscripts',
+    difficulty: 'advanced',
+    impact: 'low',
+    essential: false,
+    tags: ['test', 'debug', 'betterscripts', 'all-widgets', 'notifications', 'edge-cases'],
+    source: 'BetterRepository',
+    description: 'Comprehensive test script for debugging all BetterScripts features.',
+    purpose: 'Tests all widget types, actions, notifications, priority, edge cases, and regressions. Use this to verify BetterScripts is working correctly.',
+    requiresExtension: 'BetterDungeon',
+    files: {
+      library: `// ============================================
+// LIBRARY - BetterScripts Test Suite
+// ============================================
+// Comprehensive test script for all BetterScripts features.
+// Tests: all widget types, actions, notifications, priority, edge cases.
+
+state.test = state.test ?? {
+  phase: 0,
+  turn: 0
+};
+
+// ============================================
+// BETTERSCRIPTS PROTOCOL HELPERS
+// ============================================
+
+function bdMessage(message) {
+  return '[[BD:' + JSON.stringify(message) + ':BD]]';
+}
+
+function bdWidget(widgetId, config) {
+  return bdMessage({
+    type: 'widget',
+    widgetId: widgetId,
+    action: 'create',
+    config: config
+  });
+}
+
+function bdUpdateWidget(widgetId, config) {
+  return bdMessage({
+    type: 'widget',
+    widgetId: widgetId,
+    action: 'update',
+    config: config
+  });
+}
+
+function bdDestroyWidget(widgetId) {
+  return bdMessage({
+    type: 'widget',
+    widgetId: widgetId,
+    action: 'destroy'
+  });
+}
+
+function bdNotify(text, options) {
+  options = options || {};
+  return bdMessage({
+    type: 'notify',
+    text: text,
+    title: options.title,
+    notifyType: options.notifyType || 'info',
+    duration: options.duration || 3000
+  });
+}
+
+// Test phase names
+const PHASES = [
+  'Stat Widget',
+  'Bar Widget', 
+  'Text Widget',
+  'Panel Widget',
+  'List Widget',
+  'Custom Widget',
+  'Priority Order',
+  'Update Action',
+  'Destroy Action',
+  'Notifications',
+  'Edge Cases'
+];`,
+      context: `const modifier = (text) => {
+  text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
+  return { text };
+};
+
+modifier(text);`,
+      output: `const modifier = (text) => {
+  const t = state.test;
+  let protocol = '';
+  
+  t.turn++;
+  const phase = t.phase;
+  const phaseName = PHASES[phase] || 'Done';
+  
+  // Status widget always visible
+  protocol += bdWidget('test-status', {
+    type: 'panel',
+    title: 'Test Suite',
+    priority: 100,
+    items: [
+      { label: 'Phase', value: phase + '/10: ' + phaseName, color: '#60a5fa' },
+      { label: 'Turn', value: t.turn }
+    ]
+  });
+  
+  // Run current phase test
+  switch (phase) {
+    case 0: // Stat Widget
+      protocol += bdWidget('test-stat', {
+        type: 'stat',
+        label: 'Test Stat',
+        value: 42,
+        color: '#a855f7'
+      });
+      protocol += bdNotify('Phase 0: Stat widget', { notifyType: 'info' });
+      t.phase++;
+      break;
+      
+    case 1: // Bar Widget
+      protocol += bdDestroyWidget('test-stat');
+      protocol += bdWidget('test-bar', {
+        type: 'bar',
+        label: 'Test Bar',
+        value: 75,
+        max: 100,
+        color: '#22c55e',
+        showValue: true
+      });
+      protocol += bdNotify('Phase 1: Bar widget', { notifyType: 'info' });
+      t.phase++;
+      break;
+      
+    case 2: // Text Widget
+      protocol += bdDestroyWidget('test-bar');
+      protocol += bdWidget('test-text', {
+        type: 'text',
+        text: 'Styled Text Widget',
+        style: { fontSize: '16px', fontWeight: 'bold', color: '#fbbf24' }
+      });
+      protocol += bdNotify('Phase 2: Text widget', { notifyType: 'info' });
+      t.phase++;
+      break;
+      
+    case 3: // Panel Widget
+      protocol += bdDestroyWidget('test-text');
+      protocol += bdWidget('test-panel', {
+        type: 'panel',
+        title: 'Test Panel',
+        items: [
+          { icon: '⚔️', label: 'Weapon', value: 'Sword' },
+          { label: 'Level', value: 10, color: '#a855f7' },
+          { label: 'Status', value: 'Active', badge: 'NEW', badgeColor: '#22c55e' }
+        ]
+      });
+      protocol += bdNotify('Phase 3: Panel with icons/badges', { notifyType: 'info' });
+      t.phase++;
+      break;
+      
+    case 4: // List Widget
+      protocol += bdDestroyWidget('test-panel');
+      protocol += bdWidget('test-list', {
+        type: 'list',
+        title: 'Test List',
+        items: [
+          'Plain string item',
+          { text: 'Colored item', color: '#22c55e' },
+          { text: 'Red item', color: '#ef4444' }
+        ]
+      });
+      protocol += bdNotify('Phase 4: List widget', { notifyType: 'info' });
+      t.phase++;
+      break;
+      
+    case 5: // Custom Widget
+      protocol += bdDestroyWidget('test-list');
+      protocol += bdWidget('test-custom', {
+        type: 'custom',
+        html: '<b>Bold</b> <i>italic</i> <script>xss</script>'
+      });
+      protocol += bdNotify('Phase 5: Custom (sanitized)', { notifyType: 'info' });
+      t.phase++;
+      break;
+      
+    case 6: // Priority Order
+      protocol += bdDestroyWidget('test-custom');
+      protocol += bdWidget('test-prio-c', { type: 'stat', label: 'C (prio 1)', value: 'C', priority: 1 });
+      protocol += bdWidget('test-prio-a', { type: 'stat', label: 'A (prio 10)', value: 'A', priority: 10, color: '#22c55e' });
+      protocol += bdWidget('test-prio-b', { type: 'stat', label: 'B (prio 5)', value: 'B', priority: 5, color: '#fbbf24' });
+      protocol += bdNotify('Phase 6: Should be A, B, C order', { notifyType: 'info' });
+      t.phase++;
+      break;
+      
+    case 7: // Update Action
+      protocol += bdDestroyWidget('test-prio-b');
+      protocol += bdDestroyWidget('test-prio-c');
+      protocol += bdUpdateWidget('test-prio-a', { label: 'UPDATED', value: 'Updated!', color: '#60a5fa' });
+      protocol += bdNotify('Phase 7: Update action', { notifyType: 'info' });
+      t.phase++;
+      break;
+      
+    case 8: // Destroy Action
+      protocol += bdDestroyWidget('test-prio-a');
+      protocol += bdNotify('Phase 8: Destroyed widgets', { notifyType: 'warning' });
+      t.phase++;
+      break;
+      
+    case 9: // All Notification Types
+      protocol += bdNotify('Info toast', { notifyType: 'info', title: 'Info' });
+      protocol += bdNotify('Success toast', { notifyType: 'success', title: 'Success' });
+      protocol += bdNotify('Warning toast', { notifyType: 'warning', title: 'Warning' });
+      protocol += bdNotify('Error toast', { notifyType: 'error', title: 'Error' });
+      t.phase++;
+      break;
+      
+    case 10: // Edge Cases
+      protocol += bdWidget('edge-empty', { type: 'stat', label: 'Empty', value: '', priority: 20 });
+      protocol += bdWidget('edge-zero', { type: 'stat', label: 'Zero', value: 0, priority: 19 });
+      protocol += bdWidget('edge-special', { type: 'stat', label: 'Chars <>&', value: '!@#$', priority: 18 });
+      protocol += bdWidget('edge-bar-0', { type: 'bar', label: 'Bar 0%', value: 0, max: 100, priority: 17 });
+      protocol += bdWidget('edge-bar-100', { type: 'bar', label: 'Bar 100%', value: 100, max: 100, color: '#22c55e', priority: 16 });
+      protocol += bdWidget('edge-bar-over', { type: 'bar', label: 'Bar 150%', value: 150, max: 100, color: '#ef4444', priority: 15 });
+      protocol += bdNotify('Phase 10: Edge cases', { notifyType: 'success', title: 'Complete!' });
+      t.phase++;
+      break;
+      
+    default:
+      protocol += bdNotify('All tests complete!', { notifyType: 'success', title: 'Done', duration: 5000 });
+      break;
+  }
+  
+  return { text: text + protocol };
 };
 
 modifier(text);`

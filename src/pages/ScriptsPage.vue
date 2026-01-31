@@ -720,7 +720,7 @@ if (card !== null) {
           <div v-if="isGuideSectionExpanded('betterscripts')" class="mt-4 space-y-4">
             <p class="text-bd-text-secondary">
               <strong>BetterScripts</strong> is a feature of the <strong>BetterDungeon</strong> browser extension that 
-              enables scripts to create <strong>dynamic UI widgets</strong> displaying HP bars, stats, and game state.
+              enables scripts to create <strong>dynamic UI widgets</strong> and <strong>notifications</strong> to display HP bars, stats, inventory, and game state.
             </p>
             
             <div class="p-4 rounded-lg bg-bd-emerald/10 border border-bd-emerald/30">
@@ -736,37 +736,58 @@ if (card !== null) {
               </ol>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-4">
+            <div class="grid md:grid-cols-3 gap-4">
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
                 <h4 class="font-semibold text-bd-text-primary mb-2">Widget Types</h4>
                 <ul class="text-sm text-bd-text-secondary space-y-1">
-                  <li><code class="text-bd-cyan">stat</code> — Label + value (e.g., "Gold: 100")</li>
-                  <li><code class="text-bd-cyan">bar</code> — Progress bar (e.g., HP bar)</li>
+                  <li><code class="text-bd-cyan">stat</code> — Label + value</li>
+                  <li><code class="text-bd-cyan">bar</code> — Progress bar</li>
                   <li><code class="text-bd-cyan">panel</code> — Multi-stat container</li>
-                  <li><code class="text-bd-cyan">text</code> — Simple text display</li>
+                  <li><code class="text-bd-cyan">list</code> — Simple list</li>
+                  <li><code class="text-bd-cyan">text</code> — Styled text</li>
+                </ul>
+              </div>
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h4 class="font-semibold text-bd-text-primary mb-2">Notifications</h4>
+                <ul class="text-sm text-bd-text-secondary space-y-1">
+                  <li><code class="text-bd-green">info</code> — Blue toast</li>
+                  <li><code class="text-bd-green">success</code> — Green toast</li>
+                  <li><code class="text-bd-amber">warning</code> — Yellow toast</li>
+                  <li><code class="text-bd-red">error</code> — Red toast</li>
                 </ul>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
                 <h4 class="font-semibold text-bd-text-primary mb-2">Required Scripts</h4>
                 <ul class="text-sm text-bd-text-secondary space-y-1">
-                  <li><strong>Library:</strong> Define helpers + state</li>
-                  <li><strong>Context Modifier:</strong> Strip protocol tags</li>
-                  <li><strong>Output Modifier:</strong> Append widget commands</li>
+                  <li><strong>Library:</strong> Helpers + state</li>
+                  <li><strong>Context:</strong> Strip tags</li>
+                  <li><strong>Output:</strong> Send commands</li>
                 </ul>
               </div>
             </div>
 
             <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-              <h4 class="font-semibold text-bd-text-primary mb-2">Example: Create a Stat Widget</h4>
-              <pre class="text-xs text-bd-text-secondary overflow-x-auto"><code>// In Output Modifier:
-const widget = `[[BD:${JSON.stringify({
-  type: 'widget',
-  widgetId: 'gold-stat',
-  action: 'create',
-  config: { type: 'stat', label: 'Gold', value: 100, color: '#fbbf24' }
-})}:BD]]`;
+              <h4 class="font-semibold text-bd-text-primary mb-2">Example: Using Helper Functions</h4>
+              <pre class="text-xs text-bd-text-secondary overflow-x-auto"><code>// Library: Define helpers
+function bdMessage(msg) {
+  return `[[BD:${JSON.stringify(msg)}:BD]]`;
+}
+function bdWidget(id, config) {
+  return bdMessage({ type: 'widget', widgetId: id, action: 'create', config });
+}
+function bdNotify(text, opts) {
+  opts = opts || {};
+  return bdMessage({ type: 'notify', text, notifyType: opts.notifyType || 'info', ...opts });
+}
 
-return { text: text + widget };</code></pre>
+// Output Modifier: Use helpers
+const modifier = (text) => {
+  let protocol = '';
+  protocol += bdWidget('gold', { type: 'stat', label: 'Gold', value: 100 });
+  protocol += bdNotify('Found treasure!', { notifyType: 'success' });
+  return { text: text + protocol };
+};
+modifier(text);</code></pre>
             </div>
 
             <div class="flex items-center gap-3">
