@@ -758,14 +758,17 @@ if (card !== null) {
 
             <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
               <h4 class="font-semibold text-bd-text-primary mb-2">Example: Create a Stat Widget</h4>
-              <pre class="text-xs text-bd-text-secondary overflow-x-auto"><code>// In Output Modifier:
-const widget = `[[BD:${JSON.stringify({
-  type: 'widget',
-  widgetId: 'gold-stat',
-  action: 'create',
-  config: { type: 'stat', label: 'Gold', value: 100, color: '#fbbf24' }
-})}:BD]]`;
+              <pre class="text-xs text-bd-text-secondary overflow-x-auto"><code>// In Library - define helper:
+function bdWidget(widgetId, config) {
+  return `[[BD:${JSON.stringify({ 
+    type: 'widget', widgetId, action: 'create', config 
+  })}:BD]]`;
+}
 
+// In Output Modifier - use helper:
+const widget = bdWidget('gold-stat', { 
+  type: 'stat', label: 'Gold', value: 100, color: '#fbbf24' 
+});
 return { text: text + widget };</code></pre>
             </div>
 
