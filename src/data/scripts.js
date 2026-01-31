@@ -1224,6 +1224,491 @@ modifier(text);`,
 
 modifier(text);`
     }
+  },
+  {
+    id: 'betterscripts-test-suite',
+    name: 'BetterScripts Test Suite',
+    category: 'betterscripts',
+    difficulty: 'advanced',
+    impact: 'low',
+    essential: false,
+    tags: ['widgets', 'testing', 'debug', 'betterscripts', 'all-widgets'],
+    source: 'BetterRepository',
+    description: 'Comprehensive test script for debugging and testing all BetterScripts functionality.',
+    purpose: 'Tests all widget types (stat, bar, text, panel, custom), all actions (create, update, destroy), protocol validation, and provides interactive commands for debugging.',
+    requiresExtension: 'BetterDungeon',
+    files: {
+      library: `// ============================================
+// LIBRARY - BetterScripts Test Suite
+// ============================================
+// Comprehensive test script for BetterScripts.
+// Use commands to test all widget types and actions.
+//
+// COMMANDS:
+//   :test all       - Create all widget types
+//   :test stat      - Test stat widget
+//   :test bar       - Test bar widget
+//   :test text      - Test text widget
+//   :test panel     - Test panel widget
+//   :test custom    - Test custom HTML widget
+//   :test update    - Test widget updates
+//   :test destroy   - Destroy all test widgets
+//   :test stress    - Create many widgets (stress test)
+//   :test invalid   - Test invalid configs (validation)
+//   :test events    - Show event listener instructions
+//   :bd status      - Show current widget status
+//   :bd clear       - Clear all widgets
+//   :bd debug       - Toggle debug info display
+
+// ============================================
+// STATE INITIALIZATION
+// ============================================
+
+state.bdTest = state.bdTest ?? {
+  hp: 75,
+  maxHp: 100,
+  gold: 250,
+  level: 5,
+  xp: 450,
+  location: 'Test Chamber',
+  showDebug: false,
+  widgetCount: 0
+};
+
+// ============================================
+// BETTERSCRIPTS PROTOCOL HELPERS
+// ============================================
+
+function bdMessage(message) {
+  return \`[[BD:\${JSON.stringify(message)}:BD]]\`;
+}
+
+function bdWidget(widgetId, config) {
+  return bdMessage({
+    type: 'widget',
+    v: '1.0',
+    widgetId: widgetId,
+    action: 'create',
+    config: config
+  });
+}
+
+function bdUpdateWidget(widgetId, config) {
+  return bdMessage({
+    type: 'widget',
+    v: '1.0',
+    widgetId: widgetId,
+    action: 'update',
+    config: config
+  });
+}
+
+function bdDestroyWidget(widgetId) {
+  return bdMessage({
+    type: 'widget',
+    v: '1.0',
+    widgetId: widgetId,
+    action: 'destroy'
+  });
+}
+
+function bdRegister(scriptId, scriptName, version) {
+  return bdMessage({
+    type: 'register',
+    v: '1.0',
+    scriptId: scriptId,
+    scriptName: scriptName,
+    version: version,
+    capabilities: ['stat', 'bar', 'text', 'panel', 'custom']
+  });
+}
+
+function bdPing() {
+  return bdMessage({
+    type: 'ping',
+    v: '1.0',
+    timestamp: Date.now(),
+    data: 'test-ping'
+  });
+}
+
+// ============================================
+// TEST WIDGET GENERATORS
+// ============================================
+
+function createStatWidget() {
+  return bdWidget('test-stat', {
+    type: 'stat',
+    label: 'Gold',
+    value: state.bdTest.gold,
+    color: '#fbbf24'
+  });
+}
+
+function createBarWidget() {
+  return bdWidget('test-bar', {
+    type: 'bar',
+    label: 'HP',
+    value: state.bdTest.hp,
+    max: state.bdTest.maxHp,
+    color: '#ef4444',
+    showValue: true
+  });
+}
+
+function createTextWidget() {
+  return bdWidget('test-text', {
+    type: 'text',
+    text: '📍 ' + state.bdTest.location,
+    style: {
+      fontSize: '14px',
+      fontWeight: 'bold',
+      color: '#a3e635'
+    }
+  });
+}
+
+function createPanelWidget() {
+  return bdWidget('test-panel', {
+    type: 'panel',
+    title: 'Character Stats',
+    items: [
+      { label: 'Level', value: state.bdTest.level, color: '#60a5fa' },
+      { label: 'XP', value: state.bdTest.xp + '/1000' },
+      { label: 'Gold', value: state.bdTest.gold, color: '#fbbf24' }
+    ]
+  });
+}
+
+function createCustomWidget() {
+  return bdWidget('test-custom', {
+    type: 'custom',
+    html: \`
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <div style="font-weight: bold; color: #c084fc;">⚔️ Custom Widget</div>
+        <div style="display: flex; gap: 8px;">
+          <span style="color: #ef4444;">❤️ \${state.bdTest.hp}/\${state.bdTest.maxHp}</span>
+          <span style="color: #fbbf24;">💰 \${state.bdTest.gold}</span>
+        </div>
+        <div style="font-size: 12px; color: #9ca3af;">
+          Level \${state.bdTest.level} • \${state.bdTest.xp} XP
+        </div>
+      </div>
+    \`,
+    style: {
+      padding: '8px',
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      borderRadius: '6px'
+    }
+  });
+}
+
+function createAllWidgets() {
+  return createStatWidget() + 
+         createBarWidget() + 
+         createTextWidget() + 
+         createPanelWidget() + 
+         createCustomWidget();
+}
+
+function destroyAllTestWidgets() {
+  return bdDestroyWidget('test-stat') +
+         bdDestroyWidget('test-bar') +
+         bdDestroyWidget('test-text') +
+         bdDestroyWidget('test-panel') +
+         bdDestroyWidget('test-custom');
+}
+
+function updateAllWidgets() {
+  // Randomize values for visual feedback
+  state.bdTest.hp = Math.max(1, Math.min(state.bdTest.maxHp, state.bdTest.hp + (Math.random() > 0.5 ? 10 : -10)));
+  state.bdTest.gold += Math.floor(Math.random() * 50) - 20;
+  state.bdTest.xp += Math.floor(Math.random() * 100);
+  
+  return bdUpdateWidget('test-stat', { value: state.bdTest.gold }) +
+         bdUpdateWidget('test-bar', { value: state.bdTest.hp }) +
+         bdUpdateWidget('test-text', { text: '📍 ' + state.bdTest.location + ' (Updated!)' }) +
+         bdUpdateWidget('test-panel', {
+           items: [
+             { label: 'Level', value: state.bdTest.level, color: '#60a5fa' },
+             { label: 'XP', value: state.bdTest.xp + '/1000' },
+             { label: 'Gold', value: state.bdTest.gold, color: '#fbbf24' }
+           ]
+         }) +
+         bdUpdateWidget('test-custom', {
+           html: \`<div style="color: #22c55e; font-weight: bold;">✅ Updated at \${new Date().toLocaleTimeString()}</div>\`
+         });
+}
+
+function createStressTestWidgets(count) {
+  let widgets = '';
+  for (let i = 0; i < count; i++) {
+    widgets += bdWidget('stress-' + i, {
+      type: 'stat',
+      label: 'Widget ' + i,
+      value: Math.floor(Math.random() * 100),
+      color: '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')
+    });
+  }
+  state.bdTest.widgetCount = count;
+  return widgets;
+}
+
+function destroyStressTestWidgets() {
+  let widgets = '';
+  for (let i = 0; i < state.bdTest.widgetCount; i++) {
+    widgets += bdDestroyWidget('stress-' + i);
+  }
+  state.bdTest.widgetCount = 0;
+  return widgets;
+}
+
+function createInvalidWidgets() {
+  // These should trigger validation warnings in the console
+  return bdWidget('', { type: 'stat', value: 1 }) +  // Empty ID
+         bdWidget('invalid@id!', { type: 'stat', value: 1 }) +  // Invalid characters in ID
+         bdWidget('no-type', {}) +  // Missing type
+         bdWidget('bad-type', { type: 'unknown' }) +  // Invalid type
+         bdWidget('bad-bar', { type: 'bar', max: -5, value: 'not-a-number' });  // Invalid bar config
+}
+
+function getEventListenerInstructions() {
+  return \`
+// Paste this in browser console (F12) to listen for BetterScripts events:
+
+window.addEventListener('betterscripts:widget', (e) => {
+  console.log('Widget Event:', e.detail.action, e.detail.widgetId, e.detail.config);
+});
+
+window.addEventListener('betterscripts:error', (e) => {
+  console.log('Error Event:', e.detail.type, e.detail.errors);
+});
+
+window.addEventListener('betterscripts:registered', (e) => {
+  console.log('Registered:', e.detail.scriptId, e.detail.scriptName);
+});
+
+window.addEventListener('betterscripts:pong', (e) => {
+  console.log('Pong:', e.detail.timestamp);
+});
+\`;
+}`,
+      context: `// ============================================
+// CONTEXT MODIFIER - Strip protocol messages
+// ============================================
+// CRITICAL: This prevents the AI from seeing/repeating protocol messages.
+
+const modifier = (text) => {
+  // Strip all BetterScripts protocol messages from context
+  text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
+  return { text };
+};
+
+modifier(text);`,
+      input: `// ============================================
+// INPUT MODIFIER - Command Handler
+// ============================================
+// Handles test commands for BetterScripts debugging.
+
+const modifier = (text) => {
+  let stop = false;
+  let output = '';
+  
+  // Parse :command format
+  const match = text.match(/^(?:> You say "|> You |":?|)([/:])([a-zA-Z]+)(?:\\s+(.*))?/i);
+  
+  if (match) {
+    const prefix = match[1];
+    const command = match[2].toLowerCase();
+    const args = match[3] ? match[3].trim().toLowerCase() : '';
+    
+    if (prefix === ':' || prefix === '/') {
+      if (command === 'test') {
+        stop = true;
+        
+        switch (args) {
+          case 'all':
+            output = '🧪 Creating all widget types...';
+            state.bdTest.pendingAction = 'create-all';
+            break;
+          case 'stat':
+            output = '🧪 Creating stat widget...';
+            state.bdTest.pendingAction = 'create-stat';
+            break;
+          case 'bar':
+            output = '🧪 Creating bar widget...';
+            state.bdTest.pendingAction = 'create-bar';
+            break;
+          case 'text':
+            output = '🧪 Creating text widget...';
+            state.bdTest.pendingAction = 'create-text';
+            break;
+          case 'panel':
+            output = '🧪 Creating panel widget...';
+            state.bdTest.pendingAction = 'create-panel';
+            break;
+          case 'custom':
+            output = '🧪 Creating custom widget...';
+            state.bdTest.pendingAction = 'create-custom';
+            break;
+          case 'update':
+            output = '🔄 Updating all widgets with random values...';
+            state.bdTest.pendingAction = 'update-all';
+            break;
+          case 'destroy':
+            output = '🗑️ Destroying all test widgets...';
+            state.bdTest.pendingAction = 'destroy-all';
+            break;
+          case 'stress':
+            output = '⚡ Stress test: Creating 20 widgets...';
+            state.bdTest.pendingAction = 'stress';
+            break;
+          case 'invalid':
+            output = '⚠️ Testing invalid configs (check console for warnings)...';
+            state.bdTest.pendingAction = 'invalid';
+            break;
+          case 'events':
+            output = '📋 Event Listener Instructions:\\n' + getEventListenerInstructions();
+            state.bdTest.pendingAction = 'none';
+            break;
+          default:
+            output = \`❓ Unknown test: "\${args}"
+            
+Available tests:
+  :test all      - Create all widget types
+  :test stat     - Test stat widget
+  :test bar      - Test bar widget  
+  :test text     - Test text widget
+  :test panel    - Test panel widget
+  :test custom   - Test custom HTML widget
+  :test update   - Update widgets with random values
+  :test destroy  - Destroy all test widgets
+  :test stress   - Create 20 widgets (stress test)
+  :test invalid  - Test invalid configs
+  :test events   - Show event listener code\`;
+            state.bdTest.pendingAction = 'none';
+        }
+      }
+      else if (command === 'bd') {
+        stop = true;
+        
+        switch (args) {
+          case 'status':
+            output = \`📊 BetterScripts Status:
+  HP: \${state.bdTest.hp}/\${state.bdTest.maxHp}
+  Gold: \${state.bdTest.gold}
+  Level: \${state.bdTest.level}
+  XP: \${state.bdTest.xp}
+  Location: \${state.bdTest.location}
+  Stress Widgets: \${state.bdTest.widgetCount}\`;
+            state.bdTest.pendingAction = 'none';
+            break;
+          case 'clear':
+            output = '🗑️ Clearing all widgets...';
+            state.bdTest.pendingAction = 'clear-all';
+            break;
+          case 'debug':
+            state.bdTest.showDebug = !state.bdTest.showDebug;
+            output = '🔧 Debug mode: ' + (state.bdTest.showDebug ? 'ON' : 'OFF');
+            state.bdTest.pendingAction = 'none';
+            break;
+          case 'ping':
+            output = '🏓 Sending ping...';
+            state.bdTest.pendingAction = 'ping';
+            break;
+          case 'register':
+            output = '📝 Sending registration...';
+            state.bdTest.pendingAction = 'register';
+            break;
+          default:
+            output = \`❓ Unknown command: "bd \${args}"
+            
+Available commands:
+  :bd status   - Show current state values
+  :bd clear    - Clear all widgets
+  :bd debug    - Toggle debug display
+  :bd ping     - Send ping message
+  :bd register - Send script registration\`;
+            state.bdTest.pendingAction = 'none';
+        }
+      }
+    }
+  }
+  
+  if (stop) {
+    state.message = output;
+    return { text: '', stop: true };
+  }
+  
+  return { text };
+};
+
+modifier(text);`,
+      output: `// ============================================
+// OUTPUT MODIFIER - Execute Pending Actions
+// ============================================
+// Executes test actions and appends widget messages.
+
+const modifier = (text) => {
+  let widgets = '';
+  
+  // Execute pending action from input modifier
+  const action = state.bdTest.pendingAction;
+  state.bdTest.pendingAction = null;
+  
+  switch (action) {
+    case 'create-all':
+      widgets = createAllWidgets();
+      break;
+    case 'create-stat':
+      widgets = createStatWidget();
+      break;
+    case 'create-bar':
+      widgets = createBarWidget();
+      break;
+    case 'create-text':
+      widgets = createTextWidget();
+      break;
+    case 'create-panel':
+      widgets = createPanelWidget();
+      break;
+    case 'create-custom':
+      widgets = createCustomWidget();
+      break;
+    case 'update-all':
+      widgets = updateAllWidgets();
+      break;
+    case 'destroy-all':
+      widgets = destroyAllTestWidgets();
+      break;
+    case 'clear-all':
+      widgets = destroyAllTestWidgets() + destroyStressTestWidgets();
+      break;
+    case 'stress':
+      widgets = createStressTestWidgets(20);
+      break;
+    case 'invalid':
+      widgets = createInvalidWidgets();
+      break;
+    case 'ping':
+      widgets = bdPing();
+      break;
+    case 'register':
+      widgets = bdRegister('test-suite', 'BetterScripts Test Suite', '1.0.0');
+      break;
+  }
+  
+  // Add debug info if enabled
+  if (state.bdTest.showDebug && widgets) {
+    const debugInfo = '\\n[DEBUG] Widgets sent: ' + (widgets.match(/\\[\\[BD:/g) || []).length;
+    text += debugInfo;
+  }
+  
+  return { text: text + widgets };
+};
+
+modifier(text);`
+    }
   }
 ]
 
