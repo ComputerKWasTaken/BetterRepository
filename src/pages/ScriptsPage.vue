@@ -744,6 +744,7 @@ if (card !== null) {
                   <li><code class="text-bd-cyan">bar</code> — Progress bar (e.g., HP bar)</li>
                   <li><code class="text-bd-cyan">panel</code> — Multi-stat container</li>
                   <li><code class="text-bd-cyan">text</code> — Simple text display</li>
+                  <li><code class="text-bd-cyan">custom</code> — Custom HTML (sanitized)</li>
                 </ul>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
