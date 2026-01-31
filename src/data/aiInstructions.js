@@ -641,32 +641,6 @@ export const INSTRUCTIONS = [
     ]
   },
   {
-    id: 'role-first-person',
-    name: 'First Person',
-    category: 'role-persona',
-    difficulty: 'beginner',
-    impact: 'medium',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['pov', 'tense', 'first-person', 'intimate'],
-    models: ['All Models'],
-    conflicts: ['role-second-person', 'role-third-person'],
-    groupId: 'pov-tense',
-    groupOrder: 1,
-    description: 'First person POV: "I walk into the room."',
-    purpose: 'More intimate and internal. Good for character-focused stories where you want deep access to thoughts and feelings.',
-    variants: [
-      {
-        label: 'Present Tense',
-        content: '- Write in first person, present tense'
-      },
-      {
-        label: 'Past Tense',
-        content: '- Write in first person, past tense'
-      }
-    ]
-  },
-  {
     id: 'role-third-person',
     name: 'Third Person',
     category: 'role-persona',
@@ -689,10 +663,6 @@ export const INSTRUCTIONS = [
       {
         label: 'Omniscient',
         content: '- Write in third person omniscient, with access to any character\'s thoughts when narratively appropriate'
-      },
-      {
-        label: 'Past Tense',
-        content: '- Write in third person, past tense'
       }
     ]
   },
