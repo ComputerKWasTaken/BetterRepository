@@ -17,13 +17,13 @@ Just paste your content and I'll handle the rest.
 
 I'll review it, format it if needed, and add it to the collection.
 
-### Option 2: Pull Request
+### Other Ways to Contribute
 
-If you're comfortable with Git:
+#### Pull Request
+If you're comfortable with Git, fork the repo and submit a PR.
 
-1. Fork the repository
-2. Add your content to the appropriate file in `src/data/`
-3. Submit a pull request
+#### Discord
+Share in the [AI Dungeon Discord](https://discord.gg/aidungeon) and ping me to add it.
 
 ---
 
@@ -31,10 +31,10 @@ If you're comfortable with Git:
 
 | Type | What It Is |
 |------|------------|
-| **AI Instructions** | Rules that shape how the AI writes (style, pacing, tone) |
-| **Plot Components** | Author's Notes, Plot Essentials, Memory Banks, Story Summaries |
-| **Story Card Templates** | Reusable templates for character archetypes, location types, faction structures |
-| **Scripts** | JavaScript code for game mechanics, tracking, formatting |
+| **AI Instructions** | Style, pacing, tone rules, etc. |
+| **Plot Components** | Plot Essentials, Story Summary, Author's Notes |
+| **Story Cards** | Templates for characters, locations, items |
+| **Scripts** | Game mechanics, utilities, automation |
 
 ### About Story Cards
 

@@ -5,8 +5,9 @@
 </p>
 
 <p align="center">
-  <strong>The ultimate AI Dungeon resource hub.</strong><br>
-  Find AI Instructions, Plot Components, Story Cards, and Scripts; all in one place.
+  <strong>AI Dungeon Resource Hub</strong><br>
+  A curated collection of AI Instructions, Plot Components, Story Cards, and Scripts.<br>
+  Everything you need to craft <span style="color: #4ade80">better adventures</span>.
 </p>
 
 <p align="center">
@@ -22,11 +23,10 @@
 
 | Resource | Description |
 |----------|-------------|
-| **AI Instructions** | Rules that control how the AI writes — style, pacing, tone, and behavior |
-| **Plot Components** | Author's Notes, Plot Essentials, and Story Summaries |
-| **Story Cards** | Ready-to-use character, location, faction, and item cards |
-| **Scripts** | Custom JavaScript to add features like dice rolls, inventory, and more |
-| **Guides** | Learn how each feature works with beginner-friendly tutorials |
+| **AI Instructions** | Rules and guidelines for AI behavior, writing style, and narrative control. |
+| **Plot Components** | Author's Notes, Plot Essentials, and Story Summary templates. |
+| **Story Cards** | Templates for Story Cards, including characters, locations, factions, abilities, and more. |
+| **Scripts** | JavaScript examples for game systems, tracking, and automation. |
 
 Everything is **free**, **tested**, and **ready to copy-paste** into your adventures.
 
@@ -43,7 +43,7 @@ Everything is **free**, **tested**, and **ready to copy-paste** into your advent
 3. **Tell me what it does** in a sentence or two
 4. Done! I'll format it and add it to the collection.
 
-That's it. No pull requests, no coding, no fuss.
+You can also share in the **[AI Dungeon Discord](https://discord.gg/aidungeon)** and ping me.
 
 > 📖 See [CONTRIBUTING.md](CONTRIBUTING.md) for more details and formatting tips.
 
@@ -51,22 +51,27 @@ That's it. No pull requests, no coding, no fuss.
 
 ## Credits
 
-### Inspiration
+BetterRepository is built on the shoulders of giants. Thank you to everyone who contributed.
 
-BetterRepository was inspired by **[OffMetaGamer's AI Instructions Repository](https://docs.google.com/document/d/1na9MeTcx0QY6MkZdQSkFQFL91sT8BSiJ_6gxrC5sNEU)** — the original comprehensive collection that started it all.
+### Major Contributors
+*Contributors whose work significantly shaped BetterRepository*
+OffMetaGamer, Wilmar, Le Onyx, LewdLeah, Dragranis, Monsieur Boo
 
-### Contributors
+### Contributors by Category
 
-A huge thank you to everyone whose work helped build this resource:
+**AI Instructions**
+OffMetaGamer, Hawk, Dirty Kurtis, Shiny, Leshok, Dragranis, BinKompliziert, Wilmar, Le Onyx, Little Hat, SeinSchetten, Zoocata, Monsieur Boo, CamSift
 
-| Contributor | Contribution |
-|-------------|--------------|
-| **OffMetaGamer** | Original AI Instructions collection |
-| **dragranis & BinKompliziert** | AI Instructions guides |
-| **Wilmar** | Plot Components guide |
-| **wanderstar1 & GremmieGremlin** | Story Cards guides |
-| **Oli, LewdLeah & MrJack** | Scripts guides & utilities |
-| **The AI Dungeon Community** | Endless creativity and feedback |
+**Plot Components**
+Wilmar, Le Onyx, Dragranis, Celyne, Monsieur Boo
+
+**Story Cards**
+wanderingstar1, GremmieGremlin, Lavere, Le Onyx, Shiny
+
+**Scripting**
+Latitude, LewdLeah, Oli, Magic, BinKompliziert, MrJack
+
+And the entire **AI Dungeon Community**. Thank you!
 
 ---
 
