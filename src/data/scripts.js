@@ -1226,53 +1226,43 @@ modifier(text);`
     }
   },
   {
-    id: 'betterscripts-test-suite',
-    name: 'BetterScripts Test Suite',
+    id: 'betterscripts-debug-console',
+    name: 'BetterScripts Debug Console',
     category: 'betterscripts',
-    difficulty: 'advanced',
-    impact: 'low',
-    essential: false,
-    tags: ['widgets', 'testing', 'debug', 'betterscripts', 'all-widgets'],
+    difficulty: 'intermediate',
+    impact: 'high',
+    essential: true,
+    tags: ['widgets', 'debug', 'testing', 'betterscripts', 'commands', 'developer-tool'],
     source: 'BetterRepository',
-    description: 'Comprehensive test script for debugging and testing all BetterScripts functionality.',
-    purpose: 'Tests all widget types (stat, bar, text, panel, custom), all actions (create, update, destroy), protocol validation, and provides interactive commands for debugging.',
+    description: 'A debug console for testing BetterScripts widgets using : commands in Do actions.',
+    purpose: 'Allows developers to test all widget types, debug communication, and verify BetterScripts functionality. Type ":help" for available commands.',
     requiresExtension: 'BetterDungeon',
     files: {
       library: `// ============================================
-// LIBRARY - BetterScripts Test Suite
+// LIBRARY - BetterScripts Debug Console
 // ============================================
-// Comprehensive test script for BetterScripts.
-// Use commands to test all widget types and actions.
+// A comprehensive debug tool for testing BetterScripts.
+// Use : commands in Do actions to control widgets.
 //
 // COMMANDS:
-//   :test all       - Create all widget types
-//   :test stat      - Test stat widget
-//   :test bar       - Test bar widget
-//   :test text      - Test text widget
-//   :test panel     - Test panel widget
-//   :test custom    - Test custom HTML widget
-//   :test update    - Test widget updates
-//   :test destroy   - Destroy all test widgets
-//   :test stress    - Create many widgets (stress test)
-//   :test invalid   - Test invalid configs (validation)
-//   :test events    - Show event listener instructions
-//   :bd status      - Show current widget status
-//   :bd clear       - Clear all widgets
-//   :bd debug       - Toggle debug info display
+//   :help                    - Show all commands
+//   :ping                    - Test BetterScripts connection
+//   :clear                   - Remove all widgets
+//   :stat <id> <label> <val> - Create stat widget
+//   :bar <id> <val> <max>    - Create bar widget  
+//   :text <id> <message>     - Create text widget
+//   :panel <id> <title>      - Create panel widget
+//   :custom <id> <html>      - Create custom widget
+//   :update <id> <prop> <v>  - Update widget property
+//   :destroy <id>            - Remove specific widget
+//   :demo                    - Show demo widgets
+//   :stress <count>          - Stress test with N widgets
 
-// ============================================
-// STATE INITIALIZATION
-// ============================================
-
-state.bdTest = state.bdTest ?? {
-  hp: 75,
-  maxHp: 100,
-  gold: 250,
-  level: 5,
-  xp: 450,
-  location: 'Test Chamber',
-  showDebug: false,
-  widgetCount: 0
+state.bd = state.bd ?? {
+  turn: 0,
+  lastCommand: null,
+  lastResult: null,
+  debugMode: true
 };
 
 // ============================================
@@ -1280,13 +1270,14 @@ state.bdTest = state.bdTest ?? {
 // ============================================
 
 function bdMessage(message) {
+  // Add protocol version
+  message.v = '1.0';
   return \`[[BD:\${JSON.stringify(message)}:BD]]\`;
 }
 
 function bdWidget(widgetId, config) {
   return bdMessage({
     type: 'widget',
-    v: '1.0',
     widgetId: widgetId,
     action: 'create',
     config: config
@@ -1296,7 +1287,6 @@ function bdWidget(widgetId, config) {
 function bdUpdateWidget(widgetId, config) {
   return bdMessage({
     type: 'widget',
-    v: '1.0',
     widgetId: widgetId,
     action: 'update',
     config: config
@@ -1306,405 +1296,489 @@ function bdUpdateWidget(widgetId, config) {
 function bdDestroyWidget(widgetId) {
   return bdMessage({
     type: 'widget',
-    v: '1.0',
     widgetId: widgetId,
     action: 'destroy'
   });
 }
 
-function bdRegister(scriptId, scriptName, version) {
-  return bdMessage({
-    type: 'register',
-    v: '1.0',
-    scriptId: scriptId,
-    scriptName: scriptName,
-    version: version,
-    capabilities: ['stat', 'bar', 'text', 'panel', 'custom']
-  });
-}
-
-function bdPing() {
+function bdPing(data) {
   return bdMessage({
     type: 'ping',
-    v: '1.0',
     timestamp: Date.now(),
-    data: 'test-ping'
+    data: data || 'debug-console'
+  });
+}
+
+function bdRegister() {
+  return bdMessage({
+    type: 'register',
+    scriptId: 'debug-console',
+    scriptName: 'BetterScripts Debug Console',
+    version: '1.0.0',
+    capabilities: ['widgets', 'debug']
   });
 }
 
 // ============================================
-// TEST WIDGET GENERATORS
+// COMMAND PARSER
 // ============================================
 
-function createStatWidget() {
-  return bdWidget('test-stat', {
-    type: 'stat',
-    label: 'Gold',
-    value: state.bdTest.gold,
-    color: '#fbbf24'
-  });
-}
-
-function createBarWidget() {
-  return bdWidget('test-bar', {
-    type: 'bar',
-    label: 'HP',
-    value: state.bdTest.hp,
-    max: state.bdTest.maxHp,
-    color: '#ef4444',
-    showValue: true
-  });
-}
-
-function createTextWidget() {
-  return bdWidget('test-text', {
-    type: 'text',
-    text: '📍 ' + state.bdTest.location,
-    style: {
-      fontSize: '14px',
-      fontWeight: 'bold',
-      color: '#a3e635'
-    }
-  });
-}
-
-function createPanelWidget() {
-  return bdWidget('test-panel', {
-    type: 'panel',
-    title: 'Character Stats',
-    items: [
-      { label: 'Level', value: state.bdTest.level, color: '#60a5fa' },
-      { label: 'XP', value: state.bdTest.xp + '/1000' },
-      { label: 'Gold', value: state.bdTest.gold, color: '#fbbf24' }
-    ]
-  });
-}
-
-function createCustomWidget() {
-  return bdWidget('test-custom', {
-    type: 'custom',
-    html: \`
-      <div style="display: flex; flex-direction: column; gap: 4px;">
-        <div style="font-weight: bold; color: #c084fc;">⚔️ Custom Widget</div>
-        <div style="display: flex; gap: 8px;">
-          <span style="color: #ef4444;">❤️ \${state.bdTest.hp}/\${state.bdTest.maxHp}</span>
-          <span style="color: #fbbf24;">💰 \${state.bdTest.gold}</span>
-        </div>
-        <div style="font-size: 12px; color: #9ca3af;">
-          Level \${state.bdTest.level} • \${state.bdTest.xp} XP
-        </div>
-      </div>
-    \`,
-    style: {
-      padding: '8px',
-      backgroundColor: 'rgba(0,0,0,0.3)',
-      borderRadius: '6px'
-    }
-  });
-}
-
-function createAllWidgets() {
-  return createStatWidget() + 
-         createBarWidget() + 
-         createTextWidget() + 
-         createPanelWidget() + 
-         createCustomWidget();
-}
-
-function destroyAllTestWidgets() {
-  return bdDestroyWidget('test-stat') +
-         bdDestroyWidget('test-bar') +
-         bdDestroyWidget('test-text') +
-         bdDestroyWidget('test-panel') +
-         bdDestroyWidget('test-custom');
-}
-
-function updateAllWidgets() {
-  // Randomize values for visual feedback
-  state.bdTest.hp = Math.max(1, Math.min(state.bdTest.maxHp, state.bdTest.hp + (Math.random() > 0.5 ? 10 : -10)));
-  state.bdTest.gold += Math.floor(Math.random() * 50) - 20;
-  state.bdTest.xp += Math.floor(Math.random() * 100);
+function parseCommand(input) {
+  // Match : commands - handle quoted strings
+  const match = input.match(/^:([\\w-]+)(?:\\s+(.*))?$/);
+  if (!match) return null;
   
-  return bdUpdateWidget('test-stat', { value: state.bdTest.gold }) +
-         bdUpdateWidget('test-bar', { value: state.bdTest.hp }) +
-         bdUpdateWidget('test-text', { text: '📍 ' + state.bdTest.location + ' (Updated!)' }) +
-         bdUpdateWidget('test-panel', {
-           items: [
-             { label: 'Level', value: state.bdTest.level, color: '#60a5fa' },
-             { label: 'XP', value: state.bdTest.xp + '/1000' },
-             { label: 'Gold', value: state.bdTest.gold, color: '#fbbf24' }
-           ]
-         }) +
-         bdUpdateWidget('test-custom', {
-           html: \`<div style="color: #22c55e; font-weight: bold;">✅ Updated at \${new Date().toLocaleTimeString()}</div>\`
-         });
-}
-
-function createStressTestWidgets(count) {
-  let widgets = '';
-  for (let i = 0; i < count; i++) {
-    widgets += bdWidget('stress-' + i, {
-      type: 'stat',
-      label: 'Widget ' + i,
-      value: Math.floor(Math.random() * 100),
-      color: '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')
-    });
+  const command = match[1].toLowerCase();
+  const argsStr = match[2] || '';
+  
+  // Parse arguments (support quoted strings)
+  const args = [];
+  const regex = /"([^"]+)"|'([^']+)'|(\\S+)/g;
+  let m;
+  while ((m = regex.exec(argsStr)) !== null) {
+    args.push(m[1] || m[2] || m[3]);
   }
-  state.bdTest.widgetCount = count;
-  return widgets;
+  
+  return { command, args, raw: argsStr };
 }
 
-function destroyStressTestWidgets() {
-  let widgets = '';
-  for (let i = 0; i < state.bdTest.widgetCount; i++) {
-    widgets += bdDestroyWidget('stress-' + i);
+// ============================================
+// COMMAND HANDLERS
+// ============================================
+
+const COMMANDS = {
+  help: {
+    desc: 'Show all available commands',
+    usage: ':help',
+    handler: () => {
+      let helpText = '\\n📖 **BetterScripts Debug Console**\\n';
+      helpText += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n';
+      for (const [name, cmd] of Object.entries(COMMANDS)) {
+        helpText += \`• \${cmd.usage} - \${cmd.desc}\\n\`;
+      }
+      return { output: helpText, widgets: '' };
+    }
+  },
+  
+  ping: {
+    desc: 'Test BetterScripts connection',
+    usage: ':ping',
+    handler: () => {
+      const widgets = bdPing('manual-ping-' + Date.now());
+      return { 
+        output: '\\n🏓 Ping sent! Check browser console for pong event.', 
+        widgets 
+      };
+    }
+  },
+  
+  register: {
+    desc: 'Send script registration message',
+    usage: ':register',
+    handler: () => {
+      const widgets = bdRegister();
+      return { 
+        output: '\\n📝 Registration sent! Check browser console for event.', 
+        widgets 
+      };
+    }
+  },
+  
+  clear: {
+    desc: 'Remove all debug widgets',
+    usage: ':clear',
+    handler: () => {
+      // Use clearAll message type for efficient clearing (single message)
+      const widgets = bdMessage({ type: 'clearAll' });
+      state.bd.lastResult = 'Cleared all widgets';
+      return { output: '\\n🧹 All debug widgets cleared.', widgets };
+    }
+  },
+  
+  stat: {
+    desc: 'Create a stat widget',
+    usage: ':stat <id> <label> <value> [color]',
+    handler: (args) => {
+      const id = args[0] || 'test-stat';
+      const label = args[1] || 'Test';
+      const value = args[2] || '42';
+      const color = args[3] || '#60a5fa';
+      
+      const widgets = bdWidget(id, {
+        type: 'stat',
+        label: label,
+        value: value,
+        color: color
+      });
+      
+      return { 
+        output: \`\\n📊 Created stat widget "\${id}": \${label} = \${value}\`, 
+        widgets 
+      };
+    }
+  },
+  
+  bar: {
+    desc: 'Create a bar widget',
+    usage: ':bar <id> <value> <max> [label] [color]',
+    handler: (args) => {
+      const id = args[0] || 'test-bar';
+      const value = parseInt(args[1]) || 75;
+      const max = parseInt(args[2]) || 100;
+      const label = args[3] || 'Progress';
+      const color = args[4] || '#22c55e';
+      
+      const widgets = bdWidget(id, {
+        type: 'bar',
+        label: label,
+        value: value,
+        max: max,
+        color: color,
+        showValue: true
+      });
+      
+      return { 
+        output: \`\\n📈 Created bar widget "\${id}": \${label} \${value}/\${max}\`, 
+        widgets 
+      };
+    }
+  },
+  
+  text: {
+    desc: 'Create a text widget',
+    usage: ':text <id> <message> [color]',
+    handler: (args) => {
+      const id = args[0] || 'test-text';
+      const message = args[1] || 'Hello BetterScripts!';
+      const color = args[2] || '#fbbf24';
+      
+      const widgets = bdWidget(id, {
+        type: 'text',
+        text: message,
+        style: {
+          color: color,
+          fontWeight: 'bold'
+        }
+      });
+      
+      return { 
+        output: \`\\n💬 Created text widget "\${id}": "\${message}"\`, 
+        widgets 
+      };
+    }
+  },
+  
+  panel: {
+    desc: 'Create a panel widget with sample items',
+    usage: ':panel <id> <title>',
+    handler: (args) => {
+      const id = args[0] || 'test-panel';
+      const title = args[1] || 'Test Panel';
+      
+      const widgets = bdWidget(id, {
+        type: 'panel',
+        title: title,
+        items: [
+          { label: 'Item 1', value: 'Value A', color: '#60a5fa' },
+          { label: 'Item 2', value: 'Value B', color: '#22c55e' },
+          { label: 'Item 3', value: 'Value C', color: '#fbbf24' }
+        ]
+      });
+      
+      return { 
+        output: \`\\n📋 Created panel widget "\${id}": "\${title}"\`, 
+        widgets 
+      };
+    }
+  },
+  
+  custom: {
+    desc: 'Create a custom HTML widget',
+    usage: ':custom <id> <html>',
+    handler: (args) => {
+      const id = args[0] || 'test-custom';
+      const html = args[1] || '<div style="padding:8px;background:#1e1e2e;border-radius:4px;"><strong style="color:#f472b6;">Custom</strong> <span style="color:#94a3b8;">HTML Widget</span></div>';
+      
+      const widgets = bdWidget(id, {
+        type: 'custom',
+        html: html
+      });
+      
+      return { 
+        output: \`\\n🎨 Created custom widget "\${id}"\`, 
+        widgets 
+      };
+    }
+  },
+  
+  update: {
+    desc: 'Update a widget property',
+    usage: ':update <id> <property> <value>',
+    handler: (args) => {
+      const id = args[0];
+      const prop = args[1];
+      const value = args[2];
+      
+      if (!id || !prop) {
+        return { output: '\\n❌ Usage: :update <id> <property> <value>', widgets: '' };
+      }
+      
+      // Parse value (handle numbers)
+      let parsedValue = value;
+      if (!isNaN(value) && value !== '') {
+        parsedValue = parseFloat(value);
+      }
+      
+      const config = {};
+      config[prop] = parsedValue;
+      
+      const widgets = bdUpdateWidget(id, config);
+      
+      return { 
+        output: \`\\n✏️ Updated "\${id}".\${prop} = \${parsedValue}\`, 
+        widgets 
+      };
+    }
+  },
+  
+  destroy: {
+    desc: 'Destroy a specific widget',
+    usage: ':destroy <id>',
+    handler: (args) => {
+      const id = args[0];
+      if (!id) {
+        return { output: '\\n❌ Usage: :destroy <id>', widgets: '' };
+      }
+      
+      const widgets = bdDestroyWidget(id);
+      return { output: \`\\n🗑️ Destroyed widget "\${id}"\`, widgets };
+    }
+  },
+  
+  demo: {
+    desc: 'Show demo widgets of all types',
+    usage: ':demo',
+    handler: () => {
+      let widgets = '';
+      
+      // HP Bar
+      widgets += bdWidget('demo-hp', {
+        type: 'bar',
+        label: 'HP',
+        value: 75,
+        max: 100,
+        color: '#ef4444',
+        showValue: true
+      });
+      
+      // Gold stat
+      widgets += bdWidget('demo-gold', {
+        type: 'stat',
+        label: 'Gold',
+        value: '1,250',
+        color: '#fbbf24'
+      });
+      
+      // Status text
+      widgets += bdWidget('demo-status', {
+        type: 'text',
+        text: '⚔️ In Combat',
+        style: { color: '#f472b6', fontWeight: 'bold' }
+      });
+      
+      // Character panel
+      widgets += bdWidget('demo-panel', {
+        type: 'panel',
+        title: 'Character',
+        items: [
+          { label: 'Level', value: '12', color: '#a855f7' },
+          { label: 'Class', value: 'Warrior', color: '#60a5fa' },
+          { label: 'XP', value: '4,500/5,000', color: '#22c55e' }
+        ]
+      });
+      
+      return { 
+        output: '\\n🎮 Demo widgets created! (HP bar, Gold stat, Status text, Character panel)', 
+        widgets 
+      };
+    }
+  },
+  
+  stress: {
+    desc: 'Stress test with N widgets',
+    usage: ':stress <count>',
+    handler: (args) => {
+      const count = Math.min(parseInt(args[0]) || 10, 50);
+      let widgets = '';
+      
+      for (let i = 0; i < count; i++) {
+        widgets += bdWidget('stress-' + i, {
+          type: 'stat',
+          label: 'Widget ' + i,
+          value: Math.floor(Math.random() * 100),
+          color: \`hsl(\${(i * 360 / count)}, 70%, 60%)\`
+        });
+      }
+      
+      return { 
+        output: \`\\n🔥 Created \${count} stress test widgets\`, 
+        widgets 
+      };
+    }
+  },
+  
+  version: {
+    desc: 'Test protocol version handling',
+    usage: ':version <v>',
+    handler: (args) => {
+      const version = args[0] || '1.0';
+      // Send a message with custom version
+      const msg = {
+        type: 'ping',
+        v: version,
+        timestamp: Date.now(),
+        data: 'version-test'
+      };
+      const widgets = \`[[BD:\${JSON.stringify(msg)}:BD]]\`;
+      return { 
+        output: \`\\n🔢 Sent ping with protocol version "\${version}"\`, 
+        widgets 
+      };
+    }
+  },
+  
+  invalid: {
+    desc: 'Send an invalid message to test error handling',
+    usage: ':invalid <type>',
+    handler: (args) => {
+      const errorType = args[0] || 'type';
+      let widgets = '';
+      
+      switch (errorType) {
+        case 'json':
+          widgets = '[[BD:{ invalid json :BD]]';
+          break;
+        case 'type':
+          widgets = bdMessage({ type: 'nonexistent_type' });
+          break;
+        case 'widget':
+          widgets = bdWidget('bad-widget', { /* missing type */ });
+          break;
+        case 'id':
+          widgets = bdWidget('bad widget id!@#', { type: 'stat', label: 'X', value: 1 });
+          break;
+        default:
+          widgets = bdMessage({ type: 'unknown_message_type' });
+      }
+      
+      return { 
+        output: \`\\n⚠️ Sent invalid message (type: \${errorType}). Check console for errors.\`, 
+        widgets 
+      };
+    }
   }
-  state.bdTest.widgetCount = 0;
-  return widgets;
-}
+};
 
-function createInvalidWidgets() {
-  // These should trigger validation warnings in the console
-  return bdWidget('', { type: 'stat', value: 1 }) +  // Empty ID
-         bdWidget('invalid@id!', { type: 'stat', value: 1 }) +  // Invalid characters in ID
-         bdWidget('no-type', {}) +  // Missing type
-         bdWidget('bad-type', { type: 'unknown' }) +  // Invalid type
-         bdWidget('bad-bar', { type: 'bar', max: -5, value: 'not-a-number' });  // Invalid bar config
-}
+// ============================================
+// EXECUTE COMMAND
+// ============================================
 
-function getEventListenerInstructions() {
-  return \`
-// Paste this in browser console (F12) to listen for BetterScripts events:
-
-window.addEventListener('betterscripts:widget', (e) => {
-  console.log('Widget Event:', e.detail.action, e.detail.widgetId, e.detail.config);
-});
-
-window.addEventListener('betterscripts:error', (e) => {
-  console.log('Error Event:', e.detail.type, e.detail.errors);
-});
-
-window.addEventListener('betterscripts:registered', (e) => {
-  console.log('Registered:', e.detail.scriptId, e.detail.scriptName);
-});
-
-window.addEventListener('betterscripts:pong', (e) => {
-  console.log('Pong:', e.detail.timestamp);
-});
-\`;
+function executeCommand(input) {
+  const parsed = parseCommand(input);
+  if (!parsed) return null;
+  
+  const handler = COMMANDS[parsed.command];
+  if (!handler) {
+    return { 
+      output: \`\\n❌ Unknown command: "\${parsed.command}". Type :help for commands.\`,
+      widgets: ''
+    };
+  }
+  
+  state.bd.lastCommand = parsed;
+  const result = handler.handler(parsed.args);
+  state.bd.lastResult = result.output;
+  return result;
 }`,
       context: `// ============================================
-// CONTEXT MODIFIER - Strip protocol messages
+// CONTEXT MODIFIER - Strip Protocol Messages
 // ============================================
-// CRITICAL: This prevents the AI from seeing/repeating protocol messages.
+// Critical: Remove [[BD:...:BD]] so AI doesn't see or hallucinate them.
 
 const modifier = (text) => {
-  // Strip all BetterScripts protocol messages from context
   text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
   return { text };
 };
 
 modifier(text);`,
       input: `// ============================================
-// INPUT MODIFIER - Command Handler
+// INPUT MODIFIER - Parse : Commands (Story Action)
 // ============================================
-// Handles test commands for BetterScripts debugging.
+// Detects commands in Story actions starting with :
+// Use Story action (not Do) to type commands like :help
+//
+// NOTE: We can't use stop:true in onInput (throws error).
+// Instead, we detect command, store result, and replace
+// the input with a placeholder. Output modifier handles display.
 
 const modifier = (text) => {
-  let stop = false;
-  let output = '';
+  state.bd.turn++;
+  state.bd.isCommand = false;
   
-  // Parse :command format
-  const match = text.match(/^(?:> You say "|> You |":?|)([/:])([a-zA-Z]+)(?:\\s+(.*))?/i);
+  // Get raw input text (trim whitespace)
+  const input = text.trim();
   
-  if (match) {
-    const prefix = match[1];
-    const command = match[2].toLowerCase();
-    const args = match[3] ? match[3].trim().toLowerCase() : '';
+  // Check if input starts with : (our command prefix)
+  if (input.startsWith(':')) {
+    const result = executeCommand(input);
     
-    if (prefix === ':' || prefix === '/') {
-      if (command === 'test') {
-        stop = true;
-        
-        switch (args) {
-          case 'all':
-            output = '🧪 Creating all widget types...';
-            state.bdTest.pendingAction = 'create-all';
-            break;
-          case 'stat':
-            output = '🧪 Creating stat widget...';
-            state.bdTest.pendingAction = 'create-stat';
-            break;
-          case 'bar':
-            output = '🧪 Creating bar widget...';
-            state.bdTest.pendingAction = 'create-bar';
-            break;
-          case 'text':
-            output = '🧪 Creating text widget...';
-            state.bdTest.pendingAction = 'create-text';
-            break;
-          case 'panel':
-            output = '🧪 Creating panel widget...';
-            state.bdTest.pendingAction = 'create-panel';
-            break;
-          case 'custom':
-            output = '🧪 Creating custom widget...';
-            state.bdTest.pendingAction = 'create-custom';
-            break;
-          case 'update':
-            output = '🔄 Updating all widgets with random values...';
-            state.bdTest.pendingAction = 'update-all';
-            break;
-          case 'destroy':
-            output = '🗑️ Destroying all test widgets...';
-            state.bdTest.pendingAction = 'destroy-all';
-            break;
-          case 'stress':
-            output = '⚡ Stress test: Creating 20 widgets...';
-            state.bdTest.pendingAction = 'stress';
-            break;
-          case 'invalid':
-            output = '⚠️ Testing invalid configs (check console for warnings)...';
-            state.bdTest.pendingAction = 'invalid';
-            break;
-          case 'events':
-            output = '📋 Event Listener Instructions:\\n' + getEventListenerInstructions();
-            state.bdTest.pendingAction = 'none';
-            break;
-          default:
-            output = \`❓ Unknown test: "\${args}"
-            
-Available tests:
-  :test all      - Create all widget types
-  :test stat     - Test stat widget
-  :test bar      - Test bar widget  
-  :test text     - Test text widget
-  :test panel    - Test panel widget
-  :test custom   - Test custom HTML widget
-  :test update   - Update widgets with random values
-  :test destroy  - Destroy all test widgets
-  :test stress   - Create 20 widgets (stress test)
-  :test invalid  - Test invalid configs
-  :test events   - Show event listener code\`;
-            state.bdTest.pendingAction = 'none';
-        }
-      }
-      else if (command === 'bd') {
-        stop = true;
-        
-        switch (args) {
-          case 'status':
-            output = \`📊 BetterScripts Status:
-  HP: \${state.bdTest.hp}/\${state.bdTest.maxHp}
-  Gold: \${state.bdTest.gold}
-  Level: \${state.bdTest.level}
-  XP: \${state.bdTest.xp}
-  Location: \${state.bdTest.location}
-  Stress Widgets: \${state.bdTest.widgetCount}\`;
-            state.bdTest.pendingAction = 'none';
-            break;
-          case 'clear':
-            output = '🗑️ Clearing all widgets...';
-            state.bdTest.pendingAction = 'clear-all';
-            break;
-          case 'debug':
-            state.bdTest.showDebug = !state.bdTest.showDebug;
-            output = '🔧 Debug mode: ' + (state.bdTest.showDebug ? 'ON' : 'OFF');
-            state.bdTest.pendingAction = 'none';
-            break;
-          case 'ping':
-            output = '🏓 Sending ping...';
-            state.bdTest.pendingAction = 'ping';
-            break;
-          case 'register':
-            output = '📝 Sending registration...';
-            state.bdTest.pendingAction = 'register';
-            break;
-          default:
-            output = \`❓ Unknown command: "bd \${args}"
-            
-Available commands:
-  :bd status   - Show current state values
-  :bd clear    - Clear all widgets
-  :bd debug    - Toggle debug display
-  :bd ping     - Send ping message
-  :bd register - Send script registration\`;
-            state.bdTest.pendingAction = 'none';
-        }
-      }
+    if (result) {
+      // Store for output modifier to display
+      state.bd.pendingOutput = result.output;
+      state.bd.pendingWidgets = result.widgets;
+      state.bd.isCommand = true;
+      
+      // Replace input with placeholder (AI will respond to this)
+      // We'll override the output in the output modifier
+      return { text: '[DEBUG COMMAND]' };
     }
   }
   
-  if (stop) {
-    state.message = output;
-    return { text: '', stop: true };
-  }
-  
+  // Not a command - pass through normally
   return { text };
 };
 
 modifier(text);`,
       output: `// ============================================
-// OUTPUT MODIFIER - Execute Pending Actions
+// OUTPUT MODIFIER - Display Results
 // ============================================
-// Executes test actions and appends widget messages.
+// Shows command results and appends widget protocol messages.
+// If a command was detected in input, we override the AI output.
 
 const modifier = (text) => {
+  let output = text;
   let widgets = '';
   
-  // Execute pending action from input modifier
-  const action = state.bdTest.pendingAction;
-  state.bdTest.pendingAction = null;
-  
-  switch (action) {
-    case 'create-all':
-      widgets = createAllWidgets();
-      break;
-    case 'create-stat':
-      widgets = createStatWidget();
-      break;
-    case 'create-bar':
-      widgets = createBarWidget();
-      break;
-    case 'create-text':
-      widgets = createTextWidget();
-      break;
-    case 'create-panel':
-      widgets = createPanelWidget();
-      break;
-    case 'create-custom':
-      widgets = createCustomWidget();
-      break;
-    case 'update-all':
-      widgets = updateAllWidgets();
-      break;
-    case 'destroy-all':
-      widgets = destroyAllTestWidgets();
-      break;
-    case 'clear-all':
-      widgets = destroyAllTestWidgets() + destroyStressTestWidgets();
-      break;
-    case 'stress':
-      widgets = createStressTestWidgets(20);
-      break;
-    case 'invalid':
-      widgets = createInvalidWidgets();
-      break;
-    case 'ping':
-      widgets = bdPing();
-      break;
-    case 'register':
-      widgets = bdRegister('test-suite', 'BetterScripts Test Suite', '1.0.0');
-      break;
+  // Check for pending command output (override AI response)
+  if (state.bd.isCommand && state.bd.pendingOutput) {
+    output = state.bd.pendingOutput;
+    widgets = state.bd.pendingWidgets || '';
+    
+    // Clear pending
+    state.bd.pendingOutput = null;
+    state.bd.pendingWidgets = null;
+    state.bd.isCommand = false;
   }
   
-  // Add debug info if enabled
-  if (state.bdTest.showDebug && widgets) {
-    const debugInfo = '\\n[DEBUG] Widgets sent: ' + (widgets.match(/\\[\\[BD:/g) || []).length;
-    text += debugInfo;
-  }
+  // Always show turn counter widget
+  widgets += bdWidget('console-turn', {
+    type: 'stat',
+    label: 'Turn',
+    value: state.bd.turn,
+    color: '#94a3b8'
+  });
   
-  return { text: text + widgets };
+  return { text: output + widgets };
 };
 
 modifier(text);`
