@@ -1097,17 +1097,37 @@ const modifier = (text) => {
     state.time.isCommand = false;
   }
   
-  // Build time widget
+  // Build time widgets (multiple stats for time, day, period)
   const period = getTimePeriod();
-  const widgets = bdWidget('game-time', {
-    type: 'text',
-    text: period.icon + ' ' + getTimeString() + ' · ' + getWeekday().substring(0, 3) + ' D' + getDay(),
-    style: { 
-      fontSize: '13px', 
-      fontWeight: '500',
-      color: period.name === 'Night' || period.name === 'Midnight' ? '#94a3b8' : '#fbbf24'
-    },
-    order: 0
+  const isNight = period.name === 'Night' || period.name === 'Midnight';
+  
+  let widgets = '';
+  
+  // Time widget (order: 1)
+  widgets += bdWidget('time-clock', {
+    type: 'stat',
+    label: period.icon,
+    value: getTimeString(),
+    color: isNight ? '#94a3b8' : '#fbbf24',
+    order: 1
+  });
+  
+  // Day widget (order: 2)
+  widgets += bdWidget('time-day', {
+    type: 'stat',
+    label: '📅',
+    value: getWeekday().substring(0, 3) + ' D' + getDay(),
+    color: '#60a5fa',
+    order: 2
+  });
+  
+  // Period widget (order: 3)
+  widgets += bdWidget('time-period', {
+    type: 'stat',
+    label: 'Period',
+    value: period.name,
+    color: isNight ? '#a78bfa' : '#f472b6',
+    order: 3
   });
   
   return { text: output + widgets };
