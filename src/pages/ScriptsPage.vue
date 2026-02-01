@@ -720,7 +720,7 @@ if (card !== null) {
           <div v-if="isGuideSectionExpanded('betterscripts')" class="mt-4 space-y-4">
             <p class="text-bd-text-secondary">
               <strong>BetterScripts</strong> is a feature of the <strong>BetterDungeon</strong> browser extension that 
-              enables scripts to create <strong>dynamic UI widgets</strong> displaying HP bars, stats, panels, and custom HTML.
+              enables scripts to create <strong>dynamic UI widgets</strong> displaying HP bars, stats, panels, badges, and more.
             </p>
             
             <div class="p-4 rounded-lg bg-bd-emerald/10 border border-bd-emerald/30">
@@ -736,29 +736,69 @@ if (card !== null) {
               </ol>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-4">
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <h4 class="font-semibold text-bd-text-primary mb-2">Widget Types</h4>
+            <!-- Widget Types -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+              <h4 class="font-semibold text-bd-text-primary mb-3">Widget Types</h4>
+              <div class="grid md:grid-cols-2 gap-x-6 gap-y-2">
                 <ul class="text-sm text-bd-text-secondary space-y-1">
-                  <li><code class="text-bd-cyan">stat</code> — Label + value (e.g., "Gold: 100")</li>
+                  <li><code class="text-bd-cyan">stat</code> — Label + value (e.g., "HP: 85/100")</li>
                   <li><code class="text-bd-cyan">bar</code> — Progress bar with fill indicator</li>
                   <li><code class="text-bd-cyan">panel</code> — Container for multiple stats</li>
                   <li><code class="text-bd-cyan">text</code> — Simple text/notification</li>
                   <li><code class="text-bd-cyan">custom</code> — Custom HTML (sanitized)</li>
                 </ul>
-              </div>
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <h4 class="font-semibold text-bd-text-primary mb-2">Widget Properties</h4>
                 <ul class="text-sm text-bd-text-secondary space-y-1">
-                  <li><code class="text-bd-cyan">label</code>, <code class="text-bd-cyan">value</code> — Display text</li>
-                  <li><code class="text-bd-cyan">color</code> — CSS color for value/fill</li>
-                  <li><code class="text-bd-cyan">max</code> — Maximum for bar widgets</li>
-                  <li><code class="text-bd-cyan">order</code> — Display order (lower = first)</li>
-                  <li><code class="text-bd-cyan">html</code>, <code class="text-bd-cyan">style</code> — Custom content</li>
+                  <li><code class="text-bd-purple">badge</code> — Status tag/pill with icon</li>
+                  <li><code class="text-bd-purple">list</code> — Item list with icons</li>
+                  <li><code class="text-bd-purple">icon</code> — Compact icon with tooltip</li>
+                  <li><code class="text-bd-purple">divider</code> — Visual separator</li>
+                  <li><code class="text-bd-purple">counter</code> — Number with +/- indicator</li>
                 </ul>
               </div>
             </div>
 
+            <!-- Widget Positions -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+              <h4 class="font-semibold text-bd-text-primary mb-2">Widget Positions</h4>
+              <p class="text-sm text-bd-text-secondary mb-3">
+                Widgets can be placed in three areas using the <code class="text-bd-cyan">position</code> property:
+              </p>
+              <div class="grid grid-cols-3 gap-3">
+                <div class="p-3 rounded-lg bg-bd-bg-tertiary text-center">
+                  <code class="text-bd-green text-sm">top</code>
+                  <p class="text-xs text-bd-text-muted mt-1">Horizontal bar (default)</p>
+                </div>
+                <div class="p-3 rounded-lg bg-bd-bg-tertiary text-center">
+                  <code class="text-bd-blue text-sm">left</code>
+                  <p class="text-xs text-bd-text-muted mt-1">Left sidebar</p>
+                </div>
+                <div class="p-3 rounded-lg bg-bd-bg-tertiary text-center">
+                  <code class="text-bd-purple text-sm">right</code>
+                  <p class="text-xs text-bd-text-muted mt-1">Right sidebar</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Key Properties -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+              <h4 class="font-semibold text-bd-text-primary mb-2">Key Properties</h4>
+              <div class="grid md:grid-cols-2 gap-x-6 gap-y-1">
+                <ul class="text-sm text-bd-text-secondary space-y-1">
+                  <li><code class="text-bd-cyan">type</code> — Widget type (required)</li>
+                  <li><code class="text-bd-cyan">position</code> — top, left, right</li>
+                  <li><code class="text-bd-cyan">label</code>, <code class="text-bd-cyan">value</code> — Display text</li>
+                  <li><code class="text-bd-cyan">color</code> — CSS color</li>
+                </ul>
+                <ul class="text-sm text-bd-text-secondary space-y-1">
+                  <li><code class="text-bd-cyan">order</code> — Display order (lower = first)</li>
+                  <li><code class="text-bd-cyan">icon</code> — Emoji/icon for badges, lists</li>
+                  <li><code class="text-bd-cyan">items</code> — Array for panels/lists</li>
+                  <li><code class="text-bd-cyan">variant</code> — Badge style (subtle/solid/outline)</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Quick Start -->
             <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
               <h4 class="font-semibold text-bd-text-primary mb-2">Quick Start</h4>
               <pre class="text-xs text-bd-text-secondary overflow-x-auto"><code><span class="text-bd-text-muted">// Library - define helpers:</span>
@@ -772,10 +812,21 @@ modifier(text);
 
 <span class="text-bd-text-muted">// Output Modifier - create widgets:</span>
 const modifier = (text) => {
-  const widgets = bdWidget('hp', { type: 'bar', label: 'HP', value: state.game.hp, max: 100, color: '#22c55e' });
-  return { text: text + widgets };
+  let w = '';
+  w += bdWidget('hp', { type: 'bar', label: 'HP', value: state.game.hp, max: 100, color: '#22c55e', position: 'top' });
+  w += bdWidget('gold', { type: 'stat', label: '💰', value: state.game.gold, color: '#fbbf24', position: 'top' });
+  return { text: text + w };
 };
 modifier(text);</code></pre>
+            </div>
+
+            <!-- Responsive Design -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+              <h4 class="font-semibold text-bd-text-primary mb-2">Responsive Design</h4>
+              <p class="text-sm text-bd-text-secondary">
+                Widgets automatically adapt to screen size — from compact mobile layouts to scaled-up 4K displays. 
+                Left/right sidebars are hidden on smaller screens, and complex widgets (panels, lists) are hidden on mobile.
+              </p>
             </div>
 
             <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
@@ -785,9 +836,9 @@ modifier(text);</code></pre>
               </p>
             </div>
 
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 flex-wrap">
               <a 
-                href="https://github.com/AIDungeonWiXAnern/BetterDungeon" 
+                href="https://github.com/ComputerKWasTaken/BetterDungeon" 
                 target="_blank"
                 class="btn btn-secondary text-sm"
               >
