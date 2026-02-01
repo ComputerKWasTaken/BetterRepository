@@ -816,410 +816,301 @@ modifier(text)`
     essential: true,
     tags: ['widgets', 'counter', 'turn', 'betterscripts', 'stat-widget', 'minimal'],
     source: 'BetterRepository',
-    description: 'Minimal example showing a single stat widget that counts turns.',
-    purpose: 'The simplest BetterScripts example. Demonstrates the "stat" widget type. Great starting point for learning.',
+    description: 'Minimal example: displays turn count using a stat widget.',
+    purpose: 'The simplest BetterScripts example. Uses info.actionCount for reliable turn tracking. Great starting point for learning.',
     requiresExtension: 'BetterDungeon',
     files: {
       library: `// ============================================
 // LIBRARY - Simple Turn Counter
 // ============================================
-// Demonstrates the "stat" widget type.
-// This is the simplest possible BetterScripts example.
+// The simplest possible BetterScripts example.
+// Uses info.actionCount for reliable turn tracking.
 
-state.turn = state.turn ?? 0;
-
-// ============================================
-// BETTERSCRIPTS PROTOCOL HELPERS
-// ============================================
-// These helpers create the protocol messages that
-// BetterDungeon detects and processes into widgets.
-
-function bdMessage(message) {
-  return \`[[BD:\${JSON.stringify(message)}:BD]]\`;
-}
-
-function bdWidget(widgetId, config) {
-  return bdMessage({
-    type: 'widget',
-    widgetId: widgetId,
-    action: 'create',
-    config: config
-  });
+// BetterScripts protocol helper
+function bdWidget(id, cfg) {
+  return \`[[BD:\${JSON.stringify({ type: 'widget', widgetId: id, action: 'create', config: cfg })}:BD]]\`;
 }`,
-      context: `const modifier = (text) => {
-  // Strip protocol messages so AI doesn't see or repeat them
-  text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
-  return { text };
+      context: `// Strip protocol messages from AI context
+const modifier = (text) => {
+  return { text: text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '') };
 };
-
 modifier(text);`,
-      output: `const modifier = (text) => {
-  // Increment turn counter
-  state.turn++;
-  
-  // Create stat widget showing turn count
-  const widget = bdWidget('turn-counter', {
+      output: `// Display turn counter widget
+const modifier = (text) => {
+  const widget = bdWidget('turn', {
     type: 'stat',
     label: 'Turn',
-    value: state.turn,
+    value: info.actionCount || 0,
     color: '#60a5fa'
   });
-  
   return { text: text + widget };
 };
-
 modifier(text);`
     }
   },
   {
-    id: 'betterscripts-rpg-stats',
-    name: 'RPG Stats Widget',
+    id: 'betterscripts-time-system',
+    name: 'In-Game Time System',
     category: 'betterscripts',
     difficulty: 'intermediate',
     impact: 'high',
     essential: true,
-    tags: ['widgets', 'hp', 'stats', 'betterscripts', 'bar-widget', 'panel-widget'],
+    tags: ['widgets', 'time', 'clock', 'day-night', 'betterscripts', 'context', 'commands'],
     source: 'BetterRepository',
-    description: 'Displays HP bar, gold, level, and status using BetterDungeon widgets.',
-    purpose: 'Demonstrates "bar" and "panel" widget types. Tracks game state and updates widgets based on story content.',
+    description: 'Day/night cycle with time of day periods, weekday tracking, and time commands.',
+    purpose: 'Each turn = 2 minutes. Time injected into AI context. Commands: :time, :timeskip <hours>, :sleep, :settime <hour>.',
     requiresExtension: 'BetterDungeon',
     files: {
       library: `// ============================================
-// LIBRARY - RPG Stats Widget
+// LIBRARY - In-Game Time System
 // ============================================
-// Demonstrates "bar" and "panel" widget types.
-// Tracks HP, gold, XP, and level progression.
+// Time is calculated from info.actionCount (turns).
+// - Each turn = 2 minutes of in-game time
+// - Time of day: Dawn, Morning, Afternoon, Evening, Night, Midnight
+// - Day of week tracking
+// - Commands: :time, :timeskip <hours>, :sleep, :settime <hour>
 
-state.game = state.game ?? {
-  turn: 0,
-  hp: 100,
-  maxHp: 100,
-  gold: 0,
-  level: 1,
-  xp: 0,
-  xpToLevel: 100,
-  status: 'Healthy'
+// State only stores offsets from manual adjustments
+state.time = state.time ?? {
+  offsetMinutes: 0,  // Manual time adjustments (timeskip, sleep, settime)
+  startHour: 8       // Starting hour of day (8 AM)
 };
+
+// Configuration
+const MINUTES_PER_TURN = 2;
+const START_MINUTE = state.time.startHour * 60; // 8:00 AM default
 
 // ============================================
 // BETTERSCRIPTS PROTOCOL HELPERS
 // ============================================
 
-function bdMessage(message) {
-  return \`[[BD:\${JSON.stringify(message)}:BD]]\`;
+function bdMessage(msg) { return \`[[BD:\${JSON.stringify(msg)}:BD]]\`; }
+function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
+
+// ============================================
+// TIME CONSTANTS
+// ============================================
+
+const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+const TIME_PERIODS = [
+  { name: 'Midnight', icon: '🌑', start: 0, end: 4 },
+  { name: 'Dawn', icon: '🌅', start: 4, end: 7 },
+  { name: 'Morning', icon: '☀️', start: 7, end: 12 },
+  { name: 'Afternoon', icon: '🌤️', start: 12, end: 17 },
+  { name: 'Evening', icon: '🌆', start: 17, end: 21 },
+  { name: 'Night', icon: '🌙', start: 21, end: 24 }
+];
+
+// ============================================
+// TIME FUNCTIONS
+// ============================================
+
+// Calculate total minutes from turn count + offsets
+function getTotalMinutes() {
+  const turns = info.actionCount || 0;
+  return START_MINUTE + (turns * MINUTES_PER_TURN) + state.time.offsetMinutes;
 }
 
-function bdWidget(widgetId, config) {
-  return bdMessage({
-    type: 'widget',
-    widgetId: widgetId,
-    action: 'create',
-    config: config
-  });
+function getHour() {
+  const total = getTotalMinutes();
+  return Math.floor((total % (24 * 60)) / 60);
+}
+
+function getMinute() {
+  return getTotalMinutes() % 60;
+}
+
+function getDay() {
+  return Math.floor(getTotalMinutes() / (24 * 60)) + 1;
+}
+
+function getWeekdayIndex() {
+  return (getDay() - 1) % 7;
+}
+
+function getTimeString() {
+  const h = getHour();
+  const m = getMinute();
+  const hour12 = h % 12 || 12;
+  const ampm = h < 12 ? 'AM' : 'PM';
+  return \`\${hour12}:\${m.toString().padStart(2, '0')} \${ampm}\`;
+}
+
+function getTimePeriod() {
+  const h = getHour();
+  for (const period of TIME_PERIODS) {
+    if (h >= period.start && h < period.end) {
+      return period;
+    }
+  }
+  return TIME_PERIODS[0]; // Midnight (wraps around)
+}
+
+function getWeekday() {
+  return WEEKDAYS[getWeekdayIndex()];
+}
+
+// Add offset minutes (for timeskip)
+function addOffset(minutes) {
+  state.time.offsetMinutes += minutes;
+}
+
+// Set to specific hour (adjusts offset to reach target)
+function setTime(targetHour) {
+  const currentHour = getHour();
+  const currentMinute = getMinute();
+  let hoursToAdd = targetHour - currentHour;
+  if (hoursToAdd < 0) hoursToAdd += 24; // Wrap to next day
+  state.time.offsetMinutes += (hoursToAdd * 60) - currentMinute;
+}
+
+// Skip to next morning (7 AM)
+function skipToMorning() {
+  const currentHour = getHour();
+  const currentMinute = getMinute();
+  let hoursToSkip;
+  
+  if (currentHour >= 7 && currentHour < 21) {
+    // Daytime: skip to next morning
+    hoursToSkip = 24 - currentHour + 7;
+  } else if (currentHour >= 21) {
+    // Evening/night: skip to morning
+    hoursToSkip = 24 - currentHour + 7;
+  } else {
+    // Before 7 AM: skip to 7 AM today
+    hoursToSkip = 7 - currentHour;
+  }
+  
+  state.time.offsetMinutes += (hoursToSkip * 60) - currentMinute;
+}
+
+function getTimeContext() {
+  const period = getTimePeriod();
+  return \`[Time: \${getTimeString()} (\${period.name}), \${getWeekday()}, Day \${getDay()}]\`;
 }
 
 // ============================================
-// GAME HELPERS
+// COMMAND HANDLERS
 // ============================================
 
-function getHpColor(current, max) {
-  const percent = (current / max) * 100;
-  if (percent > 50) return '#22c55e';
-  if (percent > 25) return '#fbbf24';
-  return '#ef4444';
-}
-
-function getStatus(current, max) {
-  const percent = (current / max) * 100;
-  if (percent <= 0) return 'Dead';
-  if (percent <= 25) return 'Critical';
-  if (percent <= 50) return 'Wounded';
-  if (percent <= 75) return 'Injured';
-  return 'Healthy';
+function handleTimeCommand(input) {
+  const lower = input.toLowerCase().trim();
+  
+  // :time - show current time
+  if (lower === ':time') {
+    const period = getTimePeriod();
+    return {
+      output: \`\\n🕐 \${getTimeString()} - \${period.icon} \${period.name}\\n📅 \${getWeekday()}, Day \${getDay()} (Turn \${info.actionCount || 0})\`,
+      isCommand: true
+    };
+  }
+  
+  // :timeskip <hours> - skip ahead
+  const skipMatch = lower.match(/^:timeskip\\s+(\\d+)$/);
+  if (skipMatch) {
+    const hours = parseInt(skipMatch[1]);
+    addOffset(hours * 60);
+    const period = getTimePeriod();
+    return {
+      output: \`\\n⏩ Skipped \${hours} hour\${hours !== 1 ? 's' : ''}. It is now \${getTimeString()} (\${period.name}).\`,
+      isCommand: true
+    };
+  }
+  
+  // :sleep - skip to next morning
+  if (lower === ':sleep') {
+    skipToMorning();
+    return {
+      output: \`\\n😴 You rest and wake refreshed. It is now \${getTimeString()} on \${getWeekday()}, Day \${getDay()}.\`,
+      isCommand: true
+    };
+  }
+  
+  // :settime <hour> - set specific hour (0-23)
+  const setMatch = lower.match(/^:settime\\s+(\\d+)$/);
+  if (setMatch) {
+    const hour = parseInt(setMatch[1]) % 24;
+    setTime(hour);
+    const period = getTimePeriod();
+    return {
+      output: \`\\n🕐 Time set to \${getTimeString()} (\${period.name}).\`,
+      isCommand: true
+    };
+  }
+  
+  return null;
 }`,
-      context: `const modifier = (text) => {
+      context: `// ============================================
+// CONTEXT MODIFIER - Inject Time + Strip Protocol
+// ============================================
+// Adds current time to AI context so it can reference time of day.
+
+const modifier = (text) => {
+  // Strip protocol messages
   text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
+  
+  // Inject time context at the start
+  const timeContext = getTimeContext();
+  text = timeContext + '\\n' + text;
+  
   return { text };
 };
 
 modifier(text);`,
-      output: `const modifier = (text) => {
-  const game = state.game;
-  const lowerText = text.toLowerCase();
-  
-  game.turn++;
-  
-  // Detect damage
-  if (lowerText.includes('hit') || lowerText.includes('wound') || 
-      lowerText.includes('hurt') || lowerText.includes('damage')) {
-    const damage = Math.floor(Math.random() * 15) + 5;
-    game.hp = Math.max(0, game.hp - damage);
-  }
-  
-  // Detect healing
-  if (lowerText.includes('heal') || lowerText.includes('potion') || 
-      lowerText.includes('rest') || lowerText.includes('recover')) {
-    const healing = Math.floor(Math.random() * 20) + 10;
-    game.hp = Math.min(game.maxHp, game.hp + healing);
-  }
-  
-  // Detect loot
-  if (lowerText.includes('gold') || lowerText.includes('coin') || 
-      lowerText.includes('treasure') || lowerText.includes('loot')) {
-    game.gold += Math.floor(Math.random() * 50) + 10;
-    game.xp += 10;
-  }
-  
-  // Level up check
-  if (game.xp >= game.xpToLevel) {
-    game.level++;
-    game.xp -= game.xpToLevel;
-    game.xpToLevel = Math.floor(game.xpToLevel * 1.5);
-    game.maxHp += 10;
-    game.hp = game.maxHp;
-  }
-  
-  game.status = getStatus(game.hp, game.maxHp);
-  const hpColor = getHpColor(game.hp, game.maxHp);
-  
-  let widgets = '';
-  
-  // HP bar widget
-  widgets += bdWidget('hp-bar', {
-    type: 'bar',
-    label: 'HP',
-    value: game.hp,
-    max: game.maxHp,
-    color: hpColor,
-    showValue: true
-  });
-  
-  // Character panel widget
-  widgets += bdWidget('player-stats', {
-    type: 'panel',
-    title: 'Character',
-    items: [
-      { label: 'Level', value: game.level, color: '#a855f7' },
-      { label: 'XP', value: game.xp + '/' + game.xpToLevel, color: '#60a5fa' },
-      { label: 'Gold', value: game.gold, color: '#fbbf24' },
-      { label: 'Status', value: game.status, color: hpColor }
-    ]
-  });
-  
-  return { text: text + widgets };
-};
+      input: `// ============================================
+// INPUT MODIFIER - Handle Time Commands
+// ============================================
+// Detects :time, :timeskip, :sleep, :settime commands.
+// Time advances automatically via info.actionCount.
 
-modifier(text);`
+const modifier = (text) => {
+  const input = text.trim();
+  
+  // Check for time commands
+  if (input.startsWith(':time') || input.startsWith(':sleep') || input.startsWith(':settime')) {
+    const result = handleTimeCommand(input);
+    if (result) {
+      state.time.pendingOutput = result.output;
+      state.time.isCommand = true;
+      return { text: '[TIME COMMAND]' };
     }
-  },
-  {
-    id: 'betterscripts-inventory',
-    name: 'Inventory Panel',
-    category: 'betterscripts',
-    difficulty: 'intermediate',
-    impact: 'medium',
-    essential: false,
-    tags: ['widgets', 'inventory', 'items', 'betterscripts', 'panel-widget'],
-    source: 'BetterRepository',
-    description: 'Tracks inventory items with add/remove detection.',
-    purpose: 'Demonstrates "panel" widget with dynamic item lists. Detects items picked up or dropped in the story.',
-    requiresExtension: 'BetterDungeon',
-    files: {
-      library: `// ============================================
-// LIBRARY - BetterScripts Inventory
-// ============================================
-// Demonstrates the "panel" widget with dynamic items.
-// Tracks items picked up and dropped.
-
-state.inventory = state.inventory ?? [];
-
-// ============================================
-// BETTERSCRIPTS PROTOCOL HELPERS
-// ============================================
-
-function bdMessage(message) {
-  return \`[[BD:\${JSON.stringify(message)}:BD]]\`;
-}
-
-function bdWidget(widgetId, config) {
-  return bdMessage({
-    type: 'widget',
-    widgetId: widgetId,
-    action: 'create',
-    config: config
-  });
-}
-
-function bdDestroyWidget(widgetId) {
-  return bdMessage({
-    type: 'widget',
-    widgetId: widgetId,
-    action: 'destroy'
-  });
-}
-
-// ============================================
-// ITEM DEFINITIONS
-// ============================================
-
-const ITEMS = [
-  { pattern: /sword/i, name: 'Sword', icon: '⚔️' },
-  { pattern: /shield/i, name: 'Shield', icon: '🛡️' },
-  { pattern: /potion/i, name: 'Potion', icon: '🧪' },
-  { pattern: /key/i, name: 'Key', icon: '🔑' },
-  { pattern: /torch/i, name: 'Torch', icon: '🔥' },
-  { pattern: /rope/i, name: 'Rope', icon: '🪢' },
-  { pattern: /map/i, name: 'Map', icon: '🗺️' },
-  { pattern: /bow/i, name: 'Bow', icon: '🏹' },
-  { pattern: /armor|armour/i, name: 'Armor', icon: '🛡️' },
-  { pattern: /staff/i, name: 'Staff', icon: '🪄' }
-];
-
-function getItemByName(name) {
-  return ITEMS.find(i => i.name === name);
-}`,
-      context: `const modifier = (text) => {
-  text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
+  }
+  
+  // Time advances automatically from info.actionCount
   return { text };
 };
 
 modifier(text);`,
       output: `// ============================================
-// OUTPUT MODIFIER - Track Inventory Changes
+// OUTPUT MODIFIER - Display Time Widget
 // ============================================
+// Shows time widget and handles command output.
 
 const modifier = (text) => {
-  const lowerText = text.toLowerCase();
+  let output = text;
   
-  // Detect item pickups
-  const pickupPatterns = [/pick(?:ed)? up/i, /grab(?:bed)?/i, /take(?:s)?/i, /found/i, /receive(?:d)?/i, /obtain(?:ed)?/i];
-  const isPickup = pickupPatterns.some(p => p.test(lowerText));
-  
-  // Detect item drops/use
-  const dropPatterns = [/drop(?:ped)?/i, /use(?:d)?/i, /lose(?:s)?/i, /lost/i, /gave/i, /throw(?:s)?/i];
-  const isDrop = dropPatterns.some(p => p.test(lowerText));
-  
-  // Check for items in text
-  ITEMS.forEach(item => {
-    if (item.pattern.test(lowerText)) {
-      const hasItem = state.inventory.includes(item.name);
-      
-      if (isPickup && !hasItem) {
-        state.inventory.push(item.name);
-      } else if (isDrop && hasItem) {
-        state.inventory = state.inventory.filter(i => i !== item.name);
-      }
-    }
-  });
-  
-  // Build widget
-  let widgets = '';
-  
-  if (state.inventory.length > 0) {
-    const items = state.inventory.map(name => {
-      const item = getItemByName(name);
-      return { label: item?.icon || '•', value: name };
-    });
-    
-    widgets = bdWidget('inventory', {
-      type: 'panel',
-      title: 'Inventory (' + state.inventory.length + ')',
-      items: items
-    });
-  } else {
-    // Hide widget when empty
-    widgets = bdDestroyWidget('inventory');
+  // Check for pending command output
+  if (state.time.isCommand && state.time.pendingOutput) {
+    output = state.time.pendingOutput;
+    state.time.pendingOutput = null;
+    state.time.isCommand = false;
   }
   
-  return { text: text + widgets };
-};
-
-modifier(text);`
-    }
-  },
-  {
-    id: 'betterscripts-location',
-    name: 'Location Tracker',
-    category: 'betterscripts',
-    difficulty: 'beginner',
-    impact: 'medium',
-    essential: false,
-    tags: ['widgets', 'location', 'betterscripts', 'text-widget'],
-    source: 'BetterRepository',
-    description: 'Tracks and displays current location using a text widget.',
-    purpose: 'Demonstrates the "text" widget type. Detects location changes from story content.',
-    requiresExtension: 'BetterDungeon',
-    files: {
-      library: `// ============================================
-// LIBRARY - Location Tracker
-// ============================================
-// Demonstrates the "text" widget type.
-// Tracks current location from story context.
-
-state.location = state.location ?? 'Unknown';
-
-// ============================================
-// BETTERSCRIPTS PROTOCOL HELPERS
-// ============================================
-
-function bdMessage(message) {
-  return \`[[BD:\${JSON.stringify(message)}:BD]]\`;
-}
-
-function bdWidget(widgetId, config) {
-  return bdMessage({
-    type: 'widget',
-    widgetId: widgetId,
-    action: 'create',
-    config: config
-  });
-}
-
-// ============================================
-// LOCATION DEFINITIONS
-// ============================================
-
-const LOCATIONS = [
-  { pattern: /tavern|inn|bar/i, name: 'Tavern', icon: '🍺' },
-  { pattern: /forest|woods|trees/i, name: 'Forest', icon: '🌲' },
-  { pattern: /castle|palace|throne/i, name: 'Castle', icon: '🏰' },
-  { pattern: /cave|cavern|underground/i, name: 'Cave', icon: '🕳️' },
-  { pattern: /village|town|market/i, name: 'Village', icon: '🏘️' },
-  { pattern: /dungeon|prison|cell/i, name: 'Dungeon', icon: '⛓️' },
-  { pattern: /mountain|peak|cliff/i, name: 'Mountain', icon: '⛰️' },
-  { pattern: /river|lake|water|stream/i, name: 'Waterside', icon: '🌊' },
-  { pattern: /road|path|trail/i, name: 'Road', icon: '🛤️' },
-  { pattern: /home|house|cottage/i, name: 'Home', icon: '🏠' }
-];`,
-      context: `const modifier = (text) => {
-  text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
-  return { text };
-};
-
-modifier(text);`,
-      output: `const modifier = (text) => {
-  const lowerText = text.toLowerCase();
-  
-  // Detect location from text
-  for (const loc of LOCATIONS) {
-    if (loc.pattern.test(lowerText)) {
-      state.location = loc.icon + ' ' + loc.name;
-      break;
-    }
-  }
-  
-  // Create text widget showing location
-  const widget = bdWidget('location', {
+  // Build time widget
+  const period = getTimePeriod();
+  const widgets = bdWidget('game-time', {
     type: 'text',
-    text: state.location,
-    style: {
-      fontSize: '14px',
-      fontWeight: 'bold',
-      color: '#a3e635'
-    }
+    text: period.icon + ' ' + getTimeString() + ' · ' + getWeekday().substring(0, 3) + ' D' + getDay(),
+    style: { 
+      fontSize: '13px', 
+      fontWeight: '500',
+      color: period.name === 'Night' || period.name === 'Midnight' ? '#94a3b8' : '#fbbf24'
+    },
+    order: 0
   });
   
-  return { text: text + widget };
+  return { text: output + widgets };
 };
 
 modifier(text);`
@@ -1234,8 +1125,8 @@ modifier(text);`
     essential: true,
     tags: ['widgets', 'debug', 'testing', 'betterscripts', 'commands', 'developer-tool'],
     source: 'BetterRepository',
-    description: 'A debug console for testing BetterScripts widgets using : commands in Do actions.',
-    purpose: 'Allows developers to test all widget types, debug communication, and verify BetterScripts functionality. Type ":help" for available commands.',
+    description: 'Interactive debug console for testing all widget types via : commands.',
+    purpose: 'Type :help for commands. Create, update, and destroy widgets. Test ordering, styling, and protocol features.',
     requiresExtension: 'BetterDungeon',
     files: {
       library: `// ============================================
@@ -1245,79 +1136,31 @@ modifier(text);`
 // Use : commands in Do actions to control widgets.
 //
 // COMMANDS:
-//   :help                    - Show all commands
-//   :ping                    - Test BetterScripts connection
-//   :clear                   - Remove all widgets
-//   :stat <id> <label> <val> - Create stat widget
-//   :bar <id> <val> <max>    - Create bar widget  
-//   :text <id> <message>     - Create text widget
-//   :panel <id> <title>      - Create panel widget
-//   :custom <id> <html>      - Create custom widget
-//   :update <id> <prop> <v>  - Update widget property
-//   :destroy <id>            - Remove specific widget
-//   :demo                    - Show demo widgets
-//   :stress <count>          - Stress test with N widgets
+//   :help              - Show all commands
+//   :ping              - Test connection
+//   :clear             - Remove all widgets
+//   :demo              - Show demo widgets
+//   :stat <id> <label> <val> [color] [order]
+//   :bar <id> <val> <max> [label] [color] [order]
+//   :text <id> <msg> [color]
+//   :panel <id> <title>
+//   :custom <id> <html>
+//   :update <id> <prop> <val>
+//   :destroy <id>
+//   :stress <count>
 
-state.bd = state.bd ?? {
-  turn: 0,
-  lastCommand: null,
-  lastResult: null,
-  debugMode: true
-};
+state.bd = state.bd ?? { lastCommand: null, lastResult: null };
 
 // ============================================
 // BETTERSCRIPTS PROTOCOL HELPERS
 // ============================================
 
-function bdMessage(message) {
-  // Add protocol version
-  message.v = '1.0';
-  return \`[[BD:\${JSON.stringify(message)}:BD]]\`;
-}
-
-function bdWidget(widgetId, config) {
-  return bdMessage({
-    type: 'widget',
-    widgetId: widgetId,
-    action: 'create',
-    config: config
-  });
-}
-
-function bdUpdateWidget(widgetId, config) {
-  return bdMessage({
-    type: 'widget',
-    widgetId: widgetId,
-    action: 'update',
-    config: config
-  });
-}
-
-function bdDestroyWidget(widgetId) {
-  return bdMessage({
-    type: 'widget',
-    widgetId: widgetId,
-    action: 'destroy'
-  });
-}
-
-function bdPing(data) {
-  return bdMessage({
-    type: 'ping',
-    timestamp: Date.now(),
-    data: data || 'debug-console'
-  });
-}
-
-function bdRegister() {
-  return bdMessage({
-    type: 'register',
-    scriptId: 'debug-console',
-    scriptName: 'BetterScripts Debug Console',
-    version: '1.0.0',
-    capabilities: ['widgets', 'debug']
-  });
-}
+// Concise protocol helpers
+function bdMsg(m) { return \`[[BD:\${JSON.stringify(m)}:BD]]\`; }
+function bdWidget(id, cfg) { return bdMsg({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
+function bdUpdate(id, cfg) { return bdMsg({ type: 'widget', widgetId: id, action: 'update', config: cfg }); }
+function bdDestroy(id) { return bdMsg({ type: 'widget', widgetId: id, action: 'destroy' }); }
+function bdPing() { return bdMsg({ type: 'ping', timestamp: Date.now(), data: 'debug' }); }
 
 // ============================================
 // COMMAND PARSER
@@ -1364,21 +1207,9 @@ const COMMANDS = {
     desc: 'Test BetterScripts connection',
     usage: ':ping',
     handler: () => {
-      const widgets = bdPing('manual-ping-' + Date.now());
+      const widgets = bdPing();
       return { 
         output: '\\n🏓 Ping sent! Check browser console for pong event.', 
-        widgets 
-      };
-    }
-  },
-  
-  register: {
-    desc: 'Send script registration message',
-    usage: ':register',
-    handler: () => {
-      const widgets = bdRegister();
-      return { 
-        output: '\\n📝 Registration sent! Check browser console for event.', 
         widgets 
       };
     }
@@ -1389,7 +1220,7 @@ const COMMANDS = {
     usage: ':clear',
     handler: () => {
       // Use clearAll message type for efficient clearing (single message)
-      const widgets = bdMessage({ type: 'clearAll' });
+      const widgets = bdMsg({ type: 'clearAll' });
       state.bd.lastResult = 'Cleared all widgets';
       return { output: '\\n🧹 All debug widgets cleared.', widgets };
     }
@@ -1397,22 +1228,26 @@ const COMMANDS = {
   
   stat: {
     desc: 'Create a stat widget',
-    usage: ':stat <id> <label> <value> [color]',
+    usage: ':stat <id> <label> <value> [color] [order]',
     handler: (args) => {
       const id = args[0] || 'test-stat';
       const label = args[1] || 'Test';
       const value = args[2] || '42';
       const color = args[3] || '#60a5fa';
+      const order = args[4] ? parseInt(args[4]) : undefined;
       
-      const widgets = bdWidget(id, {
+      const config = {
         type: 'stat',
         label: label,
         value: value,
         color: color
-      });
+      };
+      if (order !== undefined) config.order = order;
+      
+      const widgets = bdWidget(id, config);
       
       return { 
-        output: \`\\n📊 Created stat widget "\${id}": \${label} = \${value}\`, 
+        output: \`\\n📊 Created stat widget "\${id}": \${label} = \${value}\${order !== undefined ? ' (order: ' + order + ')' : ''}\`, 
         widgets 
       };
     }
@@ -1420,25 +1255,29 @@ const COMMANDS = {
   
   bar: {
     desc: 'Create a bar widget',
-    usage: ':bar <id> <value> <max> [label] [color]',
+    usage: ':bar <id> <value> <max> [label] [color] [order]',
     handler: (args) => {
       const id = args[0] || 'test-bar';
       const value = parseInt(args[1]) || 75;
       const max = parseInt(args[2]) || 100;
       const label = args[3] || 'Progress';
       const color = args[4] || '#22c55e';
+      const order = args[5] ? parseInt(args[5]) : undefined;
       
-      const widgets = bdWidget(id, {
+      const config = {
         type: 'bar',
         label: label,
         value: value,
         max: max,
         color: color,
         showValue: true
-      });
+      };
+      if (order !== undefined) config.order = order;
+      
+      const widgets = bdWidget(id, config);
       
       return { 
-        output: \`\\n📈 Created bar widget "\${id}": \${label} \${value}/\${max}\`, 
+        output: \`\\n📈 Created bar widget "\${id}": \${label} \${value}/\${max}\${order !== undefined ? ' (order: ' + order + ')' : ''}\`, 
         widgets 
       };
     }
@@ -1532,7 +1371,7 @@ const COMMANDS = {
       const config = {};
       config[prop] = parsedValue;
       
-      const widgets = bdUpdateWidget(id, config);
+      const widgets = bdUpdate(id, config);
       
       return { 
         output: \`\\n✏️ Updated "\${id}".\${prop} = \${parsedValue}\`, 
@@ -1550,7 +1389,7 @@ const COMMANDS = {
         return { output: '\\n❌ Usage: :destroy <id>', widgets: '' };
       }
       
-      const widgets = bdDestroyWidget(id);
+      const widgets = bdDestroy(id);
       return { output: \`\\n🗑️ Destroyed widget "\${id}"\`, widgets };
     }
   },
@@ -1561,32 +1400,46 @@ const COMMANDS = {
     handler: () => {
       let widgets = '';
       
-      // HP Bar
+      // HP Bar (order: 1 - appears first)
       widgets += bdWidget('demo-hp', {
         type: 'bar',
         label: 'HP',
         value: 75,
         max: 100,
         color: '#ef4444',
-        showValue: true
+        showValue: true,
+        order: 1
       });
       
-      // Gold stat
+      // MP Bar (order: 2)
+      widgets += bdWidget('demo-mp', {
+        type: 'bar',
+        label: 'MP',
+        value: 50,
+        max: 80,
+        color: '#3b82f6',
+        showValue: true,
+        order: 2
+      });
+      
+      // Gold stat (order: 3)
       widgets += bdWidget('demo-gold', {
         type: 'stat',
         label: 'Gold',
         value: '1,250',
-        color: '#fbbf24'
+        color: '#fbbf24',
+        order: 3
       });
       
-      // Status text
+      // Status text (order: 4)
       widgets += bdWidget('demo-status', {
         type: 'text',
         text: '⚔️ In Combat',
-        style: { color: '#f472b6', fontWeight: 'bold' }
+        style: { color: '#f472b6', fontWeight: 'bold' },
+        order: 4
       });
       
-      // Character panel
+      // Character panel (order: 5)
       widgets += bdWidget('demo-panel', {
         type: 'panel',
         title: 'Character',
@@ -1594,11 +1447,12 @@ const COMMANDS = {
           { label: 'Level', value: '12', color: '#a855f7' },
           { label: 'Class', value: 'Warrior', color: '#60a5fa' },
           { label: 'XP', value: '4,500/5,000', color: '#22c55e' }
-        ]
+        ],
+        order: 5
       });
       
       return { 
-        output: '\\n🎮 Demo widgets created! (HP bar, Gold stat, Status text, Character panel)', 
+        output: '\\n🎮 Demo widgets created! (HP, MP, Gold, Status, Character) - ordered 1-5', 
         widgets 
       };
     }
@@ -1622,57 +1476,6 @@ const COMMANDS = {
       
       return { 
         output: \`\\n🔥 Created \${count} stress test widgets\`, 
-        widgets 
-      };
-    }
-  },
-  
-  version: {
-    desc: 'Test protocol version handling',
-    usage: ':version <v>',
-    handler: (args) => {
-      const version = args[0] || '1.0';
-      // Send a message with custom version
-      const msg = {
-        type: 'ping',
-        v: version,
-        timestamp: Date.now(),
-        data: 'version-test'
-      };
-      const widgets = \`[[BD:\${JSON.stringify(msg)}:BD]]\`;
-      return { 
-        output: \`\\n🔢 Sent ping with protocol version "\${version}"\`, 
-        widgets 
-      };
-    }
-  },
-  
-  invalid: {
-    desc: 'Send an invalid message to test error handling',
-    usage: ':invalid <type>',
-    handler: (args) => {
-      const errorType = args[0] || 'type';
-      let widgets = '';
-      
-      switch (errorType) {
-        case 'json':
-          widgets = '[[BD:{ invalid json :BD]]';
-          break;
-        case 'type':
-          widgets = bdMessage({ type: 'nonexistent_type' });
-          break;
-        case 'widget':
-          widgets = bdWidget('bad-widget', { /* missing type */ });
-          break;
-        case 'id':
-          widgets = bdWidget('bad widget id!@#', { type: 'stat', label: 'X', value: 1 });
-          break;
-        default:
-          widgets = bdMessage({ type: 'unknown_message_type' });
-      }
-      
-      return { 
-        output: \`\\n⚠️ Sent invalid message (type: \${errorType}). Check console for errors.\`, 
         widgets 
       };
     }
@@ -1722,10 +1525,7 @@ modifier(text);`,
 // the input with a placeholder. Output modifier handles display.
 
 const modifier = (text) => {
-  state.bd.turn++;
   state.bd.isCommand = false;
-  
-  // Get raw input text (trim whitespace)
   const input = text.trim();
   
   // Check if input starts with : (our command prefix)
@@ -1770,12 +1570,13 @@ const modifier = (text) => {
     state.bd.isCommand = false;
   }
   
-  // Always show turn counter widget
+  // Always show turn counter widget (order: 0 to appear first)
   widgets += bdWidget('console-turn', {
     type: 'stat',
     label: 'Turn',
-    value: state.bd.turn,
-    color: '#94a3b8'
+    value: info.actionCount || 0,
+    color: '#94a3b8',
+    order: 0
   });
   
   return { text: output + widgets };

@@ -720,7 +720,7 @@ if (card !== null) {
           <div v-if="isGuideSectionExpanded('betterscripts')" class="mt-4 space-y-4">
             <p class="text-bd-text-secondary">
               <strong>BetterScripts</strong> is a feature of the <strong>BetterDungeon</strong> browser extension that 
-              enables scripts to create <strong>dynamic UI widgets</strong> displaying HP bars, stats, and game state.
+              enables scripts to create <strong>dynamic UI widgets</strong> displaying HP bars, stats, panels, and custom HTML.
             </p>
             
             <div class="p-4 rounded-lg bg-bd-emerald/10 border border-bd-emerald/30">
@@ -730,9 +730,9 @@ if (card !== null) {
               </h3>
               <ol class="text-sm text-bd-text-secondary space-y-1 list-decimal list-inside">
                 <li>Your script embeds protocol messages <code class="text-bd-green">[[BD:...:BD]]</code> in the output</li>
-                <li>BetterDungeon detects the message via DOM observation</li>
-                <li>The message is parsed and executed (widget created/updated)</li>
-                <li>Protocol text is stripped from the DOM before the user sees it</li>
+                <li>BetterDungeon detects and parses the message</li>
+                <li>Widget is created/updated based on the message</li>
+                <li>Protocol text is stripped so the user never sees it</li>
               </ol>
             </div>
 
@@ -741,36 +741,48 @@ if (card !== null) {
                 <h4 class="font-semibold text-bd-text-primary mb-2">Widget Types</h4>
                 <ul class="text-sm text-bd-text-secondary space-y-1">
                   <li><code class="text-bd-cyan">stat</code> — Label + value (e.g., "Gold: 100")</li>
-                  <li><code class="text-bd-cyan">bar</code> — Progress bar (e.g., HP bar)</li>
-                  <li><code class="text-bd-cyan">panel</code> — Multi-stat container</li>
-                  <li><code class="text-bd-cyan">text</code> — Simple text display</li>
+                  <li><code class="text-bd-cyan">bar</code> — Progress bar with fill indicator</li>
+                  <li><code class="text-bd-cyan">panel</code> — Container for multiple stats</li>
+                  <li><code class="text-bd-cyan">text</code> — Simple text/notification</li>
                   <li><code class="text-bd-cyan">custom</code> — Custom HTML (sanitized)</li>
                 </ul>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <h4 class="font-semibold text-bd-text-primary mb-2">Required Scripts</h4>
+                <h4 class="font-semibold text-bd-text-primary mb-2">Widget Properties</h4>
                 <ul class="text-sm text-bd-text-secondary space-y-1">
-                  <li><strong>Library:</strong> Define helpers + state</li>
-                  <li><strong>Context Modifier:</strong> Strip protocol tags</li>
-                  <li><strong>Output Modifier:</strong> Append widget commands</li>
+                  <li><code class="text-bd-cyan">label</code>, <code class="text-bd-cyan">value</code> — Display text</li>
+                  <li><code class="text-bd-cyan">color</code> — CSS color for value/fill</li>
+                  <li><code class="text-bd-cyan">max</code> — Maximum for bar widgets</li>
+                  <li><code class="text-bd-cyan">order</code> — Display order (lower = first)</li>
+                  <li><code class="text-bd-cyan">html</code>, <code class="text-bd-cyan">style</code> — Custom content</li>
                 </ul>
               </div>
             </div>
 
             <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-              <h4 class="font-semibold text-bd-text-primary mb-2">Example: Create a Stat Widget</h4>
-              <pre class="text-xs text-bd-text-secondary overflow-x-auto"><code>// In Library - define helper:
-function bdWidget(widgetId, config) {
-  return `[[BD:${JSON.stringify({ 
-    type: 'widget', widgetId, action: 'create', config 
-  })}:BD]]`;
-}
+              <h4 class="font-semibold text-bd-text-primary mb-2">Quick Start</h4>
+              <pre class="text-xs text-bd-text-secondary overflow-x-auto"><code><span class="text-bd-text-muted">// Library - define helpers:</span>
+state.game = state.game ?? { hp: 100, gold: 0 };
+function bdMessage(msg) { return `[[BD:${JSON.stringify(msg)}:BD]]`; }
+function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
 
-// In Output Modifier - use helper:
-const widget = bdWidget('gold-stat', { 
-  type: 'stat', label: 'Gold', value: 100, color: '#fbbf24' 
-});
-return { text: text + widget };</code></pre>
+<span class="text-bd-text-muted">// Context Modifier - strip protocol tags (REQUIRED):</span>
+const modifier = (text) => ({ text: text.replace(/\[\[BD:[\s\S]*?:BD\]\]/g, '') });
+modifier(text);
+
+<span class="text-bd-text-muted">// Output Modifier - create widgets:</span>
+const modifier = (text) => {
+  const widgets = bdWidget('hp', { type: 'bar', label: 'HP', value: state.game.hp, max: 100, color: '#22c55e' });
+  return { text: text + widgets };
+};
+modifier(text);</code></pre>
+            </div>
+
+            <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+              <p class="text-xs text-bd-text-secondary">
+                <strong class="text-bd-text-primary">Important:</strong> Always use a Context Modifier to strip 
+                <code class="text-bd-green">[[BD:...:BD]]</code> tags, or the AI will start repeating them.
+              </p>
             </div>
 
             <div class="flex items-center gap-3">
