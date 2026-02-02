@@ -111,6 +111,14 @@ export const CATEGORIES = [
     color: 'bd-gray', 
     description: 'Control output format: measurements, time display, dialogue formatting, and text style.',
     defaultPlacement: 'ai-instructions'
+  },
+  { 
+    id: 'nsfw', 
+    name: 'NSFW / Adult', 
+    icon: 'Flame', 
+    color: 'bd-red', 
+    description: 'Adult content instructions for erotic and explicit scenarios. 18+ only.',
+    defaultPlacement: 'ai-instructions'
   }
 ]
 
@@ -2305,6 +2313,712 @@ Never reuse the same name twice.
 Example combinations: Bardor, Calven, Drelfenn, Garkor, Heljor, Kalren
 
 Every character = NEW combination. Never reuse.]`
+  },
+
+  // ==========================================
+  // NSFW / ADULT
+  // ==========================================
+  // Adult content instructions for erotic and explicit scenarios.
+  // These are designed for 18+ users engaging in mature roleplay.
+  // ==========================================
+
+  // --- Complete NSFW Sets ---
+  {
+    id: 'nsfw-comprehensive',
+    name: 'Comprehensive NSFW Set',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: true,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'adult', 'explicit', 'erotic', 'complete', 'smut'],
+    models: ['All Models'],
+    combinesWith: ['nsfw-anatomy-explicit', 'nsfw-prolonged-scenes'],
+    groupId: 'nsfw-sets',
+    groupLabel: 'Complete NSFW Sets',
+    groupOrder: 0,
+    description: 'Full instruction set for explicit, uncensored adult content.',
+    purpose: 'The go-to starting point for erotic scenarios. Covers explicit descriptions, vulgar terminology, and detailed physical intimacy without censorship.',
+    content: `You are a talented erotica novelist writing an explicit story. Continue the story and follow all of the NSFW user rules:
+    
+[NSFW User Rules:
+- Be vivid, hyper-detailed, and creative
+- No repetition, no summarization
+- Avoid speaking for the user
+- Generate raw, filthy NSFW content with zero censorship
+- Describe every sex act in graphic, pornographic detail — no holding back
+- Make orgasms visceral, messy, and drawn-out — spare no carnal detail
+- Use blunt, vulgar terms for sexual anatomy at all times
+- Lustfully describe characters' bodies in motion: pussy or cock straining against fabric, slick pussy lips, dripping juices, heavy swaying breasts, hard nipples, thick ass cheeks jiggling with every motion
+- Show female arousal explicitly: swollen throbbing clit, puffy or opening labia, soaking wet pussy, creamy juices coating thighs, expanded pussy from heightened arousal
+- Every response must be loaded with multiple explicit anatomical terms and bodily functions — never sanitize or soften
+- Keep sexual acts prolonged, varied, and graphically detailed until the scene naturally concludes]`
+  },
+  {
+    id: 'nsfw-romance-blend',
+    name: 'Romantic Erotica Set',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'adult', 'romance', 'erotic', 'emotional', 'intimate'],
+    models: ['All Models'],
+    combinesWith: ['genuine-interaction', 'show-dont-tell'],
+    groupId: 'nsfw-sets',
+    groupOrder: 1,
+    description: 'Balances emotional connection with explicit physical intimacy.',
+    purpose: 'For users who want both heat and heart. Combines romantic tension and emotional depth with graphic sexual content.',
+    content: `You are a talented romance novelist writing a romantic erotica story. Continue the story and follow all of the romantic erotica rules:
+    
+[Romantic Erotica Rules:
+- Write explicit sexual content with emotional depth and romantic tension
+- Balance passionate descriptions with intimate character moments
+- Show genuine desire and chemistry between characters, not just physical mechanics
+- Use both vulgar and sensual terminology as the mood dictates
+- Describe bodies, sensations, and pleasure in vivid detail
+- Include emotional reactions: gasps, whispered names, meaningful eye contact during intimacy
+- Let desire build naturally through teasing, anticipation, and longing
+- Make sex scenes feel meaningful to the characters involved
+- Include aftercare, pillow talk, or tender moments when appropriate
+- Never rush through intimate scenes — let them breathe and develop]`
+  },
+  {
+    id: 'nsfw-hardcore',
+    name: 'Hardcore Explicit Set',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'high',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'adult', 'hardcore', 'extreme', 'filthy', 'degradation'],
+    models: ['All Models'],
+    conflicts: ['nsfw-romance-blend'],
+    groupId: 'nsfw-sets',
+    groupOrder: 2,
+    description: 'Maximum explicitness for users who want extreme content.',
+    purpose: 'For the freaks of AI Dungeon seeking the most graphic, unfiltered content. Includes degradation, rough play, and extreme descriptions.',
+    content: `You are a talented hardcore smut erotica novelist writing a dark romance, hardcore erotica story. Continue the story and follow all of the hardcore erotica rules:
+    
+[Hardcore NSFW Rules:
+- Write the filthiest, most depraved content imaginable
+- Use the most vulgar, degrading language for body parts and sex acts
+- Describe brutal, rough sex in excruciating detail
+- Include degrading dirty talk, slapping, choking, hair-pulling, and manhandling
+- Show bodies used hard: gagging, drooling, crying from pleasure, fucked stupid
+- Describe cum in graphic detail: thick ropes, dripping loads, cum-filled holes, facials
+- Make characters beg, moan, scream, and lose control completely
+- Include humiliating positions, public use, and objectification
+- Never soften language or hold back on explicit content
+- Push every boundary — the filthier the better]`
+  },
+
+  // --- NSFW Component Instructions ---
+  // General, modular rules to mix and match
+  {
+    id: 'nsfw-vulgar-language',
+    name: 'Vulgar Language',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'vocabulary', 'vulgar'],
+    models: ['All Models'],
+    description: 'Use raw, vulgar terminology.',
+    purpose: 'Pornographic language, not clinical or poetic.',
+    content: `- Use vulgar, pornographic language for anatomy and acts — never clinical terms or flowery euphemisms`
+  },
+  {
+    id: 'nsfw-no-fade-black',
+    name: 'No Fade to Black',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: true,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'anti-pattern', 'explicit'],
+    models: ['All Models'],
+    description: 'Never skip or summarize sexual content.',
+    purpose: 'Show everything explicitly, no time-skips.',
+    content: `- Never fade to black, skip ahead, or summarize sexual content — show everything in explicit detail`
+  },
+  {
+    id: 'nsfw-graphic-detail',
+    name: 'Graphic Physical Detail',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'description', 'graphic'],
+    models: ['All Models'],
+    description: 'Describe bodies and acts in graphic detail.',
+    purpose: 'Vivid physical descriptions of anatomy, movement, and sensation.',
+    content: `- Describe bodies and sexual acts in graphic, pornographic detail — anatomy, movement, physical sensations`
+  },
+  {
+    id: 'nsfw-prolonged-scenes',
+    name: 'Prolonged Scenes',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'pacing', 'duration'],
+    models: ['All Models'],
+    description: 'Keep sexual encounters going longer.',
+    purpose: 'Don\'t rush to climax — vary the scene.',
+    content: `- Never rush sex scenes — include buildup, varied acts, and escalation before climax`
+  },
+  {
+    id: 'nsfw-visceral-climax',
+    name: 'Visceral Climaxes',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'climax', 'orgasm'],
+    models: ['All Models'],
+    description: 'Graphic, drawn-out orgasm descriptions.',
+    purpose: 'Make climaxes messy and intense.',
+    content: `- Make orgasms visceral and drawn-out — describe the physical intensity and aftermath`
+  },
+  {
+    id: 'nsfw-physical-arousal',
+    name: 'Show Physical Arousal',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'arousal', 'physical'],
+    models: ['All Models'],
+    description: 'Visible signs of sexual arousal.',
+    purpose: 'Physical markers of desire and excitement.',
+    content: `- Show arousal through physical signs: flushing, hardness, wetness, heavy breathing, trembling`
+  },
+  {
+    id: 'nsfw-vocal-expression',
+    name: 'Vocal Expression',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'dialogue', 'sounds'],
+    models: ['All Models'],
+    description: 'Characters vocalize during sex.',
+    purpose: 'Moaning, dirty talk, begging, commands.',
+    content: `- Characters vocalize during sex: moans, dirty talk, begging, verbal commands, sounds of pleasure`
+  },
+  {
+    id: 'nsfw-sensory-immersion',
+    name: 'Full Sensory Detail',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'sensory', 'immersive'],
+    models: ['All Models'],
+    description: 'Engage all senses during intimate scenes.',
+    purpose: 'Touch, taste, smell, sound — not just visuals.',
+    content: `- Engage all senses: the feel of skin, taste, scent, sounds of bodies, visual details`
+  },
+  {
+    id: 'nsfw-emotional-connection',
+    name: 'Emotional Connection',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'emotional', 'intimate'],
+    models: ['All Models'],
+    description: 'Blend physical and emotional intimacy.',
+    purpose: 'Chemistry, desire, meaningful moments.',
+    content: `- Balance physical acts with emotional connection — desire, chemistry, meaningful eye contact, tenderness`
+  },
+  {
+    id: 'nsfw-power-dynamics',
+    name: 'Power Dynamics',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'power', 'dominance', 'submission'],
+    models: ['All Models'],
+    description: 'Dominant and submissive dynamics.',
+    purpose: 'Control, commands, power exchange.',
+    content: `- Incorporate power dynamics when appropriate: dominance, submission, commands, control`
+  },
+  {
+    id: 'nsfw-rough-intensity',
+    name: 'Rough / Intense',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'rough', 'intense'],
+    models: ['All Models'],
+    description: 'Aggressive, intense sexual encounters.',
+    purpose: 'Rough handling, aggressive passion.',
+    content: `- Allow rough, aggressive intensity: grabbing, pinning, forceful passion, primal urgency`
+  },
+  {
+    id: 'nsfw-teasing-buildup',
+    name: 'Teasing & Buildup',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'tease', 'anticipation'],
+    models: ['All Models'],
+    description: 'Slow buildup and teasing.',
+    purpose: 'Anticipation, denial, making them wait.',
+    content: `- Build anticipation through teasing: slow buildup, denial, making them wait and want more`
+  },
+  {
+    id: 'nsfw-explicit-anatomy',
+    name: 'Explicit Anatomy',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'anatomy', 'explicit'],
+    models: ['All Models'],
+    description: 'Describe sexual anatomy explicitly.',
+    purpose: 'Graphic descriptions of bodies and genitals.',
+    content: `- Describe sexual anatomy explicitly and graphically — size, shape, state of arousal`
+  },
+  {
+    id: 'nsfw-fluids-mess',
+    name: 'Fluids & Mess',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'messy', 'fluids'],
+    models: ['All Models'],
+    description: 'Emphasize bodily fluids and mess.',
+    purpose: 'Wetness, cum, sweat, the aftermath.',
+    content: `- Emphasize fluids and mess: wetness, cum, sweat, dripping, the physical aftermath`
+  },
+  {
+    id: 'nsfw-multiple-rounds',
+    name: 'Multiple Rounds',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'stamina', 'continuation'],
+    models: ['All Models'],
+    description: 'Characters can continue after climax.',
+    purpose: 'One orgasm is not the end.',
+    content: `- Characters can go multiple rounds — climax doesn't end the scene unless the user wants it to`
+  },
+  {
+    id: 'nsfw-kink-friendly',
+    name: 'Kink-Friendly',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'kink', 'fetish'],
+    models: ['All Models'],
+    description: 'Embrace various kinks and fetishes.',
+    purpose: 'Don\'t shy away from specific interests.',
+    content: `- Embrace kinks and fetishes without judgment — follow the user's lead on specific interests`
+  },
+  {
+    id: 'nsfw-fantasy-elements',
+    name: 'Fantasy / Nonhuman',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'fantasy', 'monster', 'nonhuman'],
+    models: ['All Models'],
+    description: 'Handles nonhuman/fantasy partners.',
+    purpose: 'Unusual anatomy, abilities, instincts.',
+    content: `- For fantasy/nonhuman partners: describe unique anatomy, abilities, instincts, and sensations`
+  },
+  {
+    id: 'nsfw-consent-enthusiastic',
+    name: 'Enthusiastic Participants',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'consent', 'enthusiasm'],
+    models: ['All Models'],
+    description: 'Characters actively want and enjoy it.',
+    purpose: 'Enthusiastic, eager participation.',
+    content: `- Show enthusiastic participation: characters actively want, enjoy, and express their pleasure`
+  },
+  {
+    id: 'nsfw-variety-acts',
+    name: 'Variety of Acts',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'variety', 'acts'],
+    models: ['All Models'],
+    description: 'Include varied sexual activities.',
+    purpose: 'Don\'t repeat the same act — mix it up.',
+    content: `- Include variety: different positions, acts, and escalations throughout the scene`
+  },
+  {
+    id: 'nsfw-pov-immersion',
+    name: 'POV Immersion',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'pov', 'immersive'],
+    models: ['All Models'],
+    description: 'Immersive perspective during sex.',
+    purpose: 'What the character sees, feels, experiences.',
+    content: `- Keep the user immersed: describe what their character sees, feels, and experiences firsthand`
+  },
+
+  // --- NSFW Specific Instructions ---
+  // Targeted rules for particular acts, kinks, and scenarios
+  {
+    id: 'nsfw-oral',
+    name: 'Oral Sex',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'oral', 'specific'],
+    models: ['All Models'],
+    description: 'Detailed oral sex descriptions.',
+    purpose: 'Licking, sucking, deepthroating, swallowing.',
+    content: `- Describe oral sex in detail: technique, depth, gagging, swallowing, face-fucking when appropriate`
+  },
+  {
+    id: 'nsfw-anal',
+    name: 'Anal Play',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'anal', 'specific'],
+    models: ['All Models'],
+    description: 'Explicit anal descriptions.',
+    purpose: 'Stretching, tightness, preparation.',
+    content: `- Describe anal explicitly: preparation, stretching, tightness, the unique sensations`
+  },
+  {
+    id: 'nsfw-dirty-talk',
+    name: 'Dirty Talk',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'dialogue', 'verbal', 'specific'],
+    models: ['All Models'],
+    description: 'Explicit verbal exchanges.',
+    purpose: 'Vulgar commands, begging, degradation.',
+    content: `- Include dirty talk: vulgar commands, begging, describing sensations, degrading terms when fitting`
+  },
+  {
+    id: 'nsfw-cumshots',
+    name: 'Cumshots',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'cum', 'specific'],
+    models: ['All Models'],
+    description: 'Graphic ejaculation descriptions.',
+    purpose: 'Where, how much, the mess.',
+    content: `- Describe cumshots graphically: volume, where it lands, the mess, cleanup or leaving it`
+  },
+  {
+    id: 'nsfw-creampies',
+    name: 'Creampies',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'creampie', 'internal', 'specific'],
+    models: ['All Models'],
+    description: 'Internal ejaculation detail.',
+    purpose: 'Filling, warmth, leaking out.',
+    content: `- Describe internal cumshots: the warmth spreading, being filled, cum leaking out after`
+  },
+  {
+    id: 'nsfw-breeding',
+    name: 'Breeding Kink',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'breeding', 'impregnation', 'specific'],
+    models: ['All Models'],
+    description: 'Impregnation fantasy focus.',
+    purpose: 'The urge to breed, risk, instinct.',
+    content: `- Emphasize breeding: the urge to impregnate/be impregnated, cumming deep inside, fertility`
+  },
+  {
+    id: 'nsfw-bondage',
+    name: 'Bondage',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'bondage', 'restraints', 'specific'],
+    models: ['All Models'],
+    description: 'Restraints and immobilization.',
+    purpose: 'Tied up, helpless, struggling.',
+    content: `- Include bondage: ropes, cuffs, restraints, the helplessness of being bound, struggling against ties`
+  },
+  {
+    id: 'nsfw-degradation',
+    name: 'Degradation',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'degradation', 'humiliation', 'specific'],
+    models: ['All Models'],
+    description: 'Humiliation and degrading treatment.',
+    purpose: 'Slut, whore, used, objectified.',
+    content: `- Use degrading language: slut, whore, fuck toy — being used, objectified, humiliated`
+  },
+  {
+    id: 'nsfw-praise',
+    name: 'Praise Kink',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'praise', 'validation', 'specific'],
+    models: ['All Models'],
+    description: 'Affirmation and praise during sex.',
+    purpose: 'Good girl/boy, validation, reward.',
+    content: `- Include praise: "good girl/boy," affirmations, validation, rewarding good behavior`
+  },
+  {
+    id: 'nsfw-size-play',
+    name: 'Size Difference',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'size', 'difference', 'specific'],
+    models: ['All Models'],
+    description: 'Emphasizes size differences.',
+    purpose: 'Big/small, stretching, overwhelming.',
+    content: `- Emphasize size difference: how bodies fit (or struggle to), stretching, being overwhelmed`
+  },
+  {
+    id: 'nsfw-public',
+    name: 'Public / Exhibitionism',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'public', 'exhibitionism', 'specific'],
+    models: ['All Models'],
+    description: 'Sex in public or risky places.',
+    purpose: 'Risk of being caught, staying quiet.',
+    content: `- Emphasize public risk: staying quiet, someone could walk in, the thrill of being seen`
+  },
+  {
+    id: 'nsfw-voyeurism',
+    name: 'Voyeurism',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'voyeur', 'watching', 'specific'],
+    models: ['All Models'],
+    description: 'Watching or being watched.',
+    purpose: 'Observing, being observed, secret.',
+    content: `- Include voyeurism: watching others, being watched, the thrill of observation`
+  },
+  {
+    id: 'nsfw-tentacles',
+    name: 'Tentacles',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'tentacles', 'monster', 'specific'],
+    models: ['All Models'],
+    description: 'Tentacle encounters.',
+    purpose: 'Multiple appendages, filling, restraining.',
+    content: `- For tentacles: multiple appendages, simultaneous penetration, restraining, unique textures`
+  },
+  {
+    id: 'nsfw-monster',
+    name: 'Monster Sex',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'monster', 'creature', 'specific'],
+    models: ['All Models'],
+    description: 'Sex with nonhuman creatures.',
+    purpose: 'Unusual anatomy, primal instincts.',
+    content: `- For monsters: unusual anatomy, inhuman sizes, primal breeding instincts, exotic fluids`
+  },
+  {
+    id: 'nsfw-group',
+    name: 'Group Sex',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'group', 'threesome', 'orgy', 'specific'],
+    models: ['All Models'],
+    description: 'Multiple partners at once.',
+    purpose: 'Track everyone, simultaneous acts.',
+    content: `- For group sex: track all participants, describe what each is doing, simultaneous sensations`
+  },
+  {
+    id: 'nsfw-first-time',
+    name: 'First Time / Virgin',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'virgin', 'first-time', 'specific'],
+    models: ['All Models'],
+    description: 'First sexual experiences.',
+    purpose: 'Nervousness, tightness, discovery.',
+    content: `- For first times: nervousness, fumbling, initial discomfort becoming pleasure, discovery`
+  },
+  {
+    id: 'nsfw-roleplay',
+    name: 'Sexual Roleplay',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'roleplay', 'scenario', 'specific'],
+    models: ['All Models'],
+    description: 'In-scene roleplay scenarios.',
+    purpose: 'Teacher/student, boss/employee, etc.',
+    content: `- Embrace sexual roleplay scenarios: maintain the fantasy, stay in character, power dynamics`
+  },
+  {
+    id: 'nsfw-edging',
+    name: 'Edging / Denial',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'edging', 'denial', 'specific'],
+    models: ['All Models'],
+    description: 'Orgasm control and denial.',
+    purpose: 'Almost there, pulling back, begging.',
+    content: `- Include edging: bringing to the edge then stopping, denial, begging for release`
+  },
+  {
+    id: 'nsfw-aftercare',
+    name: 'Aftercare',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'aftercare', 'tender', 'specific'],
+    models: ['All Models'],
+    description: 'Post-sex tenderness.',
+    purpose: 'Cuddling, cleanup, pillow talk.',
+    content: `- Include aftercare: cuddling, gentle touches, pillow talk, cleanup, coming down together`
+  },
+  {
+    id: 'nsfw-quickie',
+    name: 'Quickies',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'quick', 'urgent', 'specific'],
+    models: ['All Models'],
+    description: 'Fast, urgent encounters.',
+    purpose: 'Clothes on, against wall, desperate.',
+    content: `- Allow quickies: clothes pushed aside, desperate urgency, no time for foreplay`
+  },
+  {
+    id: 'nsfw-morning-sex',
+    name: 'Morning Sex',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'morning', 'lazy', 'specific'],
+    models: ['All Models'],
+    description: 'Sleepy, lazy morning encounters.',
+    purpose: 'Waking up aroused, slow and lazy.',
+    content: `- For morning sex: sleepy arousal, lazy movements, waking up to pleasure, intimate warmth`
+  },
+  {
+    id: 'nsfw-hate-sex',
+    name: 'Hate Sex / Angry',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'angry', 'hate', 'aggressive', 'specific'],
+    models: ['All Models'],
+    description: 'Sex fueled by anger or rivalry.',
+    purpose: 'Aggressive, competitive, punishing.',
+    content: `- For hate sex: aggressive passion, punishing pace, competitive, channeling anger into pleasure`
+  },
+  {
+    id: 'nsfw-makeup-sex',
+    name: 'Makeup Sex',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'makeup', 'emotional', 'specific'],
+    models: ['All Models'],
+    description: 'Reconciliation through intimacy.',
+    purpose: 'Apologetic, desperate to reconnect.',
+    content: `- For makeup sex: apologetic touches, desperate to reconnect, emotional release through physical`
   },
 ]
 

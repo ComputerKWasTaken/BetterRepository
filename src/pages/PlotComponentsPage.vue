@@ -1320,15 +1320,17 @@
 
               @click="toggleCategory(category.id)"
 
-              class="tag cursor-pointer transition-all"
+              class="tag cursor-pointer transition-all flex items-center gap-1.5"
 
               :class="selectedCategories.includes(category.id) 
 
-                ? 'bg-bd-accent-primary/20 text-bd-accent-light border border-bd-accent-primary/30' 
+                  ? 'bg-bd-accent-primary/20 text-bd-accent-light border border-bd-accent-primary/30' 
 
-                : 'hover:bg-bd-tag-bg'"
+                  : 'hover:bg-bd-tag-bg'"
 
             >
+
+              <Lock v-if="category.id === 'nsfw' && !nsfwVerified" class="w-3 h-3" />
 
               {{ category.name }}
 
@@ -1584,6 +1586,94 @@
 
       </section>
 
+      <!-- NSFW Section -->
+
+      <section v-if="nsfwComponents.length > 0">
+
+        <div class="flex items-center gap-3 mb-4">
+
+          <div class="w-8 h-8 rounded-lg bg-bd-red/20 flex items-center justify-center">
+
+            <Flame class="w-4 h-4 text-bd-red" />
+
+          </div>
+
+          <div>
+
+            <h3 class="font-semibold text-bd-text-primary flex items-center gap-2">
+
+              NSFW / Adult
+
+              <Lock v-if="!nsfwVerified" class="w-3.5 h-3.5 text-bd-red" />
+
+            </h3>
+
+            <p class="text-xs text-bd-text-muted">Templates for adult content and intimate scenes. 18+ only.</p>
+
+          </div>
+
+          <span class="ml-auto tag bg-bd-red/20 text-bd-red">{{ nsfwComponents.length }}</span>
+
+        </div>
+
+        
+
+        <!-- Locked State -->
+
+        <div v-if="!nsfwVerified" class="relative">
+
+          <div class="space-y-3 filter blur-sm pointer-events-none select-none">
+
+            <div v-for="i in Math.min(3, nsfwComponents.length)" :key="i" class="card bg-bd-bg-tertiary/50 p-4">
+
+              <div class="h-4 bg-bd-bg-elevated rounded w-3/4 mb-2"></div>
+
+              <div class="h-3 bg-bd-bg-elevated rounded w-1/2"></div>
+
+            </div>
+
+          </div>
+
+          <div class="absolute inset-0 flex items-center justify-center">
+
+            <button 
+
+              @click="showAgeVerification = true"
+
+              class="flex items-center gap-2 px-4 py-2 rounded-xl bg-bd-red/20 border border-bd-red/30 text-bd-red hover:bg-bd-red/30 transition-colors"
+
+            >
+
+              <Lock class="w-4 h-4" />
+
+              <span class="font-medium">Click to verify age (18+)</span>
+
+            </button>
+
+          </div>
+
+        </div>
+
+        
+
+        <!-- Unlocked State -->
+
+        <div v-else class="space-y-3">
+
+          <ResourceCard 
+
+            v-for="component in nsfwComponents" 
+
+            :key="component.id"
+
+            :resource="component"
+
+          />
+
+        </div>
+
+      </section>
+
     </div>
 
 
@@ -1632,6 +1722,53 @@
 
     </template>
 
+    <!-- Age Verification Modal -->
+    <Teleport to="body">
+      <Transition name="fade">
+        <div v-if="showAgeVerification" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <!-- Backdrop -->
+          <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="cancelAgeVerification"></div>
+          
+          <!-- Modal -->
+          <div class="relative bg-bd-bg-secondary border border-bd-red/30 rounded-2xl p-6 max-w-md w-full shadow-2xl animate-fade-in">
+            <!-- Icon -->
+            <div class="flex justify-center mb-4">
+              <div class="w-16 h-16 rounded-full bg-bd-red/20 flex items-center justify-center">
+                <ShieldAlert class="w-8 h-8 text-bd-red" />
+              </div>
+            </div>
+            
+            <!-- Content -->
+            <div class="text-center space-y-3">
+              <h2 class="text-xl font-bold text-bd-text-primary">Adult Content Warning</h2>
+              <p class="text-bd-text-secondary text-sm">
+                The <strong class="text-bd-red">NSFW / Adult</strong> category contains explicit sexual content intended for adults only.
+              </p>
+              <p class="text-bd-text-muted text-xs">
+                By continuing, you confirm that you are <strong>18 years of age or older</strong> and that viewing adult content is legal in your jurisdiction.
+              </p>
+            </div>
+            
+            <!-- Buttons -->
+            <div class="flex gap-3 mt-6">
+              <button 
+                @click="cancelAgeVerification"
+                class="flex-1 px-4 py-3 rounded-xl bg-bd-bg-tertiary text-bd-text-secondary hover:bg-bd-bg-elevated transition-colors font-medium"
+              >
+                Go Back
+              </button>
+              <button 
+                @click="confirmAge"
+                class="flex-1 px-4 py-3 rounded-xl bg-bd-red text-white hover:bg-bd-red/80 transition-colors font-medium"
+              >
+                I'm 18+ — Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+
   </div>
 
 </template>
@@ -1660,6 +1797,8 @@ import {
 
 import { searchCollectionWithScores } from '@/data/shared'
 
+import { usePreferences } from '@/composables/usePreferences'
+
 import { 
 
   Bookmark, Info, MapPin, FileText, Feather, BookMarked, ScrollText, 
@@ -1672,11 +1811,13 @@ import {
 
   Sparkles, Scissors, MessageCircle, XCircle, Edit, SlidersHorizontal, Zap, Search,
 
-  ExternalLink, Award, ChevronDown, ChevronUp
+  ExternalLink, Award, ChevronDown, ChevronUp, Flame, ShieldAlert, Lock
 
 } from 'lucide-vue-next'
 
 
+
+const { preferences, verifyAge } = usePreferences()
 
 const activeTab = ref('templates')
 
@@ -1719,6 +1860,16 @@ const showFilters = ref(false)
 const sortBy = ref('name')
 
 const quickFilter = ref(null)
+
+
+
+// NSFW Age Verification (uses persistent preference)
+
+const nsfwVerified = computed(() => preferences.value.nsfwVerified)
+
+const showAgeVerification = ref(false)
+
+const pendingNsfwAction = ref(null)
 
 
 
@@ -1928,9 +2079,29 @@ const storySummaryComponents = computed(() =>
 
 
 
+const nsfwComponents = computed(() => 
+
+  TEMPLATES.filter(t => t.category === 'nsfw')
+
+)
+
+
+
 const filteredTemplates = computed(() => {
 
   let result = [...templates.value]
+
+  
+
+  // Filter out NSFW unless verified OR explicitly selected in category filter
+
+  const nsfwExplicitlySelected = selectedCategories.value.includes('nsfw')
+
+  if (!nsfwVerified.value && !nsfwExplicitlySelected) {
+
+    result = result.filter(t => t.category !== 'nsfw')
+
+  }
 
   
 
@@ -1938,15 +2109,15 @@ const filteredTemplates = computed(() => {
 
   if (quickFilter.value === 'essential') {
 
-    result = getEssentialTemplates()
+    result = getEssentialTemplates().filter(t => nsfwVerified.value || t.category !== 'nsfw')
 
   } else if (quickFilter.value === 'starter') {
 
-    result = getStarterSet()
+    result = getStarterSet().filter(t => nsfwVerified.value || t.category !== 'nsfw')
 
   } else if (quickFilter.value === 'high-impact') {
 
-    result = getHighImpactTemplates()
+    result = getHighImpactTemplates().filter(t => nsfwVerified.value || t.category !== 'nsfw')
 
   }
 
@@ -2086,6 +2257,26 @@ const toggleCategory = (categoryId) => {
 
   quickFilter.value = null
 
+  
+
+  // Check if trying to enable NSFW category without verification
+
+  if (categoryId === 'nsfw' && !nsfwVerified.value && !selectedCategories.value.includes('nsfw')) {
+
+    pendingNsfwAction.value = () => {
+
+      selectedCategories.value.push('nsfw')
+
+    }
+
+    showAgeVerification.value = true
+
+    return
+
+  }
+
+  
+
   const index = selectedCategories.value.indexOf(categoryId)
 
   if (index > -1) {
@@ -2097,6 +2288,36 @@ const toggleCategory = (categoryId) => {
     selectedCategories.value.push(categoryId)
 
   }
+
+}
+
+
+
+// Age verification handlers
+
+const confirmAge = () => {
+
+  verifyAge() // Persists to cookie
+
+  showAgeVerification.value = false
+
+  if (pendingNsfwAction.value) {
+
+    pendingNsfwAction.value()
+
+    pendingNsfwAction.value = null
+
+  }
+
+}
+
+
+
+const cancelAgeVerification = () => {
+
+  showAgeVerification.value = false
+
+  pendingNsfwAction.value = null
 
 }
 

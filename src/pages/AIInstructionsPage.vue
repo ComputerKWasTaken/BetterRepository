@@ -31,7 +31,10 @@
 
     <!-- ==================== BUILDER TAB ==================== -->
     <template v-if="activeTab === 'builder'">
-      <InstructionBuilder />
+      <InstructionBuilder 
+        :nsfw-verified="nsfwVerified"
+        @request-age-verification="handleBuilderAgeVerification"
+      />
     </template>
 
     <!-- ==================== GUIDE TAB ==================== -->
@@ -890,11 +893,12 @@
               v-for="category in categories" 
               :key="category.id"
               @click="toggleCategory(category.id)"
-              class="tag cursor-pointer transition-all"
+              class="tag cursor-pointer transition-all flex items-center gap-1.5"
               :class="selectedCategories.includes(category.id) 
-                ? 'bg-bd-accent-primary/20 text-bd-accent-light border border-bd-accent-primary/30' 
-                : 'hover:bg-bd-tag-bg'"
+                  ? 'bg-bd-accent-primary/20 text-bd-accent-light border border-bd-accent-primary/30' 
+                  : 'hover:bg-bd-tag-bg'"
             >
+              <Lock v-if="category.id === 'nsfw' && !nsfwVerified" class="w-3 h-3" />
               {{ category.name }}
             </button>
           </div>
@@ -968,13 +972,41 @@
             <component :is="getCategoryIcon(category.id)" class="w-4 h-4" :class="getCategoryIconClass(category.id)" />
           </div>
           <div>
-            <h2 class="text-lg font-semibold text-bd-text-primary">{{ category.name }}</h2>
+            <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+              {{ category.name }}
+              <Lock v-if="category.isLocked" class="w-4 h-4 text-bd-red" />
+            </h2>
             <p class="text-xs text-bd-text-muted">{{ category.description }}</p>
           </div>
-          <span class="ml-auto tag">{{ category.instructions.length }}</span>
+          <span 
+            class="ml-auto tag"
+            :class="category.id === 'nsfw' ? 'bg-bd-red/20 text-bd-red' : ''"
+          >{{ category.instructions.length }}</span>
         </div>
         
-        <div class="grid gap-3">
+        <!-- Locked NSFW Section -->
+        <div v-if="category.isLocked" class="relative">
+          <!-- Blurred preview -->
+          <div class="space-y-3 filter blur-sm pointer-events-none select-none">
+            <div v-for="i in Math.min(3, category.instructions.length)" :key="i" class="card bg-bd-bg-tertiary/50 p-4">
+              <div class="h-4 bg-bd-bg-elevated rounded w-3/4 mb-2"></div>
+              <div class="h-3 bg-bd-bg-elevated rounded w-1/2"></div>
+            </div>
+          </div>
+          <!-- Unlock overlay -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <button 
+              @click="toggleCategory('nsfw')"
+              class="flex items-center gap-2 px-4 py-2 rounded-xl bg-bd-red/20 border border-bd-red/30 text-bd-red hover:bg-bd-red/30 transition-colors"
+            >
+              <Lock class="w-4 h-4" />
+              <span class="font-medium">Click to verify age (18+)</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Normal category content -->
+        <div v-else class="grid gap-3">
           <template v-for="item in category.organizedItems" :key="item.isGroup ? item.groupId : item.instruction.id">
             <!-- Single instruction (not in a group) -->
             <ResourceCard 
@@ -1064,6 +1096,53 @@
     </div>
 
     </template>
+
+    <!-- Age Verification Modal -->
+    <Teleport to="body">
+      <Transition name="fade">
+        <div v-if="showAgeVerification" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <!-- Backdrop -->
+          <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="cancelAgeVerification"></div>
+          
+          <!-- Modal -->
+          <div class="relative bg-bd-bg-secondary border border-bd-red/30 rounded-2xl p-6 max-w-md w-full shadow-2xl animate-fade-in">
+            <!-- Icon -->
+            <div class="flex justify-center mb-4">
+              <div class="w-16 h-16 rounded-full bg-bd-red/20 flex items-center justify-center">
+                <ShieldAlert class="w-8 h-8 text-bd-red" />
+              </div>
+            </div>
+            
+            <!-- Content -->
+            <div class="text-center space-y-3">
+              <h2 class="text-xl font-bold text-bd-text-primary">Adult Content Warning</h2>
+              <p class="text-bd-text-secondary text-sm">
+                The <strong class="text-bd-red">NSFW / Adult</strong> category contains explicit sexual content intended for adults only.
+              </p>
+              <p class="text-bd-text-muted text-xs">
+                By continuing, you confirm that you are <strong>18 years of age or older</strong> and that viewing adult content is legal in your jurisdiction.
+              </p>
+            </div>
+            
+            <!-- Buttons -->
+            <div class="flex gap-3 mt-6">
+              <button 
+                @click="cancelAgeVerification"
+                class="flex-1 px-4 py-3 rounded-xl bg-bd-bg-tertiary text-bd-text-secondary hover:bg-bd-bg-elevated transition-colors font-medium"
+              >
+                Go Back
+              </button>
+              <button 
+                @click="confirmAge"
+                class="flex-1 px-4 py-3 rounded-xl bg-bd-red text-white hover:bg-bd-red/80 transition-colors font-medium"
+              >
+                I'm 18+ — Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
@@ -1090,7 +1169,8 @@ import {
   ListOrdered, Percent, UserPlus, Repeat, Rocket, Wrench, Clock, UserX,
   Shield, Focus, Type, Drama, MessageSquare, Skull, ExternalLink, Star,
   AlertTriangle, Plus, Tag, Braces, Split, AlignLeft, Cpu, Coins,
-  Check, X, TrendingUp, Wand2, Link2, Heart, ChevronDown, UserCog
+  Check, X, TrendingUp, Wand2, Link2, Heart, ChevronDown, UserCog, Flame,
+  ShieldAlert, Lock
 } from 'lucide-vue-next'
 
 const activeTab = ref('collection')
@@ -1102,7 +1182,7 @@ const tabs = [
 ]
 
 const route = useRoute()
-const { addToSearchHistory } = usePreferences()
+const { addToSearchHistory, preferences, verifyAge } = usePreferences()
 
 const instructions = ref(INSTRUCTIONS)
 const categories = ref(CATEGORIES)
@@ -1113,6 +1193,11 @@ const selectedImpacts = ref([])
 const showFilters = ref(false)
 const sortBy = ref('category')
 const quickFilter = ref(null)
+
+// NSFW Age Verification (uses persistent preference)
+const nsfwVerified = computed(() => preferences.value.nsfwVerified)
+const showAgeVerification = ref(false)
+const pendingNsfwAction = ref(null) // Stores the action to perform after verification
 
 const difficulties = [
   { id: 'beginner', label: 'Beginner', activeClass: 'bg-bd-green/20 text-bd-green border border-bd-green/30' },
@@ -1136,7 +1221,8 @@ const iconComponentMap = {
   'Swords': Swords,
   'Globe': Globe,
   'FileText': FileText,
-  'Settings': Settings
+  'Settings': Settings,
+  'Flame': Flame
 }
 
 const categoryColorMap = {
@@ -1147,7 +1233,8 @@ const categoryColorMap = {
   'coherence': { bg: 'bg-bd-green/20', icon: 'text-bd-green' },
   'gameplay': { bg: 'bg-bd-pink/20', icon: 'text-bd-pink' },
   'world-setting': { bg: 'bg-bd-cyan/20', icon: 'text-bd-cyan' },
-  'formatting': { bg: 'bg-bd-gray/20', icon: 'text-bd-gray' }
+  'formatting': { bg: 'bg-bd-gray/20', icon: 'text-bd-gray' },
+  'nsfw': { bg: 'bg-bd-red/20', icon: 'text-bd-red' }
 }
 
 const getCategoryIcon = (categoryId) => {
@@ -1166,15 +1253,21 @@ const getCategoryIconClass = (categoryId) => {
 const filteredInstructions = computed(() => {
   let result = [...instructions.value]
   
+  // Filter out NSFW unless verified OR explicitly selected in category filter
+  const nsfwExplicitlySelected = selectedCategories.value.includes('nsfw')
+  if (!nsfwVerified.value && !nsfwExplicitlySelected) {
+    result = result.filter(i => i.category !== 'nsfw')
+  }
+  
   // Apply quick filter first
   if (quickFilter.value === 'essential') {
-    result = getEssentialInstructions()
+    result = getEssentialInstructions().filter(i => nsfwVerified.value || i.category !== 'nsfw')
   } else if (quickFilter.value === 'starter') {
-    result = getStarterSet()
+    result = getStarterSet().filter(i => nsfwVerified.value || i.category !== 'nsfw')
   } else if (quickFilter.value === 'high-impact') {
-    result = getHighImpactInstructions()
+    result = getHighImpactInstructions().filter(i => nsfwVerified.value || i.category !== 'nsfw')
   } else if (quickFilter.value === 'beginner') {
-    result = getBeginnerInstructions()
+    result = getBeginnerInstructions().filter(i => nsfwVerified.value || i.category !== 'nsfw')
   }
   
   // Filter by search query using fuzzy search
@@ -1252,7 +1345,8 @@ const categoriesWithInstructions = computed(() => {
     .map(cat => ({
       ...cat,
       instructions: instructions.value.filter(i => i.category === cat.id),
-      organizedItems: organizeInstructions(instructions.value.filter(i => i.category === cat.id))
+      organizedItems: organizeInstructions(instructions.value.filter(i => i.category === cat.id)),
+      isLocked: cat.id === 'nsfw' && !nsfwVerified.value
     }))
     .filter(cat => cat.instructions.length > 0)
 })
@@ -1324,12 +1418,43 @@ const searchSuggestions = computed(() => {
 
 const toggleCategory = (categoryId) => {
   quickFilter.value = null // Clear quick filter when using manual filters
+  
+  // Check if trying to enable NSFW category without verification
+  if (categoryId === 'nsfw' && !nsfwVerified.value && !selectedCategories.value.includes('nsfw')) {
+    pendingNsfwAction.value = () => {
+      selectedCategories.value.push('nsfw')
+    }
+    showAgeVerification.value = true
+    return
+  }
+  
   const index = selectedCategories.value.indexOf(categoryId)
   if (index > -1) {
     selectedCategories.value.splice(index, 1)
   } else {
     selectedCategories.value.push(categoryId)
   }
+}
+
+// Age verification handlers
+const confirmAge = () => {
+  verifyAge() // Persists to cookie
+  showAgeVerification.value = false
+  if (pendingNsfwAction.value) {
+    pendingNsfwAction.value()
+    pendingNsfwAction.value = null
+  }
+}
+
+const cancelAgeVerification = () => {
+  showAgeVerification.value = false
+  pendingNsfwAction.value = null
+}
+
+// Handle age verification request from Builder component
+const handleBuilderAgeVerification = (callback) => {
+  pendingNsfwAction.value = callback
+  showAgeVerification.value = true
 }
 
 const clearFilters = () => {

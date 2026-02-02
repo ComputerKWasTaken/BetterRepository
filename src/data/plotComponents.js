@@ -40,6 +40,14 @@ export const TEMPLATE_CATEGORIES = [
     color: 'bd-cyan',
     description: 'Track overall story direction, arcs, and long-term goals. Works with Auto Summarization.',
     strength: 'Moderate'
+  },
+  { 
+    id: 'nsfw', 
+    name: 'NSFW / Adult', 
+    icon: 'Flame', 
+    color: 'bd-red',
+    description: 'Templates for adult content: intimate scenes, romantic encounters, and explicit scenarios. 18+ only.',
+    strength: 'High'
   }
 ]
 
@@ -576,6 +584,278 @@ Growing toward: [Intended development]
 
 [Relationships changed]
 - [Person]: From [old dynamic] to [new dynamic]`
+  },
+
+  // ==========================================
+  // NSFW / ADULT TEMPLATES
+  // ==========================================
+  // Templates for adult content and intimate scenes.
+  // 18+ only. Use with age verification.
+  // ==========================================
+  {
+    id: 'nsfw-scene-note',
+    name: 'NSFW Scene Note',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: true,
+    tags: ['nsfw', 'scene', 'explicit', 'essential'],
+    useCase: 'When entering an intimate or sexual scene.',
+    description: 'Author\'s Note for explicit scenes.',
+    purpose: 'Strongest influence on explicit content. Place in Author\'s Note during intimate scenes.',
+    content: `[Explicit Scene Active]
+- Write graphic, uncensored adult content
+- Never fade to black or skip intimate moments
+- Use vulgar, pornographic language for anatomy
+- Describe physical sensations in vivid detail
+- Keep the scene going until it naturally concludes`
+  },
+  {
+    id: 'nsfw-romantic-note',
+    name: 'Romantic Erotica Note',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: false,
+    tags: ['nsfw', 'romantic', 'intimate', 'emotional'],
+    useCase: 'For romantic encounters that blend emotion with physical intimacy.',
+    description: 'Balances explicit content with emotional depth.',
+    purpose: 'For users who want both heat and heart in their intimate scenes.',
+    content: `[Romantic Intimacy]
+- Balance explicit physical content with emotional connection
+- Show desire, chemistry, and meaningful moments
+- Include tender touches alongside passionate ones
+- Characters express feelings through actions and words
+- Aftercare and pillow talk when appropriate`
+  },
+  {
+    id: 'nsfw-hardcore-note',
+    name: 'Hardcore Scene Note',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'high',
+    essential: false,
+    tags: ['nsfw', 'hardcore', 'extreme', 'explicit'],
+    useCase: 'For intense, graphic content without restraint.',
+    description: 'Maximum explicitness for adult scenes.',
+    purpose: 'For users seeking the most graphic, unfiltered content.',
+    content: `[Hardcore Scene]
+- Write the most explicit, graphic content possible
+- Use vulgar, degrading language freely
+- Include rough, aggressive physical elements
+- Describe every act in pornographic detail
+- Nothing is too filthy — push boundaries`
+  },
+  {
+    id: 'nsfw-partner-profile',
+    name: 'Intimate Partner Profile',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    tags: ['nsfw', 'partner', 'character', 'preferences'],
+    useCase: 'For recurring intimate partners to maintain consistency.',
+    combinesWith: ['nsfw-scene-note'],
+    description: 'Track a partner\'s physical details and preferences.',
+    purpose: 'Keeps intimate partners consistent. Update as you learn more about them.',
+    content: `[Intimate Partner: Name]
+Relationship: [Partner/Lover/FWB/Spouse/etc.]
+
+Physical:
+- Body: [Build, features, notable attributes]
+- Intimate details: [Relevant physical specifics]
+
+Preferences:
+- Likes: [What they enjoy]
+- Dislikes: [What they avoid]
+- Kinks: [Special interests]
+
+Dynamic: [Dom/Sub/Switch/Vanilla/etc.]
+History: [Your intimate history together]`
+  },
+  {
+    id: 'nsfw-boundaries',
+    name: 'Scene Boundaries',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: false,
+    tags: ['nsfw', 'boundaries', 'limits', 'preferences'],
+    useCase: 'To set limits on what content appears in scenes.',
+    description: 'Define what\'s on and off the table.',
+    purpose: 'Prevents unwanted content. AI respects these boundaries.',
+    content: `[Scene Boundaries]
+Green (enthusiastic yes):
+- [Acts/themes you want]
+- [Content you enjoy]
+
+Yellow (include carefully):
+- [Things that are okay sometimes]
+- [Context-dependent content]
+
+Red (never include):
+- [Hard limits]
+- [Content to avoid completely]`
+  },
+  {
+    id: 'nsfw-kink-focus',
+    name: 'Kink Focus Note',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['nsfw', 'kink', 'fetish', 'specific'],
+    useCase: 'When you want scenes to emphasize specific kinks.',
+    description: 'Guides AI to focus on particular interests.',
+    purpose: 'Temporary note for scenes. Tells AI what to emphasize.',
+    content: `[Kink Focus: Scene Name]
+Primary focus: [Main kink/interest]
+Secondary: [Supporting elements]
+
+Include:
+- [Specific element you want]
+- [Another element]
+
+Tone: [Playful/Intense/Loving/Rough/etc.]
+Dynamic: [Power dynamic if relevant]`
+  },
+  {
+    id: 'nsfw-relationship-dynamic',
+    name: 'Intimate Relationship Dynamic',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['nsfw', 'relationship', 'dynamic', 'power'],
+    useCase: 'For ongoing intimate relationships with established dynamics.',
+    combinesWith: ['nsfw-partner-profile'],
+    description: 'Defines the intimate dynamic between characters.',
+    purpose: 'Establishes consistent power dynamics and roles.',
+    content: `[Intimate Dynamic: Character & Partner]
+Type: [D/s, Switch, Vanilla, etc.]
+
+Roles:
+- [Character]: [Their role/position]
+- [Partner]: [Their role/position]
+
+Established patterns:
+- [How scenes typically start]
+- [Common activities]
+- [Aftercare routine]
+
+Evolution: [How the dynamic has developed]`
+  },
+  {
+    id: 'nsfw-harem-tracker',
+    name: 'Harem / Multiple Partners',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['nsfw', 'harem', 'multiple', 'partners'],
+    useCase: 'For stories with multiple romantic/sexual partners.',
+    description: 'Track multiple intimate relationships.',
+    purpose: 'Keeps multiple partners distinct and consistent.',
+    content: `[Partners]
+
+[Name 1]
+- Status: [Relationship type]
+- Dynamic: [How you interact intimately]
+- Unique: [What's special about them]
+
+[Name 2]
+- Status: [Relationship type]
+- Dynamic: [How you interact intimately]
+- Unique: [What's special about them]
+
+[Group dynamics]
+- Know about each other: [Yes/No/Some]
+- Jealousy factor: [None/Some/High]
+- Group scenes: [Open to it / Not interested]`
+  },
+  {
+    id: 'nsfw-scene-tracker',
+    name: 'Intimate Scene Tracker',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    tags: ['nsfw', 'scene', 'tracking', 'history'],
+    useCase: 'To track intimate encounters for continuity.',
+    description: 'Log past intimate scenes.',
+    purpose: 'Helps maintain continuity in ongoing relationships.',
+    content: `[Intimate History]
+
+[Most Recent: Date/Context]
+- With: [Partner]
+- What happened: [Brief summary]
+- Notable: [Anything significant]
+
+[Previous encounters]
+- [Date]: [Partner] - [Brief note]
+- [Date]: [Partner] - [Brief note]
+
+[Firsts]
+- First kiss: [Who/When]
+- First time: [Who/When]
+- First [other milestone]: [Who/When]`
+  },
+  {
+    id: 'nsfw-tension-buildup',
+    name: 'Sexual Tension Tracker',
+    category: 'nsfw',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    tags: ['nsfw', 'tension', 'buildup', 'slow-burn'],
+    useCase: 'For slow-burn romances building toward intimacy.',
+    description: 'Track building tension between characters.',
+    purpose: 'Guides AI to build tension appropriately before payoff.',
+    content: `[Tension: Character & Interest]
+Current level: [Simmering/Building/Near breaking point]
+
+[Moments of tension]
+- [Loaded glance/accidental touch/etc.]
+- [Almost-kiss/interrupted moment/etc.]
+
+[What's stopping them]
+- [Obstacle/reason they haven't acted]
+
+[Signs of attraction]
+- They show: [How they show interest]
+- You show: [How you show interest]
+
+[When it breaks]: [What might finally push them over]`
+  },
+  {
+    id: 'nsfw-fantasy-species',
+    name: 'Fantasy Species Intimacy',
+    category: 'nsfw',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['nsfw', 'fantasy', 'monster', 'nonhuman'],
+    useCase: 'For intimate scenes with nonhuman characters.',
+    description: 'Define unique intimate traits of fantasy beings.',
+    purpose: 'Helps AI write consistent nonhuman intimate encounters.',
+    content: `[Species: Name]
+Type: [Monster/Alien/Fantasy race/etc.]
+
+Unique anatomy:
+- [Relevant physical differences]
+- [Special features or appendages]
+
+Biological traits:
+- [Heat cycles/mating instincts/etc.]
+- [Unusual fluids/pheromones/etc.]
+
+Cultural attitudes:
+- [How this species views intimacy]
+- [Mating rituals or customs]
+
+With humans:
+- [Compatibility notes]
+- [Size/physical considerations]`
   }
 ]
 
@@ -611,6 +891,9 @@ export const getPlotEssentialsTemplates = () => getTemplatesByCategory('plot-ess
 
 // Get all Story Summary templates
 export const getStorySummaryTemplates = () => getTemplatesByCategory('story-summary')
+
+// Get all NSFW templates
+export const getNsfwTemplates = () => getTemplatesByCategory('nsfw')
 
 // ============================================
 // METADATA HELPER FUNCTIONS

@@ -99,12 +99,16 @@
             <button
               v-for="cat in nonSetCategories"
               :key="cat.id"
-              @click="selectedCategory = cat.id"
-              class="px-2.5 py-1 rounded-lg text-xs font-medium transition-colors"
-              :class="selectedCategory === cat.id 
-                ? 'bg-bd-accent-primary/20 text-bd-accent-light' 
-                : 'bg-bd-bg-tertiary text-bd-text-muted hover:text-bd-text-primary'"
+              @click="handleCategorySelect(cat.id)"
+              class="px-2.5 py-1 rounded-lg text-xs font-medium transition-colors flex items-center gap-1"
+              :class="[
+                selectedCategory === cat.id 
+                  ? 'bg-bd-accent-primary/20 text-bd-accent-light' 
+                  : 'bg-bd-bg-tertiary text-bd-text-muted hover:text-bd-text-primary',
+                cat.isLocked ? 'text-bd-red' : ''
+              ]"
             >
+              <Lock v-if="cat.isLocked" class="w-3 h-3" />
               {{ cat.name }}
             </button>
           </div>
@@ -324,11 +328,22 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { 
   Wrench, FolderOpen, Layers, Search, Plus, Check, X, ListOrdered,
   ChevronUp, ChevronDown, Save, Eye, Copy, FileText, Lightbulb,
-  Trash2, Puzzle
+  Trash2, Puzzle, Lock
 } from 'lucide-vue-next'
 import { usePreferences } from '@/composables/usePreferences'
 import { INSTRUCTIONS, CATEGORIES } from '@/data/aiInstructions'
 import { searchCollectionWithScores } from '@/data/shared'
+
+// Props for age verification
+const props = defineProps({
+  nsfwVerified: {
+    type: Boolean,
+    default: false
+  }
+})
+
+// Emits for age verification
+const emit = defineEmits(['request-age-verification'])
 
 const {
   preferences,
@@ -351,13 +366,28 @@ const copied = ref(false)
 const savedBuildsDropdown = ref(null)
 
 // Filter out complete sets - users should build from individual instructions
+// Show NSFW category but mark it as locked if not verified
 const nonSetCategories = computed(() => 
-  CATEGORIES.filter(c => c.id !== 'complete-sets')
+  CATEGORIES.filter(c => c.id !== 'complete-sets').map(c => ({
+    ...c,
+    isLocked: c.id === 'nsfw' && !props.nsfwVerified
+  }))
 )
 
 const buildableInstructions = computed(() =>
   INSTRUCTIONS.filter(i => i.category !== 'complete-sets')
 )
+
+// Handle category selection with NSFW verification
+const handleCategorySelect = (categoryId) => {
+  if (categoryId === 'nsfw' && !props.nsfwVerified) {
+    emit('request-age-verification', () => {
+      selectedCategory.value = 'nsfw'
+    })
+    return
+  }
+  selectedCategory.value = categoryId
+}
 
 // Filtered instructions based on search and category
 const filteredInstructions = computed(() => {
@@ -366,6 +396,11 @@ const filteredInstructions = computed(() => {
   // Filter by category
   if (selectedCategory.value) {
     result = result.filter(i => i.category === selectedCategory.value)
+  }
+  
+  // Filter out NSFW unless verified or explicitly viewing NSFW category
+  if (!props.nsfwVerified && selectedCategory.value !== 'nsfw') {
+    result = result.filter(i => i.category !== 'nsfw')
   }
 
   // Filter by search query using fuzzy search

@@ -14,6 +14,8 @@ const defaultPreferences = {
   recentlyViewed: [],
   categoryFilters: {},
   searchHistory: [],
+  // NSFW age verification (persists across sessions)
+  nsfwVerified: false,
   // Saved instruction builds
   // Format: { id: string, name: string, instructions: [{id, variantIndex?}], createdAt: timestamp, updatedAt: timestamp }
   savedBuilds: [],
@@ -185,6 +187,30 @@ export function usePreferences() {
     return preferences.value.savedBuilds.find(b => b.id === buildId)
   }
 
+  // ===========================================
+  // NSFW AGE VERIFICATION FUNCTIONS
+  // ===========================================
+
+  // Check if user has verified age for NSFW content
+  const isNsfwVerified = () => {
+    return preferences.value.nsfwVerified === true
+  }
+
+  // Set NSFW verification status
+  const setNsfwVerified = (verified) => {
+    preferences.value.nsfwVerified = verified
+  }
+
+  // Verify age (set to true)
+  const verifyAge = () => {
+    preferences.value.nsfwVerified = true
+  }
+
+  // Reset age verification
+  const resetAgeVerification = () => {
+    preferences.value.nsfwVerified = false
+  }
+
   return {
     preferences,
     toggleFavorite,
@@ -204,6 +230,11 @@ export function usePreferences() {
     loadBuild,
     updateSavedBuild,
     deleteSavedBuild,
-    getSavedBuild
+    getSavedBuild,
+    // NSFW verification functions
+    isNsfwVerified,
+    setNsfwVerified,
+    verifyAge,
+    resetAgeVerification
   }
 }
