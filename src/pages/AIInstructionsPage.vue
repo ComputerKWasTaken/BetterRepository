@@ -9,7 +9,7 @@
         AI Instructions
       </h1>
       <p class="text-bd-text-secondary mt-2">
-        Master the art of guiding AI behavior through custom instructions and model tuning.
+        Master the art of guiding AI behavior with Instruction Sets and individual components.
       </p>
     </header>
 
@@ -28,6 +28,147 @@
         {{ tab.label }}
       </button>
     </div>
+
+    <!-- ==================== SETS TAB ==================== -->
+    <template v-if="activeTab === 'sets'">
+      <div class="space-y-6">
+        <!-- Sets Introduction -->
+        <div class="card bg-gradient-to-r from-bd-amber/10 to-bd-orange/10 border-bd-amber/30">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-bd-amber/20 flex items-center justify-center flex-shrink-0">
+              <Layers class="w-6 h-6 text-bd-amber" />
+            </div>
+            <div class="flex-1">
+              <h2 class="text-lg font-semibold text-bd-text-primary mb-1">Pre-Built Instruction Sets</h2>
+              <p class="text-sm text-bd-text-secondary mb-3">
+                Complete instruction packages ready to paste directly into your AI's system prompt. 
+                Each set is a curated combination of components designed to work well together.
+              </p>
+              <div class="flex flex-wrap gap-3 text-xs">
+                <div class="flex items-center gap-1.5 text-bd-text-muted">
+                  <Rocket class="w-3.5 h-3.5 text-bd-green" />
+                  <span><strong class="text-bd-text-secondary">New users:</strong> Start with a set, then customize</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-bd-text-muted">
+                  <Sparkles class="w-3.5 h-3.5 text-bd-purple" />
+                  <span><strong class="text-bd-text-secondary">Experienced:</strong> Use as templates or inspiration</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sets Grid -->
+        <div class="grid gap-4">
+          <div 
+            v-for="set in sets" 
+            :key="set.id"
+            class="card hover:border-bd-accent-primary/30 transition-all cursor-pointer group"
+            :class="{ 'border-bd-accent-primary/50 bg-bd-bg-tertiary': expandedSet === set.id }"
+            @click="toggleSetExpand(set.id)"
+          >
+            <!-- Set Header -->
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-bd-amber/20 to-bd-orange/20 flex items-center justify-center flex-shrink-0 group-hover:from-bd-amber/30 group-hover:to-bd-orange/30 transition-all">
+                <Layers class="w-6 h-6 text-bd-amber" />
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap mb-1">
+                  <h3 class="font-semibold text-bd-text-primary text-lg">{{ set.name }}</h3>
+                  <span v-if="set.essential" class="tag bg-bd-green/20 text-bd-green text-xs font-medium">
+                    <Star class="w-3 h-3" /> Recommended
+                  </span>
+                </div>
+                <p class="text-sm text-bd-text-secondary">{{ set.description }}</p>
+                
+                <!-- Metadata Row -->
+                <div class="flex items-center gap-3 mt-3 flex-wrap">
+                  <span class="tag text-xs" :class="{
+                    'bg-bd-green/20 text-bd-green': set.difficulty === 'beginner',
+                    'bg-bd-amber/20 text-bd-amber': set.difficulty === 'intermediate',
+                    'bg-bd-pink/20 text-bd-pink': set.difficulty === 'advanced'
+                  }">
+                    {{ set.difficulty === 'beginner' ? 'Easy to Use' : set.difficulty === 'intermediate' ? 'Intermediate' : 'Advanced' }}
+                  </span>
+                  <span v-if="set.models?.length" class="flex items-center gap-1 text-xs text-bd-text-muted">
+                    <Cpu class="w-3 h-3" />
+                    {{ set.models.join(', ') }}
+                  </span>
+                  <span v-if="set.settings" class="flex items-center gap-1 text-xs text-bd-text-muted">
+                    <SlidersHorizontal class="w-3 h-3" />
+                    Temp: {{ set.settings.temperature }} · Length: {{ set.settings.maxTokens }}
+                  </span>
+                </div>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <ChevronDown 
+                  class="w-5 h-5 text-bd-text-muted transition-transform" 
+                  :class="{ 'rotate-180': expandedSet === set.id }"
+                />
+                <span class="text-xs text-bd-text-muted">{{ expandedSet === set.id ? 'Close' : 'View' }}</span>
+              </div>
+            </div>
+
+            <!-- Expanded Content -->
+            <Transition name="slide">
+              <div v-if="expandedSet === set.id" class="mt-5 pt-5 border-t border-bd-border-subtle" @click.stop>
+                <!-- Purpose -->
+                <div class="mb-4 p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                  <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-1 flex items-center gap-1">
+                    <Target class="w-3 h-3" /> Best For
+                  </h4>
+                  <p class="text-sm text-bd-text-secondary">{{ set.purpose }}</p>
+                </div>
+
+                <!-- Content -->
+                <div class="mb-4">
+                  <div class="flex items-center justify-between mb-2">
+                    <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider flex items-center gap-1">
+                      <FileText class="w-3 h-3" /> Full Instructions
+                    </h4>
+                    <button 
+                      @click.stop="copySetContent(set.content, set.id)"
+                      class="btn text-xs py-1.5 px-3 transition-all"
+                      :class="copiedSetId === set.id ? 'btn-success bg-bd-green text-white' : 'btn-primary'"
+                    >
+                      <Check v-if="copiedSetId === set.id" class="w-3.5 h-3.5" />
+                      <Copy v-else class="w-3.5 h-3.5" />
+                      {{ copiedSetId === set.id ? 'Copied!' : 'Copy to Clipboard' }}
+                    </button>
+                  </div>
+                  <pre class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle text-sm text-bd-text-secondary font-mono whitespace-pre-wrap overflow-x-auto max-h-80 leading-relaxed">{{ set.content }}</pre>
+                </div>
+
+                <!-- Tags -->
+                <div v-if="set.tags?.length" class="flex items-center gap-2 flex-wrap">
+                  <span class="text-xs text-bd-text-muted">Tags:</span>
+                  <span 
+                    v-for="tag in set.tags" 
+                    :key="tag"
+                    class="tag text-xs"
+                  >{{ tag }}</span>
+                </div>
+              </div>
+            </Transition>
+          </div>
+        </div>
+
+        <!-- Bottom CTA -->
+        <div class="card bg-bd-bg-tertiary border-dashed text-center py-6">
+          <p class="text-sm text-bd-text-secondary mb-2">Want to build your own custom Instruction Set?</p>
+          <div class="flex items-center justify-center gap-3">
+            <button @click="activeTab = 'collection'" class="btn btn-secondary text-sm">
+              <PenTool class="w-4 h-4" />
+              Browse Components
+            </button>
+            <button @click="activeTab = 'builder'" class="btn btn-primary text-sm">
+              <Wrench class="w-4 h-4" />
+              Open Builder
+            </button>
+          </div>
+        </div>
+      </div>
+    </template>
 
     <!-- ==================== BUILDER TAB ==================== -->
     <template v-if="activeTab === 'builder'">
@@ -78,7 +219,7 @@
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Rocket class="w-5 h-5 text-bd-green" />
-            Quick Start: Build Your First Instruction
+            Quick Start: Build Your First Instruction Set
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('quick-start') }" />
         </button>
@@ -86,7 +227,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('quick-start')" class="mt-4 space-y-4">
             <p class="text-bd-text-secondary">
-              New to AI Instructions? Follow these 3 steps to create your first effective instruction set.
+              New to AI Instructions? Follow these 3 steps to create your first Instruction Set using components.
             </p>
             
             <!-- Step 1 -->
@@ -103,7 +244,7 @@
                     @click="goToCollectionWithFilter('category', 'role-persona')"
                     class="mt-2 text-xs text-bd-accent-primary hover:underline flex items-center gap-1"
                   >
-                    <ExternalLink class="w-3 h-3" /> Browse Role Instructions →
+                    <ExternalLink class="w-3 h-3" /> Browse Role Components →
                   </button>
                 </div>
               </div>
@@ -125,7 +266,7 @@
                     @click="goToCollectionWithFilter('essential')"
                     class="mt-2 text-xs text-bd-accent-primary hover:underline flex items-center gap-1"
                   >
-                    <ExternalLink class="w-3 h-3" /> Browse Essential Instructions →
+                    <ExternalLink class="w-3 h-3" /> Browse Essential Components →
                   </button>
                 </div>
               </div>
@@ -149,7 +290,7 @@
             <div class="p-4 rounded-lg bg-bd-accent-primary/10 border border-bd-accent-primary/30 flex items-center justify-between">
               <div>
                 <h3 class="font-semibold text-bd-text-primary">Ready to build?</h3>
-                <p class="text-xs text-bd-text-secondary">Use our Instruction Builder to assemble and save your instruction sets.</p>
+                <p class="text-xs text-bd-text-secondary">Use our Builder to assemble components into custom Instruction Sets.</p>
               </div>
               <button @click="activeTab = 'builder'" class="btn btn-primary text-sm">
                 <Wrench class="w-4 h-4" /> Open Builder
@@ -222,7 +363,7 @@
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <FileText class="w-5 h-5 text-bd-blue" />
-            Structuring Instructions
+            Structuring Your Instruction Set
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('structuring') }" />
         </button>
@@ -269,7 +410,7 @@
           <!-- Step 3: Topic-Specific Rules -->
           <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2">3. Topic-Specific Rules</h3>
-            <p class="text-xs text-bd-text-secondary mb-2">Group related instructions by topic. This helps the AI understand context and apply rules appropriately.</p>
+            <p class="text-xs text-bd-text-secondary mb-2">Group related components by topic. This helps the AI understand context and apply rules appropriately.</p>
             <div class="p-3 rounded bg-bd-bg-primary font-mono text-xs">
               <div class="text-bd-amber">Dialogue:</div>
               <div class="text-bd-green">- Write natural, character-appropriate dialogue</div>
@@ -290,7 +431,7 @@
                 <Zap class="w-4 h-4 text-bd-green" />
                 Short Sets
               </h3>
-              <p class="text-xs text-bd-text-secondary mb-2">Best for specific themes (horror, comedy). Each line starts with "-". Keep it under 10-15 lines.</p>
+              <p class="text-xs text-bd-text-secondary mb-2">Best for specific themes (horror, comedy). Each line starts with "-". Keep it under 10-15 components.</p>
               <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs">
                 <div class="text-bd-green">- Be descriptive and creative</div>
                 <div class="text-bd-green">- Avoid repetition</div>
@@ -302,7 +443,7 @@
                 <Layers class="w-4 h-4 text-bd-purple" />
                 Long Sets
               </h3>
-              <p class="text-xs text-bd-text-secondary mb-2">For complex scenarios. Group related instructions under labeled sections for clarity.</p>
+              <p class="text-xs text-bd-text-secondary mb-2">For complex scenarios. Group related components under labeled sections for clarity.</p>
               <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs">
                 <div class="text-bd-amber">Dialogue:</div>
                 <div class="text-bd-green">- Write natural dialogue</div>
@@ -825,15 +966,32 @@
     <!-- ==================== COLLECTION TAB ==================== -->
     <template v-if="activeTab === 'collection'">
       
+      <!-- Collection Introduction -->
+      <div class="card bg-gradient-to-r from-bd-purple/10 to-bd-blue/10 border-bd-purple/30">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-bd-purple/20 flex items-center justify-center flex-shrink-0">
+            <PenTool class="w-6 h-6 text-bd-purple" />
+          </div>
+          <div class="flex-1">
+            <h2 class="text-lg font-semibold text-bd-text-primary mb-1">Instruction Components</h2>
+            <p class="text-sm text-bd-text-secondary">
+              Individual instruction pieces you can mix and match to create your perfect AI prompt. 
+              Each component focuses on one specific behavior or style.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <!-- Quick Filter Buttons -->
       <div class="flex flex-wrap items-center gap-2">
+        <span class="text-xs text-bd-text-muted mr-1">Quick filters:</span>
         <button 
           @click="toggleQuickFilter('essential')"
           class="btn text-sm"
           :class="quickFilter === 'essential' ? 'btn-primary' : 'btn-secondary'"
         >
           <Star class="w-4 h-4" />
-          Essential Only
+          Must-Have
         </button>
         <button 
           @click="toggleQuickFilter('starter')"
@@ -841,7 +999,7 @@
           :class="quickFilter === 'starter' ? 'btn-primary' : 'btn-secondary'"
         >
           <Rocket class="w-4 h-4" />
-          Starter Set
+          Beginner Friendly
         </button>
         <button 
           @click="toggleQuickFilter('high-impact')"
@@ -858,7 +1016,7 @@
           :class="{ 'ring-2 ring-bd-accent-primary': hasActiveFilters }"
         >
           <SlidersHorizontal class="w-4 h-4" />
-          Filters
+          Advanced Filters
           <span v-if="hasActiveFilters" class="w-2 h-2 rounded-full bg-bd-accent-primary"></span>
         </button>
       </div>
@@ -866,7 +1024,7 @@
     <!-- Search Bar -->
     <SearchBar 
       v-model="searchQuery"
-      placeholder="Search AI Instructions..."
+      placeholder="Search components by name, tag, or description..."
       :suggestions="searchSuggestions"
       @search="handleSearch"
     />
@@ -1155,11 +1313,12 @@ import InstructionBuilder from '@/components/ui/InstructionBuilder.vue'
 import { 
   INSTRUCTIONS, 
   CATEGORIES,
+  SETS,
   getEssentialInstructions,
   getStarterSet,
   getHighImpactInstructions,
   getBeginnerInstructions
-} from '@/data/aiInstructions'
+} from '@/data/aiInstructions-v2'
 import { searchCollectionWithScores } from '@/data/shared'
 import { usePreferences } from '@/composables/usePreferences'
 import { 
@@ -1170,16 +1329,41 @@ import {
   Shield, Focus, Type, Drama, MessageSquare, Skull, ExternalLink, Star,
   AlertTriangle, Plus, Tag, Braces, Split, AlignLeft, Cpu, Coins,
   Check, X, TrendingUp, Wand2, Link2, Heart, ChevronDown, UserCog, Flame,
-  ShieldAlert, Lock
+  ShieldAlert, Lock, Copy
 } from 'lucide-vue-next'
 
 const activeTab = ref('collection')
 
 const tabs = [
-  { id: 'collection', label: 'Collection', icon: Layers },
+  { id: 'sets', label: 'Sets', icon: Layers },
+  { id: 'collection', label: 'Collection', icon: FileText },
   { id: 'builder', label: 'Builder', icon: Wrench },
   { id: 'guide', label: 'Guide', icon: BookOpen }
 ]
+
+const sets = ref(SETS)
+const expandedSet = ref(null)
+const copiedSetId = ref(null)
+
+const toggleSetExpand = (setId) => {
+  if (expandedSet.value === setId) {
+    expandedSet.value = null
+  } else {
+    expandedSet.value = setId
+  }
+}
+
+const copySetContent = async (content, setId) => {
+  try {
+    await navigator.clipboard.writeText(content)
+    copiedSetId.value = setId
+    setTimeout(() => {
+      copiedSetId.value = null
+    }, 2000)
+  } catch (err) {
+    console.error('Failed to copy:', err)
+  }
+}
 
 const route = useRoute()
 const { addToSearchHistory, preferences, verifyAge } = usePreferences()
@@ -1211,7 +1395,7 @@ const impacts = [
   { id: 'low', label: 'Low Impact', activeClass: 'bg-bd-tag-bg text-bd-text-muted border border-bd-border-default' }
 ]
 
-// Icon component mapping
+// Icon component mapping for categories
 const iconComponentMap = {
   'Layers': Layers,
   'UserCog': UserCog,
@@ -1222,18 +1406,29 @@ const iconComponentMap = {
   'Globe': Globe,
   'FileText': FileText,
   'Settings': Settings,
-  'Flame': Flame
+  'Flame': Flame,
+  'Clock': Clock,
+  'MessageSquare': MessageSquare,
+  'Heart': Heart,
+  'Target': Target,
+  'BookOpen': BookOpen,
+  'Wrench': Wrench,
+  'ScrollText': ScrollText
 }
 
 const categoryColorMap = {
-  'complete-sets': { bg: 'bg-bd-amber/20', icon: 'text-bd-amber' },
   'role-persona': { bg: 'bg-bd-orange/20', icon: 'text-bd-orange' },
   'writing-style': { bg: 'bg-bd-blue/20', icon: 'text-bd-blue' },
+  'pacing-flow': { bg: 'bg-bd-cyan/20', icon: 'text-bd-cyan' },
+  'dialogue': { bg: 'bg-bd-teal/20', icon: 'text-bd-teal' },
   'characterization': { bg: 'bg-bd-purple/20', icon: 'text-bd-purple' },
+  'emotion-tone': { bg: 'bg-bd-pink/20', icon: 'text-bd-pink' },
   'coherence': { bg: 'bg-bd-green/20', icon: 'text-bd-green' },
-  'gameplay': { bg: 'bg-bd-pink/20', icon: 'text-bd-pink' },
-  'world-setting': { bg: 'bg-bd-cyan/20', icon: 'text-bd-cyan' },
+  'narrative': { bg: 'bg-bd-amber/20', icon: 'text-bd-amber' },
+  'world-setting': { bg: 'bg-bd-indigo/20', icon: 'text-bd-indigo' },
+  'gameplay': { bg: 'bg-bd-rose/20', icon: 'text-bd-rose' },
   'formatting': { bg: 'bg-bd-gray/20', icon: 'text-bd-gray' },
+  'meta': { bg: 'bg-bd-slate/20', icon: 'text-bd-slate' },
   'nsfw': { bg: 'bg-bd-red/20', icon: 'text-bd-red' }
 }
 
@@ -1488,7 +1683,7 @@ const aiInstructionsContributors = [
 const guideSections = [
   { id: 'quick-start', label: 'Quick Start', icon: 'Rocket', color: 'green' },
   { id: 'what-are-instructions', label: 'What Are AI Instructions?', icon: 'HelpCircle', color: 'amber' },
-  { id: 'structuring', label: 'Structuring Instructions', icon: 'FileText', color: 'blue' },
+  { id: 'structuring', label: 'Structuring Your Set', icon: 'FileText', color: 'blue' },
   { id: 'common-mistakes', label: 'Common Mistakes', icon: 'AlertTriangle', color: 'pink' },
   { id: 'quick-fixes', label: 'Quick Fixes', icon: 'Wrench', color: 'purple' },
   { id: 'genre-guides', label: 'Genre Guides', icon: 'Drama', color: 'amber' },

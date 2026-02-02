@@ -8,7 +8,7 @@
           Build Your Instruction Set
         </h2>
         <p class="text-sm text-bd-text-muted mt-1">
-          Select individual instructions to combine into your custom set
+          Select individual components to combine into your custom Instruction Set
         </p>
       </div>
       <div class="flex items-center gap-2">
@@ -45,7 +45,7 @@
                 >
                   <div>
                     <div class="text-sm font-medium text-bd-text-primary">{{ build.name }}</div>
-                    <div class="text-xs text-bd-text-muted">{{ build.instructions.length }} instructions</div>
+                    <div class="text-xs text-bd-text-muted">{{ build.instructions.length }} components</div>
                   </div>
                   <button 
                     @click.stop="handleDeleteBuild(build.id)"
@@ -63,12 +63,12 @@
 
     <!-- Main Builder Grid -->
     <div class="grid lg:grid-cols-2 gap-6">
-      <!-- Left: Available Instructions -->
+      <!-- Left: Available Components -->
       <div class="card space-y-4">
         <div class="flex items-center justify-between">
           <h3 class="font-semibold text-bd-text-primary flex items-center gap-2">
             <Layers class="w-4 h-4 text-bd-blue" />
-            Available Instructions
+            Available Components
           </h3>
           <span class="text-xs text-bd-text-muted">{{ filteredInstructions.length }} items</span>
         </div>
@@ -80,7 +80,7 @@
             <input 
               v-model="searchQuery"
               type="text"
-              placeholder="Search instructions..."
+              placeholder="Search components..."
               class="input pl-10 text-sm"
             />
           </div>
@@ -174,12 +174,12 @@
           <!-- Empty State -->
           <div v-if="filteredInstructions.length === 0" class="text-center py-8">
             <Search class="w-8 h-8 text-bd-text-muted mx-auto mb-2" />
-            <p class="text-sm text-bd-text-muted">No instructions found</p>
+            <p class="text-sm text-bd-text-muted">No components found</p>
           </div>
         </div>
       </div>
 
-      <!-- Right: Selected Instructions -->
+      <!-- Right: Selected Components -->
       <div class="card space-y-4">
         <div class="flex items-center justify-between">
           <h3 class="font-semibold text-bd-text-primary flex items-center gap-2">
@@ -187,7 +187,7 @@
             Your Build
           </h3>
           <div class="flex items-center gap-2">
-            <span class="text-xs text-bd-text-muted">{{ currentBuildInstructions.length }} selected</span>
+            <span class="text-xs text-bd-text-muted">{{ currentBuildInstructions.length }} components</span>
             <button 
               v-if="currentBuildInstructions.length > 0"
               @click="handleClearBuild"
@@ -198,7 +198,7 @@
           </div>
         </div>
 
-        <!-- Selected Instructions List -->
+        <!-- Selected Components List -->
         <div 
           v-if="currentBuildInstructions.length > 0"
           class="space-y-2 max-h-[300px] overflow-y-auto pr-1"
@@ -247,7 +247,7 @@
         <!-- Empty State -->
         <div v-else class="text-center py-12 border-2 border-dashed border-bd-border-subtle rounded-lg">
           <Puzzle class="w-10 h-10 text-bd-text-muted mx-auto mb-3" />
-          <p class="text-sm text-bd-text-muted">Select instructions from the left panel</p>
+          <p class="text-sm text-bd-text-muted">Select components from the left panel</p>
           <p class="text-xs text-bd-text-muted mt-1">They'll appear here in order</p>
         </div>
 
@@ -301,7 +301,7 @@
       <!-- Empty Preview -->
       <div v-else class="p-8 text-center border-2 border-dashed border-bd-border-subtle rounded-lg">
         <FileText class="w-10 h-10 text-bd-text-muted mx-auto mb-3" />
-        <p class="text-sm text-bd-text-muted">Your combined instruction set will appear here</p>
+        <p class="text-sm text-bd-text-muted">Your combined Instruction Set will appear here</p>
       </div>
     </div>
 
@@ -313,7 +313,7 @@
           <h4 class="font-semibold text-bd-text-primary mb-1">Building Tips</h4>
           <ul class="text-sm text-bd-text-secondary space-y-1">
             <li>• Start with <strong>Anti-Repetition</strong> and <strong>Plot Over Description</strong> - they solve the most common issues</li>
-            <li>• Check the <strong>conflicts</strong> field - some instructions contradict each other</li>
+            <li>• Check the <strong>conflicts</strong> field - some components contradict each other</li>
             <li>• Order matters! Put your most important rules first and last (AI weighs those positions more)</li>
             <li>• Keep it focused - 10-15 well-chosen lines beats 50 vague ones</li>
           </ul>
@@ -331,7 +331,7 @@ import {
   Trash2, Puzzle, Lock
 } from 'lucide-vue-next'
 import { usePreferences } from '@/composables/usePreferences'
-import { INSTRUCTIONS, CATEGORIES } from '@/data/aiInstructions'
+import { INSTRUCTIONS, CATEGORIES } from '@/data/aiInstructions-v2'
 import { searchCollectionWithScores } from '@/data/shared'
 
 // Props for age verification
