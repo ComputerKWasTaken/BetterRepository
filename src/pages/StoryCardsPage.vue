@@ -814,7 +814,7 @@
       </div>
 
       <!-- Category Sections (default view) -->
-      <div v-if="!hasAnyFilters" class="space-y-6">
+      <div v-if="!hasAnyFilters" class="space-y-8">
         <!-- Templates Section -->
         <section>
           <div class="flex items-center gap-3 mb-4">
@@ -828,7 +828,7 @@
             <span class="ml-auto tag">{{ templates.length }}</span>
           </div>
           
-          <div class="space-y-3">
+          <div class="grid gap-3">
             <StoryCardItem 
               v-for="card in templates" 
               :key="card.id"

@@ -959,36 +959,97 @@ modifier(text);</code></pre>
       </div>
     </section>
 
-    <!-- Search and Filter -->
+    <!-- Quick Filter Buttons -->
     <div class="flex flex-wrap items-center gap-2">
-      <div class="flex-1 min-w-[200px]">
-        <SearchBar
-          v-model="searchQuery"
-          placeholder="Search scripts..."
-          :suggestions="searchSuggestions"
-          :result-count="filteredScripts.length"
-          @search="handleSearch"
-        />
-      </div>
-      <select 
-        v-model="selectedCategory"
-        class="select"
+      <span class="text-xs text-bd-text-muted mr-1">Quick filters:</span>
+      <button 
+        @click="toggleQuickFilter('essential')"
+        class="btn text-sm"
+        :class="quickFilter === 'essential' ? 'btn-primary' : 'btn-secondary'"
       >
-        <option value="">All Categories</option>
-        <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-          {{ cat.name }} ({{ cat.count }})
-        </option>
-      </select>
-      <select 
-        v-model="selectedDifficulty"
-        class="select"
+        <Star class="w-4 h-4" />
+        Must-Have
+      </button>
+      <button 
+        @click="toggleQuickFilter('beginner')"
+        class="btn text-sm"
+        :class="quickFilter === 'beginner' ? 'btn-primary' : 'btn-secondary'"
       >
-        <option value="">All Difficulties</option>
-        <option value="beginner">Beginner</option>
-        <option value="intermediate">Intermediate</option>
-        <option value="advanced">Advanced</option>
-      </select>
+        <Rocket class="w-4 h-4" />
+        Beginner Friendly
+      </button>
+      <div class="flex-1"></div>
+      <button 
+        @click="showFilters = !showFilters"
+        class="btn btn-secondary text-sm"
+        :class="{ 'ring-2 ring-bd-accent-primary': hasActiveFilters }"
+      >
+        <SlidersHorizontal class="w-4 h-4" />
+        Advanced Filters
+        <span v-if="hasActiveFilters" class="w-2 h-2 rounded-full bg-bd-accent-primary"></span>
+      </button>
     </div>
+
+    <!-- Search Bar -->
+    <SearchBar
+      v-model="searchQuery"
+      placeholder="Search scripts by name, tag, or description..."
+      :suggestions="searchSuggestions"
+      :result-count="filteredScripts.length"
+      @search="handleSearch"
+    />
+
+    <!-- Filter Panel -->
+    <Transition name="slide">
+      <div v-if="showFilters" class="card-elevated space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="font-semibold text-bd-text-primary">Filters</h3>
+          <button 
+            v-if="hasActiveFilters"
+            @click="clearFilters"
+            class="text-sm text-bd-accent-primary hover:underline"
+          >
+            Clear all
+          </button>
+        </div>
+
+        <!-- Category Filter -->
+        <div>
+          <h4 class="text-sm text-bd-text-muted mb-2">Category</h4>
+          <div class="flex flex-wrap gap-2">
+            <button 
+              v-for="category in categories" 
+              :key="category.id"
+              @click="toggleCategory(category.id)"
+              class="tag cursor-pointer transition-all flex items-center gap-1.5"
+              :class="selectedCategories.includes(category.id) 
+                  ? 'bg-bd-accent-primary/20 text-bd-accent-light border border-bd-accent-primary/30' 
+                  : 'hover:bg-bd-tag-bg'"
+            >
+              {{ category.name }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Difficulty Filter -->
+        <div>
+          <h4 class="text-sm text-bd-text-muted mb-2">Difficulty</h4>
+          <div class="flex flex-wrap gap-2">
+            <button 
+              v-for="diff in difficulties" 
+              :key="diff.id"
+              @click="toggleDifficulty(diff.id)"
+              class="tag cursor-pointer transition-all"
+              :class="selectedDifficulties.includes(diff.id) 
+                ? diff.activeClass 
+                : 'hover:bg-bd-tag-bg'"
+            >
+              {{ diff.label }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
 
     <!-- Results Summary -->
     <div class="flex items-center justify-between text-sm">
@@ -998,7 +1059,7 @@ modifier(text);</code></pre>
     </div>
 
     <!-- Scripts by Category -->
-    <div v-if="!searchQuery && !selectedCategory && !selectedDifficulty" class="space-y-6">
+    <div v-if="!hasAnyFilters" class="space-y-8">
       <section v-for="category in categoriesWithScripts" :key="category.id">
         <div class="flex items-center gap-3 mb-4">
           <div 
@@ -1014,7 +1075,7 @@ modifier(text);</code></pre>
           <span class="ml-auto tag">{{ category.count }}</span>
         </div>
         
-        <div class="space-y-3">
+        <div class="grid gap-3">
           <ScriptItem 
             v-for="script in getScriptsForCategory(category.id)" 
             :key="script.id"
@@ -1025,7 +1086,7 @@ modifier(text);</code></pre>
     </div>
 
     <!-- Filtered Results -->
-    <div v-else class="space-y-3">
+    <div v-if="hasAnyFilters" class="grid gap-3">
       <ScriptItem 
         v-for="script in filteredScripts" 
         :key="script.id"
@@ -1085,7 +1146,8 @@ import {
   BookOpen, GitPullRequest, HelpCircle, Check, Braces, FileCode, 
   Library, ArrowRightToLine, Layers, ArrowLeftToLine, Database, 
   Lightbulb, Wrench, Plus, Search, Bug, ShieldAlert, Eye, RefreshCw, 
-  ExternalLink, Settings, Award, ChevronDown, ChevronUp, Blocks, Info, MessageSquare
+  ExternalLink, Settings, Award, ChevronDown, ChevronUp, Blocks, Info, MessageSquare,
+  Star, Rocket, SlidersHorizontal, Zap
 } from 'lucide-vue-next'
 
 const activeTab = ref('collection')
@@ -1103,8 +1165,16 @@ const scriptingContributors = [
 const scripts = ref(SCRIPTS)
 const categories = ref(SCRIPT_CATEGORIES)
 const searchQuery = ref('')
-const selectedCategory = ref('')
-const selectedDifficulty = ref('')
+const selectedCategories = ref([])
+const selectedDifficulties = ref([])
+const showFilters = ref(false)
+const quickFilter = ref(null)
+
+const difficulties = [
+  { id: 'beginner', label: 'Beginner', activeClass: 'bg-bd-green/20 text-bd-green border border-bd-green/30' },
+  { id: 'intermediate', label: 'Intermediate', activeClass: 'bg-bd-amber/20 text-bd-amber border border-bd-amber/30' },
+  { id: 'advanced', label: 'Advanced', activeClass: 'bg-bd-pink/20 text-bd-pink border border-bd-pink/30' }
+]
 
 const { addToSearchHistory } = usePreferences()
 
@@ -1172,20 +1242,71 @@ const collapseAllGuideSections = () => {
 const filteredScripts = computed(() => {
   let result = [...scripts.value]
   
+  // Apply quick filter first
+  if (quickFilter.value === 'essential') {
+    result = result.filter(s => s.essential === true)
+  } else if (quickFilter.value === 'beginner') {
+    result = result.filter(s => s.difficulty === 'beginner')
+  }
+  
+  // Filter by search query
   if (searchQuery.value) {
     result = searchScripts(searchQuery.value)
   }
   
-  if (selectedCategory.value) {
-    result = result.filter(s => s.category === selectedCategory.value)
+  // Filter by selected categories
+  if (selectedCategories.value.length > 0) {
+    result = result.filter(s => selectedCategories.value.includes(s.category))
   }
   
-  if (selectedDifficulty.value) {
-    result = result.filter(s => s.difficulty === selectedDifficulty.value)
+  // Filter by selected difficulties
+  if (selectedDifficulties.value.length > 0) {
+    result = result.filter(s => selectedDifficulties.value.includes(s.difficulty))
   }
   
   return result
 })
+
+const hasActiveFilters = computed(() => 
+  selectedCategories.value.length > 0 || 
+  selectedDifficulties.value.length > 0
+)
+
+const hasAnyFilters = computed(() => 
+  searchQuery.value || 
+  quickFilter.value || 
+  hasActiveFilters.value
+)
+
+const toggleQuickFilter = (filter) => {
+  if (quickFilter.value === filter) {
+    quickFilter.value = null
+  } else {
+    quickFilter.value = filter
+    selectedCategories.value = []
+    selectedDifficulties.value = []
+  }
+}
+
+const toggleCategory = (categoryId) => {
+  quickFilter.value = null
+  const index = selectedCategories.value.indexOf(categoryId)
+  if (index > -1) {
+    selectedCategories.value.splice(index, 1)
+  } else {
+    selectedCategories.value.push(categoryId)
+  }
+}
+
+const toggleDifficulty = (difficultyId) => {
+  quickFilter.value = null
+  const index = selectedDifficulties.value.indexOf(difficultyId)
+  if (index > -1) {
+    selectedDifficulties.value.splice(index, 1)
+  } else {
+    selectedDifficulties.value.push(difficultyId)
+  }
+}
 
 const categoriesWithScripts = computed(() => {
   return categories.value.filter(cat => cat.count > 0)
@@ -1237,7 +1358,8 @@ const getCategoryTextClass = (color) => {
 
 const clearFilters = () => {
   searchQuery.value = ''
-  selectedCategory.value = ''
-  selectedDifficulty.value = ''
+  selectedCategories.value = []
+  selectedDifficulties.value = []
+  quickFilter.value = null
 }
 </script>

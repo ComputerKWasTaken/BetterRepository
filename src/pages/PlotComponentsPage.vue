@@ -700,7 +700,7 @@
       </span>
     </div>
     <!-- Category Sections (default view) -->
-    <div v-if="!hasAnyFilters" class="grid gap-6">
+    <div v-if="!hasAnyFilters" class="space-y-8">
       <!-- Author's Note Section -->
       <section>
         <div class="flex items-center gap-3 mb-4">
@@ -714,7 +714,7 @@
           <span class="ml-auto tag">{{ authorsNoteComponents.length }}</span>
         </div>
         
-        <div class="space-y-3">
+        <div class="grid gap-3">
           <ResourceCard 
             v-for="component in authorsNoteComponents" 
             :key="component.id"
@@ -735,7 +735,7 @@
           <span class="ml-auto tag">{{ plotEssentialsComponents.length }}</span>
         </div>
         
-        <div class="space-y-3">
+        <div class="grid gap-3">
           <ResourceCard 
             v-for="component in plotEssentialsComponents" 
             :key="component.id"
@@ -756,7 +756,7 @@
           <span class="ml-auto tag">{{ storySummaryComponents.length }}</span>
         </div>
         
-        <div class="space-y-3">
+        <div class="grid gap-3">
           <ResourceCard 
             v-for="component in storySummaryComponents" 
             :key="component.id"
@@ -800,7 +800,7 @@
         </div>
         
         <!-- Unlocked State -->
-        <div v-else class="space-y-3">
+        <div v-else class="grid gap-3">
           <ResourceCard 
             v-for="component in nsfwComponents" 
             :key="component.id"
