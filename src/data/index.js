@@ -34,11 +34,41 @@ export {
 
 // AI Instructions
 export {
+  // Core data
   CATEGORIES,
   INSTRUCTIONS,
+  COMPONENTS,
+  SETS,
+  // Legacy helpers (backwards compatible)
   getInstructionsByCategory,
   getCategoryById,
-  searchInstructions
+  searchInstructions,
+  getEssentialInstructions,
+  getHighImpactInstructions,
+  getBeginnerInstructions,
+  getStarterSet,
+  // New component helpers
+  getComponentById,
+  getComponentsByCategory,
+  getEssentialComponents,
+  searchComponents,
+  getComponentsByDifficulty,
+  getComponentsByImpact,
+  getComponentsByGroup,
+  getComponentsByModel,
+  getComponentsByPlacement,
+  getConflictingComponents,
+  getCompatibleComponents,
+  // Set helpers
+  getSetById,
+  getEssentialSets,
+  searchSets,
+  getSetsByDifficulty,
+  getSetsByModel,
+  // Category & group helpers
+  getCategoriesWithComponents,
+  getAllGroups,
+  getGroupsByCategory
 } from './aiInstructions.js'
 
 // Plot Components (Templates)
