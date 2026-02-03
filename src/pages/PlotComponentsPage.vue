@@ -564,15 +564,32 @@
     </template>
     <!-- ==================== TEMPLATES TAB ==================== -->
     <template v-if="activeTab === 'templates'">
+      <!-- Templates Introduction -->
+      <div class="card bg-gradient-to-r from-bd-blue/10 to-bd-green/10 border-bd-blue/30">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-bd-blue/20 flex items-center justify-center flex-shrink-0">
+            <Layers class="w-6 h-6 text-bd-blue" />
+          </div>
+          <div class="flex-1">
+            <h2 class="text-lg font-semibold text-bd-text-primary mb-1">Plot Component Templates</h2>
+            <p class="text-sm text-bd-text-secondary">
+              Ready-to-use templates for Author's Notes, Plot Essentials, and Story Summaries. 
+              Copy, customize, and paste directly into your story.
+            </p>
+          </div>
+        </div>
+      </div>
+
     <!-- Quick Filter Buttons -->
     <div class="flex flex-wrap items-center gap-2">
+      <span class="text-xs text-bd-text-muted mr-1">Quick filters:</span>
       <button 
         @click="toggleQuickFilter('essential')"
         class="btn text-sm"
         :class="quickFilter === 'essential' ? 'btn-primary' : 'btn-secondary'"
       >
         <Star class="w-4 h-4" />
-        Essential Only
+        Must-Have
       </button>
       <button 
         @click="toggleQuickFilter('starter')"
@@ -580,7 +597,7 @@
         :class="quickFilter === 'starter' ? 'btn-primary' : 'btn-secondary'"
       >
         <Rocket class="w-4 h-4" />
-        Starter Set
+        Beginner Friendly
       </button>
       <button 
         @click="toggleQuickFilter('high-impact')"
@@ -597,7 +614,7 @@
         :class="{ 'ring-2 ring-bd-accent-primary': hasActiveFilters }"
       >
         <SlidersHorizontal class="w-4 h-4" />
-        Filters
+        Advanced Filters
         <span v-if="hasActiveFilters" class="w-2 h-2 rounded-full bg-bd-accent-primary"></span>
       </button>
     </div>
@@ -805,10 +822,10 @@
         <FileText class="w-12 h-12 text-bd-text-muted mx-auto mb-4" />
         <h3 class="text-lg font-semibold text-bd-text-primary mb-2">No templates found</h3>
         <p class="text-bd-text-secondary">
-          Try adjusting your search or filters.
+          Try adjusting your search or filters to find what you're looking for.
         </p>
         <button @click="clearAll" class="btn btn-secondary mt-4">
-          Clear Filters
+          Clear Search & Filters
         </button>
       </div>
     </div>

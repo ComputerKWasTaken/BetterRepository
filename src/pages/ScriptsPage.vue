@@ -1036,7 +1036,12 @@ modifier(text);</code></pre>
       <div v-if="filteredScripts.length === 0" class="text-center py-12">
         <Code class="w-12 h-12 text-bd-text-muted mx-auto mb-4" />
         <h3 class="text-lg font-semibold text-bd-text-primary mb-2">No scripts found</h3>
-        <p class="text-bd-text-secondary">Try adjusting your search or filters.</p>
+        <p class="text-bd-text-secondary">
+          Try adjusting your search or filters to find what you're looking for.
+        </p>
+        <button @click="clearFilters" class="btn btn-secondary mt-4">
+          Clear Search & Filters
+        </button>
       </div>
     </div>
 
@@ -1228,5 +1233,11 @@ const getCategoryTextClass = (color) => {
     'bd-emerald': 'text-bd-emerald'
   }
   return map[color] || 'text-bd-text-muted'
+}
+
+const clearFilters = () => {
+  searchQuery.value = ''
+  selectedCategory.value = ''
+  selectedDifficulty.value = ''
 }
 </script>
