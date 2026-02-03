@@ -1029,6 +1029,7 @@
       v-model="searchQuery"
       placeholder="Search components by name, tag, or description..."
       :suggestions="searchSuggestions"
+      :result-count="filteredInstructions.length"
       @search="handleSearch"
     />
 
@@ -1457,7 +1458,12 @@ const filteredInstructions = computed(() => {
   
   // Filter by search query using fuzzy search
   if (searchQuery.value) {
-    const searchResults = searchCollectionWithScores(result, searchQuery.value, ['name', 'description', 'tags'])
+    const searchResults = searchCollectionWithScores(
+      result,
+      searchQuery.value,
+      ['name', 'description', 'tags'],
+      { useTagAliases: true }
+    )
     result = searchResults.map(r => r.item)
   }
   

@@ -897,7 +897,7 @@ import {
   Users, Sword, Star, RefreshCw, MessageSquare, Heart, Volume2, Ruler,
   Rocket, Focus, AlertTriangle, Database, Brain, ArrowRightLeft,
   Sparkles, Scissors, MessageCircle, XCircle, Edit, SlidersHorizontal, Zap, Search,
-  ExternalLink, Award, ChevronDown, ChevronUp, Flame, ShieldAlert, Lock, Info
+  ExternalLink, Award, ChevronDown, ChevronUp, Flame, ShieldAlert, Lock
 } from 'lucide-vue-next'
 const { preferences, verifyAge, addToSearchHistory } = usePreferences()
 const activeTab = ref('templates')

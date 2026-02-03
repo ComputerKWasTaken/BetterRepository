@@ -945,6 +945,22 @@ modifier(text);</code></pre>
     <!-- ==================== COLLECTION TAB ==================== -->
     <template v-if="activeTab === 'collection'">
 
+      <!-- Collection Introduction -->
+      <div class="card bg-gradient-to-r from-bd-cyan/10 to-bd-blue/10 border-bd-cyan/30">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-bd-cyan/20 flex items-center justify-center flex-shrink-0">
+            <Code class="w-6 h-6 text-bd-cyan" />
+          </div>
+          <div class="flex-1">
+            <h2 class="text-lg font-semibold text-bd-text-primary mb-1">Script Collection</h2>
+            <p class="text-sm text-bd-text-secondary">
+              Ready-to-use scripts for AI Dungeon. Copy the code into your scenario's script files 
+              to add new features and mechanics.
+            </p>
+          </div>
+        </div>
+      </div>
+
     <!-- Warning Notice -->
     <section class="card border-bd-warning/30">
       <div class="flex items-start gap-3">
@@ -971,12 +987,20 @@ modifier(text);</code></pre>
         Must-Have
       </button>
       <button 
-        @click="toggleQuickFilter('beginner')"
+        @click="toggleQuickFilter('starter')"
         class="btn text-sm"
-        :class="quickFilter === 'beginner' ? 'btn-primary' : 'btn-secondary'"
+        :class="quickFilter === 'starter' ? 'btn-primary' : 'btn-secondary'"
       >
         <Rocket class="w-4 h-4" />
         Beginner Friendly
+      </button>
+      <button 
+        @click="toggleQuickFilter('high-impact')"
+        class="btn text-sm"
+        :class="quickFilter === 'high-impact' ? 'btn-primary' : 'btn-secondary'"
+      >
+        <Zap class="w-4 h-4" />
+        High Impact
       </button>
       <div class="flex-1"></div>
       <button 
@@ -1045,6 +1069,24 @@ modifier(text);</code></pre>
                 : 'hover:bg-bd-tag-bg'"
             >
               {{ diff.label }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Impact Filter -->
+        <div>
+          <h4 class="text-sm text-bd-text-muted mb-2">Impact</h4>
+          <div class="flex flex-wrap gap-2">
+            <button 
+              v-for="imp in impacts" 
+              :key="imp.id"
+              @click="toggleImpact(imp.id)"
+              class="tag cursor-pointer transition-all"
+              :class="selectedImpacts.includes(imp.id) 
+                ? imp.activeClass 
+                : 'hover:bg-bd-tag-bg'"
+            >
+              {{ imp.label }}
             </button>
           </div>
         </div>
@@ -1141,6 +1183,7 @@ import {
   getScriptsByCategory,
   searchScripts
 } from '@/data/scripts'
+import { searchCollectionWithScores } from '@/data/shared'
 import { 
   Code, AlertTriangle, Dices, Clock, Terminal, Wand2, FolderOpen, 
   BookOpen, GitPullRequest, HelpCircle, Check, Braces, FileCode, 
@@ -1175,6 +1218,14 @@ const difficulties = [
   { id: 'intermediate', label: 'Intermediate', activeClass: 'bg-bd-amber/20 text-bd-amber border border-bd-amber/30' },
   { id: 'advanced', label: 'Advanced', activeClass: 'bg-bd-pink/20 text-bd-pink border border-bd-pink/30' }
 ]
+
+const impacts = [
+  { id: 'high', label: 'High Impact', activeClass: 'bg-bd-purple/20 text-bd-purple border border-bd-purple/30' },
+  { id: 'medium', label: 'Medium Impact', activeClass: 'bg-bd-blue/20 text-bd-blue border border-bd-blue/30' },
+  { id: 'low', label: 'Low Impact', activeClass: 'bg-bd-tag-bg text-bd-text-muted border border-bd-border-default' }
+]
+
+const selectedImpacts = ref([])
 
 const { addToSearchHistory } = usePreferences()
 
@@ -1245,13 +1296,21 @@ const filteredScripts = computed(() => {
   // Apply quick filter first
   if (quickFilter.value === 'essential') {
     result = result.filter(s => s.essential === true)
-  } else if (quickFilter.value === 'beginner') {
+  } else if (quickFilter.value === 'starter') {
     result = result.filter(s => s.difficulty === 'beginner')
+  } else if (quickFilter.value === 'high-impact') {
+    result = result.filter(s => s.impact === 'high')
   }
   
-  // Filter by search query
+  // Filter by search query using fuzzy search
   if (searchQuery.value) {
-    result = searchScripts(searchQuery.value)
+    const searchResults = searchCollectionWithScores(
+      result,
+      searchQuery.value,
+      ['name', 'description', 'tags', 'purpose', 'author'],
+      { useTagAliases: true }
+    )
+    result = searchResults.map(r => r.item)
   }
   
   // Filter by selected categories
@@ -1264,12 +1323,18 @@ const filteredScripts = computed(() => {
     result = result.filter(s => selectedDifficulties.value.includes(s.difficulty))
   }
   
+  // Filter by selected impacts
+  if (selectedImpacts.value.length > 0) {
+    result = result.filter(s => selectedImpacts.value.includes(s.impact))
+  }
+  
   return result
 })
 
 const hasActiveFilters = computed(() => 
   selectedCategories.value.length > 0 || 
-  selectedDifficulties.value.length > 0
+  selectedDifficulties.value.length > 0 ||
+  selectedImpacts.value.length > 0
 )
 
 const hasAnyFilters = computed(() => 
@@ -1285,6 +1350,7 @@ const toggleQuickFilter = (filter) => {
     quickFilter.value = filter
     selectedCategories.value = []
     selectedDifficulties.value = []
+    selectedImpacts.value = []
   }
 }
 
@@ -1305,6 +1371,16 @@ const toggleDifficulty = (difficultyId) => {
     selectedDifficulties.value.splice(index, 1)
   } else {
     selectedDifficulties.value.push(difficultyId)
+  }
+}
+
+const toggleImpact = (impactId) => {
+  quickFilter.value = null
+  const index = selectedImpacts.value.indexOf(impactId)
+  if (index > -1) {
+    selectedImpacts.value.splice(index, 1)
+  } else {
+    selectedImpacts.value.push(impactId)
   }
 }
 
@@ -1360,6 +1436,7 @@ const clearFilters = () => {
   searchQuery.value = ''
   selectedCategories.value = []
   selectedDifficulties.value = []
+  selectedImpacts.value = []
   quickFilter.value = null
 }
 </script>
