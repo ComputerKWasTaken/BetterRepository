@@ -331,7 +331,7 @@ import {
   Trash2, Puzzle, Lock
 } from 'lucide-vue-next'
 import { usePreferences } from '@/composables/usePreferences'
-import { INSTRUCTIONS, CATEGORIES } from '@/data/aiInstructions-v2'
+import { INSTRUCTIONS, CATEGORIES } from '@/data/aiInstructions'
 import { searchCollectionWithScores } from '@/data/shared'
 
 // Props for age verification

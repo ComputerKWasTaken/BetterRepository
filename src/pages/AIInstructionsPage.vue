@@ -1318,7 +1318,7 @@ import {
   getStarterSet,
   getHighImpactInstructions,
   getBeginnerInstructions
-} from '@/data/aiInstructions-v2'
+} from '@/data/aiInstructions'
 import { searchCollectionWithScores } from '@/data/shared'
 import { usePreferences } from '@/composables/usePreferences'
 import { 
