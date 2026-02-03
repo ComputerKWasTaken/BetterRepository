@@ -1105,18 +1105,6 @@
       <span class="text-bd-text-muted">
         Showing {{ filteredInstructions.length }} of {{ instructions.length }} instructions
       </span>
-      <div class="flex items-center gap-2">
-        <span class="text-bd-text-muted">Sort by:</span>
-        <select 
-          v-model="sortBy"
-          class="select"
-        >
-          <option value="name">Name</option>
-          <option value="category">Category</option>
-          <option value="impact">Impact (High→Low)</option>
-          <option value="difficulty">Difficulty</option>
-        </select>
-      </div>
     </div>
 
     <!-- Category Sections (default view - no filters active) -->
@@ -1375,7 +1363,6 @@ const selectedCategories = ref([])
 const selectedDifficulties = ref([])
 const selectedImpacts = ref([])
 const showFilters = ref(false)
-const sortBy = ref('category')
 const quickFilter = ref(null)
 
 // NSFW Age Verification (uses persistent preference)
@@ -1486,19 +1473,6 @@ const filteredInstructions = computed(() => {
     result = result.filter(i => selectedImpacts.value.includes(i.impact))
   }
   
-  // Sort
-  if (sortBy.value === 'name') {
-    result.sort((a, b) => a.name.localeCompare(b.name))
-  } else if (sortBy.value === 'category') {
-    result.sort((a, b) => a.category.localeCompare(b.category))
-  } else if (sortBy.value === 'impact') {
-    const impactOrder = { 'high': 0, 'medium': 1, 'low': 2 }
-    result.sort((a, b) => (impactOrder[a.impact] || 3) - (impactOrder[b.impact] || 3))
-  } else if (sortBy.value === 'difficulty') {
-    const diffOrder = { 'beginner': 0, 'intermediate': 1, 'advanced': 2 }
-    result.sort((a, b) => (diffOrder[a.difficulty] || 3) - (diffOrder[b.difficulty] || 3))
-  }
-  
   return result
 })
 
@@ -1570,8 +1544,7 @@ const hasActiveFilters = computed(() =>
 const hasAnyFilters = computed(() => 
   searchQuery.value || 
   quickFilter.value || 
-  hasActiveFilters.value ||
-  sortBy.value !== 'category'
+  hasActiveFilters.value
 )
 
 const toggleQuickFilter = (filter) => {
@@ -1665,7 +1638,6 @@ const clearAll = () => {
   selectedDifficulties.value = []
   selectedImpacts.value = []
   quickFilter.value = null
-  sortBy.value = 'category'
 }
 
 // Contributors for credits section
