@@ -5,7 +5,7 @@
       <h1 class="text-2xl font-bold text-bd-text-primary flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-bd-cyan/20 flex items-center justify-center">
           <Code class="w-5 h-5 text-bd-cyan" />
-            </div>
+        </div>
         Scripts
       </h1>
       <p class="text-bd-text-secondary mt-2">
@@ -14,12 +14,12 @@
     </header>
 
     <!-- Tab Navigation -->
-    <div class="flex gap-2 border-b border-bd-border-subtle pb-2">
+    <div class="flex gap-2 border-b border-bd-border-subtle pb-2 overflow-x-auto">
       <button
         v-for="tab in tabs"
         :key="tab.id"
         @click="activeTab = tab.id"
-        class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2"
+        class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap"
         :class="activeTab === tab.id 
           ? 'bg-bd-accent-primary/20 text-bd-accent-light' 
           : 'text-bd-text-muted hover:text-bd-text-primary hover:bg-bd-bg-tertiary'"
@@ -905,8 +905,8 @@ modifier(text);</code></pre>
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Award class="w-5 h-5 text-bd-accent-primary" />
-            Credits
+            <Info class="w-5 h-5 text-bd-amber" />
+            Credits & Resources
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -914,9 +914,9 @@ modifier(text);</code></pre>
           />
         </button>
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('credits')" class="mt-4 space-y-4">
-            <div>
-              <p class="text-xs text-bd-text-muted mb-2">
+          <div v-if="isGuideSectionExpanded('credits')" class="mt-4">
+            <div class="mb-4">
+              <p class="text-xs text-bd-text-muted mb-2 flex items-center gap-1.5">
                 Contributors who wrote scripts and other tools, or created guides and resources for scripting:
               </p>
               <div class="flex flex-wrap gap-1.5">
@@ -926,13 +926,14 @@ modifier(text);</code></pre>
                 </span>
               </div>
             </div>
-            <p class="text-xs text-bd-text-muted">
-              Guide based on community knowledge and the <strong class="text-bd-text-secondary">AI Dungeon</strong> documentation.
-              <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="text-bd-accent-primary hover:underline ml-1">
-                Join the Discord
-                <ExternalLink class="w-3 h-3 inline-block ml-1" />
+            <div class="flex flex-wrap gap-2">
+              <a href="https://github.com/latitudegames/Scripting" target="_blank" class="btn btn-secondary text-xs">
+                <FileCode class="w-3 h-3" /> Official Docs
               </a>
-            </p>
+              <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
+                <MessageSquare class="w-3 h-3" /> Discord
+              </a>
+            </div>
           </div>
         </Transition>
       </section>
@@ -1079,7 +1080,7 @@ import {
   BookOpen, GitPullRequest, HelpCircle, Check, Braces, FileCode, 
   Library, ArrowRightToLine, Layers, ArrowLeftToLine, Database, 
   Lightbulb, Wrench, Plus, Search, Bug, ShieldAlert, Eye, RefreshCw, 
-  ExternalLink, Settings, Award, ChevronDown, ChevronUp, Blocks
+  ExternalLink, Settings, Award, ChevronDown, ChevronUp, Blocks, Info, MessageSquare
 } from 'lucide-vue-next'
 
 const activeTab = ref('collection')

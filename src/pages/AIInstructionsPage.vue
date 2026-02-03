@@ -14,12 +14,12 @@
     </header>
 
     <!-- Tab Navigation -->
-    <div class="flex gap-2 border-b border-bd-border-subtle pb-2">
+    <div class="flex gap-2 border-b border-bd-border-subtle pb-2 overflow-x-auto">
       <button
         v-for="tab in tabs"
         :key="tab.id"
         @click="activeTab = tab.id"
-        class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2"
+        class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap"
         :class="activeTab === tab.id 
           ? 'bg-bd-accent-primary/20 text-bd-accent-light' 
           : 'text-bd-text-muted hover:text-bd-text-primary hover:bg-bd-bg-tertiary'"
@@ -191,6 +191,9 @@
               <div class="flex gap-1">
                 <button @click="expandAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Expand all">
                   <ChevronDown class="w-3 h-3" />
+                </button>
+                <button @click="collapseAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Collapse all">
+                  <ChevronUp class="w-3 h-3" />
                 </button>
               </div>
             </div>
@@ -1316,7 +1319,7 @@ import {
   ListOrdered, Percent, UserPlus, Repeat, Rocket, Wrench, Clock, UserX,
   Shield, Focus, Type, Drama, MessageSquare, Skull, ExternalLink, Star,
   AlertTriangle, Plus, Tag, Braces, Split, AlignLeft, Cpu, Coins,
-  Check, X, TrendingUp, Wand2, Link2, Heart, ChevronDown, UserCog, Flame,
+  Check, X, TrendingUp, Wand2, Link2, Heart, ChevronDown, ChevronUp, UserCog, Flame,
   ShieldAlert, Lock, Copy
 } from 'lucide-vue-next'
 

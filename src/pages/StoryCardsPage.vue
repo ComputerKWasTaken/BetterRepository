@@ -13,7 +13,7 @@
       </p>
     </header>
 
-    <!-- Navigation Tabs -->
+    <!-- Tab Navigation -->
     <div class="flex gap-2 border-b border-bd-border-subtle pb-2 overflow-x-auto">
       <button 
         v-for="tab in tabs" 
@@ -29,7 +29,7 @@
       </button>
     </div>
 
-    <!-- Guide Tab -->
+    <!-- ==================== GUIDE TAB ==================== -->
     <template v-if="activeTab === 'guide'">
       <!-- Table of Contents - Sticky Sidebar -->
       <div class="flex gap-6">
@@ -612,8 +612,8 @@
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Award class="w-5 h-5 text-bd-accent-primary" />
-            Credits
+            <Info class="w-5 h-5 text-bd-amber" />
+            Credits & Resources
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -621,9 +621,9 @@
           />
         </button>
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('credits')" class="mt-4 space-y-4">
-            <div>
-              <p class="text-xs text-bd-text-muted mb-2">
+          <div v-if="isGuideSectionExpanded('credits')" class="mt-4">
+            <div class="mb-4">
+              <p class="text-xs text-bd-text-muted mb-2 flex items-center gap-1.5">
                 Contributors who created the resources and guides to create, write, and use Story Cards:
               </p>
               <div class="flex flex-wrap gap-1.5">
@@ -633,13 +633,11 @@
                 </span>
               </div>
             </div>
-            <p class="text-xs text-bd-text-muted">
-              Guide based on community knowledge and the <strong class="text-bd-text-secondary">AI Dungeon</strong> documentation.
-              <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="text-bd-accent-primary hover:underline ml-1">
-                Join the Discord
-                <ExternalLink class="w-3 h-3 inline-block ml-1" />
+            <div class="flex flex-wrap gap-2">
+              <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
+                <MessageSquare class="w-3 h-3" /> Discord
               </a>
-            </p>
+            </div>
           </div>
         </Transition>
       </section>
@@ -647,7 +645,7 @@
       </div>
     </template>
 
-    <!-- Examples Tab -->
+    <!-- ==================== EXAMPLES TAB ==================== -->
     <template v-if="activeTab === 'examples'">
       <!-- Quick Filter Buttons -->
       <div class="flex flex-wrap items-center gap-2">
@@ -907,7 +905,7 @@ import {
   StickyNote, Cog, AlertTriangle, Award, Check, Scale, Pencil,
   Download, Search, Infinity, ExternalLink, BookOpen, Space, Target,
   CaseSensitive, Scissors, Quote, Clock, GitMerge, X, Star, Rocket,
-  SlidersHorizontal, ChevronDown, ChevronUp
+  SlidersHorizontal, ChevronDown, ChevronUp, Info, MessageSquare
 } from 'lucide-vue-next'
 
 const activeTab = ref('examples')
