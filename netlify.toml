@@ -1,6 +1,9 @@
 [build]
-  command = "npm run build"
+  command = "npm ci && npm run build"
   publish = "dist"
+
+[build.environment]
+  NPM_FLAGS = "--include=dev"
 
 # SPA redirect - handles client-side routing for Vue Router
 [[redirects]]
