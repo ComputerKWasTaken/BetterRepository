@@ -1065,6 +1065,30 @@ const filteredTemplates = computed(() => {
     result = result.filter(t => selectedImpacts.value.includes(t.impact))
   }
   
+  // Apply sorting based on active quick filter or default alphabetical
+  const impactOrder = { high: 0, medium: 1, low: 2 }
+  const difficultyOrder = { beginner: 0, intermediate: 1, advanced: 2 }
+  
+  if (quickFilter.value === 'essential' || quickFilter.value === 'starter') {
+    // Sort by impact (high first), then by name
+    result.sort((a, b) => {
+      const impactDiff = (impactOrder[a.impact] ?? 3) - (impactOrder[b.impact] ?? 3)
+      if (impactDiff !== 0) return impactDiff
+      return (a.name || '').localeCompare(b.name || '')
+    })
+  } else if (quickFilter.value === 'high-impact') {
+    // Sort by difficulty (beginner first), then by name
+    result.sort((a, b) => {
+      const diffDiff = (difficultyOrder[a.difficulty] ?? 3) - (difficultyOrder[b.difficulty] ?? 3)
+      if (diffDiff !== 0) return diffDiff
+      return (a.name || '').localeCompare(b.name || '')
+    })
+  } else if (!searchQuery.value) {
+    // Default: sort alphabetically by name when no search query
+    result.sort((a, b) => (a.name || '').localeCompare(b.name || ''))
+  }
+  // When searching, keep the search relevance order from searchCollectionWithScores
+  
   return result
 })
 const hasActiveFilters = computed(() => 
