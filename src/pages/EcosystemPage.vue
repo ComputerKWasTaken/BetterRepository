@@ -1,106 +1,162 @@
 <template>
-  <div class="space-y-6 animate-fade-in">
-    <!-- Page Header -->
-    <header class="text-center py-8">
-      <div class="relative inline-block mb-6">
-        <div class="flex items-center justify-center gap-4">
-          <div class="relative">
-            <div class="absolute inset-0 bg-bd-accent-primary/20 rounded-2xl blur-xl"></div>
-            <img src="/betterrepository_logo.png" alt="BetterRepository" class="relative w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-lg" />
+  <div class="space-y-8 animate-fade-in">
+    <!-- Hero Header -->
+    <header class="relative text-center py-12 overflow-hidden">
+      <!-- Background Effects -->
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-radial from-bd-accent-primary/10 via-transparent to-transparent"></div>
+        <div class="absolute top-0 right-0 w-64 h-64 bg-bd-purple/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 bg-bd-cyan/5 rounded-full blur-3xl"></div>
+      </div>
+      
+      <div class="relative">
+        <!-- Logo Showcase -->
+        <div class="flex items-center justify-center gap-6 mb-8">
+          <div class="relative group">
+            <div class="absolute inset-0 bg-bd-accent-primary/30 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+            <div class="relative p-3 rounded-2xl bg-bd-bg-secondary/80 border border-bd-accent-primary/30 backdrop-blur-sm">
+              <img src="/betterrepository_logo.png" alt="BetterRepository" class="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-lg" />
+            </div>
           </div>
-          <div class="flex flex-col items-center">
-            <Sparkles class="w-5 h-5 text-bd-accent-primary mb-1" />
-            <span class="text-xl text-bd-text-muted font-light">+</span>
+          
+          <div class="flex flex-col items-center gap-1">
+            <Sparkles class="w-6 h-6 text-bd-accent-primary animate-pulse" />
+            <Plus class="w-5 h-5 text-bd-text-muted" />
           </div>
-          <div class="relative">
-            <div class="absolute inset-0 bg-bd-purple/20 rounded-2xl blur-xl"></div>
-            <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="BetterDungeon" class="relative w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-lg" />
+          
+          <div class="relative group">
+            <div class="absolute inset-0 bg-bd-purple/30 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+            <div class="relative p-3 rounded-2xl bg-bd-bg-secondary/80 border border-bd-purple/30 backdrop-blur-sm">
+              <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="BetterDungeon" class="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-lg" />
+            </div>
+          </div>
+          
+        </div>
+        
+        <h1 class="text-3xl md:text-4xl font-bold text-bd-text-primary mb-3">
+          The <span class="text-gradient bg-gradient-to-r from-bd-accent-primary via-bd-purple to-bd-cyan bg-clip-text text-transparent">"Better"</span> Ecosystem
+        </h1>
+        <p class="text-lg text-bd-text-secondary max-w-xl mx-auto mb-6">
+          A suite of open-source tools designed to enhance your AI Dungeon experience
+        </p>
+        
+        <!-- Stats Bar -->
+        <div class="flex flex-wrap justify-center gap-6 text-center">
+          <div class="px-4">
+            <div class="text-2xl font-bold text-bd-accent-primary">2</div>
+            <div class="text-xs text-bd-text-muted uppercase tracking-wide">Active Projects</div>
+          </div>
+          <div class="w-px h-10 bg-bd-border hidden sm:block"></div>
+          <div class="px-4">
+            <div class="text-2xl font-bold text-bd-purple">15+</div>
+            <div class="text-xs text-bd-text-muted uppercase tracking-wide">Features</div>
+          </div>
+          <div class="w-px h-10 bg-bd-border hidden sm:block"></div>
+          <div class="px-4">
+            <div class="text-2xl font-bold text-bd-cyan">100%</div>
+            <div class="text-xs text-bd-text-muted uppercase tracking-wide">Open Source</div>
           </div>
         </div>
       </div>
-      <h1 class="text-2xl md:text-3xl font-bold text-bd-text-primary mb-2">
-        The <span class="text-gradient">"Better"</span> Ecosystem
-      </h1>
-      <p class="text-bd-text-secondary max-w-lg mx-auto">
-        A suite of community tools designed to enhance your AI Dungeon experience.
-      </p>
     </header>
 
-    <!-- Ecosystem Overview -->
-    <section class="card-elevated border-2 border-bd-accent-primary/30">
+    <!-- Quick Actions -->
+    <div class="flex flex-wrap gap-3 justify-center">
+      <a href="https://github.com/ComputerKWasTaken/BetterDungeon" target="_blank" rel="noopener noreferrer" 
+         class="group flex items-center gap-2 px-5 py-2.5 rounded-full bg-bd-purple/10 border border-bd-purple/30 hover:border-bd-purple hover:bg-bd-purple/20 transition-all duration-300">
+        <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="" class="w-5 h-5" />
+        <span class="text-sm text-bd-text-primary font-medium">Get BetterDungeon</span>
+        <ExternalLink class="w-3 h-3 text-bd-text-muted group-hover:text-bd-purple transition-colors" />
+      </a>
+      <router-link to="/" class="group flex items-center gap-2 px-5 py-2.5 rounded-full bg-bd-accent-primary/10 border border-bd-accent-primary/30 hover:border-bd-accent-primary hover:bg-bd-accent-primary/20 transition-all duration-300">
+        <img src="/betterrepository_logo.png" alt="" class="w-5 h-5" />
+        <span class="text-sm text-bd-text-primary font-medium">Browse Resources</span>
+        <ChevronRight class="w-4 h-4 text-bd-text-muted group-hover:text-bd-accent-primary group-hover:translate-x-0.5 transition-all" />
+      </router-link>
+      <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" rel="noopener noreferrer"
+         class="group flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#5865F2]/10 border border-[#5865F2]/30 hover:border-[#5865F2] hover:bg-[#5865F2]/20 transition-all duration-300">
+        <MessageCircle class="w-5 h-5 text-[#5865F2]" />
+        <span class="text-sm text-bd-text-primary font-medium">Join Discord</span>
+        <ExternalLink class="w-3 h-3 text-bd-text-muted group-hover:text-[#5865F2] transition-colors" />
+      </a>
+    </div>
+
+    <!-- What is the Ecosystem -->
+    <section class="card-elevated border-2 border-bd-accent-primary/20 relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-accent-primary via-bd-purple to-bd-cyan"></div>
       <div class="flex items-start gap-4">
-        <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/20 flex items-center justify-center flex-shrink-0">
-          <Puzzle class="w-6 h-6 text-bd-accent-primary" />
+        <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-bd-accent-primary/20 to-bd-purple/20 flex items-center justify-center flex-shrink-0">
+          <Puzzle class="w-7 h-7 text-bd-accent-primary" />
         </div>
         <div class="flex-1">
-          <h2 class="text-lg font-semibold text-bd-text-primary mb-2">What is the "Better" Ecosystem?</h2>
-          <p class="text-bd-text-secondary">
-            The "Better" ecosystem is a collection of open-source tools and resources created to enhance AI Dungeon. 
-            Each project focuses on a different aspect of the experience, from browser extensions that add new features, 
-            to curated repositories of community-created content.
+          <h2 class="text-xl font-semibold text-bd-text-primary mb-3">What is the "Better" Ecosystem?</h2>
+          <p class="text-bd-text-secondary leading-relaxed">
+            The "Better" ecosystem is a collection of <strong class="text-bd-text-primary">open-source tools and resources</strong> created to enhance AI Dungeon. 
+            Each project focuses on a different aspect of the experience — from browser extensions that add powerful new features, 
+            to curated repositories of community-created content ready to use in your adventures.
           </p>
         </div>
       </div>
     </section>
 
-    <!-- Quick Links Bar -->
-    <div class="flex flex-wrap gap-3 justify-center">
-      <a href="https://github.com/ComputerKWasTaken/BetterDungeon" target="_blank" rel="noopener noreferrer" 
-         class="flex items-center gap-2 px-4 py-2 rounded-full bg-bd-bg-tertiary border border-bd-border hover:border-bd-accent-primary/50 transition-all">
-        <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="" class="w-5 h-5" />
-        <span class="text-sm text-bd-text-primary font-medium">Get BetterDungeon</span>
-        <ExternalLink class="w-3 h-3 text-bd-text-muted" />
-      </a>
-      <router-link to="/" class="flex items-center gap-2 px-4 py-2 rounded-full bg-bd-bg-tertiary border border-bd-border hover:border-bd-accent-primary/50 transition-all">
-        <img src="/betterrepository_logo.png" alt="" class="w-5 h-5" />
-        <span class="text-sm text-bd-text-primary font-medium">Browse Resources</span>
-      </router-link>
-      <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" rel="noopener noreferrer"
-         class="flex items-center gap-2 px-4 py-2 rounded-full bg-bd-bg-tertiary border border-bd-border hover:border-bd-purple/50 transition-all">
-        <MessageCircle class="w-5 h-5 text-bd-purple" />
-        <span class="text-sm text-bd-text-primary font-medium">Join Discord</span>
-        <ExternalLink class="w-3 h-3 text-bd-text-muted" />
-      </a>
-    </div>
-
-    <!-- Projects Grid -->
-    <section class="space-y-4">
+    <!-- Projects Section -->
+    <section class="space-y-6">
       <div class="section-header">
-        <Layers class="w-4 h-4" />
-        <span>Projects</span>
+        <Layers class="w-5 h-5" />
+        <span class="text-lg">Projects</span>
       </div>
 
-      <div class="grid gap-4">
-        <!-- BetterRepository -->
-        <div class="card group hover:border-bd-accent-primary/30 transition-all duration-200 border-2 border-bd-success/30">
-          <div class="flex items-start gap-4">
-            <img src="/betterrepository_logo.png" alt="BetterRepository" class="w-14 h-14 object-contain flex-shrink-0" />
-            <div class="flex-1">
-              <div class="flex items-center gap-3 mb-2">
-                <h3 class="text-lg font-semibold text-bd-text-primary">BetterRepository</h3>
-                <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-bd-success/20 text-bd-success">You're here!</span>
+      <!-- BetterRepository Card -->
+      <article class="card group relative overflow-hidden border-2 border-bd-success/40 hover:border-bd-success/60 transition-all duration-300">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-bd-success/10 to-transparent rounded-bl-full"></div>
+        <div class="relative">
+          <div class="flex items-start gap-5">
+            <div class="relative flex-shrink-0">
+              <div class="absolute inset-0 bg-bd-accent-primary/20 rounded-xl blur-lg"></div>
+              <img src="/betterrepository_logo.png" alt="BetterRepository" class="relative w-16 h-16 object-contain" />
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-3 mb-2 flex-wrap">
+                <h3 class="text-xl font-bold text-bd-text-primary">BetterRepository</h3>
+                <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-bd-success/20 text-bd-success border border-bd-success/30">
+                  <span class="inline-flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-bd-success animate-pulse"></span>
+                    You're here!
+                  </span>
+                </span>
               </div>
-              <p class="text-bd-text-secondary mb-4">
-                The ultimate AI Dungeon resource hub. Find AI Instructions, Plot Components, Story Cards, and Scripts, 
-                all curated, tested, and ready to copy-paste into your adventures.
+              <p class="text-bd-text-secondary mb-5 leading-relaxed">
+                The ultimate AI Dungeon resource hub. Find <strong class="text-bd-text-primary">AI Instructions</strong>, 
+                <strong class="text-bd-text-primary">Plot Components</strong>, <strong class="text-bd-text-primary">Story Cards</strong>, 
+                and <strong class="text-bd-text-primary">Scripts</strong> — all curated, tested, and ready to copy-paste into your adventures.
               </p>
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="tag tag-amber">AI Instructions</span>
-                <span class="tag tag-blue">Plot Components</span>
-                <span class="tag tag-purple">Story Cards</span>
-                <span class="tag tag-cyan">Scripts</span>
+              
+              <!-- Resource Types -->
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-5">
+                <div class="flex items-center gap-2 p-2.5 rounded-lg bg-bd-amber/10 border border-bd-amber/20">
+                  <FileText class="w-4 h-4 text-bd-amber flex-shrink-0" />
+                  <span class="text-sm text-bd-text-primary font-medium">AI Instructions</span>
+                </div>
+                <div class="flex items-center gap-2 p-2.5 rounded-lg bg-bd-blue/10 border border-bd-blue/20">
+                  <BookOpen class="w-4 h-4 text-bd-blue flex-shrink-0" />
+                  <span class="text-sm text-bd-text-primary font-medium">Plot Components</span>
+                </div>
+                <div class="flex items-center gap-2 p-2.5 rounded-lg bg-bd-purple/10 border border-bd-purple/20">
+                  <Layers class="w-4 h-4 text-bd-purple flex-shrink-0" />
+                  <span class="text-sm text-bd-text-primary font-medium">Story Cards</span>
+                </div>
+                <div class="flex items-center gap-2 p-2.5 rounded-lg bg-bd-cyan/10 border border-bd-cyan/20">
+                  <Code class="w-4 h-4 text-bd-cyan flex-shrink-0" />
+                  <span class="text-sm text-bd-text-primary font-medium">Scripts</span>
+                </div>
               </div>
-              <div class="flex items-center gap-4">
-                <router-link to="/" class="btn btn-primary btn-sm">
+
+              <div class="flex flex-wrap items-center gap-3">
+                <router-link to="/" class="btn btn-primary">
                   <Home class="w-4 h-4" />
                   Browse Resources
                 </router-link>
-                <a 
-                  href="https://github.com/ComputerKWasTaken/BetterRepository" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  class="btn btn-secondary btn-sm"
-                >
+                <a href="https://github.com/ComputerKWasTaken/BetterRepository" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
                   <Github class="w-4 h-4" />
                   GitHub
                   <ExternalLink class="w-3 h-3" />
@@ -109,187 +165,276 @@
             </div>
           </div>
         </div>
+      </article>
 
-        <!-- BetterDungeon -->
-        <div class="card group hover:border-bd-purple/30 transition-all duration-200">
-          <div class="flex items-start gap-4">
-            <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="BetterDungeon" class="w-14 h-14 object-contain flex-shrink-0" />
-            <div class="flex-1">
-              <div class="flex items-center gap-3 mb-2">
-                <h3 class="text-lg font-semibold text-bd-text-primary">BetterDungeon</h3>
+      <!-- BetterDungeon Card -->
+      <article class="card group relative overflow-hidden border-2 border-bd-purple/30 hover:border-bd-purple/50 transition-all duration-300">
+        <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-bd-purple/10 to-transparent rounded-bl-full"></div>
+        <div class="relative">
+          <div class="flex items-start gap-5">
+            <div class="relative flex-shrink-0">
+              <div class="absolute inset-0 bg-bd-purple/20 rounded-xl blur-lg"></div>
+              <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="BetterDungeon" class="relative w-16 h-16 object-contain" />
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-3 mb-2 flex-wrap">
+                <h3 class="text-xl font-bold text-bd-text-primary">BetterDungeon</h3>
+                <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-bd-purple/20 text-bd-purple border border-bd-purple/30">
+                  Browser Extension
+                </span>
               </div>
-              <p class="text-bd-text-secondary mb-4">
+              <p class="text-bd-text-secondary mb-5 leading-relaxed">
                 An all-in-one browser extension that enhances AI Dungeon with QOL additions and brand new features. 
-                Add new input modes, hotkeys, markdown support, and much more, all without leaving your browser.
+                Add new input modes, hotkeys, markdown support, and much more — all without leaving your browser.
               </p>
               
-              <!-- Feature Highlights -->
-              <div class="grid md:grid-cols-2 gap-3 mb-4">
-                <div class="flex items-center gap-2 p-2 rounded-lg bg-bd-bg-tertiary">
-                  <Gamepad2 class="w-4 h-4 text-bd-purple flex-shrink-0" />
-                  <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">New Input Modes</strong>  — Command & Try modes</span>
+              <!-- Feature Grid - Inspired by BetterDungeon popup -->
+              <div class="space-y-4 mb-5">
+                <!-- Input Modes Section -->
+                <div class="p-4 rounded-xl bg-bd-bg-tertiary/50 border border-bd-border">
+                  <div class="flex items-center gap-2 mb-3">
+                    <MessageSquare class="w-4 h-4 text-bd-purple" />
+                    <h4 class="text-sm font-semibold text-bd-text-primary">Input Modes</h4>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div class="flex items-center gap-2 p-2 rounded-lg bg-bd-bg-secondary">
+                      <Terminal class="w-4 h-4 text-orange-500 flex-shrink-0" />
+                      <div>
+                        <span class="text-sm text-bd-text-primary font-medium">Command Mode</span>
+                        <p class="text-xs text-bd-text-muted">Direct AI instructions</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2 p-2 rounded-lg bg-bd-bg-secondary">
+                      <Dice5 class="w-4 h-4 text-bd-purple flex-shrink-0" />
+                      <div>
+                        <span class="text-sm text-bd-text-primary font-medium">Try Mode</span>
+                        <p class="text-xs text-bd-text-muted">RNG-based outcomes</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="flex items-center gap-2 p-2 rounded-lg bg-bd-bg-tertiary">
-                  <Keyboard class="w-4 h-4 text-bd-blue flex-shrink-0" />
-                  <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">Hotkeys</strong>  — Full keyboard control</span>
+
+                <!-- Tools & Features Grid -->
+                <div class="grid md:grid-cols-3 gap-3">
+                  <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary/50 border border-bd-border">
+                    <Keyboard class="w-5 h-5 text-bd-blue flex-shrink-0 mt-0.5" />
+                    <div>
+                      <span class="text-sm text-bd-text-primary font-medium">Hotkeys</span>
+                      <p class="text-xs text-bd-text-muted mt-0.5">Full keyboard control for all actions</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary/50 border border-bd-border">
+                    <Type class="w-5 h-5 text-bd-cyan flex-shrink-0 mt-0.5" />
+                    <div>
+                      <span class="text-sm text-bd-text-primary font-medium">Markdown</span>
+                      <p class="text-xs text-bd-text-muted mt-0.5">Bold, italic, underline & more</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary/50 border border-bd-border">
+                    <Palette class="w-5 h-5 text-bd-amber flex-shrink-0 mt-0.5" />
+                    <div>
+                      <span class="text-sm text-bd-text-primary font-medium">Mode Colors</span>
+                      <p class="text-xs text-bd-text-muted mt-0.5">Visual input mode feedback</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary/50 border border-bd-border">
+                    <StickyNote class="w-5 h-5 text-bd-success flex-shrink-0 mt-0.5" />
+                    <div>
+                      <span class="text-sm text-bd-text-primary font-medium">Adventure Notes</span>
+                      <p class="text-xs text-bd-text-muted mt-0.5">Per-adventure note taking</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary/50 border border-bd-border">
+                    <User class="w-5 h-5 text-bd-error flex-shrink-0 mt-0.5" />
+                    <div>
+                      <span class="text-sm text-bd-text-primary font-medium">Character Presets</span>
+                      <p class="text-xs text-bd-text-muted mt-0.5">Save & auto-fill characters</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary/50 border border-bd-border">
+                    <BarChart3 class="w-5 h-5 text-bd-accent-primary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <span class="text-sm text-bd-text-primary font-medium">Story Analytics</span>
+                      <p class="text-xs text-bd-text-muted mt-0.5">Analyze your story cards</p>
+                    </div>
+                  </div>
                 </div>
-                <div class="flex items-center gap-2 p-2 rounded-lg bg-bd-bg-tertiary">
-                  <Type class="w-4 h-4 text-bd-cyan flex-shrink-0" />
-                  <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">Markdown</strong>  — Bold, italic, & more</span>
-                </div>
-                <div class="flex items-center gap-2 p-2 rounded-lg bg-bd-bg-tertiary">
-                  <Palette class="w-4 h-4 text-bd-amber flex-shrink-0" />
-                  <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">Mode Colors</strong>  — Visual feedback</span>
-                </div>
-                <div class="flex items-center gap-2 p-2 rounded-lg bg-bd-bg-tertiary">
-                  <StickyNote class="w-4 h-4 text-bd-success flex-shrink-0" />
-                  <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">Adventure Notes</strong>  — Per-adventure notes</span>
-                </div>
-                <div class="flex items-center gap-2 p-2 rounded-lg bg-bd-bg-tertiary">
-                  <User class="w-4 h-4 text-bd-error flex-shrink-0" />
-                  <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">Character Presets</strong>  — Save & auto-fill</span>
+
+                <!-- BetterScripts Highlight -->
+                <div class="p-4 rounded-xl bg-gradient-to-r from-bd-cyan/10 to-bd-blue/10 border border-bd-cyan/20">
+                  <div class="flex items-start gap-3">
+                    <Code class="w-5 h-5 text-bd-cyan flex-shrink-0 mt-0.5" />
+                    <div>
+                      <span class="text-sm text-bd-text-primary font-semibold">BetterScripts</span>
+                      <p class="text-xs text-bd-text-secondary mt-1">
+                        Enables AI Dungeon scripts to create <strong class="text-bd-text-primary">dynamic UI widgets</strong> — 
+                        HP bars, stats, panels, and custom displays that update in real-time.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div class="flex items-center gap-4">
-                <a 
-                  href="https://github.com/ComputerKWasTaken/BetterDungeon" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  class="btn btn-primary btn-sm"
-                >
-                  <Github class="w-4 h-4" />
+              <div class="flex flex-wrap items-center gap-3">
+                <a href="https://github.com/ComputerKWasTaken/BetterDungeon" target="_blank" rel="noopener noreferrer" class="btn btn-primary bg-bd-purple hover:bg-bd-purple/80 border-bd-purple">
+                  <Download class="w-4 h-4" />
                   Get BetterDungeon
                   <ExternalLink class="w-3 h-3" />
+                </a>
+                <a href="https://github.com/ComputerKWasTaken/BetterDungeon" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                  <Github class="w-4 h-4" />
+                  View Source
                 </a>
               </div>
             </div>
           </div>
         </div>
+      </article>
 
-        <!-- BetterVoyage (Coming Soon) -->
-        <div class="card group border-dashed border-2 border-bd-border opacity-75 hover:opacity-100 transition-all duration-200">
-          <div class="flex items-start gap-4">
-            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-bd-cyan/20 to-bd-blue/20 flex items-center justify-center flex-shrink-0">
-              <Ship class="w-8 h-8 text-bd-cyan" />
+      <!-- BetterVoyage Card (Coming Soon) - Compact -->
+      <article class="card group relative overflow-hidden border border-dashed border-bd-border/50 hover:border-bd-cyan/30 opacity-60 hover:opacity-80 transition-all duration-300">
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 rounded-lg bg-bd-cyan/10 flex items-center justify-center flex-shrink-0">
+            <Ship class="w-5 h-5 text-bd-cyan" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <h3 class="text-sm font-semibold text-bd-text-primary">BetterVoyage</h3>
+              <span class="px-2 py-0.5 text-xs rounded-full bg-bd-cyan/10 text-bd-cyan">Coming Soon</span>
             </div>
-            <div class="flex-1">
-              <div class="flex items-center gap-3 mb-2">
-                <h3 class="text-lg font-semibold text-bd-text-primary">BetterVoyage</h3>
-                <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-bd-cyan/20 text-bd-cyan">Coming Soon</span>
-              </div>
-              <p class="text-bd-text-secondary mb-4">
-                The same "Better" experience, coming to Voyage. QOL enhancements, new features, and more — 
-                for Latitude's next-generation AI storytelling platform.
-              </p>
-              <p class="text-xs text-bd-text-muted italic">
-                Development begins after Voyage's full public release.
-              </p>
-            </div>
+            <p class="text-xs text-bd-text-muted mt-0.5">Development begins after Voyage's full public release.</p>
           </div>
         </div>
-      </div>
+      </article>
     </section>
 
     <!-- Better Together Section -->
     <section class="card-elevated border-2 border-bd-purple/30 relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-bd-purple/10 to-transparent rounded-bl-full"></div>
+      <div class="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-bd-purple/15 to-transparent rounded-bl-full"></div>
+      <div class="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-bd-accent-primary/10 to-transparent rounded-tr-full"></div>
       <div class="relative">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="flex items-center gap-2 p-2 rounded-xl bg-bd-bg-tertiary/50">
-            <img src="/betterrepository_logo.png" alt="" class="w-7 h-7" />
-            <Heart class="w-4 h-4 text-bd-error" />
-            <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="" class="w-7 h-7" />
+        <div class="flex items-center gap-4 mb-5">
+          <div class="flex items-center gap-2 p-3 rounded-xl bg-bd-bg-tertiary/80 border border-bd-border">
+            <img src="/betterrepository_logo.png" alt="" class="w-8 h-8" />
+            <Heart class="w-5 h-5 text-bd-error animate-pulse" />
+            <img src="https://raw.githubusercontent.com/ComputerKWasTaken/BetterDungeon/main/icons/icon128.png" alt="" class="w-8 h-8" />
           </div>
-          <h2 class="text-lg font-semibold text-bd-text-primary">Better Together</h2>
+          <div>
+            <h2 class="text-xl font-bold text-bd-text-primary">Better Together</h2>
+            <p class="text-sm text-bd-text-muted">Designed to complement each other</p>
+          </div>
         </div>
-        <p class="text-bd-text-secondary mb-4">
-          BetterDungeon and BetterRepository are designed to complement each other. Use them together for the ultimate AI Dungeon experience.
+        
+        <p class="text-bd-text-secondary mb-5 leading-relaxed">
+          BetterDungeon and BetterRepository work seamlessly together. Use them in tandem for the 
+          <strong class="text-bd-text-primary">ultimate AI Dungeon experience</strong>.
         </p>
         
-        <div class="grid md:grid-cols-2 gap-3">
-          <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
-            <Search class="w-4 h-4 text-bd-accent-primary flex-shrink-0 mt-0.5" />
+        <!-- Workflow Steps -->
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="flex items-start gap-4 p-4 rounded-xl bg-bd-bg-tertiary/50 border border-bd-border group hover:border-bd-accent-primary/30 transition-colors">
+            <div class="w-8 h-8 rounded-full bg-bd-accent-primary/20 flex items-center justify-center flex-shrink-0 text-bd-accent-primary font-bold text-sm">1</div>
             <div>
-              <span class="text-sm text-bd-text-primary font-medium">Find Resources Here</span>
-              <p class="text-xs text-bd-text-secondary mt-0.5">Browse AI Instructions, Plot Components, Story Card templates, and Scripts on BetterRepository</p>
+              <span class="text-sm text-bd-text-primary font-semibold flex items-center gap-2">
+                <Search class="w-4 h-4 text-bd-accent-primary" />
+                Find Resources
+              </span>
+              <p class="text-xs text-bd-text-secondary mt-1">Browse AI Instructions, Plot Components, Story Cards, and Scripts on BetterRepository</p>
             </div>
           </div>
-          <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
-            <Save class="w-4 h-4 text-bd-purple flex-shrink-0 mt-0.5" />
+          <div class="flex items-start gap-4 p-4 rounded-xl bg-bd-bg-tertiary/50 border border-bd-border group hover:border-bd-purple/30 transition-colors">
+            <div class="w-8 h-8 rounded-full bg-bd-purple/20 flex items-center justify-center flex-shrink-0 text-bd-purple font-bold text-sm">2</div>
             <div>
-              <span class="text-sm text-bd-text-primary font-medium">Save as Presets</span>
-              <p class="text-xs text-bd-text-secondary mt-0.5">BetterDungeon's Presets let you save and quickly apply resources to your adventures</p>
+              <span class="text-sm text-bd-text-primary font-semibold flex items-center gap-2">
+                <Save class="w-4 h-4 text-bd-purple" />
+                Save as Presets
+              </span>
+              <p class="text-xs text-bd-text-secondary mt-1">Use BetterDungeon's Presets to save and organize your favorite resources</p>
             </div>
           </div>
-          <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
-            <Type class="w-4 h-4 text-bd-cyan flex-shrink-0 mt-0.5" />
+          <div class="flex items-start gap-4 p-4 rounded-xl bg-bd-bg-tertiary/50 border border-bd-border group hover:border-bd-cyan/30 transition-colors">
+            <div class="w-8 h-8 rounded-full bg-bd-cyan/20 flex items-center justify-center flex-shrink-0 text-bd-cyan font-bold text-sm">3</div>
             <div>
-              <span class="text-sm text-bd-text-primary font-medium">Enhanced Formatting</span>
-              <p class="text-xs text-bd-text-secondary mt-0.5">BetterDungeon renders markdown syntax from BetterRepository resources</p>
+              <span class="text-sm text-bd-text-primary font-semibold flex items-center gap-2">
+                <Type class="w-4 h-4 text-bd-cyan" />
+                Enhanced Formatting
+              </span>
+              <p class="text-xs text-bd-text-secondary mt-1">BetterDungeon renders markdown syntax from BetterRepository resources beautifully</p>
             </div>
           </div>
-          <div class="flex items-start gap-3 p-3 rounded-lg bg-bd-bg-tertiary">
-            <Zap class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+          <div class="flex items-start gap-4 p-4 rounded-xl bg-bd-bg-tertiary/50 border border-bd-border group hover:border-bd-success/30 transition-colors">
+            <div class="w-8 h-8 rounded-full bg-bd-success/20 flex items-center justify-center flex-shrink-0 text-bd-success font-bold text-sm">4</div>
             <div>
-              <span class="text-sm text-bd-text-primary font-medium">One-Click Apply</span>
-              <p class="text-xs text-bd-text-secondary mt-0.5">Copy from BetterRepository, save as a Preset, apply with one click</p>
+              <span class="text-sm text-bd-text-primary font-semibold flex items-center gap-2">
+                <Zap class="w-4 h-4 text-bd-success" />
+                One-Click Apply
+              </span>
+              <p class="text-xs text-bd-text-secondary mt-1">Apply saved presets to any adventure with a single click</p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Coming Soon / Future Projects -->
-    <section class="card">
-      <div class="flex items-center gap-2 mb-4">
-        <Rocket class="w-5 h-5 text-bd-accent-primary" />
-        <h2 class="text-lg font-semibold text-bd-text-primary">What's Next?</h2>
-      </div>
-      <p class="text-bd-text-secondary mb-4">
-        The "Better" ecosystem is always growing. Have an idea for a new tool or feature? 
-        I'd love to hear it!
-      </p>
-      <div class="flex items-center gap-4">
-        <a 
-          href="https://github.com/ComputerKWasTaken/BetterDungeon/issues/new?template=feature_request.md" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          class="btn btn-secondary btn-sm"
-        >
-          <Lightbulb class="w-4 h-4" />
-          Suggest a Feature
-          <ExternalLink class="w-3 h-3" />
-        </a>
-        <a 
-          href="https://discord.com/invite/HB2YBZYjyf" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          class="btn btn-secondary btn-sm"
-        >
-          <MessageCircle class="w-4 h-4" />
-          Join Discord
-          <ExternalLink class="w-3 h-3" />
-        </a>
+    <!-- What's Next Section -->
+    <section class="card relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-accent-primary to-bd-purple"></div>
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-bd-accent-primary/20 to-bd-purple/20 flex items-center justify-center flex-shrink-0">
+          <Rocket class="w-6 h-6 text-bd-accent-primary" />
+        </div>
+        <div class="flex-1">
+          <h2 class="text-xl font-bold text-bd-text-primary mb-2">What's Next?</h2>
+          <p class="text-bd-text-secondary mb-5 leading-relaxed">
+            The "Better" ecosystem is always growing. Have an idea for a new tool or feature? 
+            <strong class="text-bd-text-primary">I'd love to hear it!</strong>
+          </p>
+          <div class="flex flex-wrap items-center gap-3">
+            <a href="https://github.com/ComputerKWasTaken/BetterDungeon/issues/new?template=feature_request.md" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+              <Lightbulb class="w-4 h-4" />
+              Suggest a Feature
+              <ExternalLink class="w-3 h-3" />
+            </a>
+            <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+              <MessageCircle class="w-4 h-4" />
+              Join Discord
+              <ExternalLink class="w-3 h-3" />
+            </a>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Credits -->
-    <section class="card text-center">
-      <Heart class="w-10 h-10 text-bd-error mx-auto mb-3" />
-      <h2 class="text-lg font-semibold text-bd-text-primary mb-2">Made for the Community</h2>
-      <p class="text-bd-text-secondary max-w-md mx-auto">
-        All "Better" projects are open source and built with love for the AI Dungeon community. 
-        Contributions, feedback, and ideas are always welcome.
-      </p>
+    <!-- Credits Footer -->
+    <section class="card text-center relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-t from-bd-error/5 to-transparent"></div>
+      <div class="relative">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-bd-error/10 mb-4">
+          <Heart class="w-8 h-8 text-bd-error" />
+        </div>
+        <h2 class="text-xl font-bold text-bd-text-primary mb-2">Made for the Community</h2>
+        <p class="text-bd-text-secondary max-w-lg mx-auto leading-relaxed">
+          All "Better" projects are <strong class="text-bd-text-primary">open source</strong> and built with love for the AI Dungeon community. 
+          Contributions, feedback, and ideas are always welcome.
+        </p>
+        <div class="flex justify-center gap-4 mt-5">
+          <a href="https://github.com/ComputerKWasTaken" target="_blank" rel="noopener noreferrer" class="text-bd-text-muted hover:text-bd-text-primary transition-colors">
+            <Github class="w-5 h-5" />
+          </a>
+          <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" rel="noopener noreferrer" class="text-bd-text-muted hover:text-[#5865F2] transition-colors">
+            <MessageCircle class="w-5 h-5" />
+          </a>
+        </div>
+      </div>
     </section>
   </div>
 </template>
 
 <script setup>
 import { 
-  Puzzle, Layers, Github, ExternalLink, Sparkles,
-  Home, Gamepad2, Keyboard, Type, Palette, StickyNote, User,
-  Rocket, Lightbulb, MessageCircle, Heart, Search, Save, Zap, Ship
+  Puzzle, Layers, Github, ExternalLink, Sparkles, Plus, ChevronRight,
+  Home, Keyboard, Type, Palette, StickyNote, User, MessageSquare, Terminal, Dice5,
+  Rocket, Lightbulb, MessageCircle, Heart, Search, Save, Zap, Ship,
+  FileText, BookOpen, Code, Download, BarChart3
 } from 'lucide-vue-next'
 </script>
