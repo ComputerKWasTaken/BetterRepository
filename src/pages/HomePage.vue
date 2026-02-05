@@ -1,189 +1,241 @@
 <template>
-  <div class="space-y-6 animate-fade-in">
-    <!-- Hero Section -->
-    <section class="text-center py-10">
-      <!-- Logo & Branding -->
-      <div class="flex items-center justify-center gap-4 mb-6">
-        <img 
-          src="/betterrepository_logo.png" 
-          alt="BetterRepository" 
-          class="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-lg"
-        />
-        <div class="text-left">
-          <h1 class="text-2xl md:text-3xl font-bold text-bd-text-primary">
-            BetterRepository
-          </h1>
-          <p class="text-sm text-bd-accent-light font-medium">AI Dungeon Resource Hub</p>
-        </div>
-      </div>
-      
-      <p class="text-bd-text-secondary max-w-xl mx-auto mb-6">
-        A curated collection of AI Instructions, Plot Components, Story Cards, and Scripts.
-        Everything you need to craft <span class="text-gradient font-medium">better adventures</span>.
-      </p>
+  <div class="space-y-8">
+    <!-- Hero Section — animated gradient backdrop -->
+    <section class="hero-section relative overflow-hidden rounded-2xl py-14 px-6 text-center">
+      <!-- Animated background orbs -->
+      <div class="hero-orb hero-orb--orange" aria-hidden="true" />
+      <div class="hero-orb hero-orb--purple" aria-hidden="true" />
+      <div class="hero-orb hero-orb--cyan" aria-hidden="true" />
 
-      <!-- Quick Search -->
-      <div class="max-w-lg mx-auto">
-        <div class="relative">
-          <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-bd-text-muted" />
-          <input 
-            v-model="searchQuery"
-            type="text"
-            placeholder="Search instructions, templates, scripts..."
-            class="input pl-12 pr-4 py-3"
-            @keyup.enter="handleSearch"
+      <!-- Content -->
+      <div class="relative z-10">
+        <!-- Logo & Branding -->
+        <div class="flex items-center justify-center gap-4 mb-5">
+          <img 
+            src="/betterrepository_logo.png" 
+            alt="BetterRepository" 
+            class="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-lg animate-float"
           />
-          <button 
-            v-if="searchQuery"
-            @click="handleSearch"
-            class="absolute right-2 top-1/2 -translate-y-1/2 btn btn-primary py-1.5 px-3 text-sm"
-          >
-            Search
-          </button>
+          <div class="text-left">
+            <h1 class="text-3xl md:text-4xl font-bold text-bd-text-primary tracking-tight">
+              Better<span class="text-gradient">Repository</span>
+            </h1>
+            <p class="text-sm text-bd-accent-light font-medium tracking-wide mt-0.5">AI Dungeon Resource Hub</p>
+          </div>
+        </div>
+
+        <p class="text-bd-text-secondary max-w-xl mx-auto mb-8 leading-relaxed">
+          A curated collection of AI Instructions, Plot Components, Story Cards, and Scripts.
+          Everything you need to craft <span class="text-gradient font-semibold">better adventures</span>.
+        </p>
+
+        <!-- Quick Search — refined -->
+        <div class="max-w-lg mx-auto">
+          <div class="relative group">
+            <div class="absolute -inset-0.5 bg-gradient-to-r from-bd-accent-primary/20 via-bd-purple/20 to-bd-cyan/20 rounded-xl opacity-0 group-focus-within:opacity-100 blur transition-opacity duration-300" />
+            <div class="relative">
+              <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-bd-text-muted" />
+              <input 
+                v-model="searchQuery"
+                type="text"
+                placeholder="Search instructions, templates, scripts..."
+                class="input pl-12 pr-24 py-3.5 bg-bd-bg-secondary/80 backdrop-blur-card"
+                @keyup.enter="handleSearch"
+              />
+              <button 
+                v-if="searchQuery"
+                @click="handleSearch"
+                class="absolute right-2 top-1/2 -translate-y-1/2 btn btn-primary py-1.5 px-4 text-sm"
+              >
+                Search
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Resource Categories -->
-    <section>
-      <div class="section-header mb-4">
+    <!-- Resource Categories — gradient accent borders -->
+    <section ref="categoriesRef" :class="['home-section', { 'is-visible': visibleSections.categories }]">
+      <div class="section-header mb-5">
         <LayoutGrid class="w-4 h-4" />
         <span>Browse Resources</span>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <router-link 
-          v-for="category in resourceCategories" 
+          v-for="(category, idx) in resourceCategories" 
           :key="category.path"
           :to="category.path"
-          class="card group flex items-start gap-4 hover:border-bd-accent-primary/30 transition-all"
+          class="category-card group"
+          :style="{ animationDelay: `${idx * 80}ms` }"
         >
-          <div 
-            class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110"
-            :class="category.bgClass"
-          >
-            <component :is="category.icon" class="w-5 h-5" :class="category.iconClass" />
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2">
-              <h3 class="font-semibold text-bd-text-primary group-hover:text-bd-accent-light transition-colors">
-                {{ category.name }}
-              </h3>
-              <span class="tag text-[10px]" :class="category.bgClass + ' ' + category.iconClass">
-                {{ category.count }}
-              </span>
+          <!-- Gradient border glow on hover -->
+          <div class="absolute -inset-px rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" :class="category.glowClass" />
+
+          <div class="relative bg-bd-bg-secondary rounded-xl p-4 flex items-start gap-4 h-full">
+            <div 
+              class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg"
+              :class="category.bgClass"
+            >
+              <component :is="category.icon" class="w-5 h-5" :class="category.iconClass" />
             </div>
-            <p class="text-sm text-bd-text-secondary mt-1 line-clamp-2">{{ category.description }}</p>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2">
+                <h3 class="font-semibold text-bd-text-primary group-hover:text-bd-accent-light transition-colors">
+                  {{ category.name }}
+                </h3>
+                <span class="tag text-[10px]" :class="category.bgClass + ' ' + category.iconClass">
+                  {{ category.count }}
+                </span>
+              </div>
+              <p class="text-sm text-bd-text-secondary mt-1.5 line-clamp-2 leading-relaxed">{{ category.description }}</p>
+            </div>
+            <ChevronRight class="w-4 h-4 text-bd-text-muted group-hover:text-bd-accent-primary group-hover:translate-x-1 transition-all flex-shrink-0 mt-1.5" />
           </div>
-          <ChevronRight class="w-4 h-4 text-bd-text-muted group-hover:text-bd-accent-primary group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" />
         </router-link>
       </div>
     </section>
 
-    <!-- Quick Stats -->
-    <section class="grid grid-cols-2 md:grid-cols-4 gap-3">
-      <div v-for="stat in stats" :key="stat.label" class="card text-center py-4">
-        <div class="text-2xl font-bold text-gradient">{{ stat.value }}</div>
-        <div class="text-xs text-bd-text-muted mt-1">{{ stat.label }}</div>
-      </div>
-    </section>
-
-    <!-- Quick Start Cards -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-3">
-      <!-- New Users -->
-      <div class="card">
-        <div class="flex items-center gap-3 mb-3">
-          <div class="w-9 h-9 rounded-lg bg-bd-green/20 flex items-center justify-center flex-shrink-0">
-            <Lightbulb class="w-4 h-4 text-bd-green" />
-          </div>
-          <h3 class="font-semibold text-bd-text-primary">New to AI Dungeon?</h3>
-        </div>
-        <p class="text-sm text-bd-text-secondary mb-3">
-          Start with Complete Sets, full instruction sets ready for various AI models.
-        </p>
-        <router-link to="/ai-instructions" class="text-sm text-bd-accent-primary hover:underline flex items-center gap-1">
-          Browse AI Instructions
-          <ChevronRight class="w-3 h-3" />
-        </router-link>
-      </div>
-
-      <!-- Contribute -->
-      <div class="card">
-        <div class="flex items-center gap-3 mb-3">
-          <div class="w-9 h-9 rounded-lg bg-bd-purple/20 flex items-center justify-center flex-shrink-0">
-            <GitPullRequest class="w-4 h-4 text-bd-purple" />
-          </div>
-          <h3 class="font-semibold text-bd-text-primary">Share Your Work</h3>
-        </div>
-        <p class="text-sm text-bd-text-secondary mb-3">
-          Paste your creation in a GitHub issue, no coding required.
-        </p>
-        <router-link to="/contribute" class="text-sm text-bd-accent-primary hover:underline flex items-center gap-1">
-          Submit Creation
-          <ChevronRight class="w-3 h-3" />
-        </router-link>
-      </div>
-
-      <!-- Discord -->
-      <div class="card">
-        <div class="flex items-center gap-3 mb-3">
-          <div class="w-9 h-9 rounded-lg bg-bd-cyan/20 flex items-center justify-center flex-shrink-0">
-            <MessageCircle class="w-4 h-4 text-bd-cyan" />
-          </div>
-          <h3 class="font-semibold text-bd-text-primary">Join Community</h3>
-        </div>
-        <p class="text-sm text-bd-text-secondary mb-3">
-          Connect with other players, share creations, and get help.
-        </p>
-        <a 
-          href="https://discord.com/invite/HB2YBZYjyf" 
-          target="_blank"
-          class="text-sm text-bd-accent-primary hover:underline flex items-center gap-1"
+    <!-- Quick Stats — with icons and animated entrance -->
+    <section ref="statsRef" :class="['home-section', { 'is-visible': visibleSections.stats }]">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div 
+          v-for="(stat, idx) in stats" 
+          :key="stat.label" 
+          class="card text-center py-5 group hover:border-bd-accent-primary/20 hover:shadow-glow"
+          :style="{ animationDelay: `${idx * 100}ms` }"
         >
-          Join Discord
-          <ExternalLink class="w-3 h-3" />
-        </a>
+          <div class="flex items-center justify-center mb-2">
+            <component :is="stat.icon" class="w-5 h-5 text-bd-accent-primary opacity-60 group-hover:opacity-100 transition-opacity" />
+          </div>
+          <div class="text-2xl font-bold text-gradient">{{ stat.value }}</div>
+          <div class="text-xs text-bd-text-muted mt-1 font-medium uppercase tracking-wider">{{ stat.label }}</div>
+        </div>
       </div>
     </section>
 
-    <!-- Credits Section (Condensed) -->
-    <section class="card">
-      <div class="flex items-center justify-between mb-4">
-        <div class="flex items-center gap-2">
-          <Award class="w-5 h-5 text-bd-accent-primary" />
-          <h2 class="text-lg font-semibold text-bd-text-primary">Community Contributors</h2>
+    <!-- Quick Start Cards — with subtle gradient overlays -->
+    <section ref="quickStartRef" :class="['home-section', { 'is-visible': visibleSections.quickStart }]">
+      <div class="section-header mb-5">
+        <Sparkles class="w-4 h-4" />
+        <span>Get Started</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- New Users -->
+        <div class="card group relative overflow-hidden hover:border-bd-green/30">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-bd-green/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
+          <div class="relative">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-bd-green/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-green/25 transition-colors">
+                <Lightbulb class="w-5 h-5 text-bd-green" />
+              </div>
+              <h3 class="font-semibold text-bd-text-primary">New to AI Dungeon?</h3>
+            </div>
+            <p class="text-sm text-bd-text-secondary mb-4 leading-relaxed">
+              Start with Complete Sets, full instruction sets ready for various AI models.
+            </p>
+            <router-link to="/ai-instructions" class="inline-flex items-center gap-1.5 text-sm font-medium text-bd-green hover:text-bd-green/80 transition-colors">
+              Browse AI Instructions
+              <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </router-link>
+          </div>
         </div>
-        <router-link to="/credits" class="text-sm text-bd-accent-primary hover:underline flex items-center gap-1">
-          View All
-          <ChevronRight class="w-3 h-3" />
-        </router-link>
+
+        <!-- Contribute -->
+        <div class="card group relative overflow-hidden hover:border-bd-purple/30">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-bd-purple/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
+          <div class="relative">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-bd-purple/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-purple/25 transition-colors">
+                <GitPullRequest class="w-5 h-5 text-bd-purple" />
+              </div>
+              <h3 class="font-semibold text-bd-text-primary">Share Your Work</h3>
+            </div>
+            <p class="text-sm text-bd-text-secondary mb-4 leading-relaxed">
+              Paste your creation in a GitHub issue, no coding required.
+            </p>
+            <router-link to="/contribute" class="inline-flex items-center gap-1.5 text-sm font-medium text-bd-purple hover:text-bd-purple/80 transition-colors">
+              Submit Creation
+              <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </router-link>
+          </div>
+        </div>
+
+        <!-- Discord -->
+        <div class="card group relative overflow-hidden hover:border-bd-cyan/30">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-bd-cyan/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
+          <div class="relative">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-bd-cyan/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-cyan/25 transition-colors">
+                <MessageCircle class="w-5 h-5 text-bd-cyan" />
+              </div>
+              <h3 class="font-semibold text-bd-text-primary">Join Community</h3>
+            </div>
+            <p class="text-sm text-bd-text-secondary mb-4 leading-relaxed">
+              Connect with other players, share creations, and get help.
+            </p>
+            <a 
+              href="https://discord.com/invite/HB2YBZYjyf" 
+              target="_blank"
+              class="inline-flex items-center gap-1.5 text-sm font-medium text-bd-cyan hover:text-bd-cyan/80 transition-colors"
+            >
+              Join Discord
+              <ExternalLink class="w-3.5 h-3.5" />
+            </a>
+          </div>
+        </div>
       </div>
+    </section>
 
-      <p class="text-sm text-bd-text-secondary mb-4">
-        BetterRepository is built on the work of amazing community members who created guides, resources, and knowledge.
-      </p>
+    <!-- Credits Section — refined -->
+    <section ref="creditsRef" :class="['home-section', { 'is-visible': visibleSections.credits }]">
+      <div class="card relative overflow-hidden">
+        <!-- Decorative gradient -->
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-accent-primary via-bd-purple to-bd-cyan" />
 
-      <!-- Major Contributors Highlight -->
-      <div class="flex flex-wrap gap-2 mb-4">
-        <span v-for="name in majorContributors" :key="name" 
-              class="px-3 py-1.5 rounded-full text-xs font-semibold bg-bd-accent-primary/15 text-bd-accent-light border border-bd-accent-primary/30">
-          {{ name }}
-        </span>
-      </div>
+        <div class="flex items-center justify-between mb-4 pt-1">
+          <div class="flex items-center gap-2.5">
+            <Award class="w-5 h-5 text-bd-accent-primary" />
+            <h2 class="text-lg font-semibold text-bd-text-primary">Community Contributors</h2>
+          </div>
+          <router-link to="/credits" class="text-sm text-bd-accent-primary hover:text-bd-accent-light flex items-center gap-1 transition-colors">
+            View All
+            <ChevronRight class="w-3.5 h-3.5" />
+          </router-link>
+        </div>
 
-      <!-- Community Thank You -->
-      <div class="flex items-center justify-center gap-2 pt-3 border-t border-bd-border-subtle">
-        <Users class="w-4 h-4 text-bd-text-muted" />
-        <p class="text-xs text-bd-text-muted">
-          And the entire AI Dungeon community. Thank you!
+        <p class="text-sm text-bd-text-secondary mb-5 leading-relaxed">
+          BetterRepository is built on the work of amazing community members who created guides, resources, and knowledge.
         </p>
+
+        <!-- Major Contributors Highlight -->
+        <div class="flex flex-wrap gap-2 mb-5">
+          <span 
+            v-for="(name, idx) in majorContributors" 
+            :key="name" 
+            class="contributor-chip"
+            :style="{ animationDelay: `${idx * 60}ms` }"
+          >
+            {{ name }}
+          </span>
+        </div>
+
+        <!-- Community Thank You -->
+        <div class="flex items-center justify-center gap-2 pt-4 border-t border-bd-border-subtle">
+          <Users class="w-4 h-4 text-bd-text-muted" />
+          <p class="text-xs text-bd-text-muted">
+            And the entire AI Dungeon community. Thank you!
+          </p>
+        </div>
       </div>
     </section>
 
     <!-- Footer -->
-    <footer class="text-center py-4 border-t border-bd-border-subtle">
-      <p class="text-xs text-bd-text-muted flex items-center justify-center gap-1">
-        Made with <Heart class="w-3 h-3 text-bd-error" /> by 
+    <footer class="text-center py-5 border-t border-bd-border-subtle">
+      <p class="text-xs text-bd-text-muted flex items-center justify-center gap-1.5">
+        Made with <Heart class="w-3 h-3 text-bd-error animate-pulse" /> by 
         <span class="text-bd-text-secondary font-medium">computerK</span>
       </p>
     </footer>
@@ -191,21 +243,62 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { INSTRUCTIONS, CATEGORIES } from '@/data/aiInstructions'
 import { TEMPLATES } from '@/data/plotComponents'
 import { STORY_CARDS, STORY_CARD_TEMPLATES } from '@/data/storyCards'
 import { SCRIPTS } from '@/data/scripts'
 import { 
-  Search, LayoutGrid, Lightbulb, ScrollText, Heart,
+  Search, LayoutGrid, Lightbulb, ScrollText, Heart, Sparkles, ArrowRight,
   GitPullRequest, MessageCircle, ExternalLink, Bookmark, Drama, Code,
-  Award, Users, ChevronRight
+  Award, Users, ChevronRight, Package, Layers, LayoutDashboard, Infinity
 } from 'lucide-vue-next'
 
 const router = useRouter()
 const searchQuery = ref('')
 
+// --- Section refs for IntersectionObserver staggered reveal ---
+const categoriesRef = ref(null)
+const statsRef = ref(null)
+const quickStartRef = ref(null)
+const creditsRef = ref(null)
+
+const visibleSections = reactive({
+  categories: false,
+  stats: false,
+  quickStart: false,
+  credits: false,
+})
+
+let observer = null
+
+onMounted(() => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const el = entry.target
+          if (el === categoriesRef.value) visibleSections.categories = true
+          else if (el === statsRef.value) visibleSections.stats = true
+          else if (el === quickStartRef.value) visibleSections.quickStart = true
+          else if (el === creditsRef.value) visibleSections.credits = true
+          observer.unobserve(el)
+        }
+      })
+    },
+    { threshold: 0.15 }
+  )
+
+  const refs = [categoriesRef, statsRef, quickStartRef, creditsRef]
+  refs.forEach((r) => { if (r.value) observer.observe(r.value) })
+})
+
+onUnmounted(() => {
+  if (observer) observer.disconnect()
+})
+
+// --- Data ---
 const totalItems = computed(() => 
   INSTRUCTIONS.length + TEMPLATES.length + STORY_CARDS.length + STORY_CARD_TEMPLATES.length + SCRIPTS.length
 )
@@ -218,7 +311,8 @@ const resourceCategories = [
     description: 'Rules and guidelines for AI behavior, writing style, and narrative control.',
     count: INSTRUCTIONS.length,
     bgClass: 'bg-bd-amber/20',
-    iconClass: 'text-bd-amber'
+    iconClass: 'text-bd-amber',
+    glowClass: 'bg-gradient-to-br from-bd-amber/40 to-bd-amber/10',
   },
   { 
     path: '/plot-components', 
@@ -227,7 +321,8 @@ const resourceCategories = [
     description: "Author's Notes, Plot Essentials, and Story Summary templates.",
     count: TEMPLATES.length,
     bgClass: 'bg-bd-blue/20',
-    iconClass: 'text-bd-blue'
+    iconClass: 'text-bd-blue',
+    glowClass: 'bg-gradient-to-br from-bd-blue/40 to-bd-blue/10',
   },
   { 
     path: '/story-cards', 
@@ -236,7 +331,8 @@ const resourceCategories = [
     description: 'Templates for Story Cards, including characters, locations, factions, abilities, and more.',
     count: STORY_CARDS.length + STORY_CARD_TEMPLATES.length,
     bgClass: 'bg-bd-purple/20',
-    iconClass: 'text-bd-purple'
+    iconClass: 'text-bd-purple',
+    glowClass: 'bg-gradient-to-br from-bd-purple/40 to-bd-purple/10',
   },
   { 
     path: '/scripts', 
@@ -245,15 +341,16 @@ const resourceCategories = [
     description: 'JavaScript examples for game systems, tracking, and automation.',
     count: SCRIPTS.length,
     bgClass: 'bg-bd-cyan/20',
-    iconClass: 'text-bd-cyan'
+    iconClass: 'text-bd-cyan',
+    glowClass: 'bg-gradient-to-br from-bd-cyan/40 to-bd-cyan/10',
   },
 ]
 
 const stats = [
-  { value: totalItems.value, label: 'Total Resources' },
-  { value: CATEGORIES.length, label: 'Categories' },
-  { value: '4', label: 'Sections' },
-  { value: 'Free', label: 'Forever' },
+  { value: totalItems.value, label: 'Resources', icon: Package },
+  { value: CATEGORIES.length, label: 'Categories', icon: Layers },
+  { value: '4', label: 'Sections', icon: LayoutDashboard },
+  { value: 'Free', label: 'Forever', icon: Infinity },
 ]
 
 // Major contributors whose work significantly shaped BetterRepository
@@ -267,3 +364,89 @@ const handleSearch = () => {
   }
 }
 </script>
+
+<style scoped>
+/* === Hero background === */
+.hero-section {
+  background: var(--bd-bg-secondary);
+  border: 1px solid var(--bd-border-subtle);
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.hero-orb--orange {
+  width: 280px;
+  height: 280px;
+  background: var(--bd-accent-primary);
+  top: -60px;
+  right: -40px;
+  animation: float 8s ease-in-out infinite;
+}
+
+.hero-orb--purple {
+  width: 200px;
+  height: 200px;
+  background: #a855f7;
+  bottom: -40px;
+  left: 10%;
+  animation: float 10s ease-in-out infinite reverse;
+}
+
+.hero-orb--cyan {
+  width: 160px;
+  height: 160px;
+  background: #06b6d4;
+  top: 20%;
+  left: -30px;
+  animation: float 12s ease-in-out infinite 2s;
+}
+
+/* === Category cards with gradient border trick === */
+.category-card {
+  position: relative;
+  border-radius: 0.75rem;
+  transition: transform 0.25s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-2px);
+}
+
+/* === Section reveal animation === */
+.home-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.home-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* === Contributor chips === */
+.contributor-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.875rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(255, 149, 0, 0.1);
+  color: var(--bd-accent-light);
+  border: 1px solid rgba(255, 149, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.contributor-chip:hover {
+  background: rgba(255, 149, 0, 0.2);
+  border-color: rgba(255, 149, 0, 0.4);
+  transform: translateY(-1px);
+}
+</style>
