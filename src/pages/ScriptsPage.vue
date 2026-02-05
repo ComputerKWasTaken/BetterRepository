@@ -232,7 +232,8 @@
               <span class="tag bg-bd-blue/20 text-bd-blue text-xs">onModelContext</span>
             </h3>
             <p class="text-sm text-bd-text-secondary mb-3">
-              Changes the <strong>text sent to the AI</strong> before the model is called. 
+              Changes the <strong>text sent to the AI</strong> before the model is called.
+              Access <code class="text-bd-cyan">info.modelName</code> to detect which AI model is running.
             </p>
             <div class="grid md:grid-cols-2 gap-4 mb-3">
               <div class="text-xs space-y-2">
@@ -278,6 +279,7 @@
             <p class="text-sm text-bd-text-secondary mb-2">
               Modifies the <strong>model's output text</strong> before it is returned to the player. 
               Use for formatting, filtering, or post-processing AI responses.
+              Access <code class="text-bd-cyan">info.modelName</code> to detect which AI model generated the response.
             </p>
             <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
               <span class="text-bd-text-muted">// Format output, clean up text</span><br>
@@ -435,6 +437,21 @@
               <li>• <code class="text-bd-cyan">info.characterNames</code> - Array of player character names (multiplayer)</li>
               <li>• <code class="text-bd-cyan">info.maxChars</code> - Max characters for context <em>(onModelContext only)</em></li>
               <li>• <code class="text-bd-cyan">info.memoryLength</code> - Length of memory section <em>(onModelContext only)</em></li>
+              <li>• <code class="text-bd-cyan">info.modelName</code> - Name of the AI model currently running <em>(onModelContext &amp; onOutput)</em>
+                <span class="tag bg-bd-green/20 text-bd-green text-[10px] ml-1">New</span>
+              </li>
+              <li>• <code class="text-bd-cyan">info.storyModel.name</code> - Story model name
+                <span class="tag bg-bd-green/20 text-bd-green text-[10px] ml-1">New</span>
+              </li>
+              <li>• <code class="text-bd-cyan">info.storyModel.version</code> - Story model version
+                <span class="tag bg-bd-green/20 text-bd-green text-[10px] ml-1">New</span>
+              </li>
+              <li>• <code class="text-bd-cyan">info.useCacheEfficient</code> - Whether cache-efficient mode is active
+                <span class="tag bg-bd-green/20 text-bd-green text-[10px] ml-1">New</span>
+              </li>
+              <li>• <code class="text-bd-cyan">info.emptyOutputReason</code> - Reason if the AI output was empty
+                <span class="tag bg-bd-green/20 text-bd-green text-[10px] ml-1">New</span>
+              </li>
             </ul>
           </div>
             </div>
@@ -678,6 +695,20 @@ if (card !== null) {
                 <p class="text-sm text-bd-text-muted">
                   <strong>Note:</strong> This commonly confuses new scripters. If your <code>log()</code> output shows 
                   the correct values, your script is likely working even if the viewer doesn't show it.
+                </p>
+              </div>
+
+              <!-- Plot Essentials / Author's Note Visual Updates (Fixed) -->
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <Check class="w-4 h-4 text-bd-green" />
+                  Plot Essentials &amp; Author's Note Updates
+                  <span class="tag bg-bd-green/20 text-bd-green text-[10px]">Fixed</span>
+                </h3>
+                <p class="text-sm text-bd-text-secondary mb-2">
+                  Previously, when scripts modified Plot Essentials or Author's Note fields, the UI would not 
+                  visually update until the page was reloaded. <strong>This has been fixed</strong> — changes made 
+                  by scripts now reflect in the UI immediately.
                 </p>
               </div>
 
