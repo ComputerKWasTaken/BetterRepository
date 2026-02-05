@@ -157,6 +157,64 @@
         </Transition>
       </section>
 
+      <!-- Story Cards vs Memory Bank -->
+      <section id="guide-vs-memory" class="card">
+        <button
+          @click="toggleGuideSection('vs-memory')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Scale class="w-5 h-5 text-bd-cyan" />
+            Story Cards vs Memory Bank
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('vs-memory') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('vs-memory')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              The Memory Bank acts like an <strong>automatic Story Card system</strong>, so why create manual cards? Each has strengths.
+            </p>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="p-4 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <Layers class="w-4 h-4 text-bd-purple" />
+                  Story Cards (Manual)
+                </h3>
+                <ul class="text-xs text-bd-text-secondary space-y-1.5">
+                  <li>• <strong>You control</strong> exactly what's stored and when it triggers</li>
+                  <li>• Precise keyword-based activation</li>
+                  <li>• Perfect for pre-built worldbuilding and lore</li>
+                  <li>• Won't contain phrasing errors</li>
+                  <li>• Can be shared/exported across scenarios</li>
+                </ul>
+              </div>
+              <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <Brain class="w-4 h-4 text-bd-green" />
+                  Memory Bank (Automatic)
+                </h3>
+                <ul class="text-xs text-bd-text-secondary space-y-1.5">
+                  <li>• <strong>Zero effort</strong> — auto-stores events every 4 actions</li>
+                  <li>• Uses embedding vectors for relevance matching</li>
+                  <li>• Great for organic story events you didn't plan for</li>
+                  <li>• May misphrase events (needs periodic review)</li>
+                  <li>• Can't be pre-built for scenarios</li>
+                </ul>
+              </div>
+            </div>
+            <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <p class="text-xs text-bd-text-secondary">
+                <strong>Best approach:</strong> Use Story Cards for important, pre-planned lore (characters, locations, factions). 
+                Let the Memory Bank handle organic events that emerge during play. Review Memory Bank periodically to fix errors.
+              </p>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
       <!-- How Story Cards Work -->
       <section id="guide-how-it-works" class="card">
         <button
@@ -527,19 +585,49 @@
           />
         </button>
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('balancing')" class="mt-4">
+          <div v-if="isGuideSectionExpanded('balancing')" class="mt-4 space-y-4">
+            <!-- Token Budget -->
+            <div class="p-4 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
+              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                <Coins class="w-4 h-4 text-bd-blue" />
+                Token Budget
+              </h3>
+              <p class="text-sm text-bd-text-secondary">
+                Story Cards share approximately <strong>~25%</strong> of the dynamic token budget (the space left after required elements). 
+                They're among the <strong>first elements removed</strong> when context is full, so keeping entries concise is critical.
+              </p>
+            </div>
+
+            <!-- Entry Length Warning -->
+            <div class="p-4 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+              <div class="flex items-start gap-3">
+                <AlertTriangle class="w-5 h-5 text-bd-amber flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 class="font-semibold text-bd-text-primary mb-1">Long Entries Get Partially Ignored</h3>
+                  <p class="text-sm text-bd-text-secondary">
+                    If an Entry is longer than the AI's output length, it will <strong>pick and choose</strong> which info to use. 
+                    The AI won't talk about everything in a single Card for multiple outputs. Keep entries shorter than your response length setting.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <ul class="space-y-2">
               <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
                 <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                <span>Aim for Story Cards to activate only when needed, not taking up space constantly.</span>
+                <span>Aim for Story Cards to activate only when needed, not taking up space constantly. <strong>Proper names</strong> are the safest trigger type.</span>
               </li>
               <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
                 <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                <span>Context space is limited. More context = more room for cards = they stay active longer.</span>
+                <span>More context window = more room for cards = they stay active longer.</span>
               </li>
               <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
                 <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
                 <span>To temporarily disable a card, put gibberish in its trigger. Remember to change it back!</span>
+              </li>
+              <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
+                <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+                <span>Create <strong>card networks</strong>: have entries reference other cards' triggers so related lore cascades in naturally when needed.</span>
               </li>
             </ul>
           </div>
@@ -600,6 +688,71 @@
               You can have thousands of Story Cards in a single scenario. The limit is effectively limitless!
             </p>
           </div>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
+      <!-- Common Mistakes -->
+      <section id="guide-common-mistakes" class="card">
+        <button
+          @click="toggleGuideSection('common-mistakes')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <AlertTriangle class="w-5 h-5 text-bd-pink" />
+            Common Mistakes
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('common-mistakes') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('common-mistakes')" class="mt-4">
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> Too-Short Triggers
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Using 2-3 character triggers like "orc" or "cat" that match unrelated words ("porch", "catalog").</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Use spacing tricks (<code>orc </code>) or aim for 5+ character triggers. Check with a word finder tool.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> Massive Entries
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Writing entire backstories in a single card. The AI will pick and choose from long entries, missing important details.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Keep entries shorter than your response length. Put the most important info at the beginning and end.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> Forgetting the Title is Invisible
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Naming a card "Amanda" but never mentioning "Amanda" in the Entry. The AI only sees the Entry, not the Title.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Always repeat the subject's name in the Entry text itself.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> Never Reviewing Cards
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Creating cards early in the story and never updating them. Outdated info causes contradictions.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Review cards periodically. Remove dead characters, update relationships, fix outdated details.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> Spaces After Commas in Triggers
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Writing <code>Amanda, daughter</code> instead of <code>Amanda,daughter</code>. The space becomes part of the trigger.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> No spaces after commas: <code>Amanda,your daughter,mandy</code></p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> Duplicating Plot Essentials
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Putting the same info in both PE and Story Cards. Wastes token budget and can cause weird emphasis.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> PE for always-relevant facts. Story Cards for situational lore that only matters when triggered.</p>
+              </div>
             </div>
           </div>
         </Transition>
@@ -922,7 +1075,8 @@ import {
   StickyNote, Cog, AlertTriangle, Award, Check, Scale, Pencil,
   Download, Search, Infinity, ExternalLink, BookOpen, Space, Target,
   CaseSensitive, Scissors, Quote, Clock, GitMerge, X, Star, Rocket,
-  SlidersHorizontal, ChevronDown, ChevronUp, Info, MessageSquare
+  SlidersHorizontal, ChevronDown, ChevronUp, Info, MessageSquare,
+  Brain, Coins
 } from 'lucide-vue-next'
 
 const activeTab = ref('examples')
@@ -980,12 +1134,14 @@ const impacts = [
 const guideSections = [
   { id: 'what-are', label: 'What Are Story Cards?' },
   { id: 'when-to-use', label: 'When to Use' },
+  { id: 'vs-memory', label: 'Cards vs Memory Bank' },
   { id: 'how-it-works', label: 'How It Works' },
   { id: 'anatomy', label: 'Anatomy' },
   { id: 'best-practices', label: 'Best Practices' },
   { id: 'trigger-mastery', label: 'Trigger Mastery' },
   { id: 'balancing', label: 'Balancing Info' },
   { id: 'pro-tips', label: 'Pro Tips' },
+  { id: 'common-mistakes', label: 'Common Mistakes' },
   { id: 'credits', label: 'Credits' }
 ]
 

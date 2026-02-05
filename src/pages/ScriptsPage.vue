@@ -649,6 +649,102 @@ if (card !== null) {
         </Transition>
       </section>
 
+      <!-- Common Patterns -->
+      <section id="guide-common-patterns" class="card">
+        <button
+          @click="toggleGuideSection('common-patterns')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Lightbulb class="w-5 h-5 text-bd-amber" />
+            Common Patterns
+            <span class="tag bg-bd-amber/20 text-bd-amber text-xs">Recipes</span>
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('common-patterns') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('common-patterns')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              Practical code patterns you can adapt for your own scripts.
+            </p>
+
+            <!-- Command System -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
+              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                <Terminal class="w-4 h-4 text-bd-green" />
+                Command System (onInput)
+              </h3>
+              <p class="text-xs text-bd-text-secondary mb-3">Let players type commands like <code>:status</code> or <code>:help</code> that trigger game logic instead of AI responses.</p>
+              <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
+                <pre><span class="text-bd-purple">const</span> modifier = (text) => {
+  <span class="text-bd-purple">if</span> (text.startsWith(<span class="text-bd-green">":status"</span>)) {
+    state.message = <span class="text-bd-green">`HP: ${state.hp} | Gold: ${state.gold}`</span>;
+    <span class="text-bd-purple">return</span> { text, stop: <span class="text-bd-purple">true</span> };
+  }
+  <span class="text-bd-purple">return</span> { text };
+};
+modifier(text);</pre>
+              </div>
+            </div>
+
+            <!-- Dynamic Context Injection -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
+              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                <Layers class="w-4 h-4 text-bd-blue" />
+                Dynamic Context Injection (onModelContext)
+              </h3>
+              <p class="text-xs text-bd-text-secondary mb-3">Prepend game state to the context so the AI knows about your custom mechanics.</p>
+              <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
+                <pre><span class="text-bd-purple">const</span> modifier = (text) => {
+  <span class="text-bd-purple">const</span> stats = <span class="text-bd-green">`[Player HP: ${state.hp}/100, Location: ${state.location}]`</span>;
+  <span class="text-bd-purple">return</span> { text: stats + <span class="text-bd-green">"\n"</span> + text };
+};
+modifier(text);</pre>
+              </div>
+            </div>
+
+            <!-- State Initialization -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
+              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                <Database class="w-4 h-4 text-bd-purple" />
+                Safe State Initialization (Library)
+              </h3>
+              <p class="text-xs text-bd-text-secondary mb-3">Always use nullish coalescing (<code>??</code>) to avoid resetting state on each turn.</p>
+              <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
+                <pre><span class="text-bd-text-muted">// Library - runs before every modifier</span>
+state.game = state.game ?? {
+  hp: 100, maxHp: 100, gold: 0,
+  inventory: [], location: <span class="text-bd-green">"tavern"</span>
+};
+state.game.turnCount = (state.game.turnCount ?? 0) + 1;</pre>
+              </div>
+            </div>
+
+            <!-- Output Filtering -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
+              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                <ArrowLeftToLine class="w-4 h-4 text-bd-amber" />
+                Output Filtering (onOutput)
+              </h3>
+              <p class="text-xs text-bd-text-secondary mb-3">Clean up common AI output issues like excessive newlines or unwanted patterns.</p>
+              <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
+                <pre><span class="text-bd-purple">const</span> modifier = (text) => {
+  <span class="text-bd-text-muted">// Collapse 3+ newlines into 2</span>
+  text = text.replace(<span class="text-bd-green">/\n{3,}/g</span>, <span class="text-bd-green">"\n\n"</span>);
+  <span class="text-bd-text-muted">// Remove AI's tendency to write "as an AI"</span>
+  text = text.replace(<span class="text-bd-green">/as an ai.*?\./gi</span>, <span class="text-bd-green">""</span>);
+  <span class="text-bd-purple">return</span> { text };
+};
+modifier(text);</pre>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
       <!-- Troubleshooting -->
       <section id="guide-troubleshooting" class="card">
         <button
@@ -726,6 +822,71 @@ if (card !== null) {
                   <strong>Workaround:</strong> Modify <code>text</code> directly in the context modifier instead of 
                   relying solely on <code>state.memory</code>.
                 </p>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
+      <!-- Common Mistakes -->
+      <section id="guide-common-mistakes" class="card">
+        <button
+          @click="toggleGuideSection('common-mistakes')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <AlertTriangle class="w-5 h-5 text-bd-pink" />
+            Common Mistakes
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('common-mistakes') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('common-mistakes')" class="mt-4">
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> Forgetting to Return Text
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Modifying <code>text</code> but forgetting <code>return { text }</code>. The modifier silently does nothing.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Always end with <code>return { text };</code> and call <code>modifier(text);</code> at the bottom.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> Resetting State Every Turn
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Writing <code>state.hp = 100</code> instead of <code>state.hp = state.hp ?? 100</code>. Your state resets on every action.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Use nullish coalescing (<code>??</code>) for all state initialization in the Library.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> Returning Empty String
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Returning <code>{ text: "" }</code> from onInput or onOutput throws an error. Only onModelContext handles empty strings (rebuilds context).</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Always return non-empty text, or use <code>{ stop: true }</code> to prevent AI from running.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> Using async/await
+                </h4>
+                <p class="text-xs text-bd-text-secondary">AI Dungeon's scripting environment does <strong>not support</strong> async/await, Promises, or any asynchronous operations.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Keep everything synchronous. Use <code>state</code> to persist data across turns instead.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> Not Enabling "Dangerous Scripts"
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Many useful scripts are classified as "dangerous" and won't run on new accounts by default.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Account Settings → Enable "Run Dangerous Scripts". This is safe for community scripts.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <X class="w-3 h-3" /> Trusting Context Viewer
+                </h4>
+                <p class="text-xs text-bd-text-secondary"><code>state.memory</code> changes (frontMemory, authorsNote) may not show in View Context even when working correctly.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Use <code>log()</code> to verify values. If logs show correct data, your script is working.</p>
               </div>
             </div>
           </div>
@@ -1221,7 +1382,7 @@ import {
   Library, ArrowRightToLine, Layers, ArrowLeftToLine, Database, 
   Lightbulb, Wrench, Plus, Search, Bug, ShieldAlert, Eye, RefreshCw, 
   ExternalLink, Settings, Award, ChevronDown, ChevronUp, Blocks, Info, MessageSquare,
-  Star, Rocket, SlidersHorizontal, Zap
+  Star, Rocket, SlidersHorizontal, Zap, X
 } from 'lucide-vue-next'
 
 const activeTab = ref('collection')
@@ -1283,7 +1444,9 @@ const guideSections = [
   { id: 'api-parameters', label: 'API Parameters' },
   { id: 'api-functions', label: 'API Functions' },
   { id: 'utility-functions', label: 'Utility Functions' },
+  { id: 'common-patterns', label: 'Common Patterns' },
   { id: 'troubleshooting', label: 'Troubleshooting' },
+  { id: 'common-mistakes', label: 'Common Mistakes' },
   { id: 'betterscripts', label: 'BetterScripts' },
   { id: 'links', label: 'Useful Links' },
   { id: 'credits', label: 'Credits' }

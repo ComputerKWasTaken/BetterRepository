@@ -164,6 +164,36 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Official Writing Tips -->
+              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+                <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                  <Ruler class="w-4 h-4 text-bd-green" />
+                  Writing Effective Plot Essentials
+                </h3>
+                <div class="grid md:grid-cols-2 gap-3 text-xs">
+                  <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/20">
+                    <h4 class="font-semibold text-bd-text-primary mb-1">Priming Effect</h4>
+                    <p class="text-bd-text-secondary">Anything in PE <strong>primes the AI to bring it up</strong>. Only include info you want the AI to actively reference.</p>
+                  </div>
+                  <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/20">
+                    <h4 class="font-semibold text-bd-text-primary mb-1">Use "Avoid" Not "Not"</h4>
+                    <p class="text-bd-text-secondary">The AI tends to <strong>ignore negatives</strong>. Say "avoid fire" instead of "is not fire-resistant" — negation confuses models.</p>
+                  </div>
+                  <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/20">
+                    <h4 class="font-semibold text-bd-text-primary mb-1">Past Tense for Past Events</h4>
+                    <p class="text-bd-text-secondary">Label past events explicitly. Without past tense, the AI may <strong>replay them in the present</strong>.</p>
+                  </div>
+                  <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/20">
+                    <h4 class="font-semibold text-bd-text-primary mb-1">One Topic Per Line</h4>
+                    <p class="text-bd-text-secondary">Keep individual topics on their own line with the subject's name repeated for <strong>strong word-association</strong>.</p>
+                  </div>
+                </div>
+                <p class="text-xs text-bd-text-muted mt-3 flex items-center gap-1">
+                  <Info class="w-3 h-3 flex-shrink-0" />
+                  Details that only matter when a specific topic comes up are better suited for Story Cards.
+                </p>
+              </div>
             </div>
           </div>
         </Transition>
@@ -220,6 +250,52 @@
                     it wants to <strong>jump the gun and do it NOW</strong>.
                   </p>
                 </div>
+              </div>
+            </div>
+
+            <!-- How AN Works Internally -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-pink/30">
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <Info class="w-4 h-4 text-bd-pink" />
+                How Author's Note Works Under the Hood
+              </h3>
+              <div class="space-y-3 text-sm text-bd-text-secondary">
+                <p>
+                  Author's Note text is automatically wrapped in <code class="text-bd-pink">[ square brackets ]</code> before being sent to the AI. 
+                  In the AI's training data, brackets were commonly used by authors to describe meta-information about their writing, 
+                  so the AI interprets bracketed text as <strong>descriptive instructions</strong> rather than story text.
+                </p>
+                <p>
+                  This means AN can be <strong>more technical and out-of-character</strong> than other plot components — it's instructions for the AI, not part of the story.
+                </p>
+              </div>
+            </div>
+
+            <!-- Best Practices Grid -->
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/20">
+                <h4 class="text-xs font-semibold text-bd-pink mb-1">Keep It Short</h4>
+                <p class="text-xs text-bd-text-secondary">
+                  <strong>3-4 sentences max.</strong> AN sits near the end of context where attention is highest — overloading it makes the AI fixate on those details instead of the actual story.
+                </p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/20">
+                <h4 class="text-xs font-semibold text-bd-pink mb-1">AN vs AI Instructions</h4>
+                <p class="text-xs text-bd-text-secondary">
+                  If AI Instructions is talking to customer support, Author's Note is <strong>"Can I speak to the manager?"</strong> — use AN when AI Instructions isn't enough.
+                </p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/20">
+                <h4 class="text-xs font-semibold text-bd-pink mb-1">Be Expressive</h4>
+                <p class="text-xs text-bd-text-secondary">
+                  "Fantasy story" is too simple. Instead: <code class="text-bd-green text-[10px]">Dark fantasy-horror story. World corrupted by evil magic. Rated T for violence.</code>
+                </p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/20">
+                <h4 class="text-xs font-semibold text-bd-pink mb-1">Use Tags</h4>
+                <p class="text-xs text-bd-text-secondary">
+                  Tags work well in AN: <code class="text-bd-green text-[10px]">Tags: noblebright, magical, fantastical, fun</code> — concise and model-friendly.
+                </p>
               </div>
             </div>
           </div>
@@ -342,7 +418,11 @@
           />
         </button>
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('memory-summary')" class="mt-4">
+          <div v-if="isGuideSectionExpanded('memory-summary')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              The Memory System has two complementary features that work together — like how human memory combines a big-picture overview with specific detail recall.
+            </p>
+
             <div class="grid md:grid-cols-2 gap-4">
               <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
                 <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
@@ -351,28 +431,54 @@
                   <span class="tag bg-bd-green/20 text-bd-green text-xs">Automated</span>
                 </h3>
                 <p class="text-sm text-bd-text-secondary">
-                  The Memory Bank automatically stores important events and details as your story progresses. 
-                  While very effective, it can struggle with <strong>phrasing memories accurately</strong>.
+                  Stores important events and details as your story progresses. Acts like an <strong>automatic Story Card system</strong> — 
+                  it saves details (your dog's name, where you found the Sword of Demons) and dynamically inserts them when relevant.
                 </p>
                 <p class="text-sm text-bd-text-muted mt-2">
-                  Poorly phrased memories can cause confusion later. If you notice the AI misremembering events or 
-                  acting on incorrect information, <strong>review and edit your Memory Bank entries</strong> to fix the wording.
+                  Poorly phrased memories can cause confusion. If the AI misremembers events, 
+                  <strong>review and edit your Memory Bank entries</strong> to fix the wording.
                 </p>
               </div>
               
               <div class="p-4 rounded-lg bg-bd-cyan/10 border border-bd-cyan/30">
                 <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
                   <ScrollText class="w-4 h-4 text-bd-cyan" />
-                  Story Summary
-                  <span class="tag bg-bd-cyan/20 text-bd-cyan text-xs">Recently Improved</span>
+                  Story Summary (Auto Summarization)
+                  <span class="tag bg-bd-cyan/20 text-bd-cyan text-xs">Improved</span>
                 </h3>
                 <p class="text-sm text-bd-text-secondary">
-                  Recent updates have <strong>drastically improved</strong> the auto-summary feature, making it much more 
-                  reliable at tracking your story's progression and key events.
+                  Keeps a running overview of your plot by appending new memories to the Story Summary plot component, 
+                  then periodically <strong>re-summarizing</strong> for conciseness. Helps the AI track the overall story direction.
                 </p>
                 <p class="text-sm text-bd-text-muted mt-2">
-                  Like all plot components, it still benefits from <strong>regular maintenance</strong>. Review periodically 
+                  Still benefits from <strong>regular maintenance</strong>. Review periodically 
                   to remove outdated info and ensure accuracy.
+                </p>
+              </div>
+            </div>
+
+            <!-- How It Works -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <RefreshCw class="w-4 h-4 text-bd-blue" />
+                How the Memory Cycle Works
+              </h3>
+              <ol class="text-xs text-bd-text-secondary space-y-2 list-decimal list-inside">
+                <li>After every <strong>4 actions</strong>, the system summarizes that batch into a new memory</li>
+                <li>New memories are appended to the <strong>Story Summary</strong> plot component</li>
+                <li>When the summary grows long, it's <strong>re-summarized</strong> by an AI model to stay concise</li>
+                <li>The Memory Bank uses <strong>embedding vectors</strong> to match stored memories to your current action by relevance</li>
+                <li>Relevant memories are dynamically included in context (up to ~25% of dynamic token budget)</li>
+              </ol>
+            </div>
+
+            <!-- Token Budget Note -->
+            <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+              <div class="flex items-start gap-2">
+                <AlertTriangle class="w-4 h-4 text-bd-amber flex-shrink-0 mt-0.5" />
+                <p class="text-xs text-bd-text-secondary">
+                  <strong>Manual components still matter.</strong> The Memory System complements Plot Essentials and Story Cards — it doesn't replace them. 
+                  Plot Essentials are <em>always</em> included; Memory Bank entries are only included when relevant. Keep critical info in PE for guaranteed context.
                 </p>
               </div>
             </div>
@@ -519,6 +625,70 @@
               The AI will catch on and follow the new path.
             </p>
           </div>
+            </div>
+          </div>
+        </Transition>
+      </section>
+      <!-- Common Pitfalls -->
+      <section id="guide-common-pitfalls" class="card">
+        <button
+          @click="toggleGuideSection('common-pitfalls')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <AlertTriangle class="w-5 h-5 text-bd-pink" />
+            Common Pitfalls
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('common-pitfalls') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('common-pitfalls')" class="mt-4">
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <XCircle class="w-3 h-3" /> Overloading Plot Essentials
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Stuffing PE with every detail about your world. The AI gets overwhelmed and you waste tokens.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Only include currently relevant info. Move situational details to Story Cards.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <XCircle class="w-3 h-3" /> Never Updating Components
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Setting up PE and AN once and never touching them. Outdated info actively misleads the AI.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Review after major story events. Remove resolved plot threads, update character states.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <XCircle class="w-3 h-3" /> Writing AN Like a Novel
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Writing long, flowery Author's Notes with full paragraphs. AN should be short, dense, and technical.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Keep to 3-4 sentences. Use tags and keywords, not prose.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <XCircle class="w-3 h-3" /> Duplicating Info Across Components
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Putting the same info in PE, AN, Story Cards, and AI Instructions. Wastes tokens and can cause weird emphasis.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Each piece of info belongs in ONE place. Use the right tool for the job.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <XCircle class="w-3 h-3" /> Ignoring Memory Bank Errors
+                </h4>
+                <p class="text-xs text-bd-text-secondary">The automated Memory Bank can misphrase events. Left unchecked, wrong memories snowball into bigger issues.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Periodically review Memory Bank entries. Edit or delete inaccurate ones.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+                  <XCircle class="w-3 h-3" /> Using Negatives in PE
+                </h4>
+                <p class="text-xs text-bd-text-secondary">"Bob is NOT evil" — the AI often ignores "not" and treats Bob as evil. Negation is unreliable in all plot components.</p>
+                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Use positive framing: "Bob is kind and trustworthy" or "Bob avoids violence."</p>
+              </div>
             </div>
           </div>
         </Transition>
@@ -953,6 +1123,7 @@ const guideSections = [
   { id: 'memory-summary', label: 'Memory + Summary' },
   { id: 'scene-transitions', label: 'Scene Transitions' },
   { id: 'additional-tips', label: 'Additional Tips' },
+  { id: 'common-pitfalls', label: 'Common Pitfalls' },
   { id: 'credits', label: 'Credits' }
 ]
 const activeGuideSection = ref(guideSections[0]?.id || '')
