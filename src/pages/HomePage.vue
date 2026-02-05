@@ -1,11 +1,13 @@
 <template>
   <div class="space-y-8">
     <!-- Hero Section — animated gradient backdrop -->
-    <section class="hero-section relative overflow-hidden rounded-2xl py-14 px-6 text-center">
-      <!-- Animated background orbs -->
-      <div class="hero-orb hero-orb--orange" aria-hidden="true" />
-      <div class="hero-orb hero-orb--purple" aria-hidden="true" />
-      <div class="hero-orb hero-orb--cyan" aria-hidden="true" />
+    <section class="hero-section relative rounded-2xl py-14 px-6 text-center">
+      <!-- Orb container — overflow-hidden here so orbs clip without affecting the search dropdown -->
+      <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none" aria-hidden="true">
+        <div class="hero-orb hero-orb--orange" />
+        <div class="hero-orb hero-orb--purple" />
+        <div class="hero-orb hero-orb--cyan" />
+      </div>
 
       <!-- Content -->
       <div class="relative z-10">
@@ -29,28 +31,128 @@
           Everything you need to craft <span class="text-gradient font-semibold">better adventures</span>.
         </p>
 
-        <!-- Quick Search — refined -->
-        <div class="max-w-lg mx-auto">
+        <!-- Quick Search — global search across all collections -->
+        <div class="max-w-lg mx-auto relative" ref="searchContainerRef">
           <div class="relative group">
             <div class="absolute -inset-0.5 bg-gradient-to-r from-bd-accent-primary/20 via-bd-purple/20 to-bd-cyan/20 rounded-xl opacity-0 group-focus-within:opacity-100 blur transition-opacity duration-300" />
-            <div class="relative">
-              <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-bd-text-muted" />
+            <div class="relative z-[2]">
+              <div class="absolute left-4 top-1/2 -translate-y-1/2 z-[3] pointer-events-none">
+                <Search class="w-5 h-5 text-bd-text-muted" />
+              </div>
               <input 
-                v-model="searchQuery"
+                ref="searchInputRef"
+                v-model="searchState.query.value"
                 type="text"
                 placeholder="Search instructions, templates, scripts..."
-                class="input pl-12 pr-24 py-3.5 bg-bd-bg-secondary/80 backdrop-blur-card"
-                @keyup.enter="handleSearch"
+                class="input pl-12 pr-12 py-3.5 bg-bd-bg-secondary/80 backdrop-blur-card"
+                @focus="showResults = true"
+                @keydown.escape="showResults = false"
               />
-              <button 
-                v-if="searchQuery"
-                @click="handleSearch"
-                class="absolute right-2 top-1/2 -translate-y-1/2 btn btn-primary py-1.5 px-4 text-sm"
+              <!-- Loading spinner -->
+              <div v-if="searchState.isSearching.value" class="absolute right-4 top-1/2 -translate-y-1/2">
+                <div class="w-4 h-4 border-2 border-bd-accent-primary/30 border-t-bd-accent-primary rounded-full animate-spin" />
+              </div>
+              <!-- Clear button -->
+              <button
+                v-else-if="searchState.hasQuery.value"
+                @click="handleClearSearch"
+                class="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg hover:bg-bd-bg-tertiary text-bd-text-muted hover:text-bd-text-primary transition-colors"
               >
-                Search
+                <X class="w-4 h-4" />
               </button>
             </div>
           </div>
+
+          <!-- Search Results Dropdown -->
+          <Transition name="search-results">
+            <div
+              v-if="showResults && searchState.hasQuery.value"
+              class="search-results-panel absolute left-0 right-0 mt-3 rounded-xl bg-bd-bg-secondary border border-bd-border-default shadow-xl overflow-hidden"
+              style="z-index: 50"
+            >
+              <!-- Results header -->
+              <div class="px-4 py-2.5 border-b border-bd-border-subtle flex items-center justify-between">
+                <span class="text-xs text-bd-text-muted font-medium uppercase tracking-wider flex items-center gap-1.5">
+                  <Search class="w-3 h-3" />
+                  <template v-if="searchState.results.value.totalCount > 0">
+                    {{ searchState.results.value.totalCount }} result{{ searchState.results.value.totalCount === 1 ? '' : 's' }} across all resources
+                  </template>
+                  <template v-else-if="!searchState.isSearching.value">
+                    No results found
+                  </template>
+                  <template v-else>
+                    Searching...
+                  </template>
+                </span>
+                <button
+                  @click="showResults = false"
+                  class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted hover:text-bd-text-primary transition-colors"
+                >
+                  <X class="w-3 h-3" />
+                </button>
+              </div>
+
+              <!-- Result groups -->
+              <div v-if="searchState.results.value.totalCount > 0" class="max-h-[420px] overflow-y-auto search-results-scroll">
+                <div
+                  v-for="group in searchState.results.value.groups"
+                  :key="group.id"
+                  class="border-b border-bd-border-subtle last:border-b-0"
+                >
+                  <!-- Group header -->
+                  <div class="px-4 py-2 bg-bd-bg-primary/50 flex items-center gap-2">
+                    <component :is="getGroupIcon(group.icon)" class="w-3.5 h-3.5" :class="'text-' + group.color" />
+                    <span class="text-xs font-semibold text-bd-text-secondary">{{ group.label }}</span>
+                    <span v-if="group.sublabel" class="text-[10px] text-bd-text-muted">· {{ group.sublabel }}</span>
+                    <span class="ml-auto text-[10px] px-1.5 py-0.5 rounded-full font-medium" :class="'bg-' + group.color + '/15 text-' + group.color">
+                      {{ group.totalMatches }}
+                    </span>
+                  </div>
+
+                  <!-- Group results -->
+                  <div class="py-1">
+                    <button
+                      v-for="result in group.results"
+                      :key="result.id"
+                      @click="navigateToResult(group, result)"
+                      class="w-full text-left px-4 py-2.5 flex items-start gap-3 hover:bg-bd-bg-tertiary transition-colors group/item"
+                    >
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2">
+                          <span class="text-sm font-medium text-bd-text-primary group-hover/item:text-bd-accent-light transition-colors truncate">
+                            {{ result.name }}
+                          </span>
+                          <span v-if="result.difficulty" class="text-[10px] px-1.5 py-0.5 rounded-full" :class="difficultyClass(result.difficulty)">
+                            {{ result.difficulty }}
+                          </span>
+                        </div>
+                        <p v-if="result.description" class="text-xs text-bd-text-muted mt-0.5 line-clamp-1">
+                          {{ result.description }}
+                        </p>
+                      </div>
+                      <ChevronRight class="w-3.5 h-3.5 text-bd-text-muted group-hover/item:text-bd-accent-primary flex-shrink-0 mt-1 transition-colors" />
+                    </button>
+                  </div>
+
+                  <!-- "View all" link if more results exist -->
+                  <button
+                    v-if="group.totalMatches > group.results.length"
+                    @click="navigateToPage(group)"
+                    class="w-full text-center py-2 text-xs font-medium text-bd-accent-primary hover:text-bd-accent-light hover:bg-bd-bg-tertiary transition-colors border-t border-bd-border-subtle"
+                  >
+                    View all {{ group.totalMatches }} {{ group.sublabel?.toLowerCase() || 'results' }} →
+                  </button>
+                </div>
+              </div>
+
+              <!-- Empty state -->
+              <div v-else-if="!searchState.isSearching.value" class="px-6 py-8 text-center">
+                <Search class="w-8 h-8 text-bd-text-muted mx-auto mb-2 opacity-50" />
+                <p class="text-sm text-bd-text-muted">No results for "<span class="text-bd-text-secondary">{{ searchState.query.value }}</span>"</p>
+                <p class="text-xs text-bd-text-muted mt-1">Try a different search term or check your spelling</p>
+              </div>
+            </div>
+          </Transition>
         </div>
       </div>
     </section>
@@ -249,14 +351,20 @@ import { INSTRUCTIONS, CATEGORIES } from '@/data/aiInstructions'
 import { TEMPLATES } from '@/data/plotComponents'
 import { STORY_CARDS, STORY_CARD_TEMPLATES } from '@/data/storyCards'
 import { SCRIPTS } from '@/data/scripts'
+import { useGlobalSearch } from '@/composables/useGlobalSearch'
 import { 
   Search, LayoutGrid, Lightbulb, ScrollText, Heart, Sparkles, ArrowRight,
   GitPullRequest, MessageCircle, ExternalLink, Bookmark, Drama, Code,
-  Award, Users, ChevronRight, Package, Layers, LayoutDashboard, Infinity
+  Award, Users, ChevronRight, Package, Layers, LayoutDashboard, Infinity, X
 } from 'lucide-vue-next'
 
 const router = useRouter()
-const searchQuery = ref('')
+
+// --- Global search ---
+const searchState = useGlobalSearch({ debounceMs: 180, maxPerGroup: 4 })
+const showResults = ref(false)
+const searchInputRef = ref(null)
+const searchContainerRef = ref(null)
 
 // --- Section refs for IntersectionObserver staggered reveal ---
 const categoriesRef = ref(null)
@@ -292,10 +400,14 @@ onMounted(() => {
 
   const refs = [categoriesRef, statsRef, quickStartRef, creditsRef]
   refs.forEach((r) => { if (r.value) observer.observe(r.value) })
+
+  // Close search results when clicking outside
+  document.addEventListener('mousedown', handleClickOutside)
 })
 
 onUnmounted(() => {
   if (observer) observer.disconnect()
+  document.removeEventListener('mousedown', handleClickOutside)
 })
 
 // --- Data ---
@@ -358,9 +470,43 @@ const majorContributors = [
   'OffMetaGamer', 'Wilmar', 'Le Onyx', 'LewdLeah', 'Dragranis', 'Monsieur Boo'
 ]
 
-const handleSearch = () => {
-  if (searchQuery.value.trim()) {
-    router.push({ path: '/ai-instructions', query: { q: searchQuery.value } })
+// Icon lookup for search result group headers
+const iconMap = { ScrollText, Layers, Bookmark, Drama, Code }
+const getGroupIcon = (name) => iconMap[name] || Search
+
+// Difficulty badge styles
+const difficultyClass = (diff) => {
+  const map = {
+    beginner: 'bg-bd-green/15 text-bd-green',
+    intermediate: 'bg-bd-amber/15 text-bd-amber',
+    advanced: 'bg-bd-pink/15 text-bd-pink',
+  }
+  return map[diff] || 'bg-bd-tag-bg text-bd-text-muted'
+}
+
+// Navigate to a specific result item's page
+const navigateToResult = (group, result) => {
+  showResults.value = false
+  router.push({ path: group.route, query: { q: searchState.query.value } })
+}
+
+// Navigate to a resource page ("view all" link)
+const navigateToPage = (group) => {
+  showResults.value = false
+  router.push({ path: group.route, query: { q: searchState.query.value } })
+}
+
+// Clear search and refocus input
+const handleClearSearch = () => {
+  searchState.clearSearch()
+  showResults.value = false
+  searchInputRef.value?.focus()
+}
+
+// Close results when clicking outside
+const handleClickOutside = (e) => {
+  if (searchContainerRef.value && !searchContainerRef.value.contains(e.target)) {
+    showResults.value = false
   }
 }
 </script>
@@ -448,5 +594,47 @@ const handleSearch = () => {
   background: rgba(255, 149, 0, 0.2);
   border-color: rgba(255, 149, 0, 0.4);
   transform: translateY(-1px);
+}
+
+/* === Search results panel === */
+.search-results-panel {
+  backdrop-filter: blur(12px);
+}
+
+.search-results-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--bd-bg-elevated) transparent;
+}
+
+.search-results-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.search-results-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.search-results-scroll::-webkit-scrollbar-thumb {
+  background: var(--bd-bg-elevated);
+  border-radius: 4px;
+}
+
+/* Transition for results dropdown */
+.search-results-enter-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.search-results-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.search-results-enter-from {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+.search-results-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
 }
 </style>
