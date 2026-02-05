@@ -1,16 +1,24 @@
 <template>
-  <div class="space-y-6 animate-fade-in">
-    <!-- Page Header -->
-    <header>
-      <h1 class="text-2xl font-bold text-bd-text-primary flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-bd-cyan/20 flex items-center justify-center">
-          <Code class="w-5 h-5 text-bd-cyan" />
+  <div class="space-y-8">
+    <!-- Page Header — animated hero -->
+    <header class="scripts-hero relative overflow-hidden rounded-2xl py-10 px-6">
+      <!-- Animated background orbs -->
+      <div class="hero-orb hero-orb--cyan" aria-hidden="true" />
+      <div class="hero-orb hero-orb--blue" aria-hidden="true" />
+
+      <div class="relative z-10 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-bd-cyan/20 flex items-center justify-center animate-float flex-shrink-0">
+          <Code class="w-6 h-6 text-bd-cyan" />
         </div>
-        Scripts
-      </h1>
-      <p class="text-bd-text-secondary mt-2">
-        Extend AI Dungeon with custom JavaScript to modify context, input, and output.
-      </p>
+        <div>
+          <h1 class="text-2xl md:text-3xl font-bold text-bd-text-primary tracking-tight">
+            <span class="text-gradient">Scripts</span>
+          </h1>
+          <p class="text-bd-text-secondary mt-1 leading-relaxed">
+            Extend AI Dungeon with custom JavaScript to modify context, input, and output.
+          </p>
+        </div>
+      </div>
     </header>
 
     <!-- Tab Navigation -->
@@ -33,7 +41,7 @@
     <template v-if="activeTab === 'guide'">
 
       <!-- Table of Contents - Sticky Sidebar -->
-      <div class="flex gap-6">
+      <div class="flex gap-6 animate-fade-in">
         <aside class="hidden lg:block w-56 flex-shrink-0">
           <div class="sticky top-4 space-y-2">
             <div class="flex items-center justify-between mb-3">
@@ -1138,8 +1146,9 @@ modifier(text);</code></pre>
     <template v-if="activeTab === 'collection'">
 
       <!-- Collection Introduction -->
-      <div class="card bg-gradient-to-r from-bd-cyan/10 to-bd-blue/10 border-bd-cyan/30">
-        <div class="flex items-start gap-4">
+      <div class="card bg-gradient-to-r from-bd-cyan/10 to-bd-blue/10 border-bd-cyan/30 relative overflow-hidden animate-fade-in">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-cyan via-bd-blue to-bd-purple" />
+        <div class="flex items-start gap-4 pt-1">
           <div class="w-12 h-12 rounded-xl bg-bd-cyan/20 flex items-center justify-center flex-shrink-0">
             <Code class="w-6 h-6 text-bd-cyan" />
           </div>
@@ -1658,3 +1667,37 @@ const clearFilters = () => {
   quickFilter.value = null
 }
 </script>
+
+<style scoped>
+/* === Hero background === */
+.scripts-hero {
+  background: var(--bd-bg-secondary);
+  border: 1px solid var(--bd-border-subtle);
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.hero-orb--cyan {
+  width: 220px;
+  height: 220px;
+  background: #06b6d4;
+  top: -40px;
+  right: -20px;
+  animation: float 8s ease-in-out infinite;
+}
+
+.hero-orb--blue {
+  width: 160px;
+  height: 160px;
+  background: #3b82f6;
+  bottom: -30px;
+  left: 5%;
+  animation: float 10s ease-in-out infinite reverse;
+}
+</style>

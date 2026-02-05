@@ -42,6 +42,11 @@
   --bd-emerald: #10b981;
   --bd-red: #ef4444;
   --bd-orange: #f97316;
+  --bd-teal: #14b8a6;
+  --bd-indigo: #6366f1;
+  --bd-rose: #f43f5e;
+  --bd-slate: #94a3b8;
+  --bd-gray: #6b7280;
   
   /* Status Colors */
   --bd-success: #22c55e;
@@ -132,6 +137,22 @@
   --bd-transition-spring: 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
   
   /* ==========================================
+     ANIMATIONS
+     ========================================== */
+  --bd-anim-fade-in: 0.3s ease-out;
+  --bd-anim-slide-up: 0.3s ease-out;
+  --bd-anim-float: 6s ease-in-out infinite;
+  --bd-anim-scale-in: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --bd-anim-shimmer: 2s linear infinite;
+  --bd-anim-gradient-shift: 8s ease infinite;
+  
+  /* Hero Orb Defaults */
+  --bd-orb-blur: 80px;
+  --bd-orb-opacity: 0.3;
+  --bd-orb-float-slow: 10s;
+  --bd-orb-float-fast: 8s;
+  
+  /* ==========================================
      Z-INDEX SCALE
      ========================================== */
   --bd-z-base: 0;
@@ -173,6 +194,13 @@
   /* Tags */
   --bd-tag-bg: rgba(255, 255, 255, 0.08);
   --bd-tag-radius: var(--bd-radius-full);
+  
+  /* Hero Sections */
+  --bd-hero-bg: var(--bd-bg-secondary);
+  --bd-hero-border: var(--bd-border-subtle);
+  --bd-hero-radius: var(--bd-radius-2xl);
+  --bd-hero-padding-y: 2.5rem;
+  --bd-hero-padding-x: 1.5rem;
 }
 
 /* ==========================================
@@ -184,6 +212,14 @@
     --bd-transition-normal: 0ms;
     --bd-transition-slow: 0ms;
     --bd-transition-spring: 0ms;
+    --bd-anim-fade-in: 0ms;
+    --bd-anim-slide-up: 0ms;
+    --bd-anim-float: 0ms;
+    --bd-anim-scale-in: 0ms;
+    --bd-anim-shimmer: 0ms;
+    --bd-anim-gradient-shift: 0ms;
+    --bd-orb-float-slow: 0ms;
+    --bd-orb-float-fast: 0ms;
   }
 }
 

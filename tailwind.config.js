@@ -45,6 +45,10 @@ export default {
         'bd-emerald': '#10b981',
         'bd-red': '#ef4444',
         'bd-orange': '#f97316',
+        'bd-teal': '#14b8a6',
+        'bd-indigo': '#6366f1',
+        'bd-rose': '#f43f5e',
+        'bd-slate': '#94a3b8',
         'bd-gray': '#6b7280',
         // Status Colors
         'bd-success': '#22c55e',
