@@ -11,6 +11,17 @@ import { TEMPLATES } from '@/data/plotComponents'
 import { STORY_CARDS, STORY_CARD_TEMPLATES } from '@/data/storyCards'
 import { SCRIPTS } from '@/data/scripts'
 import { searchCollectionWithScores } from '@/data/shared'
+import { usePreferences } from '@/composables/usePreferences'
+
+/**
+ * Check if an item is NSFW content.
+ * Items are considered NSFW if they have category 'nsfw' or an 'nsfw' tag.
+ */
+const isNsfwItem = (item) => {
+  if (item.category === 'nsfw') return true
+  if (Array.isArray(item.tags) && item.tags.includes('nsfw')) return true
+  return false
+}
 
 // Resource type definitions — icon names, colors, and route paths
 const RESOURCE_TYPES = [
@@ -94,10 +105,11 @@ const SEARCH_FIELDS = {
  * @param {Object} options - Search options
  * @param {number} options.maxPerGroup - Max results per group (default: 5)
  * @param {number} options.maxTotal - Max total results (default: 20)
+ * @param {boolean} options.includeNsfw - Whether to include NSFW results (default: false)
  * @returns {Object} - { groups: Array, totalCount: number, query: string }
  */
 export const globalSearch = (query, options = {}) => {
-  const { maxPerGroup = 5, maxTotal = 20 } = options
+  const { maxPerGroup = 5, maxTotal = 20, includeNsfw = false } = options
 
   if (!query || !query.trim()) {
     return { groups: [], totalCount: 0, query: '' }
@@ -123,7 +135,12 @@ export const globalSearch = (query, options = {}) => {
     const scored = searchCollectionWithScores(data, trimmed, fields, { useTagAliases: true })
 
     // Filter to only actual matches (score > 0 means matched)
-    const matched = scored.filter(r => r.matched && r.score > 0)
+    // Also exclude NSFW content unless the user has verified their age
+    const matched = scored.filter(r => {
+      if (!r.matched || r.score <= 0) return false
+      if (!includeNsfw && isNsfwItem(r.item)) return false
+      return true
+    })
 
     if (matched.length === 0) continue
 
@@ -170,6 +187,10 @@ export const globalSearch = (query, options = {}) => {
 export function useGlobalSearch(options = {}) {
   const { debounceMs = 200, maxPerGroup = 5, maxTotal = 20 } = options
 
+  // Access NSFW preference reactively
+  const { preferences } = usePreferences()
+  const nsfwEnabled = computed(() => preferences.value.nsfwVerified === true)
+
   const query = ref('')
   const isSearching = ref(false)
   const results = ref({ groups: [], totalCount: 0, query: '' })
@@ -189,7 +210,7 @@ export function useGlobalSearch(options = {}) {
     isSearching.value = true
 
     debounceTimer = setTimeout(() => {
-      results.value = globalSearch(newQuery, { maxPerGroup, maxTotal })
+      results.value = globalSearch(newQuery, { maxPerGroup, maxTotal, includeNsfw: nsfwEnabled.value })
       isSearching.value = false
     }, debounceMs)
   })
@@ -202,7 +223,7 @@ export function useGlobalSearch(options = {}) {
       isSearching.value = false
       return
     }
-    results.value = globalSearch(query.value, { maxPerGroup, maxTotal })
+    results.value = globalSearch(query.value, { maxPerGroup, maxTotal, includeNsfw: nsfwEnabled.value })
     isSearching.value = false
   }
 

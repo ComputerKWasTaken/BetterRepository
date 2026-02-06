@@ -1374,7 +1374,8 @@ modifier(text);</code></pre>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import ScriptItem from '@/components/ui/ScriptItem.vue'
 import SearchBar from '@/components/ui/SearchBar.vue'
 import { usePreferences } from '@/composables/usePreferences'
@@ -1394,6 +1395,7 @@ import {
   Star, Rocket, SlidersHorizontal, Zap, X
 } from 'lucide-vue-next'
 
+const route = useRoute()
 const activeTab = ref('collection')
 
 const tabs = [
@@ -1492,6 +1494,18 @@ const expandAllGuideSections = () => {
 const collapseAllGuideSections = () => {
   expandedGuideSections.value = new Set()
 }
+
+// Handle initial search query and tab from URL (e.g. from global search)
+onMounted(() => {
+  if (route.query.tab && ['collection', 'guide'].includes(route.query.tab)) {
+    activeTab.value = route.query.tab
+  }
+  if (route.query.q) {
+    searchQuery.value = route.query.q
+    // Ensure we're on the collection tab so filtered results are visible
+    if (!route.query.tab) activeTab.value = 'collection'
+  }
+})
 
 const filteredScripts = computed(() => {
   let result = [...scripts.value]

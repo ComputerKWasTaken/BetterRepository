@@ -2189,10 +2189,15 @@ const handleSearch = (query) => {
   }
 }
 
-// Handle initial search query from URL
+// Handle initial search query and tab from URL (e.g. from global search)
 onMounted(() => {
+  if (route.query.tab && ['sets', 'collection', 'builder', 'guide'].includes(route.query.tab)) {
+    activeTab.value = route.query.tab
+  }
   if (route.query.q) {
     searchQuery.value = route.query.q
+    // Default to collection tab so filtered results are visible
+    if (!route.query.tab) activeTab.value = 'collection'
   }
 })
 </script>

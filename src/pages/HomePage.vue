@@ -484,16 +484,22 @@ const difficultyClass = (diff) => {
   return map[diff] || 'bg-bd-tag-bg text-bd-text-muted'
 }
 
-// Navigate to a specific result item's page
+// Navigate to a specific result item's page with search + tab context
 const navigateToResult = (group, result) => {
   showResults.value = false
-  router.push({ path: group.route, query: { q: searchState.query.value } })
+  router.push({ 
+    path: group.route, 
+    query: { q: searchState.query.value, tab: group.tabHint } 
+  })
 }
 
 // Navigate to a resource page ("view all" link)
 const navigateToPage = (group) => {
   showResults.value = false
-  router.push({ path: group.route, query: { q: searchState.query.value } })
+  router.push({ 
+    path: group.route, 
+    query: { q: searchState.query.value, tab: group.tabHint } 
+  })
 }
 
 // Clear search and refocus input

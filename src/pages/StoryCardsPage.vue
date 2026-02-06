@@ -1062,7 +1062,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import StoryCardItem from '@/components/ui/StoryCardItem.vue'
 import SearchBar from '@/components/ui/SearchBar.vue'
 import { usePreferences } from '@/composables/usePreferences'
@@ -1088,6 +1089,7 @@ import {
   Brain, Coins
 } from 'lucide-vue-next'
 
+const route = useRoute()
 const activeTab = ref('examples')
 
 const tabs = [
@@ -1185,6 +1187,18 @@ const expandAllGuideSections = () => {
 const collapseAllGuideSections = () => {
   expandedGuideSections.value = new Set()
 }
+
+// Handle initial search query and tab from URL (e.g. from global search)
+onMounted(() => {
+  if (route.query.tab && ['examples', 'guide'].includes(route.query.tab)) {
+    activeTab.value = route.query.tab
+  }
+  if (route.query.q) {
+    searchQuery.value = route.query.q
+    // Ensure we're on the examples tab so filtered results are visible
+    if (!route.query.tab) activeTab.value = 'examples'
+  }
+})
 
 const allCards = computed(() => [...examples.value, ...templates.value])
 

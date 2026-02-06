@@ -1059,6 +1059,7 @@
 </template>
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { useRoute } from 'vue-router'
 import ResourceCard from '@/components/ui/ResourceCard.vue'
 import SearchBar from '@/components/ui/SearchBar.vue'
 import { 
@@ -1078,6 +1079,7 @@ import {
   Sparkles, Scissors, MessageCircle, XCircle, Edit, SlidersHorizontal, Zap, Search,
   ExternalLink, Award, ChevronDown, ChevronUp, Flame, ShieldAlert, Lock
 } from 'lucide-vue-next'
+const route = useRoute()
 const { preferences, verifyAge, addToSearchHistory } = usePreferences()
 const activeTab = ref('templates')
 // Get unique tags for search suggestions
@@ -1165,6 +1167,16 @@ const collapseAllGuideSections = () => {
   expandedGuideSections.value = new Set()
 }
 onMounted(() => {
+  // Handle initial search query and tab from URL (e.g. from global search)
+  if (route.query.tab && ['templates', 'guide'].includes(route.query.tab)) {
+    activeTab.value = route.query.tab
+  }
+  if (route.query.q) {
+    searchQuery.value = route.query.q
+    // Ensure we're on the templates tab so filtered results are visible
+    if (!route.query.tab) activeTab.value = 'templates'
+  }
+
   guideObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
