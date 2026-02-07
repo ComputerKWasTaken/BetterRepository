@@ -963,7 +963,7 @@ modifier(text);</pre>
               <p class="text-sm text-bd-text-secondary mb-3">
                 Widgets can be placed in three areas using the <code class="text-bd-cyan">position</code> property:
               </p>
-              <div class="grid grid-cols-3 gap-3">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div class="p-3 rounded-lg bg-bd-bg-tertiary text-center">
                   <code class="text-bd-green text-sm">top</code>
                   <p class="text-xs text-bd-text-muted mt-1">Horizontal bar (default)</p>
