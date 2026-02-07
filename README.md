@@ -13,7 +13,7 @@
 <p align="center">
   <a href="#what-you-can-find">What's Here</a> •
   <a href="#want-to-contribute">Contribute</a> •
-  <a href="#credits">Credits</a> •
+  <a href="https://betterrepository.netlify.app/credits">Credits</a> •
   <a href="#for-developers">For Developers</a>
 </p>
 
@@ -38,40 +38,14 @@ Everything is **free**, **tested**, and **ready to copy-paste** into your advent
 
 ### The Easy Way
 
-1. **Open a [GitHub Issue](https://github.com/ComputerKWasTaken/BetterRepository/issues/new)**
-2. **Paste your content** (AI Instruction, Story Card, Script, etc.)
-3. **Tell me what it does** in a sentence or two
-4. Done! I'll format it and add it to the collection.
+1. **Go to [betterrepository.netlify.app/contribute](https://betterrepository.netlify.app/contribute)**
+2. **Fill out the form** — paste your content (AI Instruction, Story Card, Script, etc.) and tell me what it does
+3. **Hit submit** — no account needed
+4. Done! I'll review it and add it to the collection.
 
 You can also share in the **[AI Dungeon Discord](https://discord.gg/aidungeon)** and ping me.
 
 > 📖 See [CONTRIBUTING.md](CONTRIBUTING.md) for more details and formatting tips.
-
----
-
-## Credits
-
-BetterRepository is built on the shoulders of giants. Thank you to everyone who contributed.
-
-### Major Contributors
-*Contributors whose work significantly shaped BetterRepository*
-OffMetaGamer, Wilmar, Le Onyx, LewdLeah, Dragranis, Monsieur Boo
-
-### Contributors by Category
-
-**AI Instructions**
-OffMetaGamer, Hawk, Dirty Kurtis, Shiny, Leshok, Dragranis, BinKompliziert, Wilmar, Le Onyx, Little Hat, SeinSchetten, Zoocata, Monsieur Boo, CamSift
-
-**Plot Components**
-Wilmar, Le Onyx, Dragranis, Celyne, Monsieur Boo
-
-**Story Cards**
-wanderingstar1, GremmieGremlin, Lavere, Le Onyx, Shiny
-
-**Scripting**
-Latitude, LewdLeah, Oli, Magic, BinKompliziert, MrJack
-
-And the entire **AI Dungeon Community**. Thank you!
 
 ---
 
