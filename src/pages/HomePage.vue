@@ -60,6 +60,14 @@
               >
                 <X class="w-4 h-4" />
               </button>
+              <!-- Keyboard shortcut hint -->
+              <div 
+                v-else
+                class="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-0.5 pointer-events-none"
+              >
+                <kbd class="px-1.5 py-0.5 rounded text-[10px] font-mono font-medium text-bd-text-muted bg-bd-bg-tertiary border border-bd-border-subtle">{{ isMac ? '⌘' : 'Ctrl' }}</kbd>
+                <kbd class="px-1.5 py-0.5 rounded text-[10px] font-mono font-medium text-bd-text-muted bg-bd-bg-tertiary border border-bd-border-subtle">K</kbd>
+              </div>
             </div>
           </div>
 
@@ -359,6 +367,9 @@ import {
 } from 'lucide-vue-next'
 
 const router = useRouter()
+
+// --- Platform detection for keyboard hint ---
+const isMac = navigator.userAgent.includes('Mac')
 
 // --- Global search ---
 const searchState = useGlobalSearch({ debounceMs: 180, maxPerGroup: 4 })

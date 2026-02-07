@@ -13,8 +13,14 @@
         <img src="/betterrepository_logo.png" alt="BetterRepository" class="w-7 h-7 object-contain" />
         <span class="text-sm font-semibold text-bd-text-primary">Better<span class="text-gradient">Repository</span></span>
       </router-link>
-      <!-- Spacer to balance the hamburger button -->
-      <div class="w-9" />
+      <!-- Search button (mobile header) -->
+      <button
+        @click="searchOpen = true"
+        class="p-2 -mr-1 rounded-lg hover:bg-bd-bg-tertiary text-bd-text-secondary hover:text-bd-text-primary transition-colors"
+        aria-label="Search"
+      >
+        <Search class="w-5 h-5" />
+      </button>
     </header>
 
     <!-- Sidebar Navigation -->
@@ -31,17 +37,40 @@
       </div>
     </main>
     
+    <!-- Global Search Overlay (Ctrl+K / Cmd+K) -->
+    <SearchOverlay :isOpen="searchOpen" @close="searchOpen = false" />
+
     <!-- Toast Notifications -->
     <ToastContainer />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { Menu } from 'lucide-vue-next'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { Menu, Search } from 'lucide-vue-next'
 import Sidebar from '@/components/layout/Sidebar.vue'
 import ToastContainer from '@/components/ui/ToastContainer.vue'
+import SearchOverlay from '@/components/ui/SearchOverlay.vue'
 
 // Mobile sidebar state
 const sidebarOpen = ref(false)
+
+// Global search overlay state
+const searchOpen = ref(false)
+
+// Ctrl+K / Cmd+K keyboard shortcut
+const handleKeydown = (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault()
+    searchOpen.value = !searchOpen.value
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeydown)
+})
 </script>

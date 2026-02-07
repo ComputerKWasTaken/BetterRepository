@@ -12,7 +12,7 @@
   <!-- Sidebar panel -->
   <Transition name="sidebar-slide">
     <aside 
-      v-show="isOpen || !isMobile"
+      v-if="sidebarVisible"
       ref="sidebarRef"
       class="fixed left-0 top-0 h-full w-64 bg-bd-bg-secondary border-r border-bd-border-subtle flex flex-col"
       :style="{ zIndex: isMobile ? 'var(--bd-z-modal)' : 'var(--bd-z-fixed)' }"
@@ -152,7 +152,11 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (mediaQuery) mediaQuery.removeEventListener('change', updateMobile)
+  document.body.style.overflow = ''
 })
+
+// Computed: sidebar is always visible on desktop, controlled by isOpen on mobile
+const sidebarVisible = computed(() => !isMobile.value || props.isOpen)
 
 // Close sidebar on mobile when navigating
 const closeMobile = () => {
@@ -160,6 +164,20 @@ const closeMobile = () => {
     emit('close')
   }
 }
+
+// Lock body scroll when mobile sidebar is open
+watch(() => props.isOpen, (open) => {
+  if (isMobile.value) {
+    document.body.style.overflow = open ? 'hidden' : ''
+  }
+})
+
+// Reset scroll lock when resizing to desktop while sidebar is open
+watch(isMobile, (mobile) => {
+  if (!mobile) {
+    document.body.style.overflow = ''
+  }
+})
 
 // Close sidebar on route change (handles browser back/forward)
 watch(() => route.path, () => {

@@ -1539,9 +1539,34 @@
       </span>
     </div>
 
+    <!-- Category Jump Navigation (default view - no filters active) -->
+    <div v-if="!hasAnyFilters" class="sticky top-0 lg:top-0 bg-bd-bg-primary/95 backdrop-blur-sm -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-2 border-b border-bd-border-subtle" style="z-index: var(--bd-z-sticky)">
+      <div class="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+        <span class="text-xs text-bd-text-muted font-medium whitespace-nowrap flex-shrink-0">Jump to:</span>
+        <button
+          v-for="category in categoriesWithInstructions"
+          :key="'jump-' + category.id"
+          @click="scrollToCategory(category.id)"
+          class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex-shrink-0"
+          :class="activeCategoryId === category.id 
+            ? getCategoryBgClass(category.id) + ' ' + getCategoryIconClass(category.id)
+            : 'text-bd-text-muted hover:text-bd-text-secondary hover:bg-bd-bg-tertiary'"
+        >
+          <component :is="getCategoryIcon(category.id)" class="w-3 h-3" />
+          {{ category.name }}
+          <span class="opacity-60">({{ category.instructions.length }})</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Category Sections (default view - no filters active) -->
     <div v-if="!hasAnyFilters" class="space-y-8">
-      <section v-for="category in categoriesWithInstructions" :key="category.id">
+      <section 
+        v-for="category in categoriesWithInstructions" 
+        :key="category.id"
+        :id="'category-' + category.id"
+        :ref="el => setCategoryRef(category.id, el)"
+      >
         <div class="flex items-center gap-3 mb-4">
           <div 
             class="w-8 h-8 rounded-lg flex items-center justify-center"
@@ -1744,7 +1769,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import SearchBar from '@/components/ui/SearchBar.vue'
 import ResourceCard from '@/components/ui/ResourceCard.vue'
@@ -2000,6 +2025,57 @@ const categoriesWithInstructions = computed(() => {
     .filter(cat => cat.instructions.length > 0)
 })
 
+// --- Category jump navigation ---
+const activeCategoryId = ref(null)
+const categoryRefs = {}
+let categoryObserver = null
+
+const setCategoryRef = (categoryId, el) => {
+  if (el) categoryRefs[categoryId] = el
+}
+
+const scrollToCategory = (categoryId) => {
+  const el = categoryRefs[categoryId]
+  if (!el) return
+  // Offset for sticky jump bar (~48px) + some breathing room
+  const offset = 56
+  const top = el.getBoundingClientRect().top + window.scrollY - offset
+  window.scrollTo({ top, behavior: 'smooth' })
+  activeCategoryId.value = categoryId
+}
+
+// Observe category sections to track which is currently visible
+const setupCategoryObserver = () => {
+  if (categoryObserver) categoryObserver.disconnect()
+
+  categoryObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          // Extract category id from the element's id attribute (format: "category-{id}")
+          const id = entry.target.id?.replace('category-', '')
+          if (id) activeCategoryId.value = id
+        }
+      }
+    },
+    { rootMargin: '-60px 0px -70% 0px', threshold: 0 }
+  )
+
+  // Observe all category section elements
+  Object.values(categoryRefs).forEach(el => {
+    if (el) categoryObserver.observe(el)
+  })
+}
+
+// Re-setup observer when the collection tab is shown or categories change
+watch([() => activeTab.value, categoriesWithInstructions], ([tab]) => {
+  if (tab === 'collection') {
+    nextTick(() => setupCategoryObserver())
+  } else {
+    if (categoryObserver) categoryObserver.disconnect()
+  }
+})
+
 // Track expanded groups
 const expandedGroups = ref(new Set())
 
@@ -2218,6 +2294,14 @@ onMounted(() => {
     // Default to collection tab so filtered results are visible
     if (!route.query.tab) activeTab.value = 'collection'
   }
+  // Initialize category observer if starting on collection tab
+  if (activeTab.value === 'collection') {
+    nextTick(() => setupCategoryObserver())
+  }
+})
+
+onUnmounted(() => {
+  if (categoryObserver) categoryObserver.disconnect()
 })
 </script>
 
@@ -2252,5 +2336,15 @@ onMounted(() => {
   bottom: -30px;
   left: 5%;
   animation: float 10s ease-in-out infinite reverse;
+}
+
+/* === Hide scrollbar on category jump nav === */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 </style>
