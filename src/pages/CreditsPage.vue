@@ -169,15 +169,21 @@
             Thank you to everyone who has shared their knowledge, answered questions, and helped make 
             AI Dungeon a better experience for all.
           </p>
-          <a 
-            href="https://discord.com/invite/HB2YBZYjyf" 
-            target="_blank"
-            class="btn btn-secondary"
-          >
-            <MessageCircle class="w-4 h-4" />
-            Join the Community
-            <ExternalLink class="w-3 h-3" />
-          </a>
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <router-link to="/contribute" class="btn btn-primary">
+              <GitPullRequest class="w-4 h-4" />
+              Become a Contributor
+            </router-link>
+            <a 
+              href="https://discord.com/invite/HB2YBZYjyf" 
+              target="_blank"
+              class="btn btn-secondary"
+            >
+              <MessageCircle class="w-4 h-4" />
+              Join the Community
+              <ExternalLink class="w-3 h-3" />
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -196,7 +202,7 @@
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { 
   Award, Star, Users, ScrollText, Bookmark, Drama, Code,
-  Heart, MessageCircle, ExternalLink
+  Heart, MessageCircle, ExternalLink, GitPullRequest
 } from 'lucide-vue-next'
 
 // --- Section refs for IntersectionObserver staggered reveal ---

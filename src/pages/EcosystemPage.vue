@@ -426,7 +426,13 @@
             All "Better" projects are <strong class="text-bd-text-primary">open source</strong> and built with love for the AI Dungeon community. 
             Contributions, feedback, and ideas are always welcome.
           </p>
-          <div class="flex justify-center gap-4 mt-5">
+          <div class="flex flex-wrap items-center justify-center gap-3 mt-5">
+            <router-link to="/contribute" class="btn btn-primary text-sm">
+              <GitPullRequest class="w-4 h-4" />
+              Contribute to BetterRepository
+            </router-link>
+          </div>
+          <div class="flex justify-center gap-4 mt-4">
             <a href="https://github.com/ComputerKWasTaken" target="_blank" rel="noopener noreferrer" class="text-bd-text-muted hover:text-bd-text-primary transition-colors hover:scale-110 transform">
               <Github class="w-5 h-5" />
             </a>
@@ -446,7 +452,7 @@ import {
   Puzzle, Layers, Github, ExternalLink, Sparkles, Plus, ChevronRight,
   Home, Keyboard, Type, Palette, StickyNote, User, MessageSquare, Terminal, Dice5,
   Rocket, Lightbulb, MessageCircle, Heart, Search, Save, Zap, Ship,
-  FileText, BookOpen, Code, Download, BarChart3
+  FileText, BookOpen, Code, Download, BarChart3, GitPullRequest
 } from 'lucide-vue-next'
 
 // --- Section refs for IntersectionObserver staggered reveal ---

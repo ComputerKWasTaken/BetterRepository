@@ -1008,6 +1008,26 @@
         </button>
       </div>
     </div>
+
+    <!-- Contribute CTA -->
+    <section v-if="!hasAnyFilters" class="card-elevated">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/20 flex items-center justify-center flex-shrink-0">
+          <GitPullRequest class="w-6 h-6 text-bd-accent-primary" />
+        </div>
+        <div class="flex-1">
+          <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Share Your Templates</h3>
+          <p class="text-bd-text-secondary mb-4">
+            Created a Plot Essential, Story Summary, or Author's Note that works well? Help the community by sharing it — just paste it in a GitHub issue.
+          </p>
+          <router-link to="/contribute" class="btn btn-primary">
+            <GitPullRequest class="w-4 h-4" />
+            Submit a Template
+          </router-link>
+        </div>
+      </div>
+    </section>
+
     </template>
     <!-- Age Verification Modal -->
     <Teleport to="body">
@@ -1077,7 +1097,7 @@ import {
   Users, Sword, Star, RefreshCw, MessageSquare, Heart, Volume2, Ruler,
   Rocket, Focus, AlertTriangle, Database, Brain, ArrowRightLeft,
   Sparkles, Scissors, MessageCircle, XCircle, Edit, SlidersHorizontal, Zap, Search,
-  ExternalLink, Award, ChevronDown, ChevronUp, Flame, ShieldAlert, Lock
+  ExternalLink, Award, ChevronDown, ChevronUp, Flame, ShieldAlert, Lock, GitPullRequest
 } from 'lucide-vue-next'
 const route = useRoute()
 const { preferences, verifyAge, addToSearchHistory } = usePreferences()

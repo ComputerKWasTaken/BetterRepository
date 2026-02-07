@@ -1673,6 +1673,25 @@
       </div>
     </div>
 
+    <!-- Contribute CTA -->
+    <section v-if="!hasAnyFilters" class="card-elevated">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/20 flex items-center justify-center flex-shrink-0">
+          <GitPullRequest class="w-6 h-6 text-bd-accent-primary" />
+        </div>
+        <div class="flex-1">
+          <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Share Your Instructions</h3>
+          <p class="text-bd-text-secondary mb-4">
+            Found a great AI instruction that works well? Share it with the community — no coding required, just paste it in a GitHub issue.
+          </p>
+          <router-link to="/contribute" class="btn btn-primary">
+            <GitPullRequest class="w-4 h-4" />
+            Submit an Instruction
+          </router-link>
+        </div>
+      </div>
+    </section>
+
     </template>
 
     <!-- Age Verification Modal -->
@@ -1749,7 +1768,7 @@ import {
   Shield, Focus, Type, Drama, MessageSquare, Skull, ExternalLink, Star,
   AlertTriangle, Plus, Tag, Braces, Split, AlignLeft, Cpu, Coins,
   Check, X, TrendingUp, Wand2, Link2, Heart, ChevronDown, ChevronUp, UserCog, Flame,
-  ShieldAlert, Lock, Copy, Eye
+  ShieldAlert, Lock, Copy, Eye, GitPullRequest
 } from 'lucide-vue-next'
 
 const activeTab = ref('collection')

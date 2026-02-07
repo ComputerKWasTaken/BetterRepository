@@ -50,11 +50,12 @@
         
         <router-link 
           to="/contribute"
-          class="nav-link"
+          class="nav-link contribute-link"
           :class="{ 'active': isActive('/contribute') }"
         >
           <GitPullRequest class="w-4 h-4" />
           <span>Contribute</span>
+          <span class="ml-auto text-[10px] px-1.5 py-0.5 rounded-full font-semibold bg-bd-accent-primary/15 text-bd-accent-primary">NEW</span>
         </router-link>
 
         <router-link 
