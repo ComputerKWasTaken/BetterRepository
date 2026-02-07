@@ -1171,9 +1171,9 @@
             <div class="flex items-center gap-2 mb-2">
               <FileText class="w-4 h-4 text-bd-cyan" />
               <span class="font-medium text-bd-text-primary text-sm">Response Length</span>
-              <span class="text-xs text-bd-text-muted">(50-500+)</span>
+              <span class="text-xs text-bd-text-muted">(25-200)</span>
             </div>
-            <p class="text-xs text-bd-text-secondary">Max tokens per AI response. Higher = longer outputs but more credits. 150-300 is a good range for most stories.</p>
+            <p class="text-xs text-bd-text-secondary">Max tokens per AI response. Higher = longer outputs. 100-150 is a good range for most stories.</p>
           </div>
 
           <!-- Official Latitude Settings -->

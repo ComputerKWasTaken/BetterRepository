@@ -105,47 +105,180 @@
       </div>
     </section>
 
-    <!-- The Easy Way — Primary CTA -->
-    <section ref="easyRef" :class="['contribute-section', { 'is-visible': visibleSections.easy }]">
+    <!-- Submit a Contribution — inline Netlify Form -->
+    <section id="submission-form" ref="easyRef" :class="['contribute-section', { 'is-visible': visibleSections.easy }]">
       <div class="card-elevated border-2 border-bd-accent-primary/30 relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-accent-primary via-bd-purple to-bd-cyan" />
-        <div class="flex items-start gap-4 pt-1">
+
+        <!-- Form header -->
+        <div class="flex items-start gap-4 pt-1 mb-5">
           <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/20 flex items-center justify-center flex-shrink-0">
             <Zap class="w-6 h-6 text-bd-accent-primary" />
           </div>
-          <div class="flex-1">
-            <h2 class="text-lg font-semibold text-bd-text-primary mb-2">The Easy Way</h2>
-            <p class="text-bd-text-secondary mb-4 leading-relaxed">
-              Just paste your content and tell me what it does. That's it. I'll handle the formatting, categorization, and everything else.
+          <div>
+            <h2 class="text-lg font-semibold text-bd-text-primary mb-1">Submit a Contribution</h2>
+            <p class="text-bd-text-secondary leading-relaxed">
+              Just fill in the fields below and hit submit. No account needed — I'll handle the rest.
             </p>
-            <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-4">
-              <div class="step-pill">
-                <span class="w-7 h-7 rounded-full bg-bd-accent-primary text-bd-bg-primary font-bold text-sm flex items-center justify-center">1</span>
-                <span class="text-sm text-bd-text-primary font-medium">Open an issue</span>
-              </div>
-              <ArrowRight class="w-4 h-4 text-bd-accent-primary hidden md:block" />
-              <div class="step-pill">
-                <span class="w-7 h-7 rounded-full bg-bd-accent-primary text-bd-bg-primary font-bold text-sm flex items-center justify-center">2</span>
-                <span class="text-sm text-bd-text-primary font-medium">Paste content</span>
-              </div>
-              <ArrowRight class="w-4 h-4 text-bd-accent-primary hidden md:block" />
-              <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-bd-success/10 border border-bd-success/30">
-                <span class="w-7 h-7 rounded-full bg-bd-success text-bd-bg-primary font-bold text-sm flex items-center justify-center">✓</span>
-                <span class="text-sm text-bd-success font-medium">Done!</span>
-              </div>
-            </div>
-            <a 
-              href="https://github.com/ComputerKWasTaken/BetterRepository/issues/new" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              class="btn btn-primary"
-            >
-              <Github class="w-4 h-4" />
-              Open a GitHub Issue
-              <ExternalLink class="w-3 h-3" />
-            </a>
           </div>
         </div>
+
+        <!-- Success state -->
+        <Transition name="fade">
+          <div v-if="formState === 'success'" class="text-center py-10">
+            <div class="w-16 h-16 rounded-full bg-bd-success/20 flex items-center justify-center mx-auto mb-4">
+              <CheckCircle class="w-8 h-8 text-bd-success" />
+            </div>
+            <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Submission Received!</h3>
+            <p class="text-bd-text-secondary max-w-md mx-auto mb-5 leading-relaxed">
+              Thanks for contributing! I'll review your submission and get it added to BetterRepository. You'll see it go live soon.
+            </p>
+            <button @click="resetForm" class="btn btn-secondary">
+              <RefreshCw class="w-4 h-4" />
+              Submit Another
+            </button>
+          </div>
+        </Transition>
+
+        <!-- Form -->
+        <form 
+          v-if="formState !== 'success'"
+          name="contribution" 
+          method="POST" 
+          data-netlify="true" 
+          netlify-honeypot="bot-field"
+          @submit.prevent="handleSubmit"
+          class="space-y-4"
+        >
+          <!-- Netlify hidden fields -->
+          <input type="hidden" name="form-name" value="contribution" />
+          <p class="hidden"><label>Don't fill this out: <input name="bot-field" v-model="formData.botField" /></label></p>
+
+          <!-- Row: Name + Discord handle -->
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label for="contributor-name" class="form-label">
+                Your Name / Alias <span class="text-bd-error">*</span>
+              </label>
+              <input 
+                id="contributor-name"
+                name="contributor-name" 
+                type="text" 
+                v-model="formData.name" 
+                placeholder="How you'd like to be credited"
+                class="input" 
+                required 
+              />
+            </div>
+            <div>
+              <label for="discord-handle" class="form-label">
+                Discord Handle <span class="text-bd-text-muted text-xs font-normal">(optional)</span>
+              </label>
+              <input 
+                id="discord-handle"
+                name="discord-handle" 
+                type="text" 
+                v-model="formData.discord" 
+                placeholder="e.g. @username"
+                class="input" 
+              />
+            </div>
+          </div>
+
+          <!-- Row: Category + Title -->
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label for="category" class="form-label">
+                Category <span class="text-bd-error">*</span>
+              </label>
+              <select 
+                id="category"
+                name="category" 
+                v-model="formData.category" 
+                class="select w-full" 
+                required
+              >
+                <option value="" disabled>Select a category</option>
+                <option value="AI Instruction">AI Instruction</option>
+                <option value="Plot Component">Plot Component</option>
+                <option value="Story Card">Story Card</option>
+                <option value="Script">Script</option>
+                <option value="Bug Report / Correction">Bug Report / Correction</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label for="title" class="form-label">
+                Title <span class="text-bd-error">*</span>
+              </label>
+              <input 
+                id="title"
+                name="title" 
+                type="text" 
+                v-model="formData.title" 
+                placeholder="A short name for your submission"
+                class="input" 
+                required 
+              />
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div>
+            <label for="description" class="form-label">
+              Description <span class="text-bd-error">*</span>
+            </label>
+            <textarea 
+              id="description"
+              name="description" 
+              v-model="formData.description" 
+              placeholder="What does it do? When would someone use it?"
+              class="input min-h-[80px] resize-y"
+              rows="3"
+              required
+            />
+          </div>
+
+          <!-- Content -->
+          <div>
+            <label for="content" class="form-label">
+              Content <span class="text-bd-error">*</span>
+            </label>
+            <textarea 
+              id="content"
+              name="content" 
+              v-model="formData.content" 
+              placeholder="Paste the full content here — AI instruction text, story card JSON, script code, etc."
+              class="input font-mono text-sm min-h-[160px] resize-y"
+              rows="8"
+              required
+            />
+          </div>
+
+          <!-- Error message -->
+          <Transition name="fade">
+            <div v-if="formState === 'error'" class="flex items-center gap-2 p-3 rounded-lg bg-bd-error/10 border border-bd-error/30">
+              <AlertCircle class="w-4 h-4 text-bd-error flex-shrink-0" />
+              <p class="text-sm text-bd-error">Something went wrong. Please try again, or reach out on Discord if the issue persists.</p>
+            </div>
+          </Transition>
+
+          <!-- Submit -->
+          <div class="flex items-center justify-between pt-2">
+            <p class="text-xs text-bd-text-muted">
+              <span class="text-bd-error">*</span> Required fields
+            </p>
+            <button 
+              type="submit" 
+              class="btn btn-primary"
+              :disabled="formState === 'submitting'"
+            >
+              <Loader v-if="formState === 'submitting'" class="w-4 h-4 animate-spin" />
+              <Send v-else class="w-4 h-4" />
+              {{ formState === 'submitting' ? 'Submitting...' : 'Submit Contribution' }}
+            </button>
+          </div>
+        </form>
       </div>
     </section>
 
@@ -421,16 +554,10 @@ Favor active voice over passive. Every word should earn its place.</span></pre>
             That's what matters.
           </p>
           <div class="flex flex-wrap items-center justify-center gap-3">
-            <a 
-              href="https://github.com/ComputerKWasTaken/BetterRepository/issues/new" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              class="btn btn-primary"
-            >
-              <Github class="w-4 h-4" />
+            <button @click="scrollToForm" class="btn btn-primary">
+              <Send class="w-4 h-4" />
               Submit a Contribution
-              <ExternalLink class="w-3 h-3" />
-            </a>
+            </button>
             <router-link to="/credits" class="btn btn-secondary">
               <Award class="w-4 h-4" />
               See Who's Contributed
@@ -449,11 +576,11 @@ import { TEMPLATES } from '@/data/plotComponents'
 import { STORY_CARDS, STORY_CARD_TEMPLATES } from '@/data/storyCards'
 import { SCRIPTS } from '@/data/scripts'
 import { 
-  GitPullRequest, Zap, CheckCircle, Check, Layers, ArrowRight,
+  GitPullRequest, Zap, CheckCircle, Check, Layers,
   ScrollText, Bookmark, Drama, Code, GitMerge, MessageCircle,
   ExternalLink, Github, FileText, Award, Heart, Users, Star,
   ChevronRight, Lightbulb, Bug, Pencil, HelpCircle, RefreshCw,
-  Sparkles, Package
+  Sparkles, Package, Send, Loader, AlertCircle
 } from 'lucide-vue-next'
 
 // --- Community impact stats (pulled from actual data) ---
@@ -486,7 +613,7 @@ const faqs = [
   },
   {
     q: 'Do I need to know how to code?',
-    a: "Not at all. Most contributions are just text — AI instructions, story cards, templates. Just paste your content into a GitHub issue and I'll take care of the rest.",
+    a: "Not at all. Most contributions are just text — AI instructions, story cards, templates. Just paste your content into the form above and I'll take care of the rest.",
   },
   {
     q: 'How long does it take to get added?',
@@ -494,13 +621,87 @@ const faqs = [
   },
   {
     q: 'Can I update or improve something that already exists?',
-    a: "Absolutely — in fact, that's one of the most helpful things you can do. If you notice something outdated, unclear, or incomplete, open an issue explaining what could be better.",
+    a: "Absolutely — in fact, that's one of the most helpful things you can do. If you notice something outdated, unclear, or incomplete, submit a correction using the form above.",
   },
   {
     q: "What if I'm not sure what category my submission fits?",
     a: "Don't worry about it. Just describe what it does and I'll figure out where it belongs. You can also ask in Discord if you want feedback first.",
   },
 ]
+
+// --- Contribution form state ---
+const formState = ref('idle') // 'idle' | 'submitting' | 'success' | 'error'
+const formData = reactive({
+  botField: '',
+  name: '',
+  discord: '',
+  category: '',
+  title: '',
+  description: '',
+  content: '',
+})
+
+/**
+ * Encode form data as URL-encoded string for Netlify Forms submission.
+ */
+const encode = (data) => {
+  return Object.keys(data)
+    .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+    .join('&')
+}
+
+/**
+ * Submit the contribution form to Netlify Forms via fetch.
+ */
+const handleSubmit = async () => {
+  formState.value = 'submitting'
+  try {
+    const response = await fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: encode({
+        'form-name': 'contribution',
+        'bot-field': formData.botField,
+        'contributor-name': formData.name,
+        'discord-handle': formData.discord,
+        'category': formData.category,
+        'title': formData.title,
+        'description': formData.description,
+        'content': formData.content,
+      }),
+    })
+    if (response.ok) {
+      formState.value = 'success'
+    } else {
+      formState.value = 'error'
+    }
+  } catch (err) {
+    console.error('Form submission error:', err)
+    formState.value = 'error'
+  }
+}
+
+/**
+ * Reset the form back to its initial empty state.
+ */
+const resetForm = () => {
+  formState.value = 'idle'
+  formData.botField = ''
+  formData.name = ''
+  formData.discord = ''
+  formData.category = ''
+  formData.title = ''
+  formData.description = ''
+  formData.content = ''
+}
+
+/**
+ * Smooth-scroll to the submission form section.
+ */
+const scrollToForm = () => {
+  const el = document.getElementById('submission-form')
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
 
 const expandedFaq = ref(null)
 const toggleFaq = (idx) => {
@@ -620,21 +821,13 @@ onUnmounted(() => {
   transform: translateY(0);
 }
 
-/* === Step pills === */
-.step-pill {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
-  background: var(--bd-bg-tertiary);
-  border: 1px solid var(--bd-border-subtle);
-  transition: all 0.2s ease;
-}
-
-.step-pill:hover {
-  border-color: var(--bd-border-default);
-  transform: translateY(-1px);
+/* === Form labels === */
+.form-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--bd-text-secondary);
+  margin-bottom: 0.375rem;
 }
 
 /* === Submit tiles === */

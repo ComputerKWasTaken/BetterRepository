@@ -29,6 +29,17 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
   </head>
   <body class="bg-bd-bg-primary text-bd-text-primary antialiased">
+    <!-- Hidden Netlify Forms detection form (parsed at build time by Netlify) -->
+    <form name="contribution" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="text" name="bot-field" />
+      <input type="text" name="contributor-name" />
+      <input type="text" name="discord-handle" />
+      <select name="category"></select>
+      <input type="text" name="title" />
+      <textarea name="description"></textarea>
+      <textarea name="content"></textarea>
+    </form>
+
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
   </body>

@@ -614,7 +614,7 @@
                   <h3 class="font-semibold text-bd-text-primary mb-1">Long Entries Get Partially Ignored</h3>
                   <p class="text-sm text-bd-text-secondary">
                     If an Entry is longer than the AI's output length, it will <strong>pick and choose</strong> which info to use. 
-                    The AI won't talk about everything in a single Card for multiple outputs. Keep entries shorter than your response length setting.
+                    The AI won't talk about everything in a single Card for multiple outputs.
                   </p>
                 </div>
               </div>
