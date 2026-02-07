@@ -575,6 +575,7 @@ import { INSTRUCTIONS, CATEGORIES } from '@/data/aiInstructions'
 import { TEMPLATES } from '@/data/plotComponents'
 import { STORY_CARDS, STORY_CARD_TEMPLATES } from '@/data/storyCards'
 import { SCRIPTS } from '@/data/scripts'
+import { ALL_CONTRIBUTORS as allContributors } from '@/data/contributors'
 import { 
   GitPullRequest, Zap, CheckCircle, Check, Layers,
   ScrollText, Bookmark, Drama, Code, GitMerge, MessageCircle,
@@ -595,15 +596,6 @@ const impactStats = computed(() => [
   { value: '4', label: 'Sections', icon: Bookmark, iconClass: 'text-bd-cyan' },
 ])
 
-// --- All unique contributors for the spotlight wall ---
-const allContributors = [
-  ...new Set([
-    'OffMetaGamer', 'Wilmar', 'Le Onyx', 'LewdLeah', 'Dragranis', 'Monsieur Boo',
-    'Hawk', 'Dirty Kurtis', 'Shiny', 'Leshok', 'BinKompliziert', 'Little Hat',
-    'SeinSchetten', 'Zoocata', 'CamSift', 'Celyne', 'wanderingstar1',
-    'GremmieGremlin', 'Lavere', 'Latitude', 'Oli', 'Magic', 'MrJack', 'Burnout'
-  ])
-]
 
 // --- FAQ data ---
 const faqs = [

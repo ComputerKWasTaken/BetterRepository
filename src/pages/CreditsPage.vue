@@ -204,6 +204,13 @@ import {
   Award, Star, Users, ScrollText, Bookmark, Drama, Code,
   Heart, MessageCircle, ExternalLink, GitPullRequest
 } from 'lucide-vue-next'
+import {
+  MAJOR_CONTRIBUTORS as majorContributors,
+  AI_INSTRUCTIONS_CONTRIBUTORS as aiInstructionsContributors,
+  PLOT_COMPONENTS_CONTRIBUTORS as plotComponentsContributors,
+  STORY_CARDS_CONTRIBUTORS as storyCardsContributors,
+  SCRIPTING_CONTRIBUTORS as scriptingContributors
+} from '@/data/contributors'
 
 // --- Section refs for IntersectionObserver staggered reveal ---
 const introRef = ref(null)
@@ -245,29 +252,6 @@ onUnmounted(() => {
   if (observer) observer.disconnect()
 })
 
-// Major contributors whose work significantly shaped BetterRepository
-const majorContributors = [
-  'OffMetaGamer', 'Wilmar', 'Le Onyx', 'LewdLeah', 'Dragranis', 'Monsieur Boo'
-]
-
-// Contributors organized by category
-const aiInstructionsContributors = [
-  'OffMetaGamer', 'Hawk', 'Dirty Kurtis', 'Shiny', 'Leshok', 'Dragranis', 
-  'BinKompliziert', 'Wilmar', 'Le Onyx', 'Little Hat', 'SeinSchetten', 
-  'Zoocata', 'Monsieur Boo', 'CamSift'
-]
-
-const plotComponentsContributors = [
-  'Wilmar', 'Le Onyx', 'Dragranis', 'Celyne', 'Monsieur Boo'
-]
-
-const storyCardsContributors = [
-  'wanderingstar1', 'GremmieGremlin', 'Lavere', 'Le Onyx', 'Shiny'
-]
-
-const scriptingContributors = [
-  'Latitude', 'LewdLeah', 'Oli', 'Magic', 'BinKompliziert', 'MrJack'
-]
 </script>
 
 <style scoped>

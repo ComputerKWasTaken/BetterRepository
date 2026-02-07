@@ -360,6 +360,7 @@ import { TEMPLATES } from '@/data/plotComponents'
 import { STORY_CARDS, STORY_CARD_TEMPLATES } from '@/data/storyCards'
 import { SCRIPTS } from '@/data/scripts'
 import { useGlobalSearch } from '@/composables/useGlobalSearch'
+import { MAJOR_CONTRIBUTORS as majorContributors } from '@/data/contributors'
 import { 
   Search, LayoutGrid, Lightbulb, ScrollText, Heart, Sparkles, ArrowRight,
   GitPullRequest, MessageCircle, ExternalLink, Bookmark, Drama, Code,
@@ -476,10 +477,6 @@ const stats = [
   { value: 'Free', label: 'Forever', icon: Infinity },
 ]
 
-// Major contributors whose work significantly shaped BetterRepository
-const majorContributors = [
-  'OffMetaGamer', 'Wilmar', 'Le Onyx', 'LewdLeah', 'Dragranis', 'Monsieur Boo'
-]
 
 // Icon lookup for search result group headers
 const iconMap = { ScrollText, Layers, Bookmark, Drama, Code }

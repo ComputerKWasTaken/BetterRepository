@@ -1386,6 +1386,7 @@ import {
   searchScripts
 } from '@/data/scripts'
 import { searchCollectionWithScores } from '@/data/shared'
+import { SCRIPTING_CONTRIBUTORS as scriptingContributors } from '@/data/contributors'
 import { 
   Code, AlertTriangle, Dices, Clock, Terminal, Wand2, FolderOpen, 
   BookOpen, GitPullRequest, HelpCircle, Check, Braces, FileCode, 
@@ -1403,10 +1404,6 @@ const tabs = [
   { id: 'guide', label: 'Guide', icon: BookOpen }
 ]
 
-// Contributors for credits section
-const scriptingContributors = [
-  'Latitude', 'LewdLeah', 'Oli', 'Magic', 'BinKompliziert', 'MrJack', 'Burnout'
-]
 
 const scripts = ref(SCRIPTS)
 const categories = ref(SCRIPT_CATEGORIES)

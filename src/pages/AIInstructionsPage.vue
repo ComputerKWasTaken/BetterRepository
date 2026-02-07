@@ -1784,6 +1784,7 @@ import {
   getBeginnerInstructions
 } from '@/data/aiInstructions'
 import { searchCollectionWithScores } from '@/data/shared'
+import { AI_INSTRUCTIONS_CONTRIBUTORS as aiInstructionsContributors } from '@/data/contributors'
 import { usePreferences } from '@/composables/usePreferences'
 import { 
   ScrollText, SlidersHorizontal, SearchX, Layers, PenTool, Users, 
@@ -2196,12 +2197,6 @@ const clearAll = () => {
   quickFilter.value = null
 }
 
-// Contributors for credits section
-const aiInstructionsContributors = [
-  'OffMetaGamer', 'Hawk', 'Dirty Kurtis', 'Shiny', 'Leshok', 'Dragranis', 
-  'BinKompliziert', 'Wilmar', 'Le Onyx', 'Little Hat', 'SeinSchetten', 
-  'Zoocata', 'Monsieur Boo', 'CamSift'
-]
 
 // ===========================================
 // GUIDE SECTION STATE & FUNCTIONS

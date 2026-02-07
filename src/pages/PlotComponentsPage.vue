@@ -1090,6 +1090,7 @@ import {
   getHighImpactTemplates
 } from '@/data/plotComponents'
 import { searchCollectionWithScores } from '@/data/shared'
+import { PLOT_COMPONENTS_CONTRIBUTORS as plotComponentsContributors } from '@/data/contributors'
 import { usePreferences } from '@/composables/usePreferences'
 import { 
   Bookmark, Info, MapPin, FileText, Feather, BookMarked, ScrollText, 
@@ -1115,10 +1116,6 @@ const handleSearch = (query) => {
 const tabs = [
   { id: 'templates', label: 'Templates', icon: Layers },
   { id: 'guide', label: 'Guide', icon: BookOpen }
-]
-// Contributors for credits section
-const plotComponentsContributors = [
-  'Wilmar', 'Le Onyx', 'Dragranis', 'Celyne', 'Monsieur Boo'
 ]
 const templates = ref(TEMPLATES)
 const categories = ref(TEMPLATE_CATEGORIES)

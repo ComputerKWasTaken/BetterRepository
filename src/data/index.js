@@ -94,6 +94,16 @@ export {
   getAllTemplates
 } from './storyCards.js'
 
+// Contributors
+export {
+  AI_INSTRUCTIONS_CONTRIBUTORS,
+  PLOT_COMPONENTS_CONTRIBUTORS,
+  STORY_CARDS_CONTRIBUTORS,
+  SCRIPTING_CONTRIBUTORS,
+  MAJOR_CONTRIBUTORS,
+  ALL_CONTRIBUTORS
+} from './contributors.js'
+
 // Scripts
 export {
   SCRIPT_CATEGORIES,

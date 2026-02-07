@@ -1079,6 +1079,7 @@ import {
   getHighImpactTemplates
 } from '@/data/storyCards'
 import { searchCollectionWithScores } from '@/data/shared'
+import { STORY_CARDS_CONTRIBUTORS as storyCardsContributors } from '@/data/contributors'
 import { 
   Drama, Users, MapPin, Shield, Sparkles, Layers, GitPullRequest,
   HelpCircle, Lightbulb, Camera, Globe, FileText, Tag, Type, Zap,
@@ -1097,10 +1098,6 @@ const tabs = [
   { id: 'guide', label: 'Guide', icon: BookOpen }
 ]
 
-// Contributors for credits section
-const storyCardsContributors = [
-  'wanderingstar1', 'GremmieGremlin', 'Lavere', 'Le Onyx', 'Shiny'
-]
 
 const examples = ref(STORY_CARDS)
 const templates = ref(STORY_CARD_TEMPLATES)
