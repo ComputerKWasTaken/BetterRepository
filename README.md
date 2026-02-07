@@ -38,7 +38,7 @@ Everything is **free**, **tested**, and **ready to copy-paste** into your advent
 
 ### The Easy Way
 
-1. **Go to [betterrepository.netlify.app/contribute](https://betterrepository.netlify.app/contribute)**
+1. **Go to [better-repository.netlify.app/contribute](https://better-repository.netlify.app/contribute)**
 2. **Fill out the form** — paste your content (AI Instruction, Story Card, Script, etc.) and tell me what it does
 3. **Hit submit** — no account needed
 4. Done! I'll review it and add it to the collection.
