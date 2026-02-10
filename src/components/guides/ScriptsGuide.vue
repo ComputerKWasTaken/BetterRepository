@@ -89,7 +89,7 @@
         </Transition>
       </section>
 
-      <!-- Modifier Structure -->
+      <!-- Modifier Structure & Return Values -->
       <section id="guide-modifier-structure" class="card">
         <button @click="toggleGuideSection('modifier-structure')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
@@ -112,6 +112,24 @@
 };
 
 <span class="text-bd-cyan">modifier</span>(<span class="text-bd-amber">text</span>)</pre>
+            </div>
+            <!-- Return Values (merged) -->
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-1"><code class="text-bd-green">{ text: "..." }</code></h4>
+                <p class="text-xs text-bd-text-secondary">The modified text to use instead of the original. <strong>Required</strong> in most cases.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-1"><code class="text-bd-green">{ stop: true }</code></h4>
+                <p class="text-xs text-bd-text-secondary">Prevents the game loop from proceeding. Useful when input should update state but not call the AI.</p>
+              </div>
+            </div>
+            <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+              <p class="text-xs text-bd-text-secondary">
+                <strong class="text-bd-text-primary">Empty string warning:</strong> 
+                <strong>onInput</strong> & <strong>onOutput</strong> throw errors on empty strings. 
+                <strong>onModelContext</strong> rebuilds context without the script.
+              </p>
             </div>
           </div>
         </Transition>
@@ -229,45 +247,6 @@
               text = text.replace(<span class="text-bd-green">/\n{3,}/g</span>, <span class="text-bd-green">"\\n\\n"</span>);
             </div>
           </div>
-            </div>
-          </div>
-        </Transition>
-      </section>
-
-      <!-- Return Values -->
-      <section id="guide-return-values" class="card">
-        <button @click="toggleGuideSection('return-values')" class="w-full flex items-center justify-between text-left">
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <ArrowLeftToLine class="w-5 h-5 text-bd-amber" />
-            Return Values
-          </h2>
-          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('return-values') }" />
-        </button>
-        <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('return-values')" class="mt-4 space-y-4">
-            <p class="text-bd-text-secondary">All modifiers must return an object. You can return these properties:</p>
-            <div class="space-y-4">
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <h3 class="font-semibold text-bd-text-primary mb-2"><code class="text-bd-green">{ text: "modified text" }</code></h3>
-                <p class="text-sm text-bd-text-secondary">The modified text to use instead of the original. <strong>Required</strong> in most cases.</p>
-              </div>
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <h3 class="font-semibold text-bd-text-primary mb-2"><code class="text-bd-green">{ stop: true }</code></h3>
-                <p class="text-sm text-bd-text-secondary">If <code>stop === true</code>, the game loop will not proceed. Useful when a player input should update state but not call the AI.</p>
-              </div>
-            </div>
-            <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
-              <div class="flex items-start gap-3">
-                <AlertTriangle class="w-5 h-5 text-bd-pink mt-0.5 flex-shrink-0" />
-                <div class="text-sm text-bd-text-secondary">
-                  <p class="mb-2"><strong class="text-bd-text-primary">Warning about empty strings:</strong></p>
-                  <ul class="space-y-1">
-                    <li>• <strong>onInput:</strong> Empty string throws error</li>
-                    <li>• <strong>onModelContext:</strong> Empty string rebuilds context without script</li>
-                    <li>• <strong>onOutput:</strong> Empty string throws error</li>
-                  </ul>
-                </div>
-              </div>
             </div>
           </div>
         </Transition>
@@ -585,96 +564,56 @@ modifier(text);</pre>
         </Transition>
       </section>
 
-      <!-- Troubleshooting -->
-      <section id="guide-troubleshooting" class="card">
-        <button @click="toggleGuideSection('troubleshooting')" class="w-full flex items-center justify-between text-left">
+      <!-- Tips & Pitfalls (merged from Troubleshooting + Common Mistakes) -->
+      <section id="guide-tips-pitfalls" class="card">
+        <button @click="toggleGuideSection('tips-pitfalls')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Bug class="w-5 h-5 text-bd-pink" />
-            Troubleshooting
+            <AlertTriangle class="w-5 h-5 text-bd-amber" />
+            Tips & Common Pitfalls
           </h2>
-          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('troubleshooting') }" />
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('tips-pitfalls') }" />
         </button>
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('troubleshooting')" class="mt-4">
-            <div class="space-y-4">
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
-                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-                  <ShieldAlert class="w-4 h-4 text-bd-amber" />
-                  "Dangerous Scripts" Setting
-                </h3>
-                <p class="text-sm text-bd-text-secondary mb-2">New accounts have "dangerous scripts" <strong>disabled by default</strong>. Many useful scripts (including Auto Cards) are classified as "dangerous" even though they're safe.</p>
-                <p class="text-sm text-bd-text-muted"><strong>Fix:</strong> Go to Account Settings → Enable "Run Dangerous Scripts"</p>
+          <div v-if="isGuideSectionExpanded('tips-pitfalls')" class="mt-4 space-y-4">
+            <!-- Key Gotchas -->
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
+                  <ShieldAlert class="w-3 h-3 text-bd-amber" /> "Dangerous Scripts" Setting
+                </h4>
+                <p class="text-xs text-bd-text-secondary">New accounts have this <strong>disabled by default</strong>. Many useful scripts won't run until you enable it.</p>
+                <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> Account Settings → Enable "Run Dangerous Scripts"</p>
               </div>
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-pink/30">
-                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-                  <Eye class="w-4 h-4 text-bd-pink" />
-                  Context Viewer Shows Wrong Data
-                </h3>
-                <p class="text-sm text-bd-text-secondary mb-2">The context viewer can be misleading! <code class="text-bd-green">state.memory</code> modifications (like <code>frontMemory</code>, <code>authorsNote</code>) may not appear in "Show Context" even when working.</p>
-                <p class="text-sm text-bd-text-muted"><strong>Note:</strong> This commonly confuses new scripters. If your <code>log()</code> output shows the correct values, your script is likely working even if the viewer doesn't show it.</p>
-              </div>
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
-                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-                  <Check class="w-4 h-4 text-bd-green" />
-                  Plot Essentials &amp; Author's Note Updates
-                  <span class="tag bg-bd-green/20 text-bd-green text-[10px]">Fixed</span>
-                </h3>
-                <p class="text-sm text-bd-text-secondary mb-2">Previously, when scripts modified Plot Essentials or Author's Note fields, the UI would not visually update until the page was reloaded. <strong>This has been fixed</strong> — changes made by scripts now reflect in the UI immediately.</p>
-              </div>
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-cyan/30">
-                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-                  <RefreshCw class="w-4 h-4 text-bd-cyan" />
-                  Take a Turn vs Continue
-                </h3>
-                <p class="text-sm text-bd-text-secondary mb-2">Some <code class="text-bd-green">state.memory</code> modifications may only work on <strong>Continue</strong> and not on <strong>Take a Turn</strong>. This is a known quirk.</p>
-                <p class="text-sm text-bd-text-muted"><strong>Workaround:</strong> Modify <code>text</code> directly in the context modifier instead of relying solely on <code>state.memory</code>.</p>
+              <div class="p-3 rounded-lg bg-bd-cyan/10 border border-bd-cyan/30">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
+                  <RefreshCw class="w-3 h-3 text-bd-cyan" /> Take a Turn vs Continue
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Some <code>state.memory</code> changes only work on <strong>Continue</strong>, not Take a Turn.</p>
+                <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> Modify <code>text</code> directly in the context modifier instead.</p>
               </div>
             </div>
-          </div>
-        </Transition>
-      </section>
 
-      <!-- Common Mistakes -->
-      <section id="guide-common-mistakes" class="card">
-        <button @click="toggleGuideSection('common-mistakes')" class="w-full flex items-center justify-between text-left">
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <AlertTriangle class="w-5 h-5 text-bd-pink" />
-            Common Mistakes
-          </h2>
-          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('common-mistakes') }" />
-        </button>
-        <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('common-mistakes')" class="mt-4">
+            <!-- Common Mistakes Grid -->
             <div class="grid md:grid-cols-2 gap-3">
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
                 <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1"><X class="w-3 h-3" /> Forgetting to Return Text</h4>
                 <p class="text-xs text-bd-text-secondary">Modifying <code>text</code> but forgetting <code>return { text }</code>. The modifier silently does nothing.</p>
-                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Always end with <code>return { text };</code> and call <code>modifier(text);</code> at the bottom.</p>
+                <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> Always end with <code>return { text };</code> and call <code>modifier(text);</code></p>
               </div>
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
                 <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1"><X class="w-3 h-3" /> Resetting State Every Turn</h4>
-                <p class="text-xs text-bd-text-secondary">Writing <code>state.hp = 100</code> instead of <code>state.hp = state.hp ?? 100</code>. Your state resets on every action.</p>
-                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Use nullish coalescing (<code>??</code>) for all state initialization in the Library.</p>
-              </div>
-              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
-                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1"><X class="w-3 h-3" /> Returning Empty String</h4>
-                <p class="text-xs text-bd-text-secondary">Returning <code>{ text: "" }</code> from onInput or onOutput throws an error. Only onModelContext handles empty strings (rebuilds context).</p>
-                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Always return non-empty text, or use <code>{ stop: true }</code> to prevent AI from running.</p>
+                <p class="text-xs text-bd-text-secondary"><code>state.hp = 100</code> instead of <code>state.hp = state.hp ?? 100</code>. State resets every action.</p>
+                <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> Use nullish coalescing (<code>??</code>) for all state init in the Library.</p>
               </div>
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
                 <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1"><X class="w-3 h-3" /> Using async/await</h4>
-                <p class="text-xs text-bd-text-secondary">AI Dungeon's scripting environment does <strong>not support</strong> async/await, Promises, or any asynchronous operations.</p>
-                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Keep everything synchronous. Use <code>state</code> to persist data across turns instead.</p>
-              </div>
-              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
-                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1"><X class="w-3 h-3" /> Not Enabling "Dangerous Scripts"</h4>
-                <p class="text-xs text-bd-text-secondary">Many useful scripts are classified as "dangerous" and won't run on new accounts by default.</p>
-                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Account Settings → Enable "Run Dangerous Scripts". This is safe for community scripts.</p>
+                <p class="text-xs text-bd-text-secondary">The scripting environment does <strong>not support</strong> async/await, Promises, or any async operations.</p>
+                <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> Keep everything synchronous. Use <code>state</code> to persist data across turns.</p>
               </div>
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
                 <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1"><X class="w-3 h-3" /> Trusting Context Viewer</h4>
-                <p class="text-xs text-bd-text-secondary"><code>state.memory</code> changes (frontMemory, authorsNote) may not show in View Context even when working correctly.</p>
-                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Use <code>log()</code> to verify values. If logs show correct data, your script is working.</p>
+                <p class="text-xs text-bd-text-secondary"><code>state.memory</code> changes (frontMemory, authorsNote) may not show in View Context even when working.</p>
+                <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> Use <code>log()</code> to verify. If logs show correct data, your script is working.</p>
               </div>
             </div>
           </div>
@@ -806,38 +745,7 @@ modifier(text);</code></pre>
         </Transition>
       </section>
 
-      <!-- Useful Links -->
-      <section id="guide-links" class="card">
-        <button @click="toggleGuideSection('links')" class="w-full flex items-center justify-between text-left">
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <ExternalLink class="w-5 h-5 text-bd-accent-primary" />
-            Useful Links
-          </h2>
-          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('links') }" />
-        </button>
-        <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('links')" class="mt-4">
-            <div class="grid md:grid-cols-2 gap-4">
-              <a href="https://github.com/latitudegames/Scripting" target="_blank" class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle hover:border-bd-accent-primary/50 transition-colors group">
-                <h3 class="font-semibold text-bd-text-primary mb-1 flex items-center gap-2">
-                  <FileCode class="w-4 h-4 text-bd-accent-primary" />
-                  Official Documentation
-                </h3>
-                <p class="text-sm text-bd-text-muted">Latitude's official scripting repository and examples</p>
-              </a>
-              <a href="https://docs.google.com/document/d/1DV6b0K-a5mTBpO1-ZbMSaXFOJxGi5MnNnHQCHF0c-DQ" target="_blank" class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle hover:border-bd-accent-primary/50 transition-colors group">
-                <h3 class="font-semibold text-bd-text-primary mb-1 flex items-center gap-2">
-                  <BookOpen class="w-4 h-4 text-bd-blue" />
-                  Scripting Guidebook
-                </h3>
-                <p class="text-sm text-bd-text-muted">Comprehensive community scripting guide</p>
-              </a>
-            </div>
-          </div>
-        </Transition>
-      </section>
-
-      <!-- Credits -->
+      <!-- Credits & Links -->
       <section id="guide-credits" class="card">
         <button @click="toggleGuideSection('credits')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
@@ -847,8 +755,8 @@ modifier(text);</code></pre>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('credits') }" />
         </button>
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('credits')" class="mt-4">
-            <div class="mb-4">
+          <div v-if="isGuideSectionExpanded('credits')" class="mt-4 space-y-4">
+            <div>
               <p class="text-xs text-bd-text-muted mb-2 flex items-center gap-1.5">
                 Contributors who wrote scripts and other tools, or created guides and resources for scripting:
               </p>
@@ -859,10 +767,21 @@ modifier(text);</code></pre>
                 </span>
               </div>
             </div>
-            <div class="flex flex-wrap gap-2">
-              <a href="https://github.com/latitudegames/Scripting" target="_blank" class="btn btn-secondary text-xs">
-                <FileCode class="w-3 h-3" /> Official Docs
+            <div class="grid md:grid-cols-2 gap-3">
+              <a href="https://github.com/latitudegames/Scripting" target="_blank" class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle hover:border-bd-accent-primary/50 transition-colors">
+                <h4 class="text-xs font-semibold text-bd-text-primary flex items-center gap-1.5">
+                  <FileCode class="w-3 h-3 text-bd-accent-primary" /> Official Documentation
+                </h4>
+                <p class="text-xs text-bd-text-muted mt-1">Latitude's scripting repository and examples</p>
               </a>
+              <a href="https://docs.google.com/document/d/1DV6b0K-a5mTBpO1-ZbMSaXFOJxGi5MnNnHQCHF0c-DQ" target="_blank" class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle hover:border-bd-accent-primary/50 transition-colors">
+                <h4 class="text-xs font-semibold text-bd-text-primary flex items-center gap-1.5">
+                  <BookOpen class="w-3 h-3 text-bd-blue" /> Scripting Guidebook
+                </h4>
+                <p class="text-xs text-bd-text-muted mt-1">Comprehensive community scripting guide</p>
+              </a>
+            </div>
+            <div class="flex flex-wrap gap-2">
               <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
                 <MessageSquare class="w-3 h-3" /> Discord
               </a>
@@ -881,7 +800,7 @@ import { SCRIPTING_CONTRIBUTORS as scriptingContributors } from '@/data/contribu
 import { 
   AlertTriangle, Braces, FileCode, HelpCircle, Check,
   BookOpen, Layers, Library, ArrowRightToLine, ArrowLeftToLine, Database, 
-  Lightbulb, Wrench, Plus, Search, Bug, ShieldAlert, Eye, RefreshCw, 
+  Lightbulb, Wrench, Plus, Search, ShieldAlert, RefreshCw, 
   ExternalLink, ChevronDown, ChevronUp, Info, MessageSquare,
   Terminal, X
 } from 'lucide-vue-next'
@@ -891,15 +810,12 @@ const guideSections = [
   { id: 'intro', label: 'Intro' },
   { id: 'modifier-structure', label: 'Modifier Structure' },
   { id: 'script-files', label: 'Script Files' },
-  { id: 'return-values', label: 'Return Values' },
   { id: 'api-parameters', label: 'API Parameters' },
   { id: 'api-functions', label: 'API Functions' },
   { id: 'utility-functions', label: 'Utility Functions' },
   { id: 'common-patterns', label: 'Common Patterns' },
-  { id: 'troubleshooting', label: 'Troubleshooting' },
-  { id: 'common-mistakes', label: 'Common Mistakes' },
+  { id: 'tips-pitfalls', label: 'Tips & Pitfalls' },
   { id: 'betterscripts', label: 'BetterScripts' },
-  { id: 'links', label: 'Useful Links' },
   { id: 'credits', label: 'Credits' }
 ]
 

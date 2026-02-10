@@ -210,12 +210,12 @@
               <div class="flex items-start gap-3">
                 <AlertTriangle class="w-5 h-5 text-bd-warning flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 class="font-semibold text-bd-text-primary mb-1">Important Timing Note</h3>
-                  <p class="text-sm text-bd-text-secondary">
-                    The AI <strong>does not know Story Cards exist</strong>. The same AI output that first activates 
-                    a Card cannot use the information in that Card. For example, if "Amanda" triggers her Card, the 
-                    AI won't have access to her info in that same output, only in subsequent ones.
-                  </p>
+                  <h3 class="font-semibold text-bd-text-primary mb-1">Trigger Timing</h3>
+                  <ol class="text-sm text-bd-text-secondary space-y-1 list-decimal list-inside">
+                    <li><strong>Player input:</strong> Triggers immediately — the AI can use the card info in its response.</li>
+                    <li><strong>AI output:</strong> Triggers for the <em>next</em> response only. The same output that activates a card cannot use it.</li>
+                  </ol>
+                  <p class="text-xs text-bd-text-muted mt-2">The AI does not know Story Cards exist — it only sees Entry text labeled "World Lore:" when a card is active.</p>
                 </div>
               </div>
             </div>
@@ -417,44 +417,25 @@
               </div>
             </div>
 
-            <!-- Capitalization & Pluralization -->
-            <div class="mb-6">
-              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-                <CaseSensitive class="w-4 h-4 text-bd-amber" />
-                Capitalization & Pluralization
-              </h3>
-              <div class="grid md:grid-cols-2 gap-4">
-                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                  <h4 class="font-medium text-bd-text-primary mb-2">Case Insensitive</h4>
-                  <p class="text-sm text-bd-text-secondary">
-                    <code>elf</code>, <code>Elf</code>, and <code>ELF</code> all work the same. 
-                    Capitalization doesn't matter.
-                  </p>
+            <!-- Capitalization, Plurals & Stubbing Note -->
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle mb-6">
+              <div class="grid md:grid-cols-3 gap-3 text-xs">
+                <div>
+                  <h4 class="font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
+                    <CaseSensitive class="w-3 h-3 text-bd-amber" /> Case Insensitive
+                  </h4>
+                  <p class="text-bd-text-secondary"><code>elf</code>, <code>Elf</code>, <code>ELF</code> all work the same.</p>
                 </div>
-                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                  <h4 class="font-medium text-bd-text-primary mb-2">Plurals (Usually Free)</h4>
-                  <p class="text-sm text-bd-text-secondary">
-                    <code>boat</code> also triggers on <code>boats</code>. But <code>elf</code> won't trigger 
-                    <code>elves</code>, add both if needed!
-                  </p>
+                <div>
+                  <h4 class="font-semibold text-bd-text-primary mb-1">Plurals (Usually Free)</h4>
+                  <p class="text-bd-text-secondary"><code>boat</code> → <code>boats</code> ✓ but <code>elf</code> → <code>elves</code> ✗ — add both if irregular.</p>
                 </div>
-              </div>
-            </div>
-
-            <!-- Word Stubbing -->
-            <div class="mb-6">
-              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-                <Scissors class="w-4 h-4 text-bd-purple" />
-                Word Stubbing (Pro Technique)
-              </h3>
-              <p class="text-sm text-bd-text-secondary mb-3">
-                Stub words to a common root to catch all variations with one trigger:
-              </p>
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
-                <p class="text-sm text-bd-text-secondary">
-                  Instead of <code>therapy,therapies,therapist,therapeutic</code>, just use 
-                  <code class="text-bd-purple">therap</code>, it catches all of them!
-                </p>
+                <div>
+                  <h4 class="font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
+                    <Scissors class="w-3 h-3 text-bd-purple" /> Word Stubbing
+                  </h4>
+                  <p class="text-bd-text-secondary">Use <code class="text-bd-purple">therap</code> to catch therapy, therapist, therapeutic all at once.</p>
+                </div>
               </div>
             </div>
 
@@ -478,23 +459,6 @@
                   <span>Hyphenated words: <code>Yellow-Dragon</code> is one word, so <code> Dragon</code> won't trigger on it.</span>
                 </li>
               </ul>
-            </div>
-
-            <!-- Trigger Timing -->
-            <div class="mb-6">
-              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-                <Clock class="w-4 h-4 text-bd-green" />
-                Trigger Timing
-              </h3>
-              <div class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
-                <p class="text-sm text-bd-text-secondary mb-2">
-                  <strong>Two ways to trigger a Story Card:</strong>
-                </p>
-                <ol class="space-y-2 text-sm text-bd-text-secondary list-decimal list-inside">
-                  <li><strong>Player input:</strong> Triggers immediately, used in the same response.</li>
-                  <li><strong>AI output:</strong> Triggers for the <em>next</em> response only. The AI can't use the info in the same output that triggered it.</li>
-                </ol>
-              </div>
             </div>
 
             <!-- Cascading Cards -->
@@ -538,189 +502,110 @@
         </Transition>
       </section>
 
-      <!-- Balancing Information -->
-      <section id="guide-balancing" class="card">
+      <!-- Tips & Pitfalls (merged from Balancing, Pro Tips, Common Mistakes) -->
+      <section id="guide-tips-pitfalls" class="card">
         <button
-          @click="toggleGuideSection('balancing')"
+          @click="toggleGuideSection('tips-pitfalls')"
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Scale class="w-5 h-5 text-bd-blue" />
-            Balancing Information
+            <AlertTriangle class="w-5 h-5 text-bd-amber" />
+            Tips & Common Pitfalls
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('balancing') }"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('tips-pitfalls') }"
           />
         </button>
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('balancing')" class="mt-4 space-y-4">
-            <!-- Token Budget -->
-            <div class="p-4 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
-              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-                <Coins class="w-4 h-4 text-bd-blue" />
-                Token Budget
-              </h3>
-              <p class="text-sm text-bd-text-secondary">
-                Story Cards share approximately <strong>~25%</strong> of the dynamic token budget (the space left after required elements). 
-                They're among the <strong>first elements removed</strong> when context is full, so keeping entries concise is critical.
-              </p>
-            </div>
-
-            <!-- Entry Length Warning -->
-            <div class="p-4 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
-              <div class="flex items-start gap-3">
-                <AlertTriangle class="w-5 h-5 text-bd-amber flex-shrink-0 mt-0.5" />
-                <div>
-                  <h3 class="font-semibold text-bd-text-primary mb-1">Long Entries Get Partially Ignored</h3>
-                  <p class="text-sm text-bd-text-secondary">
-                    If an Entry is longer than the AI's output length, it will <strong>pick and choose</strong> which info to use. 
-                    The AI won't talk about everything in a single Card for multiple outputs.
-                  </p>
-                </div>
+          <div v-if="isGuideSectionExpanded('tips-pitfalls')" class="mt-4 space-y-4">
+            <!-- Token Budget & Key Facts -->
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
+                  <Coins class="w-3 h-3 text-bd-blue" /> Token Budget
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Story Cards get <strong>~25%</strong> of dynamic tokens (space after required elements). They're among the <strong>first removed</strong> when context is full.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
+                  <AlertTriangle class="w-3 h-3 text-bd-amber" /> Long Entries Get Partially Ignored
+                </h4>
+                <p class="text-xs text-bd-text-secondary">If an Entry is longer than the AI's output length, it will <strong>pick and choose</strong> which info to use from that card.</p>
               </div>
             </div>
 
-            <ul class="space-y-2">
-              <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
-                <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                <span>Aim for Story Cards to activate only when needed, not taking up space constantly. <strong>Proper names</strong> are the safest trigger type.</span>
-              </li>
-              <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
-                <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                <span>More context window = more room for cards = they stay active longer.</span>
-              </li>
-              <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
-                <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                <span>To temporarily disable a card, put gibberish in its trigger. Remember to change it back!</span>
-              </li>
-              <li class="flex items-start gap-2 text-sm text-bd-text-secondary">
-                <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                <span>Create <strong>card networks</strong>: have entries reference other cards' triggers so related lore cascades in naturally when needed.</span>
-              </li>
-            </ul>
-          </div>
-        </Transition>
-      </section>
+            <!-- Quick Tips -->
+            <div class="grid md:grid-cols-4 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
+                  <Pencil class="w-3 h-3 text-bd-blue" /> Editable Anytime
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Update cards at any time, even mid-adventure. Keep them current.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
+                  <Download class="w-3 h-3 text-bd-green" /> Export & Import
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Reuse cards across scenarios via export/import (browser only).</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
+                  <Search class="w-3 h-3 text-bd-purple" /> Inspect Context
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Use View Context to verify cards activate when expected.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
+                  <Infinity class="w-3 h-3 text-bd-amber" /> No Card Limit
+                </h4>
+                <p class="text-xs text-bd-text-secondary">You can have thousands of cards in a single scenario.</p>
+              </div>
+            </div>
 
-      <!-- Pro Tips -->
-      <section id="guide-pro-tips" class="card">
-        <button
-          @click="toggleGuideSection('pro-tips')"
-          class="w-full flex items-center justify-between text-left"
-        >
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Lightbulb class="w-5 h-5 text-bd-amber" />
-            Pro Tips
-          </h2>
-          <ChevronDown
-            class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('pro-tips') }"
-          />
-        </button>
-        <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('pro-tips')" class="mt-4">
-            <div class="grid md:grid-cols-2 gap-4">
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <div class="flex items-center gap-2 mb-2">
-              <Pencil class="w-4 h-4 text-bd-blue" />
-              <h3 class="font-semibold text-bd-text-primary">Editable Anytime</h3>
-            </div>
-            <p class="text-sm text-bd-text-secondary">
-              Story Cards can be edited at any time, even after starting an adventure. Update them to reflect story changes.
-            </p>
-          </div>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <div class="flex items-center gap-2 mb-2">
-              <Download class="w-4 h-4 text-bd-green" />
-              <h3 class="font-semibold text-bd-text-primary">Export & Import</h3>
-            </div>
-            <p class="text-sm text-bd-text-secondary">
-              You can export and import Story Cards to use them in different scenarios (browser only).
-            </p>
-          </div>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <div class="flex items-center gap-2 mb-2">
-              <Search class="w-4 h-4 text-bd-purple" />
-              <h3 class="font-semibold text-bd-text-primary">Inspect Context</h3>
-            </div>
-            <p class="text-sm text-bd-text-secondary">
-              Check if your Cards are activating correctly or triggering when they shouldn't. Common mistake: triggers that occur at wrong times.
-            </p>
-          </div>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <div class="flex items-center gap-2 mb-2">
-              <Infinity class="w-4 h-4 text-bd-amber" />
-              <h3 class="font-semibold text-bd-text-primary">No Limit</h3>
-            </div>
-            <p class="text-sm text-bd-text-secondary">
-              You can have thousands of Story Cards in a single scenario. The limit is effectively limitless!
-            </p>
-          </div>
-            </div>
-          </div>
-        </Transition>
-      </section>
-
-      <!-- Common Mistakes -->
-      <section id="guide-common-mistakes" class="card">
-        <button
-          @click="toggleGuideSection('common-mistakes')"
-          class="w-full flex items-center justify-between text-left"
-        >
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <AlertTriangle class="w-5 h-5 text-bd-pink" />
-            Common Mistakes
-          </h2>
-          <ChevronDown
-            class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('common-mistakes') }"
-          />
-        </button>
-        <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('common-mistakes')" class="mt-4">
+            <!-- Common Pitfalls Grid -->
             <div class="grid md:grid-cols-2 gap-3">
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
                 <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
                   <X class="w-3 h-3" /> Too-Short Triggers
                 </h4>
-                <p class="text-xs text-bd-text-secondary">Using 2-3 character triggers like "orc" or "cat" that match unrelated words ("porch", "catalog").</p>
-                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Use spacing tricks (<code>orc </code>) or aim for 5+ character triggers. Check with a word finder tool.</p>
+                <p class="text-xs text-bd-text-secondary">"orc" or "cat" match unrelated words ("porch", "catalog").</p>
+                <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> Use spacing (<code>orc </code>) or aim for 5+ characters.</p>
               </div>
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
                 <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
                   <X class="w-3 h-3" /> Massive Entries
                 </h4>
-                <p class="text-xs text-bd-text-secondary">Writing entire backstories in a single card. The AI will pick and choose from long entries, missing important details.</p>
-                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Keep entries shorter than your response length. Put the most important info at the beginning and end.</p>
+                <p class="text-xs text-bd-text-secondary">Entire backstories in one card. AI picks and chooses, missing key details.</p>
+                <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> Keep entries concise. Most important info at beginning and end.</p>
               </div>
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
                 <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
-                  <X class="w-3 h-3" /> Forgetting the Title is Invisible
+                  <X class="w-3 h-3" /> Forgetting Title is Invisible
                 </h4>
-                <p class="text-xs text-bd-text-secondary">Naming a card "Amanda" but never mentioning "Amanda" in the Entry. The AI only sees the Entry, not the Title.</p>
-                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Always repeat the subject's name in the Entry text itself.</p>
+                <p class="text-xs text-bd-text-secondary">Card named "Amanda" but "Amanda" never appears in the Entry.</p>
+                <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> Always repeat the subject's name in the Entry itself.</p>
               </div>
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
                 <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
                   <X class="w-3 h-3" /> Never Reviewing Cards
                 </h4>
-                <p class="text-xs text-bd-text-secondary">Creating cards early in the story and never updating them. Outdated info causes contradictions.</p>
-                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Review cards periodically. Remove dead characters, update relationships, fix outdated details.</p>
+                <p class="text-xs text-bd-text-secondary">Outdated cards cause contradictions and waste tokens.</p>
+                <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> Review periodically. Remove dead characters, update relationships.</p>
               </div>
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
                 <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
-                  <X class="w-3 h-3" /> Spaces After Commas in Triggers
+                  <X class="w-3 h-3" /> Spaces After Commas
                 </h4>
-                <p class="text-xs text-bd-text-secondary">Writing <code>Amanda, daughter</code> instead of <code>Amanda,daughter</code>. The space becomes part of the trigger.</p>
-                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> No spaces after commas: <code>Amanda,your daughter,mandy</code></p>
+                <p class="text-xs text-bd-text-secondary"><code>Amanda, daughter</code> — the space becomes part of the trigger.</p>
+                <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> No spaces after commas: <code>Amanda,your daughter,mandy</code></p>
               </div>
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
                 <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
                   <X class="w-3 h-3" /> Duplicating Plot Essentials
                 </h4>
-                <p class="text-xs text-bd-text-secondary">Putting the same info in both PE and Story Cards. Wastes token budget and can cause weird emphasis.</p>
-                <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> PE for always-relevant facts. Story Cards for situational lore that only matters when triggered.</p>
+                <p class="text-xs text-bd-text-secondary">Same info in PE and Story Cards wastes tokens and causes weird emphasis.</p>
+                <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> PE for always-relevant. Story Cards for situational lore only.</p>
               </div>
             </div>
           </div>
@@ -775,7 +660,7 @@ import {
   Layers, HelpCircle, Lightbulb, Camera, Globe, FileText, Tag, Type, Zap,
   Cog, AlertTriangle, Award, Check, Scale, Pencil,
   Download, Search, Infinity, Space, Target,
-  CaseSensitive, Scissors, Quote, Clock, GitMerge, X,
+  CaseSensitive, Scissors, Quote, GitMerge, X,
   ChevronDown, ChevronUp, Info, MessageSquare,
   Brain, Coins
 } from 'lucide-vue-next'
@@ -789,9 +674,7 @@ const guideSections = [
   { id: 'anatomy', label: 'Anatomy' },
   { id: 'best-practices', label: 'Best Practices' },
   { id: 'trigger-mastery', label: 'Trigger Mastery' },
-  { id: 'balancing', label: 'Balancing Info' },
-  { id: 'pro-tips', label: 'Pro Tips' },
-  { id: 'common-mistakes', label: 'Common Mistakes' },
+  { id: 'tips-pitfalls', label: 'Tips & Pitfalls' },
   { id: 'credits', label: 'Credits' }
 ]
 

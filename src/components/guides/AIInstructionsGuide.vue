@@ -176,212 +176,26 @@
     </Transition>
   </section>
 
-  <!-- ===================== CONTEXT ARCHITECTURE SECTION ===================== -->
-  <section id="guide-context-architecture" class="card">
+  <!-- ===================== CONTEXT & PLACEMENT ===================== -->
+  <section id="guide-context-placement" class="card">
     <button 
-      @click="toggleGuideSection('context-architecture')"
+      @click="toggleGuideSection('context-placement')"
       class="w-full flex items-center justify-between text-left"
     >
       <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
         <Layers class="w-5 h-5 text-bd-cyan" />
-        Context Architecture
-        <span class="tag bg-bd-cyan/20 text-bd-cyan text-xs">Important</span>
+        Where AI Instructions Sit in Context
       </h2>
-      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('context-architecture') }" />
+      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('context-placement') }" />
     </button>
     
     <Transition name="slide">
-      <div v-if="isGuideSectionExpanded('context-architecture')" class="mt-4 space-y-4">
+      <div v-if="isGuideSectionExpanded('context-placement')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          Understanding how your AI Instructions fit into the bigger picture is key to writing effective ones.
-          The AI doesn't just see your instructions — it sees a carefully assembled <strong>context</strong> built from many sources.
+          AI Instructions occupy <strong>position #1</strong> in the context — the very first thing the AI reads. This makes them ideal for 
+          persistent, global rules that frame every response. For scene-specific nudges, use <strong>Author's Note</strong> (position #7, near the end where attention is also high).
         </p>
 
-        <!-- Context Order -->
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-cyan/30">
-          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-            <ListOrdered class="w-4 h-4 text-bd-cyan" />
-            Full Context Assembly Order
-          </h3>
-          <p class="text-xs text-bd-text-muted mb-3">This is the exact order the AI receives information, from first to last:</p>
-          <ol class="space-y-2 text-sm">
-            <li class="flex items-start gap-3">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-bd-amber/20 text-bd-amber font-bold flex items-center justify-center text-xs">1</span>
-              <div><strong class="text-bd-amber">AI Instructions</strong> <span class="text-bd-text-muted">— Your rules and persona (this guide)</span></div>
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-bd-green/20 text-bd-green font-bold flex items-center justify-center text-xs">2</span>
-              <div><strong class="text-bd-green">Plot Essentials</strong> <span class="text-bd-text-muted">— Key facts the AI should always know</span></div>
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center text-xs">3</span>
-              <div><strong class="text-bd-purple">Story Cards</strong> <span class="text-bd-text-muted">— Triggered by keywords in recent actions</span></div>
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-bd-blue/20 text-bd-blue font-bold flex items-center justify-center text-xs">4</span>
-              <div><strong class="text-bd-blue">Story Summary</strong> <span class="text-bd-text-muted">— Auto-generated plot recap</span></div>
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-bd-teal/20 text-bd-teal font-bold flex items-center justify-center text-xs">5</span>
-              <div><strong class="text-bd-teal">Memory Bank</strong> <span class="text-bd-text-muted">— Relevant memories ranked by recency</span></div>
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-bd-text-muted/20 text-bd-text-secondary font-bold flex items-center justify-center text-xs">6</span>
-              <div><strong class="text-bd-text-primary">History</strong> <span class="text-bd-text-muted">— Recent story actions (most recent last)</span></div>
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-bd-pink/20 text-bd-pink font-bold flex items-center justify-center text-xs">7</span>
-              <div><strong class="text-bd-pink">Author's Note</strong> <span class="text-bd-text-muted">— Style/tone guidance (near end = high influence)</span></div>
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-bd-orange/20 text-bd-orange font-bold flex items-center justify-center text-xs">8</span>
-              <div><strong class="text-bd-orange">Last Action</strong> <span class="text-bd-text-muted">— The most recent player input</span></div>
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-bd-red/20 text-bd-red font-bold flex items-center justify-center text-xs">9</span>
-              <div><strong class="text-bd-red">Front Memory</strong> <span class="text-bd-text-muted">— Highest priority, always included in full</span></div>
-            </li>
-          </ol>
-        </div>
-
-        <!-- Token Budget -->
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
-            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-              <Shield class="w-4 h-4 text-bd-amber" />
-              Required Elements
-            </h3>
-            <p class="text-xs text-bd-text-secondary mb-2">Always included (up to <strong>70%</strong> of context):</p>
-            <ul class="text-xs text-bd-text-secondary space-y-1">
-              <li>• AI Instructions, Plot Essentials, Story Summary</li>
-              <li>• Front Memory, Author's Note, Last Action</li>
-            </ul>
-            <p class="text-xs text-bd-text-muted mt-2">
-              If required elements exceed 70%, they're trimmed by priority: <strong>Front Memory → Last Action → Author's Note → Plot Essentials → AI Instructions → Story Summary</strong> (highest first).
-            </p>
-          </div>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
-            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-              <Zap class="w-4 h-4 text-bd-purple" />
-              Dynamic Elements
-            </h3>
-            <p class="text-xs text-bd-text-secondary mb-2">Fill the remaining <strong>30%+</strong> of context:</p>
-            <ul class="text-xs text-bd-text-secondary space-y-1">
-              <li>• <strong>~25%</strong> — Story Cards (keyword-triggered)</li>
-              <li>• <strong>~50%</strong> — History (up to 75% if Memory Bank off)</li>
-              <li>• <strong>~25%</strong> — Memory Bank (relevance-ranked)</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Key Insight -->
-        <div class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
-          <div class="flex items-start gap-3">
-            <Info class="w-5 h-5 text-bd-info flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 class="font-semibold text-bd-text-primary mb-1">Why This Matters for AI Instructions</h3>
-              <p class="text-sm text-bd-text-secondary">
-                Your AI Instructions sit at position <strong>#1</strong> — the very beginning of context. This means they set the 
-                "frame" for everything that follows. However, LLMs also pay strong attention to what's <strong>near the end</strong> of context 
-                (Author's Note, Last Action, Front Memory). Use AI Instructions for <em>persistent rules</em> and Author's Note for 
-                <em>immediate style nudges</em> to get the best of both positions.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Transition>
-  </section>
-
-  <!-- ===================== COMPONENT COMPARISON SECTION ===================== -->
-  <section id="guide-component-comparison" class="card">
-    <button 
-      @click="toggleGuideSection('component-comparison')"
-      class="w-full flex items-center justify-between text-left"
-    >
-      <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-        <Scale class="w-5 h-5 text-bd-green" />
-        AI Instructions vs Other Components
-      </h2>
-      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('component-comparison') }" />
-    </button>
-    
-    <Transition name="slide">
-      <div v-if="isGuideSectionExpanded('component-comparison')" class="mt-4 space-y-4">
-        <p class="text-bd-text-secondary">
-          AI Dungeon has multiple tools for guiding the AI. Knowing <strong>which tool to use when</strong> prevents overlap and saves tokens.
-        </p>
-
-        <div class="grid gap-3">
-          <!-- AI Instructions -->
-          <div class="p-4 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
-            <div class="flex items-start gap-3">
-              <ScrollText class="w-5 h-5 text-bd-amber flex-shrink-0 mt-0.5" />
-              <div class="flex-1">
-                <h3 class="font-semibold text-bd-text-primary mb-1">AI Instructions <span class="text-xs text-bd-text-muted font-normal">(Position #1 — start of context)</span></h3>
-                <p class="text-xs text-bd-text-secondary mb-2">Persistent, global rules that apply to every single AI response. The AI's "operating manual."</p>
-                <div class="flex flex-wrap gap-2 text-xs">
-                  <span class="tag bg-bd-amber/20 text-bd-amber">Writing style</span>
-                  <span class="tag bg-bd-amber/20 text-bd-amber">AI persona</span>
-                  <span class="tag bg-bd-amber/20 text-bd-amber">Universal rules</span>
-                  <span class="tag bg-bd-amber/20 text-bd-amber">Genre tone</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Author's Note -->
-          <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
-            <div class="flex items-start gap-3">
-              <PenTool class="w-5 h-5 text-bd-pink flex-shrink-0 mt-0.5" />
-              <div class="flex-1">
-                <h3 class="font-semibold text-bd-text-primary mb-1">Author's Note <span class="text-xs text-bd-text-muted font-normal">(Position #7 — near end, strongest immediate influence)</span></h3>
-                <p class="text-xs text-bd-text-secondary mb-2">Short, high-impact nudges placed near the end of context. Keep it brief — overloading it is counterproductive.</p>
-                <div class="flex flex-wrap gap-2 text-xs">
-                  <span class="tag bg-bd-pink/20 text-bd-pink">Current mood</span>
-                  <span class="tag bg-bd-pink/20 text-bd-pink">Scene tone</span>
-                  <span class="tag bg-bd-pink/20 text-bd-pink">Temporary style shifts</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Plot Essentials -->
-          <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
-            <div class="flex items-start gap-3">
-              <FileText class="w-5 h-5 text-bd-green flex-shrink-0 mt-0.5" />
-              <div class="flex-1">
-                <h3 class="font-semibold text-bd-text-primary mb-1">Plot Essentials <span class="text-xs text-bd-text-muted font-normal">(Position #2 — always included)</span></h3>
-                <p class="text-xs text-bd-text-secondary mb-2">Key facts the AI should always know. Character details, world state, active goals. Keep it dense and factual — the AI will reference anything you put here.</p>
-                <div class="flex flex-wrap gap-2 text-xs">
-                  <span class="tag bg-bd-green/20 text-bd-green">Character info</span>
-                  <span class="tag bg-bd-green/20 text-bd-green">World state</span>
-                  <span class="tag bg-bd-green/20 text-bd-green">Active goals</span>
-                  <span class="tag bg-bd-green/20 text-bd-green">Key relationships</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Story Cards -->
-          <div class="p-4 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
-            <div class="flex items-start gap-3">
-              <Layers class="w-5 h-5 text-bd-purple flex-shrink-0 mt-0.5" />
-              <div class="flex-1">
-                <h3 class="font-semibold text-bd-text-primary mb-1">Story Cards <span class="text-xs text-bd-text-muted font-normal">(Position #3 — keyword-triggered)</span></h3>
-                <p class="text-xs text-bd-text-secondary mb-2">Only injected when their trigger keywords appear in recent actions. Perfect for situational lore that doesn't need to be in context 24/7.</p>
-                <div class="flex flex-wrap gap-2 text-xs">
-                  <span class="tag bg-bd-purple/20 text-bd-purple">NPC details</span>
-                  <span class="tag bg-bd-purple/20 text-bd-purple">Location lore</span>
-                  <span class="tag bg-bd-purple/20 text-bd-purple">Item descriptions</span>
-                  <span class="tag bg-bd-purple/20 text-bd-purple">Event recaps</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Rule of Thumb -->
         <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
           <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-2">Rule of Thumb</h4>
           <div class="grid md:grid-cols-2 gap-2 text-xs text-bd-text-secondary">
@@ -389,6 +203,16 @@
             <div>• <strong>"Right now, do this"</strong> → Author's Note</div>
             <div>• <strong>"Always remember this fact"</strong> → Plot Essentials</div>
             <div>• <strong>"Remember this when relevant"</strong> → Story Cards</div>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
+          <div class="flex items-start gap-3">
+            <Info class="w-5 h-5 text-bd-info flex-shrink-0 mt-0.5" />
+            <p class="text-sm text-bd-text-secondary">
+              For a full breakdown of context assembly order, token budgets, and how all plot components interact, see the 
+              <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline font-medium">Plot Components Guide</router-link>.
+            </p>
           </div>
         </div>
       </div>
@@ -423,11 +247,9 @@
             You are a creative author, known for dark and brutal horror books that are exciting and thrilling.
           </div>
           <div class="p-3 rounded bg-bd-bg-primary font-mono text-xs border border-bd-accent-primary/20">
-            <div class="text-bd-accent-light mb-1">// Advanced patterns:</div>
+            <div class="text-bd-accent-light mb-1">// Advanced pattern:</div>
             <div class="text-bd-green">"The player would like you to pick up a varying novel..."</div>
-            <div class="text-bd-text-muted mt-1 italic text-[10px]">Also works with "talented novelist" or "expert author". This role assignment encourages the AI to treat the session as a professional book project.</div>
-            <div class="text-bd-green mt-2">"Enable thinking mode..."</div>
-            <div class="text-bd-text-muted mt-1 italic text-[10px]">While AI Dungeon doesn't natively support Thinking Mode, this "gaslights" the model into a more analytical state. It works on most models, but has the strongest impact on DeepSeek.</div>
+            <div class="text-bd-text-muted mt-1 italic text-[10px]">Framing the session as a professional writing project encourages more deliberate, higher-quality prose from the AI.</div>
           </div>
         </div>
         <p class="text-xs text-bd-text-muted mt-2">
@@ -620,71 +442,87 @@
           </div>
         </div>
 
-        <p class="text-xs text-bd-text-muted mb-3">Click any fix to find related instructions. Replace 'Name' with your character.</p>
+        <p class="text-xs text-bd-text-muted mb-3">Proven fixes from the <router-link to="/ai-instructions?tab=collection" class="text-bd-accent-primary hover:underline">Component Library</router-link>. Replace 'Name' with your character.</p>
 
         <div class="grid md:grid-cols-2 gap-3">
       <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-        <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Pacing</h4>
+        <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Repetition & Echo</h4>
         <div class="space-y-1 text-xs">
-          <div><span class="text-bd-text-muted">Faster:</span> <code class="text-bd-green">- Keep scenes moving</code></div>
-          <div><span class="text-bd-text-muted">Slower:</span> <code class="text-bd-green">- Let scenes play out</code></div>
-          <div><span class="text-bd-text-muted">Balanced:</span> <code class="text-bd-green">- Balance action with atmosphere</code></div>
+          <div><code class="text-bd-green">- Never echo, paraphrase, or restate the user's words, speech, or intentions</code></div>
+          <div><code class="text-bd-green">- NPCs should never repeat any content provided by the user</code></div>
+          <div><code class="text-bd-green">- Continue EXACTLY from where the story leaves off</code></div>
         </div>
       </div>
       <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
         <h4 class="text-xs font-semibold text-bd-text-primary mb-2">AI Writing For You</h4>
         <div class="space-y-1 text-xs">
-          <div><code class="text-bd-green">- Write ensuring 'Name' can write own dialogue</code></div>
-          <div><code class="text-bd-green">- Never assume 'Name's thoughts or actions</code></div>
-          <div><code class="text-bd-green">- Stop before 'Name' would need to respond</code></div>
+          <div><span class="text-bd-text-muted">Basic:</span> <code class="text-bd-green">- Only the user writes 'Name's speech and dialogue</code></div>
+          <div><span class="text-bd-text-muted">Extended:</span> <code class="text-bd-green">- Never decide or write speech or actions for 'Name'</code></div>
+          <div><span class="text-bd-text-muted">Total:</span> <code class="text-bd-green">- Never control 'Name' in action, thought, expression, reaction, or speech</code></div>
         </div>
       </div>
       <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-        <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Repetition</h4>
+        <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Pacing</h4>
         <div class="space-y-1 text-xs">
-          <div><code class="text-bd-green">- Continue where story left off</code></div>
-          <div><code class="text-bd-green">- Avoid repeating recent phrases</code></div>
-          <div><code class="text-bd-green">- Vary sentence structure and vocabulary</code></div>
+          <div><span class="text-bd-text-muted">Faster:</span> <code class="text-bd-green">- Prioritize plot and dialogue over description</code></div>
+          <div><span class="text-bd-text-muted">Slower:</span> <code class="text-bd-green">- Slow down the pace and let scenes play out naturally</code></div>
+          <div><span class="text-bd-text-muted">Moment by moment:</span> <code class="text-bd-green">- Allow the story to unfold moment by moment</code></div>
+        </div>
+      </div>
+      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+        <h4 class="text-xs font-semibold text-bd-text-primary mb-2">NPC Behavior</h4>
+        <div class="space-y-1 text-xs">
+          <div><span class="text-bd-text-muted">Too agreeable:</span> <code class="text-bd-green">- NPCs act according to their own motivations, not player convenience</code></div>
+          <div><span class="text-bd-text-muted">Too aggressive:</span> <code class="text-bd-green">- NPCs avoid excessive aggression or doubt; ensure interactions are nuanced</code></div>
+          <div><span class="text-bd-text-muted">Too clumsy:</span> <code class="text-bd-green">- Characters are not clumsy, jumpy, or incompetent</code></div>
         </div>
       </div>
       <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
         <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Plot Armor & Consequences</h4>
         <div class="space-y-1 text-xs">
-          <div><code class="text-bd-green">- Let 'Name' take injuries</code></div>
-          <div><code class="text-bd-green">- Actions have realistic consequences</code></div>
-          <div><code class="text-bd-green">- Bad decisions lead to bad outcomes</code></div>
+          <div><code class="text-bd-green">- Actions have meaningful consequences. Choices matter</code></div>
+          <div><code class="text-bd-green">- The world does not revolve around the main character</code></div>
+          <div><code class="text-bd-green">- Bad decisions lead to bad outcomes. The world doesn't protect the player</code></div>
         </div>
       </div>
       <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-        <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Focus Issues</h4>
+        <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Focus & Knowledge</h4>
         <div class="space-y-1 text-xs">
-          <div><code class="text-bd-green">- Focus on everyone in scenes</code></div>
-          <div><code class="text-bd-green">- Assume strangers & ignorance</code></div>
-          <div><code class="text-bd-green">- NPCs have their own goals and concerns</code></div>
+          <div><code class="text-bd-green">- Focus on everyone in the scene</code></div>
+          <div><code class="text-bd-green">- Characters should only know what they logically have information on</code></div>
+          <div><code class="text-bd-green">- Characters are people in situations, not job titles performing functions</code></div>
         </div>
       </div>
       <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
         <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Style & Prose</h4>
         <div class="space-y-1 text-xs">
-          <div><code class="text-bd-green">- Write pure prose without symbols</code></div>
-          <div><code class="text-bd-green">- Prioritize plot and dialogue over description</code></div>
-          <div><code class="text-bd-green">- Show dont tell through character actions</code></div>
+          <div><code class="text-bd-green">- Show, don't tell. Demonstrate through actions and dialogue</code></div>
+          <div><code class="text-bd-green">- Avoid simile, metaphor, and figurative comparisons</code></div>
+          <div><code class="text-bd-green">- Let the tone emerge from the scene. Focus on subtlety over explicitness</code></div>
         </div>
       </div>
       <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
         <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Dialogue Quality</h4>
         <div class="space-y-1 text-xs">
-          <div><code class="text-bd-green">- Write natural flowing dialogue</code></div>
-          <div><code class="text-bd-green">- Give each character a distinct voice</code></div>
-          <div><code class="text-bd-green">- Avoid exposition dumps in dialogue</code></div>
+          <div><code class="text-bd-green">- Ensure characters act and speak like how their personality is defined</code></div>
+          <div><code class="text-bd-green">- Make every interaction sound genuine and fitting to the moment</code></div>
+          <div><code class="text-bd-green">- Avoid contradicting the user's speech with NPC responses</code></div>
         </div>
       </div>
       <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
         <h4 class="text-xs font-semibold text-bd-text-primary mb-2">World Consistency</h4>
         <div class="space-y-1 text-xs">
-          <div><code class="text-bd-green">- Maintain established facts about the world</code></div>
-          <div><code class="text-bd-green">- Time passes naturally between scenes</code></div>
-          <div><code class="text-bd-green">- Remember character locations and states</code></div>
+          <div><code class="text-bd-green">- Never contradict established lore or timeline</code></div>
+          <div><code class="text-bd-green">- Maintain internal consistency with established world rules</code></div>
+          <div><code class="text-bd-green">- Progress time in a realistic manner</code></div>
+        </div>
+      </div>
+      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+        <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Immersion Breaking</h4>
+        <div class="space-y-1 text-xs">
+          <div><code class="text-bd-green">- Stay in character and in the narrative at all times</code></div>
+          <div><code class="text-bd-green">- Never summarize, wrap up, or provide closure at the end of responses</code></div>
+          <div><code class="text-bd-green">- Don't insert moral lessons or author commentary</code></div>
         </div>
       </div>
         </div>
@@ -804,36 +642,91 @@
         <p class="text-xs text-bd-text-muted mb-4">Complete instruction sets for different genres. Use as starting points and customize to fit your story.</p>
         
         <div class="grid md:grid-cols-2 gap-4">
-      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
-        <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
-          <MessageSquare class="w-4 h-4 text-bd-purple" />
-          Snarky Narrator
-        </h3>
-        <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are an all-seeing narrator who breaks the 4th wall like Deadpool.
-- Be sarcastic and over-the-top
-- Point out when player does something stupid
-- Use melodrama: "little did she know..."</div>
-      </div>
-      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/30">
-        <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
-          <Skull class="w-4 h-4 text-bd-pink" />
-          Evil DM
-        </h3>
-        <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are an evil DM.
-- Follow Murphy's Law
-- Actions fail unless no sensible way to fail
-- Introduce plot twists when things go well</div>
-      </div>
       <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
         <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
           <Swords class="w-4 h-4 text-bd-amber" />
-          Dark Fantasy
+          Fantasy
         </h3>
-        <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are a dark fantasy author inspired by George R.R. Martin.
-- The world is morally grey, no pure heroes or villains
+        <div class="space-y-2">
+          <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are a dark fantasy author known for morally complex worlds where magic has costs and heroes make difficult choices.
 - Actions have lasting consequences
 - Death is permanent and can happen to anyone
-- Magic is rare and comes with a cost</div>
+- Ground fantastic elements in internal logic</div>
+          <div class="flex flex-wrap gap-1 text-[10px]">
+            <span class="tag bg-bd-amber/10 text-bd-amber">Also try: Epic Fantasy</span>
+            <span class="tag bg-bd-amber/10 text-bd-amber">Urban Fantasy</span>
+          </div>
+        </div>
+      </div>
+      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-red/30">
+        <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
+          <Skull class="w-4 h-4 text-bd-red" />
+          Horror
+        </h3>
+        <div class="space-y-2">
+          <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are a horror author known for psychological terror that creeps under the skin and lingers in the mind.
+- Build dread through atmosphere, implication, and the unknown
+- What's unseen is often scarier than what's shown
+- Characters make believable mistakes under fear</div>
+          <div class="flex flex-wrap gap-1 text-[10px]">
+            <span class="tag bg-bd-red/10 text-bd-red">Also try: Brutal Horror</span>
+            <span class="tag bg-bd-red/10 text-bd-red">Cosmic Horror</span>
+          </div>
+        </div>
+      </div>
+      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-rose/30">
+        <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
+          <Heart class="w-4 h-4 text-bd-rose" />
+          Romance
+        </h3>
+        <div class="space-y-2">
+          <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are a romance author known for slow-burn stories where feelings develop gradually through meaningful interactions.
+- Build chemistry through dialogue and small gestures
+- Show vulnerability and emotional growth
+- Let tension build naturally, don't rush pivotal moments</div>
+          <div class="flex flex-wrap gap-1 text-[10px]">
+            <span class="tag bg-bd-rose/10 text-bd-rose">Also try: Passionate</span>
+            <span class="tag bg-bd-rose/10 text-bd-rose">Character-Driven</span>
+          </div>
+        </div>
+      </div>
+      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
+        <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
+          <Target class="w-4 h-4 text-bd-blue" />
+          Mystery / Thriller
+        </h3>
+        <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are a thriller author known for pulse-pounding narratives.
+- Plant clues and red herrings throughout the story
+- NPCs may lie, withhold information, or have their own agendas
+- Information is hidden and must be actively sought
+- The solution should be discoverable through investigation</div>
+      </div>
+      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-indigo/30">
+        <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
+          <Rocket class="w-4 h-4 text-bd-indigo" />
+          Sci-Fi
+        </h3>
+        <div class="space-y-2">
+          <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are a hard science fiction author who grounds speculative elements in plausible science and explores their logical consequences.
+- Technology has rules and limitations, not magic
+- Space is vast, dangerous, and indifferent
+- Political and corporate intrigue drives conflict</div>
+          <div class="flex flex-wrap gap-1 text-[10px]">
+            <span class="tag bg-bd-indigo/10 text-bd-indigo">Also try: Space Opera</span>
+            <span class="tag bg-bd-indigo/10 text-bd-indigo">Cyberpunk</span>
+          </div>
+        </div>
+      </div>
+      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-cyan/30">
+        <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
+          <Swords class="w-4 h-4 text-bd-cyan" />
+          Combat Focused
+        </h3>
+        <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">Combat:
+- Write action scenes with visceral, dynamic descriptions
+- Injuries affect performance realistically
+- Environment can be used strategically
+- No guaranteed victories; retreat or surrender are valid options</div>
       </div>
       <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30">
         <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
@@ -843,295 +736,80 @@
         <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are a wholesome storyteller writing cozy adventures.
 - Focus on friendships and small victories
 - Conflicts resolve through understanding
-- Describe comforting details like warm meals and safe havens
-- Maintain an optimistic tone even in challenges</div>
+- Maintain an optimistic tone even in challenges
+- Encourage small talk between characters</div>
       </div>
-      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
+      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
         <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
-          <Target class="w-4 h-4 text-bd-blue" />
-          Mystery Thriller
+          <MessageSquare class="w-4 h-4 text-bd-purple" />
+          Snarky Narrator
         </h3>
-        <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are a mystery thriller author.
-- Plant clues and red herrings throughout the story
-- Build suspense through pacing and atmosphere
-- Characters have secrets and hidden motives
-- Revelations should feel earned and logical</div>
+        <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are a snarky narrator who observes events with dry wit and sardonic commentary, never missing a chance for a clever observation.
+- Be sarcastic and over-the-top
+- Point out when player does something stupid
+- Use melodrama: "little did she know..."</div>
       </div>
-      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-cyan/30">
+      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/30">
         <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
-          <Swords class="w-4 h-4 text-bd-cyan" />
-          Combat Focused
+          <Skull class="w-4 h-4 text-bd-pink" />
+          Ruthless DM
         </h3>
-        <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">Combat:
-- Describe fights with tactical detail
-- Injuries affect performance realistically
-- Environment can be used strategically
-- Opponents fight intelligently based on their abilities</div>
+        <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are a ruthless Dungeon Master who enforces consequences and doesn't pull punches.
+- The world is lethal and dangerous
+- Actions fail unless no sensible way to fail
+- NPCs are proactive, competent, and dangerous
+- Resolve no-win situations with realistic consequences</div>
       </div>
-      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-indigo/30">
+      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-teal/30">
         <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
-          <Rocket class="w-4 h-4 text-bd-indigo" />
-          Sci-Fi
+          <FileText class="w-4 h-4 text-bd-teal" />
+          Literary Fiction
         </h3>
-        <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are a hard sci-fi author inspired by Asimov and Clarke.
-- Technology has rules and limitations, not magic
-- Explore the human impact of advanced technology
-- Space is vast, dangerous, and indifferent
-- Political and corporate intrigue drives conflict</div>
-      </div>
-      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-red/30">
-        <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
-          <Skull class="w-4 h-4 text-bd-red" />
-          Horror
-        </h3>
-        <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are a horror author inspired by Stephen King and Lovecraft.
-- Build dread through atmosphere, not jump scares
-- The unknown is scarier than the revealed
-- Normalcy makes horror hit harder by contrast
-- Characters make believable mistakes under fear</div>
-      </div>
-      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-rose/30">
-        <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
-          <Heart class="w-4 h-4 text-bd-rose" />
-          Romance
-        </h3>
-        <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are a romance novelist with sharp emotional instincts.
-- Build chemistry through dialogue and small gestures
-- Create meaningful obstacles between characters
-- Show vulnerability and emotional growth
-- Let tension build naturally, don't rush pivotal moments</div>
+        <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-green">You are a literary fiction author known for nuanced character studies, evocative prose, and stories that linger in the reader's mind.
+- Embrace bittersweet moments: joy tinged with sadness
+- Understate emotions rather than over-dramatizing
+- Use subtext in dialogue: characters don't always say what they mean</div>
               </div>
             </div>
           </div>
         </Transition>
       </section>
 
-  <!-- ===================== MODEL SETTINGS SECTION ===================== -->
-  <section id="guide-model-settings" class="card">
+  <!-- ===================== TOKEN TIPS SECTION ===================== -->
+  <section id="guide-token-tips" class="card">
     <button 
-      @click="toggleGuideSection('model-settings')"
-      class="w-full flex items-center justify-between text-left"
-    >
-      <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-        <SlidersHorizontal class="w-5 h-5 text-bd-cyan" />
-        Model Settings
-        <span class="tag bg-bd-cyan/20 text-bd-cyan text-xs">Advanced</span>
-      </h2>
-      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('model-settings') }" />
-    </button>
-    
-    <Transition name="slide">
-      <div v-if="isGuideSectionExpanded('model-settings')" class="mt-4 space-y-4">
-      <!-- Parameters Overview -->
-      <div class="grid md:grid-cols-2 gap-3">
-        <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-          <div class="flex items-center gap-2 mb-2">
-            <Thermometer class="w-4 h-4 text-bd-pink" />
-            <span class="font-medium text-bd-text-primary text-sm">Temperature</span>
-            <span class="text-xs text-bd-text-muted">(0.6-1.5)</span>
-          </div>
-          <p class="text-xs text-bd-text-secondary">Randomness. ↑ if bland, ↓ if incoherent.</p>
-        </div>
-        <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-          <div class="flex items-center gap-2 mb-2">
-            <Percent class="w-4 h-4 text-bd-green" />
-            <span class="font-medium text-bd-text-primary text-sm">Top P</span>
-            <span class="text-xs text-bd-text-muted">(0.7-1.0)</span>
-          </div>
-          <p class="text-xs text-bd-text-secondary">Focus. ↓ if weird endings, ↑ if boring. Balances with Temp.</p>
-        </div>
-        <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-          <div class="flex items-center gap-2 mb-2">
-            <ListOrdered class="w-4 h-4 text-bd-amber" />
-            <span class="font-medium text-bd-text-primary text-sm">Top K</span>
-            <span class="text-xs text-bd-text-muted">(20-500)</span>
-          </div>
-          <p class="text-xs text-bd-text-secondary">Word variety. ↑ if robotic, ↓ if nonsense.</p>
-        </div>
-        <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-          <div class="flex items-center gap-2 mb-2">
-            <Repeat class="w-4 h-4 text-bd-purple" />
-            <span class="font-medium text-bd-text-primary text-sm">Penalties (PP/FP)</span>
-            <span class="text-xs text-bd-text-muted">(0-1.5)</span>
-          </div>
-          <p class="text-xs text-bd-text-secondary">Reduce repetition. ↑ if obsessive, ↓ if avoiding names.</p>
-        </div>
-      </div>
-
-      <!-- Response Length -->
-      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-        <div class="flex items-center gap-2 mb-2">
-          <FileText class="w-4 h-4 text-bd-cyan" />
-          <span class="font-medium text-bd-text-primary text-sm">Response Length</span>
-          <span class="text-xs text-bd-text-muted">(25-200)</span>
-        </div>
-        <p class="text-xs text-bd-text-secondary">Max tokens per AI response. Higher = longer outputs. 100-150 is a good range for most stories.</p>
-      </div>
-
-      <!-- Official Latitude Settings -->
-      <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-cyan/30">
-        <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-          <Cpu class="w-4 h-4 text-bd-cyan" />
-          Official Latitude Settings <span class="text-xs text-bd-text-muted font-normal">(Len/T/K/P/PP/FP)</span>
-        </h3>
-        <p class="text-xs text-bd-text-muted mb-3">From the official <a href="https://help.aidungeon.com/ai-model-differences" target="_blank" class="text-bd-accent-primary hover:underline">AI Model Differences</a> page — tuned for a more "engaging experience."</p>
-        <div class="grid md:grid-cols-2 gap-3 text-xs">
-          <div class="space-y-1.5">
-            <div class="flex justify-between"><span class="text-bd-text-secondary">Muse (12B):</span><code class="text-bd-green">150/1/250/1/0.25/0</code></div>
-            <div class="flex justify-between"><span class="text-bd-text-secondary">Harbinger (24B):</span><code class="text-bd-green">150/1.3/500/0.95/0.25/0</code></div>
-            <div class="flex justify-between gap-2"><span class="text-bd-text-secondary">DeepSeek V3 (cohesive):</span><code class="text-bd-green">150+/0.7/500/1/0.4/0.4</code></div>
-          </div>
-          <div class="space-y-1.5">
-            <div class="flex justify-between gap-2"><span class="text-bd-text-secondary">DeepSeek V3 (creative):</span><code class="text-bd-green">150+/1.2/500/0.95/0.4/0.4</code></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Community Recommended Settings -->
-      <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-        <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-          <Users class="w-4 h-4 text-bd-purple" />
-          Community Settings <span class="text-xs text-bd-text-muted font-normal">(T/Len/P/PP/FP)</span>
-        </h3>
-        <p class="text-xs text-bd-text-muted mb-3">From OffMetaGamer and the AI Dungeon community.</p>
-        <div class="grid md:grid-cols-2 gap-3 text-xs">
-          <div class="space-y-1.5">
-            <div class="flex justify-between"><span class="text-bd-text-secondary">DeepSeek/Atlas:</span><code class="text-bd-green">0.7/300/0.92/0.8/0</code></div>
-            <div class="flex justify-between"><span class="text-bd-text-secondary">Wayfarer Large:</span><code class="text-bd-green">1/500/0.95/0.5/0</code></div>
-            <div class="flex justify-between"><span class="text-bd-text-secondary">Harbinger:</span><code class="text-bd-green">1.3/500/0.95/0.25/0</code></div>
-          </div>
-          <div class="space-y-1.5">
-            <div class="flex justify-between"><span class="text-bd-text-secondary">Hearthfire:</span><code class="text-bd-green">1/500/0.95/0.4/0.4</code></div>
-            <div class="flex justify-between"><span class="text-bd-text-secondary">Muse:</span><code class="text-bd-green">1/250/1/0.25/0</code></div>
-            <div class="flex justify-between"><span class="text-bd-text-secondary">Madness:</span><code class="text-bd-green">1/500/0.95/0.4/0.4</code></div>
-          </div>
-        </div>
-        <p class="text-xs text-bd-text-muted mt-2">DeepSeek: use ≤32k context for best results.</p>
-      </div>
-
-      <!-- Model Tiers -->
-      <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-        <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-          <Layers class="w-4 h-4 text-bd-amber" />
-          Model Tiers at a Glance
-        </h3>
-        <div class="grid md:grid-cols-3 gap-3 text-xs">
-          <div class="p-3 rounded-lg bg-bd-green/10 border border-bd-green/20">
-            <h4 class="font-semibold text-bd-green mb-1">Dynamic Small</h4>
-            <p class="text-bd-text-secondary">Muse, Wayfarer Small 2, Madness (12B). Fast and free-tier friendly. Good for quick stories.</p>
-          </div>
-          <div class="p-3 rounded-lg bg-bd-blue/10 border border-bd-blue/20">
-            <h4 class="font-semibold text-bd-blue mb-1">Dynamic Large</h4>
-            <p class="text-bd-text-secondary">Nova, Wayfarer Large, Hearthfire, Harbinger (24-70B). More coherent and creative. Premium.</p>
-          </div>
-          <div class="p-3 rounded-lg bg-bd-purple/10 border border-bd-purple/20">
-            <h4 class="font-semibold text-bd-purple mb-1">Dynamic Deep</h4>
-            <p class="text-bd-text-secondary">DeepSeek, Atlas, Raven (357-671B). Most capable but uses more credits. Best for complex stories.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Start -->
-      <div class="p-3 rounded-lg bg-bd-green/10 border border-bd-green/30">
-        <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
-          <Rocket class="w-4 h-4 text-bd-green" />
-          Quick Start
-        </h3>
-        <p class="text-xs text-bd-text-secondary">
-          <strong>T: 1.0</strong> • <strong>Len: 150</strong> • <strong>K: 300</strong> • <strong>P: 0.95</strong> • <strong>PP: 0.4</strong> • <strong>FP: 0</strong> — a safe starting point for most models. Adjust as you play.
-        </p>
-      </div>
-      </div>
-    </Transition>
-  </section>
-
-  <!-- ===================== TOKEN OPTIMIZATION SECTION ===================== -->
-  <section id="guide-tokens" class="card">
-    <button 
-      @click="toggleGuideSection('tokens')"
+      @click="toggleGuideSection('token-tips')"
       class="w-full flex items-center justify-between text-left"
     >
       <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
         <Coins class="w-5 h-5 text-bd-amber" />
-        Token Optimization
-        <span class="tag bg-bd-amber/20 text-bd-amber text-xs">Advanced</span>
+        Token Tips
       </h2>
-      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('tokens') }" />
+      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('token-tips') }" />
     </button>
     
     <Transition name="slide">
-      <div v-if="isGuideSectionExpanded('tokens')" class="mt-4 space-y-4">
-      <!-- What Are Tokens -->
-      <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-        <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
-          <Info class="w-4 h-4 text-bd-blue" />
-          What Are Tokens?
-        </h3>
-        <p class="text-xs text-bd-text-secondary">
-          Tokens are word chunks the AI reads. Common words = 1 token. Unusual words, punctuation, or special characters often split into multiple tokens, using more of your context limit.
+      <div v-if="isGuideSectionExpanded('token-tips')" class="mt-4 space-y-3">
+        <p class="text-bd-text-secondary">
+          Every word in your instructions costs tokens — context space that could hold story instead. Write direct, actionable lines.
         </p>
-      </div>
-
-      <div class="grid md:grid-cols-2 gap-4">
-        <!-- Why It Matters -->
-        <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-pink/30 flex flex-col justify-center">
-          <h3 class="font-semibold text-bd-text-primary text-base mb-3 flex items-center gap-2">
-            <AlertTriangle class="w-5 h-5 text-bd-pink" />
-            Why It Matters
-          </h3>
-          <ul class="text-sm text-bd-text-secondary space-y-3">
-            <li>• <strong>Wasted tokens</strong> = less room for story context</li>
-            <li>• <strong>Split words</strong> can confuse the AI</li>
-            <li>• <strong>Lower reach</strong> for players on smaller context limits</li>
-          </ul>
-        </div>
-
-        <!-- Token Examples -->
-        <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-          <h3 class="font-semibold text-bd-text-primary text-sm mb-2 flex items-center gap-2">
-            <Zap class="w-4 h-4 text-bd-amber" />
-            Optimization Examples
-          </h3>
-          <div class="space-y-3">
-            <div class="p-2 rounded bg-bd-bg-tertiary">
-              <div class="text-[10px] text-bd-pink font-semibold mb-1 uppercase">Fluffy (Wastes Tokens)</div>
-              <code class="text-[10px] text-bd-text-secondary">Please try to avoid using any metaphors, similes, or other flowery figurative comparisons in your prose.</code>
-            </div>
-            <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-green/20">
-              <div class="text-[10px] text-bd-green font-semibold mb-1 uppercase">Direct (Optimized)</div>
-              <code class="text-[10px] text-bd-text-secondary">Avoid similes, metaphors, or figurative comparisons.</code>
-            </div>
-            <div class="p-2 rounded bg-bd-bg-tertiary">
-              <div class="text-[10px] text-bd-pink font-semibold mb-1 uppercase">Vague (Wastes Tokens)</div>
-              <code class="text-[10px] text-bd-text-secondary">Make sure that you are writing in a way that characters only know things that they would realistically know in that moment.</code>
-            </div>
-            <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-green/20">
-              <div class="text-[10px] text-bd-green font-semibold mb-1 uppercase">Action-Oriented (Optimized)</div>
-              <code class="text-[10px] text-bd-text-secondary">Assume ignorance: NPCs only know what is logically supported by context.</code>
-            </div>
+        <div class="grid md:grid-cols-2 gap-3">
+          <div class="p-3 rounded-lg bg-bd-bg-tertiary">
+            <div class="text-[10px] text-bd-pink font-semibold mb-1 uppercase">Wordy</div>
+            <code class="text-[10px] text-bd-text-secondary">Please try to avoid using any metaphors, similes, or other flowery figurative comparisons in your prose.</code>
+          </div>
+          <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-green/20">
+            <div class="text-[10px] text-bd-green font-semibold mb-1 uppercase">Direct</div>
+            <code class="text-[10px] text-bd-text-secondary">Avoid similes, metaphors, or figurative comparisons.</code>
           </div>
         </div>
-      </div>
-
-      <!-- How to Optimize -->
-      <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
-        <h3 class="font-semibold text-bd-text-primary text-sm mb-3 flex items-center gap-2">
-          <Wrench class="w-4 h-4 text-bd-green" />
-          How to Optimize
-        </h3>
-        <ol class="text-xs text-bd-text-secondary space-y-2 list-decimal list-inside">
-          <li>Paste your instructions into the <a href="https://platform.openai.com/tokenizer" target="_blank" class="text-bd-accent-primary hover:underline font-medium">OpenAI Tokenizer</a></li>
-          <li>Look for words highlighted as multiple tokens (common with punctuation)</li>
-          <li>Replace with simpler, single-token alternatives where possible</li>
-          <li>Test both versions; sometimes unoptimized reads better</li>
-        </ol>
-        <div class="mt-3 p-2 rounded bg-bd-bg-tertiary">
-          <p class="text-xs text-bd-text-muted flex items-center gap-1">
-            <Info class="w-3 h-3" />
-            Capitalization and spacing affect tokenization!
-          </p>
+        <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+          <ul class="text-xs text-bd-text-secondary space-y-1">
+            <li>• Use <strong>command words</strong>: Make, Avoid, Write, Be, Remember</li>
+            <li>• <strong>One idea per line</strong> — short, specific, actionable</li>
+            <li>• Use a <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" class="text-bd-accent-primary hover:underline">tokenizer tool</a> to check your token count</li>
+          </ul>
         </div>
-      </div>
       </div>
     </Transition>
   </section>
@@ -1188,12 +866,10 @@
 import { ref } from 'vue'
 import { AI_INSTRUCTIONS_CONTRIBUTORS as aiInstructionsContributors } from '@/data/contributors'
 import { 
-  ScrollText, SlidersHorizontal, Layers, PenTool, Users, 
-  Swords, FileText, BookOpen, HelpCircle,
-  Sparkles, Info, Zap, Target, Lightbulb, Thermometer,
-  ListOrdered, Percent, Repeat, Rocket, Wrench,
-  Shield, Scale, Drama, MessageSquare, Skull, ExternalLink,
-  AlertTriangle, Plus, Cpu, Coins,
+  ScrollText, Layers, Swords, FileText, BookOpen, HelpCircle,
+  Sparkles, Info, Zap, Target, Lightbulb, Rocket, Wrench,
+  Drama, MessageSquare, Skull, ExternalLink,
+  AlertTriangle, Plus, Coins,
   X, Heart, ChevronDown, ChevronUp, Eye
 } from 'lucide-vue-next'
 
@@ -1201,15 +877,13 @@ import {
 const guideSections = [
   { id: 'quick-start', label: 'Quick Start' },
   { id: 'what-are-instructions', label: 'What Are AI Instructions?' },
-  { id: 'context-architecture', label: 'Context Architecture' },
-  { id: 'component-comparison', label: 'Instructions vs Others' },
+  { id: 'context-placement', label: 'Context Placement' },
   { id: 'structuring', label: 'Structuring Your Set' },
   { id: 'common-mistakes', label: 'Common Mistakes' },
   { id: 'quick-fixes', label: 'Quick Fixes' },
   { id: 'testing', label: 'Testing & Debugging' },
   { id: 'genre-guides', label: 'Genre Guides' },
-  { id: 'model-settings', label: 'Model Settings' },
-  { id: 'tokens', label: 'Token Optimization' },
+  { id: 'token-tips', label: 'Token Tips' },
   { id: 'credits', label: 'Credits' }
 ]
 
