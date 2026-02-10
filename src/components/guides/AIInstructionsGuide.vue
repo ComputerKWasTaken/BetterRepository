@@ -32,6 +32,83 @@
     <!-- Main Content -->
     <div class="flex-1 space-y-4 min-w-0">
 
+  <!-- ===================== WHAT ARE AI INSTRUCTIONS ===================== -->
+  <section id="guide-what-are-instructions" class="card">
+    <button 
+      @click="toggleGuideSection('what-are-instructions')"
+      class="w-full flex items-center justify-between text-left"
+    >
+      <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+        <HelpCircle class="w-5 h-5 text-bd-amber" />
+        What Are AI Instructions?
+      </h2>
+      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('what-are-instructions') }" />
+    </button>
+    
+    <Transition name="slide">
+      <div v-if="isGuideSectionExpanded('what-are-instructions')" class="mt-4 space-y-4">
+        <p class="text-bd-text-secondary">
+          AI Instructions are rules you write to control <strong>how the AI behaves</strong> — its writing style, pacing, character handling, and world rules. They sit at <strong>position #1</strong> in the context window, making them the first thing the AI reads on every turn.
+        </p>
+
+        <div class="grid md:grid-cols-3 gap-3">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
+            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+              <Sparkles class="w-4 h-4 text-bd-amber" />
+              What They Control
+            </h3>
+            <ul class="text-xs text-bd-text-secondary space-y-1">
+              <li>• Writing style & prose quality</li>
+              <li>• Pacing & response length</li>
+              <li>• NPC behavior & world rules</li>
+              <li>• Player character control</li>
+              <li>• Tone, genre, & atmosphere</li>
+            </ul>
+          </div>
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
+            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+              <Info class="w-4 h-4 text-bd-blue" />
+              Key Fact
+            </h3>
+            <p class="text-xs text-bd-text-secondary">
+              Custom instructions <strong>replace</strong> the defaults entirely — they don't stack on top. If you write your own, the built-in instructions are gone.
+            </p>
+          </div>
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
+            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+              <Plus class="w-4 h-4 text-bd-green" />
+              How to Add
+            </h3>
+            <p class="text-xs text-bd-text-secondary">
+              <strong>Sidebar → Plot → Add Plot Component → AI Instructions</strong>
+            </p>
+          </div>
+        </div>
+
+        <!-- Right tool for the job -->
+        <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+          <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-2">Right Tool for the Job</h4>
+          <div class="grid md:grid-cols-2 gap-2 text-xs text-bd-text-secondary">
+            <div>• <strong>"Always write this way"</strong> → AI Instructions</div>
+            <div>• <strong>"Right now, do this"</strong> → Author's Note</div>
+            <div>• <strong>"Always remember this fact"</strong> → Plot Essentials</div>
+            <div>• <strong>"Remember this when relevant"</strong> → Story Cards</div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30">
+          <div class="flex items-start gap-2">
+            <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
+            <p class="text-xs text-bd-text-secondary">
+              For a full breakdown of context assembly order, token budgets, and how all plot components interact, see the 
+              <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline font-medium">Plot Components Guide</router-link>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </Transition>
+  </section>
+
   <!-- ===================== QUICK START SECTION ===================== -->
   <section id="guide-quick-start" class="card">
     <button 
@@ -121,97 +198,196 @@
     </Transition>
   </section>
 
-  <!-- ===================== WHAT ARE AI INSTRUCTIONS ===================== -->
-  <section id="guide-what-are-instructions" class="card">
+  <!-- ===================== DEFAULT INSTRUCTIONS BREAKDOWN ===================== -->
+  <section id="guide-default-breakdown" class="card">
     <button 
-      @click="toggleGuideSection('what-are-instructions')"
-      class="w-full flex items-center justify-between text-left"
-    >
-      <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-        <HelpCircle class="w-5 h-5 text-bd-amber" />
-        What Are AI Instructions?
-      </h2>
-      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('what-are-instructions') }" />
-    </button>
-    
-    <Transition name="slide">
-      <div v-if="isGuideSectionExpanded('what-are-instructions')" class="mt-4 space-y-4">
-        <p class="text-bd-text-secondary">
-          AI Instructions (<strong>AIN</strong>) are rules that shape how the AI writes: style, pacing, behavior, and focus. 
-          <strong>Pick specific lines</strong> that solve your problems; don't copy everything at once.
-        </p>
-        <div class="grid md:grid-cols-3 gap-4">
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
-            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-              <Sparkles class="w-4 h-4 text-bd-amber" />
-              What They Do
-            </h3>
-            <ul class="text-xs text-bd-text-secondary space-y-1">
-              <li>• Enforce writing styles</li>
-              <li>• Control pacing & focus</li>
-              <li>• Set world rules & NPC behavior</li>
-              <li>• Break 4th wall if desired</li>
-            </ul>
-          </div>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-              <Info class="w-4 h-4 text-bd-blue" />
-              Defaults
-            </h3>
-            <p class="text-xs text-bd-text-secondary">
-              Each model has Latitude's default instructions. View them: <strong>Click output → View Context → AI Instructions</strong>
-            </p>
-          </div>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-              <Plus class="w-4 h-4 text-bd-green" />
-              How to Add
-            </h3>
-            <p class="text-xs text-bd-text-secondary">
-              <strong>Sidebar → Plot → Add Plot Component → AI Instructions</strong>
-            </p>
-          </div>
-        </div>
-      </div>
-    </Transition>
-  </section>
-
-  <!-- ===================== CONTEXT & PLACEMENT ===================== -->
-  <section id="guide-context-placement" class="card">
-    <button 
-      @click="toggleGuideSection('context-placement')"
+      @click="toggleGuideSection('default-breakdown')"
       class="w-full flex items-center justify-between text-left"
     >
       <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
         <Layers class="w-5 h-5 text-bd-cyan" />
-        Where AI Instructions Sit in Context
+        Default Instructions Breakdown
       </h2>
-      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('context-placement') }" />
+      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('default-breakdown') }" />
     </button>
     
     <Transition name="slide">
-      <div v-if="isGuideSectionExpanded('context-placement')" class="mt-4 space-y-4">
+      <div v-if="isGuideSectionExpanded('default-breakdown')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          AI Instructions occupy <strong>position #1</strong> in the context — the very first thing the AI reads. This makes them ideal for 
-          persistent, global rules that frame every response. For scene-specific nudges, use <strong>Author's Note</strong> (position #7, near the end where attention is also high).
+          Every AI Dungeon adventure starts with <strong>Latitude's built-in default instructions</strong>. When you write your own, they <strong>replace the defaults entirely</strong> — your instructions aren't appended on top. Understanding how the defaults are organized helps you decide what to keep, what to improve, and what to leave out.
         </p>
 
-        <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-          <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-2">Rule of Thumb</h4>
-          <div class="grid md:grid-cols-2 gap-2 text-xs text-bd-text-secondary">
-            <div>• <strong>"Always do this"</strong> → AI Instructions</div>
-            <div>• <strong>"Right now, do this"</strong> → Author's Note</div>
-            <div>• <strong>"Always remember this fact"</strong> → Plot Essentials</div>
-            <div>• <strong>"Remember this when relevant"</strong> → Story Cards</div>
+        <!-- The full default set -->
+        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+            <FileText class="w-4 h-4 text-bd-text-muted" />
+            The Default Instruction Set
+          </h3>
+          <div class="p-3 rounded bg-bd-bg-primary font-mono text-xs text-bd-green space-y-1">
+            <div>You are an AI dungeon master that provides any kind of roleplaying game content.</div>
+            <div class="text-bd-text-muted mt-2">Instructions:</div>
+            <div class="mt-1">- Be specific, descriptive, and creative.</div>
+            <div>- Avoid repetition and avoid summarization.</div>
+            <div>- Generally use second person (like this: 'He looks at you.'). But use third person if that's what the story seems to follow.</div>
+            <div>- Never decide or write for the user. If the input ends mid sentence, continue where it left off. ">" tokens mean a character action attempt. You should describe what happens when the player attempts that action. Do not output the ">" token.</div>
+            <div>- Make sure you always give responses continuing mid sentence even if it stops partway through.</div>
           </div>
         </div>
 
-        <div class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
+        <!-- Breakdown by category -->
+        <h3 class="font-semibold text-bd-text-primary flex items-center gap-2">
+          <Sparkles class="w-4 h-4 text-bd-amber" />
+          Line-by-Line Breakdown
+        </h3>
+
+        <!-- Line 1: Role -->
+        <div class="p-4 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
           <div class="flex items-start gap-3">
-            <Info class="w-5 h-5 text-bd-info flex-shrink-0 mt-0.5" />
-            <p class="text-sm text-bd-text-secondary">
-              For a full breakdown of context assembly order, token budgets, and how all plot components interact, see the 
-              <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline font-medium">Plot Components Guide</router-link>.
+            <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-bold bg-bd-purple/20 text-bd-purple uppercase tracking-wider">Role</span>
+            <div class="flex-1">
+              <div class="p-2 rounded bg-bd-bg-primary font-mono text-xs text-bd-green mb-2">
+                You are an AI dungeon master that provides any kind of roleplaying game content.
+              </div>
+              <p class="text-xs text-bd-text-secondary">
+                Sets the AI's <strong>persona</strong>. This is the foundation — everything else builds on this identity. The "any kind of roleplaying game content" part gives the AI broad creative permission.
+              </p>
+              <p class="text-xs text-bd-text-muted mt-1">
+                <strong>Category:</strong> Role & Persona — This is always the first line in a well-structured instruction set.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Line 2: Writing Style -->
+        <div class="p-4 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
+          <div class="flex items-start gap-3">
+            <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-bold bg-bd-blue/20 text-bd-blue uppercase tracking-wider">Style</span>
+            <div class="flex-1">
+              <div class="p-2 rounded bg-bd-bg-primary font-mono text-xs text-bd-green mb-2">
+                - Be specific, descriptive, and creative.
+              </div>
+              <p class="text-xs text-bd-text-secondary">
+                Core <strong>writing style</strong> directive. Three clear adjectives that set the quality bar. Notice how it's positive ("be this") rather than negative ("don't be boring").
+              </p>
+              <p class="text-xs text-bd-text-muted mt-1">
+                <strong>Category:</strong> Writing Style — Broad prose quality rules come right after the role.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Line 3: Anti-Repetition -->
+        <div class="p-4 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
+          <div class="flex items-start gap-3">
+            <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-bold bg-bd-blue/20 text-bd-blue uppercase tracking-wider">Style</span>
+            <div class="flex-1">
+              <div class="p-2 rounded bg-bd-bg-primary font-mono text-xs text-bd-green mb-2">
+                - Avoid repetition and avoid summarization.
+              </div>
+              <p class="text-xs text-bd-text-secondary">
+                Two of the most common AI problems in one line. <strong>Repetition</strong> (reusing phrases, echoing user input) and <strong>summarization</strong> (wrapping up instead of continuing) are the top complaints from players.
+              </p>
+              <p class="text-xs text-bd-text-muted mt-1">
+                <strong>Category:</strong> Writing Style / Pacing — Addresses both prose quality and response flow.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Line 4: POV -->
+        <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
+          <div class="flex items-start gap-3">
+            <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-bold bg-bd-green/20 text-bd-green uppercase tracking-wider">POV</span>
+            <div class="flex-1">
+              <div class="p-2 rounded bg-bd-bg-primary font-mono text-xs text-bd-green mb-2">
+                - Generally use second person (like this: 'He looks at you.'). But use third person if that's what the story seems to follow.
+              </div>
+              <p class="text-xs text-bd-text-secondary">
+                Sets the <strong>narrative perspective</strong> with a smart fallback. Second person is the AI Dungeon default ("you walk into the tavern"), but it gracefully defers to third person if the story establishes that pattern. The inline example makes the instruction unambiguous.
+              </p>
+              <p class="text-xs text-bd-text-muted mt-1">
+                <strong>Category:</strong> Writing Style / POV & Tense — Perspective rules are a core style decision.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Line 5: Player Agency + > Token -->
+        <div class="p-4 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+          <div class="flex items-start gap-3">
+            <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-bold bg-bd-amber/20 text-bd-amber uppercase tracking-wider">Gameplay + Meta</span>
+            <div class="flex-1">
+              <div class="p-2 rounded bg-bd-bg-primary font-mono text-xs text-bd-green mb-2">
+                - Never decide or write for the user. If the input ends mid sentence, continue where it left off. ">" tokens mean a character action attempt. You should describe what happens when the player attempts that action. Do not output the ">" token.
+              </div>
+              <p class="text-xs text-bd-text-secondary">
+                The densest line — it packs <strong>three separate concerns</strong> into one instruction:
+              </p>
+              <ul class="text-xs text-bd-text-secondary space-y-1 mt-2">
+                <li>• <strong>Player agency</strong> — "Never decide or write for the user" prevents the AI from controlling your character</li>
+                <li>• <strong>Continuation</strong> — "continue where it left off" ensures seamless mid-sentence pickups</li>
+                <li>• <strong>> token handling</strong> — Explains the AI Dungeon action format and prevents the AI from echoing the > symbol</li>
+              </ul>
+              <p class="text-xs text-bd-text-muted mt-2">
+                <strong>Categories:</strong> Gameplay (player control), Coherence (continuation), Meta (> token) — This line spans multiple categories, which is common in compact instruction sets.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Line 6: Continuation -->
+        <div class="p-4 rounded-lg bg-bd-teal/10 border border-bd-teal/30">
+          <div class="flex items-start gap-3">
+            <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-bold bg-bd-teal/20 text-bd-teal uppercase tracking-wider">Coherence</span>
+            <div class="flex-1">
+              <div class="p-2 rounded bg-bd-bg-primary font-mono text-xs text-bd-green mb-2">
+                - Make sure you always give responses continuing mid sentence even if it stops partway through.
+              </div>
+              <p class="text-xs text-bd-text-secondary">
+                <strong>Reinforces continuation</strong> — this is essentially a stronger restatement of the mid-sentence rule from the previous line. Latitude included it twice because seamless continuation is critical to the AI Dungeon experience.
+              </p>
+              <p class="text-xs text-bd-text-muted mt-1">
+                <strong>Category:</strong> Coherence — Ensures the AI never starts fresh or ignores partial input.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Organization Pattern -->
+        <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+            <Zap class="w-4 h-4 text-bd-amber" />
+            The Pattern
+          </h3>
+          <p class="text-xs text-bd-text-secondary mb-3">
+            Notice how the defaults follow a clear priority order. Your custom instructions should follow the same structure:
+          </p>
+          <div class="space-y-2">
+            <div class="flex items-center gap-3">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-bd-purple/20 text-bd-purple text-xs font-bold flex items-center justify-center">1</span>
+              <span class="text-xs text-bd-text-secondary"><strong>Role</strong> — Who is the AI? (persona, tone, genre)</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-bd-blue/20 text-bd-blue text-xs font-bold flex items-center justify-center">2</span>
+              <span class="text-xs text-bd-text-secondary"><strong>Style</strong> — How should it write? (prose quality, POV, pacing)</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-bd-amber/20 text-bd-amber text-xs font-bold flex items-center justify-center">3</span>
+              <span class="text-xs text-bd-text-secondary"><strong>Gameplay</strong> — What are the rules? (player control, consequences, world behavior)</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-bd-teal/20 text-bd-teal text-xs font-bold flex items-center justify-center">4</span>
+              <span class="text-xs text-bd-text-secondary"><strong>Coherence & Meta</strong> — How should it handle technical concerns? (continuation, formatting, tokens)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tip -->
+        <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30">
+          <div class="flex items-start gap-2">
+            <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
+            <p class="text-xs text-bd-text-secondary">
+              <strong>Your instructions replace these defaults entirely.</strong> Once you write custom instructions, the defaults are gone. If you want to keep any of this behavior (like the > token handling or second-person POV), you need to include it yourself. Use <strong>View Context</strong> on any AI output to verify exactly what the AI sees.
             </p>
           </div>
         </div>
@@ -315,19 +491,6 @@
         </div>
       </div>
 
-      <!-- Information Flow Tip -->
-      <div class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
-        <div class="flex items-start gap-3">
-          <Info class="w-5 h-5 text-bd-info flex-shrink-0 mt-0.5" />
-          <div>
-            <h3 class="font-semibold text-bd-text-primary mb-1">Information Flow Matters</h3>
-            <p class="text-sm text-bd-text-secondary">
-              The AI weighs instructions at the <strong>beginning and end</strong> more heavily. Put your most important rules first, 
-              and use the end for reinforcement. Topic sections in the middle help organize without losing impact.
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
       </div>
     </Transition>
@@ -393,10 +556,10 @@
           </div>
           <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
             <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
-              <X class="w-3 h-3" /> Ignoring Default Instructions
+              <X class="w-3 h-3" /> Forgetting the Defaults Are Gone
             </h4>
-            <p class="text-xs text-bd-text-secondary">Each model has Latitude's built-in instructions. Your instructions stack on top — they can conflict with or duplicate the defaults.</p>
-            <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Use <strong>View Context</strong> to see the full AI Instructions block including defaults, then write yours to complement, not repeat.</p>
+            <p class="text-xs text-bd-text-secondary">Custom instructions replace the defaults entirely. If you don't include basics like > token handling or "avoid repetition," the AI loses those rules.</p>
+            <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Read the <strong>Default Instructions Breakdown</strong> above. Decide what to keep and include it in your own set.</p>
           </div>
           <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
             <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
@@ -425,24 +588,7 @@
     
     <Transition name="slide">
       <div v-if="isGuideSectionExpanded('quick-fixes')" class="mt-4">
-        <div class="grid md:grid-cols-2 gap-4 mb-4">
-          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <ul class="text-xs text-bd-text-secondary space-y-1">
-              <li>• <strong>Use commands:</strong> Make, Avoid, Write, Be, Remember</li>
-              <li>• <strong>One idea per line</strong>, keep instructions short</li>
-              <li>• <strong>Use brackets</strong> <code class="text-bd-amber">[ ]</code> <code class="text-bd-amber">{ }</code> to group related info</li>
-            </ul>
-          </div>
-          <div class="p-3 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
-            <h4 class="text-xs font-semibold text-bd-text-primary mb-1">Scope</h4>
-            <p class="text-xs text-bd-text-secondary">
-              AIN = global rules (whole story). For scene-specific tweaks, use 
-              <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline">Author's Note</router-link>.
-            </p>
-          </div>
-        </div>
-
-        <p class="text-xs text-bd-text-muted mb-3">Proven fixes from the <router-link to="/ai-instructions?tab=collection" class="text-bd-accent-primary hover:underline">Component Library</router-link>. Replace 'Name' with your character.</p>
+        <p class="text-xs text-bd-text-muted mb-3">Proven copy-paste fixes for common problems. Replace <strong>'Name'</strong> with your character. More in the <router-link to="/ai-instructions?tab=collection" class="text-bd-accent-primary hover:underline">Component Library</router-link>.</p>
 
         <div class="grid md:grid-cols-2 gap-3">
       <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
@@ -775,40 +921,74 @@
         </Transition>
       </section>
 
-  <!-- ===================== TOKEN TIPS SECTION ===================== -->
-  <section id="guide-token-tips" class="card">
+  <!-- ===================== WRITING EFFECTIVE INSTRUCTIONS ===================== -->
+  <section id="guide-writing-tips" class="card">
     <button 
-      @click="toggleGuideSection('token-tips')"
+      @click="toggleGuideSection('writing-tips')"
       class="w-full flex items-center justify-between text-left"
     >
       <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-        <Coins class="w-5 h-5 text-bd-amber" />
-        Token Tips
+        <Lightbulb class="w-5 h-5 text-bd-amber" />
+        Writing Effective Instructions
       </h2>
-      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('token-tips') }" />
+      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('writing-tips') }" />
     </button>
     
     <Transition name="slide">
-      <div v-if="isGuideSectionExpanded('token-tips')" class="mt-4 space-y-3">
+      <div v-if="isGuideSectionExpanded('writing-tips')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          Every word in your instructions costs tokens — context space that could hold story instead. Write direct, actionable lines.
+          Every word in your instructions costs tokens — context space that could hold story instead. Good instructions are <strong>direct, specific, and actionable</strong>.
         </p>
+
+        <!-- Be Direct -->
         <div class="grid md:grid-cols-2 gap-3">
           <div class="p-3 rounded-lg bg-bd-bg-tertiary">
-            <div class="text-[10px] text-bd-pink font-semibold mb-1 uppercase">Wordy</div>
+            <div class="text-[10px] text-bd-pink font-semibold mb-1 uppercase">Wordy (19 tokens)</div>
             <code class="text-[10px] text-bd-text-secondary">Please try to avoid using any metaphors, similes, or other flowery figurative comparisons in your prose.</code>
           </div>
           <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-green/20">
-            <div class="text-[10px] text-bd-green font-semibold mb-1 uppercase">Direct</div>
+            <div class="text-[10px] text-bd-green font-semibold mb-1 uppercase">Direct (9 tokens)</div>
             <code class="text-[10px] text-bd-text-secondary">Avoid similes, metaphors, or figurative comparisons.</code>
           </div>
         </div>
-        <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-          <ul class="text-xs text-bd-text-secondary space-y-1">
-            <li>• Use <strong>command words</strong>: Make, Avoid, Write, Be, Remember</li>
-            <li>• <strong>One idea per line</strong> — short, specific, actionable</li>
-            <li>• Use a <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" class="text-bd-accent-primary hover:underline">tokenizer tool</a> to check your token count</li>
-          </ul>
+
+        <!-- Writing Rules -->
+        <div class="grid md:grid-cols-2 gap-3">
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+              <Zap class="w-4 h-4 text-bd-amber" />
+              How to Write
+            </h3>
+            <ul class="text-xs text-bd-text-secondary space-y-1.5">
+              <li>• <strong>Command words</strong> — Start with: Make, Avoid, Write, Be, Never, Always</li>
+              <li>• <strong>One idea per line</strong> — Short, specific, actionable</li>
+              <li>• <strong>Positive framing</strong> — "Write vivid descriptions" beats "Don't be boring"</li>
+              <li>• <strong>Be specific</strong> — "Use varied sentence lengths" beats "Write better"</li>
+              <li>• <strong>Give examples</strong> — Inline examples remove ambiguity</li>
+            </ul>
+          </div>
+          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+              <Coins class="w-4 h-4 text-bd-amber" />
+              Token Efficiency
+            </h3>
+            <ul class="text-xs text-bd-text-secondary space-y-1.5">
+              <li>• <strong>Cut filler</strong> — Remove "please", "try to", "make sure to"</li>
+              <li>• <strong>Merge related rules</strong> — Combine lines that address the same concern</li>
+              <li>• <strong>Skip the obvious</strong> — Don't restate what the defaults already cover (unless you've replaced them)</li>
+              <li>• <strong>Check your count</strong> — Use a <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" class="text-bd-accent-primary hover:underline">tokenizer tool</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Attention tip -->
+        <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30">
+          <div class="flex items-start gap-2">
+            <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
+            <p class="text-xs text-bd-text-secondary">
+              <strong>Attention is highest at the beginning and end.</strong> Put your most important rules first (role, core style) and use the end for reinforcement. Topic sections in the middle help organize without losing impact.
+            </p>
+          </div>
         </div>
       </div>
     </Transition>
@@ -875,15 +1055,15 @@ import {
 
 // Guide table of contents sections
 const guideSections = [
-  { id: 'quick-start', label: 'Quick Start' },
   { id: 'what-are-instructions', label: 'What Are AI Instructions?' },
-  { id: 'context-placement', label: 'Context Placement' },
+  { id: 'quick-start', label: 'Quick Start' },
+  { id: 'default-breakdown', label: 'Default Instructions Breakdown' },
   { id: 'structuring', label: 'Structuring Your Set' },
   { id: 'common-mistakes', label: 'Common Mistakes' },
   { id: 'quick-fixes', label: 'Quick Fixes' },
   { id: 'testing', label: 'Testing & Debugging' },
   { id: 'genre-guides', label: 'Genre Guides' },
-  { id: 'token-tips', label: 'Token Tips' },
+  { id: 'writing-tips', label: 'Writing Effective Instructions' },
   { id: 'credits', label: 'Credits' }
 ]
 
