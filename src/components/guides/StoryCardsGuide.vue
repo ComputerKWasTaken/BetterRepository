@@ -1,74 +1,36 @@
 <template>
-  <div class="space-y-8">
-    <!-- Page Header — animated hero -->
-    <header class="sc-hero relative overflow-hidden rounded-2xl py-10 px-6">
-      <!-- Animated background orbs -->
-      <div class="hero-orb hero-orb--purple" aria-hidden="true" />
-      <div class="hero-orb hero-orb--cyan" aria-hidden="true" />
-
-      <div class="relative z-10 flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl bg-bd-purple/20 flex items-center justify-center animate-float flex-shrink-0">
-          <Drama class="w-6 h-6 text-bd-purple" />
-        </div>
-        <div>
-          <h1 class="text-2xl md:text-3xl font-bold text-bd-text-primary tracking-tight">
-            Story <span class="text-gradient">Cards</span>
-          </h1>
-          <p class="text-bd-text-secondary mt-1 leading-relaxed">
-            Notes for the AI about characters, locations, concepts, and other elements of your story.
-          </p>
-        </div>
-      </div>
-    </header>
-
-    <!-- Tab Navigation -->
-    <div class="flex gap-2 border-b border-bd-border-subtle pb-2 overflow-x-auto">
-      <button 
-        v-for="tab in tabs" 
-        :key="tab.id"
-        @click="activeTab = tab.id"
-        class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap"
-        :class="activeTab === tab.id 
-          ? 'bg-bd-accent-primary/20 text-bd-accent-light' 
-          : 'text-bd-text-muted hover:text-bd-text-primary hover:bg-bd-bg-tertiary'"
-      >
-        <component :is="tab.icon" class="w-4 h-4" />
-        {{ tab.label }}
-      </button>
-    </div>
-
-    <!-- ==================== GUIDE TAB ==================== -->
-    <template v-if="activeTab === 'guide'">
-      <!-- Table of Contents - Sticky Sidebar -->
-      <div class="flex gap-6 animate-fade-in">
-        <aside class="hidden lg:block w-56 flex-shrink-0">
-          <div class="sticky top-4 space-y-2">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider">Contents</h3>
-              <div class="flex gap-1">
-                <button @click="expandAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Expand all">
-                  <ChevronDown class="w-3 h-3" />
-                </button>
-                <button @click="collapseAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Collapse all">
-                  <ChevronUp class="w-3 h-3" />
-                </button>
-              </div>
-            </div>
-            <button
-              v-for="section in guideSections"
-              :key="section.id"
-              @click="scrollToGuideSection(section.id)"
-              class="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors hover:bg-bd-bg-tertiary"
-              :class="[
-                isGuideSectionExpanded(section.id) ? 'text-bd-text-primary' : 'text-bd-text-muted'
-              ]"
-            >
-              {{ section.label }}
+  <!-- Table of Contents - Sticky Sidebar -->
+  <div class="flex gap-6 animate-fade-in">
+    <!-- TOC Sidebar -->
+    <aside class="hidden lg:block w-56 flex-shrink-0">
+      <div class="sticky top-4 space-y-2">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider">Contents</h3>
+          <div class="flex gap-1">
+            <button @click="expandAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Expand all">
+              <ChevronDown class="w-3 h-3" />
+            </button>
+            <button @click="collapseAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Collapse all">
+              <ChevronUp class="w-3 h-3" />
             </button>
           </div>
-        </aside>
+        </div>
+        <button
+          v-for="section in guideSections"
+          :key="section.id"
+          @click="scrollToGuideSection(section.id)"
+          class="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors hover:bg-bd-bg-tertiary"
+          :class="[
+            isGuideSectionExpanded(section.id) ? 'text-bd-text-primary' : 'text-bd-text-muted'
+          ]"
+        >
+          {{ section.label }}
+        </button>
+      </div>
+    </aside>
 
-        <div class="flex-1 space-y-4 min-w-0">
+    <!-- Main Content -->
+    <div class="flex-1 space-y-4 min-w-0">
 
       <!-- What Are Story Cards -->
       <section id="guide-what-are" class="card">
@@ -101,7 +63,7 @@
             </div>
             <p class="text-sm text-bd-text-muted">
               Story Cards are one of several 
-              <router-link to="/plot-components" class="text-bd-accent-primary hover:underline">Plot Components</router-link> 
+              <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline">Plot Components</router-link> 
               you can use to guide the AI.
             </p>
           </div>
@@ -377,7 +339,6 @@
             </div>
           </div>
         </Transition>
-
       </section>
 
       <!-- Trigger Mastery Section -->
@@ -802,347 +763,29 @@
           </div>
         </Transition>
       </section>
-        </div>
-      </div>
-    </template>
 
-    <!-- ==================== EXAMPLES TAB ==================== -->
-    <template v-if="activeTab === 'examples'">
-      <!-- Templates Introduction -->
-      <div class="card bg-gradient-to-r from-bd-purple/10 to-bd-green/10 border-bd-purple/30 relative overflow-hidden animate-fade-in">
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-purple via-bd-green to-bd-cyan" />
-        <div class="flex items-start gap-4 pt-1">
-          <div class="w-12 h-12 rounded-xl bg-bd-purple/20 flex items-center justify-center flex-shrink-0">
-            <Layers class="w-6 h-6 text-bd-purple" />
-          </div>
-          <div class="flex-1">
-            <h2 class="text-lg font-semibold text-bd-text-primary mb-1">Story Card Templates</h2>
-            <p class="text-sm text-bd-text-secondary">
-              Fill-in-the-blank templates for characters, locations, items, and more. 
-              Customize triggers and entries to fit your story.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Filter Buttons -->
-      <div class="flex flex-wrap items-center gap-2">
-        <span class="text-xs text-bd-text-muted mr-1">Quick filters:</span>
-        <button 
-          @click="toggleQuickFilter('essential')"
-          class="btn text-sm"
-          :class="quickFilter === 'essential' ? 'btn-primary' : 'btn-secondary'"
-        >
-          <Star class="w-4 h-4" />
-          Must-Have
-        </button>
-        <button 
-          @click="toggleQuickFilter('starter')"
-          class="btn text-sm"
-          :class="quickFilter === 'starter' ? 'btn-primary' : 'btn-secondary'"
-        >
-          <Rocket class="w-4 h-4" />
-          Beginner Friendly
-        </button>
-        <button 
-          @click="toggleQuickFilter('high-impact')"
-          class="btn text-sm"
-          :class="quickFilter === 'high-impact' ? 'btn-primary' : 'btn-secondary'"
-        >
-          <Zap class="w-4 h-4" />
-          High Impact
-        </button>
-        <div class="flex-1"></div>
-        <button 
-          @click="showFilters = !showFilters"
-          class="btn btn-secondary text-sm"
-          :class="{ 'ring-2 ring-bd-accent-primary': hasActiveFilters }"
-        >
-          <SlidersHorizontal class="w-4 h-4" />
-          Advanced Filters
-          <span v-if="hasActiveFilters" class="w-2 h-2 rounded-full bg-bd-accent-primary"></span>
-        </button>
-      </div>
-
-      <!-- Search Bar -->
-      <SearchBar
-        v-model="searchQuery"
-        placeholder="Search story cards..."
-        :suggestions="searchSuggestions"
-        :result-count="filteredCards.length"
-        @search="handleSearch"
-      />
-
-      <!-- Filter Panel -->
-      <Transition name="slide">
-        <div v-if="showFilters" class="card-elevated space-y-4">
-          <div class="flex items-center justify-between">
-            <h3 class="font-semibold text-bd-text-primary">Filters</h3>
-            <button 
-              v-if="hasActiveFilters"
-              @click="clearFilters"
-              class="text-sm text-bd-accent-primary hover:underline"
-            >
-              Clear all
-            </button>
-          </div>
-
-          <!-- Category Filter -->
-          <div>
-            <h4 class="text-sm text-bd-text-muted mb-2">Category</h4>
-            <div class="flex flex-wrap gap-2">
-              <button 
-                v-for="category in categories" 
-                :key="category.id"
-                @click="toggleCategory(category.id)"
-                class="tag cursor-pointer transition-all flex items-center gap-1.5"
-                :class="selectedCategories.includes(category.id) 
-                  ? 'bg-bd-accent-primary/20 text-bd-accent-light border border-bd-accent-primary/30' 
-                  : 'hover:bg-bd-tag-bg'"
-              >
-                {{ category.name }}
-              </button>
-            </div>
-          </div>
-
-          <!-- Difficulty Filter -->
-          <div>
-            <h4 class="text-sm text-bd-text-muted mb-2">Difficulty</h4>
-            <div class="flex flex-wrap gap-2">
-              <button 
-                v-for="diff in difficulties" 
-                :key="diff.id"
-                @click="toggleDifficulty(diff.id)"
-                class="tag cursor-pointer transition-all"
-                :class="selectedDifficulties.includes(diff.id) 
-                  ? diff.activeClass 
-                  : 'hover:bg-bd-tag-bg'"
-              >
-                {{ diff.label }}
-              </button>
-            </div>
-          </div>
-
-          <!-- Impact Filter -->
-          <div>
-            <h4 class="text-sm text-bd-text-muted mb-2">Impact</h4>
-            <div class="flex flex-wrap gap-2">
-              <button 
-                v-for="imp in impacts" 
-                :key="imp.id"
-                @click="toggleImpact(imp.id)"
-                class="tag cursor-pointer transition-all"
-                :class="selectedImpacts.includes(imp.id) 
-                  ? imp.activeClass 
-                  : 'hover:bg-bd-tag-bg'"
-              >
-                {{ imp.label }}
-              </button>
-            </div>
-          </div>
-
-          <!-- Type Filter -->
-          <div>
-            <h4 class="text-sm text-bd-text-muted mb-2">Type</h4>
-            <div class="flex flex-wrap gap-2">
-              <button 
-                @click="toggleType('examples')"
-                class="tag cursor-pointer transition-all"
-                :class="selectedType === 'examples' 
-                  ? 'bg-bd-purple/20 text-bd-purple border border-bd-purple/30' 
-                  : 'hover:bg-bd-tag-bg'"
-              >
-                Examples
-              </button>
-              <button 
-                @click="toggleType('templates')"
-                class="tag cursor-pointer transition-all"
-                :class="selectedType === 'templates' 
-                  ? 'bg-bd-green/20 text-bd-green border border-bd-green/30' 
-                  : 'hover:bg-bd-tag-bg'"
-              >
-                Templates
-              </button>
-            </div>
-          </div>
-        </div>
-      </Transition>
-
-      <!-- Results Summary -->
-      <div class="flex items-center justify-between text-sm">
-        <span class="text-bd-text-muted">
-          Showing {{ filteredCards.length }} of {{ allCards.length }} cards
-        </span>
-      </div>
-
-      <!-- Category Sections (default view) -->
-      <div v-if="!hasAnyFilters" class="space-y-8">
-        <!-- Templates Section -->
-        <section>
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-8 h-8 rounded-lg bg-bd-green/20 flex items-center justify-center">
-              <FileText class="w-4 h-4 text-bd-green" />
-            </div>
-            <div>
-              <h3 class="font-semibold text-bd-text-primary">Story Card Templates</h3>
-              <p class="text-xs text-bd-text-muted">Fill-in-the-blank templates to create your own cards.</p>
-            </div>
-            <span class="ml-auto tag">{{ templates.length }}</span>
-          </div>
-          
-          <div class="grid gap-3">
-            <StoryCardItem 
-              v-for="card in templates" 
-              :key="card.id"
-              :card="card"
-              type="template"
-            />
-          </div>
-        </section>
-      </div>
-
-      <!-- Filtered Results -->
-      <div v-if="hasAnyFilters" class="grid gap-3">
-        <StoryCardItem 
-          v-for="card in filteredCards" 
-          :key="card.id"
-          :card="card"
-          :type="card.id.startsWith('template-') ? 'template' : 'example'"
-        />
-        
-        <!-- Empty State -->
-        <div v-if="filteredCards.length === 0" class="text-center py-12">
-          <FileText class="w-12 h-12 text-bd-text-muted mx-auto mb-4" />
-          <h3 class="text-lg font-semibold text-bd-text-primary mb-2">No cards found</h3>
-          <p class="text-bd-text-secondary">
-            Try adjusting your search or filters to find what you're looking for.
-          </p>
-          <button @click="clearAll" class="btn btn-secondary mt-4">
-            Clear Search & Filters
-          </button>
-        </div>
-      </div>
-
-      <!-- Key Takeaways -->
-      <section v-if="!hasAnyFilters" class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
-        <div class="flex items-start gap-3">
-          <Lightbulb class="w-5 h-5 text-bd-info flex-shrink-0 mt-0.5" />
-          <div>
-            <h3 class="font-semibold text-bd-text-primary mb-2">Key Takeaways</h3>
-            <ul class="space-y-1 text-sm text-bd-text-secondary">
-              <li>• <strong>Prose style:</strong> Written in natural English, not bullet points</li>
-              <li>• <strong>Name repetition:</strong> The subject's name is mentioned throughout the Entry</li>
-              <li>• <strong>Specific details:</strong> Visual descriptions, behaviors, and context are included</li>
-              <li>• <strong>Simple triggers:</strong> Usually just the proper name of the subject</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- Contribute CTA -->
-      <section v-if="!hasAnyFilters" class="card-elevated">
-        <div class="flex items-start gap-4">
-          <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/20 flex items-center justify-center flex-shrink-0">
-            <GitPullRequest class="w-6 h-6 text-bd-accent-primary" />
-          </div>
-          <div class="flex-1">
-            <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Improve Our Templates</h3>
-            <p class="text-bd-text-secondary mb-4">
-              Story Cards are deeply personal to each scenario. If you refine a template or make it clearer, submit the revision so we can improve the shared template library.
-            </p>
-            <router-link to="/contribute" class="btn btn-primary">
-              <GitPullRequest class="w-4 h-4" />
-              Submit a Template Revision
-            </router-link>
-          </div>
-        </div>
-      </section>
-    </template>
-  </div>
+    </div><!-- End main content -->
+  </div><!-- End flex container -->
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import StoryCardItem from '@/components/ui/StoryCardItem.vue'
-import SearchBar from '@/components/ui/SearchBar.vue'
-import { usePreferences } from '@/composables/usePreferences'
-import { 
-  STORY_CARDS, 
-  STORY_CARD_TEMPLATES,
-  STORY_CARD_CATEGORIES,
-  getEssentialExamples,
-  getEssentialTemplates,
-  getStarterExamples,
-  getStarterTemplates,
-  getHighImpactExamples,
-  getHighImpactTemplates
-} from '@/data/storyCards'
-import { searchCollectionWithScores } from '@/data/shared'
+import { ref } from 'vue'
 import { STORY_CARDS_CONTRIBUTORS as storyCardsContributors } from '@/data/contributors'
 import { 
-  Drama, Users, MapPin, Shield, Sparkles, Layers, GitPullRequest,
-  HelpCircle, Lightbulb, Camera, Globe, FileText, Tag, Type, Zap,
-  StickyNote, Cog, AlertTriangle, Award, Check, Scale, Pencil,
-  Download, Search, Infinity, ExternalLink, BookOpen, Space, Target,
-  CaseSensitive, Scissors, Quote, Clock, GitMerge, X, Star, Rocket,
-  SlidersHorizontal, ChevronDown, ChevronUp, Info, MessageSquare,
+  Layers, HelpCircle, Lightbulb, Camera, Globe, FileText, Tag, Type, Zap,
+  Cog, AlertTriangle, Award, Check, Scale, Pencil,
+  Download, Search, Infinity, Space, Target,
+  CaseSensitive, Scissors, Quote, Clock, GitMerge, X,
+  ChevronDown, ChevronUp, Info, MessageSquare,
   Brain, Coins
 } from 'lucide-vue-next'
 
-const route = useRoute()
-const activeTab = ref('examples')
-
-const tabs = [
-  { id: 'examples', label: 'Templates', icon: Layers },
-]
-
-
-const examples = ref(STORY_CARDS)
-const templates = ref(STORY_CARD_TEMPLATES)
-const categories = ref(STORY_CARD_CATEGORIES)
-const searchQuery = ref('')
-const selectedCategories = ref([])
-const selectedDifficulties = ref([])
-const selectedImpacts = ref([])
-const selectedType = ref(null)
-const showFilters = ref(false)
-const quickFilter = ref(null)
-
-const { addToSearchHistory } = usePreferences()
-
-// Get unique tags for search suggestions
-const searchSuggestions = computed(() => {
-  const allTags = [...new Set(allCards.value.flatMap(c => c.tags || []))]
-  return allTags.slice(0, 20)
-})
-
-const handleSearch = (query) => {
-  if (query.trim()) {
-    addToSearchHistory(query)
-  }
-}
-
-const difficulties = [
-  { id: 'beginner', label: 'Beginner', activeClass: 'bg-bd-green/20 text-bd-green border border-bd-green/30' },
-  { id: 'intermediate', label: 'Intermediate', activeClass: 'bg-bd-amber/20 text-bd-amber border border-bd-amber/30' },
-  { id: 'advanced', label: 'Advanced', activeClass: 'bg-bd-pink/20 text-bd-pink border border-bd-pink/30' }
-]
-
-const impacts = [
-  { id: 'high', label: 'High Impact', activeClass: 'bg-bd-purple/20 text-bd-purple border border-bd-purple/30' },
-  { id: 'medium', label: 'Medium Impact', activeClass: 'bg-bd-blue/20 text-bd-blue border border-bd-blue/30' },
-  { id: 'low', label: 'Low Impact', activeClass: 'bg-bd-tag-bg text-bd-text-muted border border-bd-border-default' }
-]
-
-// ===========================================
-// GUIDE TABLE OF CONTENTS
-// ===========================================
+// Guide table of contents sections
 const guideSections = [
   { id: 'what-are', label: 'What Are Story Cards?' },
   { id: 'when-to-use', label: 'When to Use' },
   { id: 'vs-memory', label: 'Cards vs Memory Bank' },
-  { id: 'how-it-works', label: 'How It Works' },
+  { id: 'how-it-works', label: 'How They Work' },
   { id: 'anatomy', label: 'Anatomy' },
   { id: 'best-practices', label: 'Best Practices' },
   { id: 'trigger-mastery', label: 'Trigger Mastery' },
@@ -1152,7 +795,8 @@ const guideSections = [
   { id: 'credits', label: 'Credits' }
 ]
 
-const expandedGuideSections = ref(new Set(guideSections.map(section => section.id)))
+// Track which guide sections are expanded (all expanded by default)
+const expandedGuideSections = ref(new Set(guideSections.map(s => s.id)))
 
 const toggleGuideSection = (sectionId) => {
   if (expandedGuideSections.value.has(sectionId)) {
@@ -1177,207 +821,10 @@ const scrollToGuideSection = (sectionId) => {
 }
 
 const expandAllGuideSections = () => {
-  expandedGuideSections.value = new Set(guideSections.map(section => section.id))
+  expandedGuideSections.value = new Set(guideSections.map(s => s.id))
 }
 
 const collapseAllGuideSections = () => {
   expandedGuideSections.value = new Set()
 }
-
-// Handle initial search query and tab from URL (e.g. from global search)
-onMounted(() => {
-  if (route.query.tab && ['examples'].includes(route.query.tab)) {
-    activeTab.value = route.query.tab
-  }
-  if (route.query.q) {
-    searchQuery.value = route.query.q
-    // Ensure we're on the examples tab so filtered results are visible
-    if (!route.query.tab) activeTab.value = 'examples'
-  }
-})
-
-const allCards = computed(() => [...examples.value, ...templates.value])
-
-const filteredCards = computed(() => {
-  let result = [...allCards.value]
-  
-  // Apply quick filter first
-  if (quickFilter.value === 'essential') {
-    result = [...getEssentialExamples(), ...getEssentialTemplates()]
-  } else if (quickFilter.value === 'starter') {
-    result = [...getStarterExamples(), ...getStarterTemplates()]
-  } else if (quickFilter.value === 'high-impact') {
-    result = [...getHighImpactExamples(), ...getHighImpactTemplates()]
-  }
-  
-  // Filter by type
-  if (selectedType.value === 'examples') {
-    result = result.filter(c => !c.id.startsWith('template-'))
-  } else if (selectedType.value === 'templates') {
-    result = result.filter(c => c.id.startsWith('template-'))
-  }
-  
-  // Filter by search query using fuzzy search
-  if (searchQuery.value) {
-    const searchResults = searchCollectionWithScores(
-      result,
-      searchQuery.value,
-      ['name', 'description', 'tags', 'entry'],
-      { useTagAliases: true }
-    )
-    result = searchResults.map(r => r.item)
-  }
-  
-  // Filter by selected categories
-  if (selectedCategories.value.length > 0) {
-    result = result.filter(c => selectedCategories.value.includes(c.category))
-  }
-  
-  // Filter by selected difficulties
-  if (selectedDifficulties.value.length > 0) {
-    result = result.filter(c => selectedDifficulties.value.includes(c.difficulty))
-  }
-  
-  // Filter by selected impacts
-  if (selectedImpacts.value.length > 0) {
-    result = result.filter(c => selectedImpacts.value.includes(c.impact))
-  }
-  
-  // Apply sorting based on active quick filter or default alphabetical
-  const impactOrder = { high: 0, medium: 1, low: 2 }
-  const difficultyOrder = { beginner: 0, intermediate: 1, advanced: 2 }
-  
-  if (quickFilter.value === 'essential' || quickFilter.value === 'starter') {
-    // Sort by impact (high first), then by name
-    result.sort((a, b) => {
-      const impactDiff = (impactOrder[a.impact] ?? 3) - (impactOrder[b.impact] ?? 3)
-      if (impactDiff !== 0) return impactDiff
-      return (a.name || '').localeCompare(b.name || '')
-    })
-  } else if (quickFilter.value === 'high-impact') {
-    // Sort by difficulty (beginner first), then by name
-    result.sort((a, b) => {
-      const diffDiff = (difficultyOrder[a.difficulty] ?? 3) - (difficultyOrder[b.difficulty] ?? 3)
-      if (diffDiff !== 0) return diffDiff
-      return (a.name || '').localeCompare(b.name || '')
-    })
-  } else if (!searchQuery.value) {
-    // Default: sort alphabetically by name when no search query
-    result.sort((a, b) => (a.name || '').localeCompare(b.name || ''))
-  }
-  // When searching, keep the search relevance order from searchCollectionWithScores
-  
-  return result
-})
-
-const hasActiveFilters = computed(() => 
-  selectedCategories.value.length > 0 || 
-  selectedDifficulties.value.length > 0 || 
-  selectedImpacts.value.length > 0 ||
-  selectedType.value !== null
-)
-
-const hasAnyFilters = computed(() => 
-  searchQuery.value || 
-  quickFilter.value || 
-  hasActiveFilters.value
-)
-
-const toggleQuickFilter = (filter) => {
-  if (quickFilter.value === filter) {
-    quickFilter.value = null
-  } else {
-    quickFilter.value = filter
-    selectedCategories.value = []
-    selectedDifficulties.value = []
-    selectedImpacts.value = []
-    selectedType.value = null
-  }
-}
-
-const toggleCategory = (categoryId) => {
-  quickFilter.value = null
-  const index = selectedCategories.value.indexOf(categoryId)
-  if (index > -1) {
-    selectedCategories.value.splice(index, 1)
-  } else {
-    selectedCategories.value.push(categoryId)
-  }
-}
-
-const toggleDifficulty = (difficultyId) => {
-  quickFilter.value = null
-  const index = selectedDifficulties.value.indexOf(difficultyId)
-  if (index > -1) {
-    selectedDifficulties.value.splice(index, 1)
-  } else {
-    selectedDifficulties.value.push(difficultyId)
-  }
-}
-
-const toggleImpact = (impactId) => {
-  quickFilter.value = null
-  const index = selectedImpacts.value.indexOf(impactId)
-  if (index > -1) {
-    selectedImpacts.value.splice(index, 1)
-  } else {
-    selectedImpacts.value.push(impactId)
-  }
-}
-
-const toggleType = (type) => {
-  quickFilter.value = null
-  if (selectedType.value === type) {
-    selectedType.value = null
-  } else {
-    selectedType.value = type
-  }
-}
-
-const clearFilters = () => {
-  selectedCategories.value = []
-  selectedDifficulties.value = []
-  selectedImpacts.value = []
-  selectedType.value = null
-  quickFilter.value = null
-}
-
-const clearAll = () => {
-  searchQuery.value = ''
-  clearFilters()
-}
 </script>
-
-<style scoped>
-/* === Hero background === */
-.sc-hero {
-  background: var(--bd-bg-secondary);
-  border: 1px solid var(--bd-border-subtle);
-}
-
-.hero-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.3;
-  pointer-events: none;
-}
-
-.hero-orb--purple {
-  width: 220px;
-  height: 220px;
-  background: #a855f7;
-  top: -40px;
-  right: -20px;
-  animation: float 8s ease-in-out infinite;
-}
-
-.hero-orb--cyan {
-  width: 160px;
-  height: 160px;
-  background: #06b6d4;
-  bottom: -30px;
-  left: 5%;
-  animation: float 10s ease-in-out infinite reverse;
-}
-</style>

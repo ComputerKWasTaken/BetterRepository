@@ -1,73 +1,37 @@
 <template>
-  <div class="space-y-8">
-    <!-- Page Header — animated hero -->
-    <header class="plot-hero relative overflow-hidden rounded-2xl py-10 px-6">
-      <!-- Animated background orbs -->
-      <div class="hero-orb hero-orb--blue" aria-hidden="true" />
-      <div class="hero-orb hero-orb--green" aria-hidden="true" />
-
-      <div class="relative z-10 flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl bg-bd-blue/20 flex items-center justify-center animate-float flex-shrink-0">
-          <Bookmark class="w-6 h-6 text-bd-blue" />
-        </div>
-        <div>
-          <h1 class="text-2xl md:text-3xl font-bold text-bd-text-primary tracking-tight">
-            Plot <span class="text-gradient">Components</span>
-          </h1>
-          <p class="text-bd-text-secondary mt-1 leading-relaxed">
-            Master the backbone of your story: Plot Essentials, Author's Notes, Story Cards, and more.
-          </p>
-        </div>
-      </div>
-    </header>
-
-    <!-- Tab Navigation -->
-    <div class="flex gap-2 border-b border-bd-border-subtle pb-2 overflow-x-auto">
-      <button
-        v-for="tab in tabs"
-        :key="tab.id"
-        @click="activeTab = tab.id"
-        class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap"
-        :class="activeTab === tab.id 
-          ? 'bg-bd-accent-primary/20 text-bd-accent-light' 
-          : 'text-bd-text-muted hover:text-bd-text-primary hover:bg-bd-bg-tertiary'"
-      >
-        <component :is="tab.icon" class="w-4 h-4" />
-        {{ tab.label }}
-      </button>
-    </div>
-
-    <!-- ==================== GUIDE TAB ==================== -->
-    <template v-if="activeTab === 'guide'">
-      <!-- Table of Contents - Sticky Sidebar -->
-      <div class="flex gap-6 animate-fade-in">
-        <aside class="hidden lg:block w-56 flex-shrink-0">
-          <div class="sticky top-4 space-y-2">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider">Contents</h3>
-              <div class="flex gap-1">
-                <button @click="expandAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Expand all">
-                  <ChevronDown class="w-3 h-3" />
-                </button>
-                <button @click="collapseAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Collapse all">
-                  <ChevronUp class="w-3 h-3" />
-                </button>
-              </div>
-            </div>
-            <button
-              v-for="section in guideSections"
-              :key="section.id"
-              @click="scrollToGuideSection(section.id)"
-              class="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors hover:bg-bd-bg-tertiary"
-              :class="[
-                isGuideSectionExpanded(section.id) ? 'text-bd-text-primary' : 'text-bd-text-muted'
-              ]"
-            >
-              {{ section.label }}
+  <!-- Table of Contents - Sticky Sidebar -->
+  <div class="flex gap-6 animate-fade-in">
+    <!-- TOC Sidebar -->
+    <aside class="hidden lg:block w-56 flex-shrink-0">
+      <div class="sticky top-4 space-y-2">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider">Contents</h3>
+          <div class="flex gap-1">
+            <button @click="expandAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Expand all">
+              <ChevronDown class="w-3 h-3" />
+            </button>
+            <button @click="collapseAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Collapse all">
+              <ChevronUp class="w-3 h-3" />
             </button>
           </div>
-        </aside>
-        <div class="flex-1 space-y-4 min-w-0">
+        </div>
+        <button
+          v-for="section in guideSections"
+          :key="section.id"
+          @click="scrollToGuideSection(section.id)"
+          class="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors hover:bg-bd-bg-tertiary"
+          :class="[
+            isGuideSectionExpanded(section.id) ? 'text-bd-text-primary' : 'text-bd-text-muted'
+          ]"
+        >
+          {{ section.label }}
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 space-y-4 min-w-0">
+
       <!-- Introduction -->
       <section id="guide-intro" class="card">
         <button
@@ -98,6 +62,7 @@
           </div>
         </Transition>
       </section>
+
       <!-- Plot Essentials -->
       <section id="guide-plot-essentials" class="card">
         <button
@@ -206,6 +171,7 @@
           </div>
         </Transition>
       </section>
+
       <!-- Author's Note -->
       <section id="guide-authors-note" class="card">
         <button
@@ -309,6 +275,7 @@
           </div>
         </Transition>
       </section>
+
       <!-- Story Cards -->
       <section id="guide-story-cards" class="card">
         <button
@@ -373,13 +340,14 @@
             <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
               <p class="text-sm text-bd-text-secondary">
                 <strong class="text-bd-text-primary">Want more on Story Cards?</strong> Check out our 
-                <router-link to="/story-cards" class="text-bd-accent-primary hover:underline">Story Cards Guide</router-link> 
+                <router-link to="/guides?tab=story-cards" class="text-bd-accent-primary hover:underline">Story Cards Guide</router-link> 
                 for detailed trigger mechanics and best practices.
               </p>
             </div>
           </div>
         </Transition>
       </section>
+
       <!-- AI Instructions -->
       <section id="guide-ai-instructions" class="card">
         <button
@@ -403,13 +371,14 @@
             </p>
             <div class="p-4 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
               <p class="text-sm text-bd-text-secondary">
-                <router-link to="/ai-instructions" class="text-bd-accent-primary hover:underline font-medium">→ See the AI Instructions Guide</router-link> 
+                <router-link to="/guides?tab=ai-instructions" class="text-bd-accent-primary hover:underline font-medium">→ See the AI Instructions Guide</router-link> 
                 for structuring tips, model settings, token optimization, and ready-to-use instruction sets.
               </p>
             </div>
           </div>
         </Transition>
       </section>
+
       <!-- Memory Bank & Story Summary -->
       <section id="guide-memory-summary" class="card">
         <button
@@ -493,6 +462,7 @@
           </div>
         </Transition>
       </section>
+
       <!-- Scene Transitions -->
       <section id="guide-scene-transitions" class="card">
         <button
@@ -549,6 +519,7 @@
           </div>
         </Transition>
       </section>
+
       <!-- Additional Tips -->
       <section id="guide-additional-tips" class="card">
         <button
@@ -637,6 +608,7 @@
           </div>
         </Transition>
       </section>
+
       <!-- Common Pitfalls -->
       <section id="guide-common-pitfalls" class="card">
         <button
@@ -701,6 +673,7 @@
           </div>
         </Transition>
       </section>
+
       <!-- Credits -->
       <section id="guide-credits" class="card">
         <button
@@ -737,410 +710,24 @@
           </div>
         </Transition>
       </section>
-        </div>
-      </div>
-    </template>
-    <!-- ==================== TEMPLATES TAB ==================== -->
-    <template v-if="activeTab === 'templates'">
-      <!-- Templates Introduction -->
-      <div class="card bg-gradient-to-r from-bd-blue/10 to-bd-green/10 border-bd-blue/30 relative overflow-hidden animate-fade-in">
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-blue via-bd-green to-bd-cyan" />
-        <div class="flex items-start gap-4 pt-1">
-          <div class="w-12 h-12 rounded-xl bg-bd-blue/20 flex items-center justify-center flex-shrink-0">
-            <Layers class="w-6 h-6 text-bd-blue" />
-          </div>
-          <div class="flex-1">
-            <h2 class="text-lg font-semibold text-bd-text-primary mb-1">Plot Component Templates</h2>
-            <p class="text-sm text-bd-text-secondary">
-              Ready-to-use templates for Author's Notes, Plot Essentials, and Story Summaries. 
-              Copy, customize, and paste directly into your story.
-            </p>
-          </div>
-        </div>
-      </div>
 
-    <!-- Quick Filter Buttons -->
-    <div class="flex flex-wrap items-center gap-2">
-      <span class="text-xs text-bd-text-muted mr-1">Quick filters:</span>
-      <button 
-        @click="toggleQuickFilter('essential')"
-        class="btn text-sm"
-        :class="quickFilter === 'essential' ? 'btn-primary' : 'btn-secondary'"
-      >
-        <Star class="w-4 h-4" />
-        Must-Have
-      </button>
-      <button 
-        @click="toggleQuickFilter('starter')"
-        class="btn text-sm"
-        :class="quickFilter === 'starter' ? 'btn-primary' : 'btn-secondary'"
-      >
-        <Rocket class="w-4 h-4" />
-        Beginner Friendly
-      </button>
-      <button 
-        @click="toggleQuickFilter('high-impact')"
-        class="btn text-sm"
-        :class="quickFilter === 'high-impact' ? 'btn-primary' : 'btn-secondary'"
-      >
-        <Zap class="w-4 h-4" />
-        High Impact
-      </button>
-      <div class="flex-1"></div>
-      <button 
-        @click="showFilters = !showFilters"
-        class="btn btn-secondary text-sm"
-        :class="{ 'ring-2 ring-bd-accent-primary': hasActiveFilters }"
-      >
-        <SlidersHorizontal class="w-4 h-4" />
-        Advanced Filters
-        <span v-if="hasActiveFilters" class="w-2 h-2 rounded-full bg-bd-accent-primary"></span>
-      </button>
-    </div>
-    <!-- Search Bar -->
-    <SearchBar
-      v-model="searchQuery"
-      placeholder="Search templates..."
-      :suggestions="searchSuggestions"
-      :result-count="filteredTemplates.length"
-      @search="handleSearch"
-    />
-    <!-- Filter Panel -->
-    <Transition name="slide">
-      <div v-if="showFilters" class="card-elevated space-y-4">
-        <div class="flex items-center justify-between">
-          <h3 class="font-semibold text-bd-text-primary">Filters</h3>
-          <button 
-            v-if="hasActiveFilters"
-            @click="clearFilters"
-            class="text-sm text-bd-accent-primary hover:underline"
-          >
-            Clear all
-          </button>
-        </div>
-        <!-- Category Filter -->
-        <div>
-          <h4 class="text-sm text-bd-text-muted mb-2">Category</h4>
-          <div class="flex flex-wrap gap-2">
-            <button 
-              v-for="category in categories" 
-              :key="category.id"
-              @click="toggleCategory(category.id)"
-              class="tag cursor-pointer transition-all flex items-center gap-1.5"
-              :class="selectedCategories.includes(category.id) 
-                  ? 'bg-bd-accent-primary/20 text-bd-accent-light border border-bd-accent-primary/30' 
-                  : 'hover:bg-bd-tag-bg'"
-            >
-              <Lock v-if="category.id === 'nsfw' && !nsfwVerified" class="w-3 h-3" />
-              {{ category.name }}
-            </button>
-          </div>
-        </div>
-        <!-- Difficulty Filter -->
-        <div>
-          <h4 class="text-sm text-bd-text-muted mb-2">Difficulty</h4>
-          <div class="flex flex-wrap gap-2">
-            <button 
-              v-for="diff in difficulties" 
-              :key="diff.id"
-              @click="toggleDifficulty(diff.id)"
-              class="tag cursor-pointer transition-all"
-              :class="selectedDifficulties.includes(diff.id) 
-                ? diff.activeClass 
-                : 'hover:bg-bd-tag-bg'"
-            >
-              {{ diff.label }}
-            </button>
-          </div>
-        </div>
-        <!-- Impact Filter -->
-        <div>
-          <h4 class="text-sm text-bd-text-muted mb-2">Impact</h4>
-          <div class="flex flex-wrap gap-2">
-            <button 
-              v-for="imp in impacts" 
-              :key="imp.id"
-              @click="toggleImpact(imp.id)"
-              class="tag cursor-pointer transition-all"
-              :class="selectedImpacts.includes(imp.id) 
-                ? imp.activeClass 
-                : 'hover:bg-bd-tag-bg'"
-            >
-              {{ imp.label }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </Transition>
-    <!-- Results Summary -->
-    <div class="flex items-center justify-between text-sm">
-      <span class="text-bd-text-muted">
-        Showing {{ filteredTemplates.length }} of {{ templates.length }} templates
-      </span>
-    </div>
-    <!-- Category Sections (default view) -->
-    <div v-if="!hasAnyFilters" class="space-y-8">
-      <!-- Author's Note Section -->
-      <section>
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-8 h-8 rounded-lg bg-bd-purple/20 flex items-center justify-center">
-            <Feather class="w-4 h-4 text-bd-purple" />
-          </div>
-          <div>
-            <h3 class="font-semibold text-bd-text-primary">Author's Note</h3>
-            <p class="text-xs text-bd-text-muted">Strongest influence. Style, tone, and scene guidance.</p>
-          </div>
-          <span class="ml-auto tag">{{ authorsNoteComponents.length }}</span>
-        </div>
-        
-        <div class="grid gap-3">
-          <ResourceCard 
-            v-for="component in authorsNoteComponents" 
-            :key="component.id"
-            :resource="component"
-          />
-        </div>
-      </section>
-      <!-- Plot Essentials Section -->
-      <section>
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-8 h-8 rounded-lg bg-bd-green/20 flex items-center justify-center">
-            <BookMarked class="w-4 h-4 text-bd-green" />
-          </div>
-          <div>
-            <h3 class="font-semibold text-bd-text-primary">Plot Essentials</h3>
-            <p class="text-xs text-bd-text-muted">Always-relevant info: characters, relationships, world state.</p>
-          </div>
-          <span class="ml-auto tag">{{ plotEssentialsComponents.length }}</span>
-        </div>
-        
-        <div class="grid gap-3">
-          <ResourceCard 
-            v-for="component in plotEssentialsComponents" 
-            :key="component.id"
-            :resource="component"
-          />
-        </div>
-      </section>
-      <!-- Story Summary Section -->
-      <section>
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-8 h-8 rounded-lg bg-bd-cyan/20 flex items-center justify-center">
-            <ScrollText class="w-4 h-4 text-bd-cyan" />
-          </div>
-          <div>
-            <h3 class="font-semibold text-bd-text-primary">Story Summary</h3>
-            <p class="text-xs text-bd-text-muted">Track overall direction, arcs, and long-term goals.</p>
-          </div>
-          <span class="ml-auto tag">{{ storySummaryComponents.length }}</span>
-        </div>
-        
-        <div class="grid gap-3">
-          <ResourceCard 
-            v-for="component in storySummaryComponents" 
-            :key="component.id"
-            :resource="component"
-          />
-        </div>
-      </section>
-      <!-- NSFW Section -->
-      <section v-if="nsfwComponents.length > 0">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-8 h-8 rounded-lg bg-bd-red/20 flex items-center justify-center">
-            <Flame class="w-4 h-4 text-bd-red" />
-          </div>
-          <div>
-            <h3 class="font-semibold text-bd-text-primary flex items-center gap-2">
-              NSFW / Adult
-              <Lock v-if="!nsfwVerified" class="w-3.5 h-3.5 text-bd-red" />
-            </h3>
-            <p class="text-xs text-bd-text-muted">Templates for adult content and intimate scenes. 18+ only.</p>
-          </div>
-          <span class="ml-auto tag bg-bd-red/20 text-bd-red">{{ nsfwComponents.length }}</span>
-        </div>
-        
-        <!-- Locked State -->
-        <div v-if="!nsfwVerified" class="relative">
-          <div class="space-y-3 filter blur-sm pointer-events-none select-none">
-            <div v-for="i in Math.min(3, nsfwComponents.length)" :key="i" class="card bg-bd-bg-tertiary/50 p-4">
-              <div class="h-4 bg-bd-bg-elevated rounded w-3/4 mb-2"></div>
-              <div class="h-3 bg-bd-bg-elevated rounded w-1/2"></div>
-            </div>
-          </div>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <button 
-              @click="showAgeVerification = true"
-              class="flex items-center gap-2 px-4 py-2 rounded-xl bg-bd-red/20 border border-bd-red/30 text-bd-red hover:bg-bd-red/30 transition-colors"
-            >
-              <Lock class="w-4 h-4" />
-              <span class="font-medium">Click to verify age (18+)</span>
-            </button>
-          </div>
-        </div>
-        
-        <!-- Unlocked State -->
-        <div v-else class="grid gap-3">
-          <ResourceCard 
-            v-for="component in nsfwComponents" 
-            :key="component.id"
-            :resource="component"
-          />
-        </div>
-      </section>
-    </div>
-    <!-- Filtered Results -->
-    <div v-if="hasAnyFilters" class="grid gap-3">
-      <ResourceCard 
-        v-for="template in filteredTemplates" 
-        :key="template.id"
-        :resource="template"
-      />
-      
-      <!-- Empty State -->
-      <div v-if="filteredTemplates.length === 0" class="text-center py-12">
-        <FileText class="w-12 h-12 text-bd-text-muted mx-auto mb-4" />
-        <h3 class="text-lg font-semibold text-bd-text-primary mb-2">No templates found</h3>
-        <p class="text-bd-text-secondary">
-          Try adjusting your search or filters to find what you're looking for.
-        </p>
-        <button @click="clearAll" class="btn btn-secondary mt-4">
-          Clear Search & Filters
-        </button>
-      </div>
-    </div>
-
-    <!-- Contribute CTA -->
-    <section v-if="!hasAnyFilters" class="card-elevated">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/20 flex items-center justify-center flex-shrink-0">
-          <GitPullRequest class="w-6 h-6 text-bd-accent-primary" />
-        </div>
-        <div class="flex-1">
-          <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Share Your Templates</h3>
-          <p class="text-bd-text-secondary mb-4">
-            Created a Plot Essential, Story Summary, or Author's Note that works well? Help the community by sharing it — just paste it in a GitHub issue.
-          </p>
-          <router-link to="/contribute" class="btn btn-primary">
-            <GitPullRequest class="w-4 h-4" />
-            Submit a Template
-          </router-link>
-        </div>
-      </div>
-    </section>
-
-    </template>
-    <!-- Age Verification Modal -->
-    <Teleport to="body">
-      <Transition name="fade">
-        <div v-if="showAgeVerification" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <!-- Backdrop -->
-          <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="cancelAgeVerification"></div>
-          
-          <!-- Modal -->
-          <div class="relative bg-bd-bg-secondary border border-bd-red/30 rounded-2xl p-6 max-w-md w-full shadow-2xl animate-fade-in">
-            <!-- Icon -->
-            <div class="flex justify-center mb-4">
-              <div class="w-16 h-16 rounded-full bg-bd-red/20 flex items-center justify-center">
-                <ShieldAlert class="w-8 h-8 text-bd-red" />
-              </div>
-            </div>
-            
-            <!-- Content -->
-            <div class="text-center space-y-3">
-              <h2 class="text-xl font-bold text-bd-text-primary">Adult Content Warning</h2>
-              <p class="text-bd-text-secondary text-sm">
-                The <strong class="text-bd-red">NSFW / Adult</strong> category contains explicit sexual content intended for adults only.
-              </p>
-              <p class="text-bd-text-muted text-xs">
-                By continuing, you confirm that you are <strong>18 years of age or older</strong> and that viewing adult content is legal in your jurisdiction.
-              </p>
-            </div>
-            
-            <!-- Buttons -->
-            <div class="flex gap-3 mt-6">
-              <button 
-                @click="cancelAgeVerification"
-                class="flex-1 px-4 py-3 rounded-xl bg-bd-bg-tertiary text-bd-text-secondary hover:bg-bd-bg-elevated transition-colors font-medium"
-              >
-                Go Back
-              </button>
-              <button 
-                @click="confirmAge"
-                class="flex-1 px-4 py-3 rounded-xl bg-bd-red text-white hover:bg-bd-red/80 transition-colors font-medium"
-              >
-                I'm 18+ — Continue
-              </button>
-            </div>
-          </div>
-        </div>
-      </Transition>
-    </Teleport>
-  </div>
+    </div><!-- End main content -->
+  </div><!-- End flex container -->
 </template>
+
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
-import { useRoute } from 'vue-router'
-import ResourceCard from '@/components/ui/ResourceCard.vue'
-import SearchBar from '@/components/ui/SearchBar.vue'
-import { 
-  TEMPLATES, 
-  TEMPLATE_CATEGORIES,
-  getEssentialTemplates,
-  getStarterSet,
-  getHighImpactTemplates
-} from '@/data/plotComponents'
-import { searchCollectionWithScores } from '@/data/shared'
+import { ref } from 'vue'
 import { PLOT_COMPONENTS_CONTRIBUTORS as plotComponentsContributors } from '@/data/contributors'
-import { usePreferences } from '@/composables/usePreferences'
 import { 
-  Bookmark, Info, MapPin, FileText, Feather, BookMarked, ScrollText, 
-  Lightbulb, Check, BookOpen, Layers, HelpCircle, User, Globe, Plus,
-  Users, Sword, Star, RefreshCw, MessageSquare, Heart, Volume2, Ruler,
+  Info, MapPin, Feather, BookMarked, ScrollText, 
+  Lightbulb, Layers, HelpCircle, User, Globe, Plus,
+  Users, Sword, Star, RefreshCw, MessageSquare,
   Rocket, Focus, AlertTriangle, Database, Brain, ArrowRightLeft,
-  Sparkles, Scissors, MessageCircle, XCircle, Edit, SlidersHorizontal, Zap, Search,
-  ExternalLink, Award, ChevronDown, ChevronUp, Flame, ShieldAlert, Lock, GitPullRequest
+  Sparkles, Scissors, MessageCircle, XCircle, Edit, Ruler,
+  ChevronDown, ChevronUp
 } from 'lucide-vue-next'
-const route = useRoute()
-const { preferences, verifyAge, addToSearchHistory } = usePreferences()
-const activeTab = ref('templates')
-// Get unique tags for search suggestions
-const searchSuggestions = computed(() => {
-  const allTags = [...new Set(templates.value.flatMap(t => t.tags || []))]
-  return allTags.slice(0, 20)
-})
-const handleSearch = (query) => {
-  if (query.trim()) {
-    addToSearchHistory(query)
-  }
-}
-const tabs = [
-  { id: 'templates', label: 'Templates', icon: Layers },
-]
-const templates = ref(TEMPLATES)
-const categories = ref(TEMPLATE_CATEGORIES)
-const searchQuery = ref('')
-const selectedCategories = ref([])
-const selectedDifficulties = ref([])
-const selectedImpacts = ref([])
-const showFilters = ref(false)
-const quickFilter = ref(null)
-// NSFW Age Verification (uses persistent preference)
-const nsfwVerified = computed(() => preferences.value.nsfwVerified)
-const showAgeVerification = ref(false)
-const pendingNsfwAction = ref(null)
-const difficulties = [
-  { id: 'beginner', label: 'Beginner', activeClass: 'bg-bd-green/20 text-bd-green border border-bd-green/30' },
-  { id: 'intermediate', label: 'Intermediate', activeClass: 'bg-bd-amber/20 text-bd-amber border border-bd-amber/30' },
-  { id: 'advanced', label: 'Advanced', activeClass: 'bg-bd-pink/20 text-bd-pink border border-bd-pink/30' }
-]
-const impacts = [
-  { id: 'high', label: 'High Impact', activeClass: 'bg-bd-purple/20 text-bd-purple border border-bd-purple/30' },
-  { id: 'medium', label: 'Medium Impact', activeClass: 'bg-bd-blue/20 text-bd-blue border border-bd-blue/30' },
-  { id: 'low', label: 'Low Impact', activeClass: 'bg-bd-tag-bg text-bd-text-muted border border-bd-border-default' }
-]
-// ===========================================
-// GUIDE TABLE OF CONTENTS
-// ===========================================
+
+// Guide table of contents sections
 const guideSections = [
   { id: 'intro', label: 'Intro' },
   { id: 'plot-essentials', label: 'Plot Essentials' },
@@ -1153,9 +740,10 @@ const guideSections = [
   { id: 'common-pitfalls', label: 'Common Pitfalls' },
   { id: 'credits', label: 'Credits' }
 ]
-const activeGuideSection = ref(guideSections[0]?.id || '')
-let guideObserver = null
-const expandedGuideSections = ref(new Set(guideSections.map(section => section.id)))
+
+// Track which guide sections are expanded (all expanded by default)
+const expandedGuideSections = ref(new Set(guideSections.map(s => s.id)))
+
 const toggleGuideSection = (sectionId) => {
   if (expandedGuideSections.value.has(sectionId)) {
     expandedGuideSections.value.delete(sectionId)
@@ -1164,253 +752,25 @@ const toggleGuideSection = (sectionId) => {
   }
   expandedGuideSections.value = new Set(expandedGuideSections.value)
 }
+
 const isGuideSectionExpanded = (sectionId) => expandedGuideSections.value.has(sectionId)
+
 const scrollToGuideSection = (sectionId) => {
   const element = document.getElementById(`guide-${sectionId}`)
   if (element) {
     element.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    activeGuideSection.value = sectionId
     if (!expandedGuideSections.value.has(sectionId)) {
       expandedGuideSections.value.add(sectionId)
       expandedGuideSections.value = new Set(expandedGuideSections.value)
     }
   }
 }
+
 const expandAllGuideSections = () => {
-  expandedGuideSections.value = new Set(guideSections.map(section => section.id))
+  expandedGuideSections.value = new Set(guideSections.map(s => s.id))
 }
+
 const collapseAllGuideSections = () => {
   expandedGuideSections.value = new Set()
 }
-onMounted(() => {
-  // Handle initial search query and tab from URL (e.g. from global search)
-  if (route.query.tab && ['templates'].includes(route.query.tab)) {
-    activeTab.value = route.query.tab
-  }
-  if (route.query.q) {
-    searchQuery.value = route.query.q
-    // Ensure we're on the templates tab so filtered results are visible
-    if (!route.query.tab) activeTab.value = 'templates'
-  }
-
-  guideObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const sectionId = entry.target.id.replace('guide-', '')
-          activeGuideSection.value = sectionId
-        }
-      })
-    },
-    { rootMargin: '0px 0px -70% 0px' }
-  )
-  guideSections.forEach((section) => {
-    const element = document.getElementById(`guide-${section.id}`)
-    if (element) {
-      guideObserver.observe(element)
-    }
-  })
-})
-onBeforeUnmount(() => {
-  if (guideObserver) {
-    guideObserver.disconnect()
-  }
-})
-// Filter templates by category
-const authorsNoteComponents = computed(() => 
-  TEMPLATES.filter(t => t.category === 'authors-note')
-)
-const plotEssentialsComponents = computed(() => 
-  TEMPLATES.filter(t => t.category === 'plot-essentials')
-)
-const storySummaryComponents = computed(() => 
-  TEMPLATES.filter(t => t.category === 'story-summary')
-)
-const nsfwComponents = computed(() => 
-  TEMPLATES.filter(t => t.category === 'nsfw')
-)
-const filteredTemplates = computed(() => {
-  let result = [...templates.value]
-  
-  // Filter out NSFW unless verified OR explicitly selected in category filter
-  const nsfwExplicitlySelected = selectedCategories.value.includes('nsfw')
-  if (!nsfwVerified.value && !nsfwExplicitlySelected) {
-    result = result.filter(t => t.category !== 'nsfw')
-  }
-  
-  // Apply quick filter first
-  if (quickFilter.value === 'essential') {
-    result = getEssentialTemplates().filter(t => nsfwVerified.value || t.category !== 'nsfw')
-  } else if (quickFilter.value === 'starter') {
-    result = getStarterSet().filter(t => nsfwVerified.value || t.category !== 'nsfw')
-  } else if (quickFilter.value === 'high-impact') {
-    result = getHighImpactTemplates().filter(t => nsfwVerified.value || t.category !== 'nsfw')
-  }
-  
-  // Filter by search query using fuzzy search
-  if (searchQuery.value) {
-    const searchResults = searchCollectionWithScores(
-      result,
-      searchQuery.value,
-      ['name', 'description', 'tags'],
-      { useTagAliases: true }
-    )
-    result = searchResults.map(r => r.item)
-  }
-  
-  // Filter by selected categories
-  if (selectedCategories.value.length > 0) {
-    result = result.filter(t => selectedCategories.value.includes(t.category))
-  }
-  
-  // Filter by selected difficulties
-  if (selectedDifficulties.value.length > 0) {
-    result = result.filter(t => selectedDifficulties.value.includes(t.difficulty))
-  }
-  
-  // Filter by selected impacts
-  if (selectedImpacts.value.length > 0) {
-    result = result.filter(t => selectedImpacts.value.includes(t.impact))
-  }
-  
-  // Apply sorting based on active quick filter or default alphabetical
-  const impactOrder = { high: 0, medium: 1, low: 2 }
-  const difficultyOrder = { beginner: 0, intermediate: 1, advanced: 2 }
-  
-  if (quickFilter.value === 'essential' || quickFilter.value === 'starter') {
-    // Sort by impact (high first), then by name
-    result.sort((a, b) => {
-      const impactDiff = (impactOrder[a.impact] ?? 3) - (impactOrder[b.impact] ?? 3)
-      if (impactDiff !== 0) return impactDiff
-      return (a.name || '').localeCompare(b.name || '')
-    })
-  } else if (quickFilter.value === 'high-impact') {
-    // Sort by difficulty (beginner first), then by name
-    result.sort((a, b) => {
-      const diffDiff = (difficultyOrder[a.difficulty] ?? 3) - (difficultyOrder[b.difficulty] ?? 3)
-      if (diffDiff !== 0) return diffDiff
-      return (a.name || '').localeCompare(b.name || '')
-    })
-  } else if (!searchQuery.value) {
-    // Default: sort alphabetically by name when no search query
-    result.sort((a, b) => (a.name || '').localeCompare(b.name || ''))
-  }
-  // When searching, keep the search relevance order from searchCollectionWithScores
-  
-  return result
-})
-const hasActiveFilters = computed(() => 
-  selectedCategories.value.length > 0 || 
-  selectedDifficulties.value.length > 0 || 
-  selectedImpacts.value.length > 0
-)
-const hasAnyFilters = computed(() => 
-  searchQuery.value || 
-  quickFilter.value || 
-  hasActiveFilters.value
-)
-const toggleQuickFilter = (filter) => {
-  if (quickFilter.value === filter) {
-    quickFilter.value = null
-  } else {
-    quickFilter.value = filter
-    selectedCategories.value = []
-    selectedDifficulties.value = []
-    selectedImpacts.value = []
-  }
-}
-const toggleCategory = (categoryId) => {
-  quickFilter.value = null
-  
-  // Check if trying to enable NSFW category without verification
-  if (categoryId === 'nsfw' && !nsfwVerified.value && !selectedCategories.value.includes('nsfw')) {
-    pendingNsfwAction.value = () => {
-      selectedCategories.value.push('nsfw')
-    }
-    showAgeVerification.value = true
-    return
-  }
-  
-  const index = selectedCategories.value.indexOf(categoryId)
-  if (index > -1) {
-    selectedCategories.value.splice(index, 1)
-  } else {
-    selectedCategories.value.push(categoryId)
-  }
-}
-// Age verification handlers
-const confirmAge = () => {
-  verifyAge() // Persists to cookie
-  showAgeVerification.value = false
-  if (pendingNsfwAction.value) {
-    pendingNsfwAction.value()
-    pendingNsfwAction.value = null
-  }
-}
-const cancelAgeVerification = () => {
-  showAgeVerification.value = false
-  pendingNsfwAction.value = null
-}
-const toggleDifficulty = (difficultyId) => {
-  quickFilter.value = null
-  const index = selectedDifficulties.value.indexOf(difficultyId)
-  if (index > -1) {
-    selectedDifficulties.value.splice(index, 1)
-  } else {
-    selectedDifficulties.value.push(difficultyId)
-  }
-}
-const toggleImpact = (impactId) => {
-  quickFilter.value = null
-  const index = selectedImpacts.value.indexOf(impactId)
-  if (index > -1) {
-    selectedImpacts.value.splice(index, 1)
-  } else {
-    selectedImpacts.value.push(impactId)
-  }
-}
-const clearFilters = () => {
-  selectedCategories.value = []
-  selectedDifficulties.value = []
-  selectedImpacts.value = []
-  quickFilter.value = null
-}
-const clearAll = () => {
-  searchQuery.value = ''
-  clearFilters()
-}
 </script>
-
-<style scoped>
-/* === Hero background === */
-.plot-hero {
-  background: var(--bd-bg-secondary);
-  border: 1px solid var(--bd-border-subtle);
-}
-
-.hero-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.3;
-  pointer-events: none;
-}
-
-.hero-orb--blue {
-  width: 220px;
-  height: 220px;
-  background: #3b82f6;
-  top: -40px;
-  right: -20px;
-  animation: float 8s ease-in-out infinite;
-}
-
-.hero-orb--green {
-  width: 160px;
-  height: 160px;
-  background: #22c55e;
-  bottom: -30px;
-  left: 5%;
-  animation: float 10s ease-in-out infinite reverse;
-}
-</style>

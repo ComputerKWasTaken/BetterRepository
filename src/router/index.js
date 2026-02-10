@@ -9,6 +9,7 @@ import ScriptsPage from '@/pages/ScriptsPage.vue'
 import ContributePage from '@/pages/ContributePage.vue'
 import EcosystemPage from '@/pages/EcosystemPage.vue'
 import CreditsPage from '@/pages/CreditsPage.vue'
+import GuidesPage from '@/pages/GuidesPage.vue'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
 
 const routes = [
@@ -41,6 +42,12 @@ const routes = [
     name: 'Scripts',
     component: ScriptsPage,
     meta: { title: 'Scripts - BetterRepository' }
+  },
+  {
+    path: '/guides',
+    name: 'Guides',
+    component: GuidesPage,
+    meta: { title: 'Guides - BetterRepository' }
   },
   {
     path: '/contribute',
