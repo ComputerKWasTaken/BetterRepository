@@ -337,7 +337,7 @@ The user would like you to pick up a varying novel. Enable thinking mode and pro
     models: ['All Models'],
     description: 'Dialogue-only instruction set by OffMetaGamer for pure conversation-based storytelling with no narration.',
     purpose: 'For users who want stories told entirely through character dialogue. Eliminates all description and narration, focusing purely on speech between characters.',
-content: `You are a storyteller writing a story that consists entirely of text conversations. The story should include no descriptions or narration at all, instead focusing entirely on the dialogue between characters.
+    content: `You are a storyteller writing a story that consists entirely of text conversations. The story should include no descriptions or narration at all, instead focusing entirely on the dialogue between characters.
 
 ## Character Behavior
 - Make every interaction sound genuine and fitting to the moment. Speech should flow between characters naturally, without repetition, reminding, or flat voices, and should end promptly without going in circles. Let emotions change easily
@@ -415,6 +415,7 @@ export const COMPONENTS = [
     placement: 'ai-instructions',
     tags: ['pov', 'tense', 'perspective', 'foundation', 'essential'],
     models: ['All Models'],
+    conflicts: ['role-second-person', 'role-third-person'],
     description: 'Sets the narrative perspective and tense.',
     purpose: 'Establishes consistent POV and tense. Second person present is standard for interactive fiction.',
     variants: [
@@ -599,7 +600,7 @@ export const COMPONENTS = [
     placement: 'ai-instructions',
     tags: ['pov', 'tense', 'second-person', 'present'],
     models: ['All Models'],
-    conflicts: ['role-third-person'],
+    conflicts: ['role-third-person', 'pov-tense'],
     description: 'Standard AI Dungeon POV: "You walk into the room."',
     purpose: 'The default and most immersive perspective for interactive fiction. The reader IS the main character.',
     variants: [
@@ -619,7 +620,7 @@ export const COMPONENTS = [
     placement: 'ai-instructions',
     tags: ['pov', 'tense', 'third-person', 'literary'],
     models: ['All Models'],
-    conflicts: ['role-second-person'],
+    conflicts: ['role-second-person', 'pov-tense'],
     description: 'Third person POV: "She walks into the room."',
     purpose: 'More traditional literary style. Allows for following multiple characters and a broader narrative scope.',
     variants: [
@@ -971,7 +972,7 @@ export const COMPONENTS = [
     tags: ['style', 'atmosphere', 'immersive', 'sensory'],
     models: ['All Models'],
     combinesWith: ['role-horror-author'],
-    conflicts: ['no-sensory-intimacy', 'no-background-atmosphere', 'plot-over-description', 'no-figurative-language'],
+    conflicts: ['no-sensory-intimacy', 'no-background-atmosphere', 'plot-over-description', 'no-figurative-language', 'no-poetic-padding'],
     description: 'Rich atmospheric and sensory descriptions.',
     purpose: 'For immersive, mood-heavy stories. Environment becomes a character.',
     content: `- Create rich atmosphere through sensory details: sounds, smells, textures, light
@@ -1010,7 +1011,7 @@ export const COMPONENTS = [
     tags: ['style', 'atmosphere', 'minimal', 'focus'],
     models: ['All Models'],
     combinesWith: ['no-sensory-intimacy', 'plot-over-description'],
-    conflicts: ['atmospheric-writing'],
+    conflicts: ['atmospheric-writing', 'environmental-detail'],
     description: 'Minimizes atmospheric and background descriptions.',
     purpose: 'Keeps focus on characters and action. The environment doesn\'t set the mood, characters do.',
     content: `- Avoid describing ambient or continuous background sounds
@@ -1141,7 +1142,7 @@ export const COMPONENTS = [
     tags: ['pacing', 'dialogue', 'action', 'essential'],
     models: ['All Models'],
     combinesWith: ['more-speech', 'anti-repetition'],
-    conflicts: ['atmospheric-writing'],
+    conflicts: ['atmospheric-writing', 'slow-burn'],
     description: 'Prioritizes plot advancement and dialogue over lengthy descriptions.',
     purpose: 'Keeps the story moving. Description is seasoning, not the main course.',
     content: `- Prioritize plot and dialogue over description. Keep description fresh; avoid describing the same detail or action multiple times`
@@ -1159,6 +1160,7 @@ export const COMPONENTS = [
     tags: ['pacing', 'scenes', 'flow', 'time'],
     models: ['All Models'],
     combinesWith: ['no-interrupt-scenes'],
+    conflicts: ['time-compression'],
     description: 'Lets scenes play out naturally without rushing or time-skipping.',
     purpose: 'Prevents the AI from jumping ahead past important moments. Scenes breathe, then transition smoothly.',
     variants: [
@@ -1465,6 +1467,7 @@ export const COMPONENTS = [
     placement: 'ai-instructions',
     tags: ['dialogue', 'speech', 'natural', 'pauses'],
     models: ['All Models'],
+    conflicts: ['no-pauses'],
     description: 'Uses pauses, gasps, and hesitations in speech.',
     purpose: 'Makes dialogue feel more natural with realistic speech patterns and verbal tics.',
     content: `- Use paralanguage freely (pauses, gasps, hesitations) naturally in speech`
@@ -1888,10 +1891,19 @@ export const COMPONENTS = [
     purpose: 'Removes hedging phrases that undercut emotional moments. No more "but there\'s no real heat in it."',
     content: `- Express character emotions and internal state directly through dialogue without using contrasting language (e.g., "but there's no real heat in it.")`
   },
+
+  // ==========================================
+  // EMOTION & TONE
+  // ==========================================
+  
+  // --- Romance & Bonding ---
   {
     id: 'natural-romance',
     name: 'Natural Romance Development',
     category: 'emotion-tone',
+    group: 'romance-bonding',
+    groupLabel: 'Romance & Bonding',
+    groupOrder: 0,
     difficulty: 'beginner',
     impact: 'medium',
     essential: false,
@@ -1908,6 +1920,8 @@ export const COMPONENTS = [
     id: 'romance-optional',
     name: 'Romance as Optional',
     category: 'emotion-tone',
+    group: 'romance-bonding',
+    groupOrder: 1,
     difficulty: 'beginner',
     impact: 'medium',
     essential: false,
@@ -1923,6 +1937,8 @@ export const COMPONENTS = [
     id: 'sincere-bonding',
     name: 'Sincere Bonding Moments',
     category: 'emotion-tone',
+    group: 'romance-bonding',
+    groupOrder: 2,
     difficulty: 'beginner',
     impact: 'low',
     essential: false,
@@ -1938,24 +1954,23 @@ export const COMPONENTS = [
     id: 'gentle-ain',
     name: 'Gentle Caring Behavior',
     category: 'emotion-tone',
+    group: 'romance-bonding',
+    groupOrder: 3,
     difficulty: 'advanced',
     impact: 'medium',
     essential: false,
     placement: 'ai-instructions',
     tags: ['behavior', 'caring', 'gentle', 'comfort'],
-    models: ['Kooling Katie'],
+    models: ['All Models'],
     description: 'Replaces clinical observations with gentle care.',
     purpose: 'Changes how characters express concern, offers help instead of pointing out problems.',
-    content: `[Kooling Katie: Gentle AIN]
-- Caring behaviors must manifest as offers to help ('are you okay?" 'we can take a break') not observations
+    author: 'Kooling Katie',
+    content: `- Caring behaviors must manifest as offers to help ('are you okay?" 'we can take a break') not observations
 - Dialogue about physical state is prohibited unless phrased as a question about wellbeing
 - Pauses automatically trigger default caring phrases from established relationship history
 - All concern must be expressed through character-specific care (e.g., comforting words, offers to ease burdens)
 - Avoid cliches ('e.g., you're favoring your left side' or 'you're shaking') and replace them with gentle check-ins instead`
   },
-  // ==========================================
-  // EMOTION & TONE
-  // ==========================================
   
   // --- Core Emotional Control ---
   {
@@ -2066,6 +2081,7 @@ export const COMPONENTS = [
     tags: ['dark', 'mature', 'themes', 'serious'],
     models: ['All Models'],
     combinesWith: ['consequences-matter', 'role-horror-author'],
+    conflicts: ['hopeful-tone'],
     description: 'Handles dark and mature themes with appropriate weight.',
     purpose: 'For stories that deal with heavy subjects. Takes themes seriously.',
     content: `- Handle dark themes with appropriate gravity and consequence
@@ -2085,6 +2101,7 @@ export const COMPONENTS = [
     tags: ['horror', 'fear', 'dread', 'suspense'],
     models: ['All Models'],
     combinesWith: ['role-horror-author', 'dark-themes'],
+    conflicts: ['hopeful-tone'],
     description: 'Creates dread and unease.',
     purpose: 'For horror stories. Builds fear through atmosphere and implication.',
     content: `- Build dread through atmosphere, implication, and the unknown
@@ -2555,12 +2572,12 @@ export const COMPONENTS = [
     essential: false,
     placement: 'ai-instructions',
     tags: ['combat', 'tactical', 'comprehensive', 'system'],
-    models: ['Aassmodeuss'],
+    models: ['All Models'],
     combinesWith: ['realistic-consequences', 'lethal-world'],
     description: 'Comprehensive combat rules for tactical encounters.',
     purpose: 'Structured combat with tracking, consequences, and realistic outcomes. No guaranteed victories.',
-    content: `[Aassmodeuss: Combat Set]
-Combat (when engaged)
+    author: 'Aassmodeuss',
+    content: `Combat (when engaged)
 - Cinematic and tactical; track space, cover, and timing. Show actions beat-by-beat; no summary gloss
 - Enemies and allies act on their own initiative. Injury, equipment state, and terrain meaningfully affect outcomes
 - Severe injuries change capacity; death is possible. Keep consequences consistent with prior fiction
@@ -2846,10 +2863,9 @@ Failure, Challenge, and Consequences
   {
     id: 'focus-everyone',
     name: 'Focus on Everyone',
-    category: 'formatting',
-    group: 'scene-formatting',
-    groupLabel: 'Scene Formatting',
-    groupOrder: 0,
+    category: 'pacing-flow',
+    group: 'scene-control',
+    groupOrder: 4,
     difficulty: 'beginner',
     impact: 'low',
     essential: false,
@@ -2863,9 +2879,9 @@ Failure, Challenge, and Consequences
   {
     id: 'dialogue-descriptors',
     name: 'Dialogue Descriptors',
-    category: 'formatting',
-    group: 'scene-formatting',
-    groupOrder: 1,
+    category: 'dialogue',
+    group: 'dialogue-style',
+    groupOrder: 5,
     difficulty: 'beginner',
     impact: 'low',
     essential: false,
@@ -2879,9 +2895,9 @@ Failure, Challenge, and Consequences
   {
     id: 'deeper-topics',
     name: 'Allow Deeper Topics',
-    category: 'formatting',
-    group: 'scene-formatting',
-    groupOrder: 2,
+    category: 'emotion-tone',
+    group: 'core-emotion',
+    groupOrder: 3,
     difficulty: 'beginner',
     impact: 'low',
     essential: false,
@@ -3172,7 +3188,7 @@ Failure, Challenge, and Consequences
   },
 
   // ==========================================
-  // GAMEPLAY
+  // GAMEPLAY (continued)
   // ==========================================
   {
     id: 'realistic-consequences',
@@ -3289,6 +3305,9 @@ Failure, Challenge, and Consequences
     id: 'cinematic-combat',
     name: 'Cinematic Combat',
     category: 'gameplay',
+    group: 'combat-styles',
+    groupLabel: 'Combat Styles',
+    groupOrder: 0,
     difficulty: 'intermediate',
     impact: 'medium',
     essential: false,
@@ -3296,6 +3315,7 @@ Failure, Challenge, and Consequences
     tags: ['combat', 'action', 'cinematic', 'exciting'],
     models: ['All Models'],
     combinesWith: ['vivid-action'],
+    conflicts: ['tactical-combat'],
     description: 'Combat is exciting and visually dynamic.',
     purpose: 'Fights read like action movie scenes. Visceral and engaging.',
     content: `- Combat should be cinematic and exciting
@@ -3306,6 +3326,8 @@ Failure, Challenge, and Consequences
     id: 'tactical-combat',
     name: 'Tactical Combat',
     category: 'gameplay',
+    group: 'combat-styles',
+    groupOrder: 1,
     difficulty: 'advanced',
     impact: 'medium',
     essential: false,
@@ -3323,6 +3345,8 @@ Failure, Challenge, and Consequences
     id: 'fair-challenges',
     name: 'Fair Challenges',
     category: 'gameplay',
+    group: 'combat-styles',
+    groupOrder: 2,
     difficulty: 'beginner',
     impact: 'medium',
     essential: false,
@@ -3588,6 +3612,7 @@ Failure, Challenge, and Consequences
     tags: ['nsfw', 'pacing', 'adult', 'scenes'],
     models: ['All Models'],
     combinesWith: ['nsfw-enabled'],
+    conflicts: ['nsfw-no-fade-black'],
     description: 'Controls pacing of explicit scenes.',
     purpose: 'Prevents rushing through or artificially extending intimate scenes.',
     variants: [
@@ -3663,7 +3688,7 @@ Failure, Challenge, and Consequences
     groupOrder: 4,
     difficulty: 'beginner',
     impact: 'high',
-    essential: true,
+    essential: false,
     placement: 'ai-instructions',
     tags: ['nsfw', 'anti-pattern', 'explicit'],
     models: ['All Models'],
@@ -4370,7 +4395,7 @@ export function getSetsByDifficulty(difficulty) {
 }
 
 export function getSetsByModel(model) {
-  return SETS.filter(set => set.models?.includes(model))
+  return SETS.filter(set => set.models?.includes(model) || set.models?.includes('All Models'))
 }
 
 // --- COMPONENT HELPERS ---
@@ -4410,7 +4435,7 @@ export function getComponentsByGroup(groupId) {
 }
 
 export function getComponentsByModel(model) {
-  return COMPONENTS.filter(comp => comp.models?.includes(model))
+  return COMPONENTS.filter(comp => comp.models?.includes(model) || comp.models?.includes('All Models'))
 }
 
 export function getComponentsByPlacement(placement) {
