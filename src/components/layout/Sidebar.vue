@@ -28,7 +28,7 @@
               BetterRepository
             </h1>
             <div class="flex items-center gap-2">
-              <span class="text-xs text-bd-text-muted">v1.0.0</span>
+              <span class="text-xs text-bd-text-muted">v1.1.0</span>
             </div>
           </div>
         </router-link>
@@ -123,7 +123,7 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { 
-  LayoutGrid, ScrollText, Bookmark, Drama, Code,
+  LayoutGrid, ScrollText, Bookmark, Drama, Code, BookOpen,
   Link2, GitPullRequest, MessageCircle, ExternalLink, Heart, Sparkles, X
 } from 'lucide-vue-next'
 
@@ -189,6 +189,7 @@ const mainNavItems = [
   { path: '/plot-components', label: 'Plot Components', icon: Bookmark, count: null },
   { path: '/story-cards', label: 'Story Cards', icon: Drama, count: null },
   { path: '/scripts', label: 'Scripts', icon: Code, count: null },
+  { path: '/guides', label: 'Guides', icon: BookOpen, count: null },
 ]
 
 const isActive = (path) => {

@@ -187,10 +187,8 @@
       />
     </template>
 
-    <!-- ==================== GUIDE TAB ==================== -->
+    <!-- ==================== GUIDE TAB (moved to /guides) ==================== -->
     <template v-if="activeTab === 'guide'">
-
-      <!-- Table of Contents - Sticky Sidebar -->
       <div class="flex gap-6 animate-fade-in">
         <!-- TOC Sidebar -->
         <aside class="hidden lg:block w-56 flex-shrink-0">
@@ -1803,7 +1801,6 @@ const tabs = [
   { id: 'sets', label: 'Sets', icon: Layers },
   { id: 'collection', label: 'Collection', icon: FileText },
   { id: 'builder', label: 'Builder', icon: Wrench },
-  { id: 'guide', label: 'Guide', icon: BookOpen }
 ]
 
 const sets = ref(SETS)
@@ -2281,7 +2278,7 @@ const handleSearch = (query) => {
 
 // Handle initial search query and tab from URL (e.g. from global search)
 onMounted(() => {
-  if (route.query.tab && ['sets', 'collection', 'builder', 'guide'].includes(route.query.tab)) {
+  if (route.query.tab && ['sets', 'collection', 'builder'].includes(route.query.tab)) {
     activeTab.value = route.query.tab
   }
   if (route.query.q) {

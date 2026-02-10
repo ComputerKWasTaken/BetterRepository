@@ -1095,7 +1095,6 @@ const activeTab = ref('examples')
 
 const tabs = [
   { id: 'examples', label: 'Templates', icon: Layers },
-  { id: 'guide', label: 'Guide', icon: BookOpen }
 ]
 
 
@@ -1187,7 +1186,7 @@ const collapseAllGuideSections = () => {
 
 // Handle initial search query and tab from URL (e.g. from global search)
 onMounted(() => {
-  if (route.query.tab && ['examples', 'guide'].includes(route.query.tab)) {
+  if (route.query.tab && ['examples'].includes(route.query.tab)) {
     activeTab.value = route.query.tab
   }
   if (route.query.q) {

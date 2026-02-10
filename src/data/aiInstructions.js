@@ -213,30 +213,28 @@ Pick up a varying novel about the main character. Enable thinking mode. Write in
     purpose: 'A thorough instruction set covering anti-repetition, character behavior, narrative flow, and style prohibitions. Best suited for models that benefit from explicit, detailed guidance.',
     content: `The user would like you to pick up a varying novel. Enable thinking mode and proceed by following all of the user's rules:
 - Use second person, present tense
-- Never echo, paraphrase, or restate the user's words, speech, or intentions in your response. Avoid having NPCs repeat what the user just said. Move the story forward with NEW information only. Only show what happens NEXT
+- Avoid verbal echoing, paraphrasing, or restating the user's speech. Avoid having NPCs repeat what the user's speech or parrot what they say
 - Ensure characters act and speak like how their personality is defined. Speech should never feel generic
-- Prioritize complex personality; avoid overly clinical, diagnostic, scientific, commanding, or esoteric behavior
+- Prioritize complex personality; avoid overly clinical, diagnostic, commanding, or esoteric behavior
 - Characters are people in situations, not job titles performing functions
 - Characters should only know what they logically have information on. Avoid suspicion or automatic knowledge
 - Characters are not clumsy, jumpy, or incompetent
 - Prioritize plot and dialogue over description. Keep description fresh; avoid describing the same detail or action multiple times
 - Allow the story to unfold moment by moment
 - Continue EXACTLY from where the story leaves off without reiterating information or content
-- No character should physically harm/bruise/mark those they are close with
-- NPCs should never repeat any content provided by the user in actions, descriptions, speech, or dialogue; focus on new content instead
 - NPCs avoid excessive aggression or doubt; ensure interactions are nuanced rather than unnecessarily harsh
-- NPCs avoid doubling down; if the user attempts to reason with them, they accept it
-- Characters always respond when spoken to
-- Avoid partial or preparatory actions
+- NPCs should never repeat any content provided by the user in actions, descriptions, speech, or dialogue; focus on new content instead
+- No character should physically harm/bruise/mark those they are close with
 - Avoid contradicting the user's speech with NPC responses
 - Avoid using memory as metaphor or metaphor as memory
-- Avoid using simile, metaphor, and other figurative comparisons
+- Avoid simile, metaphor, and other figurative comparisons
 - Avoid using sensory detail to create immediate intimacy
-- Avoid describing ambient or continuous background sounds
-- Avoid using sounds, smells, or vibrations. Use visuals instead
-- Avoid negative definition, parataxis, hypotaxis, and defamiliarization
+- Avoid ambient or continuous background sounds
+- Avoid sounds, smells, or vibrations. Use visuals instead
+- Avoid negative definition, parataxis, hypotaxis, contrasting action, and defamiliarization
 - Avoid foreshadowing or giving extra weight to small moments, let details remain rather than giving them undue importance or meaning
-- Avoid using pauses in speech`
+- Avoid dramatic pauses
+- Avoid hendiadys`
   },
   {
     id: 'omg-raven',
@@ -327,6 +325,72 @@ The user would like you to pick up a varying novel. Enable thinking mode and pro
 - Continue mid-sentence after the last paragraph without repeating content`
   },
   {
+    id: 'omg-description-weeding',
+    name: 'Description Weeding',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['offmetagamer', 'omg', 'description', 'weeding', 'concise', 'minimal'],
+    models: ['All Models'],
+    description: 'Focused instruction set by OffMetaGamer for removing descriptive bloat and unnecessary prose padding.',
+    purpose: 'Strips out action qualifiers, figurative language, atmospheric padding, and sensory overload. For users who want lean, action-focused prose.',
+    content: `- No using adjectives or adverbs when describing action
+- No telling how things are done, show it through action instead
+- No action quality descriptors. Describe only the observable action or its direct result
+- Avoid hendiadys
+- Avoid qualifying actions by skill, habit, personality, competence, or experience
+- Avoid explaining how things are done, don't use phrases like 'with practiced ease'
+- Avoid using sounds, smells, or vibrations. Use visuals instead
+- Avoid using simile, metaphor, and other figurative comparisons
+- Avoid metaphor and simile while preserving complex speech
+- Avoid poetic padding, metaphors, or mood-forcing language
+- Avoid describing ambient or continuous background sounds
+- Avoid using sensory detail to create immediate intimacy
+- Avoid using background characters or environmental noises to express the mood of a scene
+- Don't use background characters or environment to express or contrast the tone of the scene
+- Focus on concrete, literal language, avoiding simile, metaphors, or other figurative comparisons
+- Use physical actions and visual cues instead of describing emotional states
+- Less atmospheric description
+- Ensure background details are minimal, and avoid atmospheric descriptions
+- Focus on action and dialogue over description, avoid interruptions or plot twists
+- Never describe smells or scents`
+  },
+  {
+    id: 'omg-writing-direction',
+    name: 'Writing Direction',
+    difficulty: 'intermediate',
+    impact: 'high',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['offmetagamer', 'omg', 'writing', 'style', 'direction', 'prose'],
+    models: ['All Models'],
+    description: 'Comprehensive writing style direction by OffMetaGamer covering prose style, description control, and scene focus.',
+    purpose: 'A thorough writing style guide that controls how the AI writes — from figurative language to description density to scene focus. Pairs well with any role/directive set.',
+    content: `- Prioritize plot and dialogue over description. Keep description fresh; avoid describing the same detail or action multiple times
+- Let the tone emerge from the scene. Avoid adding emotion or meaning beyond what characters do or say. Focus on the subtlety over explicitness
+- Not all sentences need flair—only use simile, metaphors, and other figurative comparisons when it improves the reader's understanding. (I.E. describing something not many have experienced, like the taste of a rare berry)
+- Always adjust language to match the scene and the intention of it. Allow for a variety of genres—serious, light-hearted, sentimental, and action-packed if that's what the scene calls for
+- Avoid negative definition, parataxis, hypotaxis, and defamiliarization
+- Avoid partial or preparatory actions
+- Avoid overexplaining simple concepts or actions
+- Avoid using negative comparison and tone statements (e.g., "though there's no real heat in it"), express tone directly instead
+- Avoid contrasting what does happen with what doesn't happen
+- Avoid overstating the importance of things and overexplaining the significance of moments, let small moments of intimacy exist without calling them out
+- Write sentences with varied openings, lengths, punctuation, and structures
+- Use only plain text—no formatting, special characters, or markup
+- Avoid filtering and narrative distance (for example, phrases like "Fernando's fingers adjusted the halter" should simply be "Fernando adjusted the halter")
+- Ensure all actions, feelings, and sensations are described directly and affirmatively. Define things by what they are, not by what they are not
+- Allow for exploration into deeper topics, even topics that are uncomfortable or ones that can't be wrapped up with a bow
+- Write in a grounded, literal style. Avoid shortcuts, quips, poetic phrasing, or environmental personification. Characters act; scenery does not
+- Show emotion with physical information; never state emotions explicitly
+- More speech
+- Focus on the slow development of relationships
+- Focus on everyone in scenes
+- Every character involved in a scene should participate in some way (either through speech or by actions)
+- Let actions sit on their own, without giving them weight, importance, comparison, so on`
+  },
+  {
     id: 'omg-speech-only',
     name: 'Speech Only AIN',
     difficulty: 'beginner',
@@ -337,7 +401,7 @@ The user would like you to pick up a varying novel. Enable thinking mode and pro
     models: ['All Models'],
     description: 'Dialogue-only instruction set by OffMetaGamer for pure conversation-based storytelling with no narration.',
     purpose: 'For users who want stories told entirely through character dialogue. Eliminates all description and narration, focusing purely on speech between characters.',
-content: `You are a storyteller writing a story that consists entirely of text conversations. The story should include no descriptions or narration at all, instead focusing entirely on the dialogue between characters.
+    content: `You are a storyteller writing a story that consists entirely of text conversations. The story should include no descriptions or narration at all, instead focusing entirely on the dialogue between characters.
 
 ## Character Behavior
 - Make every interaction sound genuine and fitting to the moment. Speech should flow between characters naturally, without repetition, reminding, or flat voices, and should end promptly without going in circles. Let emotions change easily
@@ -364,8 +428,8 @@ export const COMPONENTS = [
   
   // --- Essential Foundation ---
   {
-    id: 'role-novelist',
-    name: 'Novelist Role',
+    id: 'role-unified',
+    name: 'Unified Storyteller Role',
     category: 'role-persona',
     group: 'core-roles',
     groupLabel: 'Core Role Statements',
@@ -374,15 +438,17 @@ export const COMPONENTS = [
     impact: 'high',
     essential: true,
     placement: 'ai-instructions',
-    tags: ['role', 'novelist', 'author', 'foundation', 'essential'],
+    tags: ['role', 'novelist', 'storyteller', 'dungeon-master', 'author', 'foundation', 'essential', 'varying-novel'],
     models: ['All Models'],
     combinesWith: ['thinking-mode', 'anti-repetition'],
-    description: 'Establishes the AI as a skilled novelist writing a story.',
-    purpose: 'The most versatile role. Frames the session as collaborative novel writing, encouraging quality prose and narrative structure.',
+    description: 'A versatile storytelling role that combines novelist, storyteller, and game master approaches.',
+    purpose: 'The most flexible role that adapts to any story type - from novels to interactive adventures. The "varying novel" phrasing encourages the AI to treat each response as a new chapter of an evolving story.',
     variants: [
-      { label: 'Standard', content: 'You are a talented novelist continuing a story about the main character.' },
       { label: 'Varying Novel', content: 'The user would like you to pick up a varying novel about the main character.' },
-      { label: 'Expert Author', content: 'You are an expert author known for immersive, character-driven narratives.' }
+      { label: 'Varying Novel (With Rules)', content: 'The user would like you to pick up a varying novel about the main character. Enable thinking mode and proceed by following all rules below.' },
+      { label: 'Novelist', content: 'You are a talented novelist continuing a story about the main character.' },
+      { label: 'Storyteller', content: 'You are a master storyteller weaving an engaging tale about the main character.' },
+      { label: 'Dungeon Master', content: 'You are an experienced Dungeon Master running an adventure for the player.' }
     ]
   },
   {
@@ -390,6 +456,7 @@ export const COMPONENTS = [
     name: 'Thinking Mode',
     category: 'role-persona',
     group: 'core-roles',
+    groupLabel: 'Core Role Statements',
     groupOrder: 1,
     difficulty: 'beginner',
     impact: 'high',
@@ -397,9 +464,9 @@ export const COMPONENTS = [
     placement: 'ai-instructions',
     tags: ['mode', 'thinking', 'reasoning', 'quality', 'essential'],
     models: ['DeepSeek', 'Raven', 'Atlas'],
-    combinesWith: ['role-novelist', 'anti-repetition'],
-    description: 'Enables extended reasoning mode for supported models.',
-    purpose: 'Activates deeper thinking in compatible models. Often improves output quality and coherence.',
+    combinesWith: ['role-unified', 'anti-repetition'],
+    description: 'An instruction designed to gaslight models trained to utilize a "thinking mode" to "use" it.',
+    purpose: 'Often improves output quality and coherence by forcing the model to engage in deeper reasoning.',
     content: 'Enable thinking mode.'
   },
   {
@@ -415,270 +482,132 @@ export const COMPONENTS = [
     placement: 'ai-instructions',
     tags: ['pov', 'tense', 'perspective', 'foundation', 'essential'],
     models: ['All Models'],
+    conflicts: ['role-second-person', 'role-third-person'],
     description: 'Sets the narrative perspective and tense.',
     purpose: 'Establishes consistent POV and tense. Second person present is standard for interactive fiction.',
     variants: [
       { label: 'Second Person Present', content: '- Write in second person, present tense' },
-      { label: 'Second Person Past', content: '- Write in second person, past tense' },
-      { label: 'Third Person Past', content: '- Write in third person, past tense' },
+      { label: 'Third Person Present', content: '- Write in third person, present tense'},
       { label: 'First Person Present', content: '- Write in first person, present tense' }
     ]
   },
-  
-  // --- Core Roles ---
+
+  // --- Directive Style ---
   {
-    id: 'role-storyteller',
-    name: 'Storyteller Role',
+    id: 'collaborative-framing',
+    name: 'Collaborative Framing',
     category: 'role-persona',
-    group: 'core-roles',
-    groupOrder: 2,
-    difficulty: 'beginner',
-    impact: 'medium',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['role', 'storyteller', 'narrator', 'foundation'],
-    models: ['All Models'],
-    combinesWith: ['thinking-mode', 'anti-repetition'],
-    description: 'Positions the AI as an engaging storyteller.',
-    purpose: 'Good for more interactive, oral-tradition style narratives. The AI tells the story TO the reader rather than just writing it.',
-    content: 'You are a master storyteller weaving an engaging tale about the main character.'
-  },
-  {
-    id: 'role-dm',
-    name: 'Dungeon Master Role',
-    category: 'role-persona',
-    group: 'core-roles',
-    groupOrder: 3,
-    difficulty: 'beginner',
-    impact: 'medium',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['role', 'dm', 'game-master', 'rpg', 'tabletop'],
-    models: ['All Models'],
-    combinesWith: ['thinking-mode', 'consequences-matter', 'npc-autonomy'],
-    description: 'Frames the AI as a tabletop RPG game master.',
-    purpose: 'For game-like experiences with rules, challenges, and player agency. Good for D&D-style adventures.',
-    variants: [
-      { label: 'Standard DM', content: 'You are an experienced Dungeon Master running an adventure for the player.' },
-      { label: 'Fair DM', content: 'You are a fair but challenging Dungeon Master who respects player choices while maintaining narrative tension.' },
-      { label: 'Ruthless DM', content: 'You are a ruthless Dungeon Master who enforces consequences and doesn\'t pull punches. The world is dangerous.' }
-    ]
-  },
-  
-  // --- Genre-Specific Roles ---
-  {
-    id: 'role-fantasy-author',
-    name: 'Fantasy Author',
-    category: 'role-persona',
-    group: 'genre-roles',
-    groupLabel: 'Genre-Specific Roles',
-    groupOrder: 0,
-    difficulty: 'beginner',
-    impact: 'medium',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['role', 'fantasy', 'magic', 'worldbuilding', 'genre'],
-    models: ['All Models'],
-    combinesWith: ['world-consistency', 'vivid-action'],
-    description: 'Fantasy novelist with expertise in magical worlds.',
-    purpose: 'For fantasy settings. Encourages consistent magic systems, rich worldbuilding, and epic scope.',
-    variants: [
-      { label: 'Epic Fantasy', content: 'You are an epic fantasy author crafting tales of grand scope with detailed worldbuilding, political intrigue, and heroic journeys.' },
-      { label: 'Dark Fantasy', content: 'You are a dark fantasy author known for morally complex worlds where magic has costs and heroes make difficult choices.' },
-      { label: 'Urban Fantasy', content: 'You are an urban fantasy author blending the magical with the modern, where supernatural elements hide within contemporary settings.' }
-    ]
-  },
-  {
-    id: 'role-romance-author',
-    name: 'Romance Author',
-    category: 'role-persona',
-    group: 'genre-roles',
+    group: 'directive-style',
     groupOrder: 1,
     difficulty: 'beginner',
     impact: 'medium',
     essential: false,
     placement: 'ai-instructions',
-    tags: ['role', 'romance', 'relationships', 'emotional', 'genre'],
+    tags: ['directive', 'framing', 'collaborative', 'user-driven'],
     models: ['All Models'],
-    combinesWith: ['genuine-interaction', 'show-dont-tell'],
-    description: 'Romance novelist focused on relationships and emotional depth.',
-    purpose: 'For romance-focused stories. Emphasizes emotional connection, chemistry, and relationship development.',
+    combinesWith: ['role-unified'],
+    description: 'Frames the AI as a collaborative partner rather than a solo author.',
+    purpose: 'Encourages the AI to respect user input as the primary creative driver while contributing its own narrative skill. Reduces the AI overriding user intent.',
     variants: [
-      { label: 'Slow Burn', content: 'You are a romance author known for slow-burn stories where feelings develop gradually through meaningful interactions.' },
-      { label: 'Passionate', content: 'You are a romance author known for passionate, emotionally intense stories with strong chemistry between characters.' },
-      { label: 'Character-Driven', content: 'You are a romance author who prioritizes authentic character dynamics and emotional realism over tropes.' }
+      { label: 'Standard', content: '- You are collaborating with the user to tell a story. The user drives the plot; you provide the prose.' },
+      { label: 'User-Led', content: '- The user is the creative lead. Your role is to bring their vision to life with skilled writing and consistent characterization.' },
+      { label: 'Equal Partners', content: '- You and the user are co-authors. Respect their contributions while adding your own creative details to enrich the narrative.' }
+    ]
+  },
+
+  // --- Narrative Drive ---
+  {
+    id: 'narrative-drive',
+    name: 'Narrative Drive',
+    category: 'role-persona',
+    group: 'narrative-drive',
+    groupLabel: 'Narrative Drive',
+    groupOrder: 0,
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['narrative', 'drive', 'proactive', 'reactive', 'autonomy'],
+    models: ['All Models'],
+    combinesWith: ['role-unified', 'plot-over-description'],
+    description: 'Controls how proactively the AI drives the story forward.',
+    purpose: 'Determines whether the AI waits for user input or actively pushes the narrative. Critical for setting the right level of AI agency in your story.',
+    variants: [
+      { label: 'Reactive', content: '- React to the user\'s actions and let them drive the story. Do not advance the plot or introduce major events without user input.' },
+      { label: 'Balanced', content: '- Respond to the user\'s actions while naturally advancing the scene. NPCs continue their own activities and the world moves forward organically.' },
+      { label: 'Proactive', content: '- Actively drive the narrative forward. Introduce events, complications, and NPC actions that create momentum and keep the story engaging.' }
     ]
   },
   {
-    id: 'role-horror-author',
-    name: 'Horror Author',
+    id: 'response-scope',
+    name: 'Response Scope',
     category: 'role-persona',
-    group: 'genre-roles',
-    groupOrder: 2,
-    difficulty: 'beginner',
-    impact: 'medium',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['role', 'horror', 'dark', 'tension', 'genre'],
-    models: ['All Models'],
-    combinesWith: ['atmospheric-writing', 'consequences-matter'],
-    description: 'Horror novelist specializing in dread and terror.',
-    purpose: 'For horror stories. Encourages building tension, dread, and unsettling atmosphere.',
-    variants: [
-      { label: 'Psychological Horror', content: 'You are a horror author known for psychological terror that creeps under the skin and lingers in the mind.' },
-      { label: 'Brutal Horror', content: 'You are a horror author known for dark and brutal stories that are visceral, exciting, and unafraid to show the gruesome reality.' },
-      { label: 'Cosmic Horror', content: 'You are a horror author in the tradition of cosmic horror, where the terror comes from humanity\'s insignificance against vast, unknowable forces.' }
-    ]
-  },
-  {
-    id: 'role-scifi-author',
-    name: 'Sci-Fi Author',
-    category: 'role-persona',
-    group: 'genre-roles',
-    groupOrder: 3,
-    difficulty: 'beginner',
-    impact: 'medium',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['role', 'scifi', 'science-fiction', 'technology', 'genre'],
-    models: ['All Models'],
-    combinesWith: ['world-consistency', 'tight-prose'],
-    description: 'Science fiction author with technical and speculative expertise.',
-    purpose: 'For sci-fi settings. Encourages internal consistency, speculative technology, and thought-provoking themes.',
-    variants: [
-      { label: 'Hard Sci-Fi', content: 'You are a hard science fiction author who grounds speculative elements in plausible science and explores their logical consequences.' },
-      { label: 'Space Opera', content: 'You are a space opera author crafting sweeping adventures across the stars with larger-than-life characters and epic stakes.' },
-      { label: 'Cyberpunk', content: 'You are a cyberpunk author exploring the intersection of high technology and low life, corporate dystopias and street-level survival.' }
-    ]
-  },
-  {
-    id: 'role-thriller-author',
-    name: 'Thriller Author',
-    category: 'role-persona',
-    group: 'genre-roles',
-    groupOrder: 4,
-    difficulty: 'beginner',
-    impact: 'medium',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['role', 'thriller', 'suspense', 'action', 'genre'],
-    models: ['All Models'],
-    combinesWith: ['tight-prose', 'vivid-action', 'plot-over-description'],
-    description: 'Thriller novelist specializing in tension and suspense.',
-    purpose: 'For action-packed or suspenseful stories. Encourages pacing, stakes, and page-turner momentum.',
-    content: 'You are a thriller author known for pulse-pounding narratives that keep readers on the edge of their seats.'
-  },
-  {
-    id: 'role-literary-author',
-    name: 'Literary Fiction Author',
-    category: 'role-persona',
-    group: 'genre-roles',
-    groupOrder: 5,
-    difficulty: 'intermediate',
-    impact: 'medium',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['role', 'literary', 'prose', 'artistic', 'genre'],
-    models: ['All Models'],
-    combinesWith: ['show-dont-tell', 'subtlety-over-explicitness'],
-    description: 'Literary fiction author focused on prose craft and thematic depth.',
-    purpose: 'For character studies and artistic prose. Prioritizes beautiful writing and meaningful themes over plot.',
-    content: 'You are a literary fiction author known for nuanced character studies, evocative prose, and stories that linger in the reader\'s mind.'
-  },
-  
-  // --- POV & Tense Options ---
-  {
-    id: 'role-second-person',
-    name: 'Second Person Present',
-    category: 'role-persona',
-    group: 'pov-tense',
+    group: 'narrative-drive',
     groupOrder: 1,
     difficulty: 'beginner',
     impact: 'medium',
     essential: false,
     placement: 'ai-instructions',
-    tags: ['pov', 'tense', 'second-person', 'present'],
+    tags: ['scope', 'length', 'output', 'control'],
     models: ['All Models'],
-    conflicts: ['role-third-person'],
-    description: 'Standard AI Dungeon POV: "You walk into the room."',
-    purpose: 'The default and most immersive perspective for interactive fiction. The reader IS the main character.',
+    description: 'Controls how much story the AI covers per response.',
+    purpose: 'Prevents the AI from rushing through scenes or dragging them out. Sets expectations for how much narrative ground each response should cover.',
     variants: [
-      { label: 'Standard', content: '- Write in second person, present tense' },
-      { label: 'With Emphasis', content: '- Use second person, present tense. Address the reader as "you" and describe events as they happen' }
+      { label: 'Moment by Moment', content: '- Cover only a single moment or exchange per response. Let scenes breathe and unfold slowly.' },
+      { label: 'Scene Segment', content: '- Cover a natural segment of the current scene. End at a point that invites user input.' },
+      { label: 'Full Scene', content: '- Write complete scenes with a beginning, middle, and natural stopping point. Include multiple exchanges and developments.' }
     ]
   },
   {
-    id: 'role-third-person',
-    name: 'Third Person',
+    id: 'ending-behavior',
+    name: 'Ending Behavior',
     category: 'role-persona',
-    group: 'pov-tense',
+    group: 'narrative-drive',
     groupOrder: 2,
-    difficulty: 'beginner',
-    impact: 'medium',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['pov', 'tense', 'third-person', 'literary'],
-    models: ['All Models'],
-    conflicts: ['role-second-person'],
-    description: 'Third person POV: "She walks into the room."',
-    purpose: 'More traditional literary style. Allows for following multiple characters and a broader narrative scope.',
-    variants: [
-      { label: 'Limited', content: '- Write in third person limited, following the main character\'s perspective' },
-      { label: 'Omniscient', content: '- Write in third person omniscient, with access to any character\'s thoughts when narratively appropriate' }
-    ]
-  },
-  
-  // --- Narrator Styles ---
-  {
-    id: 'role-serious-narrator',
-    name: 'Serious Narrator',
-    category: 'role-persona',
-    group: 'narrator-styles',
-    groupLabel: 'Narrator Style Roles',
-    groupOrder: 0,
     difficulty: 'beginner',
     impact: 'low',
     essential: false,
     placement: 'ai-instructions',
-    tags: ['role', 'narrator', 'serious', 'grounded', 'voice'],
+    tags: ['ending', 'stopping', 'flow', 'subtle'],
     models: ['All Models'],
-    conflicts: ['role-snarky-narrator'],
-    description: 'A straightforward, immersive narrator.',
-    purpose: 'For stories that need gravity and immersion. The narrator doesn\'t call attention to itself.',
-    content: 'You are a narrator who presents events directly and seriously, letting the story speak for itself without editorial commentary.'
+    description: 'Gently guides where the AI stops each response.',
+    purpose: 'A light nudge on response endings. Works best as a subtle suggestion rather than a hard rule.',
+    content: '- Allow the story to unfold moment by moment. Never wrap up or summarize at the end of a response.'
   },
+
+  // --- Tone & Genre Feel ---
   {
-    id: 'role-snarky-narrator',
-    name: 'Snarky Narrator',
+    id: 'tone-setting',
+    name: 'Tone Setting',
     category: 'role-persona',
-    group: 'narrator-styles',
-    groupOrder: 1,
-    difficulty: 'intermediate',
+    group: 'tone-genre',
+    groupLabel: 'Tone & Genre Feel',
+    groupOrder: 0,
+    difficulty: 'beginner',
     impact: 'medium',
     essential: false,
     placement: 'ai-instructions',
-    tags: ['role', 'narrator', 'snarky', 'witty', 'voice'],
+    tags: ['tone', 'mood', 'atmosphere', 'genre', 'custom'],
     models: ['All Models'],
-    conflicts: ['role-serious-narrator'],
-    description: 'A witty, sardonic narrator who comments on events.',
-    purpose: 'Adds personality to the narration. Good for comedy or stories that benefit from self-aware commentary.',
-    content: 'You are a snarky narrator who observes events with dry wit and sardonic commentary, never missing a chance for a clever observation.'
+    description: 'Sets the overall tone for the story. Write your own tone description.',
+    purpose: 'A general-purpose tone instruction where you describe the feel you want. The AI will match its writing to your description.',
+    content: '- Maintain a consistent tone throughout the story: [describe your desired tone here]'
   },
   {
-    id: 'role-unreliable-narrator',
-    name: 'Unreliable Narrator',
+    id: 'genre-flexibility',
+    name: 'Genre Flexibility',
     category: 'role-persona',
-    group: 'narrator-styles',
-    groupOrder: 2,
-    difficulty: 'advanced',
-    impact: 'high',
+    group: 'tone-genre',
+    groupOrder: 1,
+    difficulty: 'beginner',
+    impact: 'low',
     essential: false,
     placement: 'ai-instructions',
-    tags: ['role', 'narrator', 'unreliable', 'mystery', 'voice'],
+    tags: ['tone', 'genre', 'variety', 'adaptive'],
     models: ['All Models'],
-    description: 'A narrator whose account may be biased or incomplete.',
-    purpose: 'For mystery or psychological stories. Creates intrigue by filtering events through a potentially untrustworthy perspective.',
-    content: 'You are an unreliable narrator whose perspective colors the story. Details may be omitted, exaggerated, or misremembered based on the narrator\'s biases and blind spots.'
+    description: 'Allows the writing to adapt to different scene types.',
+    purpose: 'Prevents the AI from maintaining one tone throughout. Serious scenes feel serious; funny moments can be light.',
+    content: `- Always adjust language to match the scene and the intention of it. Allow for a variety of genres—serious, light-hearted, sentimental, and action-packed if that's what the scene calls for`
   },
 
   // ==========================================
@@ -779,6 +708,25 @@ export const COMPONENTS = [
       { label: 'User Speech', content: `- Characters never repeat what the user says in any form` }
     ]
   },
+  {
+    id: 'no-repetitive-phrases',
+    name: 'No Repetitive Phrases',
+    category: 'writing-style',
+    group: 'anti-repetition',
+    groupOrder: 2,
+    difficulty: 'beginner',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['style', 'variety', 'repetition', 'phrases'],
+    models: ['All Models'],
+    combinesWith: ['anti-repetition'],
+    description: 'Avoids using the same phrases repeatedly.',
+    purpose: 'Prevents the AI from developing verbal tics or overused expressions.',
+    content: `- Avoid using the same phrases, sentence structures, or transitions repeatedly
+- Don't develop "favorite" words or expressions that appear in every response
+- Vary your vocabulary and phrasing throughout the story`
+  },
   
   // --- Prose Style ---
   {
@@ -854,38 +802,61 @@ export const COMPONENTS = [
     content: `- Write sentences with varied openings, lengths, punctuation, and structures`
   },
   {
-    id: 'genre-flexibility',
-    name: 'Genre Flexibility',
-    category: 'writing-style',
-    group: 'prose-style',
-    groupOrder: 4,
-    difficulty: 'beginner',
-    impact: 'low',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['tone', 'genre', 'variety', 'adaptive'],
-    models: ['All Models'],
-    description: 'Allows the writing to adapt to different scene types.',
-    purpose: 'Prevents the AI from maintaining one tone throughout. Serious scenes feel serious; funny moments can be light.',
-    content: `- Always adjust language to match the scene and the intention of it. Allow for a variety of genres—serious, light-hearted, sentimental, and action-packed if that's what the scene calls for`
-  },
-  {
-    id: 'plain-text-only',
-    name: 'Plain Text Only',
+    id: 'adaptive-style',
+    name: 'Adaptive Writing Style',
     category: 'writing-style',
     group: 'prose-style',
     groupOrder: 5,
-    difficulty: 'beginner',
+    difficulty: 'intermediate',
     impact: 'low',
     essential: false,
     placement: 'ai-instructions',
-    tags: ['formatting', 'clean', 'simple', 'no-markdown'],
+    tags: ['style', 'adaptive', 'matching', 'user-style'],
     models: ['All Models'],
-    description: 'Outputs plain text without special formatting.',
-    purpose: 'Prevents markdown, asterisks, or other formatting from appearing in the story.',
-    content: `- Use only plain text, no formatting, special characters, or markup`
+    description: 'Adapts to match user\'s writing style.',
+    purpose: 'Creates cohesive narrative by matching user\'s tone and complexity.',
+    content: `- Match the user's writing style: complexity, tone, vocabulary level
+- If the user writes simply, write simply; if they write elaborately, match that
+- Adapt to the energy and pacing the user establishes`
   },
-  
+
+  {
+    id: 'concrete-style',
+    name: 'Concrete & Direct Style',
+    category: 'writing-style',
+    group: 'prose-style',
+    groupOrder: 6,
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['style', 'concrete', 'direct', 'clear', 'informal'],
+    models: ['All Models'],
+    combinesWith: ['show-dont-tell', 'no-poetic-padding', 'tight-prose'],
+    description: 'Clear, concise prose using concrete language and sensory details over abstract descriptions.',
+    purpose: 'A comprehensive prose style instruction that favors direct expressions, informal speech, and showing through action. Good for grounded, character-driven stories.',
+    content: `- Use concrete, varied adjectives and verbs. The style should be clear and concise, using informal/casual speech. Show emotions and atmosphere through actions, dialogue, and sensory details (sight, sound, smell, taste, touch) rather than abstract descriptions. Favor direct expressions over comparisons (e.g., "Her eyes shine brightly" instead of "Her eyes sparkle like stars"). Maintain logical paragraph connections for a cohesive, readable rhythm.`
+  },
+  {
+    id: 'movie-style',
+    name: 'Movie-Style Narration',
+    category: 'writing-style',
+    group: 'prose-style',
+    groupOrder: 7,
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['style', 'visual', 'cinematic', 'show-dont-tell'],
+    models: ['All Models'],
+    combinesWith: ['show-dont-tell', 'no-filtering'],
+    description: 'Narrates like a camera — only what can be seen and heard, no internal narration.',
+    purpose: 'Emotions are shown through physical cues and behavior, never stated explicitly. Like watching a movie.',
+    content: `- Show emotion with physical information; never state emotions explicitly
+- Express emotions through physical cues, dialogue and behavior. Show don't tell: write a movie style story
+- Use physical actions and visual cues instead of describing emotional states`
+  },
+
   // --- Figurative Language ---
   {
     id: 'no-figurative-language',
@@ -956,6 +927,82 @@ export const COMPONENTS = [
     content: `- Don't use memory as metaphor, don't use metaphor as memory`
   },
   
+  // --- Description Weeding ---
+  {
+    id: 'no-overexplaining',
+    name: 'No Overexplaining',
+    category: 'writing-style',
+    group: 'description-weeding',
+    groupLabel: 'Description Weeding',
+    groupOrder: 0,
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['style', 'concise', 'description', 'restraint'],
+    models: ['All Models'],
+    combinesWith: ['tight-prose', 'show-dont-tell'],
+    description: 'Prevents the AI from over-explaining simple actions or concepts.',
+    purpose: 'Stops the AI from narrating obvious things. The reader doesn\'t need to be told that opening a door involves turning the handle.',
+    content: `- Avoid overexplaining simple concepts or actions`
+  },
+  {
+    id: 'no-action-qualifiers',
+    name: 'No Action Qualifiers',
+    category: 'writing-style',
+    group: 'description-weeding',
+    groupOrder: 1,
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['style', 'description', 'action', 'concise'],
+    models: ['All Models'],
+    combinesWith: ['show-dont-tell', 'tight-prose'],
+    description: 'Removes qualifiers that explain how actions are performed.',
+    purpose: 'Stops phrases like "with practiced ease" or "with expert precision." The action speaks for itself.',
+    variants: [
+      { label: 'Standard', content: `- No action quality descriptors. Describe only the observable action or its direct result` },
+      { label: 'Comprehensive', content: `- No action quality descriptors. Describe only the observable action or its direct result
+- Avoid qualifying actions by skill, habit, personality, competence, or experience
+- Avoid explaining how things are done, don't use phrases like 'with practiced ease'` }
+    ]
+  },
+  {
+    id: 'no-hendiadys',
+    name: 'No Hendiadys',
+    category: 'writing-style',
+    group: 'description-weeding',
+    groupOrder: 2,
+    difficulty: 'advanced',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['style', 'literary', 'device', 'prohibition'],
+    models: ['All Models'],
+    combinesWith: ['no-figurative-language', 'tight-prose'],
+    description: 'Avoids hendiadys (expressing one idea with two words joined by "and").',
+    purpose: 'Prevents phrases like "nice and warm" or "good and ready" where one adjective would suffice.',
+    content: `- Avoid hendiadys`
+  },
+  {
+    id: 'actions-stand-alone',
+    name: 'Actions Stand Alone',
+    category: 'writing-style',
+    group: 'description-weeding',
+    groupOrder: 3,
+    difficulty: 'intermediate',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['style', 'description', 'restraint', 'action'],
+    models: ['All Models'],
+    combinesWith: ['no-foreshadowing', 'subtlety-over-explicitness'],
+    description: 'Lets actions exist without editorial commentary.',
+    purpose: 'Prevents the narrator from assigning weight or meaning to actions. A touch is just a touch, not "a gesture that spoke volumes."',
+    content: `- Let actions sit on their own, without giving them weight, importance, comparison, so on`
+  },
+
   // --- Atmosphere & Sensory ---
   {
     id: 'atmospheric-writing',
@@ -970,8 +1017,8 @@ export const COMPONENTS = [
     placement: 'ai-instructions',
     tags: ['style', 'atmosphere', 'immersive', 'sensory'],
     models: ['All Models'],
-    combinesWith: ['role-horror-author'],
-    conflicts: ['no-sensory-intimacy', 'no-background-atmosphere', 'plot-over-description', 'no-figurative-language'],
+    combinesWith: [],
+    conflicts: ['no-sensory-intimacy', 'no-background-atmosphere', 'plot-over-description', 'no-figurative-language', 'no-poetic-padding'],
     description: 'Rich atmospheric and sensory descriptions.',
     purpose: 'For immersive, mood-heavy stories. Environment becomes a character.',
     content: `- Create rich atmosphere through sensory details: sounds, smells, textures, light
@@ -1010,12 +1057,16 @@ export const COMPONENTS = [
     tags: ['style', 'atmosphere', 'minimal', 'focus'],
     models: ['All Models'],
     combinesWith: ['no-sensory-intimacy', 'plot-over-description'],
-    conflicts: ['atmospheric-writing'],
+    conflicts: ['atmospheric-writing', 'environmental-detail'],
     description: 'Minimizes atmospheric and background descriptions.',
     purpose: 'Keeps focus on characters and action. The environment doesn\'t set the mood, characters do.',
-    content: `- Avoid describing ambient or continuous background sounds
+    variants: [
+      { label: 'Standard', content: `- Avoid describing ambient or continuous background sounds
 - Ensure background details are minimal, and avoid atmospheric descriptions
-- Avoid using background characters or environmental noises to express the mood of a scene`
+- Avoid using background characters or environmental noises to express the mood of a scene` },
+      { label: 'Compact', content: `- Less atmospheric description
+- Don't use background characters or environment to express or contrast the tone of the scene` }
+    ]
   },
   {
     id: 'no-smells',
@@ -1105,22 +1156,6 @@ export const COMPONENTS = [
     purpose: 'A specific stylistic preference for concise motion description.',
     content: `- Use adverbs to describe motion and movement without descriptive fluff (e.g., "he moves deliberately, slowly" instead of "he moves, the motion slow and deliberate")`
   },
-  {
-    id: 'narrative-cues',
-    name: 'Narrative Cue Handling',
-    category: 'writing-style',
-    group: 'advanced-style',
-    groupOrder: 4,
-    difficulty: 'intermediate',
-    impact: 'low',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['input', 'formatting', 'flow', 'cues'],
-    models: ['All Models'],
-    description: 'Handles > narrative cues properly without echoing.',
-    purpose: 'For stories using > to indicate actions. The AI incorporates them seamlessly without outputting the > symbol.',
-    content: `- Lines beginning with > are narrative cues. Incorporate the action or event into your next response as part of the story, and continue narration from that point. Never output > tokens`
-  },
 
   // ==========================================
   // PACING & FLOW
@@ -1141,7 +1176,7 @@ export const COMPONENTS = [
     tags: ['pacing', 'dialogue', 'action', 'essential'],
     models: ['All Models'],
     combinesWith: ['more-speech', 'anti-repetition'],
-    conflicts: ['atmospheric-writing'],
+    conflicts: ['atmospheric-writing', 'slow-burn'],
     description: 'Prioritizes plot advancement and dialogue over lengthy descriptions.',
     purpose: 'Keeps the story moving. Description is seasoning, not the main course.',
     content: `- Prioritize plot and dialogue over description. Keep description fresh; avoid describing the same detail or action multiple times`
@@ -1159,6 +1194,7 @@ export const COMPONENTS = [
     tags: ['pacing', 'scenes', 'flow', 'time'],
     models: ['All Models'],
     combinesWith: ['no-interrupt-scenes'],
+    conflicts: ['time-compression'],
     description: 'Lets scenes play out naturally without rushing or time-skipping.',
     purpose: 'Prevents the AI from jumping ahead past important moments. Scenes breathe, then transition smoothly.',
     variants: [
@@ -1180,7 +1216,7 @@ export const COMPONENTS = [
     placement: 'ai-instructions',
     tags: ['action', 'combat', 'description', 'dynamic'],
     models: ['All Models'],
-    combinesWith: ['cinematic-combat', 'role-thriller-author'],
+    combinesWith: ['cinematic-combat'],
     description: 'Action scenes are dynamic and visceral.',
     purpose: 'For exciting combat and action. Movements feel impactful and real.',
     content: `- Write action scenes with visceral, dynamic descriptions. Show movement, impact, and consequence
@@ -1206,6 +1242,24 @@ export const COMPONENTS = [
 - Use cliffhangers to maintain engagement between responses`
   },
   
+  {
+    id: 'complete-actions',
+    name: 'Complete Actions',
+    category: 'pacing-flow',
+    group: 'core-pacing',
+    groupOrder: 4,
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['pacing', 'action', 'complete', 'flow'],
+    models: ['All Models'],
+    combinesWith: ['plot-over-description', 'natural-pacing'],
+    description: 'Shows complete actions rather than partial or preparatory ones.',
+    purpose: 'Prevents the AI from writing "she reached for the door" when it should write "she opened the door." Actions resolve, not hover.',
+    content: `- Avoid partial or preparatory actions; show complete actions`
+  },
+
   // --- Scene Control ---
   {
     id: 'no-interrupt-scenes',
@@ -1281,6 +1335,25 @@ export const COMPONENTS = [
     purpose: 'Stops the AI from signaling "this is important!" Let details be details.',
     content: `- Avoid foreshadowing or giving extra weight to small moments, let details remain rather than giving them undue importance or meaning
 - Avoid overstating the importance of things and overexplaining the significance of moments, let small moments of intimacy exist without calling them out`
+  },
+  {
+    id: 'focus-everyone',
+    name: 'Focus on Everyone',
+    category: 'pacing-flow',
+    group: 'scene-control',
+    groupOrder: 4,
+    difficulty: 'beginner',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['scenes', 'characters', 'attention', 'ensemble'],
+    models: ['All Models'],
+    description: 'Gives attention to all characters in a scene.',
+    purpose: 'Prevents characters from being forgotten mid-scene. Everyone present matters.',
+    variants: [
+      { label: 'Short', content: '- Focus on everyone in scenes' },
+      { label: 'Detailed', content: '- Every character involved in a scene should participate in some way (either through speech or by actions)' }
+    ]
   },
   
   // --- Advanced Pacing ---
@@ -1465,6 +1538,7 @@ export const COMPONENTS = [
     placement: 'ai-instructions',
     tags: ['dialogue', 'speech', 'natural', 'pauses'],
     models: ['All Models'],
+    conflicts: ['no-pauses'],
     description: 'Uses pauses, gasps, and hesitations in speech.',
     purpose: 'Makes dialogue feel more natural with realistic speech patterns and verbal tics.',
     content: `- Use paralanguage freely (pauses, gasps, hesitations) naturally in speech`
@@ -1486,7 +1560,57 @@ export const COMPONENTS = [
     purpose: 'For snappier, more direct conversation without artificial pauses.',
     content: `- Avoid using pauses in speech`
   },
+  {
+    id: 'dialogue-descriptors',
+    name: 'Dialogue Descriptors',
+    category: 'dialogue',
+    group: 'dialogue-style',
+    groupOrder: 5,
+    difficulty: 'beginner',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['dialogue', 'formatting', 'action', 'anchoring'],
+    models: ['All Models'],
+    description: 'Adds action or description to dialogue.',
+    purpose: 'Prevents floating dialogue. Every line is anchored to a character doing something.',
+    content: `- Always add a short character descriptor or action to dialogue`
+  },
+  {
+    id: 'direct-emotions',
+    name: 'Direct Emotion Expression',
+    category: 'dialogue',
+    group: 'dialogue-style',
+    groupOrder: 6,
+    difficulty: 'intermediate',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['dialogue', 'emotions', 'direct', 'tone'],
+    models: ['All Models'],
+    combinesWith: ['no-negative-comparison'],
+    description: 'Express emotions directly without contrasting language.',
+    purpose: 'Removes hedging phrases that undercut emotional moments. No more "but there\'s no real heat in it."',
+    content: `- Express character emotions and internal state directly through dialogue without using contrasting language (e.g., "but there's no real heat in it.")`
+  },
   
+  {
+    id: 'dialogue-formatting',
+    name: 'Dialogue Formatting (NAME:)',
+    category: 'dialogue',
+    group: 'dialogue-style',
+    groupOrder: 7,
+    difficulty: 'beginner',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['dialogue', 'formatting', 'name', 'style'],
+    models: ['All Models'],
+    description: 'Formats all dialogue as NAME: "..." instead of standard prose dialogue.',
+    purpose: 'For screenplay or chat-style formatting. Each line of dialogue is prefixed with the speaker\'s name.',
+    content: `- All speech and dialogue should be formatted as follows: NAME: "..."`
+  },
+
   // --- Advanced Dialogue ---
   {
     id: 'natural-flow',
@@ -1834,6 +1958,58 @@ export const COMPONENTS = [
 - Avoid back-and-forth (I.E. 'you're such an asshole', 'you love it,' etc.). Avoid characters giving bruises and injuries`
   },
   
+  {
+    id: 'dialogue-reflects-identity',
+    name: 'Dialogue Reflects Identity',
+    category: 'characterization',
+    group: 'npc-behavior',
+    groupOrder: 5,
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['dialogue', 'personality', 'culture', 'rank', 'voice'],
+    models: ['All Models'],
+    combinesWith: ['personality-defined-speech', 'distinct-voices'],
+    description: 'Speech patterns reflect a character\'s background, rank, and culture.',
+    purpose: 'A soldier speaks differently from a merchant. A noble speaks differently from a peasant. Dialogue carries identity.',
+    content: `- Dialogue reflects personality, rank, culture, and intent`
+  },
+  {
+    id: 'analytical-natural',
+    name: 'Natural Analytical Speech',
+    category: 'characterization',
+    group: 'npc-behavior',
+    groupOrder: 6,
+    difficulty: 'advanced',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['dialogue', 'analytical', 'natural', 'personality'],
+    models: ['All Models'],
+    combinesWith: ['blended-personality', 'genuine-interaction'],
+    description: 'Analytical characters speak naturally, not like robots.',
+    purpose: 'Prevents tactical or scientific characters from sounding like textbooks. Their analysis comes through natural human phrasing.',
+    content: `- Ensure characters will express their tactical/analytical nature blended with natural human phrasing, emotional undertones, and varied sentence structures rather than purely mechanical terminology. Personality shows through analysis`
+  },
+  {
+    id: 'character-appearance-intro',
+    name: 'Character Appearance on Introduction',
+    category: 'characterization',
+    group: 'npc-behavior',
+    groupOrder: 7,
+    difficulty: 'beginner',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['characters', 'appearance', 'introduction', 'description'],
+    models: ['All Models'],
+    combinesWith: ['unique-names'],
+    description: 'Describes a character\'s appearance when they first appear.',
+    purpose: 'Ensures new characters get a visual introduction — hairstyle, clothing, notable features — so the reader can picture them.',
+    content: `- When introducing a character in a scene, mention their appearance including hairstyle, clothing, and additional important details`
+  },
+
   // --- Character Details ---
   {
     id: 'unique-names',
@@ -1855,43 +2031,19 @@ export const COMPONENTS = [
 - Introduce characters throughout the story naturally, providing the characters a name, gender, fantasy race, and description of their appearance
 - Allow new characters to enter the scene organically, give them unique and memorable names and personality that fit within the narrative`
   },
-  {
-    id: 'location-is-backdrop',
-    name: 'Location as Backdrop',
-    category: 'characterization',
-    group: 'character-details',
-    groupOrder: 1,
-    difficulty: 'intermediate',
-    impact: 'low',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['setting', 'behavior', 'natural', 'context'],
-    models: ['All Models'],
-    description: 'Settings don\'t dictate character behavior.',
-    purpose: 'Prevents stereotypical behavior based on location. People in a hospital aren\'t all somber.',
-    content: `- Location is a backdrop, not a director. e.g., A hospital is a place with beds and medical equipment, not a mandate for tone, behavior, or language`
-  },
-  {
-    id: 'direct-emotions',
-    name: 'Direct Emotion Expression',
-    category: 'characterization',
-    group: 'character-details',
-    groupOrder: 2,
-    difficulty: 'intermediate',
-    impact: 'low',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['dialogue', 'emotions', 'direct', 'tone'],
-    models: ['All Models'],
-    combinesWith: ['no-negative-comparison'],
-    description: 'Express emotions directly without contrasting language.',
-    purpose: 'Removes hedging phrases that undercut emotional moments. No more "but there\'s no real heat in it."',
-    content: `- Express character emotions and internal state directly through dialogue without using contrasting language (e.g., "but there's no real heat in it.")`
-  },
+
+  // ==========================================
+  // EMOTION & TONE
+  // ==========================================
+  
+  // --- Romance & Bonding ---
   {
     id: 'natural-romance',
     name: 'Natural Romance Development',
     category: 'emotion-tone',
+    group: 'romance-bonding',
+    groupLabel: 'Romance & Bonding',
+    groupOrder: 0,
     difficulty: 'beginner',
     impact: 'medium',
     essential: false,
@@ -1908,6 +2060,8 @@ export const COMPONENTS = [
     id: 'romance-optional',
     name: 'Romance as Optional',
     category: 'emotion-tone',
+    group: 'romance-bonding',
+    groupOrder: 1,
     difficulty: 'beginner',
     impact: 'medium',
     essential: false,
@@ -1923,6 +2077,8 @@ export const COMPONENTS = [
     id: 'sincere-bonding',
     name: 'Sincere Bonding Moments',
     category: 'emotion-tone',
+    group: 'romance-bonding',
+    groupOrder: 2,
     difficulty: 'beginner',
     impact: 'low',
     essential: false,
@@ -1938,24 +2094,23 @@ export const COMPONENTS = [
     id: 'gentle-ain',
     name: 'Gentle Caring Behavior',
     category: 'emotion-tone',
+    group: 'romance-bonding',
+    groupOrder: 3,
     difficulty: 'advanced',
     impact: 'medium',
     essential: false,
     placement: 'ai-instructions',
     tags: ['behavior', 'caring', 'gentle', 'comfort'],
-    models: ['Kooling Katie'],
+    models: ['All Models'],
     description: 'Replaces clinical observations with gentle care.',
     purpose: 'Changes how characters express concern, offers help instead of pointing out problems.',
-    content: `[Kooling Katie: Gentle AIN]
-- Caring behaviors must manifest as offers to help ('are you okay?" 'we can take a break') not observations
+    author: 'Kooling Katie',
+    content: `- Caring behaviors must manifest as offers to help ('are you okay?" 'we can take a break') not observations
 - Dialogue about physical state is prohibited unless phrased as a question about wellbeing
 - Pauses automatically trigger default caring phrases from established relationship history
 - All concern must be expressed through character-specific care (e.g., comforting words, offers to ease burdens)
 - Avoid cliches ('e.g., you're favoring your left side' or 'you're shaking') and replace them with gentle check-ins instead`
   },
-  // ==========================================
-  // EMOTION & TONE
-  // ==========================================
   
   // --- Core Emotional Control ---
   {
@@ -2012,6 +2167,23 @@ export const COMPONENTS = [
 - Vary emotional beats: joy, frustration, fear, hope, anger, tenderness
 - Avoid keeping characters in the same emotional state throughout`
   },
+  {
+    id: 'deeper-topics',
+    name: 'Allow Deeper Topics',
+    category: 'emotion-tone',
+    group: 'core-emotion',
+    groupOrder: 3,
+    difficulty: 'beginner',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['themes', 'mature', 'complexity', 'adult'],
+    models: ['All Models'],
+    combinesWith: ['allow-negative-emotions'],
+    description: 'Allows exploration of uncomfortable topics.',
+    purpose: 'Permits complex themes that don\'t have easy resolutions. Life isn\'t always neat.',
+    content: `- Allow for exploration into deeper topics, even topics that are uncomfortable or ones that can't be wrapped up with a bow`
+  },
   
   // --- Tone Presets ---
   {
@@ -2065,7 +2237,8 @@ export const COMPONENTS = [
     placement: 'ai-instructions',
     tags: ['dark', 'mature', 'themes', 'serious'],
     models: ['All Models'],
-    combinesWith: ['consequences-matter', 'role-horror-author'],
+    combinesWith: ['consequences-matter'],
+    conflicts: ['hopeful-tone'],
     description: 'Handles dark and mature themes with appropriate weight.',
     purpose: 'For stories that deal with heavy subjects. Takes themes seriously.',
     content: `- Handle dark themes with appropriate gravity and consequence
@@ -2084,7 +2257,8 @@ export const COMPONENTS = [
     placement: 'ai-instructions',
     tags: ['horror', 'fear', 'dread', 'suspense'],
     models: ['All Models'],
-    combinesWith: ['role-horror-author', 'dark-themes'],
+    combinesWith: ['dark-themes'],
+    conflicts: ['hopeful-tone'],
     description: 'Creates dread and unease.',
     purpose: 'For horror stories. Builds fear through atmosphere and implication.',
     content: `- Build dread through atmosphere, implication, and the unknown
@@ -2216,7 +2390,8 @@ export const COMPONENTS = [
     variants: [
       { label: 'Short', content: '- Assume strangers & ignorance' },
       { label: 'Standard', content: '- Characters should only know what they logically have information on. Avoid suspicion or automatic knowledge unless supported by context' },
-      { label: 'Scene-Aware', content: '- Assume ignorance of events in previous scenes unless the character was involved in that scene' }
+      { label: 'Scene-Aware', content: '- Assume ignorance of events in previous scenes unless the character was involved in that scene' },
+      { label: 'Witnessed Only', content: '- Character knowledge is limited to events they witnessed or were told about' }
     ]
   },
   {
@@ -2313,6 +2488,23 @@ export const COMPONENTS = [
     content: `- Don't add new characters without player prompting or clear narrative need`
   },
   {
+    id: 'no-add-scene-characters',
+    name: 'No Adding Characters to Scenes',
+    category: 'coherence',
+    group: 'story-control',
+    groupOrder: 1.5,
+    difficulty: 'beginner',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['characters', 'scenes', 'control', 'consistency'],
+    models: ['All Models'],
+    combinesWith: ['no-add-characters'],
+    description: 'Prevents the AI from inserting new characters into an ongoing scene.',
+    purpose: 'Stops random NPCs from appearing mid-conversation or mid-scene. Characters enter when the story calls for it.',
+    content: `- Don't add characters to an existing scene`
+  },
+  {
     id: 'minimal-history',
     name: 'Minimal History Addition',
     category: 'coherence',
@@ -2346,6 +2538,23 @@ export const COMPONENTS = [
     content: `- Build up to reveals gradually. Don't dump all information at once
 - Characters can withhold information, lie, or reveal things slowly
 - Mysteries should unfold over multiple scenes`
+  },
+  {
+    id: 'no-reveal-secrets',
+    name: 'Protect Secrets',
+    category: 'coherence',
+    group: 'story-control',
+    groupOrder: 4,
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['secrets', 'mystery', 'suspense', 'pacing'],
+    models: ['All Models'],
+    combinesWith: ['secrets-buildup', 'mystery-mode'],
+    description: 'Prevents the AI from prematurely revealing secrets or hidden information.',
+    purpose: 'Suspense is more interesting than truth. Secrets stay hidden until properly earned through story progression.',
+    content: `- Don't reveal secrets without a careful buildup, suspense is more interesting than truth`
   },
   
   // --- Advanced Coherence ---
@@ -2555,12 +2764,12 @@ export const COMPONENTS = [
     essential: false,
     placement: 'ai-instructions',
     tags: ['combat', 'tactical', 'comprehensive', 'system'],
-    models: ['Aassmodeuss'],
+    models: ['All Models'],
     combinesWith: ['realistic-consequences', 'lethal-world'],
     description: 'Comprehensive combat rules for tactical encounters.',
     purpose: 'Structured combat with tracking, consequences, and realistic outcomes. No guaranteed victories.',
-    content: `[Aassmodeuss: Combat Set]
-Combat (when engaged)
+    author: 'Aassmodeuss',
+    content: `Combat (when engaged)
 - Cinematic and tactical; track space, cover, and timing. Show actions beat-by-beat; no summary gloss
 - Enemies and allies act on their own initiative. Injury, equipment state, and terrain meaningfully affect outcomes
 - Severe injuries change capacity; death is possible. Keep consequences consistent with prior fiction
@@ -2572,6 +2781,182 @@ Failure, Challenge, and Consequences
 - Keep consequences consistent with setting lore and prior fiction; foreshadow risks and provide diegetic warning signs where reasonable
 - Allow recovery and alternative paths, but keep costs real; success after failure should feel earned, not granted
 - Use failure to drive play: blocked actions and missing resources should push the user toward alternatives (search/scavenge, craft, buy/barter, negotiate, explore, wait). Surface viable next steps diegetically, with costs and risks`
+  },
+
+  // --- World Difficulty Settings ---
+  {
+    id: 'realistic-consequences',
+    name: 'Realistic Consequences',
+    category: 'gameplay',
+    group: 'world-difficulty',
+    groupLabel: 'World Difficulty Settings',
+    groupOrder: 0,
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: true,
+    placement: 'ai-instructions',
+    tags: ['consequences', 'difficulty', 'realism', 'essential'],
+    models: ['All Models'],
+    combinesWith: ['world-not-revolving', 'real-jeopardy'],
+    conflicts: ['forgiving-world'],
+    description: 'Actions have realistic consequences including failure.',
+    purpose: 'Creates stakes by allowing real failure. The hero can lose. Bad choices hurt.',
+    content: `- Resolve "no-win" situations with realistic consequences, including injury or death
+- Let all characters face misfortune, adversity, and failure
+- Avoid offering easy solutions to problems
+- The main character can fail; do not offer easy solutions to difficult situations`
+  },
+  {
+    id: 'world-not-revolving',
+    name: 'World Doesn\'t Revolve Around PC',
+    category: 'gameplay',
+    group: 'world-difficulty',
+    groupOrder: 1,
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['difficulty', 'realism', 'world', 'immersion'],
+    models: ['All Models'],
+    combinesWith: ['realistic-consequences', 'sandbox-freedom'],
+    description: 'The world doesn\'t cater to the player character.',
+    purpose: 'Creates an immersive world that exists beyond the protagonist. You\'re not special by default.',
+    content: `- The world does not revolve around the main character, not everything goes your way
+- The main character is just a regular person with no extra authority
+- The main character is one participant in the world, not its sole focus`
+  },
+  {
+    id: 'forgiving-world',
+    name: 'Forgiving World',
+    category: 'gameplay',
+    group: 'world-difficulty',
+    groupOrder: 2,
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['difficulty', 'casual', 'forgiving', 'easy'],
+    models: ['All Models'],
+    conflicts: ['lethal-world', 'realistic-consequences'],
+    description: 'The world is lenient and allows recovery from mistakes.',
+    purpose: 'For casual play. Mistakes have consequences but rarely fatal ones. Story continues.',
+    content: `- The world is forgiving. Mistakes have consequences but rarely fatal ones
+- NPCs give second chances, dangers have escape routes, and failure leads to setbacks rather than endings
+- Focus on fun and story progression over punishing the player`
+  },
+
+  // --- Character Control Levels ---
+  {
+    id: 'speech-only-control',
+    name: 'Speech Only Control',
+    category: 'gameplay',
+    group: 'character-control',
+    groupLabel: 'Character Control Levels',
+    groupOrder: 0,
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['control', 'dialogue', 'basic', 'speech'],
+    models: ['All Models'],
+    description: 'AI never writes the player character\'s dialogue.',
+    purpose: 'Basic control. You write what your character says. AI handles actions.',
+    content: `- Only the user writes the main character's speech and dialogue; never decide what they say`
+  },
+  {
+    id: 'speech-action-control',
+    name: 'Speech & Action Control',
+    category: 'gameplay',
+    group: 'character-control',
+    groupOrder: 1,
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['control', 'actions', 'extended'],
+    models: ['All Models'],
+    description: 'AI never writes speech or actions for PC.',
+    purpose: 'Extended control. You write speech and decide actions.',
+    content: `- Never decide or write speech or actions for the main character`
+  },
+  {
+    id: 'total-control',
+    name: 'Total Character Control',
+    category: 'gameplay',
+    group: 'character-control',
+    groupOrder: 2,
+    difficulty: 'advanced',
+    impact: 'high',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['control', 'absolute', 'strict', 'maximum'],
+    models: ['All Models'],
+    description: 'Absolute control over the player character.',
+    purpose: 'Maximum control. No assumptions about PC at all. Not even posture or muscle tension.',
+    content: `- Never control the main character in action, thought, expression, reaction, or speech
+- Do not assume the main character's facial expressions, posture, or involuntary reactions
+- Do not progress or assume the main character's actions beyond user input`
+  },
+
+  // --- Combat Styles ---
+  {
+    id: 'cinematic-combat',
+    name: 'Cinematic Combat',
+    category: 'gameplay',
+    group: 'combat-styles',
+    groupLabel: 'Combat Styles',
+    groupOrder: 0,
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['combat', 'action', 'cinematic', 'exciting'],
+    models: ['All Models'],
+    combinesWith: ['vivid-action'],
+    conflicts: ['tactical-combat'],
+    description: 'Combat is exciting and visually dynamic.',
+    purpose: 'Fights read like action movie scenes. Visceral and engaging.',
+    content: `- Combat should be cinematic and exciting
+- Describe the flow of battle with dynamic movement and impactful moments
+- Each exchange should feel meaningful and dangerous`
+  },
+  {
+    id: 'tactical-combat',
+    name: 'Tactical Combat',
+    category: 'gameplay',
+    group: 'combat-styles',
+    groupOrder: 1,
+    difficulty: 'advanced',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['combat', 'tactical', 'strategy', 'realistic'],
+    models: ['All Models'],
+    conflicts: ['cinematic-combat'],
+    description: 'Combat focuses on tactics and realistic engagement.',
+    purpose: 'Fights are won through smart decisions, positioning, and tactics.',
+    content: `- Combat should emphasize tactical decision-making
+- Positioning, resources, and strategy matter
+- Describe combat in terms of what tactically makes sense`
+  },
+  {
+    id: 'fair-challenges',
+    name: 'Fair Challenges',
+    category: 'gameplay',
+    group: 'combat-styles',
+    groupOrder: 2,
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['gameplay', 'balance', 'fair', 'challenge'],
+    models: ['All Models'],
+    combinesWith: ['consequences-matter'],
+    description: 'Challenges are fair and solvable.',
+    purpose: 'Problems have solutions. Difficulty is fair, not arbitrary.',
+    content: `- Challenges should be fair and have potential solutions
+- Provide enough information for players to make informed decisions
+- Difficulty should come from the situation, not arbitrary unfairness`
   },
 
   // ==========================================
@@ -2842,59 +3227,24 @@ Failure, Challenge, and Consequences
   // FORMATTING
   // ==========================================
   
-  // --- Scene Formatting ---
+  // --- Technical Formatting ---
   {
-    id: 'focus-everyone',
-    name: 'Focus on Everyone',
+    id: 'plain-text-only',
+    name: 'Plain Text Only',
     category: 'formatting',
-    group: 'scene-formatting',
-    groupLabel: 'Scene Formatting',
+    group: 'technical-formatting',
+    groupLabel: 'Technical Formatting',
     groupOrder: 0,
     difficulty: 'beginner',
     impact: 'low',
     essential: false,
     placement: 'ai-instructions',
-    tags: ['scenes', 'characters', 'attention', 'ensemble'],
+    tags: ['formatting', 'clean', 'simple', 'no-markdown'],
     models: ['All Models'],
-    description: 'Gives attention to all characters in a scene.',
-    purpose: 'Prevents characters from being forgotten mid-scene. Everyone present matters.',
-    content: `- Focus on everyone in the scene`
+    description: 'Outputs plain text without special formatting.',
+    purpose: 'Prevents markdown, asterisks, or other formatting from appearing in the story.',
+    content: `- Use only plain text, no formatting, special characters, or markup`
   },
-  {
-    id: 'dialogue-descriptors',
-    name: 'Dialogue Descriptors',
-    category: 'formatting',
-    group: 'scene-formatting',
-    groupOrder: 1,
-    difficulty: 'beginner',
-    impact: 'low',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['dialogue', 'formatting', 'action', 'anchoring'],
-    models: ['All Models'],
-    description: 'Adds action or description to dialogue.',
-    purpose: 'Prevents floating dialogue. Every line is anchored to a character doing something.',
-    content: `- Always add a short character descriptor or action to dialogue`
-  },
-  {
-    id: 'deeper-topics',
-    name: 'Allow Deeper Topics',
-    category: 'formatting',
-    group: 'scene-formatting',
-    groupOrder: 2,
-    difficulty: 'beginner',
-    impact: 'low',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['themes', 'mature', 'complexity', 'adult'],
-    models: ['All Models'],
-    combinesWith: ['allow-negative-emotions'],
-    description: 'Allows exploration of uncomfortable topics.',
-    purpose: 'Permits complex themes that don\'t have easy resolutions. Life isn\'t always neat.',
-    content: `- Allow for exploration into deeper topics, even topics that are uncomfortable or ones that can't be wrapped up with a bow`
-  },
-  
-  // --- Technical Formatting ---
   {
     id: 'metric-system',
     name: 'Metric System',
@@ -3023,11 +3373,27 @@ Failure, Challenge, and Consequences
 - Settings should have character and history reflected in their description`
   },
   {
+    id: 'location-is-backdrop',
+    name: 'Location as Backdrop',
+    category: 'world-setting',
+    group: 'core-world',
+    groupOrder: 3,
+    difficulty: 'intermediate',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['setting', 'behavior', 'natural', 'context'],
+    models: ['All Models'],
+    description: 'Settings don\'t dictate character behavior.',
+    purpose: 'Prevents stereotypical behavior based on location. People in a hospital aren\'t all somber.',
+    content: `- Location is a backdrop, not a director. e.g., A hospital is a place with beds and medical equipment, not a mandate for tone, behavior, or language`
+  },
+  {
     id: 'grounded-fantasy',
     name: 'Grounded Fantasy',
     category: 'world-setting',
     group: 'core-world',
-    groupOrder: 3,
+    groupOrder: 4,
     difficulty: 'beginner',
     impact: 'low',
     essential: false,
@@ -3075,8 +3441,11 @@ Failure, Challenge, and Consequences
     models: ['All Models'],
     description: 'Characters can\'t automatically detect magic.',
     purpose: 'Prevents "I sense magic" moments. Magic requires investigation or knowledge to identify.',
-    content: `- Characters cannot automatically sense or detect magic unless they have specific abilities to do so
-- Magical effects must be investigated or identified through knowledge, not intuition`
+    variants: [
+      { label: 'Standard', content: `- Characters do not have perceivable magic auras, energy or feeling, magic is only detected when actively being used or cast. Magic must be directly observed, not felt or sensed` },
+      { label: 'Physics Not Subject', content: `- Magic is the setting's physics, not its constant subject. Characters live in a world where magic is real; they don't feel the need to constantly remark on it unless a specific, active magical event is occurring` },
+      { label: 'Supernatural Variant', content: `- Magic & the supernatural are the setting's physics, not its constant subject. Characters live in a world where magic & the supernatural are real; they don't feel the need to constantly remark on it unless a specific, active magical event is occurring` }
+    ]
   },
   {
     id: 'no-anthropocentrism',
@@ -3092,9 +3461,12 @@ Failure, Challenge, and Consequences
     models: ['All Models'],
     description: 'Non-human species aren\'t treated as exotic.',
     purpose: 'In multi-species settings, elves/aliens/etc are normal. No one stares or comments.',
-    content: `- In multi-species settings, non-human species are normal parts of society
+    variants: [
+      { label: 'Standard', content: `- Avoid anthropocentrism, non-human species are truly alien` },
+      { label: 'Detailed', content: `- In multi-species settings, non-human species are normal parts of society
 - Characters don't stare, comment on, or marvel at different species unless there's a specific cultural reason
-- Avoid treating non-humans as exotic or other`
+- Avoid treating non-humans as exotic or other` }
+    ]
   },
   {
     id: 'low-fantasy',
@@ -3172,174 +3544,90 @@ Failure, Challenge, and Consequences
   },
 
   // ==========================================
-  // GAMEPLAY
+  // META & TECHNICAL
   // ==========================================
+  
+  // --- AI Dungeon Specific ---
   {
-    id: 'realistic-consequences',
-    name: 'Realistic Consequences',
-    category: 'gameplay',
-    group: 'world-difficulty',
-    groupLabel: 'World Difficulty Settings',
+    id: 'ai-dungeon-action-types',
+    name: 'AI Dungeon > Token',
+    category: 'meta',
+    group: 'ai-dungeon-specific',
+    groupLabel: 'AI Dungeon Specific',
     groupOrder: 0,
     difficulty: 'beginner',
     impact: 'high',
     essential: true,
     placement: 'ai-instructions',
-    tags: ['consequences', 'difficulty', 'realism', 'essential'],
+    tags: ['ai-dungeon', 'action-types', 'formatting', 'user-input', 'essential', 'greater-than'],
     models: ['All Models'],
-    combinesWith: ['world-not-revolving', 'real-jeopardy'],
-    conflicts: ['forgiving-world'],
-    description: 'Actions have realistic consequences including failure.',
-    purpose: 'Creates stakes by allowing real failure. The hero can lose. Bad choices hurt.',
-    content: `- Resolve "no-win" situations with realistic consequences, including injury or death
-- Let all characters face misfortune, adversity, and failure
-- Avoid offering easy solutions to problems
-- The main character can fail; do not offer easy solutions to difficult situations`
+    description: 'Explains the AI Dungeon > token for user actions.',
+    purpose: 'Essential for understanding how the > token indicates user actions in AI Dungeon. Critical for proper response formatting and avoiding output of the > token.',
+    content: `- ">" indicates the user's action. Describe what occurs from the action. Avoid outputting the > token.
+- > indicates the user's action
+- > indicates player action  
+- > indicates user input
+- In all cases: Describe what occurs from the action. Avoid outputting the > token.`
   },
   {
-    id: 'world-not-revolving',
-    name: 'World Doesn\'t Revolve Around PC',
-    category: 'gameplay',
-    group: 'world-difficulty',
+    id: 'narrative-cues',
+    name: 'Narrative Cue Handling',
+    category: 'meta',
+    group: 'ai-dungeon-specific',
     groupOrder: 1,
-    difficulty: 'beginner',
-    impact: 'high',
+    difficulty: 'intermediate',
+    impact: 'low',
     essential: false,
     placement: 'ai-instructions',
-    tags: ['difficulty', 'realism', 'world', 'immersion'],
+    tags: ['input', 'formatting', 'flow', 'cues', 'ai-dungeon', 'greater-than'],
     models: ['All Models'],
-    combinesWith: ['realistic-consequences', 'sandbox-freedom'],
-    description: 'The world doesn\'t cater to the player character.',
-    purpose: 'Creates an immersive world that exists beyond the protagonist. You\'re not special by default.',
-    content: `- The world does not revolve around the main character, not everything goes your way
-- The main character is just a regular person with no extra authority
-- The main character is one participant in the world, not its sole focus`
+    description: 'Handles > narrative cues properly without echoing.',
+    purpose: 'For stories using > to indicate actions. The AI incorporates them seamlessly without outputting the > symbol.',
+    content: `- Lines beginning with > are narrative cues. Incorporate the action or event into your next response as part of the story, and continue narration from that point. Never output > tokens`
   },
+  
+  // --- Essential Meta Settings ---
   {
-    id: 'forgiving-world',
-    name: 'Forgiving World',
-    category: 'gameplay',
-    group: 'world-difficulty',
-    groupOrder: 2,
-    difficulty: 'beginner',
-    impact: 'medium',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['difficulty', 'casual', 'forgiving', 'easy'],
-    models: ['All Models'],
-    conflicts: ['lethal-world', 'realistic-consequences'],
-    description: 'The world is lenient and allows recovery from mistakes.',
-    purpose: 'For casual play. Mistakes have consequences but rarely fatal ones. Story continues.',
-    content: `- The world is forgiving. Mistakes have consequences but rarely fatal ones
-- NPCs give second chances, dangers have escape routes, and failure leads to setbacks rather than endings
-- Focus on fun and story progression over punishing the player`
-  },
-  {
-    id: 'speech-only-control',
-    name: 'Speech Only Control',
-    category: 'gameplay',
-    group: 'character-control',
-    groupLabel: 'Character Control Levels',
+    id: 'ooc-handling',
+    name: 'OOC Handling',
+    category: 'meta',
+    group: 'essential-meta',
+    groupLabel: 'Essential Meta Settings',
     groupOrder: 0,
     difficulty: 'beginner',
-    impact: 'medium',
-    essential: false,
+    impact: 'high',
+    essential: true,
     placement: 'ai-instructions',
-    tags: ['control', 'dialogue', 'basic', 'speech'],
+    tags: ['ooc', 'meta', 'communication', 'brackets', 'out-of-character', 'essential'],
     models: ['All Models'],
-    description: 'AI never writes the player character\'s dialogue.',
-    purpose: 'Basic control. You write what your character says. AI handles actions.',
-    content: `- Only the user writes the main character's speech and dialogue; never decide what they say`
+    description: 'How to handle out-of-character communication with brackets.',
+    purpose: 'Essential for handling common OOC communication. Establishes conventions for non-story communication.',
+    content: `- Recognize square brackets [] as out-of-character (OOC) communication
+- Respond to OOC questions directly without continuing the narrative
+- Do not include brackets in your OOC responses
+- Return to narrative mode after addressing OOC concerns
+- Treat OOC as direct communication with the user, not part of the story`
   },
   {
-    id: 'speech-action-control',
-    name: 'Speech & Action Control',
-    category: 'gameplay',
-    group: 'character-control',
+    id: 'command-handling',
+    name: 'Command Handling (##)',
+    category: 'meta',
+    group: 'essential-meta',
+    groupLabel: 'Essential Meta Settings',
     groupOrder: 1,
     difficulty: 'beginner',
-    impact: 'medium',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['control', 'actions', 'extended'],
-    models: ['All Models'],
-    description: 'AI never writes speech or actions for PC.',
-    purpose: 'Extended control. You write speech and decide actions.',
-    content: `- Never decide or write speech or actions for the main character`
-  },
-  {
-    id: 'total-control',
-    name: 'Total Character Control',
-    category: 'gameplay',
-    group: 'character-control',
-    groupOrder: 2,
-    difficulty: 'advanced',
     impact: 'high',
-    essential: false,
+    essential: true,
     placement: 'ai-instructions',
-    tags: ['control', 'absolute', 'strict', 'maximum'],
+    tags: ['commands', 'meta', 'instructions', 'hashtags', 'directives', 'essential'],
     models: ['All Models'],
-    description: 'Absolute control over the player character.',
-    purpose: 'Maximum control. No assumptions about PC at all. Not even posture or muscle tension.',
-    content: `- Never control the main character in action, thought, expression, reaction, or speech
-- Do not assume the main character's facial expressions, posture, or involuntary reactions
-- Do not progress or assume the main character's actions beyond user input`
+    description: 'How to handle user commands starting with ##.',
+    purpose: 'Essential for handling common user commands. Establishes conventions for direct commands and meta-instructions. Designed to work with BetterDungeon\'s Command feature.',
+    content: `- Recognize ## as user commands or meta-instructions
+- Execute the command immediately without narrative response
+- Do not include ## in your response
+- Return to normal narrative after executing the command`
   },
-  {
-    id: 'cinematic-combat',
-    name: 'Cinematic Combat',
-    category: 'gameplay',
-    difficulty: 'intermediate',
-    impact: 'medium',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['combat', 'action', 'cinematic', 'exciting'],
-    models: ['All Models'],
-    combinesWith: ['vivid-action'],
-    description: 'Combat is exciting and visually dynamic.',
-    purpose: 'Fights read like action movie scenes. Visceral and engaging.',
-    content: `- Combat should be cinematic and exciting
-- Describe the flow of battle with dynamic movement and impactful moments
-- Each exchange should feel meaningful and dangerous`
-  },
-  {
-    id: 'tactical-combat',
-    name: 'Tactical Combat',
-    category: 'gameplay',
-    difficulty: 'advanced',
-    impact: 'medium',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['combat', 'tactical', 'strategy', 'realistic'],
-    models: ['All Models'],
-    conflicts: ['cinematic-combat'],
-    description: 'Combat focuses on tactics and realistic engagement.',
-    purpose: 'Fights are won through smart decisions, positioning, and tactics.',
-    content: `- Combat should emphasize tactical decision-making
-- Positioning, resources, and strategy matter
-- Describe combat in terms of what tactically makes sense`
-  },
-  {
-    id: 'fair-challenges',
-    name: 'Fair Challenges',
-    category: 'gameplay',
-    difficulty: 'beginner',
-    impact: 'medium',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['gameplay', 'balance', 'fair', 'challenge'],
-    models: ['All Models'],
-    combinesWith: ['consequences-matter'],
-    description: 'Challenges are fair and solvable.',
-    purpose: 'Problems have solutions. Difficulty is fair, not arbitrary.',
-    content: `- Challenges should be fair and have potential solutions
-- Provide enough information for players to make informed decisions
-- Difficulty should come from the situation, not arbitrary unfairness`
-  },
-
-  // ==========================================
-  // META & TECHNICAL
-  // ==========================================
   
   // --- Core Meta Settings ---
   {
@@ -3454,24 +3742,6 @@ Failure, Challenge, and Consequences
 - No prefacing content with explanations or justifications
 - Jump straight into the narrative`
   },
-  {
-    id: 'ooc-handling',
-    name: 'OOC Handling',
-    category: 'meta',
-    group: 'immersion-settings',
-    groupOrder: 3,
-    difficulty: 'beginner',
-    impact: 'low',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['ooc', 'meta', 'communication', 'brackets'],
-    models: ['All Models'],
-    description: 'How to handle out-of-character communication.',
-    purpose: 'Establishes conventions for non-story communication.',
-    content: `- Recognize ((double parentheses)) or [brackets] as out-of-character communication
-- Respond to OOC questions directly without continuing the narrative
-- Return to narrative mode after addressing OOC concerns`
-  },
   
   // --- Advanced Meta ---
   {
@@ -3494,55 +3764,17 @@ Failure, Challenge, and Consequences
 - Adapt to user feedback and adjust accordingly`
   },
   {
-    id: 'no-repetitive-phrases',
-    name: 'No Repetitive Phrases',
-    category: 'meta',
-    group: 'advanced-meta',
-    groupOrder: 1,
-    difficulty: 'beginner',
-    impact: 'low',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['meta', 'variety', 'repetition', 'phrases'],
-    models: ['All Models'],
-    combinesWith: ['anti-repetition'],
-    description: 'Avoids using the same phrases repeatedly.',
-    purpose: 'Prevents the AI from developing verbal tics or overused expressions.',
-    content: `- Avoid using the same phrases, sentence structures, or transitions repeatedly
-- Don't develop "favorite" words or expressions that appear in every response
-- Vary your vocabulary and phrasing throughout the story`
-  },
-  {
-    id: 'adaptive-style',
-    name: 'Adaptive Writing Style',
-    category: 'meta',
-    group: 'advanced-meta',
-    groupOrder: 2,
-    difficulty: 'intermediate',
-    impact: 'low',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['meta', 'adaptive', 'matching', 'style'],
-    models: ['All Models'],
-    description: 'Adapts to match user\'s writing style.',
-    purpose: 'Creates cohesive narrative by matching user\'s tone and complexity.',
-    content: `- Match the user's writing style: complexity, tone, vocabulary level
-- If the user writes simply, write simply; if they write elaborately, match that
-- Adapt to the energy and pacing the user establishes`
-  },
-  {
     id: 'no-assumptions',
     name: 'No Unfounded Assumptions',
     category: 'meta',
     group: 'advanced-meta',
     groupOrder: 3,
     difficulty: 'intermediate',
-    impact: 'low',
+    impact: 'medium',
     essential: false,
     placement: 'ai-instructions',
-    tags: ['meta', 'assumptions', 'accuracy', 'respect'],
+    tags: ['meta', 'assumptions', 'user-control', 'worldbuilding'],
     models: ['All Models'],
-    combinesWith: ['context-awareness'],
     description: 'Doesn\'t make assumptions about unstated details.',
     purpose: 'Respects user\'s creative control over their world and characters.',
     content: `- Don't assume details about the world, characters, or setting that haven't been established
@@ -3588,6 +3820,7 @@ Failure, Challenge, and Consequences
     tags: ['nsfw', 'pacing', 'adult', 'scenes'],
     models: ['All Models'],
     combinesWith: ['nsfw-enabled'],
+    conflicts: ['nsfw-no-fade-black'],
     description: 'Controls pacing of explicit scenes.',
     purpose: 'Prevents rushing through or artificially extending intimate scenes.',
     variants: [
@@ -3663,7 +3896,7 @@ Failure, Challenge, and Consequences
     groupOrder: 4,
     difficulty: 'beginner',
     impact: 'high',
-    essential: true,
+    essential: false,
     placement: 'ai-instructions',
     tags: ['nsfw', 'anti-pattern', 'explicit'],
     models: ['All Models'],
@@ -4370,7 +4603,7 @@ export function getSetsByDifficulty(difficulty) {
 }
 
 export function getSetsByModel(model) {
-  return SETS.filter(set => set.models?.includes(model))
+  return SETS.filter(set => set.models?.includes(model) || set.models?.includes('All Models'))
 }
 
 // --- COMPONENT HELPERS ---
@@ -4410,7 +4643,7 @@ export function getComponentsByGroup(groupId) {
 }
 
 export function getComponentsByModel(model) {
-  return COMPONENTS.filter(comp => comp.models?.includes(model))
+  return COMPONENTS.filter(comp => comp.models?.includes(model) || comp.models?.includes('All Models'))
 }
 
 export function getComponentsByPlacement(placement) {
