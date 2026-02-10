@@ -42,6 +42,7 @@
     <PlotComponentsGuide v-if="activeTab === 'plot-components'" />
     <StoryCardsGuide v-if="activeTab === 'story-cards'" />
     <ScriptsGuide v-if="activeTab === 'scripts'" />
+    <BetterScriptsGuide v-if="activeTab === 'betterscripts'" />
   </div>
 </template>
 
@@ -52,8 +53,9 @@ import AIInstructionsGuide from '@/components/guides/AIInstructionsGuide.vue'
 import PlotComponentsGuide from '@/components/guides/PlotComponentsGuide.vue'
 import StoryCardsGuide from '@/components/guides/StoryCardsGuide.vue'
 import ScriptsGuide from '@/components/guides/ScriptsGuide.vue'
+import BetterScriptsGuide from '@/components/guides/BetterScriptsGuide.vue'
 import { 
-  BookOpen, ScrollText, Bookmark, Drama, Code
+  BookOpen, ScrollText, Bookmark, Drama, Code, Terminal
 } from 'lucide-vue-next'
 
 const route = useRoute()
@@ -63,7 +65,8 @@ const tabs = [
   { id: 'ai-instructions', label: 'AI Instructions', icon: ScrollText },
   { id: 'plot-components', label: 'Plot Components', icon: Bookmark },
   { id: 'story-cards', label: 'Story Cards', icon: Drama },
-  { id: 'scripts', label: 'Scripts', icon: Code }
+  { id: 'scripts', label: 'Scripts', icon: Code },
+  { id: 'betterscripts', label: 'BetterScripts', icon: Terminal }
 ]
 
 const validTabIds = tabs.map(t => t.id)
