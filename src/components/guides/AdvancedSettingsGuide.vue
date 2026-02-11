@@ -620,7 +620,7 @@
         </div>
 
         <div class="flex flex-wrap gap-2">
-          <a href="https://help.aidungeon.com/faq/advanced-settings" target="_blank" class="btn btn-secondary text-xs">
+          <a href="https://help.aidungeon.com/faq/what-are-advanced-settings" target="_blank" class="btn btn-secondary text-xs">
             <BookOpen class="w-3 h-3" /> Official Guide
           </a>
           <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
