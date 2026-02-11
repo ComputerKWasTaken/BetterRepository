@@ -207,9 +207,9 @@ Pick up a varying novel about the main character. Enable thinking mode. Write in
     impact: 'high',
     essential: false,
     placement: 'ai-instructions',
-    tags: ['offmetagamer', 'omg', 'long-form', 'comprehensive', 'deepseek', 'deeplogic'],
-    models: ['DeepLogic', 'DeepSeek 3.0', 'DeepSeek 3.1', 'DeepSeek 3.2', 'DeepSeek D'],
-    description: 'Comprehensive long-form instruction set by OffMetaGamer, optimized for DeepLogic and DeepSeek models.',
+    tags: ['offmetagamer', 'omg', 'long-form', 'comprehensive', 'deepseek'],
+models: ['DeepSeek 3.0', 'DeepSeek 3.1', 'DeepSeek 3.2', 'Dynamic Deep'],
+    description: 'Comprehensive long-form instruction set by OffMetaGamer, optimized for all DeepSeek models.',
     purpose: 'A thorough instruction set covering anti-repetition, character behavior, narrative flow, and style prohibitions. Best suited for models that benefit from explicit, detailed guidance.',
     content: `The user would like you to pick up a varying novel. Enable thinking mode and proceed by following all of the user's rules:
 - Use second person, present tense
@@ -284,8 +284,8 @@ The user would like you to pick up a varying novel. Enable thinking mode and pro
     essential: false,
     placement: 'ai-instructions',
     tags: ['offmetagamer', 'omg', 'light', 'deepseek', 'atlas', 'minimal'],
-    models: ['DeepSeek 3.2', 'Atlas', 'DD'],
-    description: 'Lightweight instruction set by OffMetaGamer for DeepSeek 3.2, Atlas, and DD. Suggested settings: 0.6/300/0.92/0.8/0',
+models: ['DeepSeek 3.2', 'Atlas', 'Dynamic Deep'],
+    description: 'Lightweight instruction set by OffMetaGamer for DeepSeek 3.2, Atlas, and Dynamic Deep. Suggested settings: 0.6/300/0.92/0.8/0',
     purpose: 'A minimal but effective instruction set focusing on natural dialogue and character interaction. Ideal for models that perform well with less explicit guidance.',
     content: `The user would like you to pick up a varying novel about the main character. Enable thinking mode and proceed by following all of the user's rules:
 - Write in second person, present tense
