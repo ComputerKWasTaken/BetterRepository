@@ -1193,7 +1193,7 @@ modifier(text);`
 //   :destroy <id>
 //   :stress <count>
 //
-// POSITIONS: top (default), left, right
+// All widgets appear in the top bar
 
 state.bd = state.bd ?? { lastCommand: null, lastResult: null };
 
@@ -1361,16 +1361,14 @@ const COMMANDS = {
   
   panel: {
     desc: 'Create a panel widget with sample items',
-    usage: ':panel <id> <title> [position]',
+    usage: ':panel <id> <title>',
     handler: (args) => {
       const id = args[0] || 'test-panel';
       const title = args[1] || 'Test Panel';
-      const position = args[2] || 'left';
       
       const widgets = bdWidget(id, {
         type: 'panel',
         title: title,
-        position: position,
         items: [
           { label: 'Item 1', value: 'Value A', color: '#60a5fa' },
           { label: 'Item 2', value: 'Value B', color: '#22c55e' },
@@ -1674,57 +1672,57 @@ modifier(text);`,
 const modifier = (text) => {
   let w = '';
   
-  // ========== TOP POSITION (Status Bar) ==========
+  // ========== Status Bar ==========
   
   // Stats
-  w += bdWidget('demo-hp', { type: 'stat', label: 'HP', value: '85/100', color: '#ef4444', position: 'top', order: 1 });
-  w += bdWidget('demo-mp', { type: 'stat', label: 'MP', value: '42/60', color: '#3b82f6', position: 'top', order: 2 });
-  w += bdWidget('demo-gold', { type: 'stat', label: '💰', value: '1,250', color: '#fbbf24', position: 'top', order: 3 });
+  w += bdWidget('demo-hp', { type: 'stat', label: 'HP', value: '85/100', color: '#ef4444', order: 1 });
+  w += bdWidget('demo-mp', { type: 'stat', label: 'MP', value: '42/60', color: '#3b82f6', order: 2 });
+  w += bdWidget('demo-gold', { type: 'stat', label: '💰', value: '1,250', color: '#fbbf24', order: 3 });
   
   // Bars
-  w += bdWidget('demo-health-bar', { type: 'bar', label: 'Health', value: 85, max: 100, color: '#22c55e', position: 'top', order: 4 });
-  w += bdWidget('demo-mana-bar', { type: 'bar', label: 'Mana', value: 42, max: 60, color: '#8b5cf6', position: 'top', order: 5 });
-  w += bdWidget('demo-xp-bar', { type: 'bar', label: 'XP', value: 750, max: 1000, color: '#06b6d4', position: 'top', order: 6 });
+  w += bdWidget('demo-health-bar', { type: 'bar', label: 'Health', value: 85, max: 100, color: '#22c55e', order: 4 });
+  w += bdWidget('demo-mana-bar', { type: 'bar', label: 'Mana', value: 42, max: 60, color: '#8b5cf6', order: 5 });
+  w += bdWidget('demo-xp-bar', { type: 'bar', label: 'XP', value: 750, max: 1000, color: '#06b6d4', order: 6 });
   
   // Badges (all three variants)
-  w += bdWidget('demo-badge-poison', { type: 'badge', text: 'Poisoned', icon: '☠️', color: '#a855f7', variant: 'subtle', position: 'top', order: 7 });
-  w += bdWidget('demo-badge-shield', { type: 'badge', text: 'Shielded', icon: '🛡️', color: '#3b82f6', variant: 'solid', position: 'top', order: 8 });
-  w += bdWidget('demo-badge-fire', { type: 'badge', text: 'Burning', icon: '🔥', color: '#f97316', variant: 'outline', position: 'top', order: 9 });
+  w += bdWidget('demo-badge-poison', { type: 'badge', text: 'Poisoned', icon: '☠️', color: '#a855f7', variant: 'subtle', order: 7 });
+  w += bdWidget('demo-badge-shield', { type: 'badge', text: 'Shielded', icon: '🛡️', color: '#3b82f6', variant: 'solid', order: 8 });
+  w += bdWidget('demo-badge-fire', { type: 'badge', text: 'Burning', icon: '🔥', color: '#f97316', variant: 'outline', order: 9 });
   
   // Counters (positive and negative delta)
-  w += bdWidget('demo-counter-up', { type: 'counter', icon: '⚔️', value: 24, delta: 3, color: '#60a5fa', position: 'top', order: 10 });
-  w += bdWidget('demo-counter-down', { type: 'counter', icon: '💔', value: 12, delta: -5, color: '#f472b6', position: 'top', order: 11 });
+  w += bdWidget('demo-counter-up', { type: 'counter', icon: '⚔️', value: 24, delta: 3, color: '#60a5fa', order: 10 });
+  w += bdWidget('demo-counter-down', { type: 'counter', icon: '💔', value: 12, delta: -5, color: '#f472b6', order: 11 });
   
   // Icons with tooltips
-  w += bdWidget('demo-icon-heart', { type: 'icon', icon: '❤️', color: '#ef4444', tooltip: 'Health', position: 'top', order: 12 });
-  w += bdWidget('demo-icon-star', { type: 'icon', icon: '⭐', color: '#fbbf24', tooltip: 'Reputation', position: 'top', order: 13 });
-  w += bdWidget('demo-icon-moon', { type: 'icon', icon: '🌙', color: '#94a3b8', tooltip: 'Night', position: 'top', order: 14 });
+  w += bdWidget('demo-icon-heart', { type: 'icon', icon: '❤️', color: '#ef4444', tooltip: 'Health', order: 12 });
+  w += bdWidget('demo-icon-star', { type: 'icon', icon: '⭐', color: '#fbbf24', tooltip: 'Reputation', order: 13 });
+  w += bdWidget('demo-icon-moon', { type: 'icon', icon: '🌙', color: '#94a3b8', tooltip: 'Night', order: 14 });
   
-  // ========== LEFT POSITION (Character Info) ==========
+  // ========== Character Info ==========
   
   w += bdWidget('demo-panel', { 
-    type: 'panel', title: 'Character', position: 'left',
+    type: 'panel', title: 'Character',
     items: [
       { label: 'Name', value: 'Adventurer', color: '#f472b6' },
       { label: 'Class', value: 'Warrior', color: '#60a5fa' },
       { label: 'Level', value: '12', color: '#a855f7' }
     ],
-    order: 1 
+    order: 15 
   });
   
-  // ========== RIGHT POSITION (Inventory/Quest) ==========
+  // ========== Inventory/Quest ==========
   
-  w += bdWidget('demo-text', { type: 'text', text: '⚡ Quest: Find the Artifact', style: { color: '#fbbf24', fontWeight: '500' }, position: 'right', order: 1 });
-  w += bdWidget('demo-divider', { type: 'divider', label: 'Items', color: '#60a5fa', position: 'right', order: 2 });
+  w += bdWidget('demo-text', { type: 'text', text: '⚡ Quest: Find the Artifact', style: { color: '#fbbf24', fontWeight: '500' }, order: 16 });
+  w += bdWidget('demo-divider', { type: 'divider', label: 'Items', color: '#60a5fa', order: 17 });
   w += bdWidget('demo-list', { 
-    type: 'list', title: 'Inventory', position: 'right',
+    type: 'list', title: 'Inventory',
     items: [
       { icon: '🗡️', text: 'Iron Sword', color: '#60a5fa' },
       { icon: '🧪', text: 'Potion x3', color: '#22c55e' },
       { icon: '🔑', text: 'Rusty Key', color: '#fbbf24' },
       { icon: '📜', text: 'Map' }
     ],
-    order: 3 
+    order: 18 
   });
   
   return { text: text + w };
@@ -1858,9 +1856,9 @@ const modifier = (text) => {
     widgets += bdDestroy('enemy-hp');
   }
 
-  // ---- Left sidebar: Character panel ----
+  // ---- Character panel ----
   widgets += bdWidget('char-panel', {
-    type: 'panel', position: 'left',
+    type: 'panel',
     title: 'Level ' + r.level + ' Hero',
     items: [
       { label: 'HP', value: r.hp + '/' + r.maxHp, color: '#22c55e' },
@@ -1871,10 +1869,10 @@ const modifier = (text) => {
     order: 1
   });
 
-  // ---- Right sidebar: Inventory ----
+  // ---- Inventory ----
   if (r.inventory.length > 0) {
     widgets += bdWidget('inventory', {
-      type: 'list', position: 'right',
+      type: 'list',
       title: 'Inventory',
       items: r.inventory.map(item => ({ text: item })),
       order: 1

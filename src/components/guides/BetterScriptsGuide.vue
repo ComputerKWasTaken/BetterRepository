@@ -616,8 +616,8 @@ function bdClearAll() {
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('widget-positions')" class="mt-4 space-y-4">
             <p class="text-bd-text-secondary">
-              Widgets can be placed in three distinct areas using the <code class="text-bd-cyan">position</code> property. 
-              Each position adapts responsively to different screen sizes.
+              All widgets appear in a <strong>horizontal bar at the top</strong> of the game area, aligned with the story text width.
+              Widgets wrap automatically and adapt to screen size.
             </p>
 
             <!-- Visual Layout Diagram -->
@@ -636,119 +636,35 @@ function bdClearAll() {
                       <span class="text-[10px] font-semibold" style="color:#fbbf24;">1250</span>
                     </div>
                     <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px]" style="background:rgba(168,85,247,0.15);color:#a855f7;">☠️ Poisoned</div>
+                    <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                      <span class="text-[10px] text-[#8888aa]">MP</span>
+                      <div class="w-14 h-1.5 rounded-full bg-[#2a2a3e] overflow-hidden"><div class="h-full rounded-full" style="width:60%;background:#3b82f6;"></div></div>
+                    </div>
                   </div>
                   <div class="text-center mt-1">
-                    <span class="text-[9px] text-bd-green font-mono hidden sm:inline">position: 'top'</span>
+                    <span class="text-[9px] text-bd-green font-mono">Widget Bar (top)</span>
                   </div>
                 </div>
-                <!-- Body with sidebars -->
-                <div class="flex min-h-[100px]">
-                  <!-- Left Sidebar -->
-                  <div class="w-28 border-r border-[#2a2a3e] p-2 hidden sm:block" style="background: rgba(59,130,246,0.05);">
-                    <div class="text-[9px] font-semibold text-[#8888aa] uppercase tracking-wider mb-1 pb-0.5 border-b border-[#2a2a3e]">Character</div>
-                    <div class="space-y-0.5">
-                      <div class="flex justify-between text-[9px]"><span class="text-[#666]">LVL</span><span class="text-[#aaa]">5</span></div>
-                      <div class="flex justify-between text-[9px]"><span class="text-[#666]">STR</span><span style="color:#ef4444;">18</span></div>
-                      <div class="flex justify-between text-[9px]"><span class="text-[#666]">DEX</span><span style="color:#22c55e;">14</span></div>
-                    </div>
-                    <div class="text-[8px] text-bd-blue font-mono mt-2">position: 'left'</div>
-                  </div>
-                  <!-- Main Content Area -->
-                  <div class="flex-1 p-3 flex items-center justify-center">
-                    <div class="text-center">
-                      <div class="text-xs text-[#555] italic">Adventure Text Area</div>
-                      <div class="text-[10px] text-[#444] mt-1">Your story content appears here...</div>
-                    </div>
-                  </div>
-                  <!-- Right Sidebar -->
-                  <div class="w-28 border-l border-[#2a2a3e] p-2 hidden sm:block" style="background: rgba(168,85,247,0.05);">
-                    <div class="text-[9px] font-semibold text-[#8888aa] uppercase tracking-wider mb-1 pb-0.5 border-b border-[#2a2a3e]">Inventory</div>
-                    <div class="space-y-0.5">
-                      <div class="text-[9px] text-[#aaa]">🗡️ Iron Sword</div>
-                      <div class="text-[9px] text-[#aaa]">🛡️ Shield</div>
-                      <div class="text-[9px] text-[#aaa]">🧪 Potion x3</div>
-                    </div>
-                    <div class="text-[8px] text-bd-purple font-mono mt-2">position: 'right'</div>
+                <!-- Main Content Area -->
+                <div class="flex-1 p-4 flex items-center justify-center min-h-[80px]">
+                  <div class="text-center">
+                    <div class="text-xs text-[#555] italic">Adventure Text Area</div>
+                    <div class="text-[10px] text-[#444] mt-1">Your story content appears here...</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <!-- Top Position -->
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
-                <div class="flex items-center gap-2 mb-3">
-                  <div class="w-8 h-8 rounded bg-bd-green/20 flex items-center justify-center">
-                    <ArrowUp class="w-4 h-4 text-bd-green" />
-                  </div>
-                  <h3 class="font-semibold text-bd-text-primary">Top</h3>
-                  <code class="text-xs text-bd-green ml-auto">position: 'top'</code>
-                </div>
-                <p class="text-sm text-bd-text-secondary mb-3">
-                  Horizontal bar at the top of the game area. Best for essential stats and frequently accessed information.
-                </p>
-                <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary">bdWidget('hp', { 
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
+              <p class="text-sm text-bd-text-secondary mb-3">
+                Widgets are centered and wrap across multiple rows as needed. Use the <code class="text-bd-cyan">order</code> property to control widget ordering within the bar.
+              </p>
+              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary">bdWidget('hp', { 
   type: 'bar', 
-  position: 'top',
   label: 'HP', 
-  value: 85 
+  value: 85,
+  order: 1
 });</pre>
-                <div class="mt-3 p-2 rounded bg-bd-green/10 border border-bd-green/30">
-                  <p class="text-xs text-bd-text-muted">
-                    <strong>Recommended:</strong> Use top position for mobile-friendly widgets that all players can see.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Left Position -->
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
-                <div class="flex items-center gap-2 mb-3">
-                  <div class="w-8 h-8 rounded bg-bd-blue/20 flex items-center justify-center">
-                    <ArrowLeft class="w-4 h-4 text-bd-blue" />
-                  </div>
-                  <h3 class="font-semibold text-bd-text-primary">Left</h3>
-                  <code class="text-xs text-bd-blue ml-auto">position: 'left'</code>
-                </div>
-                <p class="text-sm text-bd-text-secondary mb-3">
-                  Vertical sidebar on the left side. Good for character information and detailed stats.
-                </p>
-                <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary">bdWidget('char', { 
-  type: 'panel', 
-  position: 'left',
-  title: 'Character',
-  items: [...] 
-});</pre>
-                <div class="mt-3 p-2 rounded bg-bd-blue/10 border border-bd-blue/30">
-                  <p class="text-xs text-bd-text-muted">
-                    <strong>Note:</strong> Collapses into a horizontal row below the top bar on screens smaller than 768px.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Right Position -->
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
-                <div class="flex items-center gap-2 mb-3">
-                  <div class="w-8 h-8 rounded bg-bd-purple/20 flex items-center justify-center">
-                    <ArrowRight class="w-4 h-4 text-bd-purple" />
-                  </div>
-                  <h3 class="font-semibold text-bd-text-primary">Right</h3>
-                  <code class="text-xs text-bd-purple ml-auto">position: 'right'</code>
-                </div>
-                <p class="text-sm text-bd-text-secondary mb-3">
-                  Vertical sidebar on the right side. Ideal for inventory, quest lists, and auxiliary information.
-                </p>
-                <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary">bdWidget('inv', { 
-  type: 'list', 
-  position: 'right',
-  title: 'Inventory',
-  items: [...] 
-});</pre>
-                <div class="mt-3 p-2 rounded bg-bd-purple/10 border border-bd-purple/30">
-                  <p class="text-xs text-bd-text-muted">
-                    <strong>Note:</strong> Collapses into a horizontal row below the top bar on screens smaller than 768px.
-                  </p>
-                </div>
-              </div>
             </div>
 
             <!-- Responsive Behavior -->
@@ -760,13 +676,12 @@ function bdClearAll() {
               <div class="text-sm text-bd-text-secondary space-y-2">
                 <p>Widgets automatically adapt to screen size:</p>
                 <ul class="space-y-1 ml-4">
-                  <li>• <strong>&lt; 480px:</strong> Compact inline layout, all widgets remain visible</li>
-                  <li>• <strong>&lt; 768px:</strong> Sidebars become edge-aligned horizontal rows (left stays left, right stays right)</li>
-                  <li>• <strong>Default:</strong> Standard sizing with vertical sidebars</li>
+                  <li>• <strong>&lt; 480px:</strong> Compact inline layout with smaller fonts and tighter spacing</li>
+                  <li>• <strong>&lt; 768px:</strong> Slightly reduced sizing for tablet screens</li>
+                  <li>• <strong>Default:</strong> Standard sizing</li>
                   <li>• <strong>≥ 1440px:</strong> Larger widgets for QHD displays</li>
                   <li>• <strong>≥ 2560px:</strong> Maximum sizing for 4K/Ultra displays</li>
                 </ul>
-                <p class="mt-2">Every widget area (top bar, left sidebar, right sidebar) has a <strong>collapse toggle</strong> — a small chevron button that lets users hide or show that area's widgets on demand.</p>
               </div>
             </div>
           </div>
@@ -1226,7 +1141,7 @@ window.addEventListener('betterscripts:error', (e) => {
                   <li><strong>Use unique IDs</strong> - Prefix with script name: <code class="text-bd-cyan">myscript_hp</code>, <code class="text-bd-cyan">myscript_gold</code></li>
                   <li><strong>Initialize state safely</strong> - <code class="text-bd-purple">state.x = state.x ?? defaultValue</code></li>
                   <li><strong>Use bdWidget for all operations</strong> - Creates new or updates existing widgets</li>
-                  <li><strong>All positions are mobile-friendly</strong> - Sidebars collapse into rows on small screens</li>
+                  <li><strong>Use order property</strong> - Control widget arrangement with <code class="text-bd-cyan">order: 1, 2, 3...</code></li>
                 </ul>
               </div>
 
@@ -1239,7 +1154,7 @@ window.addEventListener('betterscripts:error', (e) => {
                   <li><strong>Forgetting context modifier</strong> - AI will repeat protocol tags</li>
                   <li><strong>Widget ID conflicts</strong> - Use prefixes to avoid clashes</li>
                   <li><strong>Overusing custom HTML</strong> - Built-in widgets are often better</li>
-                  <li><strong>Ignoring mobile layout</strong> - Test that widgets look good when sidebars collapse on small screens</li>
+                  <li><strong>Ignoring mobile layout</strong> - Test that widgets look good on smaller screens</li>
                   <li><strong>Not handling errors</strong> - Check console for widget errors</li>
                 </ul>
               </div>
@@ -1384,7 +1299,7 @@ function addGold(amount) {
                   </tr>
                   <tr>
                     <td class="py-3">Mobile layout issues</td>
-                    <td class="py-3">All positions are mobile-friendly. Sidebars collapse into horizontal rows on small screens. Test your layout at different sizes.</td>
+                    <td class="py-3">All widgets appear in a top bar that wraps automatically. Test your layout at different screen sizes to ensure readability.</td>
                   </tr>
                 </tbody>
               </table>
@@ -1665,9 +1580,9 @@ modifier(text);</code></pre>
     color: '#a855f7', showValue: false, order: 3
   });
   
-  <span class="text-bd-text-muted">// Character Panel (left sidebar)</span>
+  <span class="text-bd-text-muted">// Character Panel</span>
   widgets += bdWidget('char-panel', {
-    type: 'panel', position: 'left',
+    type: 'panel',
     title: `Level ${state.character.level} Character`,
     items: [
       { label: 'HP', value: `${state.character.hp}/${state.character.maxHp}`, color: '#22c55e' },
@@ -1677,10 +1592,10 @@ modifier(text);</code></pre>
     ], order: 1
   });
   
-  <span class="text-bd-text-muted">// Status Effects (left sidebar, only if active)</span>
+  <span class="text-bd-text-muted">// Status Effects (only if active)</span>
   if (state.character.status.length > 0) {
     widgets += bdWidget('status-effects', {
-      type: 'list', position: 'left', title: 'Status Effects',
+      type: 'list', title: 'Status Effects',
       items: state.character.status.map(s => ({ text: s, color: '#f97316' })),
       order: 2
     });
@@ -1828,7 +1743,7 @@ modifier(text);</code></pre>
     color: '#fbbf24', order: 2
   });
   
-  <span class="text-bd-text-muted">// Inventory list (right sidebar)</span>
+  <span class="text-bd-text-muted">// Inventory list</span>
   if (state.inventory.items.length > 0) {
     const inventoryItems = state.inventory.items.map(item => {
       const itemData = ITEMS[item.id];
@@ -1841,7 +1756,7 @@ modifier(text);</code></pre>
     
     widgets += bdWidget('inventory', {
       type: 'list', title: 'Inventory',
-      position: 'right', items: inventoryItems, order: 1
+      items: inventoryItems, order: 1
     });
   }
   
