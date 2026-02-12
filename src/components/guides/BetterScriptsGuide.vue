@@ -703,6 +703,7 @@ function bdClearAll() {
                   <li>• <strong>&lt; 768px:</strong> Slightly reduced sizing for tablet screens</li>
                   <li>• <strong>Default:</strong> Standard sizing</li>
                   <li>• <strong>≥ 1440px:</strong> Larger widgets for QHD displays</li>
+                  <li>• <strong>≥ 1920px:</strong> Enhanced sizing for Full HD+ displays</li>
                   <li>• <strong>≥ 2560px:</strong> Maximum sizing for 4K/Ultra displays</li>
                 </ul>
               </div>
@@ -1772,27 +1773,34 @@ modifier(text);</code></pre>
                 <pre v-if="exampleTab.showcase === 'output'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code>const modifier = (text) => {
   let w = '';
 
+  <span class="text-bd-text-muted">// ========== Status Bar ==========</span>
+
   <span class="text-bd-text-muted">// Stats</span>
   w += bdWidget('demo-hp', { type: 'stat', label: 'HP', value: '85/100', color: '#ef4444', align: 'center', order: 1 });
-  w += bdWidget('demo-gold', { type: 'stat', label: '💰', value: '1,250', color: '#fbbf24', align: 'center', order: 2 });
+  w += bdWidget('demo-mp', { type: 'stat', label: 'MP', value: '42/60', color: '#3b82f6', align: 'center', order: 2 });
+  w += bdWidget('demo-gold', { type: 'stat', label: '💰', value: '1,250', color: '#fbbf24', align: 'center', order: 3 });
 
   <span class="text-bd-text-muted">// Bars</span>
-  w += bdWidget('demo-health-bar', { type: 'bar', label: 'Health', value: 85, max: 100, color: '#22c55e', align: 'center', order: 3 });
-  w += bdWidget('demo-xp-bar', { type: 'bar', label: 'XP', value: 750, max: 1000, color: '#06b6d4', align: 'center', order: 4 });
+  w += bdWidget('demo-health-bar', { type: 'bar', label: 'Health', value: 85, max: 100, color: '#22c55e', align: 'center', order: 4 });
+  w += bdWidget('demo-mana-bar', { type: 'bar', label: 'Mana', value: 42, max: 60, color: '#8b5cf6', align: 'center', order: 5 });
+  w += bdWidget('demo-xp-bar', { type: 'bar', label: 'XP', value: 750, max: 1000, color: '#06b6d4', align: 'center', order: 6 });
 
   <span class="text-bd-text-muted">// Badges (all three variants)</span>
-  w += bdWidget('demo-poison', { type: 'badge', text: 'Poisoned', icon: '☠️', color: '#a855f7', variant: 'subtle', align: 'center', order: 5 });
-  w += bdWidget('demo-shield', { type: 'badge', text: 'Shielded', icon: '🛡️', color: '#3b82f6', variant: 'solid', align: 'center', order: 6 });
-  w += bdWidget('demo-fire', { type: 'badge', text: 'Burning', icon: '🔥', color: '#f97316', variant: 'outline', align: 'center', order: 7 });
+  w += bdWidget('demo-badge-poison', { type: 'badge', text: 'Poisoned', icon: '☠️', color: '#a855f7', variant: 'subtle', align: 'center', order: 7 });
+  w += bdWidget('demo-badge-shield', { type: 'badge', text: 'Shielded', icon: '🛡️', color: '#3b82f6', variant: 'solid', align: 'center', order: 8 });
+  w += bdWidget('demo-badge-fire', { type: 'badge', text: 'Burning', icon: '🔥', color: '#f97316', variant: 'outline', align: 'center', order: 9 });
 
-  <span class="text-bd-text-muted">// Counter with delta</span>
-  w += bdWidget('demo-counter', { type: 'counter', icon: '⚔️', value: 24, delta: 3, color: '#60a5fa', align: 'center', order: 8 });
+  <span class="text-bd-text-muted">// Counters (positive and negative delta)</span>
+  w += bdWidget('demo-counter-up', { type: 'counter', icon: '⚔️', value: 24, delta: 3, color: '#60a5fa', align: 'center', order: 10 });
+  w += bdWidget('demo-counter-down', { type: 'counter', icon: '💔', value: 12, delta: -5, color: '#f472b6', align: 'center', order: 11 });
 
   <span class="text-bd-text-muted">// Icons with tooltips</span>
-  w += bdWidget('demo-heart', { type: 'icon', icon: '❤️', color: '#ef4444', tooltip: 'Health', align: 'center', order: 9 });
-  w += bdWidget('demo-star', { type: 'icon', icon: '⭐', color: '#fbbf24', tooltip: 'Reputation', align: 'center', order: 10 });
+  w += bdWidget('demo-icon-heart', { type: 'icon', icon: '❤️', color: '#ef4444', tooltip: 'Health', align: 'center', order: 12 });
+  w += bdWidget('demo-icon-star', { type: 'icon', icon: '⭐', color: '#fbbf24', tooltip: 'Reputation', align: 'center', order: 13 });
+  w += bdWidget('demo-icon-moon', { type: 'icon', icon: '🌙', color: '#94a3b8', tooltip: 'Night', align: 'center', order: 14 });
 
-  <span class="text-bd-text-muted">// Character panel (left zone)</span>
+  <span class="text-bd-text-muted">// ========== Character Info ==========</span>
+
   w += bdWidget('demo-panel', {
     type: 'panel', title: 'Character', align: 'left',
     items: [
@@ -1802,22 +1810,17 @@ modifier(text);</code></pre>
     ], order: 1
   });
 
-  <span class="text-bd-text-muted">// Inventory list (right zone)</span>
+  <span class="text-bd-text-muted">// ========== Inventory/Quest ==========</span>
+
+  w += bdWidget('demo-text', { type: 'text', text: '⚡ Quest: Find the Artifact', style: { color: '#fbbf24', fontWeight: '500' }, align: 'right', order: 1 });
   w += bdWidget('demo-list', {
     type: 'list', title: 'Inventory', align: 'right',
     items: [
       { icon: '🗡️', text: 'Iron Sword', color: '#60a5fa' },
       { icon: '🧪', text: 'Potion x3', color: '#22c55e' },
-      { icon: '🔑', text: 'Rusty Key', color: '#fbbf24' }
-    ], order: 1
-  });
-
-  <span class="text-bd-text-muted">// Text widget (right zone)</span>
-  w += bdWidget('demo-text', {
-    type: 'text',
-    text: '⚡ Quest: Find the Artifact',
-    style: { color: '#fbbf24', fontWeight: '500' },
-    align: 'right', order: 2
+      { icon: '🔑', text: 'Rusty Key', color: '#fbbf24' },
+      { icon: '📜', text: 'Map' }
+    ], order: 2
   });
 
   return { text: text + w };
