@@ -1690,28 +1690,27 @@ const modifier = (text) => {
   // ========== Character Info ==========
   
   w += bdWidget('demo-panel', { 
-    type: 'panel', title: 'Character',
+    type: 'panel', title: 'Character', align: 'left',
     items: [
       { label: 'Name', value: 'Adventurer', color: '#f472b6' },
       { label: 'Class', value: 'Warrior', color: '#60a5fa' },
       { label: 'Level', value: '12', color: '#a855f7' }
     ],
-    order: 15 
+    order: 1 
   });
   
   // ========== Inventory/Quest ==========
   
-  w += bdWidget('demo-text', { type: 'text', text: '⚡ Quest: Find the Artifact', style: { color: '#fbbf24', fontWeight: '500' }, order: 16 });
-  w += bdWidget('demo-divider', { type: 'divider', label: 'Items', color: '#60a5fa', order: 17 });
+  w += bdWidget('demo-text', { type: 'text', text: '⚡ Quest: Find the Artifact', style: { color: '#fbbf24', fontWeight: '500' }, align: 'right', order: 1 });
   w += bdWidget('demo-list', { 
-    type: 'list', title: 'Inventory',
+    type: 'list', title: 'Inventory', align: 'right',
     items: [
       { icon: '🗡️', text: 'Iron Sword', color: '#60a5fa' },
       { icon: '🧪', text: 'Potion x3', color: '#22c55e' },
       { icon: '🔑', text: 'Rusty Key', color: '#fbbf24' },
       { icon: '📜', text: 'Map' }
     ],
-    order: 18 
+    order: 2 
   });
   
   return { text: text + w };
@@ -1845,9 +1844,9 @@ const modifier = (text) => {
     widgets += bdDestroy('enemy-hp');
   }
 
-  // ---- Character panel ----
+  // ---- Character panel (left zone) ----
   widgets += bdWidget('char-panel', {
-    type: 'panel',
+    type: 'panel', align: 'left',
     title: 'Level ' + r.level + ' Hero',
     items: [
       { label: 'HP', value: r.hp + '/' + r.maxHp, color: '#22c55e' },
@@ -1858,10 +1857,10 @@ const modifier = (text) => {
     order: 1
   });
 
-  // ---- Inventory ----
+  // ---- Inventory (right zone) ----
   if (r.inventory.length > 0) {
     widgets += bdWidget('inventory', {
-      type: 'list',
+      type: 'list', align: 'right',
       title: 'Inventory',
       items: r.inventory.map(item => ({ text: item })),
       order: 1

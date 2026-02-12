@@ -235,7 +235,7 @@ function bdClearAll() {
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('widget-types')" class="mt-4 space-y-4">
             <p class="text-bd-text-secondary">
-              BetterScripts supports <strong>10 widget types</strong> for different use cases. Each card below shows a 
+              BetterScripts supports <strong>9 widget types</strong> for different use cases. Each card below shows a 
               <strong>live preview</strong> of what the widget looks like alongside its configuration.
             </p>
 
@@ -428,25 +428,6 @@ function bdClearAll() {
                   <p class="text-xs text-bd-text-muted">Number with optional +/- change indicator.</p>
                 </div>
 
-                <!-- Divider -->
-                <div class="p-3 rounded bg-bd-bg-tertiary space-y-3">
-                  <h4 class="text-sm font-medium text-bd-text-primary flex items-center gap-2">
-                    <span class="px-2 py-0.5 rounded text-xs font-mono bg-bd-gray/20 text-bd-text-muted">divider</span>
-                    Visual Separator
-                  </h4>
-                  <!-- Preview -->
-                  <div class="widget-preview">
-                    <div class="text-[10px] text-bd-text-muted uppercase tracking-wider mb-1">Preview</div>
-                    <div class="flex items-center gap-2 min-w-[180px] px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                      <div class="flex-1 h-px" style="background: #60a5fa;"></div>
-                      <span class="text-[10px] uppercase tracking-wider" style="color: #60a5fa;">Stats</span>
-                      <div class="flex-1 h-px" style="background: #60a5fa;"></div>
-                    </div>
-                  </div>
-                  <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-primary">{ type: 'divider', label: 'Stats', color: '#60a5fa' }</pre>
-                  <p class="text-xs text-bd-text-muted">Horizontal line with optional centered label.</p>
-                </div>
-
                 <!-- Custom -->
                 <div class="p-3 rounded bg-bd-bg-tertiary space-y-3">
                   <h4 class="text-sm font-medium text-bd-text-primary flex items-center gap-2">
@@ -505,14 +486,14 @@ function bdClearAll() {
                       <td class="py-2 text-xs"><strong>Required.</strong> Widget type identifier</td>
                     </tr>
                     <tr>
-                      <td class="py-2 font-mono text-xs text-bd-cyan">position</td>
+                      <td class="py-2 font-mono text-xs text-bd-cyan">align</td>
                       <td class="py-2 text-xs">string</td>
-                      <td class="py-2 text-xs">Widget area: <code class="text-bd-green">top</code> (default), <code class="text-bd-blue">left</code>, <code class="text-bd-purple">right</code></td>
+                      <td class="py-2 text-xs">Alignment within the top bar: <code class="text-bd-blue">left</code>, <code class="text-bd-green">center</code> (default), <code class="text-bd-purple">right</code></td>
                     </tr>
                     <tr>
                       <td class="py-2 font-mono text-xs text-bd-cyan">order</td>
                       <td class="py-2 text-xs">number</td>
-                      <td class="py-2 text-xs">Display order within position (lower = first)</td>
+                      <td class="py-2 text-xs">Display order within the alignment zone (lower = first)</td>
                     </tr>
                     <tr>
                       <td class="py-2 font-mono text-xs text-bd-cyan">color</td>
@@ -531,7 +512,7 @@ function bdClearAll() {
                 <div>
                   <h4 class="text-sm font-medium text-bd-text-primary mb-2">Display Text</h4>
                   <ul class="text-xs text-bd-text-secondary space-y-1">
-                    <li><code class="text-bd-cyan">label</code> - Widget label (stat, bar, badge, divider)</li>
+                    <li><code class="text-bd-cyan">label</code> - Widget label (stat, bar, badge)</li>
                     <li><code class="text-bd-cyan">value</code> - Display value (stat, bar, counter, panel items)</li>
                     <li><code class="text-bd-cyan">text</code> - Text content (text, badge)</li>
                     <li><code class="text-bd-cyan">title</code> - Container title (panel, list)</li>
@@ -616,33 +597,48 @@ function bdClearAll() {
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('widget-positions')" class="mt-4 space-y-4">
             <p class="text-bd-text-secondary">
-              All widgets appear in a <strong>horizontal bar at the top</strong> of the game area, aligned with the story text width.
-              Widgets wrap automatically and adapt to screen size.
+              All widgets appear in a <strong>horizontal top bar</strong> aligned with the story text width.
+              Use the <code class="text-bd-cyan">align</code> property to place widgets in one of three zones: <strong>left</strong>, <strong>center</strong>, or <strong>right</strong>.
             </p>
 
             <!-- Visual Layout Diagram -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <div class="text-[10px] text-bd-text-muted uppercase tracking-wider mb-2">Layout Diagram</div>
               <div class="rounded-lg border border-bd-border-subtle overflow-hidden bg-[#0d0d1a]">
-                <!-- Top Bar -->
+                <!-- Top Bar with alignment zones -->
                 <div class="px-3 py-2 border-b border-[#2a2a3e]" style="background: rgba(34,197,94,0.08);">
-                  <div class="flex items-center justify-center gap-2 flex-wrap">
-                    <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                      <span class="text-[10px] text-[#8888aa]">HP</span>
-                      <div class="w-16 h-1.5 rounded-full bg-[#2a2a3e] overflow-hidden"><div class="h-full rounded-full" style="width:75%;background:#22c55e;"></div></div>
+                  <div class="flex items-center justify-between gap-2">
+                    <!-- Left zone -->
+                    <div class="flex items-center gap-1.5 flex-wrap" style="background: rgba(59,130,246,0.06); border-radius: 4px; padding: 2px 4px;">
+                      <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                        <span class="text-[9px] text-[#8888aa]">LVL</span>
+                        <span class="text-[9px] font-semibold" style="color:#a855f7;">12</span>
+                      </div>
                     </div>
-                    <div class="inline-flex items-center gap-1 px-2 py-1 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                      <span class="text-[10px] text-[#8888aa]">Gold</span>
-                      <span class="text-[10px] font-semibold" style="color:#fbbf24;">1250</span>
+                    <!-- Center zone -->
+                    <div class="flex items-center gap-1.5 flex-wrap justify-center flex-1" style="background: rgba(34,197,94,0.06); border-radius: 4px; padding: 2px 4px;">
+                      <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                        <span class="text-[10px] text-[#8888aa]">HP</span>
+                        <div class="w-14 h-1.5 rounded-full bg-[#2a2a3e] overflow-hidden"><div class="h-full rounded-full" style="width:75%;background:#22c55e;"></div></div>
+                      </div>
+                      <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                        <span class="text-[10px] text-[#8888aa]">MP</span>
+                        <div class="w-14 h-1.5 rounded-full bg-[#2a2a3e] overflow-hidden"><div class="h-full rounded-full" style="width:60%;background:#3b82f6;"></div></div>
+                      </div>
+                      <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px]" style="background:rgba(168,85,247,0.15);color:#a855f7;">☠️ Poisoned</div>
                     </div>
-                    <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px]" style="background:rgba(168,85,247,0.15);color:#a855f7;">☠️ Poisoned</div>
-                    <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                      <span class="text-[10px] text-[#8888aa]">MP</span>
-                      <div class="w-14 h-1.5 rounded-full bg-[#2a2a3e] overflow-hidden"><div class="h-full rounded-full" style="width:60%;background:#3b82f6;"></div></div>
+                    <!-- Right zone -->
+                    <div class="flex items-center gap-1.5 flex-wrap justify-end" style="background: rgba(168,85,247,0.06); border-radius: 4px; padding: 2px 4px;">
+                      <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                        <span class="text-[9px]">💰</span>
+                        <span class="text-[9px] font-semibold" style="color:#fbbf24;">1250</span>
+                      </div>
                     </div>
                   </div>
-                  <div class="text-center mt-1">
-                    <span class="text-[9px] text-bd-green font-mono">Widget Bar (top)</span>
+                  <div class="flex justify-between mt-1 px-1">
+                    <span class="text-[8px] text-bd-blue font-mono">align: 'left'</span>
+                    <span class="text-[8px] text-bd-green font-mono">align: 'center' (default)</span>
+                    <span class="text-[8px] text-bd-purple font-mono">align: 'right'</span>
                   </div>
                 </div>
                 <!-- Main Content Area -->
@@ -655,16 +651,38 @@ function bdClearAll() {
               </div>
             </div>
 
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
-              <p class="text-sm text-bd-text-secondary mb-3">
-                Widgets are centered and wrap across multiple rows as needed. Use the <code class="text-bd-cyan">order</code> property to control widget ordering within the bar.
-              </p>
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary">bdWidget('hp', { 
-  type: 'bar', 
-  label: 'HP', 
-  value: 85,
-  order: 1
+            <!-- Alignment Zone Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
+                <h3 class="font-semibold text-bd-text-primary mb-2">Left Zone</h3>
+                <p class="text-sm text-bd-text-secondary mb-3">
+                  Widgets anchored to the left edge. Good for persistent identifiers like level or character name.
+                </p>
+                <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary">bdWidget('level', { 
+  type: 'stat', label: 'LVL',
+  value: 12, align: 'left'
 });</pre>
+              </div>
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
+                <h3 class="font-semibold text-bd-text-primary mb-2">Center Zone <span class="text-xs text-bd-text-muted font-normal">(default)</span></h3>
+                <p class="text-sm text-bd-text-secondary mb-3">
+                  Primary area for core HUD elements. Fills available space between left and right zones.
+                </p>
+                <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary">bdWidget('hp', { 
+  type: 'bar', label: 'HP',
+  value: 85, order: 1
+});</pre>
+              </div>
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
+                <h3 class="font-semibold text-bd-text-primary mb-2">Right Zone</h3>
+                <p class="text-sm text-bd-text-secondary mb-3">
+                  Widgets anchored to the right edge. Ideal for currency, counters, or secondary info.
+                </p>
+                <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary">bdWidget('gold', { 
+  type: 'counter', icon: '💰',
+  value: 1250, align: 'right'
+});</pre>
+              </div>
             </div>
 
             <!-- Responsive Behavior -->
@@ -1226,7 +1244,7 @@ function addGold(amount) {
                   <h4 class="text-sm font-medium text-bd-text-primary mb-2">Visual Design</h4>
                   <ul class="text-xs text-bd-text-secondary space-y-1">
                     <li>• Use consistent colors throughout your widgets</li>
-                    <li>• Group related widgets with dividers</li>
+                    <li>• Group related widgets using alignment zones</li>
                     <li>• Use icons to improve visual recognition</li>
                     <li>• Keep text concise and readable</li>
                     <li>• Use progress bars for measurable quantities</li>
@@ -1580,9 +1598,9 @@ modifier(text);</code></pre>
     color: '#a855f7', showValue: false, order: 3
   });
   
-  <span class="text-bd-text-muted">// Character Panel</span>
+  <span class="text-bd-text-muted">// Character Panel (left zone)</span>
   widgets += bdWidget('char-panel', {
-    type: 'panel',
+    type: 'panel', align: 'left',
     title: `Level ${state.character.level} Character`,
     items: [
       { label: 'HP', value: `${state.character.hp}/${state.character.maxHp}`, color: '#22c55e' },
@@ -1595,7 +1613,7 @@ modifier(text);</code></pre>
   <span class="text-bd-text-muted">// Status Effects (only if active)</span>
   if (state.character.status.length > 0) {
     widgets += bdWidget('status-effects', {
-      type: 'list', title: 'Status Effects',
+      type: 'list', align: 'left', title: 'Status Effects',
       items: state.character.status.map(s => ({ text: s, color: '#f97316' })),
       order: 2
     });
@@ -1736,11 +1754,11 @@ modifier(text);</code></pre>
     order: 1
   });
   
-  <span class="text-bd-text-muted">// Gold counter</span>
+  <span class="text-bd-text-muted">// Gold counter (right zone)</span>
   widgets += bdWidget('gold', {
     type: 'counter', icon: '💰',
     value: state.inventory.gold,
-    color: '#fbbf24', order: 2
+    color: '#fbbf24', align: 'right', order: 1
   });
   
   <span class="text-bd-text-muted">// Inventory list</span>
@@ -1756,7 +1774,7 @@ modifier(text);</code></pre>
     
     widgets += bdWidget('inventory', {
       type: 'list', title: 'Inventory',
-      items: inventoryItems, order: 1
+      align: 'right', items: inventoryItems, order: 2
     });
   }
   
