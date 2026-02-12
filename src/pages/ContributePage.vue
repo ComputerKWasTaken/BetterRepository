@@ -21,7 +21,7 @@
           Every guide, every template, every script started as someone's contribution.
         </p>
         <p class="text-sm text-bd-text-muted max-w-md mx-auto">
-          No coding required, just paste and submit. It takes less than 2 minutes.
+          New here? Check out the <router-link to="/guides" class="text-bd-accent-primary hover:text-bd-accent-light transition-colors font-medium">Guides</router-link> first to learn the ropes. Ready to share? Just paste and submit.
         </p>
       </div>
     </header>
@@ -64,7 +64,7 @@
             </div>
             <p class="text-sm text-bd-text-secondary leading-relaxed">
               New players discover AI Dungeon every day. Your contribution could be the thing that turns a confused
-              newcomer into a confident storyteller.
+              newcomer into a confident storyteller. Start by reading the <router-link to="/guides" class="text-bd-green hover:text-bd-green/80 font-medium transition-colors">Guides</router-link> to see what's already covered.
             </p>
           </div>
         </div>
@@ -558,6 +558,10 @@ Favor active voice over passive. Every word should earn its place.</span></pre>
               <Send class="w-4 h-4" />
               Submit a Contribution
             </button>
+            <router-link to="/guides" class="btn btn-secondary">
+              <BookOpen class="w-4 h-4" />
+              Read the Guides
+            </router-link>
             <router-link to="/credits" class="btn btn-secondary">
               <Award class="w-4 h-4" />
               See Who's Contributed
@@ -581,7 +585,7 @@ import {
   ScrollText, Bookmark, Drama, Code, GitMerge, MessageCircle,
   ExternalLink, Github, FileText, Award, Heart, Users, Star,
   ChevronRight, Lightbulb, Bug, Pencil, HelpCircle, RefreshCw,
-  Sparkles, Package, Send, Loader, AlertCircle
+  Sparkles, Package, Send, Loader, AlertCircle, BookOpen
 } from 'lucide-vue-next'
 
 // --- Community impact stats (pulled from actual data) ---
