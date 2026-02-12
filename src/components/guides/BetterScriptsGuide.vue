@@ -1391,18 +1391,18 @@ function addGold(amount) {
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('examples')" class="mt-4 space-y-6">
             <p class="text-bd-text-secondary">
-              Ready-to-use examples with visual previews. Each example includes all three script parts 
-              (Library, Context Modifier, Output Modifier) needed for a complete implementation.
+              Ready-to-use examples from our <strong>Scripts</strong> collection. Each includes all the script parts 
+              needed for a complete implementation. Find these and more in the Scripts tab.
             </p>
 
-            <!-- ==================== EXAMPLE 1: Simple Status Display ==================== -->
+            <!-- ==================== EXAMPLE 1: Simple Turn Counter ==================== -->
             <div class="rounded-xl border border-bd-border-subtle overflow-hidden">
               <!-- Example Header -->
               <div class="px-4 py-3 bg-bd-bg-tertiary border-b border-bd-border-subtle flex items-center gap-3">
                 <Activity class="w-5 h-5 text-bd-green flex-shrink-0" />
                 <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary">Simple Status Display</h3>
-                  <p class="text-xs text-bd-text-muted mt-0.5">Minimal setup for basic status tracking</p>
+                  <h3 class="font-semibold text-bd-text-primary">Simple Turn Counter</h3>
+                  <p class="text-xs text-bd-text-muted mt-0.5">Minimal BetterScripts example with a turn counter and location badge</p>
                 </div>
                 <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-bd-green/20 text-bd-green">Beginner</span>
               </div>
@@ -1412,69 +1412,80 @@ function addGold(amount) {
                 <div class="text-[10px] text-bd-text-muted uppercase tracking-wider mb-2">Widget Preview</div>
                 <div class="flex items-center gap-2 flex-wrap">
                   <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                    <span class="text-[11px] text-[#8888aa]">HP</span>
-                    <span class="text-[11px] font-semibold" style="color: #22c55e;">100</span>
+                    <span class="text-[11px] text-[#8888aa]">Turn</span>
+                    <span class="text-[11px] font-semibold" style="color: #60a5fa;">5</span>
                   </div>
-                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                    <span class="text-[11px] text-[#8888aa]">Gold</span>
-                    <span class="text-[11px] font-semibold" style="color: #fbbf24;">0</span>
-                  </div>
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px]" style="background: rgba(96,165,250,0.15); color: #60a5fa;">📍 Town</span>
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px]" style="background: rgba(168,85,247,0.15); color: #a855f7;">📍 Town</span>
                 </div>
               </div>
 
               <!-- Script Tabs -->
               <div class="px-4 py-3 space-y-3 bg-bd-bg-primary">
                 <div class="flex gap-1 border-b border-bd-border-subtle pb-2">
-                  <button @click="exampleTab.simple = 'library'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.simple === 'library' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
+                  <button @click="exampleTab.counter = 'library'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.counter === 'library' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
                     <span class="flex items-center gap-1"><Library class="w-3 h-3" /> Library</span>
                   </button>
-                  <button @click="exampleTab.simple = 'context'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.simple === 'context' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
+                  <button @click="exampleTab.counter = 'context'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.counter === 'context' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
                     <span class="flex items-center gap-1"><ArrowLeft class="w-3 h-3" /> Context Modifier</span>
                   </button>
-                  <button @click="exampleTab.simple = 'output'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.simple === 'output' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
+                  <button @click="exampleTab.counter = 'output'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.counter === 'output' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
                     <span class="flex items-center gap-1"><ArrowRight class="w-3 h-3" /> Output Modifier</span>
                   </button>
                 </div>
 
-                <pre v-if="exampleTab.simple === 'library'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code><span class="text-bd-text-muted">// Initialize game state safely</span>
-state.status = state.status ?? { hp: 100, gold: 0, location: 'Town' };
+                <pre v-if="exampleTab.counter === 'library'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code><span class="text-bd-text-muted">// The simplest possible BetterScripts example.</span>
+<span class="text-bd-text-muted">// Demonstrates bdWidget for creating and updating widgets.</span>
 
-<span class="text-bd-text-muted">// BetterScripts helpers</span>
+<span class="text-bd-text-muted">// BetterScripts protocol helpers</span>
 function bdMessage(msg) { return `[[BD:${JSON.stringify(msg)}:BD]]`; }
-function bdWidget(id, cfg) {
-  return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg });
-}</code></pre>
+function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
 
-                <pre v-if="exampleTab.simple === 'context'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code><span class="text-bd-text-muted">// Strip protocol tags so the AI never sees them</span>
+<span class="text-bd-text-muted">// Persistent state</span>
+state.location = state.location ?? 'Town';</code></pre>
+
+                <pre v-if="exampleTab.counter === 'context'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code><span class="text-bd-text-muted">// Strip protocol messages from AI context</span>
 const modifier = (text) => {
   return { text: text.replace(/\[\[BD:[\s\S]*?:BD\]\]/g, '') };
 };
 modifier(text);</code></pre>
 
-                <pre v-if="exampleTab.simple === 'output'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code>const modifier = (text) => {
-  <span class="text-bd-text-muted">// Example: lose 1 HP per turn</span>
-  state.status.hp = Math.max(0, state.status.hp - 1);
-  
+                <pre v-if="exampleTab.counter === 'output'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code><span class="text-bd-text-muted">// Display turn counter and location badge</span>
+const modifier = (text) => {
   let widgets = '';
-  widgets += bdWidget('hp', { type: 'stat', label: 'HP', value: state.status.hp, color: '#22c55e' });
-  widgets += bdWidget('gold', { type: 'stat', label: 'Gold', value: state.status.gold, color: '#fbbf24' });
-  widgets += bdWidget('location', { type: 'badge', text: state.status.location, icon: '📍', color: '#60a5fa' });
-  
+
+  <span class="text-bd-text-muted">// Turn counter (bdWidget creates or updates existing widget)</span>
+  widgets += bdWidget('turn', {
+    type: 'stat',
+    label: 'Turn',
+    value: info.actionCount || 0,
+    color: '#60a5fa',
+    order: 1
+  });
+
+  <span class="text-bd-text-muted">// Location badge</span>
+  widgets += bdWidget('location', {
+    type: 'badge',
+    text: state.location,
+    icon: '📍',
+    color: '#a855f7',
+    variant: 'subtle',
+    order: 2
+  });
+
   return { text: text + widgets };
 };
 modifier(text);</code></pre>
               </div>
             </div>
 
-            <!-- ==================== EXAMPLE 2: RPG Stats System ==================== -->
+            <!-- ==================== EXAMPLE 2: In-Game Time System ==================== -->
             <div class="rounded-xl border border-bd-border-subtle overflow-hidden">
               <!-- Example Header -->
               <div class="px-4 py-3 bg-bd-bg-tertiary border-b border-bd-border-subtle flex items-center gap-3">
-                <Sword class="w-5 h-5 text-bd-indigo flex-shrink-0" />
+                <Clock class="w-5 h-5 text-bd-amber flex-shrink-0" />
                 <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary">RPG Stats System</h3>
-                  <p class="text-xs text-bd-text-muted mt-0.5">HP, MP, experience bars, character panel, and status effects</p>
+                  <h3 class="font-semibold text-bd-text-primary">In-Game Time System</h3>
+                  <p class="text-xs text-bd-text-muted mt-0.5">Day/night cycle, weekday tracking, and time commands (<code class="text-bd-text-secondary">:time</code>, <code class="text-bd-text-secondary">:sleep</code>, <code class="text-bd-text-secondary">:timeskip</code>)</p>
                 </div>
                 <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-bd-amber/20 text-bd-amber">Intermediate</span>
               </div>
@@ -1482,188 +1493,231 @@ modifier(text);</code></pre>
               <!-- Widget Preview -->
               <div class="px-4 py-3 border-b border-bd-border-subtle" style="background: #0d0d1a;">
                 <div class="text-[10px] text-bd-text-muted uppercase tracking-wider mb-2">Widget Preview</div>
-                <div class="flex gap-4">
-                  <!-- Top Bars -->
-                  <div class="flex-1 space-y-1.5">
-                    <div class="flex items-center gap-2">
-                      <span class="text-[10px] text-[#8888aa] w-7">HP</span>
-                      <div class="flex-1 h-2.5 rounded-full bg-[#2a2a3e] overflow-hidden"><div class="h-full rounded-full" style="width:85%;background:#22c55e;"></div></div>
-                      <span class="text-[10px] text-[#8888aa]">85/100</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                      <span class="text-[10px] text-[#8888aa] w-7">MP</span>
-                      <div class="flex-1 h-2.5 rounded-full bg-[#2a2a3e] overflow-hidden"><div class="h-full rounded-full" style="width:70%;background:#3b82f6;"></div></div>
-                      <span class="text-[10px] text-[#8888aa]">35/50</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                      <span class="text-[10px] text-[#8888aa] w-7">EXP</span>
-                      <div class="flex-1 h-2.5 rounded-full bg-[#2a2a3e] overflow-hidden"><div class="h-full rounded-full" style="width:45%;background:#a855f7;"></div></div>
-                    </div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                    <span class="text-[11px] text-[#8888aa]">☀️</span>
+                    <span class="text-[11px] font-semibold" style="color: #fbbf24;">10:30 AM</span>
                   </div>
-                  <!-- Side Panel -->
-                  <div class="hidden sm:block px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e] min-w-[110px]">
-                    <div class="text-[9px] font-semibold text-[#8888aa] uppercase tracking-wider mb-1 pb-0.5 border-b border-[#2a2a3e]">Level 3 Character</div>
-                    <div class="space-y-0.5">
-                      <div class="flex justify-between text-[10px]"><span class="text-[#666]">HP</span><span style="color:#22c55e;">85/100</span></div>
-                      <div class="flex justify-between text-[10px]"><span class="text-[#666]">MP</span><span style="color:#3b82f6;">35/50</span></div>
-                      <div class="flex justify-between text-[10px]"><span class="text-[#666]">Gold</span><span style="color:#fbbf24;">250</span></div>
-                    </div>
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                    <span class="text-[11px] text-[#8888aa]">📅</span>
+                    <span class="text-[11px] font-semibold" style="color: #60a5fa;">Wed D3</span>
                   </div>
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px]" style="background: rgba(244,114,182,0.15); color: #f472b6;">☀️ Morning</span>
                 </div>
               </div>
 
               <!-- Script Tabs -->
               <div class="px-4 py-3 space-y-3 bg-bd-bg-primary">
-                <div class="flex gap-1 border-b border-bd-border-subtle pb-2">
-                  <button @click="exampleTab.rpg = 'library'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.rpg === 'library' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
+                <div class="flex gap-1 flex-wrap border-b border-bd-border-subtle pb-2">
+                  <button @click="exampleTab.time = 'library'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.time === 'library' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
                     <span class="flex items-center gap-1"><Library class="w-3 h-3" /> Library</span>
                   </button>
-                  <button @click="exampleTab.rpg = 'context'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.rpg === 'context' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
-                    <span class="flex items-center gap-1"><ArrowLeft class="w-3 h-3" /> Context Modifier</span>
+                  <button @click="exampleTab.time = 'context'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.time === 'context' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
+                    <span class="flex items-center gap-1"><ArrowLeft class="w-3 h-3" /> Context</span>
                   </button>
-                  <button @click="exampleTab.rpg = 'output'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.rpg === 'output' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
-                    <span class="flex items-center gap-1"><ArrowRight class="w-3 h-3" /> Output Modifier</span>
+                  <button @click="exampleTab.time = 'input'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.time === 'input' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
+                    <span class="flex items-center gap-1"><ArrowDown class="w-3 h-3" /> Input</span>
+                  </button>
+                  <button @click="exampleTab.time = 'output'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.time === 'output' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
+                    <span class="flex items-center gap-1"><ArrowRight class="w-3 h-3" /> Output</span>
                   </button>
                 </div>
 
-                <pre v-if="exampleTab.rpg === 'library'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code><span class="text-bd-text-muted">// Initialize character state</span>
-state.character = state.character ?? {
-  hp: 100, maxHp: 100, mp: 50, maxMp: 50,
-  exp: 0, expToNext: 100, level: 1, gold: 0, status: []
+                <pre v-if="exampleTab.time === 'library'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code><span class="text-bd-text-muted">// Time calculated from info.actionCount (turns).</span>
+<span class="text-bd-text-muted">// Each turn = 2 minutes of in-game time.</span>
+<span class="text-bd-text-muted">// Commands: :time, :timeskip &lt;hours&gt;, :sleep, :settime &lt;hour&gt;</span>
+
+state.time = state.time ?? {
+  offsetMinutes: 0,  <span class="text-bd-text-muted">// Manual time adjustments</span>
+  startHour: 8       <span class="text-bd-text-muted">// Starting hour (8 AM)</span>
 };
 
-<span class="text-bd-text-muted">// BetterScripts helpers</span>
+const MINUTES_PER_TURN = 2;
+const START_MINUTE = state.time.startHour * 60;
+
+<span class="text-bd-text-muted">// BetterScripts protocol helpers</span>
 function bdMessage(msg) { return `[[BD:${JSON.stringify(msg)}:BD]]`; }
 function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
 
-<span class="text-bd-text-muted">// Game logic</span>
-function takeDamage(amount) {
-  state.character.hp = Math.max(0, state.character.hp - amount);
-  return state.character.hp;
+const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+const TIME_PERIODS = [
+  { name: 'Midnight', icon: '🌑', start: 0, end: 4 },
+  { name: 'Dawn', icon: '🌅', start: 4, end: 7 },
+  { name: 'Morning', icon: '☀️', start: 7, end: 12 },
+  { name: 'Afternoon', icon: '🌤️', start: 12, end: 17 },
+  { name: 'Evening', icon: '🌆', start: 17, end: 21 },
+  { name: 'Night', icon: '🌙', start: 21, end: 24 }
+];
+
+<span class="text-bd-text-muted">// Time calculation functions</span>
+function getTotalMinutes() {
+  return START_MINUTE + ((info.actionCount || 0) * MINUTES_PER_TURN) + state.time.offsetMinutes;
+}
+function getHour() { return Math.floor((getTotalMinutes() % (24 * 60)) / 60); }
+function getMinute() { return getTotalMinutes() % 60; }
+function getDay() { return Math.floor(getTotalMinutes() / (24 * 60)) + 1; }
+function getWeekday() { return WEEKDAYS[(getDay() - 1) % 7]; }
+function getTimeString() {
+  const h = getHour(), m = getMinute();
+  return `${h % 12 || 12}:${m.toString().padStart(2, '0')} ${h &lt; 12 ? 'AM' : 'PM'}`;
+}
+function getTimePeriod() {
+  const h = getHour();
+  for (const p of TIME_PERIODS) { if (h >= p.start && h &lt; p.end) return p; }
+  return TIME_PERIODS[0];
 }
 
-function heal(amount) {
-  state.character.hp = Math.min(state.character.maxHp, state.character.hp + amount);
-  return state.character.hp;
+<span class="text-bd-text-muted">// Time manipulation</span>
+function addOffset(min) { state.time.offsetMinutes += min; }
+function setTime(targetHour) {
+  let diff = targetHour - getHour();
+  if (diff &lt; 0) diff += 24;
+  state.time.offsetMinutes += (diff * 60) - getMinute();
+}
+function skipToMorning() { setTime(7); }
+
+function getTimeContext() {
+  const p = getTimePeriod();
+  return `[Time: ${getTimeString()} (${p.name}), ${getWeekday()}, Day ${getDay()}]`;
 }
 
-function addExp(amount) {
-  state.character.exp += amount;
-  while (state.character.exp >= state.character.expToNext) {
-    state.character.exp -= state.character.expToNext;
-    state.character.level++;
-    state.character.expToNext = state.character.level * 100;
-    state.character.maxHp += 10;
-    state.character.maxMp += 5;
-    state.character.hp = state.character.maxHp;
-    state.character.mp = state.character.maxMp;
+<span class="text-bd-text-muted">// Command handler (called from Input Modifier)</span>
+function handleTimeCommand(input) {
+  const lower = input.toLowerCase().trim();
+  if (lower === ':time') {
+    const p = getTimePeriod();
+    return { output: `\n🕐 ${getTimeString()} - ${p.icon} ${p.name}\n📅 ${getWeekday()}, Day ${getDay()}`, isCommand: true };
   }
-}
-
-function addStatus(status) {
-  if (!state.character.status.includes(status)) state.character.status.push(status);
-}
-
-function removeStatus(status) {
-  state.character.status = state.character.status.filter(s => s !== status);
+  const skipMatch = lower.match(/^:timeskip\s+(\d+)$/);
+  if (skipMatch) {
+    const hours = parseInt(skipMatch[1]);
+    addOffset(hours * 60);
+    return { output: `\n⏩ Skipped ${hours}h. Now ${getTimeString()} (${getTimePeriod().name}).`, isCommand: true };
+  }
+  if (lower === ':sleep') {
+    skipToMorning();
+    return { output: `\n😴 You wake refreshed. ${getTimeString()}, ${getWeekday()}, Day ${getDay()}.`, isCommand: true };
+  }
+  const setMatch = lower.match(/^:settime\s+(\d+)$/);
+  if (setMatch) {
+    setTime(parseInt(setMatch[1]) % 24);
+    return { output: `\n🕐 Time set to ${getTimeString()} (${getTimePeriod().name}).`, isCommand: true };
+  }
+  return null;
 }</code></pre>
 
-                <pre v-if="exampleTab.rpg === 'context'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code><span class="text-bd-text-muted">// Strip protocol tags so the AI never sees them</span>
+                <pre v-if="exampleTab.time === 'context'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code><span class="text-bd-text-muted">// Inject time into AI context + strip protocol tags</span>
 const modifier = (text) => {
-  return { text: text.replace(/\[\[BD:[\s\S]*?:BD\]\]/g, '') };
+  text = text.replace(/\[\[BD:[\s\S]*?:BD\]\]/g, '');
+  text = getTimeContext() + '\n' + text;
+  return { text };
 };
 modifier(text);</code></pre>
 
-                <pre v-if="exampleTab.rpg === 'output'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code>const modifier = (text) => {
-  let widgets = '';
-  
-  <span class="text-bd-text-muted">// HP Bar (turns red when low)</span>
-  widgets += bdWidget('hp-bar', {
-    type: 'bar', label: 'HP',
-    value: state.character.hp, max: state.character.maxHp,
-    color: state.character.hp &lt; 30 ? '#ef4444' : '#22c55e', order: 1
-  });
-  
-  <span class="text-bd-text-muted">// MP Bar</span>
-  widgets += bdWidget('mp-bar', {
-    type: 'bar', label: 'MP',
-    value: state.character.mp, max: state.character.maxMp,
-    color: '#3b82f6', order: 2
-  });
-  
-  <span class="text-bd-text-muted">// Experience Bar (no value text)</span>
-  widgets += bdWidget('exp-bar', {
-    type: 'bar', label: 'EXP',
-    value: state.character.exp, max: state.character.expToNext,
-    color: '#a855f7', showValue: false, order: 3
-  });
-  
-  <span class="text-bd-text-muted">// Character Panel (left zone)</span>
-  widgets += bdWidget('char-panel', {
-    type: 'panel', align: 'left',
-    title: `Level ${state.character.level} Character`,
-    items: [
-      { label: 'HP', value: `${state.character.hp}/${state.character.maxHp}`, color: '#22c55e' },
-      { label: 'MP', value: `${state.character.mp}/${state.character.maxMp}`, color: '#3b82f6' },
-      { label: 'EXP', value: `${state.character.exp}/${state.character.expToNext}`, color: '#a855f7' },
-      { label: 'Gold', value: state.character.gold, color: '#fbbf24' }
-    ], order: 1
-  });
-  
-  <span class="text-bd-text-muted">// Status Effects (only if active)</span>
-  if (state.character.status.length > 0) {
-    widgets += bdWidget('status-effects', {
-      type: 'list', align: 'left', title: 'Status Effects',
-      items: state.character.status.map(s => ({ text: s, color: '#f97316' })),
-      order: 2
-    });
+                <pre v-if="exampleTab.time === 'input'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code><span class="text-bd-text-muted">// Detect :time, :timeskip, :sleep, :settime commands</span>
+const modifier = (text) => {
+  const input = text.trim();
+  if (input.startsWith(':time') || input.startsWith(':sleep') || input.startsWith(':settime')) {
+    const result = handleTimeCommand(input);
+    if (result) {
+      state.time.pendingOutput = result.output;
+      state.time.isCommand = true;
+      return { text: '[TIME COMMAND]' };
+    }
   }
-  
-  return { text: text + widgets };
+  return { text };
+};
+modifier(text);</code></pre>
+
+                <pre v-if="exampleTab.time === 'output'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code>const modifier = (text) => {
+  let output = text;
+
+  <span class="text-bd-text-muted">// Check for pending command output</span>
+  if (state.time.isCommand && state.time.pendingOutput) {
+    output = state.time.pendingOutput;
+    state.time.pendingOutput = null;
+    state.time.isCommand = false;
+  }
+
+  <span class="text-bd-text-muted">// Build time widgets</span>
+  const period = getTimePeriod();
+  const isNight = period.name === 'Night' || period.name === 'Midnight';
+  let widgets = '';
+
+  widgets += bdWidget('time-clock', {
+    type: 'stat', label: period.icon,
+    value: getTimeString(),
+    color: isNight ? '#94a3b8' : '#fbbf24', order: 1
+  });
+
+  widgets += bdWidget('day-counter', {
+    type: 'stat', label: '📅',
+    value: getWeekday().substring(0, 3) + ' D' + getDay(),
+    color: '#60a5fa', order: 2
+  });
+
+  widgets += bdWidget('period-badge', {
+    type: 'badge', text: period.name,
+    icon: period.icon,
+    color: isNight ? '#a78bfa' : '#f472b6',
+    variant: 'subtle', order: 3
+  });
+
+  return { text: output + widgets };
 };
 modifier(text);</code></pre>
               </div>
             </div>
 
-            <!-- ==================== EXAMPLE 3: Inventory System ==================== -->
+            <!-- ==================== EXAMPLE 3: Widget Showcase ==================== -->
             <div class="rounded-xl border border-bd-border-subtle overflow-hidden">
               <!-- Example Header -->
               <div class="px-4 py-3 bg-bd-bg-tertiary border-b border-bd-border-subtle flex items-center gap-3">
-                <Package class="w-5 h-5 text-bd-blue flex-shrink-0" />
+                <LayoutDashboard class="w-5 h-5 text-bd-blue flex-shrink-0" />
                 <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary">Inventory System</h3>
-                  <p class="text-xs text-bd-text-muted mt-0.5">Item management with weight tracking and dynamic list</p>
+                  <h3 class="font-semibold text-bd-text-primary">Widget Showcase</h3>
+                  <p class="text-xs text-bd-text-muted mt-0.5">Displays all widget types for visual testing and layout reference</p>
                 </div>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-bd-red/20 text-bd-red">Advanced</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-bd-green/20 text-bd-green">Beginner</span>
               </div>
 
               <!-- Widget Preview -->
               <div class="px-4 py-3 border-b border-bd-border-subtle" style="background: #0d0d1a;">
                 <div class="text-[10px] text-bd-text-muted uppercase tracking-wider mb-2">Widget Preview</div>
                 <div class="flex gap-4">
-                  <!-- Top Widgets -->
+                  <!-- Center widgets -->
                   <div class="flex-1 space-y-1.5">
-                    <div class="flex items-center gap-2">
-                      <span class="text-[10px] text-[#8888aa] w-12">Weight</span>
-                      <div class="flex-1 h-2.5 rounded-full bg-[#2a2a3e] overflow-hidden"><div class="h-full rounded-full" style="width:29%;background:#60a5fa;"></div></div>
-                      <span class="text-[10px] text-[#8888aa]">29/100</span>
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                        <span class="text-[11px] text-[#8888aa]">HP</span>
+                        <span class="text-[11px] font-semibold" style="color: #ef4444;">85/100</span>
+                      </div>
+                      <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                        <span class="text-[11px] text-[#8888aa]">💰</span>
+                        <span class="text-[11px] font-semibold" style="color: #fbbf24;">1,250</span>
+                      </div>
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px]" style="background: rgba(168,85,247,0.15); color: #a855f7;">☠️ Poisoned</span>
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px]" style="background: #3b82f6; color: #fff;">🛡️ Shielded</span>
                     </div>
                     <div class="flex items-center gap-2">
-                      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                        <span class="text-sm">💰</span>
-                        <span class="text-[11px] font-semibold" style="color: #fbbf24;">350</span>
-                        <span class="text-[10px] font-medium" style="color: #22c55e;">+50</span>
-                      </div>
+                      <span class="text-[10px] text-[#8888aa] w-12">Health</span>
+                      <div class="flex-1 h-2.5 rounded-full bg-[#2a2a3e] overflow-hidden"><div class="h-full rounded-full" style="width:85%;background:#22c55e;"></div></div>
+                      <span class="text-[10px] text-[#8888aa]">85/100</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] text-[#8888aa] w-12">XP</span>
+                      <div class="flex-1 h-2.5 rounded-full bg-[#2a2a3e] overflow-hidden"><div class="h-full rounded-full" style="width:75%;background:#06b6d4;"></div></div>
+                      <span class="text-[10px] text-[#8888aa]">750/1000</span>
                     </div>
                   </div>
-                  <!-- Inventory List -->
-                  <div class="hidden sm:block px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e] min-w-[130px]">
-                    <div class="text-[9px] font-semibold text-[#8888aa] uppercase tracking-wider mb-1 pb-0.5 border-b border-[#2a2a3e]">Inventory</div>
+                  <!-- Side panel -->
+                  <div class="hidden sm:block px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e] min-w-[110px]">
+                    <div class="text-[9px] font-semibold text-[#8888aa] uppercase tracking-wider mb-1 pb-0.5 border-b border-[#2a2a3e]">Character</div>
                     <div class="space-y-0.5">
-                      <div class="text-[10px]" style="color:#60a5fa;">🗡️ Iron Sword x1</div>
-                      <div class="text-[10px]" style="color:#60a5fa;">🛡️ Wooden Shield x1</div>
-                      <div class="text-[10px]" style="color:#60a5fa;">🧪 Health Potion x3</div>
-                      <div class="text-[10px]" style="color:#60a5fa;">🎽 Leather Armor x1</div>
+                      <div class="flex justify-between text-[10px]"><span class="text-[#666]">Name</span><span style="color:#f472b6;">Adventurer</span></div>
+                      <div class="flex justify-between text-[10px]"><span class="text-[#666]">Class</span><span style="color:#60a5fa;">Warrior</span></div>
+                      <div class="flex justify-between text-[10px]"><span class="text-[#666]">Level</span><span style="color:#a855f7;">12</span></div>
                     </div>
                   </div>
                 </div>
@@ -1672,113 +1726,82 @@ modifier(text);</code></pre>
               <!-- Script Tabs -->
               <div class="px-4 py-3 space-y-3 bg-bd-bg-primary">
                 <div class="flex gap-1 border-b border-bd-border-subtle pb-2">
-                  <button @click="exampleTab.inventory = 'library'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.inventory === 'library' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
+                  <button @click="exampleTab.showcase = 'library'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.showcase === 'library' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
                     <span class="flex items-center gap-1"><Library class="w-3 h-3" /> Library</span>
                   </button>
-                  <button @click="exampleTab.inventory = 'context'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.inventory === 'context' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
+                  <button @click="exampleTab.showcase = 'context'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.showcase === 'context' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
                     <span class="flex items-center gap-1"><ArrowLeft class="w-3 h-3" /> Context Modifier</span>
                   </button>
-                  <button @click="exampleTab.inventory = 'output'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.inventory === 'output' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
+                  <button @click="exampleTab.showcase = 'output'" class="px-3 py-1 rounded text-xs font-medium transition-colors" :class="exampleTab.showcase === 'output' ? 'bg-bd-accent-primary/20 text-bd-accent-light' : 'text-bd-text-muted hover:text-bd-text-primary'">
                     <span class="flex items-center gap-1"><ArrowRight class="w-3 h-3" /> Output Modifier</span>
                   </button>
                 </div>
 
-                <pre v-if="exampleTab.inventory === 'library'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code><span class="text-bd-text-muted">// Initialize inventory</span>
-state.inventory = state.inventory ?? {
-  items: [], maxWeight: 100, currentWeight: 0, gold: 0
-};
+                <pre v-if="exampleTab.showcase === 'library'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code><span class="text-bd-text-muted">// Creates all widget types for visual testing.</span>
+<span class="text-bd-text-muted">// Uses bdWidget to create or update widgets on subsequent turns.</span>
 
-<span class="text-bd-text-muted">// Item database</span>
-const ITEMS = {
-  'sword':  { name: 'Iron Sword',    weight: 5,  icon: '🗡️', value: 50 },
-  'shield': { name: 'Wooden Shield', weight: 8,  icon: '🛡️', value: 30 },
-  'potion': { name: 'Health Potion', weight: 1,  icon: '🧪', value: 10 },
-  'armor':  { name: 'Leather Armor', weight: 15, icon: '🎽', value: 75 }
-};
-
-<span class="text-bd-text-muted">// BetterScripts helpers</span>
 function bdMessage(msg) { return `[[BD:${JSON.stringify(msg)}:BD]]`; }
-function bdWidget(id, cfg) {
-  return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg });
-}
+function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
+function bdClearAll() { return bdMessage({ type: 'clearAll' }); }</code></pre>
 
-<span class="text-bd-text-muted">// Inventory management</span>
-function addItem(itemId, quantity = 1) {
-  const item = ITEMS[itemId];
-  if (!item) return false;
-  
-  const totalWeight = state.inventory.currentWeight + (item.weight * quantity);
-  if (totalWeight > state.inventory.maxWeight) return false;
-  
-  const existing = state.inventory.items.find(i => i.id === itemId);
-  if (existing) { existing.quantity += quantity; }
-  else { state.inventory.items.push({ id: itemId, quantity }); }
-  
-  state.inventory.currentWeight = totalWeight;
-  return true;
-}
-
-function removeItem(itemId, quantity = 1) {
-  const index = state.inventory.items.findIndex(i => i.id === itemId);
-  if (index === -1) return false;
-  
-  const item = state.inventory.items[index];
-  const itemData = ITEMS[itemId];
-  
-  if (item.quantity &lt;= quantity) {
-    state.inventory.items.splice(index, 1);
-    state.inventory.currentWeight -= itemData.weight * item.quantity;
-  } else {
-    item.quantity -= quantity;
-    state.inventory.currentWeight -= itemData.weight * quantity;
-  }
-  return true;
-}</code></pre>
-
-                <pre v-if="exampleTab.inventory === 'context'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code><span class="text-bd-text-muted">// Strip protocol tags so the AI never sees them</span>
+                <pre v-if="exampleTab.showcase === 'context'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code><span class="text-bd-text-muted">// Strip protocol messages from AI context</span>
 const modifier = (text) => {
   return { text: text.replace(/\[\[BD:[\s\S]*?:BD\]\]/g, '') };
 };
 modifier(text);</code></pre>
 
-                <pre v-if="exampleTab.inventory === 'output'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code>const modifier = (text) => {
-  let widgets = '';
-  
-  <span class="text-bd-text-muted">// Weight bar (turns red when near capacity)</span>
-  widgets += bdWidget('weight', {
-    type: 'bar', label: 'Weight',
-    value: state.inventory.currentWeight,
-    max: state.inventory.maxWeight,
-    color: state.inventory.currentWeight > state.inventory.maxWeight * 0.8
-      ? '#ef4444' : '#60a5fa',
-    order: 1
+                <pre v-if="exampleTab.showcase === 'output'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code>const modifier = (text) => {
+  let w = '';
+
+  <span class="text-bd-text-muted">// Stats</span>
+  w += bdWidget('demo-hp', { type: 'stat', label: 'HP', value: '85/100', color: '#ef4444', order: 1 });
+  w += bdWidget('demo-gold', { type: 'stat', label: '💰', value: '1,250', color: '#fbbf24', order: 2 });
+
+  <span class="text-bd-text-muted">// Bars</span>
+  w += bdWidget('demo-health-bar', { type: 'bar', label: 'Health', value: 85, max: 100, color: '#22c55e', order: 3 });
+  w += bdWidget('demo-xp-bar', { type: 'bar', label: 'XP', value: 750, max: 1000, color: '#06b6d4', order: 4 });
+
+  <span class="text-bd-text-muted">// Badges (all three variants)</span>
+  w += bdWidget('demo-poison', { type: 'badge', text: 'Poisoned', icon: '☠️', color: '#a855f7', variant: 'subtle', order: 5 });
+  w += bdWidget('demo-shield', { type: 'badge', text: 'Shielded', icon: '🛡️', color: '#3b82f6', variant: 'solid', order: 6 });
+  w += bdWidget('demo-fire', { type: 'badge', text: 'Burning', icon: '🔥', color: '#f97316', variant: 'outline', order: 7 });
+
+  <span class="text-bd-text-muted">// Counter with delta</span>
+  w += bdWidget('demo-counter', { type: 'counter', icon: '⚔️', value: 24, delta: 3, color: '#60a5fa', order: 8 });
+
+  <span class="text-bd-text-muted">// Icons with tooltips</span>
+  w += bdWidget('demo-heart', { type: 'icon', icon: '❤️', color: '#ef4444', tooltip: 'Health', order: 9 });
+  w += bdWidget('demo-star', { type: 'icon', icon: '⭐', color: '#fbbf24', tooltip: 'Reputation', order: 10 });
+
+  <span class="text-bd-text-muted">// Character panel (left zone)</span>
+  w += bdWidget('demo-panel', {
+    type: 'panel', title: 'Character', align: 'left',
+    items: [
+      { label: 'Name', value: 'Adventurer', color: '#f472b6' },
+      { label: 'Class', value: 'Warrior', color: '#60a5fa' },
+      { label: 'Level', value: '12', color: '#a855f7' }
+    ], order: 1
   });
-  
-  <span class="text-bd-text-muted">// Gold counter (right zone)</span>
-  widgets += bdWidget('gold', {
-    type: 'counter', icon: '💰',
-    value: state.inventory.gold,
-    color: '#fbbf24', align: 'right', order: 1
+
+  <span class="text-bd-text-muted">// Inventory list (right zone)</span>
+  w += bdWidget('demo-list', {
+    type: 'list', title: 'Inventory', align: 'right',
+    items: [
+      { icon: '🗡️', text: 'Iron Sword', color: '#60a5fa' },
+      { icon: '🧪', text: 'Potion x3', color: '#22c55e' },
+      { icon: '🔑', text: 'Rusty Key', color: '#fbbf24' }
+    ], order: 1
   });
-  
-  <span class="text-bd-text-muted">// Inventory list</span>
-  if (state.inventory.items.length > 0) {
-    const inventoryItems = state.inventory.items.map(item => {
-      const itemData = ITEMS[item.id];
-      return {
-        icon: itemData.icon,
-        text: `${itemData.name} x${item.quantity}`,
-        color: '#60a5fa'
-      };
-    });
-    
-    widgets += bdWidget('inventory', {
-      type: 'list', title: 'Inventory',
-      align: 'right', items: inventoryItems, order: 2
-    });
-  }
-  
-  return { text: text + widgets };
+
+  <span class="text-bd-text-muted">// Text widget (right zone)</span>
+  w += bdWidget('demo-text', {
+    type: 'text',
+    text: '⚡ Quest: Find the Artifact',
+    style: { color: '#fbbf24', fontWeight: '500' },
+    align: 'right', order: 2
+  });
+
+  return { text: text + w };
 };
 modifier(text);</code></pre>
               </div>
@@ -1799,7 +1822,7 @@ import {
   Terminal, Zap, Layout, Settings, LayoutDashboard, Library,
   MessageSquare, Code, Smartphone, Radio, Bug, Star,
   HelpCircle, CheckCircle, ExternalLink,
-  Code2, Sword, Package, Activity, Hash, FileText, Trash2,
+  Code2, Clock, Activity, Hash, FileText, Trash2,
   RefreshCw, Plus, Check, ChevronDown, ChevronUp
 } from 'lucide-vue-next'
 
@@ -1820,9 +1843,9 @@ const guideSections = [
 
 // Example script tab state
 const exampleTab = ref({
-  simple: 'library',
-  rpg: 'library',
-  inventory: 'library'
+  counter: 'library',
+  time: 'library',
+  showcase: 'library'
 })
 
 // Track which guide sections are expanded (all expanded by default)
