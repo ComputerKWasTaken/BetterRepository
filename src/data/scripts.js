@@ -847,7 +847,6 @@ const modifier = (text) => {
     label: 'Turn',
     value: info.actionCount || 0,
     color: '#60a5fa',
-    position: 'top',
     order: 1
   });
 
@@ -858,7 +857,6 @@ const modifier = (text) => {
     icon: '📍',
     color: '#a855f7',
     variant: 'subtle',
-    position: 'top',
     order: 2
   });
 
@@ -1129,28 +1127,25 @@ const modifier = (text) => {
     label: period.icon,
     value: getTimeString(),
     color: isNight ? '#94a3b8' : '#fbbf24',
-    position: 'top',
     order: 1
   });
   
   // Day widget (order: 2) - top bar
-  widgets += bdWidget('time-day', {
+  widgets += bdWidget('day-counter', {
     type: 'stat',
     label: '📅',
     value: getWeekday().substring(0, 3) + ' D' + getDay(),
     color: '#60a5fa',
-    position: 'top',
     order: 2
   });
   
   // Period badge (order: 3) - top bar
-  widgets += bdWidget('time-period', {
+  widgets += bdWidget('period-badge', {
     type: 'badge',
     text: period.name,
     icon: period.icon,
     color: isNight ? '#a78bfa' : '#f472b6',
     variant: 'subtle',
-    position: 'top',
     order: 3
   });
   
@@ -1184,10 +1179,10 @@ modifier(text);`
 //   :ping              - Test connection
 //   :clear             - Remove all widgets
 //   :demo              - Show demo widgets
-//   :stat <id> <label> <val> [color] [order] [position]
-//   :bar <id> <val> <max> [label] [color] [order] [position]
-//   :text <id> <msg> [color] [position]
-//   :panel <id> <title> [position]
+//   :stat <id> <label> <val> [color] [order]
+//   :bar <id> <val> <max> [label] [color] [order]
+//   :text <id> <msg> [color]
+//   :panel <id> <title>
 //   :custom <id> <html>
 //   :update <id> <prop> <val>
 //   :destroy <id>
@@ -1274,28 +1269,26 @@ const COMMANDS = {
   
   stat: {
     desc: 'Create a stat widget',
-    usage: ':stat <id> <label> <value> [color] [order] [position]',
+    usage: ':stat <id> <label> <value> [color] [order]',
     handler: (args) => {
       const id = args[0] || 'test-stat';
       const label = args[1] || 'Test';
       const value = args[2] || '42';
       const color = args[3] || '#60a5fa';
       const order = args[4] ? parseInt(args[4]) : undefined;
-      const position = args[5] || 'top';
       
       const config = {
         type: 'stat',
         label: label,
         value: value,
-        color: color,
-        position: position
+        color: color
       };
       if (order !== undefined) config.order = order;
       
       const widgets = bdWidget(id, config);
       
       return { 
-        output: \`\\n📊 Created stat widget "\${id}": \${label} = \${value} [\${position}]\`, 
+        output: \`\\n📊 Created stat widget "\${id}": \${label} = \${value}\`, 
         widgets 
       };
     }
@@ -1303,7 +1296,7 @@ const COMMANDS = {
   
   bar: {
     desc: 'Create a bar widget',
-    usage: ':bar <id> <value> <max> [label] [color] [order] [position]',
+    usage: ':bar <id> <value> <max> [label] [color] [order]',
     handler: (args) => {
       const id = args[0] || 'test-bar';
       const value = parseInt(args[1]) || 75;
@@ -1311,7 +1304,6 @@ const COMMANDS = {
       const label = args[3] || 'Progress';
       const color = args[4] || '#22c55e';
       const order = args[5] ? parseInt(args[5]) : undefined;
-      const position = args[6] || 'top';
       
       const config = {
         type: 'bar',
@@ -1319,15 +1311,14 @@ const COMMANDS = {
         value: value,
         max: max,
         color: color,
-        showValue: true,
-        position: position
+        showValue: true
       };
       if (order !== undefined) config.order = order;
       
       const widgets = bdWidget(id, config);
       
       return { 
-        output: \`\\n📈 Created bar widget "\${id}": \${label} \${value}/\${max} [\${position}]\`, 
+        output: \`\\n📈 Created bar widget "\${id}": \${label} \${value}/\${max}\`, 
         widgets 
       };
     }
@@ -1335,12 +1326,11 @@ const COMMANDS = {
   
   text: {
     desc: 'Create a text widget',
-    usage: ':text <id> <message> [color] [position]',
+    usage: ':text <id> <message> [color]',
     handler: (args) => {
       const id = args[0] || 'test-text';
       const message = args[1] || 'Hello BetterScripts!';
       const color = args[2] || '#fbbf24';
-      const position = args[3] || 'top';
       
       const widgets = bdWidget(id, {
         type: 'text',
@@ -1348,12 +1338,11 @@ const COMMANDS = {
         style: {
           color: color,
           fontWeight: 'bold'
-        },
-        position: position
+        }
       });
       
       return { 
-        output: \`\\n💬 Created text widget "\${id}": "\${message}" [\${position}]\`, 
+        output: \`\\n💬 Created text widget "\${id}": "\${message}"\`, 
         widgets 
       };
     }
@@ -1377,7 +1366,7 @@ const COMMANDS = {
       });
       
       return { 
-        output: \`\\n📋 Created panel widget "\${id}": "\${title}" [\${position}]\`, 
+        output: \`\\n📋 Created panel widget "\${id}": "\${title}"\`, 
         widgets 
       };
     }
@@ -1646,7 +1635,7 @@ modifier(text);`
     essential: false,
     tags: ['widgets', 'demo', 'showcase', 'betterscripts', 'testing', 'all-widgets'],
     source: 'BetterRepository',
-    description: 'Displays all widget types across all positions for visual testing.',
+    description: 'Displays all widget types for visual testing.',
     purpose: 'Creates one of every widget type using bdWidget. Perfect for testing styles and layouts. See the BetterScripts Guide for full documentation.',
     requiresExtension: 'BetterDungeon',
     files: {
@@ -1665,7 +1654,7 @@ const modifier = (text) => {
 };
 modifier(text);`,
       output: `// ============================================
-// OUTPUT - Create All Widget Types (Multi-Position)
+// OUTPUT - Create All Widget Types
 // ============================================
 // Uses bdWidget to create and update widgets each turn.
 
@@ -1814,26 +1803,26 @@ const modifier = (text) => {
     type: 'bar', label: 'HP',
     value: r.hp, max: r.maxHp,
     color: r.hp < r.maxHp * 0.3 ? '#ef4444' : '#22c55e',
-    position: 'top', order: 1
+    order: 1
   });
 
   widgets += bdWidget('mp', {
     type: 'bar', label: 'MP',
     value: r.mp, max: r.maxMp,
-    color: '#3b82f6', position: 'top', order: 2
+    color: '#3b82f6', order: 2
   });
 
   // ---- Always-visible: Gold & Level ----
   widgets += bdWidget('gold', {
     type: 'counter', icon: '💰',
     value: r.gold, color: '#fbbf24',
-    position: 'top', order: 3
+    order: 3
   });
 
   widgets += bdWidget('level', {
     type: 'stat', label: 'LVL',
     value: r.level, color: '#a855f7',
-    position: 'top', order: 4
+    order: 4
   });
 
   // ---- Combat Mode ----
@@ -1842,13 +1831,13 @@ const modifier = (text) => {
     widgets += bdWidget('combat-badge', {
       type: 'badge', text: '⚔️ In Combat',
       color: '#ef4444', variant: 'solid',
-      position: 'top', order: 5
+      order: 5
     });
 
     widgets += bdWidget('enemy-hp', {
       type: 'bar', label: r.enemy.name,
       value: r.enemy.hp, max: 50,
-      color: '#f97316', position: 'top', order: 6
+      color: '#f97316', order: 6
     });
   } else {
     // bdDestroy removes combat widgets when not fighting
