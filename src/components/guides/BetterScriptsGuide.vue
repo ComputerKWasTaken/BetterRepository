@@ -961,10 +961,13 @@ bdMessage({ type: 'register', scriptId: 'my-rpg',     <span class="text-bd-text-
                 color, background-color, background,<br>
                 font-size, font-weight, font-style, font-family,<br>
                 text-align, text-decoration, text-transform,<br>
-                padding, margin, border, border-radius,<br>
-                width, height, max-width, max-height,<br>
+                padding, padding-top, padding-right, padding-bottom, padding-left,<br>
+                margin, margin-top, margin-right, margin-bottom, margin-left,<br>
+                border, border-radius, border-color, border-width, border-style,<br>
+                width, height, max-width, max-height, min-width, min-height,<br>
                 display, flex, flex-direction, justify-content, align-items, gap,<br>
-                opacity, visibility, overflow, position, top, right, bottom, left
+                opacity, visibility, overflow,<br>
+                position, top, right, bottom, left, z-index
               </div>
             </div>
 
@@ -1314,7 +1317,7 @@ function addGold(amount) {
                   </tr>
                   <tr>
                     <td class="py-3">Widget not updating</td>
-                    <td class="py-3">Use <code class="text-bd-cyan">update</code> action, check widget ID matches exactly, verify state changes</td>
+                    <td class="py-3">Use <code class="text-bd-cyan">bdWidget</code> with the same ID (auto-updates in place), check widget ID matches exactly, verify state changes</td>
                   </tr>
                   <tr>
                     <td class="py-3">Custom HTML stripped</td>
