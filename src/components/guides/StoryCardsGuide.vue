@@ -167,7 +167,7 @@
                   Memory Bank (Automatic)
                 </h3>
                 <ul class="text-xs text-bd-text-secondary space-y-1.5">
-                  <li>• <strong>Zero effort</strong> — auto-stores events every 4 actions</li>
+                  <li>• <strong>Zero effort</strong> - auto-stores events every 4 actions</li>
                   <li>• Uses embedding vectors for relevance matching</li>
                   <li>• Great for organic story events you didn't plan for</li>
                   <li>• May misphrase events (needs periodic review)</li>
@@ -212,10 +212,10 @@
                 <div>
                   <h3 class="font-semibold text-bd-text-primary mb-1">Trigger Timing</h3>
                   <ol class="text-sm text-bd-text-secondary space-y-1 list-decimal list-inside">
-                    <li><strong>Player input:</strong> Triggers immediately — the AI can use the card info in its response.</li>
+                    <li><strong>Player input:</strong> Triggers immediately, so the AI can use the card info in its response.</li>
                     <li><strong>AI output:</strong> Triggers for the <em>next</em> response only. The same output that activates a card cannot use it.</li>
                   </ol>
-                  <p class="text-xs text-bd-text-muted mt-2">The AI does not know Story Cards exist — it only sees Entry text labeled "World Lore:" when a card is active.</p>
+                  <p class="text-xs text-bd-text-muted mt-2">The AI does not know Story Cards exist. It only sees Entry text labeled "World Lore:" when a card is active.</p>
                 </div>
               </div>
             </div>
@@ -428,7 +428,7 @@
                 </div>
                 <div>
                   <h4 class="font-semibold text-bd-text-primary mb-1">Plurals (Usually Free)</h4>
-                  <p class="text-bd-text-secondary"><code>boat</code> → <code>boats</code> ✓ but <code>elf</code> → <code>elves</code> ✗ — add both if irregular.</p>
+                  <p class="text-bd-text-secondary"><code>boat</code> → <code>boats</code> ✓ but <code>elf</code> → <code>elves</code> ✗. Add both if irregular.</p>
                 </div>
                 <div>
                   <h4 class="font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
@@ -597,7 +597,7 @@
                 <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
                   <X class="w-3 h-3" /> Spaces After Commas
                 </h4>
-                <p class="text-xs text-bd-text-secondary"><code>Amanda, daughter</code> — the space becomes part of the trigger.</p>
+                <p class="text-xs text-bd-text-secondary"><code>Amanda, daughter</code> - the space becomes part of the trigger.</p>
                 <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> No spaces after commas: <code>Amanda,your daughter,mandy</code></p>
               </div>
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">

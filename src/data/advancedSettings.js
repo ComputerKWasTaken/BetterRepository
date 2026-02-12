@@ -6,7 +6,7 @@
 // Presence Penalty, and Frequency Penalty.
 //
 // Guide content (setting explanations, tips, etc.) lives in the
-// AdvancedSettingsGuide.vue component — this file only stores reusable data.
+// AdvancedSettingsGuide.vue component, while this file only stores reusable data.
 //
 // PRESET SCHEMA:
 // - id: string           Unique identifier (kebab-case)

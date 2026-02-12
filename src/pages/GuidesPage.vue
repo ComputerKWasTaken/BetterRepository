@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-8">
-    <!-- Page Header — animated hero -->
+    <!-- Page Header with animated hero -->
     <header class="guides-hero relative overflow-hidden rounded-2xl py-12 px-6">
       <!-- Animated background orbs -->
       <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none" aria-hidden="true">
@@ -18,15 +18,15 @@
             <span class="text-gradient">Guides</span>
           </h1>
           <p class="text-bd-text-secondary mt-1 leading-relaxed max-w-lg">
-            Everything you need to master AI Dungeon — from AI instructions to advanced model settings.
+            Everything you need to master AI Dungeon, from AI instructions to advanced model settings.
           </p>
         </div>
       </div>
     </header>
 
-    <!-- Tab Navigation — grouped into Primary and Secondary -->
+    <!-- Tab Navigation grouped into Primary and Secondary -->
     <div class="guides-tab-bar rounded-xl bg-bd-bg-secondary border border-bd-border-subtle p-2">
-      <!-- Primary Guides — core resource guides -->
+      <!-- Primary Guides for core resource guides -->
       <div class="flex flex-wrap gap-1.5">
         <button
           v-for="tab in primaryTabs"
@@ -50,7 +50,7 @@
           <div class="w-px h-5 bg-bd-border-subtle" />
         </div>
 
-        <!-- Secondary Guides — supplemental guides -->
+        <!-- Secondary Guides for supplemental guides -->
         <button
           v-for="tab in secondaryTabs"
           :key="tab.id"
@@ -94,7 +94,7 @@ import {
 const route = useRoute()
 const router = useRouter()
 
-// Primary tabs — core resource guides with colored dot indicators
+// Primary tabs for core resource guides with colored dot indicators
 const primaryTabs = [
   { id: 'ai-instructions', label: 'AI Instructions', icon: ScrollText, dotClass: 'dot--amber', activeClass: 'guide-tab--active-amber' },
   { id: 'plot-components', label: 'Plot Components', icon: Bookmark, dotClass: 'dot--blue', activeClass: 'guide-tab--active-blue' },
@@ -102,7 +102,7 @@ const primaryTabs = [
   { id: 'scripts', label: 'Scripts', icon: Code, dotClass: 'dot--cyan', activeClass: 'guide-tab--active-cyan' },
 ]
 
-// Secondary tabs — supplemental guides
+// Secondary tabs for supplemental guides
 const secondaryTabs = [
   { id: 'betterscripts', label: 'BetterScripts', icon: Terminal },
   { id: 'advanced-settings', label: 'Advanced Settings', icon: Settings },
@@ -236,7 +236,7 @@ watch(() => route.query.tab, (newTab) => {
   opacity: 0.7;
 }
 
-/* === Active primary tab — color-coded backgrounds === */
+/* === Active primary tab with color-coded backgrounds === */
 .guide-tab--active {
   color: var(--bd-text-primary);
   font-weight: 600;
@@ -287,7 +287,7 @@ watch(() => route.query.tab, (newTab) => {
   box-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
 }
 
-/* === Active secondary tab — neutral accent === */
+/* === Active secondary tab with neutral accent === */
 .guide-tab--active-secondary {
   background: var(--bd-bg-tertiary);
   border-color: var(--bd-border-default);
@@ -295,7 +295,7 @@ watch(() => route.query.tab, (newTab) => {
   font-weight: 600;
 }
 
-/* === Secondary tab styling — slightly smaller, subtler === */
+/* === Secondary tab styling that's slightly smaller and subtler === */
 .guide-tab--secondary {
   font-size: 0.8125rem;
   padding: 0.4375rem 0.75rem;

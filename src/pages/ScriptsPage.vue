@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-8">
-    <!-- Page Header — animated hero -->
+    <!-- Page Header with animated hero -->
     <header class="scripts-hero relative overflow-hidden rounded-2xl py-10 px-6">
       <!-- Animated background orbs -->
       <div class="hero-orb hero-orb--cyan" aria-hidden="true" />
@@ -811,7 +811,7 @@ modifier(text);</pre>
                 </h3>
                 <p class="text-sm text-bd-text-secondary mb-2">
                   Previously, when scripts modified Plot Essentials or Author's Note fields, the UI would not 
-                  visually update until the page was reloaded. <strong>This has been fixed</strong> — changes made 
+                  visually update until the page was reloaded. <strong>This has been fixed</strong> and changes made 
                   by scripts now reflect in the UI immediately.
                 </p>
               </div>

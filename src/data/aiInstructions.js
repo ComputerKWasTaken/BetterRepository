@@ -429,11 +429,11 @@ models: ['DeepSeek 3.2', 'Atlas', 'Dynamic Deep'],
     tags: ['offmetagamer', 'omg', 'writing', 'style', 'direction', 'prose'],
     models: ['All Models'],
     description: 'Comprehensive writing style direction by OffMetaGamer covering prose style, description control, and scene focus.',
-    purpose: 'A thorough writing style guide that controls how the AI writes — from figurative language to description density to scene focus. Pairs well with any role/directive set.',
+    purpose: 'A thorough writing style guide that controls how the AI writes from figurative language to description density to scene focus. Pairs well with any role/directive set.',
     content: `- Prioritize plot and dialogue over description. Keep description fresh; avoid describing the same detail or action multiple times
 - Let the tone emerge from the scene. Avoid adding emotion or meaning beyond what characters do or say. Focus on the subtlety over explicitness
-- Not all sentences need flair—only use simile, metaphors, and other figurative comparisons when it improves the reader's understanding. (I.E. describing something not many have experienced, like the taste of a rare berry)
-- Always adjust language to match the scene and the intention of it. Allow for a variety of genres—serious, light-hearted, sentimental, and action-packed if that's what the scene calls for
+- Not all sentences need flair. Only use simile, metaphors, and other figurative comparisons when it improves the reader's understanding. (I.E. describing something not many have experienced, like the taste of a rare berry)
+- Always adjust language to match the scene and the intention of it. Allow for a variety of genres: serious, light-hearted, sentimental, and action-packed if that's what the scene calls for
 - Avoid negative definition, parataxis, hypotaxis, and defamiliarization
 - Avoid partial or preparatory actions
 - Avoid overexplaining simple concepts or actions
@@ -441,7 +441,7 @@ models: ['DeepSeek 3.2', 'Atlas', 'Dynamic Deep'],
 - Avoid contrasting what does happen with what doesn't happen
 - Avoid overstating the importance of things and overexplaining the significance of moments, let small moments of intimacy exist without calling them out
 - Write sentences with varied openings, lengths, punctuation, and structures
-- Use only plain text—no formatting, special characters, or markup
+- Use only plain text, no formatting, special characters, or markup
 - Avoid filtering and narrative distance (for example, phrases like "Fernando's fingers adjusted the halter" should simply be "Fernando adjusted the halter")
 - Ensure all actions, feelings, and sensations are described directly and affirmatively. Define things by what they are, not by what they are not
 - Allow for exploration into deeper topics, even topics that are uncomfortable or ones that can't be wrapped up with a bow
@@ -670,7 +670,7 @@ export const COMPONENTS = [
     models: ['All Models'],
     description: 'Allows the writing to adapt to different scene types.',
     purpose: 'Prevents the AI from maintaining one tone throughout. Serious scenes feel serious; funny moments can be light.',
-    content: `- Always adjust language to match the scene and the intention of it. Allow for a variety of genres—serious, light-hearted, sentimental, and action-packed if that's what the scene calls for`
+    content: `- Always adjust language to match the scene and the intention of it. Allow for a variety of genres: serious, light-hearted, sentimental, and action-packed if that's what the scene calls for`
   },
 
   // ==========================================
@@ -913,7 +913,7 @@ export const COMPONENTS = [
     tags: ['style', 'visual', 'cinematic', 'show-dont-tell'],
     models: ['All Models'],
     combinesWith: ['show-dont-tell', 'no-filtering'],
-    description: 'Narrates like a camera — only what can be seen and heard, no internal narration.',
+    description: 'Narrates like a camera showing only what can be seen and heard, with no internal narration.',
     purpose: 'Emotions are shown through physical cues and behavior, never stated explicitly. Like watching a movie.',
     content: `- Show emotion with physical information; never state emotions explicitly
 - Express emotions through physical cues, dialogue and behavior. Show don't tell: write a movie style story
@@ -1729,7 +1729,7 @@ export const COMPONENTS = [
     description: 'Characters interrupt and talk over each other.',
     purpose: 'Conversations feel natural with overlapping speech and cut-off sentences.',
     content: `- Allow characters to interrupt each other naturally in heated or casual moments
-- Use em-dashes to show cut-off dialogue
+- Use natural interruptions to show cut-off dialogue
 - Not every character waits politely for others to finish speaking`
   },
   {
@@ -2069,7 +2069,7 @@ export const COMPONENTS = [
     models: ['All Models'],
     combinesWith: ['unique-names'],
     description: 'Describes a character\'s appearance when they first appear.',
-    purpose: 'Ensures new characters get a visual introduction — hairstyle, clothing, notable features — so the reader can picture them.',
+    purpose: 'Ensures new characters get a visual introduction including hairstyle, clothing, notable features so the reader can picture them.',
     content: `- When introducing a character in a scene, mention their appearance including hairstyle, clothing, and additional important details`
   },
 
@@ -3967,7 +3967,7 @@ Failure, Challenge, and Consequences
     conflicts: ['nsfw-pacing'],
     description: 'Never skip or summarize sexual content.',
     purpose: 'Show everything explicitly, no time-skips.',
-    content: `- Never fade to black, skip ahead, or summarize sexual content — show everything in explicit detail`
+    content: `- Never fade to black, skip ahead, or summarize sexual content: show everything in explicit detail`
   },
   
   // --- Writing Style & Detail ---
@@ -3987,7 +3987,7 @@ Failure, Challenge, and Consequences
     combinesWith: ['nsfw-enabled', 'nsfw-explicit-anatomy'],
     description: 'Describe bodies and acts in graphic detail.',
     purpose: 'Vivid physical descriptions of anatomy, movement, and sensation.',
-    content: `- Describe bodies and sexual acts in graphic, pornographic detail — anatomy, movement, physical sensations
+    content: `- Describe bodies and sexual acts in graphic, pornographic detail: anatomy, movement, physical sensations
 - Focus on visceral, tangible descriptions that engage the reader`
   },
   {
@@ -4005,7 +4005,7 @@ Failure, Challenge, and Consequences
     combinesWith: ['nsfw-graphic-detail'],
     description: 'Describe sexual anatomy explicitly.',
     purpose: 'Graphic descriptions of bodies and genitals.',
-    content: `- Describe sexual anatomy explicitly and graphically — size, shape, state of arousal
+    content: `- Describe sexual anatomy explicitly and graphically: size, shape, state of arousal
 - Don't shy away from detailed anatomical descriptions`
   },
   {
@@ -4022,7 +4022,7 @@ Failure, Challenge, and Consequences
     models: ['All Models'],
     combinesWith: ['nsfw-graphic-detail'],
     description: 'Engage all senses during intimate scenes.',
-    purpose: 'Touch, taste, smell, sound — not just visuals.',
+    purpose: 'Touch, taste, smell, sound not just visuals.',
     content: `- Engage all senses: the feel of skin, taste, scent, sounds of bodies, visual details
 - Create immersive experiences through multi-sensory descriptions`
   },
@@ -4115,8 +4115,8 @@ Failure, Challenge, and Consequences
     models: ['All Models'],
     combinesWith: ['nsfw-teasing-buildup', 'nsfw-variety-acts'],
     description: 'Keep sexual encounters going longer.',
-    purpose: 'Don\'t rush to climax — vary the scene.',
-    content: `- Never rush sex scenes — include buildup, varied acts, and escalation before climax
+    purpose: 'Don\'t rush to climax and vary the scene.',
+    content: `- Never rush sex scenes: include buildup, varied acts, and escalation before climax
 - Take time to develop intimate encounters fully`
   },
   {
@@ -4151,7 +4151,7 @@ Failure, Challenge, and Consequences
     models: ['All Models'],
     combinesWith: ['nsfw-prolonged-scenes'],
     description: 'Include varied sexual activities.',
-    purpose: 'Don\'t repeat the same act — mix it up.',
+    purpose: 'Don\'t repeat the same act and mix it up.',
     content: `- Include variety: different positions, acts, and escalations throughout the scene
 - Keep scenes dynamic by varying activities and intensities`
   },
@@ -4170,7 +4170,7 @@ Failure, Challenge, and Consequences
     combinesWith: ['nsfw-graphic-detail'],
     description: 'Graphic, drawn-out orgasm descriptions.',
     purpose: 'Make climaxes messy and intense.',
-    content: `- Make orgasms visceral and drawn-out — describe the physical intensity and aftermath
+    content: `- Make orgasms visceral and drawn-out: describe the physical intensity and aftermath
 - Don't rush through climaxes; let them be significant moments`
   },
   {
@@ -4188,7 +4188,7 @@ Failure, Challenge, and Consequences
     combinesWith: ['nsfw-prolonged-scenes'],
     description: 'Characters can continue after climax.',
     purpose: 'One orgasm is not the end.',
-    content: `- Characters can go multiple rounds — climax doesn't end the scene unless the user wants it to
+    content: `- Characters can go multiple rounds: climax doesn't end the scene unless the user wants it to
 - Allow for recovery and continuation when appropriate`
   },
   
@@ -4209,7 +4209,7 @@ Failure, Challenge, and Consequences
     combinesWith: ['nsfw-consent-enthusiastic'],
     description: 'Blend physical and emotional intimacy.',
     purpose: 'Chemistry, desire, meaningful moments.',
-    content: `- Balance physical acts with emotional connection — desire, chemistry, meaningful eye contact, tenderness
+    content: `- Balance physical acts with emotional connection: desire, chemistry, meaningful eye contact, tenderness
 - Show how physical intimacy reflects and deepens emotional bonds`
   },
   {
@@ -4284,7 +4284,7 @@ Failure, Challenge, and Consequences
     combinesWith: ['nsfw-enabled'],
     description: 'Embrace various kinks and fetishes.',
     purpose: 'Don\'t shy away from specific interests.',
-    content: `- Embrace kinks and fetishes without judgment — follow the user's lead on specific interests
+    content: `- Embrace kinks and fetishes without judgment: follow the user's lead on specific interests
 - Explore diverse sexual interests and preferences`
   },
   {
@@ -4450,7 +4450,7 @@ Failure, Challenge, and Consequences
     conflicts: ['nsfw-praise'],
     description: 'Humiliation and degrading treatment.',
     purpose: 'Slut, whore, used, objectified.',
-    content: `- Use degrading language: slut, whore, fuck toy — being used, objectified, humiliated
+    content: `- Use degrading language: slut, whore, fuck toy, being used, objectified, humiliated
 - Emphasize power imbalance and objectification`
   },
   {

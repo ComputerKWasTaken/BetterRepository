@@ -46,7 +46,7 @@
             <p class="text-bd-text-secondary">
               <strong>BetterScripts</strong> is a feature of the <strong>BetterDungeon</strong> browser extension that 
               enables AI Dungeon scripts to create <strong>dynamic UI widgets</strong> for displaying game state, 
-              statistics, progress bars, and custom content—delivering rich visual feedback that surpasses the 
+              statistics, progress bars, and custom content, delivering rich visual feedback that surpasses the 
               limitations of vanilla implementations.
             </p>
 
@@ -535,19 +535,19 @@ function bdClearAll() {
                 <div>
                   <h4 class="text-sm font-medium text-bd-text-primary mb-2">Display Text</h4>
                   <ul class="text-xs text-bd-text-secondary space-y-1">
-                    <li><code class="text-bd-cyan">label</code> — Widget label (stat, bar, badge, divider)</li>
-                    <li><code class="text-bd-cyan">value</code> — Display value (stat, bar, counter, panel items)</li>
-                    <li><code class="text-bd-cyan">text</code> — Text content (text, badge)</li>
-                    <li><code class="text-bd-cyan">title</code> — Container title (panel, list)</li>
+                    <li><code class="text-bd-cyan">label</code> - Widget label (stat, bar, badge, divider)</li>
+                    <li><code class="text-bd-cyan">value</code> - Display value (stat, bar, counter, panel items)</li>
+                    <li><code class="text-bd-cyan">text</code> - Text content (text, badge)</li>
+                    <li><code class="text-bd-cyan">title</code> - Container title (panel, list)</li>
                   </ul>
                 </div>
                 <div>
                   <h4 class="text-sm font-medium text-bd-text-primary mb-2">Visual Elements</h4>
                   <ul class="text-xs text-bd-text-secondary space-y-1">
-                    <li><code class="text-bd-cyan">icon</code> — Emoji/icon (badge, list items, icon, counter)</li>
-                    <li><code class="text-bd-cyan">items</code> — Array of items (panel, list)</li>
-                    <li><code class="text-bd-cyan">html</code> — Custom HTML (custom widget)</li>
-                    <li><code class="text-bd-cyan">style</code> — CSS styles (text, custom)</li>
+                    <li><code class="text-bd-cyan">icon</code> - Emoji/icon (badge, list items, icon, counter)</li>
+                    <li><code class="text-bd-cyan">items</code> - Array of items (panel, list)</li>
+                    <li><code class="text-bd-cyan">html</code> - Custom HTML (custom widget)</li>
+                    <li><code class="text-bd-cyan">style</code> - CSS styles (text, custom)</li>
                   </ul>
                 </div>
               </div>
@@ -560,9 +560,9 @@ function bdClearAll() {
                 <div>
                   <h4 class="text-sm font-medium text-bd-text-primary mb-2">Progress Control</h4>
                   <ul class="text-xs text-bd-text-secondary space-y-1">
-                    <li><code class="text-bd-cyan">value</code> — Current value (number)</li>
-                    <li><code class="text-bd-cyan">max</code> — Maximum value (number, default: 100)</li>
-                    <li><code class="text-bd-cyan">showValue</code> — Show value text (boolean, default: true)</li>
+                    <li><code class="text-bd-cyan">value</code> - Current value (number)</li>
+                    <li><code class="text-bd-cyan">max</code> - Maximum value (number, default: 100)</li>
+                    <li><code class="text-bd-cyan">showValue</code> - Show value text (boolean, default: true)</li>
                   </ul>
                 </div>
                 <div>
@@ -587,9 +587,9 @@ function bdClearAll() {
                 <div>
                   <h4 class="text-sm font-medium text-bd-text-primary mb-2">Style Variants</h4>
                   <ul class="text-xs text-bd-text-secondary space-y-1">
-                    <li><code class="text-bd-cyan">variant</code> — Badge style: <code class="text-bd-green">subtle</code> (default), <code class="text-bd-blue">solid</code>, <code class="text-bd-purple">outline</code></li>
-                    <li><code class="text-bd-cyan">text</code> — Badge text content</li>
-                    <li><code class="text-bd-cyan">icon</code> — Optional emoji/icon prefix</li>
+                    <li><code class="text-bd-cyan">variant</code> - Badge style: <code class="text-bd-green">subtle</code> (default), <code class="text-bd-blue">solid</code>, <code class="text-bd-purple">outline</code></li>
+                    <li><code class="text-bd-cyan">text</code> - Badge text content</li>
+                    <li><code class="text-bd-cyan">icon</code> - Optional emoji/icon prefix</li>
                   </ul>
                 </div>
                 <div>
@@ -953,7 +953,7 @@ function bdClearAll() {
                     <MessageSquare class="w-3.5 h-3.5 text-bd-purple" />
                     <code class="text-sm font-semibold text-bd-purple">bdMessage(payload)</code>
                   </div>
-                  <p class="text-xs text-bd-text-secondary">Low-level helper — sends any raw protocol message. The other helpers are built on top of this. Use it for pings, registration, or custom message types.</p>
+                  <p class="text-xs text-bd-text-secondary">Low-level helper that sends any raw protocol message. The other helpers are built on top of this. Use it for pings, registration, or custom message types.</p>
                   <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-primary">bdMessage({ type: 'ping', data: 'hello' });           <span class="text-bd-text-muted">// test connectivity</span>
 bdMessage({ type: 'register', scriptId: 'my-rpg',     <span class="text-bd-text-muted">// announce your script</span>
             scriptName: 'My RPG', version: '1.0' });</pre>
@@ -962,7 +962,7 @@ bdMessage({ type: 'register', scriptId: 'my-rpg',     <span class="text-bd-text-
 
               <div class="mt-3 p-2 rounded bg-bd-emerald/10 border border-bd-emerald/30">
                 <p class="text-xs text-bd-text-muted">
-                  <strong class="text-bd-text-primary">Tip:</strong> Prefer <code class="text-bd-blue">bdUpdate</code> over <code class="text-bd-green">bdWidget</code> for value changes — it merges into the existing config instead of replacing it entirely.
+                  <strong class="text-bd-text-primary">Tip:</strong> Prefer <code class="text-bd-blue">bdUpdate</code> over <code class="text-bd-green">bdWidget</code> for value changes since it merges into the existing config instead of replacing it entirely.
                 </p>
               </div>
             </div>
@@ -1253,11 +1253,11 @@ window.betterScripts.debug = false;</pre>
                   Essential Practices
                 </h3>
                 <ul class="text-sm text-bd-text-secondary space-y-2">
-                  <li><strong>Always strip context</strong> — Use Context Modifier to remove <code class="text-bd-green">[[BD:...:BD]]</code> tags</li>
-                  <li><strong>Use unique IDs</strong> — Prefix with script name: <code class="text-bd-cyan">myscript_hp</code>, <code class="text-bd-cyan">myscript_gold</code></li>
-                  <li><strong>Initialize state safely</strong> — <code class="text-bd-purple">state.x = state.x ?? defaultValue</code></li>
-                  <li><strong>Prefer update action</strong> — For value changes, preserves existing config</li>
-                  <li><strong>Focus on top position</strong> — Mobile players can't see sidebars</li>
+                  <li><strong>Always strip context</strong> - Use Context Modifier to remove <code class="text-bd-green">[[BD:...:BD]]</code> tags</li>
+                  <li><strong>Use unique IDs</strong> - Prefix with script name: <code class="text-bd-cyan">myscript_hp</code>, <code class="text-bd-cyan">myscript_gold</code></li>
+                  <li><strong>Initialize state safely</strong> - <code class="text-bd-purple">state.x = state.x ?? defaultValue</code></li>
+                  <li><strong>Prefer update action</strong> - For value changes, preserves existing config</li>
+                  <li><strong>Focus on top position</strong> - Mobile players can't see sidebars</li>
                 </ul>
               </div>
 
@@ -1267,11 +1267,11 @@ window.betterScripts.debug = false;</pre>
                   Common Pitfalls
                 </h3>
                 <ul class="text-sm text-bd-text-secondary space-y-2">
-                  <li><strong>Forgetting context modifier</strong> — AI will repeat protocol tags</li>
-                  <li><strong>Widget ID conflicts</strong> — Use prefixes to avoid clashes</li>
-                  <li><strong>Overusing custom HTML</strong> — Built-in widgets are often better</li>
-                  <li><strong>Ignoring mobile layout</strong> — Sidebars hidden on small screens</li>
-                  <li><strong>Not handling errors</strong> — Check console for widget errors</li>
+                  <li><strong>Forgetting context modifier</strong> - AI will repeat protocol tags</li>
+                  <li><strong>Widget ID conflicts</strong> - Use prefixes to avoid clashes</li>
+                  <li><strong>Overusing custom HTML</strong> - Built-in widgets are often better</li>
+                  <li><strong>Ignoring mobile layout</strong> - Sidebars hidden on small screens</li>
+                  <li><strong>Not handling errors</strong> - Check console for widget errors</li>
                 </ul>
               </div>
             </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-8">
-    <!-- Page Header — animated hero -->
+    <!-- Page Header with animated hero -->
     <header class="sc-hero relative overflow-hidden rounded-2xl py-10 px-6">
       <!-- Animated background orbs -->
       <div class="hero-orb hero-orb--purple" aria-hidden="true" />
@@ -205,7 +205,7 @@
                   Memory Bank (Automatic)
                 </h3>
                 <ul class="text-xs text-bd-text-secondary space-y-1.5">
-                  <li>• <strong>Zero effort</strong> — auto-stores events every 4 actions</li>
+                  <li>• <strong>Zero effort</strong> - auto-stores events every 4 actions</li>
                   <li>• Uses embedding vectors for relevance matching</li>
                   <li>• Great for organic story events you didn't plan for</li>
                   <li>• May misphrase events (needs periodic review)</li>

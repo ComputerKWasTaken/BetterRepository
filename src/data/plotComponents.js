@@ -644,7 +644,7 @@ Growing toward: [Intended development]
 - Use vulgar, degrading language freely
 - Include rough, aggressive physical elements
 - Describe every act in pornographic detail
-- Nothing is too filthy — push boundaries`
+- Nothing is too filthy, push all boundaries`
   },
   {
     id: 'nsfw-partner-profile',

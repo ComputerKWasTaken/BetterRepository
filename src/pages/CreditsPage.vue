@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-8">
-    <!-- Page Header — animated hero -->
+    <!-- Page Header with animated hero -->
     <header class="credits-hero relative overflow-hidden rounded-2xl text-center py-12 px-6">
       <!-- Animated background orbs -->
       <div class="hero-orb hero-orb--orange" aria-hidden="true" />

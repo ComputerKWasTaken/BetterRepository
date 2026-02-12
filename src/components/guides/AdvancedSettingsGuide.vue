@@ -122,12 +122,12 @@
             What's Included in Context
           </h3>
           <div class="grid md:grid-cols-2 gap-2 text-xs text-bd-text-secondary">
-            <div>• <strong>Memory</strong> — persistent info you've set</div>
-            <div>• <strong>Triggered Story Cards</strong> — active card entries</div>
-            <div>• <strong>Author's Note</strong> — scene-level guidance</div>
-            <div>• <strong>Model Instructions</strong> — AI behavior rules</div>
-            <div>• <strong>Most recent input</strong> — your last action</div>
-            <div>• <strong>Adventure text</strong> — fills remaining space</div>
+            <div>• <strong>Memory</strong> - persistent info you've set</div>
+            <div>• <strong>Triggered Story Cards</strong> - active card entries</div>
+            <div>• <strong>Author's Note</strong> - scene-level guidance</div>
+            <div>• <strong>Model Instructions</strong> - AI behavior rules</div>
+            <div>• <strong>Most recent input</strong> - your last action</div>
+            <div>• <strong>Adventure text</strong> - fills remaining space</div>
           </div>
         </div>
 
@@ -187,7 +187,7 @@
 
         <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
           <p class="text-xs text-bd-text-secondary">
-            <strong>Tip:</strong> Do whatever fits your play style! There's no wrong answer here — it's about how you like to experience your Adventure.
+            <strong>Tip:</strong> Do whatever fits your play style! There's no wrong answer here - it's about how you like to experience your Adventure.
           </p>
         </div>
       </div>
@@ -328,7 +328,7 @@
         <div class="grid md:grid-cols-2 gap-3">
           <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
             <h4 class="text-xs font-semibold text-bd-pink mb-1">Too Low</h4>
-            <p class="text-xs text-bd-text-secondary">AI outputs may be <strong>repetitive and uninteresting</strong> — too few options to choose from.</p>
+            <p class="text-xs text-bd-text-secondary">AI outputs may be <strong>repetitive and uninteresting</strong> because there are too few options to choose from.</p>
           </div>
           <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
             <h4 class="text-xs font-semibold text-bd-pink mb-1">Too High</h4>
@@ -341,7 +341,7 @@
             <Lightbulb class="w-3 h-3" /> Recommendation
           </h4>
           <p class="text-xs text-bd-text-secondary">
-            A Top-P of <strong>0.90 to 0.95</strong> is probably best for most players. Adjust inversely with Top-K — if you have a high Top-K, opt for a lower Top-P, and vice versa.
+            A Top-P of <strong>0.90 to 0.95</strong> is probably best for most players. Adjust inversely with Top-K: if you have a high Top-K, opt for a lower Top-P, and vice versa.
           </p>
         </div>
       </div>
@@ -383,7 +383,7 @@
               When It Hurts
             </h3>
             <p class="text-xs text-bd-text-secondary">
-              Pushing this too high can <strong>cause more repetition</strong>, not less. If all words are penalized equally, the relative probabilities stay the same — nothing changes.
+              Pushing this too high can <strong>cause more repetition</strong>, not less. If all words are penalized equally, the relative probabilities stay the same, so nothing changes.
             </p>
           </div>
         </div>
@@ -407,7 +407,7 @@
     <Transition name="slide">
       <div v-if="isGuideSectionExpanded('frequency-penalty')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          Frequency Penalty is like Presence Penalty, but <strong>cumulative</strong> — the more a word has been used, the more it gets penalized in the next response.
+          Frequency Penalty is like Presence Penalty, but <strong>cumulative</strong>: the more a word has been used, the more it gets penalized in the next response.
         </p>
 
         <div class="p-4 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
@@ -427,7 +427,7 @@
             <Lightbulb class="w-3 h-3" /> Recommendation
           </h4>
           <p class="text-xs text-bd-text-secondary">
-            Defaults to <strong>zero</strong>. Keep it low — the AI will start trending towards strange outputs if you push it much past <strong>1</strong>.
+            Defaults to <strong>zero</strong>. Keep it low because the AI will start trending towards strange outputs if you push it much past <strong>1</strong>.
           </p>
         </div>
       </div>
@@ -559,7 +559,7 @@
           <div class="flex items-start gap-2">
             <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
             <p class="text-xs text-bd-text-secondary">
-              These are <strong>starting points</strong>, not gospel. Every story is different — use these as a baseline and tweak based on what you're seeing in your Adventure.
+              These are <strong>starting points</strong>, not gospel. Every story is different, so use these as a baseline and tweak based on what you're seeing in your Adventure.
             </p>
           </div>
         </div>
@@ -583,7 +583,7 @@
     <Transition name="slide">
       <div v-if="isGuideSectionExpanded('tips')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          There are <strong>no rules</strong> for these settings. The best way to learn is to experiment — and there's no penalty for doing so.
+          There are <strong>no rules</strong> for these settings. The best way to learn is to experiment, and there's no penalty for doing so.
         </p>
 
         <div class="grid md:grid-cols-2 gap-3">
@@ -603,7 +603,7 @@
             <h4 class="text-xs font-semibold text-bd-text-primary mb-2 flex items-center gap-1">
               <Layers class="w-3 h-3 text-bd-purple" /> K + P Are a Team
             </h4>
-            <p class="text-xs text-bd-text-secondary">Top-K and Top-P work together — adjust them in tandem for best results. High K + low P, or low K + high P.</p>
+            <p class="text-xs text-bd-text-secondary">Top-K and Top-P work together, so adjust them in tandem for best results. High K + low P, or low K + high P.</p>
           </div>
           <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h4 class="text-xs font-semibold text-bd-text-primary mb-2 flex items-center gap-1">
@@ -615,7 +615,7 @@
 
         <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
           <p class="text-xs text-bd-text-secondary">
-            Sure, the AI responses may get weird and wacky, but <strong>that's part of the fun</strong> of playing AI Dungeon! Nudge settings around based on what you think you'd personally prefer — you might like it better, or you might go back.
+            Sure, the AI responses may get weird and wacky, but <strong>that's part of the fun</strong> of playing AI Dungeon! Nudge settings around based on what you think you'd personally prefer. You might like it better, or you might go back.
           </p>
         </div>
 

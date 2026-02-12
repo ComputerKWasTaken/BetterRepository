@@ -2,7 +2,7 @@
 // BetterRepository - Contributors Data
 // =============================================================================
 // Single source of truth for all contributor accreditation across the site.
-// Add new contributors here — every page will automatically reflect changes.
+// Add new contributors here and every page will automatically reflect changes.
 // =============================================================================
 
 // -----------------------------------------------------------------------------
