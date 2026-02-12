@@ -847,6 +847,7 @@ const modifier = (text) => {
     label: 'Turn',
     value: info.actionCount || 0,
     color: '#60a5fa',
+    align: 'left',
     order: 1
   });
 
@@ -857,7 +858,8 @@ const modifier = (text) => {
     icon: '📍',
     color: '#a855f7',
     variant: 'subtle',
-    order: 2
+    align: 'right',
+    order: 1
   });
 
   return { text: text + widgets };
@@ -1127,26 +1129,29 @@ const modifier = (text) => {
     label: period.icon,
     value: getTimeString(),
     color: isNight ? '#94a3b8' : '#fbbf24',
+    align: 'left',
     order: 1
   });
   
-  // Day widget (order: 2) - top bar
+  // Day widget (order: 2) - left zone
   widgets += bdWidget('day-counter', {
     type: 'stat',
     label: '📅',
     value: getWeekday().substring(0, 3) + ' D' + getDay(),
     color: '#60a5fa',
+    align: 'left',
     order: 2
   });
   
-  // Period badge (order: 3) - top bar
+  // Period badge - right zone
   widgets += bdWidget('period-badge', {
     type: 'badge',
     text: period.name,
     icon: period.icon,
     color: isNight ? '#a78bfa' : '#f472b6',
     variant: 'subtle',
-    order: 3
+    align: 'right',
+    order: 1
   });
   
   return { text: output + widgets };
@@ -1281,7 +1286,8 @@ const COMMANDS = {
         type: 'stat',
         label: label,
         value: value,
-        color: color
+        color: color,
+        align: 'center'
       };
       if (order !== undefined) config.order = order;
       
@@ -1311,7 +1317,8 @@ const COMMANDS = {
         value: value,
         max: max,
         color: color,
-        showValue: true
+        showValue: true,
+        align: 'center'
       };
       if (order !== undefined) config.order = order;
       
@@ -1338,7 +1345,8 @@ const COMMANDS = {
         style: {
           color: color,
           fontWeight: 'bold'
-        }
+        },
+        align: 'center'
       });
       
       return { 
@@ -1362,7 +1370,8 @@ const COMMANDS = {
           { label: 'Item 1', value: 'Value A', color: '#60a5fa' },
           { label: 'Item 2', value: 'Value B', color: '#22c55e' },
           { label: 'Item 3', value: 'Value C', color: '#fbbf24' }
-        ]
+        ],
+        align: 'center'
       });
       
       return { 
@@ -1381,7 +1390,8 @@ const COMMANDS = {
       
       const widgets = bdWidget(id, {
         type: 'custom',
-        html: html
+        html: html,
+        align: 'center'
       });
       
       return { 
@@ -1449,6 +1459,7 @@ const COMMANDS = {
         max: 100,
         color: '#ef4444',
         showValue: true,
+        align: 'center',
         order: 1
       });
       
@@ -1460,6 +1471,7 @@ const COMMANDS = {
         max: 80,
         color: '#3b82f6',
         showValue: true,
+        align: 'center',
         order: 2
       });
       
@@ -1469,6 +1481,7 @@ const COMMANDS = {
         label: 'Gold',
         value: '1,250',
         color: '#fbbf24',
+        align: 'right',
         order: 3
       });
       
@@ -1477,6 +1490,7 @@ const COMMANDS = {
         type: 'text',
         text: '⚔️ In Combat',
         style: { color: '#f472b6', fontWeight: 'bold' },
+        align: 'center',
         order: 4
       });
       
@@ -1489,6 +1503,7 @@ const COMMANDS = {
           { label: 'Class', value: 'Warrior', color: '#60a5fa' },
           { label: 'XP', value: '4,500/5,000', color: '#22c55e' }
         ],
+        align: 'left',
         order: 5
       });
       
@@ -1511,7 +1526,8 @@ const COMMANDS = {
           type: 'stat',
           label: 'Widget ' + i,
           value: Math.floor(Math.random() * 100),
-          color: \`hsl(\${(i * 360 / count)}, 70%, 60%)\`
+          color: \`hsl(\${(i * 360 / count)}, 70%, 60%)\`,
+          align: 'center'
         });
       }
       
@@ -1617,6 +1633,7 @@ const modifier = (text) => {
     label: 'Turn',
     value: info.actionCount || 0,
     color: '#94a3b8',
+    align: 'left',
     order: 0
   });
   
@@ -1664,28 +1681,28 @@ const modifier = (text) => {
   // ========== Status Bar ==========
   
   // Stats
-  w += bdWidget('demo-hp', { type: 'stat', label: 'HP', value: '85/100', color: '#ef4444', order: 1 });
-  w += bdWidget('demo-mp', { type: 'stat', label: 'MP', value: '42/60', color: '#3b82f6', order: 2 });
-  w += bdWidget('demo-gold', { type: 'stat', label: '💰', value: '1,250', color: '#fbbf24', order: 3 });
+  w += bdWidget('demo-hp', { type: 'stat', label: 'HP', value: '85/100', color: '#ef4444', align: 'center', order: 1 });
+  w += bdWidget('demo-mp', { type: 'stat', label: 'MP', value: '42/60', color: '#3b82f6', align: 'center', order: 2 });
+  w += bdWidget('demo-gold', { type: 'stat', label: '💰', value: '1,250', color: '#fbbf24', align: 'center', order: 3 });
   
   // Bars
-  w += bdWidget('demo-health-bar', { type: 'bar', label: 'Health', value: 85, max: 100, color: '#22c55e', order: 4 });
-  w += bdWidget('demo-mana-bar', { type: 'bar', label: 'Mana', value: 42, max: 60, color: '#8b5cf6', order: 5 });
-  w += bdWidget('demo-xp-bar', { type: 'bar', label: 'XP', value: 750, max: 1000, color: '#06b6d4', order: 6 });
+  w += bdWidget('demo-health-bar', { type: 'bar', label: 'Health', value: 85, max: 100, color: '#22c55e', align: 'center', order: 4 });
+  w += bdWidget('demo-mana-bar', { type: 'bar', label: 'Mana', value: 42, max: 60, color: '#8b5cf6', align: 'center', order: 5 });
+  w += bdWidget('demo-xp-bar', { type: 'bar', label: 'XP', value: 750, max: 1000, color: '#06b6d4', align: 'center', order: 6 });
   
   // Badges (all three variants)
-  w += bdWidget('demo-badge-poison', { type: 'badge', text: 'Poisoned', icon: '☠️', color: '#a855f7', variant: 'subtle', order: 7 });
-  w += bdWidget('demo-badge-shield', { type: 'badge', text: 'Shielded', icon: '🛡️', color: '#3b82f6', variant: 'solid', order: 8 });
-  w += bdWidget('demo-badge-fire', { type: 'badge', text: 'Burning', icon: '🔥', color: '#f97316', variant: 'outline', order: 9 });
+  w += bdWidget('demo-badge-poison', { type: 'badge', text: 'Poisoned', icon: '☠️', color: '#a855f7', variant: 'subtle', align: 'center', order: 7 });
+  w += bdWidget('demo-badge-shield', { type: 'badge', text: 'Shielded', icon: '🛡️', color: '#3b82f6', variant: 'solid', align: 'center', order: 8 });
+  w += bdWidget('demo-badge-fire', { type: 'badge', text: 'Burning', icon: '🔥', color: '#f97316', variant: 'outline', align: 'center', order: 9 });
   
   // Counters (positive and negative delta)
-  w += bdWidget('demo-counter-up', { type: 'counter', icon: '⚔️', value: 24, delta: 3, color: '#60a5fa', order: 10 });
-  w += bdWidget('demo-counter-down', { type: 'counter', icon: '💔', value: 12, delta: -5, color: '#f472b6', order: 11 });
+  w += bdWidget('demo-counter-up', { type: 'counter', icon: '⚔️', value: 24, delta: 3, color: '#60a5fa', align: 'center', order: 10 });
+  w += bdWidget('demo-counter-down', { type: 'counter', icon: '💔', value: 12, delta: -5, color: '#f472b6', align: 'center', order: 11 });
   
   // Icons with tooltips
-  w += bdWidget('demo-icon-heart', { type: 'icon', icon: '❤️', color: '#ef4444', tooltip: 'Health', order: 12 });
-  w += bdWidget('demo-icon-star', { type: 'icon', icon: '⭐', color: '#fbbf24', tooltip: 'Reputation', order: 13 });
-  w += bdWidget('demo-icon-moon', { type: 'icon', icon: '🌙', color: '#94a3b8', tooltip: 'Night', order: 14 });
+  w += bdWidget('demo-icon-heart', { type: 'icon', icon: '❤️', color: '#ef4444', tooltip: 'Health', align: 'center', order: 12 });
+  w += bdWidget('demo-icon-star', { type: 'icon', icon: '⭐', color: '#fbbf24', tooltip: 'Reputation', align: 'center', order: 13 });
+  w += bdWidget('demo-icon-moon', { type: 'icon', icon: '🌙', color: '#94a3b8', tooltip: 'Night', align: 'center', order: 14 });
   
   // ========== Character Info ==========
   

@@ -196,11 +196,13 @@ function bdClearAll() {
   <span class="text-bd-purple">let</span> widgets = <span class="text-bd-green">''</span>;
   widgets += bdWidget(<span class="text-bd-green">'hp-bar'</span>, { 
     type: <span class="text-bd-green">'bar'</span>, label: <span class="text-bd-green">'HP'</span>, 
-    value: state.game.hp, max: 100, color: <span class="text-bd-green">'#22c55e'</span> 
+    value: state.game.hp, max: 100, color: <span class="text-bd-green">'#22c55e'</span>,
+    align: <span class="text-bd-green">'left'</span>, order: 1
   });
   widgets += bdWidget(<span class="text-bd-green">'gold'</span>, { 
     type: <span class="text-bd-green">'stat'</span>, label: <span class="text-bd-green">'Gold'</span>, 
-    value: state.game.gold, color: <span class="text-bd-green">'#fbbf24'</span> 
+    value: state.game.gold, color: <span class="text-bd-green">'#fbbf24'</span>,
+    align: <span class="text-bd-green">'right'</span>, order: 1
   });
   
   <span class="text-bd-purple">return</span> { text: text + widgets };
@@ -551,6 +553,7 @@ function bdClearAll() {
   max: 1000,
   color: '#60a5fa',
   showValue: true,
+  align: 'center',
   order: 2
 }</pre>
                 </div>
@@ -576,7 +579,8 @@ function bdClearAll() {
   text: 'Buffed',
   icon: '⚡',
   color: '#fbbf24',
-  variant: 'solid'
+  variant: 'solid',
+  align: 'center'
 }</pre>
                 </div>
               </div>
@@ -670,7 +674,8 @@ function bdClearAll() {
                 </p>
                 <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary">bdWidget('hp', { 
   type: 'bar', label: 'HP',
-  value: 85, order: 1
+  value: 85, align: 'center',
+  order: 1
 });</pre>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
@@ -738,7 +743,8 @@ function bdClearAll() {
   config: { 
     type: 'bar', 
     label: 'HP', 
-    value: 85 
+    value: 85,
+    align: 'center'
   } 
 }</pre>
                   <p class="text-xs text-bd-text-muted">Creates a new widget or updates existing widget in place.</p>
@@ -844,7 +850,7 @@ function bdClearAll() {
                     <code class="text-sm font-semibold text-bd-green">bdWidget(id, config)</code>
                   </div>
                   <p class="text-xs text-bd-text-secondary">Create or update a widget. If the widget already exists, updates it in place.</p>
-                  <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-primary">bdWidget('hp-bar', { type: 'bar', label: 'HP', value: 85, max: 100 });</pre>
+                  <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-primary">bdWidget('hp-bar', { type: 'bar', label: 'HP', value: 85, max: 100, align: 'center' });</pre>
                 </div>
 
                 <!-- bdDestroy -->
@@ -1008,7 +1014,8 @@ bdMessage({ type: 'register', scriptId: 'my-rpg',     <span class="text-bd-text-
         '<span style="color: #ef4444;">❤️</span>' +
         '<span style="font-weight: bold;">Health:</span>' +
         '<span style="color: #22c55e;">100/100</span>' +
-        '</div>'
+        '</div>',
+  align: 'center'
 });</pre>
                 </div>
 
@@ -1020,7 +1027,8 @@ bdMessage({ type: 'register', scriptId: 'my-rpg',     <span class="text-bd-text-
         '<tr><td style="padding: 2px 4px;">STR:</td><td style="color: #60a5fa;">18</td></tr>' +
         '<tr><td style="padding: 2px 4px;">DEX:</td><td style="color: #22c55e;">14</td></tr>' +
         '<tr><td style="padding: 2px 4px;">INT:</td><td style="color: #a855f7;">16</td></tr>' +
-        '</table>'
+        '</table>',
+  align: 'left'
 });</pre>
                 </div>
               </div>
@@ -1217,15 +1225,16 @@ function addGold(amount) {
   <span class="text-bd-purple">let</span> widgets = <span class="text-bd-green">''</span>;
   
   <span class="text-bd-comment">// Core stats (always visible)</span>
-  widgets += bdWidget(<span class="text-bd-green">'hp-bar'</span>, { type: <span class="text-bd-green">'bar'</span>, label: <span class="text-bd-green">'HP'</span>, value: state.game.hp, max: state.game.maxHp });
-  widgets += bdWidget(<span class="text-bd-green">'gold'</span>, { type: <span class="text-bd-green">'stat'</span>, label: <span class="text-bd-green">'Gold'</span>, value: state.game.gold });
+  widgets += bdWidget(<span class="text-bd-green">'hp-bar'</span>, { type: <span class="text-bd-green">'bar'</span>, label: <span class="text-bd-green">'HP'</span>, value: state.game.hp, max: state.game.maxHp, align: <span class="text-bd-green">'left'</span>, order: 1 });
+  widgets += bdWidget(<span class="text-bd-green">'gold'</span>, { type: <span class="text-bd-green">'stat'</span>, label: <span class="text-bd-green">'Gold'</span>, value: state.game.gold, align: <span class="text-bd-green">'right'</span>, order: 1 });
   
   <span class="text-bd-comment">// Conditional widgets</span>
   <span class="text-bd-purple">if</span> (state.game.hp < 30) {
     widgets += bdWidget(<span class="text-bd-green">'warning'</span>, {
       type: <span class="text-bd-green">'text'</span>,
       text: <span class="text-bd-green">'⚠️ Low Health!'</span>,
-      style: { color: <span class="text-bd-green">'#ef4444'</span>, fontWeight: <span class="text-bd-green">'bold'</span> }
+      style: { color: <span class="text-bd-green">'#ef4444'</span>, fontWeight: <span class="text-bd-green">'bold'</span> },
+      align: <span class="text-bd-green">'center'</span>, order: 2
     });
   }
   
@@ -1410,7 +1419,7 @@ function addGold(amount) {
               <!-- Widget Preview -->
               <div class="px-4 py-3 border-b border-bd-border-subtle" style="background: #0d0d1a;">
                 <div class="text-[10px] text-bd-text-muted uppercase tracking-wider mb-2">Widget Preview</div>
-                <div class="flex items-center gap-2 flex-wrap">
+                <div class="flex items-center justify-between gap-2 flex-wrap">
                   <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
                     <span class="text-[11px] text-[#8888aa]">Turn</span>
                     <span class="text-[11px] font-semibold" style="color: #60a5fa;">5</span>
@@ -1459,6 +1468,7 @@ const modifier = (text) => {
     label: 'Turn',
     value: info.actionCount || 0,
     color: '#60a5fa',
+    align: 'left',
     order: 1
   });
 
@@ -1469,7 +1479,8 @@ const modifier = (text) => {
     icon: '📍',
     color: '#a855f7',
     variant: 'subtle',
-    order: 2
+    align: 'right',
+    order: 1
   });
 
   return { text: text + widgets };
@@ -1493,14 +1504,16 @@ modifier(text);</code></pre>
               <!-- Widget Preview -->
               <div class="px-4 py-3 border-b border-bd-border-subtle" style="background: #0d0d1a;">
                 <div class="text-[10px] text-bd-text-muted uppercase tracking-wider mb-2">Widget Preview</div>
-                <div class="flex items-center gap-2 flex-wrap">
-                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                    <span class="text-[11px] text-[#8888aa]">☀️</span>
-                    <span class="text-[11px] font-semibold" style="color: #fbbf24;">10:30 AM</span>
-                  </div>
-                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                    <span class="text-[11px] text-[#8888aa]">📅</span>
-                    <span class="text-[11px] font-semibold" style="color: #60a5fa;">Wed D3</span>
+                <div class="flex items-center justify-between gap-2 flex-wrap">
+                  <div class="flex items-center gap-2">
+                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                      <span class="text-[11px] text-[#8888aa]">☀️</span>
+                      <span class="text-[11px] font-semibold" style="color: #fbbf24;">10:30 AM</span>
+                    </div>
+                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                      <span class="text-[11px] text-[#8888aa]">📅</span>
+                      <span class="text-[11px] font-semibold" style="color: #60a5fa;">Wed D3</span>
+                    </div>
                   </div>
                   <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px]" style="background: rgba(244,114,182,0.15); color: #f472b6;">☀️ Morning</span>
                 </div>
@@ -1648,20 +1661,23 @@ modifier(text);</code></pre>
   widgets += bdWidget('time-clock', {
     type: 'stat', label: period.icon,
     value: getTimeString(),
-    color: isNight ? '#94a3b8' : '#fbbf24', order: 1
+    color: isNight ? '#94a3b8' : '#fbbf24',
+    align: 'left', order: 1
   });
 
   widgets += bdWidget('day-counter', {
     type: 'stat', label: '📅',
     value: getWeekday().substring(0, 3) + ' D' + getDay(),
-    color: '#60a5fa', order: 2
+    color: '#60a5fa',
+    align: 'left', order: 2
   });
 
   widgets += bdWidget('period-badge', {
     type: 'badge', text: period.name,
     icon: period.icon,
     color: isNight ? '#a78bfa' : '#f472b6',
-    variant: 'subtle', order: 3
+    variant: 'subtle',
+    align: 'right', order: 1
   });
 
   return { text: output + widgets };
@@ -1754,24 +1770,24 @@ modifier(text);</code></pre>
   let w = '';
 
   <span class="text-bd-text-muted">// Stats</span>
-  w += bdWidget('demo-hp', { type: 'stat', label: 'HP', value: '85/100', color: '#ef4444', order: 1 });
-  w += bdWidget('demo-gold', { type: 'stat', label: '💰', value: '1,250', color: '#fbbf24', order: 2 });
+  w += bdWidget('demo-hp', { type: 'stat', label: 'HP', value: '85/100', color: '#ef4444', align: 'center', order: 1 });
+  w += bdWidget('demo-gold', { type: 'stat', label: '💰', value: '1,250', color: '#fbbf24', align: 'center', order: 2 });
 
   <span class="text-bd-text-muted">// Bars</span>
-  w += bdWidget('demo-health-bar', { type: 'bar', label: 'Health', value: 85, max: 100, color: '#22c55e', order: 3 });
-  w += bdWidget('demo-xp-bar', { type: 'bar', label: 'XP', value: 750, max: 1000, color: '#06b6d4', order: 4 });
+  w += bdWidget('demo-health-bar', { type: 'bar', label: 'Health', value: 85, max: 100, color: '#22c55e', align: 'center', order: 3 });
+  w += bdWidget('demo-xp-bar', { type: 'bar', label: 'XP', value: 750, max: 1000, color: '#06b6d4', align: 'center', order: 4 });
 
   <span class="text-bd-text-muted">// Badges (all three variants)</span>
-  w += bdWidget('demo-poison', { type: 'badge', text: 'Poisoned', icon: '☠️', color: '#a855f7', variant: 'subtle', order: 5 });
-  w += bdWidget('demo-shield', { type: 'badge', text: 'Shielded', icon: '🛡️', color: '#3b82f6', variant: 'solid', order: 6 });
-  w += bdWidget('demo-fire', { type: 'badge', text: 'Burning', icon: '🔥', color: '#f97316', variant: 'outline', order: 7 });
+  w += bdWidget('demo-poison', { type: 'badge', text: 'Poisoned', icon: '☠️', color: '#a855f7', variant: 'subtle', align: 'center', order: 5 });
+  w += bdWidget('demo-shield', { type: 'badge', text: 'Shielded', icon: '🛡️', color: '#3b82f6', variant: 'solid', align: 'center', order: 6 });
+  w += bdWidget('demo-fire', { type: 'badge', text: 'Burning', icon: '🔥', color: '#f97316', variant: 'outline', align: 'center', order: 7 });
 
   <span class="text-bd-text-muted">// Counter with delta</span>
-  w += bdWidget('demo-counter', { type: 'counter', icon: '⚔️', value: 24, delta: 3, color: '#60a5fa', order: 8 });
+  w += bdWidget('demo-counter', { type: 'counter', icon: '⚔️', value: 24, delta: 3, color: '#60a5fa', align: 'center', order: 8 });
 
   <span class="text-bd-text-muted">// Icons with tooltips</span>
-  w += bdWidget('demo-heart', { type: 'icon', icon: '❤️', color: '#ef4444', tooltip: 'Health', order: 9 });
-  w += bdWidget('demo-star', { type: 'icon', icon: '⭐', color: '#fbbf24', tooltip: 'Reputation', order: 10 });
+  w += bdWidget('demo-heart', { type: 'icon', icon: '❤️', color: '#ef4444', tooltip: 'Health', align: 'center', order: 9 });
+  w += bdWidget('demo-star', { type: 'icon', icon: '⭐', color: '#fbbf24', tooltip: 'Reputation', align: 'center', order: 10 });
 
   <span class="text-bd-text-muted">// Character panel (left zone)</span>
   w += bdWidget('demo-panel', {
