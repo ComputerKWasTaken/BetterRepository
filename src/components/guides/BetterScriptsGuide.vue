@@ -155,10 +155,6 @@ function bdWidget(id, config) {
   return bdMessage({ type: 'widget', widgetId: id, action: 'create', config });
 }
 
-function bdUpdate(id, config) {
-  return bdMessage({ type: 'widget', widgetId: id, action: 'update', config });
-}
-
 function bdDestroy(id) {
   return bdMessage({ type: 'widget', widgetId: id, action: 'destroy' });
 }
@@ -724,7 +720,7 @@ function bdClearAll() {
 });</pre>
                 <div class="mt-3 p-2 rounded bg-bd-blue/10 border border-bd-blue/30">
                   <p class="text-xs text-bd-text-muted">
-                    <strong>Note:</strong> Hidden on screens smaller than 768px.
+                    <strong>Note:</strong> Collapses into a horizontal row below the top bar on screens smaller than 768px.
                   </p>
                 </div>
               </div>
@@ -749,7 +745,7 @@ function bdClearAll() {
 });</pre>
                 <div class="mt-3 p-2 rounded bg-bd-purple/10 border border-bd-purple/30">
                   <p class="text-xs text-bd-text-muted">
-                    <strong>Note:</strong> Hidden on screens smaller than 768px.
+                    <strong>Note:</strong> Collapses into a horizontal row below the top bar on screens smaller than 768px.
                   </p>
                 </div>
               </div>
@@ -764,12 +760,13 @@ function bdClearAll() {
               <div class="text-sm text-bd-text-secondary space-y-2">
                 <p>Widgets automatically adapt to screen size:</p>
                 <ul class="space-y-1 ml-4">
-                  <li>• <strong>&lt; 480px:</strong> Compact inline layout, panels/lists hidden</li>
-                  <li>• <strong>&lt; 768px:</strong> Left/right sidebars hidden, smaller widgets</li>
-                  <li>• <strong>Default:</strong> Standard sizing</li>
+                  <li>• <strong>&lt; 480px:</strong> Compact inline layout, all widgets remain visible</li>
+                  <li>• <strong>&lt; 768px:</strong> Sidebars become edge-aligned horizontal rows (left stays left, right stays right)</li>
+                  <li>• <strong>Default:</strong> Standard sizing with vertical sidebars</li>
                   <li>• <strong>≥ 1440px:</strong> Larger widgets for QHD displays</li>
                   <li>• <strong>≥ 2560px:</strong> Maximum sizing for 4K/Ultra displays</li>
                 </ul>
+                <p class="mt-2">Every widget area (top bar, left sidebar, right sidebar) has a <strong>collapse toggle</strong> — a small chevron button that lets users hide or show that area's widgets on demand.</p>
               </div>
             </div>
           </div>
@@ -913,18 +910,8 @@ function bdClearAll() {
                     <Plus class="w-3.5 h-3.5 text-bd-green" />
                     <code class="text-sm font-semibold text-bd-green">bdWidget(id, config)</code>
                   </div>
-                  <p class="text-xs text-bd-text-secondary">Create a new widget (or replace an existing one with the same ID).</p>
+                  <p class="text-xs text-bd-text-secondary">Create or update a widget. If the widget already exists, updates it in place.</p>
                   <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-primary">bdWidget('hp-bar', { type: 'bar', label: 'HP', value: 85, max: 100 });</pre>
-                </div>
-
-                <!-- bdUpdate -->
-                <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-2">
-                  <div class="flex items-center gap-2">
-                    <RefreshCw class="w-3.5 h-3.5 text-bd-blue" />
-                    <code class="text-sm font-semibold text-bd-blue">bdUpdate(id, config)</code>
-                  </div>
-                  <p class="text-xs text-bd-text-secondary">Update specific properties of an existing widget. Auto-creates if it doesn't exist.</p>
-                  <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-primary">bdUpdate('hp-bar', { value: 50 }); <span class="text-bd-text-muted">// only changes value</span></pre>
                 </div>
 
                 <!-- bdDestroy -->
@@ -962,7 +949,7 @@ bdMessage({ type: 'register', scriptId: 'my-rpg',     <span class="text-bd-text-
 
               <div class="mt-3 p-2 rounded bg-bd-emerald/10 border border-bd-emerald/30">
                 <p class="text-xs text-bd-text-muted">
-                  <strong class="text-bd-text-primary">Tip:</strong> Prefer <code class="text-bd-blue">bdUpdate</code> over <code class="text-bd-green">bdWidget</code> for value changes since it merges into the existing config instead of replacing it entirely.
+                  <strong class="text-bd-text-primary">Tip:</strong> Use <code class="text-bd-green">bdWidget</code> for all widget operations. It automatically creates new widgets or updates existing ones in place.
                 </p>
               </div>
             </div>
@@ -1121,40 +1108,9 @@ bdMessage({ type: 'register', scriptId: 'my-rpg',     <span class="text-bd-text-
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('advanced-features')" class="mt-4 space-y-4">
             <p class="text-bd-text-secondary">
-              Unlock the full potential of BetterScripts with advanced features like condensed mode, 
-              responsive design, and JavaScript events.
+              Unlock the full potential of BetterScripts with advanced features like 
+              responsive design, JavaScript events, and debug mode.
             </p>
-
-            <!-- Condensed Mode -->
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-                <Minimize2 class="w-4 h-4 text-bd-yellow" />
-                Condensed Mode
-              </h3>
-              <p class="text-sm text-bd-text-secondary mb-3">
-                Reduce widget sizes for a more compact display. Useful for smaller screens or when you want to minimize UI clutter.
-              </p>
-              <div class="grid md:grid-cols-2 gap-4">
-                <div>
-                  <h4 class="text-sm font-medium text-bd-text-primary mb-2">Browser Console Control</h4>
-                  <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><span class="text-bd-comment">// Toggle condensed mode</span>
-window.betterScripts.toggleCondensedMode();
-
-<span class="text-bd-comment">// Set explicitly</span>
-window.betterScripts.setCondensedMode(true);   <span class="text-bd-comment">// Enable</span>
-window.betterScripts.setCondensedMode(false);  <span class="text-bd-comment">// Disable</span></pre>
-                </div>
-                <div>
-                  <h4 class="text-sm font-medium text-bd-text-primary mb-2">What Gets Reduced</h4>
-                  <ul class="text-xs text-bd-text-secondary space-y-1">
-                    <li>• Widget padding and gaps</li>
-                    <li>• Font sizes across all widget types</li>
-                    <li>• Bar heights and minimum widths</li>
-                    <li>• Panel and list dimensions</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
 
             <!-- JavaScript Events -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
@@ -1198,16 +1154,29 @@ window.addEventListener('betterscripts:error', (e) => {
                 Debug Mode
               </h3>
               <p class="text-sm text-bd-text-secondary mb-3">
-                Enable detailed logging to troubleshoot widget creation and message processing.
+                Debug mode helps you troubleshoot widget creation and inspect the raw protocol messages your scripts are sending.
               </p>
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><span class="text-bd-comment">// Enable debug mode</span>
-window.betterScripts.debug = true;
-
-<span class="text-bd-comment">// Disable debug mode</span>
-window.betterScripts.debug = false;</pre>
-              <div class="p-2 rounded bg-bd-green/10 border border-bd-green/30 mt-2">
+              <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                  <h4 class="text-sm font-medium text-bd-text-primary mb-2">How to Enable</h4>
+                  <p class="text-xs text-bd-text-secondary mb-2">
+                    Open the <strong>BetterDungeon popup</strong>, expand the <strong>BetterScripts</strong> card, and toggle <strong>Debug Mode</strong> on.
+                  </p>
+                  <p class="text-xs text-bd-text-muted">
+                    The setting is persisted across sessions and synced to your browser profile.
+                  </p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-bd-text-primary mb-2">What It Does</h4>
+                  <ul class="text-xs text-bd-text-secondary space-y-1">
+                    <li>• <strong>Protocol messages stay visible</strong> in the story text so you can read the raw <code class="text-bd-green">[[BD:...:BD]]</code> tags</li>
+                    <li>• <strong>Verbose console logging</strong> for every parsed message, widget create/update/destroy, and processing step</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="p-2 rounded bg-bd-green/10 border border-bd-green/30 mt-3">
                 <p class="text-xs text-bd-text-muted">
-                  With debug mode enabled, you'll see detailed logs in the console for message parsing, widget creation, and processing steps.
+                  <strong>Tip:</strong> Use your browser's DevTools console (<kbd class="px-1 py-0.5 rounded bg-bd-bg-tertiary text-bd-text-secondary text-[10px]">F12</kbd>) alongside debug mode to see the full log output.
                 </p>
               </div>
             </div>
@@ -1219,7 +1188,7 @@ window.betterScripts.debug = false;</pre>
                 Performance Tips
               </h3>
               <ul class="text-sm text-bd-text-secondary space-y-2">
-                <li>• <strong>Use update action</strong> for value changes instead of recreating widgets</li>
+                <li>• <strong>Use bdWidget for updates</strong> - it automatically updates existing widgets in place</li>
                 <li>• <strong>Batch multiple widgets</strong> in a single output modifier call</li>
                 <li>• <strong>Limit custom HTML complexity</strong> - complex DOM can impact performance</li>
                 <li>• <strong>Use appropriate widget types</strong> - custom HTML isn't always necessary</li>
@@ -1256,8 +1225,8 @@ window.betterScripts.debug = false;</pre>
                   <li><strong>Always strip context</strong> - Use Context Modifier to remove <code class="text-bd-green">[[BD:...:BD]]</code> tags</li>
                   <li><strong>Use unique IDs</strong> - Prefix with script name: <code class="text-bd-cyan">myscript_hp</code>, <code class="text-bd-cyan">myscript_gold</code></li>
                   <li><strong>Initialize state safely</strong> - <code class="text-bd-purple">state.x = state.x ?? defaultValue</code></li>
-                  <li><strong>Prefer update action</strong> - For value changes, preserves existing config</li>
-                  <li><strong>Focus on top position</strong> - Mobile players can't see sidebars</li>
+                  <li><strong>Use bdWidget for all operations</strong> - Creates new or updates existing widgets</li>
+                  <li><strong>All positions are mobile-friendly</strong> - Sidebars collapse into rows on small screens</li>
                 </ul>
               </div>
 
@@ -1270,7 +1239,7 @@ window.betterScripts.debug = false;</pre>
                   <li><strong>Forgetting context modifier</strong> - AI will repeat protocol tags</li>
                   <li><strong>Widget ID conflicts</strong> - Use prefixes to avoid clashes</li>
                   <li><strong>Overusing custom HTML</strong> - Built-in widgets are often better</li>
-                  <li><strong>Ignoring mobile layout</strong> - Sidebars hidden on small screens</li>
+                  <li><strong>Ignoring mobile layout</strong> - Test that widgets look good when sidebars collapse on small screens</li>
                   <li><strong>Not handling errors</strong> - Check console for widget errors</li>
                 </ul>
               </div>
@@ -1291,7 +1260,6 @@ state.game = state.game ?? {
 <span class="text-bd-comment">// === BetterScripts Helpers ===</span>
 function bdMessage(msg) { return `[[BD:${JSON.stringify(msg)}:BD]]`; }
 function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
-function bdUpdate(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'update', config: cfg }); }
 
 <span class="text-bd-comment">// === Game Logic Helpers ===</span>
 function updateHP(amount) {
@@ -1316,8 +1284,8 @@ function addGold(amount) {
   <span class="text-bd-purple">let</span> widgets = <span class="text-bd-green">''</span>;
   
   <span class="text-bd-comment">// Core stats (always visible)</span>
-  widgets += bdUpdate(<span class="text-bd-green">'hp-bar'</span>, { value: state.game.hp });
-  widgets += bdUpdate(<span class="text-bd-green">'gold'</span>, { value: state.game.gold });
+  widgets += bdWidget(<span class="text-bd-green">'hp-bar'</span>, { type: <span class="text-bd-green">'bar'</span>, label: <span class="text-bd-green">'HP'</span>, value: state.game.hp, max: state.game.maxHp });
+  widgets += bdWidget(<span class="text-bd-green">'gold'</span>, { type: <span class="text-bd-green">'stat'</span>, label: <span class="text-bd-green">'Gold'</span>, value: state.game.gold });
   
   <span class="text-bd-comment">// Conditional widgets</span>
   <span class="text-bd-purple">if</span> (state.game.hp < 30) {
@@ -1416,7 +1384,7 @@ function addGold(amount) {
                   </tr>
                   <tr>
                     <td class="py-3">Mobile layout issues</td>
-                    <td class="py-3">Use <code class="text-bd-cyan">position: 'top'</code> for mobile-friendly widgets, sidebars hidden on small screens</td>
+                    <td class="py-3">All positions are mobile-friendly. Sidebars collapse into horizontal rows on small screens. Test your layout at different sizes.</td>
                   </tr>
                 </tbody>
               </table>
@@ -1634,7 +1602,6 @@ state.character = state.character ?? {
 <span class="text-bd-text-muted">// BetterScripts helpers</span>
 function bdMessage(msg) { return `[[BD:${JSON.stringify(msg)}:BD]]`; }
 function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
-function bdUpdate(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'update', config: cfg }); }
 
 <span class="text-bd-text-muted">// Game logic</span>
 function takeDamage(amount) {
@@ -1678,28 +1645,28 @@ modifier(text);</code></pre>
   let widgets = '';
   
   <span class="text-bd-text-muted">// HP Bar (turns red when low)</span>
-  widgets += bdUpdate('hp-bar', {
+  widgets += bdWidget('hp-bar', {
     type: 'bar', label: 'HP',
     value: state.character.hp, max: state.character.maxHp,
     color: state.character.hp &lt; 30 ? '#ef4444' : '#22c55e', order: 1
   });
   
   <span class="text-bd-text-muted">// MP Bar</span>
-  widgets += bdUpdate('mp-bar', {
+  widgets += bdWidget('mp-bar', {
     type: 'bar', label: 'MP',
     value: state.character.mp, max: state.character.maxMp,
     color: '#3b82f6', order: 2
   });
   
   <span class="text-bd-text-muted">// Experience Bar (no value text)</span>
-  widgets += bdUpdate('exp-bar', {
+  widgets += bdWidget('exp-bar', {
     type: 'bar', label: 'EXP',
     value: state.character.exp, max: state.character.expToNext,
     color: '#a855f7', showValue: false, order: 3
   });
   
   <span class="text-bd-text-muted">// Character Panel (left sidebar)</span>
-  widgets += bdUpdate('char-panel', {
+  widgets += bdWidget('char-panel', {
     type: 'panel', position: 'left',
     title: `Level ${state.character.level} Character`,
     items: [
@@ -1712,7 +1679,7 @@ modifier(text);</code></pre>
   
   <span class="text-bd-text-muted">// Status Effects (left sidebar, only if active)</span>
   if (state.character.status.length > 0) {
-    widgets += bdUpdate('status-effects', {
+    widgets += bdWidget('status-effects', {
       type: 'list', position: 'left', title: 'Status Effects',
       items: state.character.status.map(s => ({ text: s, color: '#f97316' })),
       order: 2
@@ -1798,8 +1765,8 @@ const ITEMS = {
 
 <span class="text-bd-text-muted">// BetterScripts helpers</span>
 function bdMessage(msg) { return `[[BD:${JSON.stringify(msg)}:BD]]`; }
-function bdUpdate(id, cfg) {
-  return bdMessage({ type: 'widget', widgetId: id, action: 'update', config: cfg });
+function bdWidget(id, cfg) {
+  return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg });
 }
 
 <span class="text-bd-text-muted">// Inventory management</span>
@@ -1845,7 +1812,7 @@ modifier(text);</code></pre>
   let widgets = '';
   
   <span class="text-bd-text-muted">// Weight bar (turns red when near capacity)</span>
-  widgets += bdUpdate('weight', {
+  widgets += bdWidget('weight', {
     type: 'bar', label: 'Weight',
     value: state.inventory.currentWeight,
     max: state.inventory.maxWeight,
@@ -1855,7 +1822,7 @@ modifier(text);</code></pre>
   });
   
   <span class="text-bd-text-muted">// Gold counter</span>
-  widgets += bdUpdate('gold', {
+  widgets += bdWidget('gold', {
     type: 'counter', icon: '💰',
     value: state.inventory.gold,
     color: '#fbbf24', order: 2
@@ -1872,7 +1839,7 @@ modifier(text);</code></pre>
       };
     });
     
-    widgets += bdUpdate('inventory', {
+    widgets += bdWidget('inventory', {
       type: 'list', title: 'Inventory',
       position: 'right', items: inventoryItems, order: 1
     });
@@ -1897,7 +1864,7 @@ import { ref } from 'vue'
 import { 
   AlertTriangle, ArrowDown, ArrowUp, ArrowLeft, ArrowRight, 
   Terminal, Zap, Layout, Settings, LayoutDashboard, Library,
-  MessageSquare, Code, Smartphone, Minimize2, Radio, Bug, Star,
+  MessageSquare, Code, Smartphone, Radio, Bug, Star,
   HelpCircle, CheckCircle, ExternalLink,
   Code2, Sword, Package, Activity, Hash, FileText, Trash2,
   RefreshCw, Plus, Check, ChevronDown, ChevronUp

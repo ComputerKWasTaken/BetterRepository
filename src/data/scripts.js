@@ -817,19 +817,18 @@ modifier(text)`
     tags: ['widgets', 'counter', 'turn', 'betterscripts', 'stat-widget', 'minimal'],
     source: 'BetterRepository',
     description: 'Minimal example: displays turn count and a location badge using stat and badge widgets.',
-    purpose: 'The simplest BetterScripts example. Demonstrates bdWidget (create) and bdUpdate (merge changes). Great starting point for learning.',
+    purpose: 'The simplest BetterScripts example. Demonstrates bdWidget for creating and updating widgets. Great starting point for learning.',
     requiresExtension: 'BetterDungeon',
     files: {
       library: `// ============================================
 // LIBRARY - Simple Turn Counter
 // ============================================
 // The simplest possible BetterScripts example.
-// Demonstrates bdWidget (create) and bdUpdate (merge).
+// Demonstrates bdWidget for creating and updating widgets.
 
 // BetterScripts protocol helpers
 function bdMessage(msg) { return \`[[BD:\${JSON.stringify(msg)}:BD]]\`; }
 function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
-function bdUpdate(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'update', config: cfg }); }
 
 // Persistent state
 state.location = state.location ?? 'Town';`,
@@ -842,8 +841,8 @@ modifier(text);`,
 const modifier = (text) => {
   let widgets = '';
 
-  // Turn counter (bdUpdate merges into existing widget)
-  widgets += bdUpdate('turn', {
+  // Turn counter (bdWidget creates or updates existing widget)
+  widgets += bdWidget('turn', {
     type: 'stat',
     label: 'Turn',
     value: info.actionCount || 0,
@@ -853,7 +852,7 @@ const modifier = (text) => {
   });
 
   // Location badge
-  widgets += bdUpdate('location', {
+  widgets += bdWidget('location', {
     type: 'badge',
     text: state.location,
     icon: '📍',
@@ -906,7 +905,6 @@ const START_MINUTE = state.time.startHour * 60; // 8:00 AM default
 
 function bdMessage(msg) { return \`[[BD:\${JSON.stringify(msg)}:BD]]\`; }
 function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
-function bdUpdate(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'update', config: cfg }); }
 
 // ============================================
 // TIME CONSTANTS
@@ -1125,8 +1123,8 @@ const modifier = (text) => {
   let widgets = '';
   
   // Time widget (order: 1) - top bar
-  // bdUpdate merges changes so only value/color update each turn
-  widgets += bdUpdate('time-clock', {
+  // bdWidget creates or updates so only value/color update each turn
+  widgets += bdWidget('time-clock', {
     type: 'stat',
     label: period.icon,
     value: getTimeString(),
@@ -1136,7 +1134,7 @@ const modifier = (text) => {
   });
   
   // Day widget (order: 2) - top bar
-  widgets += bdUpdate('time-day', {
+  widgets += bdWidget('time-day', {
     type: 'stat',
     label: '📅',
     value: getWeekday().substring(0, 3) + ' D' + getDay(),
@@ -1146,7 +1144,7 @@ const modifier = (text) => {
   });
   
   // Period badge (order: 3) - top bar
-  widgets += bdUpdate('time-period', {
+  widgets += bdWidget('time-period', {
     type: 'badge',
     text: period.name,
     icon: period.icon,
@@ -1203,10 +1201,9 @@ state.bd = state.bd ?? { lastCommand: null, lastResult: null };
 // BETTERSCRIPTS PROTOCOL HELPERS
 // ============================================
 
-// All five helpers + ping shortcut
+// All four helpers + ping shortcut
 function bdMsg(m) { return \`[[BD:\${JSON.stringify(m)}:BD]]\`; }
 function bdWidget(id, cfg) { return bdMsg({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
-function bdUpdate(id, cfg) { return bdMsg({ type: 'widget', widgetId: id, action: 'update', config: cfg }); }
 function bdDestroy(id) { return bdMsg({ type: 'widget', widgetId: id, action: 'destroy' }); }
 function bdClearAll() { return bdMsg({ type: 'clearAll' }); }
 function bdPing() { return bdMsg({ type: 'ping', timestamp: Date.now(), data: 'debug' }); }
@@ -1428,7 +1425,7 @@ const COMMANDS = {
       const config = {};
       config[prop] = parsedValue;
       
-      const widgets = bdUpdate(id, config);
+      const widgets = bdMsg({ type: 'widget', widgetId: id, action: 'update', config });
       
       return { 
         output: \`\\n✏️ Updated "\${id}".\${prop} = \${parsedValue}\`, 
@@ -1628,7 +1625,7 @@ const modifier = (text) => {
   }
   
   // Always show turn counter widget (order: 0 to appear first)
-  widgets += bdUpdate('console-turn', {
+  widgets += bdWidget('console-turn', {
     type: 'stat',
     label: 'Turn',
     value: info.actionCount || 0,
@@ -1652,17 +1649,17 @@ modifier(text);`
     tags: ['widgets', 'demo', 'showcase', 'betterscripts', 'testing', 'all-widgets'],
     source: 'BetterRepository',
     description: 'Displays all widget types across all positions for visual testing.',
-    purpose: 'Creates one of every widget type using bdUpdate. Perfect for testing styles and layouts. See the BetterScripts Guide for full documentation.',
+    purpose: 'Creates one of every widget type using bdWidget. Perfect for testing styles and layouts. See the BetterScripts Guide for full documentation.',
     requiresExtension: 'BetterDungeon',
     files: {
       library: `// ============================================
 // LIBRARY - Widget Showcase
 // ============================================
 // Creates all widget types for visual testing.
-// Uses bdUpdate so widgets merge on subsequent turns.
+// Uses bdWidget to create or update widgets on subsequent turns.
 
 function bdMessage(msg) { return \`[[BD:\${JSON.stringify(msg)}:BD]]\`; }
-function bdUpdate(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'update', config: cfg }); }
+function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
 function bdClearAll() { return bdMessage({ type: 'clearAll' }); }`,
       context: `// Strip protocol messages from AI context
 const modifier = (text) => {
@@ -1672,8 +1669,7 @@ modifier(text);`,
       output: `// ============================================
 // OUTPUT - Create All Widget Types (Multi-Position)
 // ============================================
-// Uses bdUpdate (not bdWidget) so properties merge
-// instead of replacing on each turn.
+// Uses bdWidget to create and update widgets each turn.
 
 const modifier = (text) => {
   let w = '';
@@ -1681,32 +1677,32 @@ const modifier = (text) => {
   // ========== TOP POSITION (Status Bar) ==========
   
   // Stats
-  w += bdUpdate('demo-hp', { type: 'stat', label: 'HP', value: '85/100', color: '#ef4444', position: 'top', order: 1 });
-  w += bdUpdate('demo-mp', { type: 'stat', label: 'MP', value: '42/60', color: '#3b82f6', position: 'top', order: 2 });
-  w += bdUpdate('demo-gold', { type: 'stat', label: '💰', value: '1,250', color: '#fbbf24', position: 'top', order: 3 });
+  w += bdWidget('demo-hp', { type: 'stat', label: 'HP', value: '85/100', color: '#ef4444', position: 'top', order: 1 });
+  w += bdWidget('demo-mp', { type: 'stat', label: 'MP', value: '42/60', color: '#3b82f6', position: 'top', order: 2 });
+  w += bdWidget('demo-gold', { type: 'stat', label: '💰', value: '1,250', color: '#fbbf24', position: 'top', order: 3 });
   
   // Bars
-  w += bdUpdate('demo-health-bar', { type: 'bar', label: 'Health', value: 85, max: 100, color: '#22c55e', position: 'top', order: 4 });
-  w += bdUpdate('demo-mana-bar', { type: 'bar', label: 'Mana', value: 42, max: 60, color: '#8b5cf6', position: 'top', order: 5 });
-  w += bdUpdate('demo-xp-bar', { type: 'bar', label: 'XP', value: 750, max: 1000, color: '#06b6d4', position: 'top', order: 6 });
+  w += bdWidget('demo-health-bar', { type: 'bar', label: 'Health', value: 85, max: 100, color: '#22c55e', position: 'top', order: 4 });
+  w += bdWidget('demo-mana-bar', { type: 'bar', label: 'Mana', value: 42, max: 60, color: '#8b5cf6', position: 'top', order: 5 });
+  w += bdWidget('demo-xp-bar', { type: 'bar', label: 'XP', value: 750, max: 1000, color: '#06b6d4', position: 'top', order: 6 });
   
   // Badges (all three variants)
-  w += bdUpdate('demo-badge-poison', { type: 'badge', text: 'Poisoned', icon: '☠️', color: '#a855f7', variant: 'subtle', position: 'top', order: 7 });
-  w += bdUpdate('demo-badge-shield', { type: 'badge', text: 'Shielded', icon: '🛡️', color: '#3b82f6', variant: 'solid', position: 'top', order: 8 });
-  w += bdUpdate('demo-badge-fire', { type: 'badge', text: 'Burning', icon: '🔥', color: '#f97316', variant: 'outline', position: 'top', order: 9 });
+  w += bdWidget('demo-badge-poison', { type: 'badge', text: 'Poisoned', icon: '☠️', color: '#a855f7', variant: 'subtle', position: 'top', order: 7 });
+  w += bdWidget('demo-badge-shield', { type: 'badge', text: 'Shielded', icon: '🛡️', color: '#3b82f6', variant: 'solid', position: 'top', order: 8 });
+  w += bdWidget('demo-badge-fire', { type: 'badge', text: 'Burning', icon: '🔥', color: '#f97316', variant: 'outline', position: 'top', order: 9 });
   
   // Counters (positive and negative delta)
-  w += bdUpdate('demo-counter-up', { type: 'counter', icon: '⚔️', value: 24, delta: 3, color: '#60a5fa', position: 'top', order: 10 });
-  w += bdUpdate('demo-counter-down', { type: 'counter', icon: '💔', value: 12, delta: -5, color: '#f472b6', position: 'top', order: 11 });
+  w += bdWidget('demo-counter-up', { type: 'counter', icon: '⚔️', value: 24, delta: 3, color: '#60a5fa', position: 'top', order: 10 });
+  w += bdWidget('demo-counter-down', { type: 'counter', icon: '💔', value: 12, delta: -5, color: '#f472b6', position: 'top', order: 11 });
   
   // Icons with tooltips
-  w += bdUpdate('demo-icon-heart', { type: 'icon', icon: '❤️', color: '#ef4444', tooltip: 'Health', position: 'top', order: 12 });
-  w += bdUpdate('demo-icon-star', { type: 'icon', icon: '⭐', color: '#fbbf24', tooltip: 'Reputation', position: 'top', order: 13 });
-  w += bdUpdate('demo-icon-moon', { type: 'icon', icon: '🌙', color: '#94a3b8', tooltip: 'Night', position: 'top', order: 14 });
+  w += bdWidget('demo-icon-heart', { type: 'icon', icon: '❤️', color: '#ef4444', tooltip: 'Health', position: 'top', order: 12 });
+  w += bdWidget('demo-icon-star', { type: 'icon', icon: '⭐', color: '#fbbf24', tooltip: 'Reputation', position: 'top', order: 13 });
+  w += bdWidget('demo-icon-moon', { type: 'icon', icon: '🌙', color: '#94a3b8', tooltip: 'Night', position: 'top', order: 14 });
   
   // ========== LEFT POSITION (Character Info) ==========
   
-  w += bdUpdate('demo-panel', { 
+  w += bdWidget('demo-panel', { 
     type: 'panel', title: 'Character', position: 'left',
     items: [
       { label: 'Name', value: 'Adventurer', color: '#f472b6' },
@@ -1718,9 +1714,9 @@ const modifier = (text) => {
   
   // ========== RIGHT POSITION (Inventory/Quest) ==========
   
-  w += bdUpdate('demo-text', { type: 'text', text: '⚡ Quest: Find the Artifact', style: { color: '#fbbf24', fontWeight: '500' }, position: 'right', order: 1 });
-  w += bdUpdate('demo-divider', { type: 'divider', label: 'Items', color: '#60a5fa', position: 'right', order: 2 });
-  w += bdUpdate('demo-list', { 
+  w += bdWidget('demo-text', { type: 'text', text: '⚡ Quest: Find the Artifact', style: { color: '#fbbf24', fontWeight: '500' }, position: 'right', order: 1 });
+  w += bdWidget('demo-divider', { type: 'divider', label: 'Items', color: '#60a5fa', position: 'right', order: 2 });
+  w += bdWidget('demo-list', { 
     type: 'list', title: 'Inventory', position: 'right',
     items: [
       { icon: '🗡️', text: 'Iron Sword', color: '#60a5fa' },
@@ -1747,15 +1743,14 @@ modifier(text);`
     tags: ['widgets', 'rpg', 'hud', 'betterscripts', 'combat', 'destroy', 'clearall', 'scenes'],
     source: 'BetterRepository',
     description: 'Full RPG heads-up display with combat mode that uses bdDestroy and bdClearAll for scene transitions.',
-    purpose: 'Demonstrates all five helpers: bdWidget, bdUpdate, bdDestroy, bdClearAll, and bdMessage. Shows how to conditionally show/hide widgets based on game state.',
+    purpose: 'Demonstrates all four helpers: bdWidget, bdDestroy, bdClearAll, and bdMessage. Shows how to conditionally show/hide widgets based on game state.',
     requiresExtension: 'BetterDungeon',
     files: {
       library: `// ============================================
 // LIBRARY - RPG HUD with Scene Transitions
 // ============================================
 // Demonstrates ALL helper functions:
-//   bdWidget  - create a widget
-//   bdUpdate  - merge-update a widget
+//   bdWidget  - create or update a widget
 //   bdDestroy - remove a single widget
 //   bdClearAll - remove ALL widgets at once
 //   bdMessage - send raw protocol (ping, register)
@@ -1763,7 +1758,6 @@ modifier(text);`
 // ---- Protocol Helpers ----
 function bdMessage(msg) { return \`[[BD:\${JSON.stringify(msg)}:BD]]\`; }
 function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
-function bdUpdate(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'update', config: cfg }); }
 function bdDestroy(id) { return bdMessage({ type: 'widget', widgetId: id, action: 'destroy' }); }
 function bdClearAll() { return bdMessage({ type: 'clearAll' }); }
 
@@ -1809,7 +1803,7 @@ modifier(text);`,
       output: `// ============================================
 // OUTPUT - RPG HUD with Scene Transitions
 // ============================================
-// Uses bdUpdate for persistent widgets, bdDestroy
+// Uses bdWidget for persistent widgets, bdDestroy
 // to remove combat-only widgets, and bdClearAll
 // for full scene resets.
 
@@ -1818,27 +1812,27 @@ const modifier = (text) => {
   const r = state.rpg;
 
   // ---- Always-visible: HP & MP bars ----
-  widgets += bdUpdate('hp', {
+  widgets += bdWidget('hp', {
     type: 'bar', label: 'HP',
     value: r.hp, max: r.maxHp,
     color: r.hp < r.maxHp * 0.3 ? '#ef4444' : '#22c55e',
     position: 'top', order: 1
   });
 
-  widgets += bdUpdate('mp', {
+  widgets += bdWidget('mp', {
     type: 'bar', label: 'MP',
     value: r.mp, max: r.maxMp,
     color: '#3b82f6', position: 'top', order: 2
   });
 
   // ---- Always-visible: Gold & Level ----
-  widgets += bdUpdate('gold', {
+  widgets += bdWidget('gold', {
     type: 'counter', icon: '💰',
     value: r.gold, color: '#fbbf24',
     position: 'top', order: 3
   });
 
-  widgets += bdUpdate('level', {
+  widgets += bdWidget('level', {
     type: 'stat', label: 'LVL',
     value: r.level, color: '#a855f7',
     position: 'top', order: 4
@@ -1847,13 +1841,13 @@ const modifier = (text) => {
   // ---- Combat Mode ----
   if (r.inCombat && r.enemy) {
     // Show combat-only widgets
-    widgets += bdUpdate('combat-badge', {
+    widgets += bdWidget('combat-badge', {
       type: 'badge', text: '⚔️ In Combat',
       color: '#ef4444', variant: 'solid',
       position: 'top', order: 5
     });
 
-    widgets += bdUpdate('enemy-hp', {
+    widgets += bdWidget('enemy-hp', {
       type: 'bar', label: r.enemy.name,
       value: r.enemy.hp, max: 50,
       color: '#f97316', position: 'top', order: 6
@@ -1865,7 +1859,7 @@ const modifier = (text) => {
   }
 
   // ---- Left sidebar: Character panel ----
-  widgets += bdUpdate('char-panel', {
+  widgets += bdWidget('char-panel', {
     type: 'panel', position: 'left',
     title: 'Level ' + r.level + ' Hero',
     items: [
@@ -1879,7 +1873,7 @@ const modifier = (text) => {
 
   // ---- Right sidebar: Inventory ----
   if (r.inventory.length > 0) {
-    widgets += bdUpdate('inventory', {
+    widgets += bdWidget('inventory', {
       type: 'list', position: 'right',
       title: 'Inventory',
       items: r.inventory.map(item => ({ text: item })),
