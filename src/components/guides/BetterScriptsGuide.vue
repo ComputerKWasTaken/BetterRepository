@@ -589,13 +589,27 @@ bdWidget('xp', { ..., align: 'center', order: 3 });</pre>
                   <Smartphone class="w-4 h-4 text-bd-amber" />
                   Responsive Scaling
                 </h3>
-                <p class="text-xs text-bd-text-secondary mb-2">Widgets adapt automatically to screen size:</p>
-                <ul class="text-xs text-bd-text-secondary space-y-0.5">
-                  <li>• <strong>&lt; 480px</strong> - compact fonts and tighter spacing</li>
-                  <li>• <strong>&lt; 768px</strong> - slightly reduced sizing</li>
-                  <li>• <strong>≥ 1440px</strong> - larger widgets for QHD+</li>
-                  <li>• <strong>≥ 2560px</strong> - maximum sizing for 4K</li>
-                </ul>
+                <p class="text-xs text-bd-text-secondary mb-2">Widgets adapt automatically via two layers:</p>
+
+                <div class="mb-2">
+                  <h4 class="text-[11px] font-semibold text-bd-text-primary mb-1">Viewport Breakpoints</h4>
+                  <ul class="text-xs text-bd-text-secondary space-y-0.5">
+                    <li>• <strong>&lt; 480px</strong> - compact fonts and tighter spacing</li>
+                    <li>• <strong>&lt; 768px</strong> - slightly reduced sizing</li>
+                    <li>• <strong>≥ 1440px</strong> - larger widgets for QHD+</li>
+                    <li>• <strong>≥ 2560px</strong> - maximum sizing for 4K</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 class="text-[11px] font-semibold text-bd-text-primary mb-1">Density Scaling</h4>
+                  <p class="text-[11px] text-bd-text-muted mb-1">Widgets also scale based on how many are in the bar:</p>
+                  <ul class="text-xs text-bd-text-secondary space-y-0.5">
+                    <li>• <strong>Spacious</strong> - few widgets → roomier padding and gaps</li>
+                    <li>• <strong>Compact</strong> - bar is filling up → tighter sizing</li>
+                    <li>• <strong>Dense</strong> - many widgets → aggressively compressed</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
