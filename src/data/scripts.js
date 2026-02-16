@@ -856,19 +856,21 @@ modifier(text);`
     difficulty: 'intermediate',
     impact: 'high',
     essential: true,
-    tags: ['widgets', 'time', 'clock', 'day-night', 'betterscripts', 'context', 'commands'],
+    tags: ['widgets', 'time', 'clock', 'day-night', 'moon', 'weather', 'betterscripts', 'context', 'commands'],
     source: 'BetterRepository',
-    description: 'Day/night cycle with time of day periods, weekday tracking, and time commands.',
-    purpose: 'Each turn = 2 minutes. Time injected into AI context. Commands: :time, :timeskip <hours>, :sleep, :settime <hour>.',
+    description: 'Day/night cycle with time periods, weekday tracking, moon phases, weather, and time commands.',
+    purpose: 'Each turn = 2 minutes. Time, moon phase, and weather injected into AI context. Commands: :time, :timeskip <hours>, :sleep, :settime <hour>.',
     requiresExtension: 'BetterDungeon',
     files: {
       library: `// ============================================
-// LIBRARY - In-Game Time System
+// LIBRARY - Chronos: In-Game Time System
 // ============================================
 // Time is calculated from info.actionCount (turns).
 // - Each turn = 2 minutes of in-game time
 // - Time of day: Dawn, Morning, Afternoon, Evening, Night, Midnight
 // - Day of week tracking
+// - Moon phases (29.5-day lunar cycle)
+// - Weather system (changes daily)
 // - Commands: :time, :timeskip <hours>, :sleep, :settime <hour>
 
 // State only stores offsets from manual adjustments
@@ -904,6 +906,36 @@ const TIME_PERIODS = [
 ];
 
 // ============================================
+// MOON PHASE CONSTANTS
+// ============================================
+
+const LUNAR_CYCLE = 29.5;
+const MOON_PHASES = [
+  { name: 'New Moon', icon: '🌑' },
+  { name: 'Waxing Crescent', icon: '🌒' },
+  { name: 'First Quarter', icon: '🌓' },
+  { name: 'Waxing Gibbous', icon: '🌔' },
+  { name: 'Full Moon', icon: '🌕' },
+  { name: 'Waning Gibbous', icon: '🌖' },
+  { name: 'Last Quarter', icon: '🌗' },
+  { name: 'Waning Crescent', icon: '🌘' }
+];
+
+// ============================================
+// WEATHER CONSTANTS
+// ============================================
+
+const WEATHER_TYPES = [
+  { name: 'Clear', icon: '☀️', nightIcon: '🌙', desc: 'clear skies' },
+  { name: 'Partly Cloudy', icon: '⛅', nightIcon: '☁️', desc: 'partly cloudy' },
+  { name: 'Overcast', icon: '☁️', nightIcon: '☁️', desc: 'overcast skies' },
+  { name: 'Rainy', icon: '🌧️', nightIcon: '🌧️', desc: 'rain' },
+  { name: 'Stormy', icon: '⛈️', nightIcon: '⛈️', desc: 'thunderstorms' },
+  { name: 'Foggy', icon: '🌫️', nightIcon: '🌫️', desc: 'thick fog' },
+  { name: 'Windy', icon: '💨', nightIcon: '💨', desc: 'strong winds' }
+];
+
+// ============================================
 // TIME FUNCTIONS
 // ============================================
 
@@ -915,19 +947,20 @@ function getTotalMinutes() {
 
 function getHour() {
   const total = getTotalMinutes();
-  return Math.floor((total % (24 * 60)) / 60);
+  return Math.floor((((total % 1440) + 1440) % 1440) / 60);
 }
 
 function getMinute() {
-  return getTotalMinutes() % 60;
+  return ((getTotalMinutes() % 60) + 60) % 60;
 }
 
 function getDay() {
-  return Math.floor(getTotalMinutes() / (24 * 60)) + 1;
+  const total = getTotalMinutes();
+  return Math.max(1, Math.floor(total / 1440) + 1);
 }
 
 function getWeekdayIndex() {
-  return (getDay() - 1) % 7;
+  return ((getDay() - 1) % 7 + 7) % 7;
 }
 
 function getTimeString() {
@@ -952,6 +985,33 @@ function getWeekday() {
   return WEEKDAYS[getWeekdayIndex()];
 }
 
+// ============================================
+// MOON & WEATHER FUNCTIONS
+// ============================================
+
+function getMoonPhase() {
+  const day = getDay();
+  const phaseIndex = Math.floor(((day % LUNAR_CYCLE) / LUNAR_CYCLE) * 8) % 8;
+  return MOON_PHASES[phaseIndex];
+}
+
+function getWeather() {
+  const day = getDay();
+  const seed = ((day * 2654435761) >>> 0) % WEATHER_TYPES.length;
+  return WEATHER_TYPES[seed];
+}
+
+function getWeatherIcon() {
+  const weather = getWeather();
+  const period = getTimePeriod();
+  const isNight = period.name === 'Night' || period.name === 'Midnight';
+  return isNight ? weather.nightIcon : weather.icon;
+}
+
+// ============================================
+// TIME ADJUSTMENT FUNCTIONS
+// ============================================
+
 // Add offset minutes (for timeskip)
 function addOffset(minutes) {
   state.time.offsetMinutes += minutes;
@@ -962,7 +1022,7 @@ function setTime(targetHour) {
   const currentHour = getHour();
   const currentMinute = getMinute();
   let hoursToAdd = targetHour - currentHour;
-  if (hoursToAdd < 0) hoursToAdd += 24; // Wrap to next day
+  if (hoursToAdd <= 0) hoursToAdd += 24;
   state.time.offsetMinutes += (hoursToAdd * 60) - currentMinute;
 }
 
@@ -971,24 +1031,24 @@ function skipToMorning() {
   const currentHour = getHour();
   const currentMinute = getMinute();
   let hoursToSkip;
-  
-  if (currentHour >= 7 && currentHour < 21) {
-    // Daytime: skip to next morning
-    hoursToSkip = 24 - currentHour + 7;
-  } else if (currentHour >= 21) {
-    // Evening/night: skip to morning
-    hoursToSkip = 24 - currentHour + 7;
-  } else {
-    // Before 7 AM: skip to 7 AM today
+
+  if (currentHour < 7) {
+    // Before dawn: skip to 7 AM today
     hoursToSkip = 7 - currentHour;
+  } else {
+    // 7 AM or later: skip to next day's 7 AM
+    hoursToSkip = (24 - currentHour) + 7;
   }
-  
+
   state.time.offsetMinutes += (hoursToSkip * 60) - currentMinute;
 }
 
 function getTimeContext() {
   const period = getTimePeriod();
-  return \`[Time: \${getTimeString()} (\${period.name}), \${getWeekday()}, Day \${getDay()}]\`;
+  const moon = getMoonPhase();
+  const weather = getWeather();
+  const weatherIcon = getWeatherIcon();
+  return \`[Time: \${getTimeString()} (\${period.name}), \${getWeekday()}, Day \${getDay()} | Moon: \${moon.icon} \${moon.name} | Weather: \${weatherIcon} \${weather.name}]\`;
 }
 
 // ============================================
@@ -1001,8 +1061,11 @@ function handleTimeCommand(input) {
   // :time - show current time
   if (lower === ':time') {
     const period = getTimePeriod();
+    const moon = getMoonPhase();
+    const weather = getWeather();
+    const weatherIcon = getWeatherIcon();
     return {
-      output: \`\\n🕐 \${getTimeString()} - \${period.icon} \${period.name}\\n📅 \${getWeekday()}, Day \${getDay()} (Turn \${info.actionCount || 0})\`,
+      output: \`\\n🕐 \${getTimeString()} - \${period.icon} \${period.name}\\n📅 \${getWeekday()}, Day \${getDay()} (Turn \${info.actionCount || 0})\\n\${moon.icon} \${moon.name}\\n\${weatherIcon} \${weather.name}\`,
       isCommand: true
     };
   }
@@ -1043,19 +1106,28 @@ function handleTimeCommand(input) {
   return null;
 }`,
       context: `// ============================================
-// CONTEXT MODIFIER - Inject Time + Strip Protocol
+// CONTEXT MODIFIER - Inject Time, Moon, Weather + Strip Protocol
 // ============================================
-// Adds current time to AI context so it can reference time of day.
+// Adds current time, moon phase, and weather to AI context.
+// Properly handles memory section and maxChars limit.
 
 const modifier = (text) => {
   // Strip protocol messages
   text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
-  
-  // Inject time context at the start
-  const timeContext = getTimeContext();
-  text = timeContext + '\\n' + text;
-  
-  return { text };
+
+  // Separate memory from context (memory occupies first info.memoryLength chars)
+  const contextMemory = info.memoryLength ? text.slice(0, info.memoryLength) : '';
+  let context = info.memoryLength ? text.slice(info.memoryLength) : text;
+
+  // Inject time/moon/weather context after memory, before story content
+  const envContext = getTimeContext();
+  context = envContext + '\\n' + context;
+
+  // Ensure context doesn't exceed maxChars (server truncates from the start)
+  context = context.slice(-(info.maxChars - info.memoryLength));
+  const finalText = contextMemory + context;
+
+  return { text: finalText };
 };
 
 modifier(text);`,
@@ -1063,47 +1135,54 @@ modifier(text);`,
 // INPUT MODIFIER - Handle Time Commands
 // ============================================
 // Detects :time, :timeskip, :sleep, :settime commands.
+// Uses the AI Dungeon command parser regex to handle Do, Say, and Story mode.
 // Time advances automatically via info.actionCount.
 
 const modifier = (text) => {
-  const input = text.trim();
-  
-  // Check for time commands
-  if (input.startsWith(':time') || input.startsWith(':sleep') || input.startsWith(':settime')) {
-    const result = handleTimeCommand(input);
+  // Parse commands from all AI Dungeon input formats:
+  // Do mode:    "> You :command args"
+  // Say mode:   '> You say ":command args"'
+  // Story mode: ":command args"
+  const cmdMatch = text.match(/\\n? ?(?:> You |> You say "|):(\\w+?)( [\\w ]+)?[".]?\\n?$/i);
+
+  if (cmdMatch) {
+    const command = ':' + cmdMatch[1].trim() + (cmdMatch[2] ? cmdMatch[2].trimEnd() : '');
+    const result = handleTimeCommand(command);
     if (result) {
       state.time.pendingOutput = result.output;
       state.time.isCommand = true;
       return { text: '[TIME COMMAND]' };
     }
   }
-  
-  // Time advances automatically from info.actionCount
+
   return { text };
 };
 
 modifier(text);`,
       output: `// ============================================
-// OUTPUT MODIFIER - Display Time Widget
+// OUTPUT MODIFIER - Display Time, Moon & Weather Widgets
 // ============================================
-// Shows time widget and handles command output.
+// Shows time, moon phase, and weather widgets. Handles command output.
 
 const modifier = (text) => {
   let output = text;
-  
+
   // Check for pending command output
   if (state.time.isCommand && state.time.pendingOutput) {
     output = state.time.pendingOutput;
     state.time.pendingOutput = null;
     state.time.isCommand = false;
   }
-  
-  // Build time widgets (multiple stats for time, day, period)
+
+  // Build widgets
   const period = getTimePeriod();
+  const moon = getMoonPhase();
+  const weather = getWeather();
   const isNight = period.name === 'Night' || period.name === 'Midnight';
-  
+  const weatherIcon = isNight ? weather.nightIcon : weather.icon;
+
   let widgets = '';
-  
+
   // Time widget (order: 1) - top bar
   widgets += bdWidget('time-clock', {
     type: 'stat',
@@ -1113,7 +1192,7 @@ const modifier = (text) => {
     position: 'top',
     order: 1
   });
-  
+
   // Day widget (order: 2) - top bar
   widgets += bdWidget('time-day', {
     type: 'stat',
@@ -1123,7 +1202,7 @@ const modifier = (text) => {
     position: 'top',
     order: 2
   });
-  
+
   // Period badge (order: 3) - top bar
   widgets += bdWidget('time-period', {
     type: 'badge',
@@ -1134,7 +1213,27 @@ const modifier = (text) => {
     position: 'top',
     order: 3
   });
-  
+
+  // Moon phase widget (order: 4) - top bar
+  widgets += bdWidget('time-moon', {
+    type: 'stat',
+    label: moon.icon,
+    value: moon.name,
+    color: '#c4b5fd',
+    position: 'top',
+    order: 4
+  });
+
+  // Weather widget (order: 5) - top bar
+  widgets += bdWidget('time-weather', {
+    type: 'stat',
+    label: weatherIcon,
+    value: weather.name,
+    color: '#67e8f9',
+    position: 'top',
+    order: 5
+  });
+
   return { text: output + widgets };
 };
 
