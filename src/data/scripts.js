@@ -850,292 +850,570 @@ modifier(text);`
     }
   },
   {
-    id: 'betterscripts-time-system',
-    name: 'In-Game Time System',
+    id: 'chronos-time-system',
+    name: 'Chronos',
     category: 'betterscripts',
-    difficulty: 'intermediate',
+    difficulty: 'advanced',
     impact: 'high',
     essential: true,
-    tags: ['widgets', 'time', 'clock', 'day-night', 'betterscripts', 'context', 'commands'],
+    tags: ['widgets', 'time', 'clock', 'day-night', 'betterscripts', 'context', 'commands', 'calendar', 'weather', 'date', 'season', 'standalone'],
     source: 'BetterRepository',
-    description: 'Day/night cycle with time of day periods, weekday tracking, and time commands.',
-    purpose: 'Each turn = 2 minutes. Time injected into AI context. Commands: :time, :timeskip <hours>, :sleep, :settime <hour>.',
-    requiresExtension: 'BetterDungeon',
+    description: 'The ultimate AI Dungeon time system. Full calendar with day/week/month/year tracking, time-of-day periods, optional weather, and rich commands. Works standalone or enhanced with BetterScripts widgets.',
+    purpose: 'Standalone time engine enhanced by BetterDungeon. Each turn = configurable minutes. Commands: :time, :timeskip, :sleep, :settime, :setdate, :weather, :chronos. Full calendar with seasons and optional weather cycles.',
     files: {
       library: `// ============================================
-// LIBRARY - In-Game Time System
+// Chronos - The Ultimate AI Dungeon Time System
 // ============================================
-// Time is calculated from info.actionCount (turns).
-// - Each turn = 2 minutes of in-game time
-// - Time of day: Dawn, Morning, Afternoon, Evening, Night, Midnight
-// - Day of week tracking
-// - Commands: :time, :timeskip <hours>, :sleep, :settime <hour>
+// A comprehensive time and calendar engine for AI Dungeon.
+// Works standalone. Enhanced with BetterScripts widgets when BetterDungeon is present.
+//
+// FEATURES:
+//   Full calendar: hour, minute, day-of-week, day, month, year
+//   Time-of-day periods: Dawn, Morning, Afternoon, Evening, Night, Midnight
+//   Season tracking with configurable start date
+//   Optional weather system with season-aware patterns
+//   Rich command set for time manipulation
+//   Leap year support, proper month lengths
+//
+// COMMANDS:
+//   :time                    - Show current date/time
+//   :timeskip <N> <unit>     - Skip time (minutes/hours/days/weeks/months/years)
+//   :sleep                   - Skip to next morning (7 AM)
+//   :settime <hour> [minute] - Set clock to specific time (0-23)
+//   :setdate <month> <day> [year] - Set calendar date
+//   :weather                 - Toggle weather system
+//   :chronos                 - Show help and system status
 
-// State only stores offsets from manual adjustments
-state.time = state.time ?? {
-  offsetMinutes: 0,  // Manual time adjustments (timeskip, sleep, settime)
-  startHour: 8       // Starting hour of day (8 AM)
+// ============================================
+// STATE INITIALIZATION
+// ============================================
+
+state.chronos = state.chronos ?? {
+  offsetMinutes: 0,
+  startMonth: 6,
+  startDay: 15,
+  startYear: 1,
+  startHour: 8,
+  startMinute: 0,
+  weatherEnabled: false,
+  weatherCondition: 'Clear',
+  weatherLastChange: 0,
+  bdDetected: false
 };
 
-// Configuration
-const MINUTES_PER_TURN = 2;
-const START_MINUTE = state.time.startHour * 60; // 8:00 AM default
+const CFG = {
+  minutesPerTurn: 2,
+  morningHour: 7
+};
 
 // ============================================
-// BETTERSCRIPTS PROTOCOL HELPERS
+// BETTERSCRIPTS PROTOCOL (OPTIONAL)
 // ============================================
 
-function bdMessage(msg) { return \`[[BD:\${JSON.stringify(msg)}:BD]]\`; }
-function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
+function bdMsg(m) { return \`[[BD:\${JSON.stringify(m)}:BD]]\`; }
+function bdWidget(id, cfg) { return bdMsg({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
+function hasBetterScripts() { return state.chronos.bdDetected; }
 
 // ============================================
-// TIME CONSTANTS
+// CALENDAR CONSTANTS
 // ============================================
 
 const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-const TIME_PERIODS = [
-  { name: 'Midnight', icon: '🌑', start: 0, end: 4 },
-  { name: 'Dawn', icon: '🌅', start: 4, end: 7 },
-  { name: 'Morning', icon: '☀️', start: 7, end: 12 },
-  { name: 'Afternoon', icon: '🌤️', start: 12, end: 17 },
-  { name: 'Evening', icon: '🌆', start: 17, end: 21 },
-  { name: 'Night', icon: '🌙', start: 21, end: 24 }
+const MONTHS = [
+  { name: 'January', days: 31 },
+  { name: 'February', days: 28 },
+  { name: 'March', days: 31 },
+  { name: 'April', days: 30 },
+  { name: 'May', days: 31 },
+  { name: 'June', days: 30 },
+  { name: 'July', days: 31 },
+  { name: 'August', days: 31 },
+  { name: 'September', days: 30 },
+  { name: 'October', days: 31 },
+  { name: 'November', days: 30 },
+  { name: 'December', days: 31 }
 ];
 
+const TIME_PERIODS = [
+  { name: 'Midnight', start: 0, end: 4 },
+  { name: 'Dawn', start: 4, end: 7 },
+  { name: 'Morning', start: 7, end: 12 },
+  { name: 'Afternoon', start: 12, end: 17 },
+  { name: 'Evening', start: 17, end: 21 },
+  { name: 'Night', start: 21, end: 24 }
+];
+
+const SEASONS = [
+  { name: 'Winter', months: [12, 1, 2] },
+  { name: 'Spring', months: [3, 4, 5] },
+  { name: 'Summer', months: [6, 7, 8] },
+  { name: 'Autumn', months: [9, 10, 11] }
+];
+
+const WEATHER_TABLE = {
+  Winter: { Clear: 10, Cloudy: 25, Foggy: 15, Snowy: 25, Windy: 10, Rainy: 10, Stormy: 5 },
+  Spring: { Clear: 25, Cloudy: 20, Foggy: 10, Rainy: 25, Windy: 10, Stormy: 8, Snowy: 2 },
+  Summer: { Clear: 35, Cloudy: 20, Rainy: 15, Stormy: 10, Windy: 10, Foggy: 5, Snowy: 0 },
+  Autumn: { Clear: 15, Cloudy: 25, Foggy: 20, Rainy: 20, Windy: 10, Stormy: 5, Snowy: 5 }
+};
+
 // ============================================
-// TIME FUNCTIONS
+// CALENDAR ENGINE
 // ============================================
 
-// Calculate total minutes from turn count + offsets
+function isLeapYear(y) {
+  return (y % 4 === 0) && (y % 100 !== 0 || y % 400 === 0);
+}
+
+function daysInMonth(month, year) {
+  if (month === 2 && isLeapYear(year)) return 29;
+  return MONTHS[month - 1].days;
+}
+
 function getTotalMinutes() {
   const turns = info.actionCount || 0;
-  return START_MINUTE + (turns * MINUTES_PER_TURN) + state.time.offsetMinutes;
+  const startMin = state.chronos.startHour * 60 + state.chronos.startMinute;
+  return startMin + (turns * CFG.minutesPerTurn) + state.chronos.offsetMinutes;
 }
 
-function getHour() {
-  const total = getTotalMinutes();
-  return Math.floor((total % (24 * 60)) / 60);
+function resolveDateTime() {
+  let totalMin = getTotalMinutes();
+  let year = state.chronos.startYear;
+  let month = state.chronos.startMonth;
+  let day = state.chronos.startDay;
+
+  let daysSinceStart = Math.floor(totalMin / (24 * 60));
+  let remainingMin = totalMin % (24 * 60);
+  if (remainingMin < 0) {
+    daysSinceStart -= 1;
+    remainingMin += 24 * 60;
+  }
+
+  day += daysSinceStart;
+
+  while (day > daysInMonth(month, year)) {
+    day -= daysInMonth(month, year);
+    month++;
+    if (month > 12) { month = 1; year++; }
+  }
+  while (day < 1) {
+    month--;
+    if (month < 1) { month = 12; year--; }
+    day += daysInMonth(month, year);
+  }
+
+  const hour = Math.floor(remainingMin / 60) % 24;
+  const minute = remainingMin % 60;
+
+  return { year, month, day, hour, minute };
 }
 
-function getMinute() {
-  return getTotalMinutes() % 60;
-}
-
-function getDay() {
-  return Math.floor(getTotalMinutes() / (24 * 60)) + 1;
-}
-
-function getWeekdayIndex() {
-  return (getDay() - 1) % 7;
-}
+function getHour() { return resolveDateTime().hour; }
+function getMinute() { return resolveDateTime().minute; }
 
 function getTimeString() {
-  const h = getHour();
-  const m = getMinute();
-  const hour12 = h % 12 || 12;
-  const ampm = h < 12 ? 'AM' : 'PM';
-  return \`\${hour12}:\${m.toString().padStart(2, '0')} \${ampm}\`;
+  const dt = resolveDateTime();
+  const hour12 = dt.hour % 12 || 12;
+  const ampm = dt.hour < 12 ? 'AM' : 'PM';
+  return \`\${hour12}:\${String(dt.minute).padStart(2, '0')} \${ampm}\`;
 }
 
 function getTimePeriod() {
   const h = getHour();
-  for (const period of TIME_PERIODS) {
-    if (h >= period.start && h < period.end) {
-      return period;
-    }
+  for (const p of TIME_PERIODS) {
+    if (h >= p.start && h < p.end) return p;
   }
-  return TIME_PERIODS[0]; // Midnight (wraps around)
+  return TIME_PERIODS[0];
+}
+
+function getMonthName() { return MONTHS[resolveDateTime().month - 1].name; }
+function getMonthShort() { return getMonthName().substring(0, 3); }
+function getDayOfMonth() { return resolveDateTime().day; }
+function getYear() { return resolveDateTime().year; }
+
+function getDayCount() {
+  return Math.floor(getTotalMinutes() / (24 * 60)) + 1;
 }
 
 function getWeekday() {
-  return WEEKDAYS[getWeekdayIndex()];
+  return WEEKDAYS[(getDayCount() - 1) % 7];
 }
 
-// Add offset minutes (for timeskip)
-function addOffset(minutes) {
-  state.time.offsetMinutes += minutes;
-}
-
-// Set to specific hour (adjusts offset to reach target)
-function setTime(targetHour) {
-  const currentHour = getHour();
-  const currentMinute = getMinute();
-  let hoursToAdd = targetHour - currentHour;
-  if (hoursToAdd < 0) hoursToAdd += 24; // Wrap to next day
-  state.time.offsetMinutes += (hoursToAdd * 60) - currentMinute;
-}
-
-// Skip to next morning (7 AM)
-function skipToMorning() {
-  const currentHour = getHour();
-  const currentMinute = getMinute();
-  let hoursToSkip;
-  
-  if (currentHour >= 7 && currentHour < 21) {
-    // Daytime: skip to next morning
-    hoursToSkip = 24 - currentHour + 7;
-  } else if (currentHour >= 21) {
-    // Evening/night: skip to morning
-    hoursToSkip = 24 - currentHour + 7;
-  } else {
-    // Before 7 AM: skip to 7 AM today
-    hoursToSkip = 7 - currentHour;
+function getSeason() {
+  const m = resolveDateTime().month;
+  for (const s of SEASONS) {
+    if (s.months.includes(m)) return s.name;
   }
-  
-  state.time.offsetMinutes += (hoursToSkip * 60) - currentMinute;
+  return 'Summer';
 }
+
+function getDateString() {
+  const dt = resolveDateTime();
+  return \`\${getMonthName()} \${dt.day}, Year \${dt.year}\`;
+}
+
+function getFullDateString() {
+  return \`\${getWeekday()}, \${getDateString()}\`;
+}
+
+// ============================================
+// TIME MANIPULATION
+// ============================================
+
+function addMinutes(n) { state.chronos.offsetMinutes += n; }
+
+function skipToHour(targetHour, targetMinute) {
+  const dt = resolveDateTime();
+  let minutesToAdd = (targetHour * 60 + (targetMinute || 0)) - (dt.hour * 60 + dt.minute);
+  if (minutesToAdd <= 0) minutesToAdd += 24 * 60;
+  state.chronos.offsetMinutes += minutesToAdd;
+}
+
+function skipToMorning() {
+  const h = getHour();
+  const m = getMinute();
+  if (h < CFG.morningHour) {
+    state.chronos.offsetMinutes += (CFG.morningHour * 60) - (h * 60 + m);
+  } else {
+    state.chronos.offsetMinutes += (24 * 60) - (h * 60 + m) + (CFG.morningHour * 60);
+  }
+}
+
+function setDateTime(month, day, year) {
+  const dt = resolveDateTime();
+  const curTotal = getTotalMinutes();
+  const curDayStart = curTotal - (dt.hour * 60 + dt.minute);
+
+  let targetDays = 0;
+  let y = state.chronos.startYear;
+  let mo = state.chronos.startMonth;
+  let d = state.chronos.startDay;
+
+  const targetY = year !== undefined ? year : dt.year;
+  const targetM = month;
+  const targetD = day;
+
+  let startDays = 0;
+  let ty = state.chronos.startYear;
+  let tm = state.chronos.startMonth;
+  let td = state.chronos.startDay;
+
+  function countDaysFromEpoch(ey, em, ed) {
+    let total = 0;
+    for (let yr = 1; yr < ey; yr++) {
+      total += isLeapYear(yr) ? 366 : 365;
+    }
+    for (let mn = 1; mn < em; mn++) {
+      total += daysInMonth(mn, ey);
+    }
+    total += ed - 1;
+    return total;
+  }
+
+  const startAbsDays = countDaysFromEpoch(state.chronos.startYear, state.chronos.startMonth, state.chronos.startDay);
+  const targetAbsDays = countDaysFromEpoch(targetY, targetM, targetD);
+  const curAbsDays = countDaysFromEpoch(dt.year, dt.month, dt.day);
+
+  const dayDiff = targetAbsDays - curAbsDays;
+  state.chronos.offsetMinutes += dayDiff * 24 * 60;
+}
+
+// ============================================
+// WEATHER ENGINE
+// ============================================
+
+function rollWeather() {
+  const season = getSeason();
+  const table = WEATHER_TABLE[season];
+  const conditions = Object.keys(table);
+  const weights = Object.values(table);
+  const totalWeight = weights.reduce(function(a, b) { return a + b; }, 0);
+
+  let roll = Math.floor(Math.random() * totalWeight);
+  for (let i = 0; i < conditions.length; i++) {
+    roll -= weights[i];
+    if (roll < 0) return conditions[i];
+  }
+  return 'Clear';
+}
+
+function updateWeather() {
+  if (!state.chronos.weatherEnabled) return;
+  const dayCount = getDayCount();
+  const period = getTimePeriod().name;
+  const changePoints = ['Dawn', 'Afternoon', 'Night'];
+  const lastChange = state.chronos.weatherLastChange || 0;
+
+  if (dayCount !== lastChange && changePoints.includes(period)) {
+    if (Math.random() < 0.4) {
+      state.chronos.weatherCondition = rollWeather();
+    }
+    state.chronos.weatherLastChange = dayCount;
+  }
+}
+
+function getWeatherString() {
+  if (!state.chronos.weatherEnabled) return '';
+  return state.chronos.weatherCondition || 'Clear';
+}
+
+// ============================================
+// CONTEXT BUILDER
+// ============================================
 
 function getTimeContext() {
   const period = getTimePeriod();
-  return \`[Time: \${getTimeString()} (\${period.name}), \${getWeekday()}, Day \${getDay()}]\`;
+  let ctx = \`[Time: \${getTimeString()} (\${period.name}), \${getFullDateString()}, \${getSeason()}\`;
+  if (state.chronos.weatherEnabled) {
+    ctx += \` | Weather: \${getWeatherString()}\`;
+  }
+  ctx += ']';
+  return ctx;
 }
 
 // ============================================
 // COMMAND HANDLERS
 // ============================================
 
-function handleTimeCommand(input) {
+function handleChronosCommand(input) {
   const lower = input.toLowerCase().trim();
-  
-  // :time - show current time
-  if (lower === ':time') {
-    const period = getTimePeriod();
+  const parts = lower.split(/\\s+/);
+  const cmd = parts[0];
+
+  if (cmd === ':chronos') {
+    const bd = hasBetterScripts() ? 'Active' : 'Inactive';
+    const w = state.chronos.weatherEnabled ? 'ON' : 'OFF';
     return {
-      output: \`\\n🕐 \${getTimeString()} - \${period.icon} \${period.name}\\n📅 \${getWeekday()}, Day \${getDay()} (Turn \${info.actionCount || 0})\`,
+      output: \`\\nChronos Time System\\n\` +
+        \`Time: \${getTimeString()} (\${getTimePeriod().name})\\n\` +
+        \`Date: \${getFullDateString()}\\n\` +
+        \`Season: \${getSeason()} | Year \${getYear()}\\n\` +
+        \`Weather: \${w}\${state.chronos.weatherEnabled ? ' (' + getWeatherString() + ')' : ''}\\n\` +
+        \`BetterScripts: \${bd}\\n\` +
+        \`Turn: \${info.actionCount || 0} (\${CFG.minutesPerTurn} min/turn)\\n\\n\` +
+        \`Commands:\\n\` +
+        \`:time - Current time & date\\n\` +
+        \`:timeskip <N> <unit> - Skip (minutes/hours/days/weeks/months/years)\\n\` +
+        \`:sleep - Rest until morning\\n\` +
+        \`:settime <hour> [min] - Set clock (0-23)\\n\` +
+        \`:setdate <month> <day> [year] - Set date (1-12, 1-31)\\n\` +
+        \`:weather - Toggle weather\\n\` +
+        \`:chronos - This help\`,
       isCommand: true
     };
   }
-  
-  // :timeskip <hours> - skip ahead
-  const skipMatch = lower.match(/^:timeskip\\s+(\\d+)$/);
-  if (skipMatch) {
-    const hours = parseInt(skipMatch[1]);
-    addOffset(hours * 60);
+
+  if (cmd === ':time') {
+    const period = getTimePeriod();
+    let out = \`\\n\${getTimeString()} - \${period.name}\\n\${getFullDateString()} (\${getSeason()}, Year \${getYear()})\`;
+    if (state.chronos.weatherEnabled) {
+      out += \`\\nWeather: \${getWeatherString()}\`;
+    }
+    return { output: out, isCommand: true };
+  }
+
+  if (cmd === ':timeskip' && parts.length >= 2) {
+    const amount = parseInt(parts[1]);
+    if (isNaN(amount) || amount <= 0) {
+      return { output: '\\nUsage: :timeskip <number> <minutes|hours|days|weeks|months|years>', isCommand: true };
+    }
+    const unit = (parts[2] || 'hours').toLowerCase();
+    let minutes = 0;
+    let label = '';
+    if (unit.startsWith('mi')) { minutes = amount; label = \`\${amount} minute\${amount !== 1 ? 's' : ''}\`; }
+    else if (unit.startsWith('h')) { minutes = amount * 60; label = \`\${amount} hour\${amount !== 1 ? 's' : ''}\`; }
+    else if (unit.startsWith('d')) { minutes = amount * 60 * 24; label = \`\${amount} day\${amount !== 1 ? 's' : ''}\`; }
+    else if (unit.startsWith('w')) { minutes = amount * 60 * 24 * 7; label = \`\${amount} week\${amount !== 1 ? 's' : ''}\`; }
+    else if (unit.startsWith('mo')) { minutes = amount * 60 * 24 * 30; label = \`\${amount} month\${amount !== 1 ? 's' : ''}\`; }
+    else if (unit.startsWith('y')) { minutes = amount * 60 * 24 * 365; label = \`\${amount} year\${amount !== 1 ? 's' : ''}\`; }
+    else { minutes = amount * 60; label = \`\${amount} hour\${amount !== 1 ? 's' : ''}\`; }
+
+    addMinutes(minutes);
     const period = getTimePeriod();
     return {
-      output: \`\\n⏩ Skipped \${hours} hour\${hours !== 1 ? 's' : ''}. It is now \${getTimeString()} (\${period.name}).\`,
+      output: \`\\nSkipped \${label}. It is now \${getTimeString()} (\${period.name}), \${getFullDateString()}.\`,
       isCommand: true
     };
   }
-  
-  // :sleep - skip to next morning
-  if (lower === ':sleep') {
+
+  if (cmd === ':sleep') {
     skipToMorning();
     return {
-      output: \`\\n😴 You rest and wake refreshed. It is now \${getTimeString()} on \${getWeekday()}, Day \${getDay()}.\`,
+      output: \`\\nYou rest and wake refreshed. It is now \${getTimeString()} on \${getFullDateString()}.\`,
       isCommand: true
     };
   }
-  
-  // :settime <hour> - set specific hour (0-23)
-  const setMatch = lower.match(/^:settime\\s+(\\d+)$/);
-  if (setMatch) {
-    const hour = parseInt(setMatch[1]) % 24;
-    setTime(hour);
+
+  if (cmd === ':settime' && parts.length >= 2) {
+    const hour = parseInt(parts[1]);
+    if (isNaN(hour) || hour < 0 || hour > 23) {
+      return { output: '\\nUsage: :settime <hour 0-23> [minute 0-59]', isCommand: true };
+    }
+    const minute = parts[2] ? Math.min(59, Math.max(0, parseInt(parts[2]) || 0)) : 0;
+    skipToHour(hour, minute);
     const period = getTimePeriod();
     return {
-      output: \`\\n🕐 Time set to \${getTimeString()} (\${period.name}).\`,
+      output: \`\\nTime set to \${getTimeString()} (\${period.name}).\`,
       isCommand: true
     };
   }
-  
+
+  if (cmd === ':setdate' && parts.length >= 3) {
+    const month = parseInt(parts[1]);
+    const day = parseInt(parts[2]);
+    const year = parts[3] ? parseInt(parts[3]) : undefined;
+    if (isNaN(month) || month < 1 || month > 12 || isNaN(day) || day < 1 || day > 31) {
+      return { output: '\\nUsage: :setdate <month 1-12> <day 1-31> [year]', isCommand: true };
+    }
+    const maxDay = daysInMonth(month, year || getYear());
+    const clampedDay = Math.min(day, maxDay);
+    setDateTime(month, clampedDay, year);
+    return {
+      output: \`\\nDate set to \${getFullDateString()}, Year \${getYear()}.\`,
+      isCommand: true
+    };
+  }
+
+  if (cmd === ':weather') {
+    state.chronos.weatherEnabled = !state.chronos.weatherEnabled;
+    if (state.chronos.weatherEnabled && !state.chronos.weatherCondition) {
+      state.chronos.weatherCondition = rollWeather();
+    }
+    const status = state.chronos.weatherEnabled ? 'enabled' : 'disabled';
+    let out = \`\\nWeather system \${status}.\`;
+    if (state.chronos.weatherEnabled) {
+      out += \` Current: \${getWeatherString()} (\${getSeason()})\`;
+    }
+    return { output: out, isCommand: true };
+  }
+
   return null;
 }`,
       context: `// ============================================
-// CONTEXT MODIFIER - Inject Time + Strip Protocol
+// CONTEXT MODIFIER - Chronos
 // ============================================
-// Adds current time to AI context so it can reference time of day.
+// Injects current time/date/weather into AI context.
+// Strips BetterScripts protocol messages so AI never sees them.
 
 const modifier = (text) => {
-  // Strip protocol messages
   text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
-  
-  // Inject time context at the start
+
+  updateWeather();
+
   const timeContext = getTimeContext();
   text = timeContext + '\\n' + text;
-  
+
   return { text };
 };
 
 modifier(text);`,
       input: `// ============================================
-// INPUT MODIFIER - Handle Time Commands
+// INPUT MODIFIER - Chronos
 // ============================================
-// Detects :time, :timeskip, :sleep, :settime commands.
-// Time advances automatically via info.actionCount.
+// Detects Chronos commands from player input.
+// Handles: :time, :timeskip, :sleep, :settime, :setdate, :weather, :chronos
 
 const modifier = (text) => {
   const input = text.trim();
-  
-  // Check for time commands
-  if (input.startsWith(':time') || input.startsWith(':sleep') || input.startsWith(':settime')) {
-    const result = handleTimeCommand(input);
+  const lower = input.toLowerCase();
+
+  const commandPrefixes = [':time', ':sleep', ':settime', ':setdate', ':weather', ':chronos'];
+  const isCommand = commandPrefixes.some(function(p) { return lower.startsWith(p); });
+
+  if (isCommand) {
+    const result = handleChronosCommand(input);
     if (result) {
-      state.time.pendingOutput = result.output;
-      state.time.isCommand = true;
-      return { text: '[TIME COMMAND]' };
+      state.chronos.pendingOutput = result.output;
+      state.chronos.isCommand = true;
+      return { text: '', stop: true };
     }
   }
-  
-  // Time advances automatically from info.actionCount
+
   return { text };
 };
 
 modifier(text);`,
       output: `// ============================================
-// OUTPUT MODIFIER - Display Time Widget
+// OUTPUT MODIFIER - Chronos
 // ============================================
-// Shows time widget and handles command output.
+// Displays time via BetterScripts widgets (if available) or state.message fallback.
+// Handles pending command output.
 
 const modifier = (text) => {
   let output = text;
-  
-  // Check for pending command output
-  if (state.time.isCommand && state.time.pendingOutput) {
-    output = state.time.pendingOutput;
-    state.time.pendingOutput = null;
-    state.time.isCommand = false;
+
+  if (state.chronos.isCommand && state.chronos.pendingOutput) {
+    output = state.chronos.pendingOutput;
+    state.chronos.pendingOutput = null;
+    state.chronos.isCommand = false;
   }
-  
-  // Build time widgets (multiple stats for time, day, period)
+
+  updateWeather();
+
   const period = getTimePeriod();
   const isNight = period.name === 'Night' || period.name === 'Midnight';
-  
-  let widgets = '';
-  
-  // Time widget (order: 1) - top bar
-  widgets += bdWidget('time-clock', {
-    type: 'stat',
-    label: period.icon,
-    value: getTimeString(),
-    color: isNight ? '#94a3b8' : '#fbbf24',
-    position: 'top',
-    order: 1
-  });
-  
-  // Day widget (order: 2) - top bar
-  widgets += bdWidget('time-day', {
-    type: 'stat',
-    label: '📅',
-    value: getWeekday().substring(0, 3) + ' D' + getDay(),
-    color: '#60a5fa',
-    position: 'top',
-    order: 2
-  });
-  
-  // Period badge (order: 3) - top bar
-  widgets += bdWidget('time-period', {
-    type: 'badge',
-    text: period.name,
-    icon: period.icon,
-    color: isNight ? '#a78bfa' : '#f472b6',
-    variant: 'subtle',
-    position: 'top',
-    order: 3
-  });
-  
-  return { text: output + widgets };
+
+  if (hasBetterScripts()) {
+    let widgets = '';
+
+    widgets += bdWidget('chronos-clock', {
+      type: 'stat',
+      label: 'Time',
+      value: getTimeString(),
+      color: isNight ? '#94a3b8' : '#fbbf24',
+      position: 'top',
+      order: 1
+    });
+
+    widgets += bdWidget('chronos-date', {
+      type: 'stat',
+      label: 'Date',
+      value: getMonthShort() + ' ' + getDayOfMonth() + ', Y' + getYear(),
+      color: '#60a5fa',
+      position: 'top',
+      order: 2
+    });
+
+    widgets += bdWidget('chronos-period', {
+      type: 'badge',
+      text: period.name,
+      color: isNight ? '#a78bfa' : '#f472b6',
+      variant: 'subtle',
+      position: 'top',
+      order: 3
+    });
+
+    widgets += bdWidget('chronos-day', {
+      type: 'badge',
+      text: getWeekday().substring(0, 3) + ' D' + getDayCount(),
+      color: '#34d399',
+      variant: 'subtle',
+      position: 'top',
+      order: 4
+    });
+
+    if (state.chronos.weatherEnabled) {
+      widgets += bdWidget('chronos-weather', {
+        type: 'badge',
+        text: getWeatherString(),
+        color: '#38bdf8',
+        variant: 'subtle',
+        position: 'top',
+        order: 5
+      });
+    }
+
+    output += widgets;
+  } else {
+    let msg = \`\${getTimeString()} (\${period.name}) | \${getWeekday().substring(0, 3)}, \${getMonthShort()} \${getDayOfMonth()}\`;
+    if (state.chronos.weatherEnabled) {
+      msg += \` | \${getWeatherString()}\`;
+    }
+    state.message = msg;
+  }
+
+  return { text: output };
 };
 
 modifier(text);`
