@@ -932,7 +932,6 @@ state.chronos = state.chronos ?? {
   pendingOutput: null,
   isCommand: false,
   lastActionCount: -1,
-  lastActionHash: null,
   initialized: false
 };
 
@@ -1294,7 +1293,7 @@ function setDateTo(day, month, year) {
 function skipToMorning() {
   const s = state.chronos;
   const wakeHour = s.config.wakeHour || 7;
-  if (s.hour >= wakeHour && s.hour < wakeHour + 4 && s.minute === 0) {
+  if (s.hour >= wakeHour && s.hour < wakeHour + 4) {
     return false;
   }
   let minutesToSkip = 0;
@@ -1305,8 +1304,11 @@ function skipToMorning() {
   }
   if (s.config.weatherEnabled) {
     const turnsToSimulate = Math.floor(minutesToSkip / Math.max(1, s.config.minutesPerTurn));
-    for (let i = 0; i < turnsToSimulate; i++) {
-      if (shouldChangeWeather()) {
+    const maxIter = Math.min(turnsToSimulate, 500);
+    const expectedRolls = Math.max(1, Math.floor(turnsToSimulate / s.config.weatherChangeCooldown));
+    const rollEvery = Math.max(1, Math.floor(maxIter / expectedRolls));
+    for (let i = 0; i < maxIter; i++) {
+      if (i % rollEvery === 0) {
         rollWeather();
       }
       updateTemperature();
@@ -1326,8 +1328,11 @@ function handleAdvanceTime(amount, unit) {
   const totalMinutes = amount * minutesPerUnit;
   if (state.chronos.config.weatherEnabled) {
     const turnsToSimulate = Math.floor(totalMinutes / Math.max(1, state.chronos.config.minutesPerTurn));
-    for (let i = 0; i < turnsToSimulate; i++) {
-      if (shouldChangeWeather()) {
+    const maxIter = Math.min(turnsToSimulate, 500);
+    const expectedRolls = Math.max(1, Math.floor(turnsToSimulate / state.chronos.config.weatherChangeCooldown));
+    const rollEvery = Math.max(1, Math.floor(maxIter / expectedRolls));
+    for (let i = 0; i < maxIter; i++) {
+      if (i % rollEvery === 0) {
         rollWeather();
       }
       updateTemperature();
@@ -1417,7 +1422,7 @@ function updateTemperature() {
     return;
   }
   const diff = w.targetTemp - w.temperature;
-  if (Math.abs(diff) < 1) {
+  if (Math.abs(diff) <= 1) {
     w.temperature = w.targetTemp;
   } else {
     w.temperature += Math.round(diff * 0.3);
@@ -1685,15 +1690,17 @@ const modifier = (text) => {
   if (!state.chronos.config.enabled) return { text };
 
   let output = text;
+  let isCommandOutput = false;
 
   if (state.chronos.isCommand && state.chronos.pendingOutput) {
     output = state.chronos.pendingOutput;
     state.chronos.pendingOutput = null;
     state.chronos.isCommand = false;
+    isCommandOutput = true;
   }
 
   if (!state.chronos.config.useBetterScripts) {
-    if (state.chronos.config.showTimeInOutput && !state.chronos.isCommand) {
+    if (state.chronos.config.showTimeInOutput && !isCommandOutput) {
       const period = getTimePeriod(state.chronos.hour);
       output = '[' + period.icon + ' ' + getTimeString() + ' - ' + period.name + ']\\n' + output;
     }
