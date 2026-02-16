@@ -958,10 +958,10 @@ const TIME_PERIODS = [
 ];
 
 const SEASONS = [
-  { name: 'Winter', months: [12, 1, 2] },
-  { name: 'Spring', months: [3, 4, 5] },
   { name: 'Summer', months: [6, 7, 8] },
-  { name: 'Autumn', months: [9, 10, 11] }
+  { name: 'Autumn', months: [9, 10, 11] },
+  { name: 'Winter', months: [12, 1, 2] },
+  { name: 'Spring', months: [3, 4, 5] }
 ];
 
 const MOON_PHASES = [
@@ -1924,7 +1924,7 @@ const modifier = (text) => {
   if (s.config.useBetterScripts) {
     let widgets = '';
 
-    // LEFT ZONE: Time + Period (grouped - tells you "when" at a glance)
+    // LEFT ZONE: Time (shows exact time with period icon)
     widgets += bdWidget('chronos-clock', {
       type: 'stat',
       label: period.icon,
@@ -1933,45 +1933,42 @@ const modifier = (text) => {
       align: 'left',
       order: 1
     });
-    widgets += bdWidget('chronos-period', {
-      type: 'badge',
-      text: period.name,
-      icon: period.icon,
-      color: isNight ? '#a78bfa' : '#f472b6',
-      variant: 'subtle',
-      align: 'left',
-      order: 2
-    });
 
-    // CENTER ZONE: Date + Season/Year (the calendar at a glance)
-    widgets += bdWidget('chronos-date', {
-      type: 'stat',
-      label: '\\u{1F4C5}',
-      value: getWeekday() + ', ' + getMonthName() + ' ' + s.day,
-      color: '#60a5fa',
-      align: 'center',
-      order: 1
-    });
-    widgets += bdWidget('chronos-season', {
-      type: 'stat',
-      label: '\\u{1F30D}',
-      value: season.name + ', Year ' + s.year,
-      color: '#a78bfa',
-      align: 'center',
-      order: 2
-    });
-    const moon = getMoonPhase();
-    widgets += bdWidget('chronos-moon', {
-      type: 'badge',
-      text: moon.name,
-      icon: moon.icon,
-      color: '#e2e8f0',
-      variant: 'subtle',
-      align: 'center',
-      order: 3
-    });
+    // CENTER ZONE: Date (when weather is enabled)
+    if (s.config.weatherEnabled) {
+      widgets += bdWidget('chronos-date', {
+        type: 'stat',
+        label: '\\u{1F4C5}',
+        value: getWeekday() + ', ' + getMonthName() + ' ' + s.day,
+        color: '#60a5fa',
+        align: 'center',
+        order: 1
+      });
+      widgets += bdWidget('chronos-season', {
+        type: 'stat',
+        label: '\\u{1F30D}',
+        value: season.name + ', Year ' + s.year,
+        color: '#a78bfa',
+        align: 'center',
+        order: 2
+      });
+    }
 
-    // RIGHT ZONE: Weather (only when enabled)
+    // Moon phase only shows at night
+    if (isNight) {
+      const moon = getMoonPhase();
+      widgets += bdWidget('chronos-moon', {
+        type: 'badge',
+        text: moon.name,
+        icon: moon.icon,
+        color: '#e2e8f0',
+        variant: 'subtle',
+        align: s.config.weatherEnabled ? 'center' : 'right',
+        order: s.config.weatherEnabled ? 3 : 1
+      });
+    }
+
+    // RIGHT ZONE: Weather (when enabled) or Date/Season (when weather disabled)
     if (s.config.weatherEnabled) {
       const wInfo = WEATHER_CONDITIONS[s.weather.current] || WEATHER_CONDITIONS['clear'];
       widgets += bdWidget('chronos-weather', {
@@ -1982,6 +1979,24 @@ const modifier = (text) => {
         align: 'right',
         order: 1
       });
+    } else {
+      // Move date and season to right when weather is disabled
+      widgets += bdWidget('chronos-date', {
+        type: 'stat',
+        label: '\\u{1F4C5}',
+        value: getWeekday() + ', ' + getMonthName() + ' ' + s.day,
+        color: '#60a5fa',
+        align: 'right',
+        order: 1
+      });
+      widgets += bdWidget('chronos-season', {
+        type: 'stat',
+        label: '\\u{1F30D}',
+        value: season.name + ', Year ' + s.year,
+        color: '#a78bfa',
+        align: 'right',
+        order: 2
+      });
     }
 
     return { text: output + widgets };
@@ -1990,12 +2005,18 @@ const modifier = (text) => {
   // -- Standalone Text Mode --
   // Guarded by showTimeInOutput so users can opt for context-only
   if (!s.config.showTimeInOutput) return { text: output };
-  const moonText = getMoonPhase();
   let timeBlock = '\\n';
-  timeBlock += \`\\n--- \${period.name}, \${getTimeString()} ---\`;
-  timeBlock += \`\\n\${getWeekday()}, \${getDateString()} | \${season.name} | \${moonText.icon} \${moonText.name}\`;
+  timeBlock += '\\n--- ' + period.name + ', ' + getTimeString() + ' ---';
+  timeBlock += '\\n' + getWeekday() + ', ' + getDateString() + ' | ' + season.name;
+  
+  // Only show moon phase at night
+  if (isNight) {
+    const moonText = getMoonPhase();
+    timeBlock += ' | ' + moonText.icon + ' ' + moonText.name;
+  }
+  
   if (s.config.weatherEnabled) {
-    timeBlock += \`\\n\${getWeatherDisplay()}\`;
+    timeBlock += '\\n' + getWeatherDisplay();
   }
   output += timeBlock;
 
