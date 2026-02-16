@@ -898,10 +898,10 @@ modifier(text);`
 
 state.chronos = state.chronos ?? {
   minute: 0,
-  hour: 8,
+  hour: 7,
   day: 1,
-  month: 1,
-  year: 1,
+  month: 6,
+  year: 2026,
   config: {
     minutesPerTurn: 2,
     use12HourFormat: true,
@@ -923,6 +923,7 @@ state.chronos = state.chronos ?? {
   pendingOutput: null,
   isCommand: false,
   lastActionCount: -1,
+  lastActionHash: null,
   initialized: false
 };
 
@@ -1152,11 +1153,11 @@ General:
 > Time Format: 12h
 
 Current Time (auto-updated each turn, editable):
-> Hour: 8
+> Hour: 7
 > Minute: 0
 > Day: 1
-> Month: 1
-> Year: 1
+> Month: 6
+> Year: 2026
 
 Display:
 > Use BetterScripts Widgets: false
