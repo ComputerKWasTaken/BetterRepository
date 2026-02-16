@@ -897,8 +897,7 @@ state.chronos = state.chronos ?? {
   startMinute: 0,
   weatherEnabled: false,
   weatherCondition: 'Clear',
-  weatherLastChange: 0,
-  bdDetected: false
+  weatherLastChange: 0
 };
 
 const CFG = {
@@ -912,7 +911,6 @@ const CFG = {
 
 function bdMsg(m) { return \`[[BD:\${JSON.stringify(m)}:BD]]\`; }
 function bdWidget(id, cfg) { return bdMsg({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
-function hasBetterScripts() { return state.chronos.bdDetected; }
 
 // ============================================
 // CALENDAR CONSTANTS
@@ -1082,22 +1080,7 @@ function skipToMorning() {
 
 function setDateTime(month, day, year) {
   const dt = resolveDateTime();
-  const curTotal = getTotalMinutes();
-  const curDayStart = curTotal - (dt.hour * 60 + dt.minute);
-
-  let targetDays = 0;
-  let y = state.chronos.startYear;
-  let mo = state.chronos.startMonth;
-  let d = state.chronos.startDay;
-
   const targetY = year !== undefined ? year : dt.year;
-  const targetM = month;
-  const targetD = day;
-
-  let startDays = 0;
-  let ty = state.chronos.startYear;
-  let tm = state.chronos.startMonth;
-  let td = state.chronos.startDay;
 
   function countDaysFromEpoch(ey, em, ed) {
     let total = 0;
@@ -1111,10 +1094,8 @@ function setDateTime(month, day, year) {
     return total;
   }
 
-  const startAbsDays = countDaysFromEpoch(state.chronos.startYear, state.chronos.startMonth, state.chronos.startDay);
-  const targetAbsDays = countDaysFromEpoch(targetY, targetM, targetD);
+  const targetAbsDays = countDaysFromEpoch(targetY, month, day);
   const curAbsDays = countDaysFromEpoch(dt.year, dt.month, dt.day);
-
   const dayDiff = targetAbsDays - curAbsDays;
   state.chronos.offsetMinutes += dayDiff * 24 * 60;
 }
@@ -1182,7 +1163,7 @@ function handleChronosCommand(input) {
   const cmd = parts[0];
 
   if (cmd === ':chronos') {
-    const bd = hasBetterScripts() ? 'Active' : 'Inactive';
+    const bd = 'Supported (widgets emitted each turn)';
     const w = state.chronos.weatherEnabled ? 'ON' : 'OFF';
     return {
       output: \`\\nChronos Time System\\n\` +
@@ -1337,8 +1318,10 @@ modifier(text);`,
       output: `// ============================================
 // OUTPUT MODIFIER - Chronos
 // ============================================
-// Displays time via BetterScripts widgets (if available) or state.message fallback.
-// Handles pending command output.
+// Progressive enhancement: always emits BetterScripts widget protocol
+// messages AND sets state.message. BetterDungeon strips the protocol
+// messages from the DOM and renders widgets. Without BetterDungeon,
+// state.message provides a clean fallback display.
 
 const modifier = (text) => {
   let output = text;
@@ -1354,64 +1337,62 @@ const modifier = (text) => {
   const period = getTimePeriod();
   const isNight = period.name === 'Night' || period.name === 'Midnight';
 
-  if (hasBetterScripts()) {
-    let widgets = '';
+  let widgets = '';
 
-    widgets += bdWidget('chronos-clock', {
-      type: 'stat',
-      label: 'Time',
-      value: getTimeString(),
-      color: isNight ? '#94a3b8' : '#fbbf24',
-      position: 'top',
-      order: 1
-    });
+  widgets += bdWidget('chronos-clock', {
+    type: 'stat',
+    label: 'Time',
+    value: getTimeString(),
+    color: isNight ? '#94a3b8' : '#fbbf24',
+    position: 'top',
+    order: 1
+  });
 
-    widgets += bdWidget('chronos-date', {
-      type: 'stat',
-      label: 'Date',
-      value: getMonthShort() + ' ' + getDayOfMonth() + ', Y' + getYear(),
-      color: '#60a5fa',
-      position: 'top',
-      order: 2
-    });
+  widgets += bdWidget('chronos-date', {
+    type: 'stat',
+    label: 'Date',
+    value: getMonthShort() + ' ' + getDayOfMonth() + ', Y' + getYear(),
+    color: '#60a5fa',
+    position: 'top',
+    order: 2
+  });
 
-    widgets += bdWidget('chronos-period', {
+  widgets += bdWidget('chronos-period', {
+    type: 'badge',
+    text: period.name,
+    color: isNight ? '#a78bfa' : '#f472b6',
+    variant: 'subtle',
+    position: 'top',
+    order: 3
+  });
+
+  widgets += bdWidget('chronos-day', {
+    type: 'badge',
+    text: getWeekday().substring(0, 3) + ' D' + getDayCount(),
+    color: '#34d399',
+    variant: 'subtle',
+    position: 'top',
+    order: 4
+  });
+
+  if (state.chronos.weatherEnabled) {
+    widgets += bdWidget('chronos-weather', {
       type: 'badge',
-      text: period.name,
-      color: isNight ? '#a78bfa' : '#f472b6',
+      text: getWeatherString(),
+      color: '#38bdf8',
       variant: 'subtle',
       position: 'top',
-      order: 3
+      order: 5
     });
-
-    widgets += bdWidget('chronos-day', {
-      type: 'badge',
-      text: getWeekday().substring(0, 3) + ' D' + getDayCount(),
-      color: '#34d399',
-      variant: 'subtle',
-      position: 'top',
-      order: 4
-    });
-
-    if (state.chronos.weatherEnabled) {
-      widgets += bdWidget('chronos-weather', {
-        type: 'badge',
-        text: getWeatherString(),
-        color: '#38bdf8',
-        variant: 'subtle',
-        position: 'top',
-        order: 5
-      });
-    }
-
-    output += widgets;
-  } else {
-    let msg = \`\${getTimeString()} (\${period.name}) | \${getWeekday().substring(0, 3)}, \${getMonthShort()} \${getDayOfMonth()}\`;
-    if (state.chronos.weatherEnabled) {
-      msg += \` | \${getWeatherString()}\`;
-    }
-    state.message = msg;
   }
+
+  output += widgets;
+
+  let msg = \`\${getTimeString()} (\${period.name}) | \${getWeekday().substring(0, 3)}, \${getMonthShort()} \${getDayOfMonth()}\`;
+  if (state.chronos.weatherEnabled) {
+    msg += \` | \${getWeatherString()}\`;
+  }
+  state.message = msg;
 
   return { text: output };
 };
