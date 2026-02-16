@@ -1535,8 +1535,17 @@ function handleAdvanceTime(amount, unit) {
 }
 
 // Retry detection - prevents double-advancing on retries
+// Uses a hash of recent history to detect when the same action is being processed again
 function isRetry() {
-  return state.chronos.lastActionCount === (info.actionCount || 0);
+  const currentAction = info.actionCount || 0;
+  const lastText = (history && history.length > 0) ? history[history.length - 1]?.text || '' : '';
+  const actionHash = currentAction + ':' + lastText.slice(0, 50);
+  
+  if (state.chronos.lastActionHash === actionHash) {
+    return true;
+  }
+  state.chronos.lastActionHash = actionHash;
+  return false;
 }
 
 // ============================================
