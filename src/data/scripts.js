@@ -874,10 +874,10 @@ modifier(text);`
     difficulty: 'intermediate',
     impact: 'high',
     essential: true,
-    tags: ['widgets', 'time', 'clock', 'day-night', 'moon', 'weather', 'betterscripts', 'context', 'commands'],
+    tags: ['widgets', 'time', 'clock', 'day-night', 'weather', 'betterscripts', 'context', 'commands'],
     source: 'BetterRepository',
-    description: 'Day/night cycle with time periods, weekday tracking, moon phases, weather, and time commands.',
-    purpose: 'Configurable time pacing. Time, moon phase, and weather injected into AI context. Commands: :time, :date, :advance, :sleep, :settime, :setdate, :setweather, :weather, :chronos, :chronos help, :chronos reset, :timeskip/:skip.',
+    description: 'Day/night cycle with time periods, weekday tracking, weather, and time commands.',
+    purpose: 'Configurable time pacing. Time and weather injected into AI context. Commands: :time, :date, :advance, :sleep, :settime, :setdate, :setweather, :weather, :chronos, :chronos help, :chronos reset, :timeskip/:skip.',
     requiresExtension: 'BetterDungeon',
     files: {
       library: `// ============================================
@@ -890,7 +890,6 @@ modifier(text);`
 // - Configurable time pacing (minutes per turn)
 // - Day/night cycle with 6 time periods
 // - Weekday and calendar tracking with leap years
-// - 8-phase lunar cycle
 // - Season-aware weather with Markov-chain transitions
 // - Temperature simulation with smooth drift
 // - Story card-based settings (Chronos Settings card)
@@ -971,17 +970,6 @@ const SEASONS = [
   { name: 'Summer', months: [6, 7, 8] },
   { name: 'Autumn', months: [9, 10, 11] },
   { name: 'Winter', months: [12, 1, 2] }
-];
-
-const MOON_PHASES = [
-  { name: 'New Moon', icon: '\\u{1F311}' },
-  { name: 'Waxing Crescent', icon: '\\u{1F312}' },
-  { name: 'First Quarter', icon: '\\u{1F313}' },
-  { name: 'Waxing Gibbous', icon: '\\u{1F314}' },
-  { name: 'Full Moon', icon: '\\u{1F315}' },
-  { name: 'Waning Gibbous', icon: '\\u{1F316}' },
-  { name: 'Last Quarter', icon: '\\u{1F317}' },
-  { name: 'Waning Crescent', icon: '\\u{1F318}' }
 ];
 
 const WEATHER_CONDITIONS = {
@@ -1348,17 +1336,6 @@ function handleAdvanceTime(amount, unit) {
 }
 
 // ============================================
-// MOON SYSTEM
-// ============================================
-
-function getMoonPhase() {
-  const s = state.chronos;
-  const absDay = getAbsoluteDay(s.day, s.month, s.year);
-  const phaseIndex = Math.floor((absDay % 30) / 3.75);
-  return MOON_PHASES[Math.min(phaseIndex, 7)];
-}
-
-// ============================================
 // WEATHER SYSTEM
 // ============================================
 
@@ -1449,8 +1426,7 @@ function getWeatherDisplay() {
 function getTimeContext() {
   const s = state.chronos;
   const period = getTimePeriod(s.hour);
-  const moon = getMoonPhase();
-  let ctx = '[Time: ' + getTimeString() + ' (' + period.name + '), ' + getWeekday() + ', ' + getDateString() + ' | Moon: ' + moon.icon + ' ' + moon.name;
+  let ctx = '[Time: ' + getTimeString() + ' (' + period.name + '), ' + getWeekday() + ', ' + getDateString();
   if (s.config.weatherEnabled) {
     ctx += ' | Weather: ' + getWeatherDisplay();
   }
@@ -1468,10 +1444,8 @@ function handleChronosCommand(input) {
   if (lower === ':time') {
     const s = state.chronos;
     const period = getTimePeriod(s.hour);
-    const moon = getMoonPhase();
     let out = \`\\n\\u{1F550} \${getTimeString()} - \${period.icon} \${period.name}\`;
     out += \`\\n\\u{1F4C5} \${getWeekday()}, \${getDateString()} (Turn \${info.actionCount || 0})\`;
-    out += \`\\n\${moon.icon} \${moon.name}\`;
     if (s.config.weatherEnabled) {
       out += \`\\n\${getWeatherDisplay()}\`;
     }
@@ -1481,9 +1455,8 @@ function handleChronosCommand(input) {
   if (lower === ':date') {
     const s = state.chronos;
     const season = getSeason(s.month);
-    const moon = getMoonPhase();
     let out = \`\\n\${getWeekday()}, \${getDateString()}\`;
-    out += \`\\nSeason: \${season.name} | Moon: \${moon.icon} \${moon.name}\`;
+    out += \`\\nSeason: \${season.name}\`;
     return { output: out, isCommand: true };
   }
 
@@ -1587,11 +1560,10 @@ function handleChronosCommand(input) {
     const s = state.chronos;
     const period = getTimePeriod(s.hour);
     const season = getSeason(s.month);
-    const moon = getMoonPhase();
     let out = '\\n--- Chronos Status ---';
     out += \`\\nTime: \${period.name}, \${getTimeString()} (\${s.config.use12HourFormat ? '12h' : '24h'})\`;
     out += \`\\nDate: \${getWeekday()}, \${getDateString()}\`;
-    out += \`\\nSeason: \${season.name} | Moon: \${moon.icon} \${moon.name}\`;
+    out += \`\\nSeason: \${season.name}\`;
     out += \`\\nPacing: \${s.config.minutesPerTurn} min/turn | Turn \${info.actionCount || 0}\`;
     if (s.config.weatherEnabled) {
       out += \`\\nWeather: \${getWeatherDisplay()} (\${s.config.temperatureUnit})\`;
@@ -1709,7 +1681,6 @@ const modifier = (text) => {
 
   const s = state.chronos;
   const period = getTimePeriod(s.hour);
-  const moon = getMoonPhase();
   const isNight = period.name === 'Night' || period.name === 'Midnight';
 
   let widgets = '';
@@ -1739,15 +1710,6 @@ const modifier = (text) => {
     color: isNight ? '#a78bfa' : '#f472b6',
     variant: 'subtle',
     align: 'center',
-    order: 1
-  });
-
-  widgets += bdWidget('time-moon', {
-    type: 'stat',
-    label: moon.icon,
-    value: moon.name,
-    color: '#c4b5fd',
-    align: 'right',
     order: 1
   });
 
