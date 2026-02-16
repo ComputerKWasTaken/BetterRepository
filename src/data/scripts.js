@@ -1123,7 +1123,7 @@ function findCard(keyName, createIfNotFound, defaultEntry, defaultDescription) {
 
 function readSetting(card, settingName, defaultValue) {
   if (!card || !card.entry) return defaultValue;
-  const regex = new RegExp('> ' + settingName.replace(/[.*+?^\\${}()|[\\]\\\\]/g, '\\\\\\$&') + ':\\\\s*(.+)', 'i');
+  const regex = new RegExp('> ' + settingName.replace(/[.*+?^\${}()|[\\]\\\\]/g, '\\\\\\$&') + ':\\\\s*(.+)', 'i');
   const match = card.entry.match(regex);
   if (!match) return defaultValue;
   const raw = match[1].trim();
