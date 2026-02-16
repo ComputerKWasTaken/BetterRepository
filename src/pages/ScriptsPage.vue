@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-8">
-    <!-- Page Header — animated hero -->
+    <!-- Page Header with animated hero -->
     <header class="scripts-hero relative overflow-hidden rounded-2xl py-10 px-6">
       <!-- Animated background orbs -->
       <div class="hero-orb hero-orb--cyan" aria-hidden="true" />
@@ -811,7 +811,7 @@ modifier(text);</pre>
                 </h3>
                 <p class="text-sm text-bd-text-secondary mb-2">
                   Previously, when scripts modified Plot Essentials or Author's Note fields, the UI would not 
-                  visually update until the page was reloaded. <strong>This has been fixed</strong> — changes made 
+                  visually update until the page was reloaded. <strong>This has been fixed</strong> and changes made 
                   by scripts now reflect in the UI immediately.
                 </p>
               </div>
@@ -901,156 +901,24 @@ modifier(text);</pre>
         </Transition>
       </section>
 
-      <!-- BetterScripts -->
+      <!-- BetterScripts Section Moved -->
       <section id="guide-betterscripts" class="card">
-        <button
-          @click="toggleGuideSection('betterscripts')"
-          class="w-full flex items-center justify-between text-left"
-        >
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Terminal class="w-5 h-5 text-bd-emerald" />
-            BetterScripts (BetterDungeon)
-          </h2>
-          <ChevronDown
-            class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('betterscripts') }"
-          />
-        </button>
-        <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('betterscripts')" class="mt-4 space-y-4">
-            <p class="text-bd-text-secondary">
-              <strong>BetterScripts</strong> is a feature of the <strong>BetterDungeon</strong> browser extension that 
-              enables scripts to create <strong>dynamic UI widgets</strong> displaying HP bars, stats, panels, badges, and more.
-            </p>
-            
-            <div class="p-4 rounded-lg bg-bd-emerald/10 border border-bd-emerald/30">
-              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-                <Terminal class="w-4 h-4 text-bd-emerald" />
-                How It Works
-              </h3>
-              <ol class="text-sm text-bd-text-secondary space-y-1 list-decimal list-inside">
-                <li>Your script embeds protocol messages <code class="text-bd-green">[[BD:...:BD]]</code> in the output</li>
-                <li>BetterDungeon detects and parses the message</li>
-                <li>Widget is created/updated based on the message</li>
-                <li>Protocol text is stripped so the user never sees it</li>
-              </ol>
-            </div>
-
-            <!-- Widget Types -->
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-              <h4 class="font-semibold text-bd-text-primary mb-3">Widget Types</h4>
-              <div class="grid md:grid-cols-2 gap-x-6 gap-y-2">
-                <ul class="text-sm text-bd-text-secondary space-y-1">
-                  <li><code class="text-bd-cyan">stat</code> — Label + value (e.g., "HP: 85/100")</li>
-                  <li><code class="text-bd-cyan">bar</code> — Progress bar with fill indicator</li>
-                  <li><code class="text-bd-cyan">panel</code> — Container for multiple stats</li>
-                  <li><code class="text-bd-cyan">text</code> — Simple text/notification</li>
-                  <li><code class="text-bd-cyan">custom</code> — Custom HTML (sanitized)</li>
-                </ul>
-                <ul class="text-sm text-bd-text-secondary space-y-1">
-                  <li><code class="text-bd-purple">badge</code> — Status tag/pill with icon</li>
-                  <li><code class="text-bd-purple">list</code> — Item list with icons</li>
-                  <li><code class="text-bd-purple">icon</code> — Compact icon with tooltip</li>
-                  <li><code class="text-bd-purple">divider</code> — Visual separator</li>
-                  <li><code class="text-bd-purple">counter</code> — Number with +/- indicator</li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- Widget Positions -->
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-              <h4 class="font-semibold text-bd-text-primary mb-2">Widget Positions</h4>
-              <p class="text-sm text-bd-text-secondary mb-3">
-                Widgets can be placed in three areas using the <code class="text-bd-cyan">position</code> property:
-              </p>
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div class="p-3 rounded-lg bg-bd-bg-tertiary text-center">
-                  <code class="text-bd-green text-sm">top</code>
-                  <p class="text-xs text-bd-text-muted mt-1">Horizontal bar (default)</p>
-                </div>
-                <div class="p-3 rounded-lg bg-bd-bg-tertiary text-center">
-                  <code class="text-bd-blue text-sm">left</code>
-                  <p class="text-xs text-bd-text-muted mt-1">Left sidebar</p>
-                </div>
-                <div class="p-3 rounded-lg bg-bd-bg-tertiary text-center">
-                  <code class="text-bd-purple text-sm">right</code>
-                  <p class="text-xs text-bd-text-muted mt-1">Right sidebar</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Key Properties -->
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-              <h4 class="font-semibold text-bd-text-primary mb-2">Key Properties</h4>
-              <div class="grid md:grid-cols-2 gap-x-6 gap-y-1">
-                <ul class="text-sm text-bd-text-secondary space-y-1">
-                  <li><code class="text-bd-cyan">type</code> — Widget type (required)</li>
-                  <li><code class="text-bd-cyan">position</code> — top, left, right</li>
-                  <li><code class="text-bd-cyan">label</code>, <code class="text-bd-cyan">value</code> — Display text</li>
-                  <li><code class="text-bd-cyan">color</code> — CSS color</li>
-                </ul>
-                <ul class="text-sm text-bd-text-secondary space-y-1">
-                  <li><code class="text-bd-cyan">order</code> — Display order (lower = first)</li>
-                  <li><code class="text-bd-cyan">icon</code> — Emoji/icon for badges, lists</li>
-                  <li><code class="text-bd-cyan">items</code> — Array for panels/lists</li>
-                  <li><code class="text-bd-cyan">variant</code> — Badge style (subtle/solid/outline)</li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- Quick Start -->
-            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-              <h4 class="font-semibold text-bd-text-primary mb-2">Quick Start</h4>
-              <pre class="text-xs text-bd-text-secondary overflow-x-auto"><code><span class="text-bd-text-muted">// Library - define helpers:</span>
-state.game = state.game ?? { hp: 100, gold: 0 };
-function bdMessage(msg) { return `[[BD:${JSON.stringify(msg)}:BD]]`; }
-function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
-
-<span class="text-bd-text-muted">// Context Modifier - strip protocol tags (REQUIRED):</span>
-const modifier = (text) => ({ text: text.replace(/\[\[BD:[\s\S]*?:BD\]\]/g, '') });
-modifier(text);
-
-<span class="text-bd-text-muted">// Output Modifier - create widgets:</span>
-const modifier = (text) => {
-  let w = '';
-  w += bdWidget('hp', { type: 'bar', label: 'HP', value: state.game.hp, max: 100, color: '#22c55e', position: 'top' });
-  w += bdWidget('gold', { type: 'stat', label: '💰', value: state.game.gold, color: '#fbbf24', position: 'top' });
-  return { text: text + w };
-};
-modifier(text);</code></pre>
-            </div>
-
-            <!-- Responsive Design -->
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-              <h4 class="font-semibold text-bd-text-primary mb-2">Responsive Design</h4>
-              <p class="text-sm text-bd-text-secondary">
-                Widgets automatically adapt to screen size — from compact mobile layouts to scaled-up 4K displays. 
-                Left/right sidebars are hidden on smaller screens, and complex widgets (panels, lists) are hidden on mobile.
-              </p>
-            </div>
-
-            <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
-              <p class="text-xs text-bd-text-secondary">
-                <strong class="text-bd-text-primary">Important:</strong> Always use a Context Modifier to strip 
-                <code class="text-bd-green">[[BD:...:BD]]</code> tags, or the AI will start repeating them.
-              </p>
-            </div>
-
-            <div class="flex items-center gap-3 flex-wrap">
-              <a 
-                href="https://github.com/ComputerKWasTaken/BetterDungeon" 
-                target="_blank"
-                class="btn btn-secondary text-sm"
-              >
-                <ExternalLink class="w-4 h-4" />
-                Get BetterDungeon
-              </a>
-              <span class="text-xs text-bd-text-muted">
-                See the <strong>BetterScripts</strong> category in Examples for ready-to-use scripts.
-              </span>
-            </div>
+        <div class="p-4 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
+          <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+            <Terminal class="w-4 h-4 text-bd-blue" />
+            BetterScripts Has Moved
+          </h3>
+          <p class="text-sm text-bd-text-secondary mb-3">
+            The BetterScripts documentation has been moved to its own dedicated guide with expanded content, examples, and detailed explanations.
+          </p>
+          <div class="flex items-center gap-3">
+            <router-link to="/guides?tab=betterscripts" class="btn btn-primary text-sm">
+              <Terminal class="w-4 h-4" />
+              View BetterScripts Guide
+            </router-link>
+            <span class="text-xs text-bd-text-muted">Complete documentation for BetterDungeon's widget system</span>
           </div>
-        </Transition>
+        </div>
       </section>
 
       <!-- Useful Links -->
@@ -1454,7 +1322,6 @@ const guideSections = [
   { id: 'common-patterns', label: 'Common Patterns' },
   { id: 'troubleshooting', label: 'Troubleshooting' },
   { id: 'common-mistakes', label: 'Common Mistakes' },
-  { id: 'betterscripts', label: 'BetterScripts' },
   { id: 'links', label: 'Useful Links' },
   { id: 'credits', label: 'Credits' }
 ]

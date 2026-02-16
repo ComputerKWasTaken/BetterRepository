@@ -55,10 +55,10 @@ We focus on **templates and archetypes** rather than specific characters from ex
 
 Before submitting, make sure:
 
-- [ ] **It works** — You've tested it in AI Dungeon
-- [ ] **It's original** — Or you have permission to share it
-- [ ] **It's described** — A sentence or two explaining what it does
-- [ ] **It's appropriate** — Nothing that violates AI Dungeon's Terms of Service
+- [ ] **It works** - You've tested it in AI Dungeon
+- [ ] **It's original** - Or you have permission to share it
+- [ ] **It's described** - A sentence or two explaining what it does
+- [ ] **It's appropriate** - Nothing that violates AI Dungeon's Terms of Service
 
 That's it! Don't worry about perfect formatting, I'll clean it up.
 

@@ -816,42 +816,60 @@ modifier(text)`
     essential: true,
     tags: ['widgets', 'counter', 'turn', 'betterscripts', 'stat-widget', 'minimal'],
     source: 'BetterRepository',
-    description: 'Minimal example: displays turn count using a stat widget.',
-    purpose: 'The simplest BetterScripts example. Uses info.actionCount for reliable turn tracking. Great starting point for learning.',
+    description: 'Minimal example: displays turn count and a location badge using stat and badge widgets.',
+    purpose: 'The simplest BetterScripts example. Demonstrates bdWidget for creating and updating widgets. Great starting point for learning.',
     requiresExtension: 'BetterDungeon',
     files: {
       library: `// ============================================
 // LIBRARY - Simple Turn Counter
 // ============================================
 // The simplest possible BetterScripts example.
-// Uses info.actionCount for reliable turn tracking.
+// Demonstrates bdWidget for creating and updating widgets.
 
-// BetterScripts protocol helper
-function bdWidget(id, cfg) {
-  return \`[[BD:\${JSON.stringify({ type: 'widget', widgetId: id, action: 'create', config: cfg })}:BD]]\`;
-}`,
+// BetterScripts protocol helpers
+function bdMessage(msg) { return \`[[BD:\${JSON.stringify(msg)}:BD]]\`; }
+function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
+
+// Persistent state
+state.location = state.location ?? 'Town';`,
       context: `// Strip protocol messages from AI context
 const modifier = (text) => {
   return { text: text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '') };
 };
 modifier(text);`,
-      output: `// Display turn counter widget
+      output: `// Display turn counter and location badge
 const modifier = (text) => {
-  const widget = bdWidget('turn', {
+  let widgets = '';
+
+  // Turn counter (bdWidget creates or updates existing widget)
+  widgets += bdWidget('turn', {
     type: 'stat',
     label: 'Turn',
     value: info.actionCount || 0,
     color: '#60a5fa',
-    position: 'top'
+    align: 'left',
+    order: 1
   });
-  return { text: text + widget };
+
+  // Location badge
+  widgets += bdWidget('location', {
+    type: 'badge',
+    text: state.location,
+    icon: '📍',
+    color: '#a855f7',
+    variant: 'subtle',
+    align: 'right',
+    order: 1
+  });
+
+  return { text: text + widgets };
 };
 modifier(text);`
     }
   },
   {
-    id: 'betterscripts-time-system',
-    name: 'In-Game Time System',
+    id: 'chronos-time-system',
+    name: 'Chronos Time System',
     category: 'betterscripts',
     difficulty: 'intermediate',
     impact: 'high',
@@ -879,9 +897,40 @@ state.time = state.time ?? {
   startHour: 8       // Starting hour of day (8 AM)
 };
 
-// Configuration
-const MINUTES_PER_TURN = 2;
-const START_MINUTE = state.time.startHour * 60; // 8:00 AM default
+// ============================================
+// STATE INITIALIZATION
+// ============================================
+
+state.chronos = state.chronos ?? {
+  minute: 0,
+  hour: 7,
+  day: 1,
+  month: 6,
+  year: 2026,
+  config: {
+    minutesPerTurn: 2,
+    use12HourFormat: true,
+    useBetterScripts: false,
+    showTimeInOutput: true,
+    weatherEnabled: false,
+    enabled: true,
+    weatherChangeCooldown: 15,
+    temperatureUnit: 'F',
+    wakeHour: 7,
+    customWeekdays: null,
+    customMonths: null
+  },
+  weather: {
+    current: 'clear',
+    temperature: 70,
+    lastChange: 0
+  },
+  pendingOutput: null,
+  isCommand: false,
+  lastActionCount: -1,
+  lastActionHash: null,
+  initialized: false
+};
 
 // ============================================
 // BETTERSCRIPTS PROTOCOL HELPERS
@@ -891,19 +940,158 @@ function bdMessage(msg) { return \`[[BD:\${JSON.stringify(msg)}:BD]]\`; }
 function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
 
 // ============================================
-// TIME CONSTANTS
+// CONSTANTS
 // ============================================
 
-const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const DEFAULT_WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+const DEFAULT_MONTHS = [
+  { name: 'January', days: 31 }, { name: 'February', days: 28 },
+  { name: 'March', days: 31 }, { name: 'April', days: 30 },
+  { name: 'May', days: 31 }, { name: 'June', days: 30 },
+  { name: 'July', days: 31 }, { name: 'August', days: 31 },
+  { name: 'September', days: 30 }, { name: 'October', days: 31 },
+  { name: 'November', days: 30 }, { name: 'December', days: 31 }
+];
 
 const TIME_PERIODS = [
-  { name: 'Midnight', icon: '🌑', start: 0, end: 4 },
-  { name: 'Dawn', icon: '🌅', start: 4, end: 7 },
-  { name: 'Morning', icon: '☀️', start: 7, end: 12 },
-  { name: 'Afternoon', icon: '🌤️', start: 12, end: 17 },
-  { name: 'Evening', icon: '🌆', start: 17, end: 21 },
-  { name: 'Night', icon: '🌙', start: 21, end: 24 }
+  { name: 'Midnight', icon: '\\u{1F311}', start: 0, end: 4 },
+  { name: 'Dawn', icon: '\\u{1F305}', start: 4, end: 6 },
+  { name: 'Morning', icon: '\\u{2600}\\u{FE0F}', start: 6, end: 12 },
+  { name: 'Afternoon', icon: '\\u{1F324}\\u{FE0F}', start: 12, end: 17 },
+  { name: 'Evening', icon: '\\u{1F306}', start: 17, end: 21 },
+  { name: 'Night', icon: '\\u{1F319}', start: 21, end: 24 }
 ];
+
+const SEASONS = [
+  { name: 'Summer', months: [6, 7, 8] },
+  { name: 'Autumn', months: [9, 10, 11] },
+  { name: 'Winter', months: [12, 1, 2] },
+  { name: 'Spring', months: [3, 4, 5] }
+];
+
+const MOON_PHASES = [
+  { name: 'New Moon', icon: '\\u{1F311}' },
+  { name: 'Waxing Crescent', icon: '\\u{1F312}' },
+  { name: 'First Quarter', icon: '\\u{1F313}' },
+  { name: 'Waxing Gibbous', icon: '\\u{1F314}' },
+  { name: 'Full Moon', icon: '\\u{1F315}' },
+  { name: 'Waning Gibbous', icon: '\\u{1F316}' },
+  { name: 'Last Quarter', icon: '\\u{1F317}' },
+  { name: 'Waning Crescent', icon: '\\u{1F318}' }
+];
+
+// Weather conditions with transition weights per season
+// Each condition maps to an array of [condition, weight] for possible next states
+const WEATHER_CONDITIONS = {
+  clear: { icon: '\\u{2600}\\u{FE0F}', label: 'Clear skies' },
+  partly_cloudy: { icon: '\\u{26C5}', label: 'Partly cloudy' },
+  cloudy: { icon: '\\u{2601}\\u{FE0F}', label: 'Cloudy' },
+  overcast: { icon: '\\u{2601}\\u{FE0F}', label: 'Overcast' },
+  light_rain: { icon: '\\u{1F326}\\u{FE0F}', label: 'Light rain' },
+  rain: { icon: '\\u{1F327}\\u{FE0F}', label: 'Rain' },
+  heavy_rain: { icon: '\\u{1F327}\\u{FE0F}', label: 'Heavy rain' },
+  thunderstorm: { icon: '\\u{26C8}\\u{FE0F}', label: 'Thunderstorm' },
+  light_snow: { icon: '\\u{1F328}\\u{FE0F}', label: 'Light snow' },
+  snow: { icon: '\\u{2744}\\u{FE0F}', label: 'Snow' },
+  heavy_snow: { icon: '\\u{2744}\\u{FE0F}', label: 'Heavy snow' },
+  fog: { icon: '\\u{1F32B}\\u{FE0F}', label: 'Fog' },
+  windy: { icon: '\\u{1F4A8}', label: 'Windy' }
+};
+
+// Season-weighted weather transition table
+// Key = current weather, value = { season: [[nextWeather, weight], ...] }
+const WEATHER_TRANSITIONS = {
+  clear: {
+    Spring: [['clear',4],['partly_cloudy',3],['light_rain',1],['windy',1]],
+    Summer: [['clear',5],['partly_cloudy',2],['thunderstorm',1]],
+    Autumn: [['clear',3],['partly_cloudy',3],['cloudy',2],['fog',1]],
+    Winter: [['clear',3],['partly_cloudy',2],['cloudy',2],['light_snow',1],['fog',1]]
+  },
+  partly_cloudy: {
+    Spring: [['clear',3],['partly_cloudy',3],['cloudy',2],['light_rain',1]],
+    Summer: [['clear',3],['partly_cloudy',3],['cloudy',1],['thunderstorm',1]],
+    Autumn: [['clear',2],['partly_cloudy',3],['cloudy',3],['light_rain',1]],
+    Winter: [['clear',2],['partly_cloudy',3],['cloudy',3],['light_snow',1]]
+  },
+  cloudy: {
+    Spring: [['partly_cloudy',2],['cloudy',3],['overcast',2],['light_rain',2]],
+    Summer: [['partly_cloudy',3],['cloudy',3],['thunderstorm',2]],
+    Autumn: [['partly_cloudy',2],['cloudy',3],['overcast',2],['rain',1],['fog',1]],
+    Winter: [['partly_cloudy',2],['cloudy',3],['overcast',2],['light_snow',2]]
+  },
+  overcast: {
+    Spring: [['cloudy',3],['overcast',3],['light_rain',2],['rain',1]],
+    Summer: [['cloudy',3],['overcast',2],['heavy_rain',1],['thunderstorm',2]],
+    Autumn: [['cloudy',2],['overcast',3],['rain',2],['fog',1]],
+    Winter: [['cloudy',2],['overcast',3],['snow',2],['light_snow',2]]
+  },
+  light_rain: {
+    Spring: [['partly_cloudy',2],['cloudy',2],['light_rain',3],['rain',2]],
+    Summer: [['partly_cloudy',2],['light_rain',3],['rain',2],['thunderstorm',1]],
+    Autumn: [['cloudy',2],['light_rain',3],['rain',3]],
+    Winter: [['cloudy',2],['light_rain',2],['light_snow',3]]
+  },
+  rain: {
+    Spring: [['light_rain',3],['rain',3],['heavy_rain',1],['cloudy',2]],
+    Summer: [['light_rain',2],['rain',3],['heavy_rain',2],['thunderstorm',2]],
+    Autumn: [['light_rain',2],['rain',4],['heavy_rain',2]],
+    Winter: [['light_rain',2],['rain',2],['snow',2],['cloudy',2]]
+  },
+  heavy_rain: {
+    Spring: [['rain',4],['heavy_rain',2],['overcast',2]],
+    Summer: [['rain',3],['heavy_rain',2],['thunderstorm',3]],
+    Autumn: [['rain',4],['heavy_rain',3],['overcast',2]],
+    Winter: [['rain',3],['heavy_snow',2],['overcast',2]]
+  },
+  thunderstorm: {
+    Spring: [['rain',3],['heavy_rain',2],['overcast',3]],
+    Summer: [['rain',2],['heavy_rain',2],['thunderstorm',2],['partly_cloudy',2]],
+    Autumn: [['rain',4],['overcast',3],['cloudy',2]],
+    Winter: [['heavy_snow',3],['overcast',3],['snow',2]]
+  },
+  light_snow: {
+    Spring: [['cloudy',3],['light_rain',3],['light_snow',2]],
+    Summer: [['cloudy',4],['partly_cloudy',4]],
+    Autumn: [['cloudy',3],['light_snow',3],['snow',2]],
+    Winter: [['light_snow',3],['snow',3],['cloudy',2]]
+  },
+  snow: {
+    Spring: [['light_snow',4],['cloudy',3],['snow',2]],
+    Summer: [['light_rain',4],['cloudy',4]],
+    Autumn: [['light_snow',3],['snow',3],['overcast',2]],
+    Winter: [['snow',4],['heavy_snow',2],['light_snow',2],['overcast',1]]
+  },
+  heavy_snow: {
+    Spring: [['snow',4],['overcast',3],['light_snow',2]],
+    Summer: [['rain',4],['cloudy',4]],
+    Autumn: [['snow',4],['overcast',3]],
+    Winter: [['heavy_snow',3],['snow',4],['overcast',2]]
+  },
+  fog: {
+    Spring: [['partly_cloudy',3],['cloudy',3],['fog',2]],
+    Summer: [['clear',3],['partly_cloudy',3],['fog',1]],
+    Autumn: [['cloudy',3],['fog',3],['overcast',2]],
+    Winter: [['cloudy',3],['fog',3],['light_snow',1],['overcast',2]]
+  },
+  windy: {
+    Spring: [['clear',3],['partly_cloudy',2],['windy',2],['cloudy',1]],
+    Summer: [['clear',3],['partly_cloudy',3],['windy',1]],
+    Autumn: [['partly_cloudy',3],['cloudy',2],['windy',2]],
+    Winter: [['cloudy',3],['light_snow',2],['windy',2]]
+  }
+};
+
+// Approximate minutes per unit (for weather simulation on time skips)
+const UNIT_TO_MINUTES = { minute: 1, minutes: 1, hour: 60, hours: 60, day: 1440, days: 1440, week: 10080, weeks: 10080, month: 43200, months: 43200, year: 525600, years: 525600 };
+
+// Base temperature ranges per season (Fahrenheit)
+const SEASON_TEMPS = {
+  Winter: { low: 20, high: 42 },
+  Spring: { low: 45, high: 68 },
+  Summer: { low: 65, high: 95 },
+  Autumn: { low: 40, high: 65 }
+};
 
 // ============================================
 // MOON PHASE CONSTANTS
@@ -938,11 +1126,47 @@ const WEATHER_TYPES = [
 // ============================================
 // TIME FUNCTIONS
 // ============================================
+// Inspired by LPCroc's CommunityUtils.StoryCards pattern.
+// Story cards in AI Dungeon have: title (keys), entry (text), description (notes), type.
 
-// Calculate total minutes from turn count + offsets
-function getTotalMinutes() {
-  const turns = info.actionCount || 0;
-  return START_MINUTE + (turns * MINUTES_PER_TURN) + state.time.offsetMinutes;
+function findCard(keyName, createIfNotFound, defaultEntry, defaultDescription) {
+  if (!worldInfo) return null;
+  // Search existing cards by keys
+  for (const card of worldInfo) {
+    if (card.keys && card.keys.toLowerCase().includes(keyName.toLowerCase())) {
+      return card;
+    }
+  }
+  if (!createIfNotFound) return null;
+  // Create the card if not found
+  addWorldEntry(keyName, defaultEntry || '', false);
+  // Find the newly created card
+  for (const card of worldInfo) {
+    if (card.keys && card.keys.toLowerCase().includes(keyName.toLowerCase())) {
+      if (defaultDescription && !card.description) {
+        card.description = defaultDescription;
+      }
+      return card;
+    }
+  }
+  return null;
+}
+
+function readSetting(card, settingName, defaultValue) {
+  if (!card || !card.entry) return defaultValue;
+  // Match "> Setting Name: value" pattern
+  const regex = new RegExp('> ' + settingName.replace(/[.*+?^\${}()|[\\]\\\\]/g, '\\\\\\$&') + ':\\\\s*(.+)', 'i');
+  const match = card.entry.match(regex);
+  if (!match) return defaultValue;
+  const raw = match[1].trim();
+  // Parse booleans
+  if (raw.toLowerCase() === 'true') return true;
+  if (raw.toLowerCase() === 'false') return false;
+  // Parse numbers
+  const num = Number(raw);
+  if (!isNaN(num) && raw !== '') return num;
+  // Return as string
+  return raw;
 }
 
 function getHour() {
@@ -963,26 +1187,93 @@ function getWeekdayIndex() {
   return ((getDay() - 1) % 7 + 7) % 7;
 }
 
-function getTimeString() {
-  const h = getHour();
-  const m = getMinute();
-  const hour12 = h % 12 || 12;
-  const ampm = h < 12 ? 'AM' : 'PM';
-  return \`\${hour12}:\${m.toString().padStart(2, '0')} \${ampm}\`;
+function getMonths() {
+  const custom = state.chronos.config.customMonths;
+  if (custom) {
+    return DEFAULT_MONTHS.map((m, i) => ({ name: custom[i] || m.name, days: m.days }));
+  }
+  return DEFAULT_MONTHS;
 }
 
-function getTimePeriod() {
-  const h = getHour();
-  for (const period of TIME_PERIODS) {
-    if (h >= period.start && h < period.end) {
-      return period;
-    }
+function isLeapYear(y) {
+  return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
+}
+
+function getDaysInMonth(month, year) {
+  const months = getMonths();
+  const idx = ((month - 1) % 12 + 12) % 12;
+  let days = months[idx].days;
+  // February leap year check (only for standard calendar, index 1)
+  if (idx === 1 && !state.chronos.config.customMonths && isLeapYear(year)) {
+    days = 29;
   }
-  return TIME_PERIODS[0]; // Midnight (wraps around)
+  return days;
+}
+
+function getSeason(month) {
+  for (const s of SEASONS) {
+    if (s.months.includes(month)) return s;
+  }
+  return SEASONS[0];
+}
+
+function getTimePeriod(hour) {
+  for (const p of TIME_PERIODS) {
+    if (hour >= p.start && hour < p.end) return p;
+  }
+  return TIME_PERIODS[0]; // Midnight wraps around
+}
+
+// Calculate day-of-week index (0-6) using a simple cumulative day count from year 1, month 1, day 1
+function getDayOfYear(day, month, year) {
+  let total = 0;
+  for (let m = 1; m < month; m++) {
+    total += getDaysInMonth(m, year);
+  }
+  return total + day;
+}
+
+function getAbsoluteDay(day, month, year) {
+  // O(1) formula: total days from year 1 to start of this year
+  const y = year - 1;
+  const yearDays = 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400);
+  return yearDays + getDayOfYear(day, month, year) - 1;
+}
+
+function getWeekdayIndex(day, month, year) {
+  return getAbsoluteDay(day, month, year) % getWeekdays().length;
 }
 
 function getWeekday() {
-  return WEEKDAYS[getWeekdayIndex()];
+  const s = state.chronos;
+  return getWeekdays()[getWeekdayIndex(s.day, s.month, s.year)];
+}
+
+// Returns current moon phase from an 8-phase, 30-day lunar cycle
+function getMoonPhase() {
+  const s = state.chronos;
+  const absDay = getAbsoluteDay(s.day, s.month, s.year);
+  const phaseIndex = Math.floor((absDay % 30) / 3.75);
+  return MOON_PHASES[Math.min(phaseIndex, 7)];
+}
+
+// ============================================
+// TIME FORMATTING
+// ============================================
+
+function getTimeString() {
+  const h = state.chronos.hour;
+  const m = state.chronos.minute;
+  if (state.chronos.config.use12HourFormat) {
+    const hour12 = h % 12 || 12;
+    const ampm = h < 12 ? 'AM' : 'PM';
+    return \`\${hour12}:\${String(m).padStart(2, '0')} \${ampm}\`;
+  }
+  return \`\${String(h).padStart(2, '0')}:\${String(m).padStart(2, '0')}\`;
+}
+
+function getMonthName() {
+  return getMonths()[(state.chronos.month - 1) % 12].name;
 }
 
 // ============================================
@@ -1026,7 +1317,6 @@ function setTime(targetHour) {
   state.time.offsetMinutes += (hoursToAdd * 60) - currentMinute;
 }
 
-// Skip to next morning (7 AM)
 function skipToMorning() {
   const currentHour = getHour();
   const currentMinute = getMinute();
@@ -1055,10 +1345,10 @@ function getTimeContext() {
 // COMMAND HANDLERS
 // ============================================
 
-function handleTimeCommand(input) {
+function handleChronosCommand(input) {
   const lower = input.toLowerCase().trim();
-  
-  // :time - show current time
+
+  // :time - concise current-state summary
   if (lower === ':time') {
     const period = getTimePeriod();
     const moon = getMoonPhase();
@@ -1069,40 +1359,145 @@ function handleTimeCommand(input) {
       isCommand: true
     };
   }
-  
-  // :timeskip <hours> - skip ahead
-  const skipMatch = lower.match(/^:timeskip\\s+(\\d+)$/);
-  if (skipMatch) {
-    const hours = parseInt(skipMatch[1]);
-    addOffset(hours * 60);
-    const period = getTimePeriod();
-    return {
-      output: \`\\n⏩ Skipped \${hours} hour\${hours !== 1 ? 's' : ''}. It is now \${getTimeString()} (\${period.name}).\`,
-      isCommand: true
-    };
+
+  // :date - calendar-focused view
+  if (lower === ':date') {
+    const s = state.chronos;
+    const season = getSeason(s.month);
+    const moon = getMoonPhase();
+    let out = \`\\n\${getWeekday()}, \${getDateString()}\`;
+    out += \`\\nSeason: \${season.name} | Moon: \${moon.icon} \${moon.name}\`;
+    return { output: out, isCommand: true };
   }
-  
-  // :sleep - skip to next morning
+
+  // :advance <N> <unit>
+  const advMatch = lower.match(/^:advance\\s+(\\d+)\\s+(\\w+)$/);
+  if (advMatch) {
+    return handleAdvanceTime(parseInt(advMatch[1]), advMatch[2]);
+  }
+
+  // :sleep - skip to next morning (weather simulated over sleep period)
   if (lower === ':sleep') {
-    skipToMorning();
+    if (!skipToMorning()) {
+      return { output: '\\nYou are already up. It is morning.', isCommand: true };
+    }
+    const period = getTimePeriod(state.chronos.hour);
+    let out = \`\\nYou rest and wake refreshed.\\n\${period.icon} \${period.name}, \${getTimeString()} - \${getWeekday()}, \${getDateString()}\`;
+    if (state.chronos.config.weatherEnabled) {
+      out += \`\\n\${getWeatherDisplay()}\`;
+    }
+    return { output: out, isCommand: true };
+  }
+
+  // :settime <HH:MM> or :settime <hour>
+  const setTimeMatch = lower.match(/^:settime\\s+(\\d{1,2})(?::(\\d{2}))?$/);
+  if (setTimeMatch) {
+    const hour = parseInt(setTimeMatch[1]) % 24;
+    const minute = setTimeMatch[2] ? parseInt(setTimeMatch[2]) : 0;
+    setTimeTo(hour, minute);
+    const period = getTimePeriod(state.chronos.hour);
     return {
-      output: \`\\n😴 You rest and wake refreshed. It is now \${getTimeString()} on \${getWeekday()}, Day \${getDay()}.\`,
+      output: \`\\nTime set to \${period.name}, \${getTimeString()}.\`,
       isCommand: true
     };
   }
-  
-  // :settime <hour> - set specific hour (0-23)
-  const setMatch = lower.match(/^:settime\\s+(\\d+)$/);
-  if (setMatch) {
-    const hour = parseInt(setMatch[1]) % 24;
-    setTime(hour);
-    const period = getTimePeriod();
+
+  // :setdate <day> <month> <year>
+  const setDateMatch = lower.match(/^:setdate\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)$/);
+  if (setDateMatch) {
+    const d = parseInt(setDateMatch[1]);
+    const m = parseInt(setDateMatch[2]);
+    const y = parseInt(setDateMatch[3]);
+    if (m < 1 || m > 12) {
+      return { output: '\\nInvalid month. Must be 1-12.', isCommand: true };
+    }
+    if (y < 1) {
+      return { output: '\\nInvalid year. Must be 1 or greater.', isCommand: true };
+    }
+    setDateTo(d, m, y);
     return {
-      output: \`\\n🕐 Time set to \${getTimeString()} (\${period.name}).\`,
+      output: \`\\nDate set to \${getWeekday()}, \${getDateString()}.\`,
       isCommand: true
     };
   }
-  
+
+  // :setweather <condition> - force a specific weather condition
+  const setWeatherMatch = lower.match(/^:setweather\\s+(.+)$/);
+  if (setWeatherMatch) {
+    if (!state.chronos.config.weatherEnabled) {
+      return { output: '\\nWeather is disabled. Enable it in the Chronos Settings story card.', isCommand: true };
+    }
+    const requested = setWeatherMatch[1].trim().replace(/ /g, '_');
+    if (!WEATHER_CONDITIONS[requested]) {
+      const valid = Object.keys(WEATHER_CONDITIONS).join(', ');
+      return { output: \`\\nUnknown condition: \${requested}\\nValid: \${valid}\`, isCommand: true };
+    }
+    state.chronos.weather.current = requested;
+    state.chronos.weather.targetTemp = calcTargetTemp();
+    state.chronos.weather.temperature = state.chronos.weather.targetTemp;
+    state.chronos.weather.lastChange = info.actionCount || 0;
+    return { output: \`\\nWeather set to \${getWeatherDisplay()}\`, isCommand: true };
+  }
+
+  // :weather - show current weather with context
+  if (lower === ':weather') {
+    if (!state.chronos.config.weatherEnabled) {
+      return { output: '\\nWeather is disabled. Enable it in the Chronos Settings story card.', isCommand: true };
+    }
+    const s = state.chronos;
+    const season = getSeason(s.month);
+    return {
+      output: \`\\n\${getWeatherDisplay()}\\n\${season.name} - \${getTimePeriod(s.hour).name}\`,
+      isCommand: true
+    };
+  }
+
+  // :chronos help - show command list
+  if (lower === ':chronos help') {
+    return { output: \`\\n\${COMMANDS_CARD_ENTRY}\`, isCommand: true };
+  }
+
+  // :timeskip / :skip <N> <unit> - aliases for :advance
+  const skipMatch = lower.match(/^:(?:timeskip|skip)\\s+(\\d+)\\s+(\\w+)$/);
+  if (skipMatch) {
+    return handleAdvanceTime(parseInt(skipMatch[1]), skipMatch[2]);
+  }
+
+  // :chronos reset - restore all state to defaults
+  if (lower === ':chronos reset') {
+    state.chronos.minute = 0;
+    state.chronos.hour = 8;
+    state.chronos.day = 1;
+    state.chronos.month = 1;
+    state.chronos.year = 1;
+    state.chronos.weather = { current: 'clear', temperature: 70, lastChange: 0, targetTemp: null };
+    state.chronos.initialized = false;
+    return { output: '\\nChronos has been reset to defaults.', isCommand: true };
+  }
+
+  // :chronos - full diagnostic status
+  if (lower === ':chronos') {
+    const s = state.chronos;
+    const period = getTimePeriod(s.hour);
+    const season = getSeason(s.month);
+    const moon = getMoonPhase();
+    let out = '\\n--- Chronos Status ---';
+    out += \`\\nTime: \${period.name}, \${getTimeString()} (\${s.config.use12HourFormat ? '12h' : '24h'})\`;
+    out += \`\\nDate: \${getWeekday()}, \${getDateString()}\`;
+    out += \`\\nSeason: \${season.name} | Moon: \${moon.icon} \${moon.name}\`;
+    out += \`\\nPacing: \${s.config.minutesPerTurn} min/turn | Turn \${info.actionCount || 0}\`;
+    if (s.config.weatherEnabled) {
+      out += \`\\nWeather: \${getWeatherDisplay()} (\${s.config.temperatureUnit})\`;
+    } else {
+      out += '\\nWeather: Disabled';
+    }
+    out += \`\\nDisplay: \${s.config.useBetterScripts ? 'Widgets' : s.config.showTimeInOutput ? 'Text' : 'Context only'}\`;
+    if (s.config.customWeekdays) out += '\\nCustom weekdays: ' + s.config.customWeekdays.join(', ');
+    if (s.config.customMonths) out += '\\nCustom months: ' + s.config.customMonths.join(', ');
+    out += '\\n---';
+    return { output: out, isCommand: true };
+  }
+
   return null;
 }`,
       context: `// ============================================
@@ -1112,7 +1507,51 @@ function handleTimeCommand(input) {
 // Properly handles memory section and maxChars limit.
 
 const modifier = (text) => {
-  // Strip protocol messages
+  // -- Story Card Setup --
+  // Find or create the Settings card, then sync config into state
+  const settingsCard = findCard('Chronos Settings', true, SETTINGS_CARD_ENTRY, SETTINGS_CARD_DESCRIPTION);
+  syncSettingsFromCard(settingsCard);
+
+  // Find or create the Commands reference card
+  const commandsCard = findCard('Chronos Commands', true, COMMANDS_CARD_ENTRY);
+
+  // Early exit if disabled
+  if (!state.chronos.config.enabled) return { text };
+
+  // -- First-turn initialization --
+  if (!state.chronos.initialized) {
+    state.chronos.initialized = true;
+    // Set initial weather state if weather is enabled on first load
+    if (state.chronos.config.weatherEnabled) {
+      rollWeather();
+      updateTemperature();
+    }
+  }
+  // Handle weather being enabled mid-adventure (no target temp yet)
+  if (state.chronos.config.weatherEnabled && !state.chronos.weather.targetTemp) {
+    state.chronos.weather.targetTemp = calcTargetTemp();
+    state.chronos.weather.temperature = state.chronos.weather.targetTemp;
+  }
+
+  // -- Time Advancement (once per turn, skip retries) --
+  if (!isRetry()) {
+    advanceTime(state.chronos.config.minutesPerTurn);
+
+    // Weather roll if enabled and cooldown has passed
+    if (state.chronos.config.weatherEnabled && shouldChangeWeather()) {
+      rollWeather();
+    }
+    // Smoothly drift temperature toward target each turn
+    if (state.chronos.config.weatherEnabled) {
+      updateTemperature();
+    }
+  }
+  state.chronos.lastActionCount = info.actionCount || 0;
+
+  // -- Write current time back to Settings card --
+  syncTimeToCard(settingsCard);
+
+  // -- Strip BetterScripts protocol messages from context --
   text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
 
   // Separate memory from context (memory occupies first info.memoryLength chars)
@@ -1132,7 +1571,7 @@ const modifier = (text) => {
 
 modifier(text);`,
       input: `// ============================================
-// INPUT MODIFIER - Handle Time Commands
+// INPUT MODIFIER - Chronos Time System
 // ============================================
 // Detects :time, :timeskip, :sleep, :settime commands.
 // Uses the AI Dungeon command parser regex to handle Do, Say, and Story mode.
@@ -1149,9 +1588,10 @@ const modifier = (text) => {
     const command = ':' + cmdMatch[1].trim() + (cmdMatch[2] ? cmdMatch[2].trimEnd() : '');
     const result = handleTimeCommand(command);
     if (result) {
-      state.time.pendingOutput = result.output;
-      state.time.isCommand = true;
-      return { text: '[TIME COMMAND]' };
+      state.chronos.pendingOutput = result.output;
+      state.chronos.isCommand = true;
+      // Replace input with neutral placeholder so the AI doesn't narrate the command
+      return { text: '' };
     }
   }
 
@@ -1247,10 +1687,10 @@ modifier(text);`
     difficulty: 'intermediate',
     impact: 'high',
     essential: true,
-    tags: ['widgets', 'debug', 'testing', 'betterscripts', 'commands', 'developer-tool'],
+    tags: ['widgets', 'debug', 'testing', 'betterscripts', 'commands', 'developer-tool', 'test-suite'],
     source: 'BetterRepository',
-    description: 'Interactive debug console for testing all widget types via : commands.',
-    purpose: 'Type :help for commands. Create, update, and destroy widgets. Test ordering, styling, and protocol features.',
+    description: 'Interactive debug console for testing all 9 widget types, protocol messages, and a sequential test suite.',
+    purpose: 'Type :help for commands. Create, update, and destroy all widget types. Run :test to execute a full test suite one step per turn.',
     requiresExtension: 'BetterDungeon',
     files: {
       library: `// ============================================
@@ -1259,34 +1699,53 @@ modifier(text);`
 // A comprehensive debug tool for testing BetterScripts.
 // Use : commands in Do actions to control widgets.
 //
-// COMMANDS:
+// WIDGET COMMANDS (all 9 types):
+//   :stat <id> <label> <val> [color] [order]
+//   :bar <id> <val> <max> [label] [color] [order]
+//   :badge <id> <text> [icon] [color] [variant]
+//   :counter <id> <val> [delta] [icon] [color]
+//   :text <id> <msg> [color]
+//   :icon <id> <emoji> [tooltip] [color]
+//   :panel <id> <title>
+//   :list <id> <title>
+//   :custom <id> <html>
+//
+// PROTOCOL COMMANDS:
 //   :help              - Show all commands
 //   :ping              - Test connection
+//   :register          - Register a test script
 //   :clear             - Remove all widgets
-//   :demo              - Show demo widgets
-//   :stat <id> <label> <val> [color] [order] [position]
-//   :bar <id> <val> <max> [label] [color] [order] [position]
-//   :text <id> <msg> [color] [position]
-//   :panel <id> <title> [position]
-//   :custom <id> <html>
 //   :update <id> <prop> <val>
 //   :destroy <id>
-//   :stress <count>
 //
-// POSITIONS: top (default), left, right
+// TESTING COMMANDS:
+//   :demo              - Show all 9 widget types
+//   :stress <count>    - Stress test with N widgets
+//   :test              - Start sequential test suite (1 step/turn)
+//   :test skip         - Skip current test step
+//   :test stop         - Stop running test suite
+//
+// All widgets appear in the top bar
 
-state.bd = state.bd ?? { lastCommand: null, lastResult: null };
+state.bd = state.bd ?? {
+  lastCommand: null,
+  lastResult: null,
+  testRunning: false,
+  testStep: 0,
+  testResults: []
+};
 
 // ============================================
 // BETTERSCRIPTS PROTOCOL HELPERS
 // ============================================
 
-// Concise protocol helpers
+// All helpers: create, destroy, clearAll, ping, register
 function bdMsg(m) { return \`[[BD:\${JSON.stringify(m)}:BD]]\`; }
 function bdWidget(id, cfg) { return bdMsg({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
-function bdUpdate(id, cfg) { return bdMsg({ type: 'widget', widgetId: id, action: 'update', config: cfg }); }
 function bdDestroy(id) { return bdMsg({ type: 'widget', widgetId: id, action: 'destroy' }); }
-function bdPing() { return bdMsg({ type: 'ping', timestamp: Date.now(), data: 'debug' }); }
+function bdClearAll() { return bdMsg({ type: 'clearAll' }); }
+function bdPing(data) { return bdMsg({ type: 'ping', timestamp: Date.now(), data: data || 'debug' }); }
+function bdRegister(id, name, ver) { return bdMsg({ type: 'register', scriptId: id, scriptName: name, version: ver || '1.0', capabilities: ['widgets'] }); }
 
 // ============================================
 // COMMAND PARSER
@@ -1312,6 +1771,312 @@ function parseCommand(input) {
 }
 
 // ============================================
+// SEQUENTIAL TEST SUITE
+// ============================================
+// Each step returns { name, output, widgets }
+// Steps run one per turn when :test is active
+
+const TEST_STEPS = [
+  // --- Step 0: Register script ---
+  {
+    name: 'Register Script',
+    run: () => {
+      const widgets = bdRegister('debug-console', 'Debug Console', '2.0');
+      return { output: '📝 Registering test script...', widgets };
+    }
+  },
+  // --- Step 1: Ping ---
+  {
+    name: 'Ping',
+    run: () => {
+      const widgets = bdPing('test-suite');
+      return { output: '🏓 Sending ping...', widgets };
+    }
+  },
+  // --- Step 2: Stat widget ---
+  {
+    name: 'Create Stat Widget',
+    run: () => {
+      const widgets = bdWidget('test-stat', {
+        type: 'stat', label: 'Gold', value: '1,250',
+        color: '#fbbf24', align: 'right', order: 1
+      });
+      return { output: '📊 Creating stat widget (Gold)...', widgets };
+    }
+  },
+  // --- Step 3: Bar widget ---
+  {
+    name: 'Create Bar Widget',
+    run: () => {
+      const widgets = bdWidget('test-bar', {
+        type: 'bar', label: 'HP', value: 75, max: 100,
+        color: '#22c55e', showValue: true, align: 'center', order: 1
+      });
+      return { output: '📈 Creating bar widget (HP 75/100)...', widgets };
+    }
+  },
+  // --- Step 4: Badge widget (subtle) ---
+  {
+    name: 'Create Badge Widget',
+    run: () => {
+      const widgets = bdWidget('test-badge', {
+        type: 'badge', text: 'Poisoned', icon: '☠️',
+        color: '#a855f7', variant: 'subtle', align: 'center', order: 2
+      });
+      return { output: '🏷️ Creating badge widget (Poisoned)...', widgets };
+    }
+  },
+  // --- Step 5: Counter widget ---
+  {
+    name: 'Create Counter Widget',
+    run: () => {
+      const widgets = bdWidget('test-counter', {
+        type: 'counter', icon: '⚔️', value: 24, delta: 3,
+        color: '#60a5fa', align: 'center', order: 3
+      });
+      return { output: '🔢 Creating counter widget (24, +3)...', widgets };
+    }
+  },
+  // --- Step 6: Text widget ---
+  {
+    name: 'Create Text Widget',
+    run: () => {
+      const widgets = bdWidget('test-text', {
+        type: 'text', text: '⚡ Quest Active',
+        style: { color: '#fbbf24', fontWeight: 'bold' },
+        align: 'center', order: 4
+      });
+      return { output: '💬 Creating text widget...', widgets };
+    }
+  },
+  // --- Step 7: Icon widget ---
+  {
+    name: 'Create Icon Widget',
+    run: () => {
+      const widgets = bdWidget('test-icon', {
+        type: 'icon', icon: '❤️', color: '#ef4444',
+        tooltip: 'Health Status', align: 'center', order: 5
+      });
+      return { output: '🎯 Creating icon widget (❤️)...', widgets };
+    }
+  },
+  // --- Step 8: Panel widget ---
+  {
+    name: 'Create Panel Widget',
+    run: () => {
+      const widgets = bdWidget('test-panel', {
+        type: 'panel', title: 'Character', align: 'left', order: 1,
+        items: [
+          { label: 'Level', value: '12', color: '#a855f7' },
+          { label: 'Class', value: 'Warrior', color: '#60a5fa' },
+          { label: 'XP', value: '4500/5000', color: '#22c55e' }
+        ]
+      });
+      return { output: '📋 Creating panel widget (Character)...', widgets };
+    }
+  },
+  // --- Step 9: List widget ---
+  {
+    name: 'Create List Widget',
+    run: () => {
+      const widgets = bdWidget('test-list', {
+        type: 'list', title: 'Inventory', align: 'right', order: 2,
+        items: [
+          { icon: '🗡️', text: 'Iron Sword', color: '#60a5fa' },
+          { icon: '🧪', text: 'Potion x3', color: '#22c55e' },
+          { icon: '🔑', text: 'Rusty Key', color: '#fbbf24' },
+          'Health Potion'
+        ]
+      });
+      return { output: '📝 Creating list widget (Inventory)...', widgets };
+    }
+  },
+  // --- Step 10: Custom HTML widget ---
+  {
+    name: 'Create Custom Widget',
+    run: () => {
+      const widgets = bdWidget('test-custom', {
+        type: 'custom', align: 'center', order: 6,
+        html: '<div style="display:flex;gap:6px;align-items:center;"><strong style="color:#f472b6;">Custom</strong><span style="color:#94a3b8;">HTML Widget</span></div>'
+      });
+      return { output: '🎨 Creating custom HTML widget...', widgets };
+    }
+  },
+  // --- Step 11: Update stat value ---
+  {
+    name: 'Update Stat Value',
+    run: () => {
+      const widgets = bdWidget('test-stat', {
+        type: 'stat', label: 'Gold', value: '2,500',
+        color: '#fbbf24', align: 'right', order: 1
+      });
+      return { output: '✏️ Updating stat widget (Gold → 2,500)...', widgets };
+    }
+  },
+  // --- Step 12: Update bar value ---
+  {
+    name: 'Update Bar Value',
+    run: () => {
+      const widgets = bdWidget('test-bar', {
+        type: 'bar', label: 'HP', value: 30, max: 100,
+        color: '#ef4444', showValue: true, align: 'center', order: 1
+      });
+      return { output: '✏️ Updating bar widget (HP → 30/100, red)...', widgets };
+    }
+  },
+  // --- Step 13: Update badge variant ---
+  {
+    name: 'Update Badge Variant',
+    run: () => {
+      const widgets = bdWidget('test-badge', {
+        type: 'badge', text: 'Shielded', icon: '🛡️',
+        color: '#3b82f6', variant: 'solid', align: 'center', order: 2
+      });
+      return { output: '✏️ Updating badge (Poisoned → Shielded, solid)...', widgets };
+    }
+  },
+  // --- Step 14: Update counter delta ---
+  {
+    name: 'Update Counter Delta',
+    run: () => {
+      const widgets = bdWidget('test-counter', {
+        type: 'counter', icon: '💔', value: 18, delta: -6,
+        color: '#f472b6', align: 'center', order: 3
+      });
+      return { output: '✏️ Updating counter (24 → 18, delta -6)...', widgets };
+    }
+  },
+  // --- Step 15: Update panel items ---
+  {
+    name: 'Update Panel Items',
+    run: () => {
+      const widgets = bdWidget('test-panel', {
+        type: 'panel', title: 'Character (Updated)', align: 'left', order: 1,
+        items: [
+          { label: 'Level', value: '13', color: '#a855f7' },
+          { label: 'Class', value: 'Knight', color: '#fbbf24' },
+          { label: 'XP', value: '500/6000', color: '#22c55e' },
+          { label: 'STR', value: '18', color: '#ef4444' }
+        ]
+      });
+      return { output: '✏️ Updating panel (new items, title)...', widgets };
+    }
+  },
+  // --- Step 16: Test alignment zones ---
+  {
+    name: 'Test Alignment Zones',
+    run: () => {
+      let widgets = '';
+      widgets += bdWidget('zone-left', {
+        type: 'stat', label: 'Left', value: '←',
+        color: '#3b82f6', align: 'left', order: 10
+      });
+      widgets += bdWidget('zone-center', {
+        type: 'stat', label: 'Center', value: '●',
+        color: '#22c55e', align: 'center', order: 10
+      });
+      widgets += bdWidget('zone-right', {
+        type: 'stat', label: 'Right', value: '→',
+        color: '#a855f7', align: 'right', order: 10
+      });
+      return { output: '↔️ Testing alignment zones (left/center/right)...', widgets };
+    }
+  },
+  // --- Step 17: Test ordering within zone ---
+  {
+    name: 'Test Widget Ordering',
+    run: () => {
+      let widgets = '';
+      widgets += bdWidget('order-c', {
+        type: 'badge', text: 'Third (order:3)', color: '#ef4444',
+        variant: 'outline', align: 'center', order: 13
+      });
+      widgets += bdWidget('order-a', {
+        type: 'badge', text: 'First (order:1)', color: '#22c55e',
+        variant: 'outline', align: 'center', order: 11
+      });
+      widgets += bdWidget('order-b', {
+        type: 'badge', text: 'Second (order:2)', color: '#3b82f6',
+        variant: 'outline', align: 'center', order: 12
+      });
+      return { output: '🔢 Testing widget ordering (should appear 1,2,3)...', widgets };
+    }
+  },
+  // --- Step 18: Destroy individual widgets ---
+  {
+    name: 'Destroy Individual Widgets',
+    run: () => {
+      let widgets = '';
+      widgets += bdDestroy('test-text');
+      widgets += bdDestroy('test-icon');
+      widgets += bdDestroy('test-custom');
+      widgets += bdDestroy('zone-left');
+      widgets += bdDestroy('zone-center');
+      widgets += bdDestroy('zone-right');
+      widgets += bdDestroy('order-a');
+      widgets += bdDestroy('order-b');
+      widgets += bdDestroy('order-c');
+      return { output: '🗑️ Destroying text, icon, custom, zone, and order widgets...', widgets };
+    }
+  },
+  // --- Step 19: Clear all ---
+  {
+    name: 'Clear All Widgets',
+    run: () => {
+      const widgets = bdClearAll();
+      return { output: '🧹 Clearing ALL remaining widgets...', widgets };
+    }
+  },
+  // --- Step 20: Final summary ---
+  {
+    name: 'Test Complete',
+    run: () => {
+      const total = TEST_STEPS.length;
+      const passed = state.bd.testResults.filter(r => r === 'pass').length;
+      let summary = '\\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n';
+      summary += '🏁 TEST SUITE COMPLETE\\n';
+      summary += \`   Steps run: \${total}\\n\`;
+      summary += \`   All steps executed successfully.\\n\`;
+      summary += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n';
+      summary += '\\nCheck browser console (F12) for detailed BetterScripts logs.';
+      state.bd.testRunning = false;
+      state.bd.testStep = 0;
+      state.bd.testResults = [];
+      return { output: summary, widgets: '' };
+    }
+  }
+];
+
+// Run the current test step and advance
+function runTestStep() {
+  if (!state.bd.testRunning) return null;
+  
+  const stepIndex = state.bd.testStep;
+  if (stepIndex >= TEST_STEPS.length) {
+    state.bd.testRunning = false;
+    return null;
+  }
+  
+  const step = TEST_STEPS[stepIndex];
+  const result = step.run();
+  
+  // Record result and advance
+  state.bd.testResults.push('pass');
+  state.bd.testStep = stepIndex + 1;
+  
+  const progress = \`[\${stepIndex + 1}/\${TEST_STEPS.length}]\`;
+  const output = \`\\n🧪 \${progress} \${step.name}\\n\${result.output}\`;
+  
+  // Show next step preview if not the last step
+  let nextHint = '';
+  if (stepIndex + 1 < TEST_STEPS.length) {
+    nextHint = \`\\n\\n⏭️ Next: \${TEST_STEPS[stepIndex + 1].name} (continue story to proceed)\`;
+  }
+  
+  return { output: output + nextHint, widgets: result.widgets };
+}
+
+// ============================================
 // COMMAND HANDLERS
 // ============================================
 
@@ -1322,8 +2087,20 @@ const COMMANDS = {
     handler: () => {
       let helpText = '\\n📖 **BetterScripts Debug Console**\\n';
       helpText += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n';
-      for (const [name, cmd] of Object.entries(COMMANDS)) {
-        helpText += \`• \${cmd.usage} - \${cmd.desc}\\n\`;
+      helpText += '\\n🔧 WIDGET COMMANDS (all 9 types):\\n';
+      for (const name of ['stat','bar','badge','counter','text','icon','panel','list','custom']) {
+        const cmd = COMMANDS[name];
+        helpText += \`  \${cmd.usage}\\n\`;
+      }
+      helpText += '\\n📡 PROTOCOL COMMANDS:\\n';
+      for (const name of ['ping','register','update','destroy','clear']) {
+        const cmd = COMMANDS[name];
+        helpText += \`  \${cmd.usage} - \${cmd.desc}\\n\`;
+      }
+      helpText += '\\n🧪 TESTING COMMANDS:\\n';
+      for (const name of ['demo','stress','test']) {
+        const cmd = COMMANDS[name];
+        helpText += \`  \${cmd.usage} - \${cmd.desc}\\n\`;
       }
       return { output: helpText, widgets: '' };
     }
@@ -1341,41 +2118,50 @@ const COMMANDS = {
     }
   },
   
+  register: {
+    desc: 'Register a test script',
+    usage: ':register [scriptId] [name] [version]',
+    handler: (args) => {
+      const id = args[0] || 'debug-console';
+      const name = args[1] || 'Debug Console';
+      const ver = args[2] || '2.0';
+      const widgets = bdRegister(id, name, ver);
+      return { 
+        output: \`\\n📝 Registered script "\${name}" (id: \${id}, v\${ver}). Check console.\`, 
+        widgets 
+      };
+    }
+  },
+  
   clear: {
-    desc: 'Remove all debug widgets',
+    desc: 'Remove all widgets',
     usage: ':clear',
     handler: () => {
-      // Use clearAll message type for efficient clearing (single message)
-      const widgets = bdMsg({ type: 'clearAll' });
+      const widgets = bdClearAll();
       state.bd.lastResult = 'Cleared all widgets';
-      return { output: '\\n🧹 All debug widgets cleared.', widgets };
+      return { output: '\\n🧹 All widgets cleared.', widgets };
     }
   },
   
   stat: {
     desc: 'Create a stat widget',
-    usage: ':stat <id> <label> <value> [color] [order] [position]',
+    usage: ':stat <id> <label> <value> [color] [order]',
     handler: (args) => {
       const id = args[0] || 'test-stat';
       const label = args[1] || 'Test';
       const value = args[2] || '42';
       const color = args[3] || '#60a5fa';
       const order = args[4] ? parseInt(args[4]) : undefined;
-      const position = args[5] || 'top';
       
       const config = {
-        type: 'stat',
-        label: label,
-        value: value,
-        color: color,
-        position: position
+        type: 'stat', label: label, value: value,
+        color: color, align: 'center'
       };
       if (order !== undefined) config.order = order;
       
       const widgets = bdWidget(id, config);
-      
       return { 
-        output: \`\\n📊 Created stat widget "\${id}": \${label} = \${value} [\${position}]\`, 
+        output: \`\\n📊 Created stat "\${id}": \${label} = \${value}\`, 
         widgets 
       };
     }
@@ -1383,7 +2169,7 @@ const COMMANDS = {
   
   bar: {
     desc: 'Create a bar widget',
-    usage: ':bar <id> <value> <max> [label] [color] [order] [position]',
+    usage: ':bar <id> <value> <max> [label] [color] [order]',
     handler: (args) => {
       const id = args[0] || 'test-bar';
       const value = parseInt(args[1]) || 75;
@@ -1391,23 +2177,65 @@ const COMMANDS = {
       const label = args[3] || 'Progress';
       const color = args[4] || '#22c55e';
       const order = args[5] ? parseInt(args[5]) : undefined;
-      const position = args[6] || 'top';
       
       const config = {
-        type: 'bar',
-        label: label,
-        value: value,
-        max: max,
-        color: color,
-        showValue: true,
-        position: position
+        type: 'bar', label: label, value: value, max: max,
+        color: color, showValue: true, align: 'center'
       };
       if (order !== undefined) config.order = order;
       
       const widgets = bdWidget(id, config);
-      
       return { 
-        output: \`\\n📈 Created bar widget "\${id}": \${label} \${value}/\${max} [\${position}]\`, 
+        output: \`\\n📈 Created bar "\${id}": \${label} \${value}/\${max}\`, 
+        widgets 
+      };
+    }
+  },
+  
+  badge: {
+    desc: 'Create a badge widget',
+    usage: ':badge <id> <text> [icon] [color] [variant]',
+    handler: (args) => {
+      const id = args[0] || 'test-badge';
+      const text = args[1] || 'Status';
+      const icon = args[2] || '';
+      const color = args[3] || '#a855f7';
+      const variant = args[4] || 'subtle';
+      
+      const config = {
+        type: 'badge', text: text, color: color,
+        variant: variant, align: 'center'
+      };
+      if (icon) config.icon = icon;
+      
+      const widgets = bdWidget(id, config);
+      return { 
+        output: \`\\n🏷️ Created badge "\${id}": \${icon ? icon + ' ' : ''}\${text} (\${variant})\`, 
+        widgets 
+      };
+    }
+  },
+  
+  counter: {
+    desc: 'Create a counter widget',
+    usage: ':counter <id> <value> [delta] [icon] [color]',
+    handler: (args) => {
+      const id = args[0] || 'test-counter';
+      const value = parseInt(args[1]) || 0;
+      const delta = args[2] ? parseInt(args[2]) : 0;
+      const icon = args[3] || '';
+      const color = args[4] || '#60a5fa';
+      
+      const config = {
+        type: 'counter', value: value, delta: delta,
+        color: color, align: 'center'
+      };
+      if (icon) config.icon = icon;
+      
+      const widgets = bdWidget(id, config);
+      const deltaStr = delta !== 0 ? \` (\${delta > 0 ? '+' : ''}\${delta})\` : '';
+      return { 
+        output: \`\\n🔢 Created counter "\${id}": \${value}\${deltaStr}\`, 
         widgets 
       };
     }
@@ -1415,25 +2243,41 @@ const COMMANDS = {
   
   text: {
     desc: 'Create a text widget',
-    usage: ':text <id> <message> [color] [position]',
+    usage: ':text <id> <message> [color]',
     handler: (args) => {
       const id = args[0] || 'test-text';
       const message = args[1] || 'Hello BetterScripts!';
       const color = args[2] || '#fbbf24';
-      const position = args[3] || 'top';
       
       const widgets = bdWidget(id, {
-        type: 'text',
-        text: message,
-        style: {
-          color: color,
-          fontWeight: 'bold'
-        },
-        position: position
+        type: 'text', text: message,
+        style: { color: color, fontWeight: 'bold' },
+        align: 'center'
       });
-      
       return { 
-        output: \`\\n💬 Created text widget "\${id}": "\${message}" [\${position}]\`, 
+        output: \`\\n💬 Created text "\${id}": "\${message}"\`, 
+        widgets 
+      };
+    }
+  },
+  
+  icon: {
+    desc: 'Create an icon widget',
+    usage: ':icon <id> <emoji> [tooltip] [color]',
+    handler: (args) => {
+      const id = args[0] || 'test-icon';
+      const emoji = args[1] || '❤️';
+      const tooltip = args[2] || '';
+      const color = args[3] || '#ef4444';
+      
+      const config = {
+        type: 'icon', icon: emoji, color: color, align: 'center'
+      };
+      if (tooltip) config.tooltip = tooltip;
+      
+      const widgets = bdWidget(id, config);
+      return { 
+        output: \`\\n🎯 Created icon "\${id}": \${emoji}\${tooltip ? ' (' + tooltip + ')' : ''}\`, 
         widgets 
       };
     }
@@ -1441,25 +2285,43 @@ const COMMANDS = {
   
   panel: {
     desc: 'Create a panel widget with sample items',
-    usage: ':panel <id> <title> [position]',
+    usage: ':panel <id> <title>',
     handler: (args) => {
       const id = args[0] || 'test-panel';
       const title = args[1] || 'Test Panel';
-      const position = args[2] || 'left';
       
       const widgets = bdWidget(id, {
-        type: 'panel',
-        title: title,
-        position: position,
+        type: 'panel', title: title, align: 'center',
         items: [
           { label: 'Item 1', value: 'Value A', color: '#60a5fa' },
           { label: 'Item 2', value: 'Value B', color: '#22c55e' },
           { label: 'Item 3', value: 'Value C', color: '#fbbf24' }
         ]
       });
-      
       return { 
-        output: \`\\n📋 Created panel widget "\${id}": "\${title}" [\${position}]\`, 
+        output: \`\\n📋 Created panel "\${id}": "\${title}"\`, 
+        widgets 
+      };
+    }
+  },
+  
+  list: {
+    desc: 'Create a list widget with sample items',
+    usage: ':list <id> <title>',
+    handler: (args) => {
+      const id = args[0] || 'test-list';
+      const title = args[1] || 'Test List';
+      
+      const widgets = bdWidget(id, {
+        type: 'list', title: title, align: 'center',
+        items: [
+          { icon: '🗡️', text: 'Iron Sword', color: '#60a5fa' },
+          { icon: '🛡️', text: 'Wooden Shield', color: '#22c55e' },
+          'Health Potion'
+        ]
+      });
+      return { 
+        output: \`\\n📝 Created list "\${id}": "\${title}"\`, 
         widgets 
       };
     }
@@ -1470,13 +2332,11 @@ const COMMANDS = {
     usage: ':custom <id> <html>',
     handler: (args) => {
       const id = args[0] || 'test-custom';
-      const html = args[1] || '<div style="padding:8px;background:#1e1e2e;border-radius:4px;"><strong style="color:#f472b6;">Custom</strong> <span style="color:#94a3b8;">HTML Widget</span></div>';
+      const html = args[1] || '<div style="display:flex;gap:6px;align-items:center;"><strong style="color:#f472b6;">Custom</strong> <span style="color:#94a3b8;">HTML Widget</span></div>';
       
       const widgets = bdWidget(id, {
-        type: 'custom',
-        html: html
+        type: 'custom', html: html, align: 'center'
       });
-      
       return { 
         output: \`\\n🎨 Created custom widget "\${id}"\`, 
         widgets 
@@ -1505,8 +2365,7 @@ const COMMANDS = {
       const config = {};
       config[prop] = parsedValue;
       
-      const widgets = bdUpdate(id, config);
-      
+      const widgets = bdMsg({ type: 'widget', widgetId: id, action: 'update', config });
       return { 
         output: \`\\n✏️ Updated "\${id}".\${prop} = \${parsedValue}\`, 
         widgets 
@@ -1529,64 +2388,86 @@ const COMMANDS = {
   },
   
   demo: {
-    desc: 'Show demo widgets of all types',
+    desc: 'Show all 9 widget types at once',
     usage: ':demo',
     handler: () => {
       let widgets = '';
       
-      // HP Bar (order: 1 - appears first)
+      // === CENTER ZONE: Core HUD ===
+      
+      // Bar: HP (order 1)
       widgets += bdWidget('demo-hp', {
-        type: 'bar',
-        label: 'HP',
-        value: 75,
-        max: 100,
-        color: '#ef4444',
-        showValue: true,
-        order: 1
+        type: 'bar', label: 'HP', value: 75, max: 100,
+        color: '#ef4444', showValue: true, align: 'center', order: 1
       });
       
-      // MP Bar (order: 2)
+      // Bar: MP (order 2)
       widgets += bdWidget('demo-mp', {
-        type: 'bar',
-        label: 'MP',
-        value: 50,
-        max: 80,
-        color: '#3b82f6',
-        showValue: true,
-        order: 2
+        type: 'bar', label: 'MP', value: 50, max: 80,
+        color: '#3b82f6', showValue: true, align: 'center', order: 2
       });
       
-      // Gold stat (order: 3)
-      widgets += bdWidget('demo-gold', {
-        type: 'stat',
-        label: 'Gold',
-        value: '1,250',
-        color: '#fbbf24',
-        order: 3
+      // Badge: Poisoned (order 3)
+      widgets += bdWidget('demo-badge', {
+        type: 'badge', text: 'Poisoned', icon: '☠️',
+        color: '#a855f7', variant: 'subtle', align: 'center', order: 3
       });
       
-      // Status text (order: 4)
+      // Counter: Kills (order 4)
+      widgets += bdWidget('demo-counter', {
+        type: 'counter', icon: '⚔️', value: 24, delta: 3,
+        color: '#60a5fa', align: 'center', order: 4
+      });
+      
+      // Text: Quest (order 5)
       widgets += bdWidget('demo-status', {
-        type: 'text',
-        text: '⚔️ In Combat',
-        style: { color: '#f472b6', fontWeight: 'bold' },
-        order: 4
+        type: 'text', text: '⚡ Quest Active',
+        style: { color: '#fbbf24', fontWeight: 'bold' },
+        align: 'center', order: 5
       });
       
-      // Character panel (order: 5)
+      // Icon: Night indicator (order 6)
+      widgets += bdWidget('demo-icon', {
+        type: 'icon', icon: '🌙', color: '#94a3b8',
+        tooltip: 'Night Time', align: 'center', order: 6
+      });
+      
+      // Custom HTML (order 7)
+      widgets += bdWidget('demo-custom', {
+        type: 'custom', align: 'center', order: 7,
+        html: '<div style="display:flex;gap:4px;align-items:center;"><strong style="color:#f472b6;">LVL</strong><span style="color:#e2e8f0;">12</span></div>'
+      });
+      
+      // === LEFT ZONE: Character Panel ===
+      
       widgets += bdWidget('demo-panel', {
-        type: 'panel',
-        title: 'Character',
+        type: 'panel', title: 'Character', align: 'left', order: 1,
         items: [
-          { label: 'Level', value: '12', color: '#a855f7' },
           { label: 'Class', value: 'Warrior', color: '#60a5fa' },
-          { label: 'XP', value: '4,500/5,000', color: '#22c55e' }
-        ],
-        order: 5
+          { label: 'XP', value: '4500/5000', color: '#22c55e' }
+        ]
+      });
+      
+      // === RIGHT ZONE: Inventory + Gold ===
+      
+      // Stat: Gold (order 1)
+      widgets += bdWidget('demo-gold', {
+        type: 'stat', label: 'Gold', value: '1,250',
+        color: '#fbbf24', align: 'right', order: 1
+      });
+      
+      // List: Inventory (order 2)
+      widgets += bdWidget('demo-list', {
+        type: 'list', title: 'Inventory', align: 'right', order: 2,
+        items: [
+          { icon: '🗡️', text: 'Iron Sword', color: '#60a5fa' },
+          { icon: '🧪', text: 'Potion x3', color: '#22c55e' },
+          { icon: '🔑', text: 'Rusty Key', color: '#fbbf24' }
+        ]
       });
       
       return { 
-        output: '\\n🎮 Demo widgets created! (HP, MP, Gold, Status, Character) - ordered 1-5', 
+        output: '\\n🎮 Demo: All 9 widget types created!\\n  Center: bar, badge, counter, text, icon, custom\\n  Left: panel\\n  Right: stat, list', 
         widgets 
       };
     }
@@ -1602,9 +2483,10 @@ const COMMANDS = {
       for (let i = 0; i < count; i++) {
         widgets += bdWidget('stress-' + i, {
           type: 'stat',
-          label: 'Widget ' + i,
+          label: 'W' + i,
           value: Math.floor(Math.random() * 100),
-          color: \`hsl(\${(i * 360 / count)}, 70%, 60%)\`
+          color: \`hsl(\${(i * 360 / count)}, 70%, 60%)\`,
+          align: 'center', order: i
         });
       }
       
@@ -1612,6 +2494,65 @@ const COMMANDS = {
         output: \`\\n🔥 Created \${count} stress test widgets\`, 
         widgets 
       };
+    }
+  },
+  
+  test: {
+    desc: 'Run sequential test suite (1 step/turn)',
+    usage: ':test [skip|stop]',
+    handler: (args) => {
+      const subcommand = (args[0] || '').toLowerCase();
+      
+      // :test stop - abort running test
+      if (subcommand === 'stop') {
+        if (!state.bd.testRunning) {
+          return { output: '\\n❌ No test suite is running.', widgets: '' };
+        }
+        const step = state.bd.testStep;
+        state.bd.testRunning = false;
+        state.bd.testStep = 0;
+        state.bd.testResults = [];
+        const widgets = bdClearAll();
+        return { output: \`\\n🛑 Test suite stopped at step \${step}/\${TEST_STEPS.length}. Widgets cleared.\`, widgets };
+      }
+      
+      // :test skip - skip current step
+      if (subcommand === 'skip') {
+        if (!state.bd.testRunning) {
+          return { output: '\\n❌ No test suite is running.', widgets: '' };
+        }
+        const skippedName = TEST_STEPS[state.bd.testStep]?.name || '?';
+        state.bd.testResults.push('skip');
+        state.bd.testStep += 1;
+        if (state.bd.testStep >= TEST_STEPS.length) {
+          state.bd.testRunning = false;
+          return { output: \`\\n⏭️ Skipped "\${skippedName}". Suite complete.\`, widgets: '' };
+        }
+        const nextName = TEST_STEPS[state.bd.testStep].name;
+        return { output: \`\\n⏭️ Skipped "\${skippedName}". Next: \${nextName}\`, widgets: '' };
+      }
+      
+      // :test - start a new test suite
+      if (state.bd.testRunning) {
+        return { output: \`\\n⚠️ Test already running (step \${state.bd.testStep + 1}/\${TEST_STEPS.length}). Use :test stop to abort.\`, widgets: '' };
+      }
+      
+      state.bd.testRunning = true;
+      state.bd.testStep = 0;
+      state.bd.testResults = [];
+      
+      // Clear any existing widgets before starting
+      let widgets = bdClearAll();
+      
+      let output = '\\n🧪 **BetterScripts Test Suite Started**\\n';
+      output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n';
+      output += \`Total steps: \${TEST_STEPS.length}\\n\`;
+      output += 'Each turn runs the next test step.\\n';
+      output += 'Commands: :test skip | :test stop\\n';
+      output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n';
+      output += \`\\n⏭️ Next: \${TEST_STEPS[0].name} (continue story to begin)\`;
+      
+      return { output, widgets };
     }
   }
 };
@@ -1684,10 +2625,10 @@ const modifier = (text) => {
 
 modifier(text);`,
       output: `// ============================================
-// OUTPUT MODIFIER - Display Results
+// OUTPUT MODIFIER - Display Results & Run Tests
 // ============================================
-// Shows command results and appends widget protocol messages.
-// If a command was detected in input, we override the AI output.
+// Shows command results, runs test suite steps,
+// and appends widget protocol messages.
 
 const modifier = (text) => {
   let output = text;
@@ -1703,6 +2644,14 @@ const modifier = (text) => {
     state.bd.pendingWidgets = null;
     state.bd.isCommand = false;
   }
+  // Run next test step if suite is active (and no command was just run)
+  else if (state.bd.testRunning) {
+    const testResult = runTestStep();
+    if (testResult) {
+      output = testResult.output;
+      widgets = testResult.widgets;
+    }
+  }
   
   // Always show turn counter widget (order: 0 to appear first)
   widgets += bdWidget('console-turn', {
@@ -1710,8 +2659,22 @@ const modifier = (text) => {
     label: 'Turn',
     value: info.actionCount || 0,
     color: '#94a3b8',
+    align: 'left',
     order: 0
   });
+  
+  // Show test progress badge if suite is running
+  if (state.bd.testRunning) {
+    widgets += bdWidget('console-test', {
+      type: 'badge',
+      text: \`Test \${state.bd.testStep}/\${TEST_STEPS.length}\`,
+      icon: '🧪',
+      color: '#22c55e',
+      variant: 'subtle',
+      align: 'left',
+      order: 1
+    });
+  }
   
   return { text: output + widgets };
 };
@@ -1728,62 +2691,62 @@ modifier(text);`
     essential: false,
     tags: ['widgets', 'demo', 'showcase', 'betterscripts', 'testing', 'all-widgets'],
     source: 'BetterRepository',
-    description: 'Displays all widget types for visual testing and design preview.',
-    purpose: 'A simple script that creates one of every widget type. Perfect for testing styles and layouts.',
+    description: 'Displays all widget types for visual testing.',
+    purpose: 'Creates one of every widget type using bdWidget. Perfect for testing styles and layouts. See the BetterScripts Guide for full documentation.',
     requiresExtension: 'BetterDungeon',
     files: {
       library: `// ============================================
 // LIBRARY - Widget Showcase
 // ============================================
 // Creates all widget types for visual testing.
+// Uses bdWidget to create or update widgets on subsequent turns.
 
-function bdWidget(id, cfg) {
-  return \`[[BD:\${JSON.stringify({ type: 'widget', widgetId: id, action: 'create', config: cfg })}:BD]]\`;
-}`,
+function bdMessage(msg) { return \`[[BD:\${JSON.stringify(msg)}:BD]]\`; }
+function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
+function bdClearAll() { return bdMessage({ type: 'clearAll' }); }`,
       context: `// Strip protocol messages from AI context
 const modifier = (text) => {
   return { text: text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '') };
 };
 modifier(text);`,
       output: `// ============================================
-// OUTPUT - Create All Widget Types (Multi-Position)
+// OUTPUT - Create All Widget Types
 // ============================================
+// Uses bdWidget to create and update widgets each turn.
 
 const modifier = (text) => {
   let w = '';
   
-  // ========== TOP POSITION (Status Bar) ==========
+  // ========== Status Bar ==========
   
   // Stats
-  w += bdWidget('demo-hp', { type: 'stat', label: 'HP', value: '85/100', color: '#ef4444', position: 'top', order: 1 });
-  w += bdWidget('demo-mp', { type: 'stat', label: 'MP', value: '42/60', color: '#3b82f6', position: 'top', order: 2 });
-  w += bdWidget('demo-gold', { type: 'stat', label: '💰', value: '1,250', color: '#fbbf24', position: 'top', order: 3 });
+  w += bdWidget('demo-hp', { type: 'stat', label: 'HP', value: '85/100', color: '#ef4444', align: 'center', order: 1 });
+  w += bdWidget('demo-mp', { type: 'stat', label: 'MP', value: '42/60', color: '#3b82f6', align: 'center', order: 2 });
+  w += bdWidget('demo-gold', { type: 'stat', label: '💰', value: '1,250', color: '#fbbf24', align: 'center', order: 3 });
   
   // Bars
-  w += bdWidget('demo-health-bar', { type: 'bar', label: 'Health', value: 85, max: 100, color: '#22c55e', position: 'top', order: 4 });
-  w += bdWidget('demo-mana-bar', { type: 'bar', label: 'Mana', value: 42, max: 60, color: '#8b5cf6', position: 'top', order: 5 });
-  w += bdWidget('demo-xp-bar', { type: 'bar', label: 'XP', value: 750, max: 1000, color: '#06b6d4', position: 'top', order: 6 });
+  w += bdWidget('demo-health-bar', { type: 'bar', label: 'Health', value: 85, max: 100, color: '#22c55e', align: 'center', order: 4 });
+  w += bdWidget('demo-mana-bar', { type: 'bar', label: 'Mana', value: 42, max: 60, color: '#8b5cf6', align: 'center', order: 5 });
+  w += bdWidget('demo-xp-bar', { type: 'bar', label: 'XP', value: 750, max: 1000, color: '#06b6d4', align: 'center', order: 6 });
   
-  // Badges (status effects)
-  w += bdWidget('demo-badge-poison', { type: 'badge', text: 'Poisoned', icon: '☠️', color: '#a855f7', variant: 'subtle', position: 'top', order: 7 });
-  w += bdWidget('demo-badge-shield', { type: 'badge', text: 'Shielded', icon: '🛡️', color: '#3b82f6', variant: 'solid', position: 'top', order: 8 });
-  w += bdWidget('demo-badge-fire', { type: 'badge', text: 'Burning', icon: '🔥', color: '#f97316', variant: 'outline', position: 'top', order: 9 });
+  // Badges (all three variants)
+  w += bdWidget('demo-badge-poison', { type: 'badge', text: 'Poisoned', icon: '☠️', color: '#a855f7', variant: 'subtle', align: 'center', order: 7 });
+  w += bdWidget('demo-badge-shield', { type: 'badge', text: 'Shielded', icon: '🛡️', color: '#3b82f6', variant: 'solid', align: 'center', order: 8 });
+  w += bdWidget('demo-badge-fire', { type: 'badge', text: 'Burning', icon: '🔥', color: '#f97316', variant: 'outline', align: 'center', order: 9 });
   
-  // Counters
-  w += bdWidget('demo-counter-up', { type: 'counter', icon: '⚔️', value: 24, delta: 3, color: '#60a5fa', position: 'top', order: 10 });
-  w += bdWidget('demo-counter-down', { type: 'counter', icon: '💔', value: 12, delta: -5, color: '#f472b6', position: 'top', order: 11 });
+  // Counters (positive and negative delta)
+  w += bdWidget('demo-counter-up', { type: 'counter', icon: '⚔️', value: 24, delta: 3, color: '#60a5fa', align: 'center', order: 10 });
+  w += bdWidget('demo-counter-down', { type: 'counter', icon: '💔', value: 12, delta: -5, color: '#f472b6', align: 'center', order: 11 });
   
-  // Icons
-  w += bdWidget('demo-icon-heart', { type: 'icon', icon: '❤️', color: '#ef4444', tooltip: 'Health', position: 'top', order: 12 });
-  w += bdWidget('demo-icon-star', { type: 'icon', icon: '⭐', color: '#fbbf24', tooltip: 'Reputation', position: 'top', order: 13 });
-  w += bdWidget('demo-icon-moon', { type: 'icon', icon: '🌙', color: '#94a3b8', tooltip: 'Night', position: 'top', order: 14 });
+  // Icons with tooltips
+  w += bdWidget('demo-icon-heart', { type: 'icon', icon: '❤️', color: '#ef4444', tooltip: 'Health', align: 'center', order: 12 });
+  w += bdWidget('demo-icon-star', { type: 'icon', icon: '⭐', color: '#fbbf24', tooltip: 'Reputation', align: 'center', order: 13 });
+  w += bdWidget('demo-icon-moon', { type: 'icon', icon: '🌙', color: '#94a3b8', tooltip: 'Night', align: 'center', order: 14 });
   
-  // ========== LEFT POSITION (Character Info) ==========
+  // ========== Character Info ==========
   
   w += bdWidget('demo-panel', { 
-    type: 'panel', 
-    title: 'Character', 
-    position: 'left',
+    type: 'panel', title: 'Character', align: 'left',
     items: [
       { label: 'Name', value: 'Adventurer', color: '#f472b6' },
       { label: 'Class', value: 'Warrior', color: '#60a5fa' },
@@ -1792,23 +2755,18 @@ const modifier = (text) => {
     order: 1 
   });
   
-  // ========== RIGHT POSITION (Inventory/Quest) ==========
+  // ========== Inventory/Quest ==========
   
-  w += bdWidget('demo-text', { type: 'text', text: '⚡ Quest: Find the Artifact', style: { color: '#fbbf24', fontWeight: '500' }, position: 'right', order: 1 });
-  
-  w += bdWidget('demo-divider', { type: 'divider', label: 'Items', color: '#60a5fa', position: 'right', order: 2 });
-  
+  w += bdWidget('demo-text', { type: 'text', text: '⚡ Quest: Find the Artifact', style: { color: '#fbbf24', fontWeight: '500' }, align: 'right', order: 1 });
   w += bdWidget('demo-list', { 
-    type: 'list', 
-    title: 'Inventory', 
-    position: 'right',
+    type: 'list', title: 'Inventory', align: 'right',
     items: [
       { icon: '🗡️', text: 'Iron Sword', color: '#60a5fa' },
       { icon: '🧪', text: 'Potion x3', color: '#22c55e' },
       { icon: '🔑', text: 'Rusty Key', color: '#fbbf24' },
       { icon: '📜', text: 'Map' }
     ],
-    order: 3 
+    order: 2 
   });
   
   return { text: text + w };

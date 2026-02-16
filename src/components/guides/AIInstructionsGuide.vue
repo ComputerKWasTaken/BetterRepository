@@ -48,7 +48,7 @@
     <Transition name="slide">
       <div v-if="isGuideSectionExpanded('what-are-instructions')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          AI Instructions are rules you write to control <strong>how the AI behaves</strong> — its writing style, pacing, character handling, and world rules. They sit at <strong>position #1</strong> in the context window, making them the first thing the AI reads on every turn.
+          AI Instructions are rules you write to control <strong>how the AI behaves</strong>, including its writing style, pacing, character handling, and world rules. They sit at <strong>position #1</strong> in the context window, making them the first thing the AI reads on every turn.
         </p>
 
         <div class="grid md:grid-cols-3 gap-3">
@@ -71,7 +71,7 @@
               Key Fact
             </h3>
             <p class="text-xs text-bd-text-secondary">
-              Custom instructions <strong>replace</strong> the defaults entirely — they don't stack on top. If you write your own, the built-in instructions are gone.
+              Custom instructions <strong>replace</strong> the defaults entirely; they don't stack on top. If you write your own, the built-in instructions are gone.
             </p>
           </div>
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
@@ -214,7 +214,7 @@
     <Transition name="slide">
       <div v-if="isGuideSectionExpanded('default-breakdown')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          Every AI Dungeon adventure starts with <strong>Latitude's built-in default instructions</strong>. When you write your own, they <strong>replace the defaults entirely</strong> — your instructions aren't appended on top. Understanding how the defaults are organized helps you decide what to keep, what to improve, and what to leave out.
+          Every AI Dungeon adventure starts with <strong>Latitude's built-in default instructions</strong>. When you write your own, they <strong>replace the defaults entirely</strong>, meaning your instructions aren't appended on top. Understanding how the defaults are organized helps you decide what to keep, what to improve, and what to leave out.
         </p>
 
         <!-- The full default set -->
@@ -249,10 +249,10 @@
                 You are an AI dungeon master that provides any kind of roleplaying game content.
               </div>
               <p class="text-xs text-bd-text-secondary">
-                Sets the AI's <strong>persona</strong>. This is the foundation — everything else builds on this identity. The "any kind of roleplaying game content" part gives the AI broad creative permission.
+                Sets the AI's <strong>persona</strong>. This is the foundation, as everything else builds on this identity. The "any kind of roleplaying game content" part gives the AI broad creative permission.
               </p>
               <p class="text-xs text-bd-text-muted mt-1">
-                <strong>Category:</strong> Role & Persona — This is always the first line in a well-structured instruction set.
+                <strong>Category:</strong> Role & Persona; this is always the first line in a well-structured instruction set.
               </p>
             </div>
           </div>
@@ -270,7 +270,7 @@
                 Core <strong>writing style</strong> directive. Three clear adjectives that set the quality bar. Notice how it's positive ("be this") rather than negative ("don't be boring").
               </p>
               <p class="text-xs text-bd-text-muted mt-1">
-                <strong>Category:</strong> Writing Style — Broad prose quality rules come right after the role.
+                <strong>Category:</strong> Writing Style. Broad prose quality rules come right after the role.
               </p>
             </div>
           </div>
@@ -288,7 +288,7 @@
                 Two of the most common AI problems in one line. <strong>Repetition</strong> (reusing phrases, echoing user input) and <strong>summarization</strong> (wrapping up instead of continuing) are the top complaints from players.
               </p>
               <p class="text-xs text-bd-text-muted mt-1">
-                <strong>Category:</strong> Writing Style / Pacing — Addresses both prose quality and response flow.
+                <strong>Category:</strong> Writing Style / Pacing. Addresses both prose quality and response flow.
               </p>
             </div>
           </div>
@@ -306,7 +306,7 @@
                 Sets the <strong>narrative perspective</strong> with a smart fallback. Second person is the AI Dungeon default ("you walk into the tavern"), but it gracefully defers to third person if the story establishes that pattern. The inline example makes the instruction unambiguous.
               </p>
               <p class="text-xs text-bd-text-muted mt-1">
-                <strong>Category:</strong> Writing Style / POV & Tense — Perspective rules are a core style decision.
+                <strong>Category:</strong> Writing Style / POV & Tense. Perspective rules are a core style decision.
               </p>
             </div>
           </div>
@@ -321,15 +321,15 @@
                 - Never decide or write for the user. If the input ends mid sentence, continue where it left off. ">" tokens mean a character action attempt. You should describe what happens when the player attempts that action. Do not output the ">" token.
               </div>
               <p class="text-xs text-bd-text-secondary">
-                The densest line — it packs <strong>three separate concerns</strong> into one instruction:
+                The densest line; it packs <strong>three separate concerns</strong> into one instruction:
               </p>
               <ul class="text-xs text-bd-text-secondary space-y-1 mt-2">
-                <li>• <strong>Player agency</strong> — "Never decide or write for the user" prevents the AI from controlling your character</li>
-                <li>• <strong>Continuation</strong> — "continue where it left off" ensures seamless mid-sentence pickups</li>
-                <li>• <strong>> token handling</strong> — Explains the AI Dungeon action format and prevents the AI from echoing the > symbol</li>
+                <li>• <strong>Player agency</strong>: "Never decide or write for the user" prevents the AI from controlling your character</li>
+                <li>• <strong>Continuation</strong>: "continue where it left off" ensures seamless mid-sentence pickups</li>
+                <li>• <strong>> token handling</strong>: Explains the AI Dungeon action format and prevents the AI from echoing the > symbol</li>
               </ul>
               <p class="text-xs text-bd-text-muted mt-2">
-                <strong>Categories:</strong> Gameplay (player control), Coherence (continuation), Meta (> token) — This line spans multiple categories, which is common in compact instruction sets.
+                <strong>Categories:</strong> Gameplay (player control), Coherence (continuation), Meta (> token). This line spans multiple categories, which is common in compact instruction sets.
               </p>
             </div>
           </div>
@@ -344,10 +344,10 @@
                 - Make sure you always give responses continuing mid sentence even if it stops partway through.
               </div>
               <p class="text-xs text-bd-text-secondary">
-                <strong>Reinforces continuation</strong> — this is essentially a stronger restatement of the mid-sentence rule from the previous line. Latitude included it twice because seamless continuation is critical to the AI Dungeon experience.
+                <strong>Reinforces continuation</strong>; this is essentially a stronger restatement of the mid-sentence rule from the previous line. Latitude included it twice because seamless continuation is critical to the AI Dungeon experience.
               </p>
               <p class="text-xs text-bd-text-muted mt-1">
-                <strong>Category:</strong> Coherence — Ensures the AI never starts fresh or ignores partial input.
+                <strong>Category:</strong> Coherence. Ensures the AI never starts fresh or ignores partial input.
               </p>
             </div>
           </div>
@@ -365,19 +365,19 @@
           <div class="space-y-2">
             <div class="flex items-center gap-3">
               <span class="flex-shrink-0 w-6 h-6 rounded-full bg-bd-purple/20 text-bd-purple text-xs font-bold flex items-center justify-center">1</span>
-              <span class="text-xs text-bd-text-secondary"><strong>Role</strong> — Who is the AI? (persona, tone, genre)</span>
+              <span class="text-xs text-bd-text-secondary"><strong>Role</strong>: Who is the AI? (persona, tone, genre)</span>
             </div>
             <div class="flex items-center gap-3">
               <span class="flex-shrink-0 w-6 h-6 rounded-full bg-bd-blue/20 text-bd-blue text-xs font-bold flex items-center justify-center">2</span>
-              <span class="text-xs text-bd-text-secondary"><strong>Style</strong> — How should it write? (prose quality, POV, pacing)</span>
+              <span class="text-xs text-bd-text-secondary"><strong>Style</strong>: How should it write? (prose quality, POV, pacing)</span>
             </div>
             <div class="flex items-center gap-3">
               <span class="flex-shrink-0 w-6 h-6 rounded-full bg-bd-amber/20 text-bd-amber text-xs font-bold flex items-center justify-center">3</span>
-              <span class="text-xs text-bd-text-secondary"><strong>Gameplay</strong> — What are the rules? (player control, consequences, world behavior)</span>
+              <span class="text-xs text-bd-text-secondary"><strong>Gameplay</strong>: What are the rules? (player control, consequences, world behavior)</span>
             </div>
             <div class="flex items-center gap-3">
               <span class="flex-shrink-0 w-6 h-6 rounded-full bg-bd-teal/20 text-bd-teal text-xs font-bold flex items-center justify-center">4</span>
-              <span class="text-xs text-bd-text-secondary"><strong>Coherence & Meta</strong> — How should it handle technical concerns? (continuation, formatting, tokens)</span>
+              <span class="text-xs text-bd-text-secondary"><strong>Coherence & Meta</strong>: How should it handle technical concerns? (continuation, formatting, tokens)</span>
             </div>
           </div>
         </div>
@@ -692,7 +692,7 @@
     <Transition name="slide">
       <div v-if="isGuideSectionExpanded('testing')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          Writing instructions is only half the battle — you need to <strong>verify they're working</strong>. AI Dungeon provides built-in tools to inspect what the AI actually sees.
+          Writing instructions is only half the battle; you need to <strong>verify they're working</strong>. AI Dungeon provides built-in tools to inspect what the AI actually sees.
         </p>
 
         <!-- Built-in Tools -->
@@ -726,11 +726,11 @@
             Debugging Workflow
           </h3>
           <ol class="text-xs text-bd-text-secondary space-y-2 list-decimal list-inside">
-            <li><strong>Identify the problem</strong> — What specifically is the AI doing wrong? (e.g., "AI keeps writing dialogue for my character")</li>
-            <li><strong>Check View Context</strong> — Are your instructions actually present? Were they trimmed due to token limits?</li>
-            <li><strong>Add ONE instruction</strong> — Write a clear, specific rule to fix the issue</li>
-            <li><strong>Test with 3-5 actions</strong> — Give the AI enough chances to show whether the instruction works</li>
-            <li><strong>Refine or remove</strong> — If it works, keep it. If not, reword it more directly or try a different approach</li>
+            <li><strong>Identify the problem</strong>: What specifically is the AI doing wrong? (e.g., "AI keeps writing dialogue for my character")</li>
+            <li><strong>Check View Context</strong>: Are your instructions actually present? Were they trimmed due to token limits?</li>
+            <li><strong>Add ONE instruction</strong>: Write a clear, specific rule to fix the issue</li>
+            <li><strong>Test with 3-5 actions</strong>: Give the AI enough chances to show whether the instruction works</li>
+            <li><strong>Refine or remove</strong>: If it works, keep it. If not, reword it more directly or try a different approach</li>
           </ol>
         </div>
 
@@ -937,7 +937,7 @@
     <Transition name="slide">
       <div v-if="isGuideSectionExpanded('writing-tips')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          Every word in your instructions costs tokens — context space that could hold story instead. Good instructions are <strong>direct, specific, and actionable</strong>.
+          Every word in your instructions costs tokens, which is context space that could hold story instead. Good instructions are <strong>direct, specific, and actionable</strong>.
         </p>
 
         <!-- Be Direct -->
@@ -960,11 +960,11 @@
               How to Write
             </h3>
             <ul class="text-xs text-bd-text-secondary space-y-1.5">
-              <li>• <strong>Command words</strong> — Start with: Make, Avoid, Write, Be, Never, Always</li>
-              <li>• <strong>One idea per line</strong> — Short, specific, actionable</li>
-              <li>• <strong>Positive framing</strong> — "Write vivid descriptions" beats "Don't be boring"</li>
-              <li>• <strong>Be specific</strong> — "Use varied sentence lengths" beats "Write better"</li>
-              <li>• <strong>Give examples</strong> — Inline examples remove ambiguity</li>
+              <li>• <strong>Command words</strong>: Start with: Make, Avoid, Write, Be, Never, Always</li>
+              <li>• <strong>One idea per line</strong>: Short, specific, actionable</li>
+              <li>• <strong>Positive framing</strong>: "Write vivid descriptions" beats "Don't be boring"</li>
+              <li>• <strong>Be specific</strong>: "Use varied sentence lengths" beats "Write better"</li>
+              <li>• <strong>Give examples</strong>: Inline examples remove ambiguity</li>
             </ul>
           </div>
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
@@ -973,10 +973,10 @@
               Token Efficiency
             </h3>
             <ul class="text-xs text-bd-text-secondary space-y-1.5">
-              <li>• <strong>Cut filler</strong> — Remove "please", "try to", "make sure to"</li>
-              <li>• <strong>Merge related rules</strong> — Combine lines that address the same concern</li>
-              <li>• <strong>Skip the obvious</strong> — Don't restate what the defaults already cover (unless you've replaced them)</li>
-              <li>• <strong>Check your count</strong> — Use a <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" class="text-bd-accent-primary hover:underline">tokenizer tool</a></li>
+              <li>• <strong>Cut filler</strong>: Remove "please", "try to", "make sure to"</li>
+              <li>• <strong>Merge related rules</strong>: Combine lines that address the same concern</li>
+              <li>• <strong>Skip the obvious</strong>: Don't restate what the defaults already cover (unless you've replaced them)</li>
+              <li>• <strong>Check your count</strong>: Use a <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" class="text-bd-accent-primary hover:underline">tokenizer tool</a></li>
             </ul>
           </div>
         </div>

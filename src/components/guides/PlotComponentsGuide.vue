@@ -151,7 +151,7 @@
                   </div>
                   <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/20">
                     <h4 class="font-semibold text-bd-text-primary mb-1">Use "Avoid" Not "Not"</h4>
-                    <p class="text-bd-text-secondary">The AI tends to <strong>ignore negatives</strong>. Say "avoid fire" instead of "is not fire-resistant" — negation confuses models.</p>
+                    <p class="text-bd-text-secondary">The AI tends to <strong>ignore negatives</strong>. Say "avoid fire" instead of "is not fire-resistant" because negation confuses models.</p>
                   </div>
                   <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/20">
                     <h4 class="font-semibold text-bd-text-primary mb-1">Past Tense for Past Events</h4>
@@ -244,13 +244,13 @@
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/20">
                 <h4 class="text-xs font-semibold text-bd-pink mb-1">Keep It Short</h4>
                 <p class="text-xs text-bd-text-secondary">
-                  <strong>3-4 sentences max.</strong> AN sits near the end of context where attention is highest — overloading it makes the AI fixate on those details instead of the actual story.
+                  <strong>3-4 sentences max.</strong> AN sits near the end of context where attention is highest, so overloading it makes the AI fixate on those details instead of the actual story.
                 </p>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/20">
                 <h4 class="text-xs font-semibold text-bd-pink mb-1">AN vs AI Instructions</h4>
                 <p class="text-xs text-bd-text-secondary">
-                  If AI Instructions is talking to customer support, Author's Note is <strong>"Can I speak to the manager?"</strong> — use AN when AI Instructions isn't enough.
+                  If AI Instructions is talking to customer support, Author's Note is <strong>"Can I speak to the manager?"</strong>. Use AN when AI Instructions isn't enough.
                 </p>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/20">
@@ -262,7 +262,7 @@
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/20">
                 <h4 class="text-xs font-semibold text-bd-pink mb-1">Use Tags</h4>
                 <p class="text-xs text-bd-text-secondary">
-                  Tags work well in AN: <code class="text-bd-green text-[10px]">Tags: noblebright, magical, fantastical, fun</code> — concise and model-friendly.
+                  Tags work well in AN: <code class="text-bd-green text-[10px]">Tags: noblebright, magical, fantastical, fun</code> because they're concise and model-friendly.
                 </p>
               </div>
             </div>
@@ -391,7 +391,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('memory-summary')" class="mt-4 space-y-4">
             <p class="text-bd-text-secondary">
-              The Memory System has two complementary features that work together — like how human memory combines a big-picture overview with specific detail recall.
+              The Memory System has two complementary features that work together, like how human memory combines a big-picture overview with specific detail recall.
             </p>
 
             <div class="grid md:grid-cols-2 gap-4">
@@ -402,8 +402,8 @@
                   <span class="tag bg-bd-green/20 text-bd-green text-xs">Automated</span>
                 </h3>
                 <p class="text-sm text-bd-text-secondary">
-                  Stores important events and details as your story progresses. Acts like an <strong>automatic Story Card system</strong> — 
-                  it saves details (your dog's name, where you found the Sword of Demons) and dynamically inserts them when relevant.
+                  Stores important events and details as your story progresses. Acts like an <strong>automatic Story Card system</strong> that 
+                  saves details (your dog's name, where you found the Sword of Demons) and dynamically inserts them when relevant.
                 </p>
                 <p class="text-sm text-bd-text-muted mt-2">
                   Poorly phrased memories can cause confusion. If the AI misremembers events, 
@@ -448,7 +448,7 @@
               <div class="flex items-start gap-2">
                 <AlertTriangle class="w-4 h-4 text-bd-amber flex-shrink-0 mt-0.5" />
                 <p class="text-xs text-bd-text-secondary">
-                  <strong>Manual components still matter.</strong> The Memory System complements Plot Essentials and Story Cards — it doesn't replace them. 
+                  <strong>Manual components still matter.</strong> The Memory System complements Plot Essentials and Story Cards but doesn't replace them. 
                   Plot Essentials are <em>always</em> included; Memory Bank entries are only included when relevant. Keep critical info in PE for guaranteed context.
                 </p>
               </div>
@@ -592,7 +592,7 @@
                 <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
                   <XCircle class="w-3 h-3" /> Using Negatives in PE
                 </h4>
-                <p class="text-xs text-bd-text-secondary">"Bob is NOT evil" — the AI often ignores "not" and treats Bob as evil.</p>
+                <p class="text-xs text-bd-text-secondary">"Bob is NOT evil" because the AI often ignores "not" and treats Bob as evil.</p>
                 <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> Use positive framing: "Bob is kind and trustworthy" or "Bob avoids violence."</p>
               </div>
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">

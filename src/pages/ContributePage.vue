@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-8">
-    <!-- Hero Section — community-driven messaging with three animated orbs -->
+    <!-- Hero Section: community-driven messaging with three animated orbs -->
     <header class="contribute-hero relative overflow-hidden rounded-2xl text-center py-14 px-6">
       <!-- Animated background orbs (matches HomePage triple-orb style) -->
       <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none" aria-hidden="true">
@@ -21,12 +21,12 @@
           Every guide, every template, every script started as someone's contribution.
         </p>
         <p class="text-sm text-bd-text-muted max-w-md mx-auto">
-          No coding required — just paste and submit. It takes less than 2 minutes.
+          New here? Check out the <router-link to="/guides" class="text-bd-accent-primary hover:text-bd-accent-light transition-colors font-medium">Guides</router-link> first to learn the ropes. Ready to share? Just paste and submit.
         </p>
       </div>
     </header>
 
-    <!-- Community Impact Stats — social proof through numbers -->
+    <!-- Community Impact Stats: social proof through numbers -->
     <section ref="statsRef" :class="['contribute-section', { 'is-visible': visibleSections.stats }]">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div 
@@ -44,7 +44,7 @@
       </div>
     </section>
 
-    <!-- Why Contribute? — motivation cards -->
+    <!-- Why Contribute? Motivation cards -->
     <section ref="whyRef" :class="['contribute-section', { 'is-visible': visibleSections.why }]">
       <div class="section-header mb-5">
         <Heart class="w-4 h-4" />
@@ -64,7 +64,7 @@
             </div>
             <p class="text-sm text-bd-text-secondary leading-relaxed">
               New players discover AI Dungeon every day. Your contribution could be the thing that turns a confused
-              newcomer into a confident storyteller.
+              newcomer into a confident storyteller. Start by reading the <router-link to="/guides" class="text-bd-green hover:text-bd-green/80 font-medium transition-colors">Guides</router-link> to see what's already covered.
             </p>
           </div>
         </div>
@@ -80,7 +80,7 @@
               <h3 class="font-semibold text-bd-text-primary">Keep It Current</h3>
             </div>
             <p class="text-sm text-bd-text-secondary leading-relaxed">
-              AI Dungeon evolves constantly — new models, new features, new possibilities. Community contributions
+              AI Dungeon evolves constantly with new models, new features, new possibilities. Community contributions
               keep the guides and resources accurate and relevant.
             </p>
           </div>
@@ -105,7 +105,7 @@
       </div>
     </section>
 
-    <!-- Submit a Contribution — inline Netlify Form -->
+    <!-- Submit a Contribution: inline Netlify Form -->
     <section id="submission-form" ref="easyRef" :class="['contribute-section', { 'is-visible': visibleSections.easy }]">
       <div class="card-elevated border-2 border-bd-accent-primary/30 relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-accent-primary via-bd-purple to-bd-cyan" />
@@ -118,7 +118,7 @@
           <div>
             <h2 class="text-lg font-semibold text-bd-text-primary mb-1">Submit a Contribution</h2>
             <p class="text-bd-text-secondary leading-relaxed">
-              Just fill in the fields below and hit submit. No account needed — I'll handle the rest.
+              Just fill in the fields below and hit submit. No account needed, I'll handle the rest.
             </p>
           </div>
         </div>
@@ -248,7 +248,7 @@
               id="content"
               name="content" 
               v-model="formData.content" 
-              placeholder="Paste the full content here — AI instruction text, story card JSON, script code, etc."
+              placeholder="Paste the full content here: AI instruction text, story card JSON, script code, etc."
               class="input font-mono text-sm min-h-[160px] resize-y"
               rows="8"
               required
@@ -282,7 +282,7 @@
       </div>
     </section>
 
-    <!-- What Can You Submit — content types + beyond content -->
+    <!-- What Can You Submit: content types + beyond content -->
     <section ref="submitRef" :class="['contribute-section', { 'is-visible': visibleSections.submit }]">
       <div class="card">
         <div class="section-header mb-4">
@@ -330,7 +330,7 @@
           </div>
         </div>
 
-        <!-- Beyond content — other ways to help -->
+        <!-- Beyond content: other ways to help -->
         <div class="border-t border-bd-border-subtle pt-4">
           <p class="text-xs text-bd-text-muted font-medium uppercase tracking-wider mb-3 flex items-center gap-1.5">
             <Lightbulb class="w-3 h-3" />
@@ -364,23 +364,23 @@
         <div class="grid md:grid-cols-2 gap-3">
           <div class="checklist-item">
             <Check class="w-4 h-4 text-bd-success flex-shrink-0" />
-            <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">It works</strong> — you've tested it in AI Dungeon</span>
+            <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">It works</strong> and you've tested it in AI Dungeon</span>
           </div>
           <div class="checklist-item">
             <Check class="w-4 h-4 text-bd-success flex-shrink-0" />
-            <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">It's original</strong> — or you have permission to share it</span>
+            <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">It's original</strong> or you have permission to share it</span>
           </div>
           <div class="checklist-item">
             <Check class="w-4 h-4 text-bd-success flex-shrink-0" />
-            <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">It's described</strong> — a sentence explaining what it does</span>
+            <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">It's described</strong> with a sentence explaining what it does</span>
           </div>
           <div class="checklist-item">
             <Check class="w-4 h-4 text-bd-success flex-shrink-0" />
-            <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">It's appropriate</strong> — follows AI Dungeon ToS</span>
+            <span class="text-sm text-bd-text-secondary"><strong class="text-bd-text-primary">It's appropriate</strong> and follows AI Dungeon ToS</span>
           </div>
         </div>
         <p class="text-sm text-bd-text-muted mt-4 text-center">
-          Don't worry about perfect formatting — I'll clean everything up before it goes live.
+          Don't worry about perfect formatting, I'll clean everything up before it goes live.
         </p>
       </div>
     </section>
@@ -393,7 +393,7 @@
           <h2 class="text-lg font-semibold text-bd-text-primary">Example Submission</h2>
         </div>
         <p class="text-sm text-bd-text-secondary mb-4">
-          Here's what a good submission looks like — don't overthink it:
+          Here's what a good submission looks like. Don't overthink it:
         </p>
         <div class="rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle overflow-hidden code-window">
           <div class="px-4 py-2 bg-bd-bg-secondary border-b border-bd-border-subtle flex items-center gap-2">
@@ -415,7 +415,7 @@ Favor active voice over passive. Every word should earn its place.</span></pre>
       </div>
     </section>
 
-    <!-- Contributor Spotlight — social proof showing real names -->
+    <!-- Contributor Spotlight: social proof showing real names -->
     <section ref="spotlightRef" :class="['contribute-section', { 'is-visible': visibleSections.spotlight }]">
       <div class="card relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-accent-primary via-bd-purple to-bd-cyan" />
@@ -513,7 +513,7 @@ Favor active voice over passive. Every word should earn its place.</span></pre>
       </div>
     </section>
 
-    <!-- FAQ — address common hesitations -->
+    <!-- FAQ: address common hesitations -->
     <section ref="faqRef" :class="['contribute-section', { 'is-visible': visibleSections.faq }]">
       <div class="card">
         <div class="section-header mb-4">
@@ -542,7 +542,7 @@ Favor active voice over passive. Every word should earn its place.</span></pre>
       </div>
     </section>
 
-    <!-- Final CTA — strong closing push -->
+    <!-- Final CTA: strong closing push -->
     <section ref="ctaRef" :class="['contribute-section', { 'is-visible': visibleSections.cta }]">
       <div class="card-elevated text-center relative overflow-hidden border-2 border-bd-accent-primary/20">
         <div class="absolute inset-0 bg-gradient-to-t from-bd-accent-primary/5 via-transparent to-bd-purple/5 pointer-events-none" />
@@ -558,6 +558,10 @@ Favor active voice over passive. Every word should earn its place.</span></pre>
               <Send class="w-4 h-4" />
               Submit a Contribution
             </button>
+            <router-link to="/guides" class="btn btn-secondary">
+              <BookOpen class="w-4 h-4" />
+              Read the Guides
+            </router-link>
             <router-link to="/credits" class="btn btn-secondary">
               <Award class="w-4 h-4" />
               See Who's Contributed
@@ -581,7 +585,7 @@ import {
   ScrollText, Bookmark, Drama, Code, GitMerge, MessageCircle,
   ExternalLink, Github, FileText, Award, Heart, Users, Star,
   ChevronRight, Lightbulb, Bug, Pencil, HelpCircle, RefreshCw,
-  Sparkles, Package, Send, Loader, AlertCircle
+  Sparkles, Package, Send, Loader, AlertCircle, BookOpen
 } from 'lucide-vue-next'
 
 // --- Community impact stats (pulled from actual data) ---
@@ -601,11 +605,11 @@ const impactStats = computed(() => [
 const faqs = [
   {
     q: 'Is my work good enough to submit?',
-    a: "If it helped you, it's good enough. We're not looking for perfection — we're looking for things that work. Even small, focused contributions are incredibly valuable.",
+    a: "If it helped you, it's good enough. We're not looking for perfection, we're looking for things that work. Even small, focused contributions are incredibly valuable.",
   },
   {
     q: 'Do I need to know how to code?',
-    a: "Not at all. Most contributions are just text — AI instructions, story cards, templates. Just paste your content into the form above and I'll take care of the rest.",
+    a: "Not at all. Most contributions are just text like AI instructions, story cards, templates. Just paste your content into the form above and I'll take care of the rest.",
   },
   {
     q: 'How long does it take to get added?',
@@ -613,7 +617,7 @@ const faqs = [
   },
   {
     q: 'Can I update or improve something that already exists?',
-    a: "Absolutely — in fact, that's one of the most helpful things you can do. If you notice something outdated, unclear, or incomplete, submit a correction using the form above.",
+    a: "Absolutely! In fact, that's one of the most helpful things you can do. If you notice something outdated, unclear, or incomplete, submit a correction using the form above.",
   },
   {
     q: "What if I'm not sure what category my submission fits?",

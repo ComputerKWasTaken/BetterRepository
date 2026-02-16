@@ -39,8 +39,8 @@ Everything is **free**, **tested**, and **ready to copy-paste** into your advent
 ### The Easy Way
 
 1. **Go to [better-repository.netlify.app/contribute](https://better-repository.netlify.app/contribute)**
-2. **Fill out the form** — paste your content (AI Instruction, Story Card, Script, etc.) and tell me what it does
-3. **Hit submit** — no account needed
+2. **Fill out the form** by pasting your content (AI Instruction, Story Card, Script, etc.) and tell me what it does
+3. **Hit submit** with no account needed
 4. Done! I'll review it and add it to the collection.
 
 You can also share in the **[AI Dungeon Discord](https://discord.gg/aidungeon)** and ping me.
@@ -56,10 +56,10 @@ You can also share in the **[AI Dungeon Discord](https://discord.gg/aidungeon)**
 
 ### Tech Stack
 
-- **Vue 3** + **Vite** — Fast, modern frontend
-- **Tailwind CSS** — Utility-first styling
-- **Vue Router** — Client-side routing
-- **Lucide Icons** — Clean iconography
+- **Vue 3** + **Vite** for fast, modern frontend
+- **Tailwind CSS** for utility-first styling
+- **Vue Router** for client-side routing
+- **Lucide Icons** for clean iconography
 
 ### Quick Start
 

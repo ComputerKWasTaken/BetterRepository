@@ -93,7 +93,7 @@
             <h2 class="text-xl font-semibold text-bd-text-primary mb-3">What is the "Better" Ecosystem?</h2>
             <p class="text-bd-text-secondary leading-relaxed">
               The "Better" ecosystem is a collection of <strong class="text-bd-text-primary">open-source tools and resources</strong> created to enhance AI Dungeon. 
-              Each project focuses on a different aspect of the experience — from browser extensions that add powerful new features, 
+              Each project focuses on a different aspect of the experience, from browser extensions that add powerful new features 
               to curated repositories of community-created content ready to use in your adventures.
             </p>
           </div>
@@ -131,7 +131,7 @@
                 <p class="text-bd-text-secondary mb-5 leading-relaxed">
                   The ultimate AI Dungeon resource hub. Find <strong class="text-bd-text-primary">AI Instructions</strong>, 
                   <strong class="text-bd-text-primary">Plot Components</strong>, <strong class="text-bd-text-primary">Story Cards</strong>, 
-                  and <strong class="text-bd-text-primary">Scripts</strong> — all curated, tested, and ready to copy-paste into your adventures.
+                  and <strong class="text-bd-text-primary">Scripts</strong>, all curated, tested, and ready to copy-paste into your adventures.
                 </p>
                 
                 <!-- Resource Types -->
@@ -188,7 +188,7 @@
                 </div>
                 <p class="text-bd-text-secondary mb-5 leading-relaxed">
                   An all-in-one browser extension that enhances AI Dungeon with QOL additions and brand new features. 
-                  Add new input modes, hotkeys, markdown support, and much more — all without leaving your browser.
+                  Add new input modes, hotkeys, markdown support, and much more, all without leaving your browser.
                 </p>
                 
                 <!-- Feature Grid - Inspired by BetterDungeon popup -->
@@ -270,7 +270,7 @@
                       <div>
                         <span class="text-sm text-bd-text-primary font-semibold">BetterScripts</span>
                         <p class="text-xs text-bd-text-secondary mt-1">
-                          Enables AI Dungeon scripts to create <strong class="text-bd-text-primary">dynamic UI widgets</strong> — 
+                          Enables AI Dungeon scripts to create <strong class="text-bd-text-primary">dynamic UI widgets</strong> like 
                           HP bars, stats, panels, and custom displays that update in real-time.
                         </p>
                       </div>

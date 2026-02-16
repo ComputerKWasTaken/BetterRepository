@@ -23,7 +23,7 @@ const isNsfwItem = (item) => {
   return false
 }
 
-// Resource type definitions — icon names, colors, and route paths
+// Resource type definitions - icon names, colors, and route paths
 const RESOURCE_TYPES = [
   {
     id: 'ai-instructions',

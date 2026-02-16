@@ -28,7 +28,7 @@
               BetterRepository
             </h1>
             <div class="flex items-center gap-2">
-              <span class="text-xs text-bd-text-muted">v1.1.0</span>
+              <span class="text-xs text-bd-text-muted">v1.2.0</span>
             </div>
           </div>
         </router-link>
@@ -83,8 +83,7 @@
           >
             <GitPullRequest class="w-4 h-4" />
             <span>Contribute</span>
-            <span class="ml-auto text-[10px] px-1.5 py-0.5 rounded-full font-semibold bg-bd-accent-primary/15 text-bd-accent-primary">NEW</span>
-          </router-link>
+            </router-link>
 
           <router-link 
             to="/ecosystem"

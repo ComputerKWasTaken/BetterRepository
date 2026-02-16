@@ -1,8 +1,8 @@
 <template>
   <div class="space-y-8">
-    <!-- Hero Section — animated gradient backdrop -->
+    <!-- Hero Section with animated gradient backdrop -->
     <section class="hero-section relative rounded-2xl py-14 px-6 text-center">
-      <!-- Orb container — overflow-hidden here so orbs clip without affecting the search dropdown -->
+      <!-- Orb container with overflow-hidden so orbs clip without affecting the search dropdown -->
       <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none" aria-hidden="true">
         <div class="hero-orb hero-orb--orange" />
         <div class="hero-orb hero-orb--purple" />
@@ -27,11 +27,11 @@
         </div>
 
         <p class="text-bd-text-secondary max-w-xl mx-auto mb-8 leading-relaxed">
-          A curated collection of AI Instructions, Plot Components, Story Cards, and Scripts.
+          A curated collection of AI Instructions, Plot Components, Story Cards, Scripts, and Guides.
           Everything you need to craft <span class="text-gradient font-semibold">better adventures</span>.
         </p>
 
-        <!-- Quick Search — global search across all collections -->
+        <!-- Quick Search for global search across all collections -->
         <div class="max-w-lg mx-auto relative" ref="searchContainerRef">
           <div class="relative group">
             <div class="absolute -inset-0.5 bg-gradient-to-r from-bd-accent-primary/20 via-bd-purple/20 to-bd-cyan/20 rounded-xl opacity-0 group-focus-within:opacity-100 blur transition-opacity duration-300" />
@@ -165,7 +165,7 @@
       </div>
     </section>
 
-    <!-- Resource Categories — gradient accent borders -->
+    <!-- Resource Categories with gradient accent borders -->
     <section ref="categoriesRef" :class="['home-section', { 'is-visible': visibleSections.categories }]">
       <div class="section-header mb-5">
         <LayoutGrid class="w-4 h-4" />
@@ -207,7 +207,7 @@
       </div>
     </section>
 
-    <!-- Quick Stats — with icons and animated entrance -->
+    <!-- Quick Stats with icons and animated entrance -->
     <section ref="statsRef" :class="['home-section', { 'is-visible': visibleSections.stats }]">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div 
@@ -225,7 +225,7 @@
       </div>
     </section>
 
-    <!-- Quick Start Cards — with subtle gradient overlays -->
+    <!-- Quick Start Cards with subtle gradient overlays -->
     <section ref="quickStartRef" :class="['home-section', { 'is-visible': visibleSections.quickStart }]">
       <div class="section-header mb-5">
         <Sparkles class="w-4 h-4" />
@@ -244,10 +244,10 @@
               <h3 class="font-semibold text-bd-text-primary">New to AI Dungeon?</h3>
             </div>
             <p class="text-sm text-bd-text-secondary mb-4 leading-relaxed">
-              Start with Complete Sets, full instruction sets ready for various AI models.
+              Check out the Guides to learn how AI Instructions, Plot Components, Story Cards, and Scripts work.
             </p>
-            <router-link to="/ai-instructions" class="inline-flex items-center gap-1.5 text-sm font-medium text-bd-green hover:text-bd-green/80 transition-colors">
-              Browse AI Instructions
+            <router-link to="/guides" class="inline-flex items-center gap-1.5 text-sm font-medium text-bd-green hover:text-bd-green/80 transition-colors">
+              Read the Guides
               <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </router-link>
           </div>
@@ -264,7 +264,7 @@
               <h3 class="font-semibold text-bd-text-primary">Share Your Work</h3>
             </div>
             <p class="text-sm text-bd-text-secondary mb-4 leading-relaxed">
-              Paste your creation in a GitHub issue, no coding required.
+              Read the Guides to learn the ropes, then share your own creations with the community.
             </p>
             <router-link to="/contribute" class="inline-flex items-center gap-1.5 text-sm font-medium text-bd-purple hover:text-bd-purple/80 transition-colors">
               Submit Creation
@@ -299,7 +299,7 @@
       </div>
     </section>
 
-    <!-- Credits Section — refined -->
+    <!-- Credits Section with refined styling -->
     <section ref="creditsRef" :class="['home-section', { 'is-visible': visibleSections.credits }]">
       <div class="card relative overflow-hidden">
         <!-- Decorative gradient -->
