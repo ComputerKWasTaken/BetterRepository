@@ -877,25 +877,28 @@ modifier(text);`
     tags: ['widgets', 'time', 'clock', 'day-night', 'moon', 'weather', 'betterscripts', 'context', 'commands'],
     source: 'BetterRepository',
     description: 'Day/night cycle with time periods, weekday tracking, moon phases, weather, and time commands.',
-    purpose: 'Each turn = 2 minutes. Time, moon phase, and weather injected into AI context. Commands: :time, :timeskip <hours>, :sleep, :settime <hour>.',
+    purpose: 'Configurable time pacing. Time, moon phase, and weather injected into AI context. Commands: :time, :date, :advance, :sleep, :settime, :setdate, :setweather, :weather, :chronos, :chronos help, :chronos reset, :timeskip/:skip.',
     requiresExtension: 'BetterDungeon',
     files: {
       library: `// ============================================
 // LIBRARY - Chronos: In-Game Time System
 // ============================================
-// Time is calculated from info.actionCount (turns).
-// - Each turn = 2 minutes of in-game time
-// - Time of day: Dawn, Morning, Afternoon, Evening, Night, Midnight
-// - Day of week tracking
-// - Moon phases (29.5-day lunar cycle)
-// - Weather system (changes daily)
-// - Commands: :time, :timeskip <hours>, :sleep, :settime <hour>
-
-// State only stores offsets from manual adjustments
-state.time = state.time ?? {
-  offsetMinutes: 0,  // Manual time adjustments (timeskip, sleep, settime)
-  startHour: 8       // Starting hour of day (8 AM)
-};
+// Direct-tracking time system for AI Dungeon.
+// All time state is stored in state.chronos and advanced each turn.
+//
+// Features:
+// - Configurable time pacing (minutes per turn)
+// - Day/night cycle with 6 time periods
+// - Weekday and calendar tracking with leap years
+// - 8-phase lunar cycle
+// - Season-aware weather with Markov-chain transitions
+// - Temperature simulation with smooth drift
+// - Story card-based settings (Chronos Settings card)
+// - BetterScripts widget integration
+//
+// Commands: :time, :date, :advance, :sleep, :settime, :setdate,
+//           :setweather, :weather, :chronos, :chronos help,
+//           :chronos reset, :timeskip/:skip
 
 // ============================================
 // STATE INITIALIZATION
@@ -923,12 +926,12 @@ state.chronos = state.chronos ?? {
   weather: {
     current: 'clear',
     temperature: 70,
-    lastChange: 0
+    lastChange: 0,
+    targetTemp: null
   },
   pendingOutput: null,
   isCommand: false,
   lastActionCount: -1,
-  lastActionHash: null,
   initialized: false
 };
 
@@ -964,10 +967,10 @@ const TIME_PERIODS = [
 ];
 
 const SEASONS = [
+  { name: 'Spring', months: [3, 4, 5] },
   { name: 'Summer', months: [6, 7, 8] },
   { name: 'Autumn', months: [9, 10, 11] },
-  { name: 'Winter', months: [12, 1, 2] },
-  { name: 'Spring', months: [3, 4, 5] }
+  { name: 'Winter', months: [12, 1, 2] }
 ];
 
 const MOON_PHASES = [
@@ -981,8 +984,6 @@ const MOON_PHASES = [
   { name: 'Waning Crescent', icon: '\\u{1F318}' }
 ];
 
-// Weather conditions with transition weights per season
-// Each condition maps to an array of [condition, weight] for possible next states
 const WEATHER_CONDITIONS = {
   clear: { icon: '\\u{2600}\\u{FE0F}', label: 'Clear skies' },
   partly_cloudy: { icon: '\\u{26C5}', label: 'Partly cloudy' },
@@ -999,8 +1000,6 @@ const WEATHER_CONDITIONS = {
   windy: { icon: '\\u{1F4A8}', label: 'Windy' }
 };
 
-// Season-weighted weather transition table
-// Key = current weather, value = { season: [[nextWeather, weight], ...] }
 const WEATHER_TRANSITIONS = {
   clear: {
     Spring: [['clear',4],['partly_cloudy',3],['light_rain',1],['windy',1]],
@@ -1082,10 +1081,8 @@ const WEATHER_TRANSITIONS = {
   }
 };
 
-// Approximate minutes per unit (for weather simulation on time skips)
 const UNIT_TO_MINUTES = { minute: 1, minutes: 1, hour: 60, hours: 60, day: 1440, days: 1440, week: 10080, weeks: 10080, month: 43200, months: 43200, year: 525600, years: 525600 };
 
-// Base temperature ranges per season (Fahrenheit)
 const SEASON_TEMPS = {
   Winter: { low: 20, high: 42 },
   Spring: { low: 45, high: 68 },
@@ -1093,54 +1090,25 @@ const SEASON_TEMPS = {
   Autumn: { low: 40, high: 65 }
 };
 
-// ============================================
-// MOON PHASE CONSTANTS
-// ============================================
+const SETTINGS_CARD_ENTRY = '> Enabled: true\\n> Minutes Per Turn: 2\\n> 12-Hour Format: true\\n> Show Time In Output: true\\n> Use BetterScripts: false\\n> Weather Enabled: false\\n> Weather Change Cooldown: 15\\n> Temperature Unit: F\\n> Wake Hour: 7\\n> Current Time: 7:00 AM\\n> Current Date: June 1, 2026';
 
-const LUNAR_CYCLE = 29.5;
-const MOON_PHASES = [
-  { name: 'New Moon', icon: '🌑' },
-  { name: 'Waxing Crescent', icon: '🌒' },
-  { name: 'First Quarter', icon: '🌓' },
-  { name: 'Waxing Gibbous', icon: '🌔' },
-  { name: 'Full Moon', icon: '🌕' },
-  { name: 'Waning Gibbous', icon: '🌖' },
-  { name: 'Last Quarter', icon: '🌗' },
-  { name: 'Waning Crescent', icon: '🌘' }
-];
+const SETTINGS_CARD_DESCRIPTION = 'Chronos time system settings. Edit the values after each colon to configure. Time and date update automatically.';
+
+const COMMANDS_CARD_ENTRY = ':time - Show current time and status\\n:date - Show current date and season\\n:advance <N> <unit> - Advance time (e.g. :advance 3 hours)\\n:sleep - Sleep until morning\\n:settime <HH:MM> - Set time (e.g. :settime 14:30)\\n:setdate <day> <month> <year> - Set date\\n:setweather <condition> - Set weather condition\\n:weather - Show weather status\\n:timeskip <N> <unit> - Alias for :advance\\n:skip <N> <unit> - Alias for :advance\\n:chronos - Full diagnostic status\\n:chronos help - Show this command list\\n:chronos reset - Reset all state to defaults';
 
 // ============================================
-// WEATHER CONSTANTS
+// STORY CARD FUNCTIONS
 // ============================================
-
-const WEATHER_TYPES = [
-  { name: 'Clear', icon: '☀️', nightIcon: '🌙', desc: 'clear skies' },
-  { name: 'Partly Cloudy', icon: '⛅', nightIcon: '☁️', desc: 'partly cloudy' },
-  { name: 'Overcast', icon: '☁️', nightIcon: '☁️', desc: 'overcast skies' },
-  { name: 'Rainy', icon: '🌧️', nightIcon: '🌧️', desc: 'rain' },
-  { name: 'Stormy', icon: '⛈️', nightIcon: '⛈️', desc: 'thunderstorms' },
-  { name: 'Foggy', icon: '🌫️', nightIcon: '🌫️', desc: 'thick fog' },
-  { name: 'Windy', icon: '💨', nightIcon: '💨', desc: 'strong winds' }
-];
-
-// ============================================
-// TIME FUNCTIONS
-// ============================================
-// Inspired by LPCroc's CommunityUtils.StoryCards pattern.
-// Story cards in AI Dungeon have: title (keys), entry (text), description (notes), type.
 
 function findCard(keyName, createIfNotFound, defaultEntry, defaultDescription) {
   if (!worldInfo) return null;
-  // Search existing cards by keys
   for (const card of worldInfo) {
     if (card.keys && card.keys.toLowerCase().includes(keyName.toLowerCase())) {
       return card;
     }
   }
   if (!createIfNotFound) return null;
-  // Create the card if not found
   addWorldEntry(keyName, defaultEntry || '', false);
-  // Find the newly created card
   for (const card of worldInfo) {
     if (card.keys && card.keys.toLowerCase().includes(keyName.toLowerCase())) {
       if (defaultDescription && !card.description) {
@@ -1154,38 +1122,43 @@ function findCard(keyName, createIfNotFound, defaultEntry, defaultDescription) {
 
 function readSetting(card, settingName, defaultValue) {
   if (!card || !card.entry) return defaultValue;
-  // Match "> Setting Name: value" pattern
   const regex = new RegExp('> ' + settingName.replace(/[.*+?^\${}()|[\\]\\\\]/g, '\\\\\\$&') + ':\\\\s*(.+)', 'i');
   const match = card.entry.match(regex);
   if (!match) return defaultValue;
   const raw = match[1].trim();
-  // Parse booleans
   if (raw.toLowerCase() === 'true') return true;
   if (raw.toLowerCase() === 'false') return false;
-  // Parse numbers
   const num = Number(raw);
   if (!isNaN(num) && raw !== '') return num;
-  // Return as string
   return raw;
 }
 
-function getHour() {
-  const total = getTotalMinutes();
-  return Math.floor((((total % 1440) + 1440) % 1440) / 60);
+function syncSettingsFromCard(card) {
+  if (!card) return;
+  const c = state.chronos.config;
+  c.enabled = readSetting(card, 'Enabled', c.enabled);
+  c.minutesPerTurn = readSetting(card, 'Minutes Per Turn', c.minutesPerTurn);
+  c.use12HourFormat = readSetting(card, '12-Hour Format', c.use12HourFormat);
+  c.showTimeInOutput = readSetting(card, 'Show Time In Output', c.showTimeInOutput);
+  c.useBetterScripts = readSetting(card, 'Use BetterScripts', c.useBetterScripts);
+  c.weatherEnabled = readSetting(card, 'Weather Enabled', c.weatherEnabled);
+  c.weatherChangeCooldown = readSetting(card, 'Weather Change Cooldown', c.weatherChangeCooldown);
+  c.temperatureUnit = readSetting(card, 'Temperature Unit', c.temperatureUnit);
+  c.wakeHour = readSetting(card, 'Wake Hour', c.wakeHour);
 }
 
-function getMinute() {
-  return ((getTotalMinutes() % 60) + 60) % 60;
+function syncTimeToCard(card) {
+  if (!card || !card.entry) return;
+  const timeStr = getTimeString();
+  const dateStr = getDateString();
+  card.entry = card.entry
+    .replace(/> Current Time:.*/i, '> Current Time: ' + timeStr)
+    .replace(/> Current Date:.*/i, '> Current Date: ' + dateStr);
 }
 
-function getDay() {
-  const total = getTotalMinutes();
-  return Math.max(1, Math.floor(total / 1440) + 1);
-}
-
-function getWeekdayIndex() {
-  return ((getDay() - 1) % 7 + 7) % 7;
-}
+// ============================================
+// DATE ENGINE
+// ============================================
 
 function getMonths() {
   const custom = state.chronos.config.customMonths;
@@ -1193,6 +1166,11 @@ function getMonths() {
     return DEFAULT_MONTHS.map((m, i) => ({ name: custom[i] || m.name, days: m.days }));
   }
   return DEFAULT_MONTHS;
+}
+
+function getWeekdays() {
+  const custom = state.chronos.config.customWeekdays;
+  return custom || DEFAULT_WEEKDAYS;
 }
 
 function isLeapYear(y) {
@@ -1203,7 +1181,6 @@ function getDaysInMonth(month, year) {
   const months = getMonths();
   const idx = ((month - 1) % 12 + 12) % 12;
   let days = months[idx].days;
-  // February leap year check (only for standard calendar, index 1)
   if (idx === 1 && !state.chronos.config.customMonths && isLeapYear(year)) {
     days = 29;
   }
@@ -1217,14 +1194,6 @@ function getSeason(month) {
   return SEASONS[0];
 }
 
-function getTimePeriod(hour) {
-  for (const p of TIME_PERIODS) {
-    if (hour >= p.start && hour < p.end) return p;
-  }
-  return TIME_PERIODS[0]; // Midnight wraps around
-}
-
-// Calculate day-of-week index (0-6) using a simple cumulative day count from year 1, month 1, day 1
 function getDayOfYear(day, month, year) {
   let total = 0;
   for (let m = 1; m < month; m++) {
@@ -1234,7 +1203,6 @@ function getDayOfYear(day, month, year) {
 }
 
 function getAbsoluteDay(day, month, year) {
-  // O(1) formula: total days from year 1 to start of this year
   const y = year - 1;
   const yearDays = 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400);
   return yearDays + getDayOfYear(day, month, year) - 1;
@@ -1249,17 +1217,25 @@ function getWeekday() {
   return getWeekdays()[getWeekdayIndex(s.day, s.month, s.year)];
 }
 
-// Returns current moon phase from an 8-phase, 30-day lunar cycle
-function getMoonPhase() {
+function getMonthName() {
+  return getMonths()[(state.chronos.month - 1) % 12].name;
+}
+
+function getDateString() {
   const s = state.chronos;
-  const absDay = getAbsoluteDay(s.day, s.month, s.year);
-  const phaseIndex = Math.floor((absDay % 30) / 3.75);
-  return MOON_PHASES[Math.min(phaseIndex, 7)];
+  return getMonthName() + ' ' + s.day + ', ' + s.year;
 }
 
 // ============================================
-// TIME FORMATTING
+// TIME ENGINE
 // ============================================
+
+function getTimePeriod(hour) {
+  for (const p of TIME_PERIODS) {
+    if (hour >= p.start && hour < p.end) return p;
+  }
+  return TIME_PERIODS[0];
+}
 
 function getTimeString() {
   const h = state.chronos.hour;
@@ -1272,95 +1248,236 @@ function getTimeString() {
   return \`\${String(h).padStart(2, '0')}:\${String(m).padStart(2, '0')}\`;
 }
 
-function getMonthName() {
-  return getMonths()[(state.chronos.month - 1) % 12].name;
+function advanceTime(minutes) {
+  const s = state.chronos;
+  s.minute += minutes;
+  while (s.minute >= 60) {
+    s.minute -= 60;
+    s.hour += 1;
+  }
+  while (s.hour >= 24) {
+    s.hour -= 24;
+    s.day += 1;
+  }
+  while (s.day > getDaysInMonth(s.month, s.year)) {
+    s.day -= getDaysInMonth(s.month, s.year);
+    s.month += 1;
+    if (s.month > 12) {
+      s.month = 1;
+      s.year += 1;
+    }
+  }
 }
 
-// ============================================
-// MOON & WEATHER FUNCTIONS
-// ============================================
-
-function getMoonPhase() {
-  const day = getDay();
-  const phaseIndex = Math.floor(((day % LUNAR_CYCLE) / LUNAR_CYCLE) * 8) % 8;
-  return MOON_PHASES[phaseIndex];
-}
-
-function getWeather() {
-  const day = getDay();
-  const seed = ((day * 2654435761) >>> 0) % WEATHER_TYPES.length;
-  return WEATHER_TYPES[seed];
-}
-
-function getWeatherIcon() {
-  const weather = getWeather();
-  const period = getTimePeriod();
-  const isNight = period.name === 'Night' || period.name === 'Midnight';
-  return isNight ? weather.nightIcon : weather.icon;
+function isRetry() {
+  return (info.actionCount || 0) === state.chronos.lastActionCount;
 }
 
 // ============================================
 // TIME ADJUSTMENT FUNCTIONS
 // ============================================
 
-// Add offset minutes (for timeskip)
-function addOffset(minutes) {
-  state.time.offsetMinutes += minutes;
+function setTimeTo(hour, minute) {
+  state.chronos.hour = hour % 24;
+  state.chronos.minute = (minute || 0) % 60;
 }
 
-// Set to specific hour (adjusts offset to reach target)
-function setTime(targetHour) {
-  const currentHour = getHour();
-  const currentMinute = getMinute();
-  let hoursToAdd = targetHour - currentHour;
-  if (hoursToAdd <= 0) hoursToAdd += 24;
-  state.time.offsetMinutes += (hoursToAdd * 60) - currentMinute;
+function setDateTo(day, month, year) {
+  const s = state.chronos;
+  s.year = Math.max(1, year);
+  s.month = Math.max(1, Math.min(12, month));
+  const maxDay = getDaysInMonth(s.month, s.year);
+  s.day = Math.max(1, Math.min(maxDay, day));
 }
 
 function skipToMorning() {
-  const currentHour = getHour();
-  const currentMinute = getMinute();
-  let hoursToSkip;
-
-  if (currentHour < 7) {
-    // Before dawn: skip to 7 AM today
-    hoursToSkip = 7 - currentHour;
-  } else {
-    // 7 AM or later: skip to next day's 7 AM
-    hoursToSkip = (24 - currentHour) + 7;
+  const s = state.chronos;
+  const wakeHour = s.config.wakeHour || 7;
+  if (s.hour >= wakeHour && s.hour < wakeHour + 4) {
+    return false;
   }
-
-  state.time.offsetMinutes += (hoursToSkip * 60) - currentMinute;
+  let minutesToSkip = 0;
+  if (s.hour < wakeHour) {
+    minutesToSkip = ((wakeHour - s.hour) * 60) - s.minute;
+  } else {
+    minutesToSkip = ((24 - s.hour + wakeHour) * 60) - s.minute;
+  }
+  if (s.config.weatherEnabled) {
+    const turnsToSimulate = Math.floor(minutesToSkip / Math.max(1, s.config.minutesPerTurn));
+    const maxIter = Math.min(turnsToSimulate, 500);
+    const expectedRolls = Math.max(1, Math.floor(turnsToSimulate / s.config.weatherChangeCooldown));
+    const rollEvery = Math.max(1, Math.floor(maxIter / expectedRolls));
+    for (let i = 0; i < maxIter; i++) {
+      if (i % rollEvery === 0) {
+        rollWeather();
+      }
+      updateTemperature();
+    }
+  }
+  advanceTime(minutesToSkip);
+  return true;
 }
 
-function getTimeContext() {
-  const period = getTimePeriod();
-  const moon = getMoonPhase();
-  const weather = getWeather();
-  const weatherIcon = getWeatherIcon();
-  return \`[Time: \${getTimeString()} (\${period.name}), \${getWeekday()}, Day \${getDay()} | Moon: \${moon.icon} \${moon.name} | Weather: \${weatherIcon} \${weather.name}]\`;
+function handleAdvanceTime(amount, unit) {
+  const unitLower = unit.toLowerCase();
+  const minutesPerUnit = UNIT_TO_MINUTES[unitLower];
+  if (!minutesPerUnit) {
+    const validUnits = 'minutes, hours, days, weeks, months, years';
+    return { output: \`\\nUnknown time unit: \${unit}\\nValid units: \${validUnits}\`, isCommand: true };
+  }
+  const totalMinutes = amount * minutesPerUnit;
+  if (state.chronos.config.weatherEnabled) {
+    const turnsToSimulate = Math.floor(totalMinutes / Math.max(1, state.chronos.config.minutesPerTurn));
+    const maxIter = Math.min(turnsToSimulate, 500);
+    const expectedRolls = Math.max(1, Math.floor(turnsToSimulate / state.chronos.config.weatherChangeCooldown));
+    const rollEvery = Math.max(1, Math.floor(maxIter / expectedRolls));
+    for (let i = 0; i < maxIter; i++) {
+      if (i % rollEvery === 0) {
+        rollWeather();
+      }
+      updateTemperature();
+    }
+  }
+  advanceTime(totalMinutes);
+  const period = getTimePeriod(state.chronos.hour);
+  let out = \`\\nAdvanced \${amount} \${unitLower}.\\n\${period.icon} \${period.name}, \${getTimeString()} - \${getWeekday()}, \${getDateString()}\`;
+  if (state.chronos.config.weatherEnabled) {
+    out += \`\\n\${getWeatherDisplay()}\`;
+  }
+  return { output: out, isCommand: true };
 }
 
 // ============================================
-// COMMAND HANDLERS
+// MOON SYSTEM
+// ============================================
+
+function getMoonPhase() {
+  const s = state.chronos;
+  const absDay = getAbsoluteDay(s.day, s.month, s.year);
+  const phaseIndex = Math.floor((absDay % 30) / 3.75);
+  return MOON_PHASES[Math.min(phaseIndex, 7)];
+}
+
+// ============================================
+// WEATHER SYSTEM
+// ============================================
+
+function shouldChangeWeather() {
+  const turnsSinceLast = (info.actionCount || 0) - (state.chronos.weather.lastChange || 0);
+  return turnsSinceLast >= state.chronos.config.weatherChangeCooldown;
+}
+
+function rollWeather() {
+  const season = getSeason(state.chronos.month).name;
+  const current = state.chronos.weather.current;
+  const transitions = WEATHER_TRANSITIONS[current];
+  if (!transitions || !transitions[season]) {
+    state.chronos.weather.current = 'clear';
+    state.chronos.weather.lastChange = info.actionCount || 0;
+    state.chronos.weather.targetTemp = calcTargetTemp();
+    return;
+  }
+  const options = transitions[season];
+  let totalWeight = 0;
+  for (const opt of options) { totalWeight += opt[1]; }
+  let roll = Math.random() * totalWeight;
+  for (const opt of options) {
+    roll -= opt[1];
+    if (roll <= 0) {
+      state.chronos.weather.current = opt[0];
+      break;
+    }
+  }
+  state.chronos.weather.lastChange = info.actionCount || 0;
+  state.chronos.weather.targetTemp = calcTargetTemp();
+}
+
+function calcTargetTemp() {
+  const season = getSeason(state.chronos.month).name;
+  const range = SEASON_TEMPS[season] || SEASON_TEMPS.Spring;
+  const baseTemp = range.low + Math.random() * (range.high - range.low);
+  const weather = state.chronos.weather.current;
+  let modifier = 0;
+  if (weather === 'clear') modifier = 3;
+  else if (weather === 'partly_cloudy') modifier = 1;
+  else if (weather === 'overcast' || weather === 'cloudy') modifier = -2;
+  else if (weather === 'rain' || weather === 'light_rain') modifier = -5;
+  else if (weather === 'heavy_rain' || weather === 'thunderstorm') modifier = -8;
+  else if (weather === 'light_snow') modifier = -10;
+  else if (weather === 'snow' || weather === 'heavy_snow') modifier = -15;
+  else if (weather === 'fog') modifier = -3;
+  else if (weather === 'windy') modifier = -4;
+  const hour = state.chronos.hour;
+  if (hour >= 0 && hour < 6) modifier -= 5;
+  else if (hour >= 11 && hour < 15) modifier += 5;
+  else if (hour >= 20) modifier -= 3;
+  return Math.round(baseTemp + modifier);
+}
+
+function updateTemperature() {
+  const w = state.chronos.weather;
+  if (w.targetTemp === null) {
+    w.targetTemp = calcTargetTemp();
+    w.temperature = w.targetTemp;
+    return;
+  }
+  const diff = w.targetTemp - w.temperature;
+  if (Math.abs(diff) <= 1) {
+    w.temperature = w.targetTemp;
+  } else {
+    w.temperature += Math.round(diff * 0.3);
+  }
+}
+
+function getWeatherDisplay() {
+  const w = state.chronos.weather;
+  const cond = WEATHER_CONDITIONS[w.current];
+  if (!cond) return 'Unknown weather';
+  let tempStr = '';
+  if (state.chronos.config.temperatureUnit === 'C') {
+    tempStr = Math.round((w.temperature - 32) * 5 / 9) + '\\u{00B0}C';
+  } else {
+    tempStr = w.temperature + '\\u{00B0}F';
+  }
+  return cond.icon + ' ' + cond.label + ' (' + tempStr + ')';
+}
+
+// ============================================
+// CONTEXT BUILDING
+// ============================================
+
+function getTimeContext() {
+  const s = state.chronos;
+  const period = getTimePeriod(s.hour);
+  const moon = getMoonPhase();
+  let ctx = '[Time: ' + getTimeString() + ' (' + period.name + '), ' + getWeekday() + ', ' + getDateString() + ' | Moon: ' + moon.icon + ' ' + moon.name;
+  if (s.config.weatherEnabled) {
+    ctx += ' | Weather: ' + getWeatherDisplay();
+  }
+  ctx += ']';
+  return ctx;
+}
+
+// ============================================
+// COMMAND HANDLER
 // ============================================
 
 function handleChronosCommand(input) {
   const lower = input.toLowerCase().trim();
 
-  // :time - concise current-state summary
   if (lower === ':time') {
-    const period = getTimePeriod();
+    const s = state.chronos;
+    const period = getTimePeriod(s.hour);
     const moon = getMoonPhase();
-    const weather = getWeather();
-    const weatherIcon = getWeatherIcon();
-    return {
-      output: \`\\n🕐 \${getTimeString()} - \${period.icon} \${period.name}\\n📅 \${getWeekday()}, Day \${getDay()} (Turn \${info.actionCount || 0})\\n\${moon.icon} \${moon.name}\\n\${weatherIcon} \${weather.name}\`,
-      isCommand: true
-    };
+    let out = \`\\n\\u{1F550} \${getTimeString()} - \${period.icon} \${period.name}\`;
+    out += \`\\n\\u{1F4C5} \${getWeekday()}, \${getDateString()} (Turn \${info.actionCount || 0})\`;
+    out += \`\\n\${moon.icon} \${moon.name}\`;
+    if (s.config.weatherEnabled) {
+      out += \`\\n\${getWeatherDisplay()}\`;
+    }
+    return { output: out, isCommand: true };
   }
 
-  // :date - calendar-focused view
   if (lower === ':date') {
     const s = state.chronos;
     const season = getSeason(s.month);
@@ -1370,13 +1487,11 @@ function handleChronosCommand(input) {
     return { output: out, isCommand: true };
   }
 
-  // :advance <N> <unit>
   const advMatch = lower.match(/^:advance\\s+(\\d+)\\s+(\\w+)$/);
   if (advMatch) {
     return handleAdvanceTime(parseInt(advMatch[1]), advMatch[2]);
   }
 
-  // :sleep - skip to next morning (weather simulated over sleep period)
   if (lower === ':sleep') {
     if (!skipToMorning()) {
       return { output: '\\nYou are already up. It is morning.', isCommand: true };
@@ -1389,7 +1504,6 @@ function handleChronosCommand(input) {
     return { output: out, isCommand: true };
   }
 
-  // :settime <HH:MM> or :settime <hour>
   const setTimeMatch = lower.match(/^:settime\\s+(\\d{1,2})(?::(\\d{2}))?$/);
   if (setTimeMatch) {
     const hour = parseInt(setTimeMatch[1]) % 24;
@@ -1402,7 +1516,6 @@ function handleChronosCommand(input) {
     };
   }
 
-  // :setdate <day> <month> <year>
   const setDateMatch = lower.match(/^:setdate\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)$/);
   if (setDateMatch) {
     const d = parseInt(setDateMatch[1]);
@@ -1421,7 +1534,6 @@ function handleChronosCommand(input) {
     };
   }
 
-  // :setweather <condition> - force a specific weather condition
   const setWeatherMatch = lower.match(/^:setweather\\s+(.+)$/);
   if (setWeatherMatch) {
     if (!state.chronos.config.weatherEnabled) {
@@ -1439,7 +1551,6 @@ function handleChronosCommand(input) {
     return { output: \`\\nWeather set to \${getWeatherDisplay()}\`, isCommand: true };
   }
 
-  // :weather - show current weather with context
   if (lower === ':weather') {
     if (!state.chronos.config.weatherEnabled) {
       return { output: '\\nWeather is disabled. Enable it in the Chronos Settings story card.', isCommand: true };
@@ -1452,18 +1563,15 @@ function handleChronosCommand(input) {
     };
   }
 
-  // :chronos help - show command list
   if (lower === ':chronos help') {
     return { output: \`\\n\${COMMANDS_CARD_ENTRY}\`, isCommand: true };
   }
 
-  // :timeskip / :skip <N> <unit> - aliases for :advance
   const skipMatch = lower.match(/^:(?:timeskip|skip)\\s+(\\d+)\\s+(\\w+)$/);
   if (skipMatch) {
     return handleAdvanceTime(parseInt(skipMatch[1]), skipMatch[2]);
   }
 
-  // :chronos reset - restore all state to defaults
   if (lower === ':chronos reset') {
     state.chronos.minute = 0;
     state.chronos.hour = 8;
@@ -1475,7 +1583,6 @@ function handleChronosCommand(input) {
     return { output: '\\nChronos has been reset to defaults.', isCommand: true };
   }
 
-  // :chronos - full diagnostic status
   if (lower === ':chronos') {
     const s = state.chronos;
     const period = getTimePeriod(s.hour);
@@ -1501,68 +1608,52 @@ function handleChronosCommand(input) {
   return null;
 }`,
       context: `// ============================================
-// CONTEXT MODIFIER - Inject Time, Moon, Weather + Strip Protocol
+// CONTEXT MODIFIER - Chronos Time System
 // ============================================
-// Adds current time, moon phase, and weather to AI context.
-// Properly handles memory section and maxChars limit.
 
 const modifier = (text) => {
-  // -- Story Card Setup --
-  // Find or create the Settings card, then sync config into state
   const settingsCard = findCard('Chronos Settings', true, SETTINGS_CARD_ENTRY, SETTINGS_CARD_DESCRIPTION);
   syncSettingsFromCard(settingsCard);
 
-  // Find or create the Commands reference card
   const commandsCard = findCard('Chronos Commands', true, COMMANDS_CARD_ENTRY);
 
-  // Early exit if disabled
   if (!state.chronos.config.enabled) return { text };
 
-  // -- First-turn initialization --
   if (!state.chronos.initialized) {
     state.chronos.initialized = true;
-    // Set initial weather state if weather is enabled on first load
     if (state.chronos.config.weatherEnabled) {
       rollWeather();
       updateTemperature();
     }
   }
-  // Handle weather being enabled mid-adventure (no target temp yet)
+
   if (state.chronos.config.weatherEnabled && !state.chronos.weather.targetTemp) {
     state.chronos.weather.targetTemp = calcTargetTemp();
     state.chronos.weather.temperature = state.chronos.weather.targetTemp;
   }
 
-  // -- Time Advancement (once per turn, skip retries) --
   if (!isRetry()) {
     advanceTime(state.chronos.config.minutesPerTurn);
 
-    // Weather roll if enabled and cooldown has passed
     if (state.chronos.config.weatherEnabled && shouldChangeWeather()) {
       rollWeather();
     }
-    // Smoothly drift temperature toward target each turn
     if (state.chronos.config.weatherEnabled) {
       updateTemperature();
     }
   }
   state.chronos.lastActionCount = info.actionCount || 0;
 
-  // -- Write current time back to Settings card --
   syncTimeToCard(settingsCard);
 
-  // -- Strip BetterScripts protocol messages from context --
   text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
 
-  // Separate memory from context (memory occupies first info.memoryLength chars)
   const contextMemory = info.memoryLength ? text.slice(0, info.memoryLength) : '';
   let context = info.memoryLength ? text.slice(info.memoryLength) : text;
 
-  // Inject time/moon/weather context after memory, before story content
   const envContext = getTimeContext();
   context = envContext + '\\n' + context;
 
-  // Ensure context doesn't exceed maxChars (server truncates from the start)
   context = context.slice(-(info.maxChars - info.memoryLength));
   const finalText = contextMemory + context;
 
@@ -1573,24 +1664,16 @@ modifier(text);`,
       input: `// ============================================
 // INPUT MODIFIER - Chronos Time System
 // ============================================
-// Detects :time, :timeskip, :sleep, :settime commands.
-// Uses the AI Dungeon command parser regex to handle Do, Say, and Story mode.
-// Time advances automatically via info.actionCount.
 
 const modifier = (text) => {
-  // Parse commands from all AI Dungeon input formats:
-  // Do mode:    "> You :command args"
-  // Say mode:   '> You say ":command args"'
-  // Story mode: ":command args"
   const cmdMatch = text.match(/\\n? ?(?:> You |> You say "|):(\\w+?)( [\\w ]+)?[".]?\\n?$/i);
 
   if (cmdMatch) {
     const command = ':' + cmdMatch[1].trim() + (cmdMatch[2] ? cmdMatch[2].trimEnd() : '');
-    const result = handleTimeCommand(command);
+    const result = handleChronosCommand(command);
     if (result) {
       state.chronos.pendingOutput = result.output;
       state.chronos.isCommand = true;
-      // Replace input with neutral placeholder so the AI doesn't narrate the command
       return { text: '' };
     }
   }
@@ -1600,79 +1683,87 @@ const modifier = (text) => {
 
 modifier(text);`,
       output: `// ============================================
-// OUTPUT MODIFIER - Display Time, Moon & Weather Widgets
+// OUTPUT MODIFIER - Chronos Time System
 // ============================================
-// Shows time, moon phase, and weather widgets. Handles command output.
 
 const modifier = (text) => {
-  let output = text;
+  if (!state.chronos.config.enabled) return { text };
 
-  // Check for pending command output
-  if (state.time.isCommand && state.time.pendingOutput) {
-    output = state.time.pendingOutput;
-    state.time.pendingOutput = null;
-    state.time.isCommand = false;
+  let output = text;
+  let isCommandOutput = false;
+
+  if (state.chronos.isCommand && state.chronos.pendingOutput) {
+    output = state.chronos.pendingOutput;
+    state.chronos.pendingOutput = null;
+    state.chronos.isCommand = false;
+    isCommandOutput = true;
   }
 
-  // Build widgets
-  const period = getTimePeriod();
+  if (!state.chronos.config.useBetterScripts) {
+    if (state.chronos.config.showTimeInOutput && !isCommandOutput) {
+      const period = getTimePeriod(state.chronos.hour);
+      output = '[' + period.icon + ' ' + getTimeString() + ' - ' + period.name + ']\\n' + output;
+    }
+    return { text: output };
+  }
+
+  const s = state.chronos;
+  const period = getTimePeriod(s.hour);
   const moon = getMoonPhase();
-  const weather = getWeather();
   const isNight = period.name === 'Night' || period.name === 'Midnight';
-  const weatherIcon = isNight ? weather.nightIcon : weather.icon;
 
   let widgets = '';
 
-  // Time widget (order: 1) - top bar
   widgets += bdWidget('time-clock', {
     type: 'stat',
     label: period.icon,
     value: getTimeString(),
     color: isNight ? '#94a3b8' : '#fbbf24',
-    position: 'top',
+    align: 'left',
     order: 1
   });
 
-  // Day widget (order: 2) - top bar
   widgets += bdWidget('time-day', {
     type: 'stat',
-    label: '📅',
-    value: getWeekday().substring(0, 3) + ' D' + getDay(),
+    label: '\\u{1F4C5}',
+    value: getWeekday().substring(0, 3) + ' ' + getDateString(),
     color: '#60a5fa',
-    position: 'top',
+    align: 'left',
     order: 2
   });
 
-  // Period badge (order: 3) - top bar
   widgets += bdWidget('time-period', {
     type: 'badge',
     text: period.name,
     icon: period.icon,
     color: isNight ? '#a78bfa' : '#f472b6',
     variant: 'subtle',
-    position: 'top',
-    order: 3
+    align: 'center',
+    order: 1
   });
 
-  // Moon phase widget (order: 4) - top bar
   widgets += bdWidget('time-moon', {
     type: 'stat',
     label: moon.icon,
     value: moon.name,
     color: '#c4b5fd',
-    position: 'top',
-    order: 4
+    align: 'right',
+    order: 1
   });
 
-  // Weather widget (order: 5) - top bar
-  widgets += bdWidget('time-weather', {
-    type: 'stat',
-    label: weatherIcon,
-    value: weather.name,
-    color: '#67e8f9',
-    position: 'top',
-    order: 5
-  });
+  if (s.config.weatherEnabled) {
+    const cond = WEATHER_CONDITIONS[s.weather.current];
+    if (cond) {
+      widgets += bdWidget('time-weather', {
+        type: 'stat',
+        label: cond.icon,
+        value: cond.label,
+        color: '#67e8f9',
+        align: 'right',
+        order: 2
+      });
+    }
+  }
 
   return { text: output + widgets };
 };
