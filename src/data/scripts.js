@@ -1656,6 +1656,8 @@ modifier(text);`,
 // ============================================
 
 const modifier = (text) => {
+  let stop = false;
+
   const cmdMatch = text.match(/\\n? ?(?:> You |> You say "|):(\\w+)( [\\w ]+)?[".]?\\n?$/i);
 
   if (cmdMatch) {
@@ -1663,11 +1665,16 @@ const modifier = (text) => {
     const result = handleChronosCommand(command);
     if (result) {
       state.message = result.output;
-      return { text: null, stop: true };
+      stop = true;
+      text = null;
     }
   }
 
-  return { text };
+  if (!stop) {
+    delete state.message;
+  }
+
+  return { text, stop };
 };
 
 modifier(text);`,
