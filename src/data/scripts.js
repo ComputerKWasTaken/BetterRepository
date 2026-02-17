@@ -1664,8 +1664,23 @@ const modifier = (text) => {
 
   if (!state.chronos.config.useBetterScripts) {
     if (state.chronos.config.showTimeInOutput) {
-      const period = getTimePeriod(state.chronos.hour);
-      output = '[' + period.icon + ' ' + getTimeString() + ' - ' + period.name + ']\\n' + output;
+      const s = state.chronos;
+      const period = getTimePeriod(s.hour);
+      let header = '[' + period.icon + ' ' + getTimeString() + ' | ' + getWeekday() + ', ' + getMonthName() + ' ' + s.day;
+      if (s.config.weatherEnabled) {
+        const cond = WEATHER_CONDITIONS[s.weather.current];
+        if (cond) {
+          let tempStr = '';
+          if (s.config.temperatureUnit === 'C') {
+            tempStr = Math.round((s.weather.temperature - 32) * 5 / 9) + '\\u{00B0}C';
+          } else {
+            tempStr = s.weather.temperature + '\\u{00B0}F';
+          }
+          header += ' | ' + cond.icon + ' ' + cond.label + ', ' + tempStr;
+        }
+      }
+      header += ']';
+      output = header + '\\n' + output;
     }
     return { text: output };
   }
@@ -1681,7 +1696,7 @@ const modifier = (text) => {
     label: period.icon,
     value: getTimeString(),
     color: isNight ? '#94a3b8' : '#fbbf24',
-    align: 'left',
+    align: 'center',
     order: 1
   });
 
@@ -1690,7 +1705,7 @@ const modifier = (text) => {
     label: '\\u{1F4C5}',
     value: getWeekday() + ', ' + getMonthName() + ' ' + s.day,
     color: '#60a5fa',
-    align: 'left',
+    align: 'center',
     order: 2
   });
 
@@ -1708,7 +1723,7 @@ const modifier = (text) => {
         label: cond.icon,
         value: cond.label + ', ' + tempStr,
         color: '#34d399',
-        align: 'left',
+        align: 'center',
         order: 3
       });
     }

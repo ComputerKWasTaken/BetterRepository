@@ -1064,7 +1064,7 @@ modifier(text);</code></pre>
               <!-- Widget Preview -->
               <div class="px-4 py-3 border-b border-bd-border-subtle" style="background: #0d0d1a;">
                 <div class="text-[10px] text-bd-text-muted uppercase tracking-wider mb-2">Widget Preview</div>
-                <div class="flex items-center gap-2 flex-wrap">
+                <div class="flex items-center justify-center gap-2 flex-wrap">
                   <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
                     <span class="text-[11px] text-[#8888aa]">&#9728;&#65039;</span>
                     <span class="text-[11px] font-semibold" style="color: #fbbf24;">10:30 AM</span>
@@ -1214,8 +1214,23 @@ modifier(text);</code></pre>
   <span class="text-bd-text-muted">// Text fallback when BetterScripts is off</span>
   if (!state.chronos.config.useBetterScripts) {
     if (state.chronos.config.showTimeInOutput) {
-      const period = getTimePeriod(state.chronos.hour);
-      output = '[' + period.icon + ' ' + getTimeString() + ' - ' + period.name + ']\n' + output;
+      const s = state.chronos;
+      const period = getTimePeriod(s.hour);
+      let header = '[' + period.icon + ' ' + getTimeString() + ' | ' + getWeekday() + ', ' + getMonthName() + ' ' + s.day;
+      if (s.config.weatherEnabled) {
+        const cond = WEATHER_CONDITIONS[s.weather.current];
+        if (cond) {
+          let tempStr = '';
+          if (s.config.temperatureUnit === 'C') {
+            tempStr = Math.round((s.weather.temperature - 32) * 5 / 9) + '&#176;C';
+          } else {
+            tempStr = s.weather.temperature + '&#176;F';
+          }
+          header += ' | ' + cond.icon + ' ' + cond.label + ', ' + tempStr;
+        }
+      }
+      header += ']';
+      output = header + '\n' + output;
     }
     return { text: output };
   }
@@ -1227,12 +1242,12 @@ modifier(text);</code></pre>
   let widgets = '';
   widgets += bdWidget('time-clock', {
     type: 'stat', label: period.icon, value: getTimeString(),
-    color: isNight ? '#94a3b8' : '#fbbf24', align: 'left', order: 1
+    color: isNight ? '#94a3b8' : '#fbbf24', align: 'center', order: 1
   });
   widgets += bdWidget('time-date', {
     type: 'stat', label: '&#128197;',
     value: getWeekday() + ', ' + getMonthName() + ' ' + s.day,
-    color: '#60a5fa', align: 'left', order: 2
+    color: '#60a5fa', align: 'center', order: 2
   });
   <span class="text-bd-text-muted">// Weather + Temperature (when enabled)</span>
   if (s.config.weatherEnabled) {
@@ -1247,7 +1262,7 @@ modifier(text);</code></pre>
       widgets += bdWidget('time-weather', {
         type: 'stat', label: cond.icon,
         value: cond.label + ', ' + tempStr,
-        color: '#34d399', align: 'left', order: 3
+        color: '#34d399', align: 'center', order: 3
       });
     }
   }
