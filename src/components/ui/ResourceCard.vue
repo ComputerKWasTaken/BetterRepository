@@ -132,6 +132,21 @@
           </div>
         </div>
 
+        <!-- Credits -->
+        <div v-if="resource.credit" class="px-4 pb-4">
+          <div class="flex items-start gap-2 p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/20">
+            <span class="text-sm text-bd-amber flex-shrink-0">👥</span>
+            <div>
+              <span class="text-sm text-bd-amber font-medium">Credits:</span>
+              <div class="text-xs text-bd-text-secondary mt-1">
+                <div v-if="resource.credit.author" class="flex items-center gap-1">
+                  <strong>Author:</strong> {{ resource.credit.author }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Conflicts With -->
         <div v-if="resource.conflicts && resource.conflicts.length > 0" class="px-4 pb-4">
           <div class="flex items-start gap-2 p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">

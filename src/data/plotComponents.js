@@ -856,6 +856,27 @@ Cultural attitudes:
 With humans:
 - [Compatibility notes]
 - [Size/physical considerations]`
+  },
+  // ==========================================
+  // COMBAT TEMPLATES
+  // ==========================================
+  {
+    id: 'autonomous-combat',
+    name: 'Autonomous and Realistic Combat',
+    category: 'authors-note',
+    description: 'Allows NPCs and characters to attack and strike first without waiting for the player to make the first move. Second, NPCs also follow up with combo attacks/counters and don\'t stop attacking after just trying once, and finally NPCs in groups can attack simultaneously and together.',
+    content: `- All characters and enemies can attack and strike first to initiate and engage in combat
+- All characters and enemies in groups can attack simultaneously and together if they wish to, allowing for coordination
+- All Characters and enemies follow up with combo attacks and chain attacks in combat after landing or trying to land an initial attack`,
+    tags: ['combat', 'npc', 'enemies', 'action', 'battle', 'coordination'],
+    difficulty: 'intermediate',
+    impact: 'high',
+    essential: false,
+    useCase: 'Use when you want more dynamic and unpredictable combat scenarios where NPCs act autonomously rather than waiting for player input',
+    combinesWith: ['dynamic-combat', 'group-tactics', 'realistic-injuries'],
+    credit: {
+      author: 'Kyoi'
+    }
   }
 ]
 

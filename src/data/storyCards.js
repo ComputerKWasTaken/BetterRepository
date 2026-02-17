@@ -625,6 +625,22 @@ export const STORY_CARD_TEMPLATES = [
     useCase: 'Tracking evolving bonds, rivalries, and emotional stakes.',
     triggers: '[Character A] and [Character B]',
     entry: `[Character A] and [Character B] share a [relationship type]. [How the relationship started]. [What each believes about the other]. [Emotional tone: trust, resentment, obligation]. [Recent changes or conflicts]. [How their bond affects other characters]. [How it might evolve next].`
+  },
+  {
+    id: 'template-political-party',
+    name: 'Political Party Template',
+    category: 'faction',
+    difficulty: 'intermediate',
+    impact: 'high',
+    essential: false,
+    tags: ['politics', 'organization', 'faction', 'government', 'ideology'],
+    description: 'An in-depth template for the creation of any political party or organisation. Designed to be used in modern/early modern political scenarios.',
+    useCase: 'Creating detailed political factions with clear ideologies, leadership, and support bases.',
+    triggers: '[Political Party Name],the [ideology] party',
+    entry: `[Political Party Name] is a [Political Leaning: Right-Wing, Centrist, Far-Left, etc.] Political Party operating in [Country Name], formed in [Party Formation Year: early 2026, 1989, late 2019]. It is led by [Party Leader] who is a [Gender, Ethnicity, Religion, etc.], and is a committed [Ideology: National Conservative, Social Liberal, Marxist-Leninist]. They have approximately [Number of Supporters] Supporters, predominantly among [Supporting Groups: the working class, students, Christians, etc] and its membership is currently [Growing, Declining, Stagnant, etc]. [Aesthetics and symbols: Its supporters wear black military uniforms, It flies a hammer and sickle with a sword through it, etc.]`,
+    credit: {
+      author: 'Number19mouseinbakedbeans'
+    }
   }
 ]
 

@@ -21,12 +21,12 @@ export const AI_INSTRUCTIONS_CONTRIBUTORS = [
 
 /** Contributors who created PEs, SSs, and ANs, or created guides for them */
 export const PLOT_COMPONENTS_CONTRIBUTORS = [
-  'Wilmar', 'Le Onyx', 'Dragranis', 'Celyne', 'Monsieur Boo'
+  'Wilmar', 'Le Onyx', 'Dragranis', 'Celyne', 'Monsieur Boo', 'Kyoi'
 ]
 
 /** Contributors who created the resources and guides to create, write, and use Story Cards */
 export const STORY_CARDS_CONTRIBUTORS = [
-  'wanderingstar1', 'GremmieGremlin', 'Lavere', 'Le Onyx', 'Shiny'
+  'wanderingstar1', 'GremmieGremlin', 'Lavere', 'Le Onyx', 'Shiny', 'Number19mouseinbakedbeans'
 ]
 
 /** Contributors who wrote scripts and other tools, or created guides and resources for scripting */
