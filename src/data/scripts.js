@@ -1585,16 +1585,6 @@ const CHRONOS_COMMANDS = {
   }
 };
 
-function extractRawInput(text) {
-  let raw = text.trim();
-  if (raw.startsWith('> You say "')) {
-    raw = raw.slice(11).replace(/[".]* *$/, '');
-  } else if (raw.startsWith('> You ')) {
-    raw = raw.slice(6);
-  }
-  return raw.trim();
-}
-
 function handleChronosCommand(input) {
   const trimmed = input.trim();
   const parsed = trimmed.match(/^:(\\w+)(?:\\s+(.*))?$/);
@@ -1666,21 +1656,21 @@ modifier(text);`,
       input: `// ============================================
 // INPUT MODIFIER - Chronos Time System
 // ============================================
-// Detects : commands from any input mode (Do, Say, Story).
-// Stores result for the output modifier to display.
+// Use Story mode to type commands (e.g. :time, :advance 3 hours).
+// Input is cleared so the turn acts like a Continue.
 // Avoids stop:true which can cause errors/freezing.
 
 const modifier = (text) => {
   state.chronos.isCommand = false;
 
-  const raw = extractRawInput(text);
+  const trimmed = text.trim();
 
-  if (raw.startsWith(':')) {
-    const result = handleChronosCommand(raw);
+  if (trimmed.startsWith(':')) {
+    const result = handleChronosCommand(trimmed);
     if (result) {
       state.chronos.pendingOutput = result.output;
       state.chronos.isCommand = true;
-      return { text: '> You check your surroundings.' };
+      return { text: ' ' };
     }
   }
 
