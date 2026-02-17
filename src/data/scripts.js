@@ -877,7 +877,7 @@ modifier(text);`
     tags: ['widgets', 'time', 'clock', 'day-night', 'weather', 'betterscripts', 'context', 'commands'],
     source: 'BetterRepository',
     description: 'Day/night cycle with time periods, weekday tracking, weather, and time commands.',
-    purpose: 'Configurable time pacing. Time and weather injected into AI context. Commands: :time, :date, :advance, :sleep, :settime, :setdate, :setweather, :weather, :chronos, :chronos help, :chronos reset, :timeskip/:skip.',
+    purpose: 'Configurable time pacing. Time and weather injected into AI context. Settings and commands organized by category in Story Cards. Commands: :time, :date, :advance, :sleep, :settime, :setdate, :setweather, :weather, :chronos, :chronos help, :chronos reset, :timeskip/:skip.',
     requiresExtension: 'BetterDungeon',
     files: {
       library: `// ============================================
@@ -895,9 +895,12 @@ modifier(text);`
 // - Story card-based settings (Chronos Settings card)
 // - BetterScripts widget integration
 //
-// Commands: :time, :date, :advance, :sleep, :settime, :setdate,
-//           :setweather, :weather, :chronos, :chronos help,
-//           :chronos reset, :timeskip/:skip
+// Commands (by category):
+//   Status: :time, :date, :weather, :chronos
+//   Time Control: :advance, :sleep, :settime, :setdate
+//   Weather: :setweather
+//   System: :chronos help, :chronos reset
+//   Aliases: :timeskip/:skip
 
 // ============================================
 // STATE INITIALIZATION
@@ -1076,11 +1079,11 @@ const SEASON_TEMPS = {
   Autumn: { low: 40, high: 65 }
 };
 
-const SETTINGS_CARD_ENTRY = '> Enabled: true\\n> Minutes Per Turn: 2\\n> 12-Hour Format: true\\n> Show Time In Output: true\\n> Use BetterScripts: false\\n> Weather Enabled: false\\n> Weather Change Cooldown: 15\\n> Temperature Unit: F\\n> Wake Hour: 7\\n> Current Time: 7:00 AM\\n> Current Date: June 1, 2026';
+const SETTINGS_CARD_ENTRY = '--- General ---\\n> Enabled: true\\n> Minutes Per Turn: 2\\n\\n--- Display ---\\n> 12-Hour Format: true\\n> Show Time In Output: true\\n> Use BetterScripts: false\\n\\n--- Weather ---\\n> Weather Enabled: false\\n> Weather Change Cooldown: 15\\n> Temperature Unit: F\\n\\n--- Clock ---\\n> Wake Hour: 7\\n> Current Time: 7:00 AM\\n> Current Date: June 1, 2026';
 
-const SETTINGS_CARD_DESCRIPTION = 'Chronos time system settings. Edit the values after each colon to configure. Time and date update automatically.';
+const SETTINGS_CARD_DESCRIPTION = 'Chronos time system settings. Organized by category. Edit the values after each colon to configure. Time and date update automatically.';
 
-const COMMANDS_CARD_ENTRY = ':time - Show current time and status\\n:date - Show current date and season\\n:advance <N> <unit> - Advance time (e.g. :advance 3 hours)\\n:sleep - Sleep until morning\\n:settime <HH:MM> - Set time (e.g. :settime 14:30)\\n:setdate <day> <month> <year> - Set date\\n:setweather <condition> - Set weather condition\\n:weather - Show weather status\\n:timeskip <N> <unit> - Alias for :advance\\n:skip <N> <unit> - Alias for :advance\\n:chronos - Full diagnostic status\\n:chronos help - Show this command list\\n:chronos reset - Reset all state to defaults';
+const COMMANDS_CARD_ENTRY = '--- Status ---\\n:time - Show current time and status\\n:date - Show current date and season\\n:weather - Show weather status\\n:chronos - Full diagnostic status\\n\\n--- Time Control ---\\n:advance <N> <unit> - Advance time (e.g. :advance 3 hours)\\n:sleep - Sleep until morning\\n:settime <HH:MM> - Set time (e.g. :settime 14:30)\\n:setdate <day> <month> <year> - Set date\\n\\n--- Weather ---\\n:setweather <condition> - Set weather condition\\n\\n--- System ---\\n:chronos help - Show this command list\\n:chronos reset - Reset all state to defaults\\n\\n--- Aliases ---\\n:timeskip <N> <unit> - Alias for :advance\\n:skip <N> <unit> - Alias for :advance';
 
 // ============================================
 // STORY CARD FUNCTIONS
