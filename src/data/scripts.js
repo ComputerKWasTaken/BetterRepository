@@ -1236,15 +1236,11 @@ function getTimeString() {
 
 function advanceTime(minutes) {
   const s = state.chronos;
-  s.minute += minutes;
-  while (s.minute >= 60) {
-    s.minute -= 60;
-    s.hour += 1;
-  }
-  while (s.hour >= 24) {
-    s.hour -= 24;
-    s.day += 1;
-  }
+  const totalMinutes = s.minute + minutes;
+  s.minute = totalMinutes % 60;
+  const totalHours = s.hour + Math.floor(totalMinutes / 60);
+  s.hour = totalHours % 24;
+  s.day += Math.floor(totalHours / 24);
   while (s.day > getDaysInMonth(s.month, s.year)) {
     s.day -= getDaysInMonth(s.month, s.year);
     s.month += 1;
@@ -1433,13 +1429,11 @@ function getTimeContext() {
 }
 
 // ============================================
-// COMMAND HANDLER
+// COMMAND HANDLER (Registry Pattern)
 // ============================================
 
-function handleChronosCommand(input) {
-  const lower = input.toLowerCase().trim();
-
-  if (lower === ':time') {
+const CHRONOS_COMMANDS = {
+  time: function () {
     const s = state.chronos;
     const period = getTimePeriod(s.hour);
     let out = \`\\n\\u{1F550} \${getTimeString()} - \${period.icon} \${period.name}\`;
@@ -1448,22 +1442,23 @@ function handleChronosCommand(input) {
       out += \`\\n\${getWeatherDisplay()}\`;
     }
     return { output: out, isCommand: true };
-  }
+  },
 
-  if (lower === ':date') {
+  date: function () {
     const s = state.chronos;
     const season = getSeason(s.month);
     let out = \`\\n\${getWeekday()}, \${getDateString()}\`;
     out += \`\\nSeason: \${season.name}\`;
     return { output: out, isCommand: true };
-  }
+  },
 
-  const advMatch = lower.match(/^:advance\\s+(\\d+)\\s+(\\w+)$/);
-  if (advMatch) {
-    return handleAdvanceTime(parseInt(advMatch[1]), advMatch[2]);
-  }
+  advance: function (args) {
+    const m = args.match(/^(\\d+)\\s+(\\w+)$/);
+    if (!m) return null;
+    return handleAdvanceTime(parseInt(m[1]), m[2]);
+  },
 
-  if (lower === ':sleep') {
+  sleep: function () {
     if (!skipToMorning()) {
       return { output: '\\nYou are already up. It is morning.', isCommand: true };
     }
@@ -1473,44 +1468,45 @@ function handleChronosCommand(input) {
       out += \`\\n\${getWeatherDisplay()}\`;
     }
     return { output: out, isCommand: true };
-  }
+  },
 
-  const setTimeMatch = lower.match(/^:settime\\s+(\\d{1,2})(?::(\\d{2}))?$/);
-  if (setTimeMatch) {
-    const hour = parseInt(setTimeMatch[1]) % 24;
-    const minute = setTimeMatch[2] ? parseInt(setTimeMatch[2]) : 0;
+  settime: function (args) {
+    const m = args.match(/^(\\d{1,2})(?::(\\d{2}))?$/);
+    if (!m) return null;
+    const hour = parseInt(m[1]) % 24;
+    const minute = m[2] ? parseInt(m[2]) : 0;
     setTimeTo(hour, minute);
     const period = getTimePeriod(state.chronos.hour);
     return {
       output: \`\\nTime set to \${period.name}, \${getTimeString()}.\`,
       isCommand: true
     };
-  }
+  },
 
-  const setDateMatch = lower.match(/^:setdate\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)$/);
-  if (setDateMatch) {
-    const d = parseInt(setDateMatch[1]);
-    const m = parseInt(setDateMatch[2]);
-    const y = parseInt(setDateMatch[3]);
-    if (m < 1 || m > 12) {
+  setdate: function (args) {
+    const m = args.match(/^(\\d+)\\s+(\\d+)\\s+(\\d+)$/);
+    if (!m) return null;
+    const d = parseInt(m[1]);
+    const mo = parseInt(m[2]);
+    const y = parseInt(m[3]);
+    if (mo < 1 || mo > 12) {
       return { output: '\\nInvalid month. Must be 1-12.', isCommand: true };
     }
     if (y < 1) {
       return { output: '\\nInvalid year. Must be 1 or greater.', isCommand: true };
     }
-    setDateTo(d, m, y);
+    setDateTo(d, mo, y);
     return {
       output: \`\\nDate set to \${getWeekday()}, \${getDateString()}.\`,
       isCommand: true
     };
-  }
+  },
 
-  const setWeatherMatch = lower.match(/^:setweather\\s+(.+)$/);
-  if (setWeatherMatch) {
+  setweather: function (args) {
     if (!state.chronos.config.weatherEnabled) {
       return { output: '\\nWeather is disabled. Enable it in the Chronos Settings story card.', isCommand: true };
     }
-    const requested = setWeatherMatch[1].trim().replace(/ /g, '_');
+    const requested = args.trim().replace(/ /g, '_');
     if (!WEATHER_CONDITIONS[requested]) {
       const valid = Object.keys(WEATHER_CONDITIONS).join(', ');
       return { output: \`\\nUnknown condition: \${requested}\\nValid: \${valid}\`, isCommand: true };
@@ -1520,9 +1516,9 @@ function handleChronosCommand(input) {
     state.chronos.weather.temperature = state.chronos.weather.targetTemp;
     state.chronos.weather.lastChange = info.actionCount || 0;
     return { output: \`\\nWeather set to \${getWeatherDisplay()}\`, isCommand: true };
-  }
+  },
 
-  if (lower === ':weather') {
+  weather: function () {
     if (!state.chronos.config.weatherEnabled) {
       return { output: '\\nWeather is disabled. Enable it in the Chronos Settings story card.', isCommand: true };
     }
@@ -1532,50 +1528,72 @@ function handleChronosCommand(input) {
       output: \`\\n\${getWeatherDisplay()}\\n\${season.name} - \${getTimePeriod(s.hour).name}\`,
       isCommand: true
     };
-  }
+  },
 
-  if (lower === ':chronos help') {
-    return { output: \`\\n\${COMMANDS_CARD_ENTRY}\`, isCommand: true };
-  }
+  timeskip: function (args) {
+    const m = args.match(/^(\\d+)\\s+(\\w+)$/);
+    if (!m) return null;
+    return handleAdvanceTime(parseInt(m[1]), m[2]);
+  },
 
-  const skipMatch = lower.match(/^:(?:timeskip|skip)\\s+(\\d+)\\s+(\\w+)$/);
-  if (skipMatch) {
-    return handleAdvanceTime(parseInt(skipMatch[1]), skipMatch[2]);
-  }
+  skip: function (args) {
+    const m = args.match(/^(\\d+)\\s+(\\w+)$/);
+    if (!m) return null;
+    return handleAdvanceTime(parseInt(m[1]), m[2]);
+  },
 
-  if (lower === ':chronos reset') {
-    state.chronos.minute = 0;
-    state.chronos.hour = state.chronos.config.wakeHour || 7;
-    state.chronos.day = 1;
-    state.chronos.month = 1;
-    state.chronos.year = 1;
-    state.chronos.weather = { current: 'clear', temperature: 70, lastChange: 0, targetTemp: null };
-    state.chronos.initialized = false;
-    return { output: '\\nChronos has been reset to defaults.', isCommand: true };
-  }
+  chronos: function (args) {
+    const sub = args.trim().toLowerCase();
 
-  if (lower === ':chronos') {
-    const s = state.chronos;
-    const period = getTimePeriod(s.hour);
-    const season = getSeason(s.month);
-    let out = '\\n--- Chronos Status ---';
-    out += \`\\nTime: \${period.name}, \${getTimeString()} (\${s.config.use12HourFormat ? '12h' : '24h'})\`;
-    out += \`\\nDate: \${getWeekday()}, \${getDateString()}\`;
-    out += \`\\nSeason: \${season.name}\`;
-    out += \`\\nPacing: \${s.config.minutesPerTurn} min/turn | Turn \${info.actionCount || 0}\`;
-    if (s.config.weatherEnabled) {
-      out += \`\\nWeather: \${getWeatherDisplay()} (\${s.config.temperatureUnit})\`;
-    } else {
-      out += '\\nWeather: Disabled';
+    if (sub === 'help') {
+      return { output: \`\\n\${COMMANDS_CARD_ENTRY}\`, isCommand: true };
     }
-    out += \`\\nDisplay: \${s.config.useBetterScripts ? 'Widgets' : s.config.showTimeInOutput ? 'Text' : 'Context only'}\`;
-    if (s.config.customWeekdays) out += '\\nCustom weekdays: ' + s.config.customWeekdays.join(', ');
-    if (s.config.customMonths) out += '\\nCustom months: ' + s.config.customMonths.join(', ');
-    out += '\\n---';
-    return { output: out, isCommand: true };
-  }
 
-  return null;
+    if (sub === 'reset') {
+      state.chronos.minute = 0;
+      state.chronos.hour = state.chronos.config.wakeHour || 7;
+      state.chronos.day = 1;
+      state.chronos.month = 1;
+      state.chronos.year = 1;
+      state.chronos.weather = { current: 'clear', temperature: 70, lastChange: 0, targetTemp: null };
+      state.chronos.initialized = false;
+      return { output: '\\nChronos has been reset to defaults.', isCommand: true };
+    }
+
+    if (sub === '') {
+      const s = state.chronos;
+      const period = getTimePeriod(s.hour);
+      const season = getSeason(s.month);
+      let out = '\\n--- Chronos Status ---';
+      out += \`\\nTime: \${period.name}, \${getTimeString()} (\${s.config.use12HourFormat ? '12h' : '24h'})\`;
+      out += \`\\nDate: \${getWeekday()}, \${getDateString()}\`;
+      out += \`\\nSeason: \${season.name}\`;
+      out += \`\\nPacing: \${s.config.minutesPerTurn} min/turn | Turn \${info.actionCount || 0}\`;
+      if (s.config.weatherEnabled) {
+        out += \`\\nWeather: \${getWeatherDisplay()} (\${s.config.temperatureUnit})\`;
+      } else {
+        out += '\\nWeather: Disabled';
+      }
+      out += \`\\nDisplay: \${s.config.useBetterScripts ? 'Widgets' : s.config.showTimeInOutput ? 'Text' : 'Context only'}\`;
+      if (s.config.customWeekdays) out += '\\nCustom weekdays: ' + s.config.customWeekdays.join(', ');
+      if (s.config.customMonths) out += '\\nCustom months: ' + s.config.customMonths.join(', ');
+      out += '\\n---';
+      return { output: out, isCommand: true };
+    }
+
+    return null;
+  }
+};
+
+function handleChronosCommand(input) {
+  const lower = input.toLowerCase().trim();
+  const parsed = lower.match(/^:(\\w+)(?:\\s+(.*))?$/);
+  if (!parsed) return null;
+  const cmdName = parsed[1];
+  const args = parsed[2] || '';
+  const handler = CHRONOS_COMMANDS[cmdName];
+  if (!handler) return null;
+  return handler(args);
 }`,
       context: `// ============================================
 // CONTEXT MODIFIER - Chronos Time System
@@ -1638,18 +1656,25 @@ modifier(text);`,
 // ============================================
 
 const modifier = (text) => {
-  const cmdMatch = text.match(/\\n? ?(?:> You |> You say "|):(\\w+?)( [\\w ]+)?[".]?\\n?$/i);
+  let stop = false;
+
+  const cmdMatch = text.match(/\\n? ?(?:> You |> You say "|):(\\w+)( [\\w ]+)?[".]?\\n?$/i);
 
   if (cmdMatch) {
     const command = ':' + cmdMatch[1].trim() + (cmdMatch[2] ? cmdMatch[2].trimEnd() : '');
     const result = handleChronosCommand(command);
     if (result) {
       state.message = result.output;
-      return { text: null, stop: true };
+      stop = true;
+      text = null;
     }
   }
 
-  return { text };
+  if (!stop) {
+    delete state.message;
+  }
+
+  return { text, stop };
 };
 
 modifier(text);`,
