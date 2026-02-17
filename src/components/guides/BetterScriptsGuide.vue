@@ -1064,32 +1064,18 @@ modifier(text);</code></pre>
               <!-- Widget Preview -->
               <div class="px-4 py-3 border-b border-bd-border-subtle" style="background: #0d0d1a;">
                 <div class="text-[10px] text-bd-text-muted uppercase tracking-wider mb-2">Widget Preview</div>
-                <div class="flex items-center justify-between gap-2 flex-wrap">
-                  <!-- LEFT: Clock + Period -->
-                  <div class="flex items-center gap-2">
-                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                      <span class="text-[11px] text-[#8888aa]">&#9728;&#65039;</span>
-                      <span class="text-[11px] font-semibold" style="color: #fbbf24;">10:30 AM</span>
-                    </div>
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px]" style="background: rgba(244,114,182,0.15); color: #f472b6;">&#9728;&#65039; Morning</span>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                    <span class="text-[11px] text-[#8888aa]">&#9728;&#65039;</span>
+                    <span class="text-[11px] font-semibold" style="color: #fbbf24;">10:30 AM</span>
                   </div>
-                  <!-- CENTER: Date + Season -->
-                  <div class="flex items-center gap-2">
-                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                      <span class="text-[11px] text-[#8888aa]">&#128197;</span>
-                      <span class="text-[11px] font-semibold" style="color: #60a5fa;">Wednesday, June 1</span>
-                    </div>
-                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                      <span class="text-[11px] text-[#8888aa]">&#127757;</span>
-                      <span class="text-[11px] font-semibold" style="color: #a78bfa;">Summer, Year 2026</span>
-                    </div>
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                    <span class="text-[11px] text-[#8888aa]">&#128197;</span>
+                    <span class="text-[11px] font-semibold" style="color: #60a5fa;">Wednesday, June 1</span>
                   </div>
-                  <!-- RIGHT: Weather -->
-                  <div class="flex items-center gap-2">
-                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                      <span class="text-[11px] text-[#8888aa]">&#9925;</span>
-                      <span class="text-[11px] font-semibold" style="color: #34d399;">Partly cloudy, 62&#176;F</span>
-                    </div>
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                    <span class="text-[11px] text-[#8888aa]">&#9925;</span>
+                    <span class="text-[11px] font-semibold" style="color: #34d399;">Partly cloudy, 62&#176;F</span>
                   </div>
                 </div>
               </div>
@@ -1236,31 +1222,19 @@ modifier(text);</code></pre>
 
   const s = state.chronos;
   const period = getTimePeriod(s.hour);
-  const season = getSeason(s.month);
   const isNight = period.name === 'Night' || period.name === 'Midnight';
 
   let widgets = '';
-  <span class="text-bd-text-muted">// LEFT: Clock + Period badge</span>
   widgets += bdWidget('time-clock', {
     type: 'stat', label: period.icon, value: getTimeString(),
     color: isNight ? '#94a3b8' : '#fbbf24', align: 'left', order: 1
   });
-  widgets += bdWidget('time-period', {
-    type: 'badge', text: period.name, icon: period.icon,
-    color: isNight ? '#a78bfa' : '#f472b6', variant: 'subtle', align: 'left', order: 2
-  });
-  <span class="text-bd-text-muted">// CENTER: Date + Season</span>
   widgets += bdWidget('time-date', {
     type: 'stat', label: '&#128197;',
     value: getWeekday() + ', ' + getMonthName() + ' ' + s.day,
-    color: '#60a5fa', align: 'center', order: 1
+    color: '#60a5fa', align: 'left', order: 2
   });
-  widgets += bdWidget('time-season', {
-    type: 'stat', label: '&#127757;',
-    value: season.name + ', Year ' + s.year,
-    color: '#a78bfa', align: 'center', order: 2
-  });
-  <span class="text-bd-text-muted">// RIGHT: Weather + Temperature (when enabled)</span>
+  <span class="text-bd-text-muted">// Weather + Temperature (when enabled)</span>
   if (s.config.weatherEnabled) {
     const cond = WEATHER_CONDITIONS[s.weather.current];
     if (cond) {
@@ -1273,7 +1247,7 @@ modifier(text);</code></pre>
       widgets += bdWidget('time-weather', {
         type: 'stat', label: cond.icon,
         value: cond.label + ', ' + tempStr,
-        color: '#34d399', align: 'right', order: 1
+        color: '#34d399', align: 'left', order: 3
       });
     }
   }

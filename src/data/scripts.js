@@ -1672,7 +1672,6 @@ const modifier = (text) => {
 
   const s = state.chronos;
   const period = getTimePeriod(s.hour);
-  const season = getSeason(s.month);
   const isNight = period.name === 'Night' || period.name === 'Midnight';
 
   let widgets = '';
@@ -1686,31 +1685,12 @@ const modifier = (text) => {
     order: 1
   });
 
-  widgets += bdWidget('time-period', {
-    type: 'badge',
-    text: period.name,
-    icon: period.icon,
-    color: isNight ? '#a78bfa' : '#f472b6',
-    variant: 'subtle',
-    align: 'left',
-    order: 2
-  });
-
   widgets += bdWidget('time-date', {
     type: 'stat',
     label: '\\u{1F4C5}',
     value: getWeekday() + ', ' + getMonthName() + ' ' + s.day,
     color: '#60a5fa',
-    align: 'center',
-    order: 1
-  });
-
-  widgets += bdWidget('time-season', {
-    type: 'stat',
-    label: '\\u{1F30D}',
-    value: season.name + ', Year ' + s.year,
-    color: '#a78bfa',
-    align: 'center',
+    align: 'left',
     order: 2
   });
 
@@ -1728,8 +1708,8 @@ const modifier = (text) => {
         label: cond.icon,
         value: cond.label + ', ' + tempStr,
         color: '#34d399',
-        align: 'right',
-        order: 1
+        align: 'left',
+        order: 3
       });
     }
   }
