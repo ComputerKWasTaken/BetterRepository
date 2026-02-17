@@ -1623,6 +1623,8 @@ const modifier = (text) => {
   const contextMemory = info.memoryLength ? text.slice(0, info.memoryLength) : '';
   let context = info.memoryLength ? text.slice(info.memoryLength) : text;
 
+  context = context.replace(/\\[\\S+ \\d{1,2}:\\d{2}(?: [AP]M)? - (?:Midnight|Dawn|Morning|Afternoon|Evening|Night)\\]\\n?/g, '');
+
   const envContext = getTimeContext();
   context = envContext + '\\n' + context;
 
