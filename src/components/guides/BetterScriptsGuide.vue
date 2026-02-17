@@ -1056,7 +1056,7 @@ modifier(text);</code></pre>
                 <Clock class="w-5 h-5 text-bd-amber flex-shrink-0" />
                 <div class="flex-1">
                   <h3 class="font-semibold text-bd-text-primary">Chronos Time System</h3>
-                  <p class="text-xs text-bd-text-muted mt-0.5">Full calendar, weather, moon phases, story card config, and time commands (<code class="text-bd-text-secondary">:time</code>, <code class="text-bd-text-secondary">:date</code>, <code class="text-bd-text-secondary">:advance</code>, <code class="text-bd-text-secondary">:sleep</code>, <code class="text-bd-text-secondary">:settime</code>, <code class="text-bd-text-secondary">:setdate</code>, <code class="text-bd-text-secondary">:weather</code>, <code class="text-bd-text-secondary">:chronos</code>)</p>
+                  <p class="text-xs text-bd-text-muted mt-0.5">Full calendar, weather, story card config, and time commands (<code class="text-bd-text-secondary">:time</code>, <code class="text-bd-text-secondary">:date</code>, <code class="text-bd-text-secondary">:advance</code>, <code class="text-bd-text-secondary">:sleep</code>, <code class="text-bd-text-secondary">:settime</code>, <code class="text-bd-text-secondary">:setdate</code>, <code class="text-bd-text-secondary">:weather</code>, <code class="text-bd-text-secondary">:chronos</code>)</p>
                 </div>
                 <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-bd-amber/20 text-bd-amber">Intermediate</span>
               </div>
@@ -1064,33 +1064,18 @@ modifier(text);</code></pre>
               <!-- Widget Preview -->
               <div class="px-4 py-3 border-b border-bd-border-subtle" style="background: #0d0d1a;">
                 <div class="text-[10px] text-bd-text-muted uppercase tracking-wider mb-2">Widget Preview</div>
-                <div class="flex items-center justify-between gap-2 flex-wrap">
-                  <!-- LEFT: Clock + Period -->
-                  <div class="flex items-center gap-2">
-                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                      <span class="text-[11px] text-[#8888aa]">&#9728;&#65039;</span>
-                      <span class="text-[11px] font-semibold" style="color: #fbbf24;">10:30 AM</span>
-                    </div>
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px]" style="background: rgba(244,114,182,0.15); color: #f472b6;">&#9728;&#65039; Morning</span>
+                <div class="flex items-center justify-center gap-2 flex-wrap">
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                    <span class="text-[11px] text-[#8888aa]">&#9728;&#65039;</span>
+                    <span class="text-[11px] font-semibold" style="color: #fbbf24;">10:30 AM</span>
                   </div>
-                  <!-- CENTER: Date + Season + Moon -->
-                  <div class="flex items-center gap-2">
-                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                      <span class="text-[11px] text-[#8888aa]">&#128197;</span>
-                      <span class="text-[11px] font-semibold" style="color: #60a5fa;">Wednesday, March 15</span>
-                    </div>
-                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                      <span class="text-[11px] text-[#8888aa]">&#127757;</span>
-                      <span class="text-[11px] font-semibold" style="color: #a78bfa;">Spring, Year 1</span>
-                    </div>
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px]" style="background: rgba(226,232,240,0.1); color: #e2e8f0;">&#127765; Full Moon</span>
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                    <span class="text-[11px] text-[#8888aa]">&#128197;</span>
+                    <span class="text-[11px] font-semibold" style="color: #60a5fa;">Wednesday, June 1</span>
                   </div>
-                  <!-- RIGHT: Weather -->
-                  <div class="flex items-center gap-2">
-                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                      <span class="text-[11px] text-[#8888aa]">&#9925;</span>
-                      <span class="text-[11px] font-semibold" style="color: #34d399;">Partly cloudy, 62&#176;F</span>
-                    </div>
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                    <span class="text-[11px] text-[#8888aa]">&#9925;</span>
+                    <span class="text-[11px] font-semibold" style="color: #34d399;">Partly cloudy, 62&#176;F</span>
                   </div>
                 </div>
               </div>
@@ -1116,7 +1101,7 @@ modifier(text);</code></pre>
 <span class="text-bd-text-muted">// Full calendar, weather, story card config, BetterScripts widgets</span>
 
 state.chronos = state.chronos ?? {
-  minute: 0, hour: 8, day: 1, month: 1, year: 1,
+  minute: 0, hour: 7, day: 1, month: 6, year: 2026,
   config: {
     minutesPerTurn: 2, use12HourFormat: true,
     useBetterScripts: false, weatherEnabled: false,
@@ -1124,8 +1109,7 @@ state.chronos = state.chronos ?? {
     weatherChangeCooldown: 15, temperatureUnit: 'F',
     wakeHour: 7, customWeekdays: null, customMonths: null
   },
-  weather: { current: 'clear', temperature: 70, lastChange: 0 },
-  pendingOutput: null, isCommand: false,
+  weather: { current: 'clear', temperature: 70, lastChange: 0, targetTemp: null },
   lastActionCount: -1, initialized: false
 };
 
@@ -1133,50 +1117,40 @@ state.chronos = state.chronos ?? {
 function bdMessage(msg) { return `[[BD:${JSON.stringify(msg)}:BD]]`; }
 function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
 
-<span class="text-bd-text-muted">// Story card utilities (find, read/write "> Key: value" settings)</span>
+<span class="text-bd-text-muted">// Story card utilities (find, read "> Key: value" settings)</span>
 function findCard(keyName, create, defaultEntry, defaultDesc) { <span class="text-bd-text-muted">/* ... */</span> }
 function readSetting(card, name, fallback) { <span class="text-bd-text-muted">/* ... */</span> }
-function writeSetting(card, name, value) { <span class="text-bd-text-muted">/* ... */</span> }
 function syncSettingsFromCard(card) { <span class="text-bd-text-muted">/* reads all config from card */</span> }
-function syncTimeToCard(card) { <span class="text-bd-text-muted">/* writes hour/min/day/month/year back */</span> }
+function syncTimeToCard(card) { <span class="text-bd-text-muted">/* writes current time/date back to card */</span> }
 
 <span class="text-bd-text-muted">// Calendar engine</span>
 function isLeapYear(y) { return (y%4===0 &amp;&amp; y%100!==0) || y%400===0; }
 function getDaysInMonth(month, year) { <span class="text-bd-text-muted">/* handles leap years */</span> }
 function getSeason(month) { <span class="text-bd-text-muted">/* Winter/Spring/Summer/Autumn */</span> }
 function getTimePeriod(hour) { <span class="text-bd-text-muted">/* Midnight/Dawn/Morning/... */</span> }
-function getMoonPhase() { <span class="text-bd-text-muted">/* 8-phase, 30-day lunar cycle */</span> }
 function getWeekday() { <span class="text-bd-text-muted">/* day-of-week from absolute day count */</span> }
+function getMonthName() { <span class="text-bd-text-muted">/* current month name */</span> }
 
-<span class="text-bd-text-muted">// Time advancement with full calendar overflow (forward and backward)</span>
+<span class="text-bd-text-muted">// Time advancement with full calendar overflow</span>
 function advanceTime(minutes) {
   const s = state.chronos;
   s.minute += minutes;
   while (s.minute >= 60) { s.minute -= 60; s.hour++; }
-  while (s.minute < 0) { s.minute += 60; s.hour--; }
   while (s.hour >= 24) { s.hour -= 24; s.day++; }
-  while (s.hour < 0) { s.hour += 24; s.day--; }
   while (s.day > getDaysInMonth(s.month, s.year)) {
     s.day -= getDaysInMonth(s.month, s.year);
     s.month++;
     if (s.month > 12) { s.month = 1; s.year++; }
   }
-  while (s.day < 1) {
-    s.month--;
-    if (s.month < 1) { s.month = 12; s.year--; }
-    s.day += getDaysInMonth(s.month, s.year);
-  }
 }
-function advanceByUnit(n, unit) { <span class="text-bd-text-muted">/* months/years: direct field math; others use advanceTime */</span> }
 
 <span class="text-bd-text-muted">// Commands: :time, :date, :advance/:timeskip/:skip, :sleep, :settime, :setdate, :weather, :setweather, :chronos, :chronos reset, :chronos help</span>
 function handleChronosCommand(input) { <span class="text-bd-text-muted">/* ... full command router ... */</span> }
 
-<span class="text-bd-text-muted">// Weather engine (optional): season-aware transitions, smooth temperature drift</span>
+<span class="text-bd-text-muted">// Weather engine (optional): season-aware Markov transitions, smooth temperature drift</span>
 function rollWeather() { <span class="text-bd-text-muted">/* weighted random from transition table */</span> }
 function calcTargetTemp() { <span class="text-bd-text-muted">/* season + time-of-day + weather modifier */</span> }
-function updateTemperature() { <span class="text-bd-text-muted">/* smooth drift toward target each turn */</span> }
-function simulateWeatherOverSkip(mins) { <span class="text-bd-text-muted">/* weather changes during time skips */</span> }</code></pre>
+function updateTemperature() { <span class="text-bd-text-muted">/* smooth drift toward target each turn */</span> }</code></pre>
 
                 <pre v-if="exampleTab.time === 'context'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code><span class="text-bd-text-muted">// Context Modifier - story card sync, time advance, context injection</span>
 const modifier = (text) => {
@@ -1209,29 +1183,24 @@ const modifier = (text) => {
 
   <span class="text-bd-text-muted">// Strip protocol + stale timestamps, inject current time</span>
   text = text.replace(/\[\[BD:[\s\S]*?:BD\]\]/g, '');
-  text = text.replace(/\[Time:[^\]]*\]/g, '');
-  text = text.replace(/\[Weather:[^\]]*\]/g, '');
-  text = text.replace(/\[Moon:[^\]]*\]/g, '');
-  let header = getTimeContext();
-  if (state.chronos.config.weatherEnabled) header += '\n' + getWeatherContext();
-  return { text: header + '\n' + text };
+  const contextMemory = info.memoryLength ? text.slice(0, info.memoryLength) : '';
+  let context = info.memoryLength ? text.slice(info.memoryLength) : text;
+  context = context.replace(/\[.+ \d{1,2}:\d{2}(?: [AP]M)? - (?:Midnight|Dawn|Morning|Afternoon|Evening|Night)\]\n?/g, '');
+  context = getTimeContext() + '\n' + context;
+  context = context.slice(-(info.maxChars - info.memoryLength));
+  return { text: contextMemory + context };
 };
 modifier(text);</code></pre>
 
                 <pre v-if="exampleTab.time === 'input'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code><span class="text-bd-text-muted">// Detect Chronos commands from player input</span>
 const modifier = (text) => {
-  const input = text.trim();
-  const prefixes = [':time',':date',':advance',':sleep',':settime',
-    ':setdate',':setweather',':weather',':chronos',':timeskip',':skip'];
-  const lower = input.toLowerCase();
-  <span class="text-bd-text-muted">// Exact match or prefix + space (prevents :timer matching :time)</span>
-  const isCmd = prefixes.some(p => lower === p || lower.startsWith(p + ' '));
-  if (isCmd) {
-    const result = handleChronosCommand(input);
+  const cmdMatch = text.match(/\n? ?(?:> You |> You say "|):(\w+?)( [\w ]+)?[".]?\n?$/i);
+  if (cmdMatch) {
+    const command = ':' + cmdMatch[1].trim() + (cmdMatch[2] ? cmdMatch[2].trimEnd() : '');
+    const result = handleChronosCommand(command);
     if (result) {
-      state.chronos.pendingOutput = result.output;
-      state.chronos.isCommand = true;
-      return { text: '' };
+      state.message = result.output;
+      return { text: null, stop: true };
     }
   }
   return { text };
@@ -1239,71 +1208,65 @@ const modifier = (text) => {
 modifier(text);</code></pre>
 
                 <pre v-if="exampleTab.time === 'output'" class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code>const modifier = (text) => {
+  if (!state.chronos.config.enabled) return { text };
   let output = text;
 
-  <span class="text-bd-text-muted">// Handle pending command output</span>
-  if (state.chronos.isCommand &amp;&amp; state.chronos.pendingOutput) {
-    output = state.chronos.pendingOutput;
-    state.chronos.pendingOutput = null;
-    state.chronos.isCommand = false;
+  <span class="text-bd-text-muted">// Text fallback when BetterScripts is off</span>
+  if (!state.chronos.config.useBetterScripts) {
+    if (state.chronos.config.showTimeInOutput) {
+      const s = state.chronos;
+      const period = getTimePeriod(s.hour);
+      let header = '[' + period.icon + ' ' + getTimeString() + ' | ' + getWeekday() + ', ' + getMonthName() + ' ' + s.day;
+      if (s.config.weatherEnabled) {
+        const cond = WEATHER_CONDITIONS[s.weather.current];
+        if (cond) {
+          let tempStr = '';
+          if (s.config.temperatureUnit === 'C') {
+            tempStr = Math.round((s.weather.temperature - 32) * 5 / 9) + '&#176;C';
+          } else {
+            tempStr = s.weather.temperature + '&#176;F';
+          }
+          header += ' | ' + cond.icon + ' ' + cond.label + ', ' + tempStr;
+        }
+      }
+      header += ']';
+      output = header + '\n' + output;
+    }
+    return { text: output };
   }
-  if (!state.chronos.config.enabled) return { text: output };
 
   const s = state.chronos;
   const period = getTimePeriod(s.hour);
-  const season = getSeason(s.month);
   const isNight = period.name === 'Night' || period.name === 'Midnight';
 
-  <span class="text-bd-text-muted">// BetterScripts widget mode</span>
-  if (s.config.useBetterScripts) {
-    let widgets = '';
-    <span class="text-bd-text-muted">// LEFT: Clock + Period badge</span>
-    widgets += bdWidget('chronos-clock', {
-      type: 'stat', label: period.icon, value: getTimeString(),
-      color: isNight ? '#94a3b8' : '#fbbf24', align: 'left', order: 1
-    });
-    widgets += bdWidget('chronos-period', {
-      type: 'badge', text: period.name, icon: period.icon,
-      color: isNight ? '#a78bfa' : '#f472b6', variant: 'subtle', align: 'left', order: 2
-    });
-    <span class="text-bd-text-muted">// CENTER: Date + Season + Moon</span>
-    widgets += bdWidget('chronos-date', {
-      type: 'stat', label: '&#128197;',
-      value: getWeekday() + ', ' + getMonthName() + ' ' + s.day,
-      color: '#60a5fa', align: 'center', order: 1
-    });
-    widgets += bdWidget('chronos-season', {
-      type: 'stat', label: '&#127757;',
-      value: season.name + ', Year ' + s.year,
-      color: '#a78bfa', align: 'center', order: 2
-    });
-    const moon = getMoonPhase();
-    widgets += bdWidget('chronos-moon', {
-      type: 'badge', text: moon.name, icon: moon.icon,
-      color: '#e2e8f0', variant: 'subtle', align: 'center', order: 3
-    });
-    <span class="text-bd-text-muted">// RIGHT: Weather (when enabled)</span>
-    if (s.config.weatherEnabled) {
-      const wInfo = WEATHER_CONDITIONS[s.weather.current] || WEATHER_CONDITIONS['clear'];
-      widgets += bdWidget('chronos-weather', {
-        type: 'stat', label: wInfo.icon,
-        value: wInfo.label + ', ' + formatTemp(s.weather.temperature),
-        color: '#34d399', align: 'right', order: 1
+  let widgets = '';
+  widgets += bdWidget('time-clock', {
+    type: 'stat', label: period.icon, value: getTimeString(),
+    color: isNight ? '#94a3b8' : '#fbbf24', align: 'center', order: 1
+  });
+  widgets += bdWidget('time-date', {
+    type: 'stat', label: '&#128197;',
+    value: getWeekday() + ', ' + getMonthName() + ' ' + s.day,
+    color: '#60a5fa', align: 'center', order: 2
+  });
+  <span class="text-bd-text-muted">// Weather + Temperature (when enabled)</span>
+  if (s.config.weatherEnabled) {
+    const cond = WEATHER_CONDITIONS[s.weather.current];
+    if (cond) {
+      let tempStr = '';
+      if (s.config.temperatureUnit === 'C') {
+        tempStr = Math.round((s.weather.temperature - 32) * 5 / 9) + '&#176;C';
+      } else {
+        tempStr = s.weather.temperature + '&#176;F';
+      }
+      widgets += bdWidget('time-weather', {
+        type: 'stat', label: cond.icon,
+        value: cond.label + ', ' + tempStr,
+        color: '#34d399', align: 'center', order: 3
       });
     }
-    return { text: output + widgets };
   }
-
-  <span class="text-bd-text-muted">// Standalone text fallback</span>
-  if (!s.config.showTimeInOutput) return { text: output };
-  const moonText = getMoonPhase();
-  let timeBlock = '\n';
-  timeBlock += '\n--- ' + period.name + ', ' + getTimeString() + ' ---';
-  timeBlock += '\n' + getWeekday() + ', ' + getDateString();
-  timeBlock += ' | ' + season.name + ' | ' + moonText.icon + ' ' + moonText.name;
-  if (s.config.weatherEnabled) timeBlock += '\n' + getWeatherDisplay();
-  output += timeBlock;
-  return { text: output };
+  return { text: output + widgets };
 };
 modifier(text);</code></pre>
               </div>
