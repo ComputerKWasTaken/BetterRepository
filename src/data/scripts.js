@@ -1600,7 +1600,7 @@ function handleChronosCommand(input) {
   const parsed = trimmed.match(/^:(\\w+)(?:\\s+(.*))?$/);
   if (!parsed) return null;
   const cmdName = parsed[1].toLowerCase();
-  const args = parsed[2] || '';
+  const args = (parsed[2] || '').toLowerCase();
   const handler = CHRONOS_COMMANDS[cmdName];
   if (!handler) return { output: '\\nUnknown command: :' + cmdName + '. Type :chronos help for commands.', isCommand: true };
   const result = handler(args);
