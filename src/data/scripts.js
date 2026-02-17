@@ -1585,15 +1585,27 @@ const CHRONOS_COMMANDS = {
   }
 };
 
+function extractRawInput(text) {
+  let raw = text.trim();
+  if (raw.startsWith('> You say "')) {
+    raw = raw.slice(11).replace(/[".]* *$/, '');
+  } else if (raw.startsWith('> You ')) {
+    raw = raw.slice(6);
+  }
+  return raw.trim();
+}
+
 function handleChronosCommand(input) {
-  const lower = input.toLowerCase().trim();
-  const parsed = lower.match(/^:(\\w+)(?:\\s+(.*))?$/);
+  const trimmed = input.trim();
+  const parsed = trimmed.match(/^:(\\w+)(?:\\s+(.*))?$/);
   if (!parsed) return null;
-  const cmdName = parsed[1];
+  const cmdName = parsed[1].toLowerCase();
   const args = parsed[2] || '';
   const handler = CHRONOS_COMMANDS[cmdName];
-  if (!handler) return null;
-  return handler(args);
+  if (!handler) return { output: '\\nUnknown command: :' + cmdName + '. Type :chronos help for commands.', isCommand: true };
+  const result = handler(args);
+  if (!result) return { output: '\\nInvalid arguments for :' + cmdName + '. Type :chronos help for usage.', isCommand: true };
+  return result;
 }`,
       context: `// ============================================
 // CONTEXT MODIFIER - Chronos Time System
@@ -1620,7 +1632,7 @@ const modifier = (text) => {
     state.chronos.weather.temperature = state.chronos.weather.targetTemp;
   }
 
-  if (!isRetry()) {
+  if (!isRetry() && !state.chronos.isCommand) {
     advanceTime(state.chronos.config.minutesPerTurn);
 
     if (state.chronos.config.weatherEnabled && shouldChangeWeather()) {
@@ -1654,27 +1666,26 @@ modifier(text);`,
       input: `// ============================================
 // INPUT MODIFIER - Chronos Time System
 // ============================================
+// Detects : commands from any input mode (Do, Say, Story).
+// Stores result for the output modifier to display.
+// Avoids stop:true which can cause errors/freezing.
 
 const modifier = (text) => {
-  let stop = false;
+  state.chronos.isCommand = false;
 
-  const cmdMatch = text.match(/\\n? ?(?:> You |> You say "|):(\\w+)( [\\w ]+)?[".]?\\n?$/i);
+  const raw = extractRawInput(text);
 
-  if (cmdMatch) {
-    const command = ':' + cmdMatch[1].trim() + (cmdMatch[2] ? cmdMatch[2].trimEnd() : '');
-    const result = handleChronosCommand(command);
+  if (raw.startsWith(':')) {
+    const result = handleChronosCommand(raw);
     if (result) {
-      state.message = result.output;
-      stop = true;
-      text = null;
+      state.chronos.pendingOutput = result.output;
+      state.chronos.isCommand = true;
+      return { text: '> You check your surroundings.' };
     }
   }
 
-  if (!stop) {
-    delete state.message;
-  }
-
-  return { text, stop };
+  delete state.message;
+  return { text };
 };
 
 modifier(text);`,
@@ -1686,9 +1697,18 @@ const modifier = (text) => {
   if (!state.chronos.config.enabled) return { text };
 
   let output = text;
+  let isCommandOutput = false;
+
+  if (state.chronos.isCommand && state.chronos.pendingOutput) {
+    output = state.chronos.pendingOutput;
+    state.message = state.chronos.pendingOutput;
+    state.chronos.pendingOutput = null;
+    state.chronos.isCommand = false;
+    isCommandOutput = true;
+  }
 
   if (!state.chronos.config.useBetterScripts) {
-    if (state.chronos.config.showTimeInOutput) {
+    if (!isCommandOutput && state.chronos.config.showTimeInOutput) {
       const s = state.chronos;
       const period = getTimePeriod(s.hour);
       let header = '[' + period.icon + ' ' + getTimeString() + ' | ' + getWeekday() + ', ' + getMonthName() + ' ' + s.day;
