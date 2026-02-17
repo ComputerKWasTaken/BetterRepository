@@ -928,8 +928,6 @@ state.chronos = state.chronos ?? {
     lastChange: 0,
     targetTemp: null
   },
-  pendingOutput: null,
-  isCommand: false,
   lastActionCount: -1,
   initialized: false
 };
@@ -1089,15 +1087,15 @@ const COMMANDS_CARD_ENTRY = ':time - Show current time and status\\n:date - Show
 // ============================================
 
 function findCard(keyName, createIfNotFound, defaultEntry, defaultDescription) {
-  if (!worldInfo) return null;
-  for (const card of worldInfo) {
+  if (!storyCards) return null;
+  for (const card of storyCards) {
     if (card.keys && card.keys.toLowerCase().includes(keyName.toLowerCase())) {
       return card;
     }
   }
   if (!createIfNotFound) return null;
-  addWorldEntry(keyName, defaultEntry || '', false);
-  for (const card of worldInfo) {
+  addStoryCard(keyName, defaultEntry || '');
+  for (const card of storyCards) {
     if (card.keys && card.keys.toLowerCase().includes(keyName.toLowerCase())) {
       if (defaultDescription && !card.description) {
         card.description = defaultDescription;
@@ -1547,7 +1545,7 @@ function handleChronosCommand(input) {
 
   if (lower === ':chronos reset') {
     state.chronos.minute = 0;
-    state.chronos.hour = 8;
+    state.chronos.hour = state.chronos.config.wakeHour || 7;
     state.chronos.day = 1;
     state.chronos.month = 1;
     state.chronos.year = 1;
@@ -1646,9 +1644,8 @@ const modifier = (text) => {
     const command = ':' + cmdMatch[1].trim() + (cmdMatch[2] ? cmdMatch[2].trimEnd() : '');
     const result = handleChronosCommand(command);
     if (result) {
-      state.chronos.pendingOutput = result.output;
-      state.chronos.isCommand = true;
-      return { text: '' };
+      state.message = result.output;
+      return { text: null, stop: true };
     }
   }
 
@@ -1664,17 +1661,9 @@ const modifier = (text) => {
   if (!state.chronos.config.enabled) return { text };
 
   let output = text;
-  let isCommandOutput = false;
-
-  if (state.chronos.isCommand && state.chronos.pendingOutput) {
-    output = state.chronos.pendingOutput;
-    state.chronos.pendingOutput = null;
-    state.chronos.isCommand = false;
-    isCommandOutput = true;
-  }
 
   if (!state.chronos.config.useBetterScripts) {
-    if (state.chronos.config.showTimeInOutput && !isCommandOutput) {
+    if (state.chronos.config.showTimeInOutput) {
       const period = getTimePeriod(state.chronos.hour);
       output = '[' + period.icon + ' ' + getTimeString() + ' - ' + period.name + ']\\n' + output;
     }
