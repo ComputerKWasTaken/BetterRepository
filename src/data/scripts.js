@@ -1672,6 +1672,7 @@ const modifier = (text) => {
 
   const s = state.chronos;
   const period = getTimePeriod(s.hour);
+  const season = getSeason(s.month);
   const isNight = period.name === 'Night' || period.name === 'Midnight';
 
   let widgets = '';
@@ -1685,35 +1686,50 @@ const modifier = (text) => {
     order: 1
   });
 
-  widgets += bdWidget('time-day', {
-    type: 'stat',
-    label: '\\u{1F4C5}',
-    value: getWeekday().substring(0, 3) + ' ' + getDateString(),
-    color: '#60a5fa',
-    align: 'left',
-    order: 2
-  });
-
   widgets += bdWidget('time-period', {
     type: 'badge',
     text: period.name,
     icon: period.icon,
     color: isNight ? '#a78bfa' : '#f472b6',
     variant: 'subtle',
+    align: 'left',
+    order: 2
+  });
+
+  widgets += bdWidget('time-date', {
+    type: 'stat',
+    label: '\\u{1F4C5}',
+    value: getWeekday() + ', ' + getMonthName() + ' ' + s.day,
+    color: '#60a5fa',
     align: 'center',
     order: 1
+  });
+
+  widgets += bdWidget('time-season', {
+    type: 'stat',
+    label: '\\u{1F30D}',
+    value: season.name + ', Year ' + s.year,
+    color: '#a78bfa',
+    align: 'center',
+    order: 2
   });
 
   if (s.config.weatherEnabled) {
     const cond = WEATHER_CONDITIONS[s.weather.current];
     if (cond) {
+      let tempStr = '';
+      if (s.config.temperatureUnit === 'C') {
+        tempStr = Math.round((s.weather.temperature - 32) * 5 / 9) + '\\u{00B0}C';
+      } else {
+        tempStr = s.weather.temperature + '\\u{00B0}F';
+      }
       widgets += bdWidget('time-weather', {
         type: 'stat',
         label: cond.icon,
-        value: cond.label,
-        color: '#67e8f9',
+        value: cond.label + ', ' + tempStr,
+        color: '#34d399',
         align: 'right',
-        order: 2
+        order: 1
       });
     }
   }
