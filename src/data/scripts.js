@@ -931,9 +931,7 @@ state.chronos = state.chronos ?? {
     enabled: true,
     weatherChangeCooldown: 15,
     temperatureUnit: 'F',
-    wakeHour: 7,
-    customWeekdays: null,
-    customMonths: null
+    wakeHour: 7
   },
   weather: {
     current: 'clear',
@@ -967,7 +965,7 @@ function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, ac
 // CONSTANTS
 // ============================================
 
-// Standard weekday names used when no custom weekdays are configured.
+// Standard weekday names.
 const DEFAULT_WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 // Standard Gregorian months with their day counts (February adjusted for leap years at runtime).
@@ -1209,21 +1207,16 @@ function syncTimeToCard(card) {
 // ============================================
 // Calendar math: months, weekdays, leap years, seasons, and date formatting.
 
-// Returns the active month definitions, substituting custom names if configured.
+// Returns the standard month definitions.
 // @returns {Array<{name: string, days: number}>} 12-element month array.
 function getMonths() {
-  const custom = state.chronos.config.customMonths;
-  if (custom) {
-    return DEFAULT_MONTHS.map((m, i) => ({ name: custom[i] || m.name, days: m.days }));
-  }
   return DEFAULT_MONTHS;
 }
 
-// Returns the active weekday names, using custom names if configured.
+// Returns the standard weekday names.
 // @returns {string[]} Array of weekday names.
 function getWeekdays() {
-  const custom = state.chronos.config.customWeekdays;
-  return custom || DEFAULT_WEEKDAYS;
+  return DEFAULT_WEEKDAYS;
 }
 
 // Determines whether a given year is a leap year (Gregorian rules).
@@ -1241,7 +1234,7 @@ function getDaysInMonth(month, year) {
   const months = getMonths();
   const idx = ((month - 1) % 12 + 12) % 12;
   let days = months[idx].days;
-  if (idx === 1 && !state.chronos.config.customMonths && isLeapYear(year)) {
+  if (idx === 1 && isLeapYear(year)) {
     days = 29;
   }
   return days;
@@ -1758,8 +1751,6 @@ const CHRONOS_COMMANDS = {
         out += '\\nWeather: Disabled';
       }
       out += \`\\nDisplay: \${s.config.useBetterScripts ? 'Widgets' : s.config.showTimeInOutput ? 'Text' : 'Context only'}\`;
-      if (s.config.customWeekdays) out += '\\nCustom weekdays: ' + s.config.customWeekdays.join(', ');
-      if (s.config.customMonths) out += '\\nCustom months: ' + s.config.customMonths.join(', ');
       out += '\\n---';
       return { output: out, isCommand: true };
     }
