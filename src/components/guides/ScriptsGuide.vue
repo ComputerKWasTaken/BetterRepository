@@ -289,8 +289,10 @@
             </p>
             <ul class="text-sm text-bd-text-secondary space-y-1">
               <li>• <code class="text-bd-cyan">id</code> - Unique numerical ID</li>
+              <li>• <code class="text-bd-cyan">title</code> - Display title</li>
               <li>• <code class="text-bd-cyan">keys</code> - Trigger keys</li>
               <li>• <code class="text-bd-cyan">entry</code> - The card's content</li>
+              <li>• <code class="text-bd-cyan">description</code> - Card description</li>
               <li>• <code class="text-bd-cyan">type</code> - Category type</li>
             </ul>
           </div>
