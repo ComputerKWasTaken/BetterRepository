@@ -1843,7 +1843,9 @@ const modifier = (text) => {
   let context = info.memoryLength ? text.slice(info.memoryLength) : text;
 
   // Remove previously injected output headers so the AI doesn't see repeated time banners.
-  context = context.replace(/\\[\\S+ \\d{1,2}:\\d{2}(?: [AP]M)? - (?:Midnight|Dawn|Morning|Afternoon|Evening|Night)\\]\\n?/g, '');
+  // Matches the output modifier's format: [<icon> <time> | <weekday>, <month> <day> ...]
+  // The \\| after the time distinguishes these from the [Time: ...] context line (which uses parentheses).
+  context = context.replace(/\\[\\S+ \\d{1,2}:\\d{2}(?: [AP]M)? \\|[^\\]]+\\]\\n?/g, '');
 
   const envContext = getTimeContext();
   context = envContext + '\\n' + context;
