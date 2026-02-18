@@ -897,7 +897,7 @@ modifier(text);`
 //
 // Commands (by category):
 //   Status: :time, :date, :weather, :chronos
-//   Time Control: :advance, :sleep, :settime, :setdate
+//   Time Control: :advance, :sleep, :settime, :setdate, :pause, :resume
 //   Weather: :setweather
 //   System: :chronos help, :chronos reset
 //   Aliases: :timeskip/:skip
@@ -1084,7 +1084,7 @@ const SETTINGS_CARD_ENTRY = '--- General ---\\n> Enabled: true\\n> Minutes Per T
 
 const SETTINGS_CARD_DESCRIPTION = 'Chronos time system settings. Organized by category. Edit the values after each colon to configure. Time and date update automatically.';
 
-const COMMANDS_CARD_ENTRY = '--- Status ---\\n:time - Show current time and status\\n:date - Show current date and season\\n:weather - Show weather status\\n:chronos - Full diagnostic status\\n\\n--- Time Control ---\\n:advance <N> <unit> - Advance time (e.g. :advance 3 hours)\\n:sleep - Sleep until morning\\n:settime <HH:MM> - Set time (e.g. :settime 14:30)\\n:setdate <day> <month> <year> - Set date\\n\\n--- Weather ---\\n:setweather <condition> - Set weather condition\\n\\n--- System ---\\n:chronos help - Show this command list\\n:chronos reset - Reset all state to defaults\\n\\n--- Aliases ---\\n:timeskip <N> <unit> - Alias for :advance\\n:skip <N> <unit> - Alias for :advance';
+const COMMANDS_CARD_ENTRY = '--- Status ---\\n:time - Show current time and status\\n:date - Show current date and season\\n:weather - Show weather status\\n:chronos - Full diagnostic status\\n\\n--- Time Control ---\\n:advance <N> <unit> - Advance time (e.g. :advance 3 hours)\\n:sleep - Sleep until morning\\n:settime <HH:MM> - Set time (e.g. :settime 14:30)\\n:setdate <day> <month> <year> - Set date\\n:pause - Pause time advancement\\n:resume - Resume time advancement\\n\\n--- Weather ---\\n:setweather <condition> - Set weather condition\\n\\n--- System ---\\n:chronos help - Show this command list\\n:chronos reset - Reset all state to defaults\\n\\n--- Aliases ---\\n:timeskip <N> <unit> - Alias for :advance\\n:skip <N> <unit> - Alias for :advance';
 
 // ============================================
 // STORY CARD FUNCTIONS
@@ -1589,6 +1589,7 @@ const CHRONOS_COMMANDS = {
       out += \`\\nTime: \${period.name}, \${getTimeString()} (\${s.config.use12HourFormat ? '12h' : '24h'})\`;
       out += \`\\nDate: \${getWeekday()}, \${getDateString()}\`;
       out += \`\\nSeason: \${season.name}\`;
+      out += \`\\nStatus: \${s.paused ? 'Paused' : 'Running'}\`;
       out += \`\\nPacing: \${s.config.minutesPerTurn} min/turn | Turn \${info.actionCount || 0}\`;
       if (s.config.weatherEnabled) {
         out += \`\\nWeather: \${getWeatherDisplay()} (\${s.config.temperatureUnit})\`;
