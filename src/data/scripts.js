@@ -905,6 +905,16 @@ modifier(text);`
 // ============================================
 // STATE INITIALIZATION
 // ============================================
+// Initializes the persistent state.chronos object on the first turn.
+// Uses nullish coalescing (??) so existing state is never overwritten.
+//
+// Structure:
+//   minute/hour/day/month/year - Current in-game date and time
+//   config                     - User-configurable settings (synced from story card)
+//   weather                    - Current weather condition, temperature, and drift target
+//   lastActionCount            - Tracks the previous turn to detect retries
+//   initialized                - Whether the first-turn setup has run
+//   paused                     - Whether automatic time advancement is suspended
 
 state.chronos = state.chronos ?? {
   minute: 0,
@@ -939,16 +949,28 @@ state.chronos = state.chronos ?? {
 // ============================================
 // BETTERSCRIPTS PROTOCOL HELPERS
 // ============================================
+// These helpers encode messages in the [[BD:...:BD]] protocol format
+// so the BetterDungeon browser extension can parse them from story output.
 
+// Serializes an arbitrary message object into the BetterScripts protocol wrapper.
+// @param {Object} msg - The message payload to encode.
+// @returns {string} The protocol-wrapped JSON string.
 function bdMessage(msg) { return \`[[BD:\${JSON.stringify(msg)}:BD]]\`; }
+
+// Creates (or updates) a BetterScripts widget by ID.
+// @param {string} id  - Unique widget identifier (re-using an ID updates the existing widget).
+// @param {Object} cfg - Widget configuration (type, label, value, color, align, order, etc.).
+// @returns {string} The protocol-wrapped widget creation message.
 function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
 
 // ============================================
 // CONSTANTS
 // ============================================
 
+// Standard weekday names used when no custom weekdays are configured.
 const DEFAULT_WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+// Standard Gregorian months with their day counts (February adjusted for leap years at runtime).
 const DEFAULT_MONTHS = [
   { name: 'January', days: 31 }, { name: 'February', days: 28 },
   { name: 'March', days: 31 }, { name: 'April', days: 30 },
@@ -958,6 +980,8 @@ const DEFAULT_MONTHS = [
   { name: 'November', days: 30 }, { name: 'December', days: 31 }
 ];
 
+// The six time-of-day periods that divide a 24-hour clock.
+// Each entry has a display name, emoji icon, and the hour range [start, end).
 const TIME_PERIODS = [
   { name: 'Midnight', icon: '\\u{1F311}', start: 0, end: 4 },
   { name: 'Dawn', icon: '\\u{1F305}', start: 4, end: 6 },
@@ -967,6 +991,7 @@ const TIME_PERIODS = [
   { name: 'Night', icon: '\\u{1F319}', start: 21, end: 24 }
 ];
 
+// Seasons mapped by the month numbers they contain (1-indexed).
 const SEASONS = [
   { name: 'Spring', months: [3, 4, 5] },
   { name: 'Summer', months: [6, 7, 8] },
@@ -974,6 +999,7 @@ const SEASONS = [
   { name: 'Winter', months: [12, 1, 2] }
 ];
 
+// All supported weather conditions with their display icon and human-readable label.
 const WEATHER_CONDITIONS = {
   clear: { icon: '\\u{2600}\\u{FE0F}', label: 'Clear skies' },
   partly_cloudy: { icon: '\\u{26C5}', label: 'Partly cloudy' },
@@ -990,6 +1016,9 @@ const WEATHER_CONDITIONS = {
   windy: { icon: '\\u{1F4A8}', label: 'Windy' }
 };
 
+// Markov-chain weather transition table.
+// Keyed by current condition, then by season. Each entry is [nextCondition, weight].
+// Higher weight = more likely to transition to that condition.
 const WEATHER_TRANSITIONS = {
   clear: {
     Spring: [['clear',4],['partly_cloudy',3],['light_rain',1],['windy',1]],
@@ -1071,8 +1100,12 @@ const WEATHER_TRANSITIONS = {
   }
 };
 
+// Maps time-unit keywords (singular and plural) to their equivalent in minutes.
+// Used by the :advance command to convert "3 hours" into 180 minutes.
 const UNIT_TO_MINUTES = { minute: 1, minutes: 1, hour: 60, hours: 60, day: 1440, days: 1440, week: 10080, weeks: 10080, month: 43200, months: 43200, year: 525600, years: 525600 };
 
+// Baseline temperature ranges (in Fahrenheit) for each season.
+// calcTargetTemp() picks a random value in this range and applies weather/time modifiers.
 const SEASON_TEMPS = {
   Winter: { low: 20, high: 42 },
   Spring: { low: 45, high: 68 },
@@ -1080,16 +1113,29 @@ const SEASON_TEMPS = {
   Autumn: { low: 40, high: 65 }
 };
 
+// Default entry text for the "Chronos Settings" story card.
+// Players edit the values after each colon to configure the system.
 const SETTINGS_CARD_ENTRY = '--- General ---\\n> Enabled: true\\n> Minutes Per Turn: 2\\n\\n--- Display ---\\n> 12-Hour Format: true\\n> Show Time In Output: true\\n> Use BetterScripts: false\\n\\n--- Weather ---\\n> Weather Enabled: false\\n> Weather Change Cooldown: 15\\n> Temperature Unit: F\\n\\n--- Clock ---\\n> Wake Hour: 7\\n> Current Time: 7:00 AM\\n> Current Date: June 1, 2026';
 
+// Description shown on the Chronos Settings story card.
 const SETTINGS_CARD_DESCRIPTION = 'Chronos time system settings. Organized by category. Edit the values after each colon to configure. Time and date update automatically.';
 
+// Default entry text for the "Chronos Commands" story card (in-game reference).
 const COMMANDS_CARD_ENTRY = '--- Status ---\\n:time - Show current time and status\\n:date - Show current date and season\\n:weather - Show weather status\\n:chronos - Full diagnostic status\\n\\n--- Time Control ---\\n:advance <N> <unit> - Advance time (e.g. :advance 3 hours)\\n:sleep - Sleep until morning\\n:settime <HH:MM> - Set time (e.g. :settime 14:30)\\n:setdate <day> <month> <year> - Set date\\n:pause - Pause time advancement\\n:resume - Resume time advancement\\n\\n--- Weather ---\\n:setweather <condition> - Set weather condition\\n\\n--- System ---\\n:chronos help - Show this command list\\n:chronos reset - Reset all state to defaults\\n\\n--- Aliases ---\\n:timeskip <N> <unit> - Alias for :advance\\n:skip <N> <unit> - Alias for :advance';
 
 // ============================================
 // STORY CARD FUNCTIONS
 // ============================================
+// These functions manage the "Chronos Settings" and "Chronos Commands" story cards,
+// which let players configure and reference the time system directly in-game.
 
+// Searches storyCards for a card whose keys contain the given name (case-insensitive).
+// Optionally creates the card with default content if it does not exist.
+// @param {string} keyName           - The key to search for (e.g. 'Chronos Settings').
+// @param {boolean} createIfNotFound - If true, creates the card when it is missing.
+// @param {string} [defaultEntry]    - Default entry text for a newly created card.
+// @param {string} [defaultDescription] - Default description for a newly created card.
+// @returns {Object|null} The matching story card object, or null if not found.
 function findCard(keyName, createIfNotFound, defaultEntry, defaultDescription) {
   if (!storyCards) return null;
   for (const card of storyCards) {
@@ -1110,6 +1156,12 @@ function findCard(keyName, createIfNotFound, defaultEntry, defaultDescription) {
   return null;
 }
 
+// Reads a single setting value from a story card's entry text.
+// Parses the line "> SettingName: value" and auto-converts booleans and numbers.
+// @param {Object} card         - The story card object to read from.
+// @param {string} settingName  - The setting label to look for (e.g. 'Minutes Per Turn').
+// @param {*} defaultValue      - Fallback returned when the setting is not found.
+// @returns {boolean|number|string} The parsed setting value, or defaultValue.
 function readSetting(card, settingName, defaultValue) {
   if (!card || !card.entry) return defaultValue;
   const regex = new RegExp('> ' + settingName.replace(/[.*+?^\${}()|[\\]\\\\]/g, '\\\\\\$&') + ':\\\\s*(.+)', 'i');
@@ -1123,6 +1175,9 @@ function readSetting(card, settingName, defaultValue) {
   return raw;
 }
 
+// Reads all recognized settings from the Chronos Settings story card
+// and writes them into state.chronos.config so the system uses the latest values.
+// @param {Object} card - The Chronos Settings story card.
 function syncSettingsFromCard(card) {
   if (!card) return;
   const c = state.chronos.config;
@@ -1137,6 +1192,9 @@ function syncSettingsFromCard(card) {
   c.wakeHour = readSetting(card, 'Wake Hour', c.wakeHour);
 }
 
+// Writes the current in-game time and date back into the settings card
+// so the player can see the live clock when they open it.
+// @param {Object} card - The Chronos Settings story card.
 function syncTimeToCard(card) {
   if (!card || !card.entry) return;
   const timeStr = getTimeString();
@@ -1149,7 +1207,10 @@ function syncTimeToCard(card) {
 // ============================================
 // DATE ENGINE
 // ============================================
+// Calendar math: months, weekdays, leap years, seasons, and date formatting.
 
+// Returns the active month definitions, substituting custom names if configured.
+// @returns {Array<{name: string, days: number}>} 12-element month array.
 function getMonths() {
   const custom = state.chronos.config.customMonths;
   if (custom) {
@@ -1158,15 +1219,24 @@ function getMonths() {
   return DEFAULT_MONTHS;
 }
 
+// Returns the active weekday names, using custom names if configured.
+// @returns {string[]} Array of weekday names.
 function getWeekdays() {
   const custom = state.chronos.config.customWeekdays;
   return custom || DEFAULT_WEEKDAYS;
 }
 
+// Determines whether a given year is a leap year (Gregorian rules).
+// @param {number} y - The year to test.
+// @returns {boolean} True if the year is a leap year.
 function isLeapYear(y) {
   return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
 }
 
+// Returns the number of days in a given month, accounting for leap years in February.
+// @param {number} month - 1-indexed month (1 = January).
+// @param {number} year  - The year (needed for leap-year check).
+// @returns {number} Number of days in the month.
 function getDaysInMonth(month, year) {
   const months = getMonths();
   const idx = ((month - 1) % 12 + 12) % 12;
@@ -1177,6 +1247,9 @@ function getDaysInMonth(month, year) {
   return days;
 }
 
+// Looks up which season a month belongs to.
+// @param {number} month - 1-indexed month number.
+// @returns {{name: string, months: number[]}} The matching season object.
 function getSeason(month) {
   for (const s of SEASONS) {
     if (s.months.includes(month)) return s;
@@ -1184,6 +1257,11 @@ function getSeason(month) {
   return SEASONS[0];
 }
 
+// Calculates the ordinal day-of-year (1-indexed) for a given date.
+// @param {number} day   - Day of the month.
+// @param {number} month - 1-indexed month.
+// @param {number} year  - The year.
+// @returns {number} Day-of-year (e.g. Feb 1 = 32).
 function getDayOfYear(day, month, year) {
   let total = 0;
   for (let m = 1; m < month; m++) {
@@ -1192,25 +1270,42 @@ function getDayOfYear(day, month, year) {
   return total + day;
 }
 
+// Converts a date into an absolute day count from a fixed epoch.
+// Used to compute weekday indices via modular arithmetic.
+// @param {number} day   - Day of the month.
+// @param {number} month - 1-indexed month.
+// @param {number} year  - The year.
+// @returns {number} Absolute day number.
 function getAbsoluteDay(day, month, year) {
   const y = year - 1;
   const yearDays = 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400);
   return yearDays + getDayOfYear(day, month, year) - 1;
 }
 
+// Computes the weekday index for a given date (0 = first weekday in the list).
+// @param {number} day   - Day of the month.
+// @param {number} month - 1-indexed month.
+// @param {number} year  - The year.
+// @returns {number} Index into the weekday array.
 function getWeekdayIndex(day, month, year) {
   return getAbsoluteDay(day, month, year) % getWeekdays().length;
 }
 
+// Returns the weekday name for the current in-game date.
+// @returns {string} e.g. 'Monday'.
 function getWeekday() {
   const s = state.chronos;
   return getWeekdays()[getWeekdayIndex(s.day, s.month, s.year)];
 }
 
+// Returns the name of the current in-game month.
+// @returns {string} e.g. 'June'.
 function getMonthName() {
   return getMonths()[(state.chronos.month - 1) % 12].name;
 }
 
+// Formats the current in-game date as a human-readable string.
+// @returns {string} e.g. 'June 1, 2026'.
 function getDateString() {
   const s = state.chronos;
   return getMonthName() + ' ' + s.day + ', ' + s.year;
@@ -1219,7 +1314,11 @@ function getDateString() {
 // ============================================
 // TIME ENGINE
 // ============================================
+// Core clock logic: time periods, formatting, advancement, and retry detection.
 
+// Returns the time-of-day period (Midnight, Dawn, Morning, etc.) for a given hour.
+// @param {number} hour - Hour in 24-hour format (0-23).
+// @returns {{name: string, icon: string, start: number, end: number}} The matching period.
 function getTimePeriod(hour) {
   for (const p of TIME_PERIODS) {
     if (hour >= p.start && hour < p.end) return p;
@@ -1227,6 +1326,9 @@ function getTimePeriod(hour) {
   return TIME_PERIODS[0];
 }
 
+// Formats the current in-game time as a display string.
+// Respects the 12-hour / 24-hour format setting.
+// @returns {string} e.g. '7:00 AM' or '07:00'.
 function getTimeString() {
   const h = state.chronos.hour;
   const m = state.chronos.minute;
@@ -1238,6 +1340,9 @@ function getTimeString() {
   return \`\${String(h).padStart(2, '0')}:\${String(m).padStart(2, '0')}\`;
 }
 
+// Advances the in-game clock by the given number of minutes.
+// Handles minute/hour overflow and rolls over days, months, and years as needed.
+// @param {number} minutes - Number of minutes to advance.
 function advanceTime(minutes) {
   const s = state.chronos;
   const totalMinutes = s.minute + minutes;
@@ -1255,6 +1360,9 @@ function advanceTime(minutes) {
   }
 }
 
+// Detects whether the current turn is a retry (player hit "retry" on the same action).
+// Prevents double-advancing time on retried turns.
+// @returns {boolean} True if the action count has not changed since the last turn.
 function isRetry() {
   return (info.actionCount || 0) === state.chronos.lastActionCount;
 }
@@ -1262,12 +1370,20 @@ function isRetry() {
 // ============================================
 // TIME ADJUSTMENT FUNCTIONS
 // ============================================
+// Direct setters for time and date, plus sleep and bulk-advance helpers.
 
+// Sets the in-game clock to an exact hour and minute (no date change).
+// @param {number} hour   - Hour (0-23; values >= 24 wrap via modulo).
+// @param {number} minute - Minute (0-59; values >= 60 wrap via modulo).
 function setTimeTo(hour, minute) {
   state.chronos.hour = hour % 24;
   state.chronos.minute = (minute || 0) % 60;
 }
 
+// Sets the in-game date, clamping each component to valid ranges.
+// @param {number} day   - Day of the month (clamped to month's max).
+// @param {number} month - Month (1-12).
+// @param {number} year  - Year (minimum 1).
 function setDateTo(day, month, year) {
   const s = state.chronos;
   s.year = Math.max(1, year);
@@ -1276,6 +1392,10 @@ function setDateTo(day, month, year) {
   s.day = Math.max(1, Math.min(maxDay, day));
 }
 
+// Advances time forward to the configured wake hour (next morning).
+// If already within the "morning window" (wakeHour to wakeHour+4), returns false.
+// Simulates weather rolls proportionally during the skipped time.
+// @returns {boolean} True if time was advanced, false if already morning.
 function skipToMorning() {
   const s = state.chronos;
   const wakeHour = s.config.wakeHour || 7;
@@ -1304,6 +1424,11 @@ function skipToMorning() {
   return true;
 }
 
+// Advances time by an arbitrary amount and unit (e.g. 3 hours, 2 days).
+// Validates the unit, simulates weather during the skip, then returns a status message.
+// @param {number} amount - How many units to advance.
+// @param {string} unit   - Time unit keyword (e.g. 'hours', 'days').
+// @returns {{output: string, isCommand: boolean}} Result message for display.
 function handleAdvanceTime(amount, unit) {
   const unitLower = unit.toLowerCase();
   const minutesPerUnit = UNIT_TO_MINUTES[unitLower];
@@ -1336,12 +1461,19 @@ function handleAdvanceTime(amount, unit) {
 // ============================================
 // WEATHER SYSTEM
 // ============================================
+// Season-aware weather with Markov-chain transitions and smooth temperature drift.
 
+// Checks whether enough turns have passed since the last weather change
+// to allow a new transition (based on the weatherChangeCooldown setting).
+// @returns {boolean} True if a weather roll should occur this turn.
 function shouldChangeWeather() {
   const turnsSinceLast = (info.actionCount || 0) - (state.chronos.weather.lastChange || 0);
   return turnsSinceLast >= state.chronos.config.weatherChangeCooldown;
 }
 
+// Performs a weighted-random weather transition using the Markov-chain table.
+// Picks the next condition based on the current condition and season,
+// then resets the cooldown timer and recalculates the temperature target.
 function rollWeather() {
   const season = getSeason(state.chronos.month).name;
   const current = state.chronos.weather.current;
@@ -1367,6 +1499,9 @@ function rollWeather() {
   state.chronos.weather.targetTemp = calcTargetTemp();
 }
 
+// Calculates a new target temperature based on season, weather condition, and time of day.
+// A random base value is picked from the season's range, then shifted by weather and hour modifiers.
+// @returns {number} The target temperature in Fahrenheit (rounded).
 function calcTargetTemp() {
   const season = getSeason(state.chronos.month).name;
   const range = SEASON_TEMPS[season] || SEASON_TEMPS.Spring;
@@ -1389,6 +1524,8 @@ function calcTargetTemp() {
   return Math.round(baseTemp + modifier);
 }
 
+// Smoothly drifts the displayed temperature toward the current target.
+// Uses a 30% step each turn so changes feel gradual rather than instant.
 function updateTemperature() {
   const w = state.chronos.weather;
   if (w.targetTemp === null) {
@@ -1404,6 +1541,9 @@ function updateTemperature() {
   }
 }
 
+// Builds a human-readable weather string with icon, label, and temperature.
+// Converts to Celsius if the temperatureUnit setting is 'C'.
+// @returns {string} e.g. '\\u2600\\ufe0f Clear skies (72\\u00b0F)'.
 function getWeatherDisplay() {
   const w = state.chronos.weather;
   const cond = WEATHER_CONDITIONS[w.current];
@@ -1420,7 +1560,11 @@ function getWeatherDisplay() {
 // ============================================
 // CONTEXT BUILDING
 // ============================================
+// Produces the bracket-wrapped environment string injected into the AI's context window.
 
+// Builds the context-injection string that the AI sees each turn.
+// Includes time, period, weekday, date, and optionally weather.
+// @returns {string} e.g. '[Time: 7:00 AM (Morning), Monday, June 1, 2026 | Weather: \u2600\ufe0f Clear skies (72\u00b0F)]'.
 function getTimeContext() {
   const s = state.chronos;
   const period = getTimePeriod(s.hour);
@@ -1435,8 +1579,12 @@ function getTimeContext() {
 // ============================================
 // COMMAND HANDLER (Registry Pattern)
 // ============================================
+// Each key is a command name (e.g. 'time', 'advance', 'sleep').
+// The value is a handler function(args) that returns { output, isCommand } or null on bad args.
+// null signals invalid arguments so the dispatcher can show a usage hint.
 
 const CHRONOS_COMMANDS = {
+  // :time - Displays current time, period, date, turn count, and weather (if enabled).
   time: function () {
     const s = state.chronos;
     const period = getTimePeriod(s.hour);
@@ -1448,6 +1596,7 @@ const CHRONOS_COMMANDS = {
     return { output: out, isCommand: true };
   },
 
+  // :date - Shows the current date and season.
   date: function () {
     const s = state.chronos;
     const season = getSeason(s.month);
@@ -1456,12 +1605,14 @@ const CHRONOS_COMMANDS = {
     return { output: out, isCommand: true };
   },
 
+  // :advance <N> <unit> - Jumps time forward by the specified amount (e.g. :advance 3 hours).
   advance: function (args) {
     const m = args.match(/^(\\d+)\\s+(\\w+)$/);
     if (!m) return null;
     return handleAdvanceTime(parseInt(m[1]), m[2]);
   },
 
+  // :sleep - Fast-forwards to the configured wake hour, simulating overnight weather.
   sleep: function () {
     if (!skipToMorning()) {
       return { output: '\\nYou are already up. It is morning.', isCommand: true };
@@ -1474,6 +1625,7 @@ const CHRONOS_COMMANDS = {
     return { output: out, isCommand: true };
   },
 
+  // :settime <HH:MM> - Sets the clock to an exact time (e.g. :settime 14:30).
   settime: function (args) {
     const m = args.match(/^(\\d{1,2})(?::(\\d{2}))?$/);
     if (!m) return null;
@@ -1487,6 +1639,7 @@ const CHRONOS_COMMANDS = {
     };
   },
 
+  // :setdate <day> <month> <year> - Sets the calendar date directly.
   setdate: function (args) {
     const m = args.match(/^(\\d+)\\s+(\\d+)\\s+(\\d+)$/);
     if (!m) return null;
@@ -1506,6 +1659,7 @@ const CHRONOS_COMMANDS = {
     };
   },
 
+  // :setweather <condition> - Overrides the current weather (e.g. :setweather rain).
   setweather: function (args) {
     if (!state.chronos.config.weatherEnabled) {
       return { output: '\\nWeather is disabled. Enable it in the Chronos Settings story card.', isCommand: true };
@@ -1522,6 +1676,7 @@ const CHRONOS_COMMANDS = {
     return { output: \`\\nWeather set to \${getWeatherDisplay()}\`, isCommand: true };
   },
 
+  // :weather - Displays the current weather condition, temperature, and season.
   weather: function () {
     if (!state.chronos.config.weatherEnabled) {
       return { output: '\\nWeather is disabled. Enable it in the Chronos Settings story card.', isCommand: true };
@@ -1534,18 +1689,21 @@ const CHRONOS_COMMANDS = {
     };
   },
 
+  // :timeskip <N> <unit> - Alias for :advance.
   timeskip: function (args) {
     const m = args.match(/^(\\d+)\\s+(\\w+)$/);
     if (!m) return null;
     return handleAdvanceTime(parseInt(m[1]), m[2]);
   },
 
+  // :skip <N> <unit> - Alias for :advance.
   skip: function (args) {
     const m = args.match(/^(\\d+)\\s+(\\w+)$/);
     if (!m) return null;
     return handleAdvanceTime(parseInt(m[1]), m[2]);
   },
 
+  // :pause - Suspends automatic time advancement until :resume is used.
   pause: function () {
     if (state.chronos.paused) {
       return { output: '\\nTime is already paused.', isCommand: true };
@@ -1554,6 +1712,7 @@ const CHRONOS_COMMANDS = {
     return { output: '\\nTime paused. Time will not advance until you use :resume.', isCommand: true };
   },
 
+  // :resume - Resumes automatic time advancement after a :pause.
   resume: function () {
     if (!state.chronos.paused) {
       return { output: '\\nTime is not currently paused.', isCommand: true };
@@ -1562,6 +1721,7 @@ const CHRONOS_COMMANDS = {
     return { output: '\\nTime resumed. Time will advance normally each turn.', isCommand: true };
   },
 
+  // :chronos [help|reset] - Shows full diagnostic status, help text, or resets all state.
   chronos: function (args) {
     const sub = args.trim().toLowerCase();
 
@@ -1607,6 +1767,10 @@ const CHRONOS_COMMANDS = {
   }
 };
 
+// Parses a command line (":command args") and dispatches to CHRONOS_COMMANDS.
+// Returns null when the input is not a Chronos command.
+// @param {string} input - Full player input line.
+// @returns {{output: string, isCommand: boolean}|null} Command result or null when not a command.
 function handleChronosCommand(input) {
   const trimmed = input.trim();
   const parsed = trimmed.match(/^:(\\w+)(?:\\s+(.*))?$/);
@@ -1622,11 +1786,23 @@ function handleChronosCommand(input) {
       context: `// ============================================
 // CONTEXT MODIFIER - Chronos Time System
 // ============================================
+// Paste into: Context Modifier
+//
+// Responsibilities:
+// - Ensure the Chronos Settings/Commands story cards exist
+// - Read settings from the Settings card (syncSettingsFromCard)
+// - Advance time once per non-retry turn (unless paused or command turn)
+// - Optionally roll weather + temperature drift
+// - Inject a "[Time: ...]" line into the AI's context window
+// - Strip BetterScripts protocol messages ([[BD:...:BD]]) so the AI never sees them
+//
+// Requires: the Chronos Library file (functions + state initialization).
 
 const modifier = (text) => {
   const settingsCard = findCard('Chronos Settings', true, SETTINGS_CARD_ENTRY, SETTINGS_CARD_DESCRIPTION);
   syncSettingsFromCard(settingsCard);
 
+  // Ensure the Commands card exists as an in-game reference.
   const commandsCard = findCard('Chronos Commands', true, COMMANDS_CARD_ENTRY);
 
   if (!state.chronos.config.enabled) return { text };
@@ -1644,6 +1820,8 @@ const modifier = (text) => {
     state.chronos.weather.temperature = state.chronos.weather.targetTemp;
   }
 
+  // Advance time once per turn.
+  // Skips retries (so time doesn't double-advance), command turns, and paused state.
   if (!isRetry() && !state.chronos.isCommand && !state.chronos.paused) {
     advanceTime(state.chronos.config.minutesPerTurn);
 
@@ -1658,11 +1836,13 @@ const modifier = (text) => {
 
   syncTimeToCard(settingsCard);
 
+  // Strip BetterScripts protocol messages from the text before injecting into AI context.
   text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
 
   const contextMemory = info.memoryLength ? text.slice(0, info.memoryLength) : '';
   let context = info.memoryLength ? text.slice(info.memoryLength) : text;
 
+  // Remove previously injected output headers so the AI doesn't see repeated time banners.
   context = context.replace(/\\[\\S+ \\d{1,2}:\\d{2}(?: [AP]M)? - (?:Midnight|Dawn|Morning|Afternoon|Evening|Night)\\]\\n?/g, '');
 
   const envContext = getTimeContext();
@@ -1678,9 +1858,16 @@ modifier(text);`,
       input: `// ============================================
 // INPUT MODIFIER - Chronos Time System
 // ============================================
+// Paste into: Input Modifier
+//
 // Use Story mode to type commands (e.g. :time, :advance 3 hours).
-// Input is cleared so the turn acts like a Continue.
-// Avoids stop:true which can cause errors/freezing.
+// When a command is detected:
+// - The command is parsed + executed in the library (handleChronosCommand)
+// - The result is stored in state.chronos.pendingOutput
+// - The input text is replaced with a single space so the turn acts like a Continue
+//
+// Avoids stop:true (which can cause freezing/soft-locks in some scenarios).
+// Requires: the Chronos Library file (state.chronos + handleChronosCommand).
 
 const modifier = (text) => {
   state.chronos.isCommand = false;
@@ -1692,6 +1879,8 @@ const modifier = (text) => {
     if (result) {
       state.chronos.pendingOutput = result.output;
       state.chronos.isCommand = true;
+      // Use a single space instead of an empty string to avoid edge cases where
+      // an empty input can behave inconsistently across scenarios.
       return { text: ' ' };
     }
   }
@@ -1704,6 +1893,17 @@ modifier(text);`,
       output: `// ============================================
 // OUTPUT MODIFIER - Chronos Time System
 // ============================================
+// Paste into: Output Modifier
+//
+// Two display modes:
+// - Text header (default): prepends a one-line time header to normal story output
+// - BetterScripts widgets: emits [[BD:...:BD]] messages to render widgets in BetterDungeon
+//
+// Command turns:
+// - If state.chronos.pendingOutput is set, this replaces the AI output for that turn
+// - Also sets state.message so the player gets an info popup
+//
+// Requires: the Chronos Library file.
 
 const modifier = (text) => {
   if (!state.chronos.config.enabled) return { text };
