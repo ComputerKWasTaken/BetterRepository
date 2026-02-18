@@ -664,18 +664,12 @@ modifier(text);</pre>
                 </span>
               </div>
             </div>
-            <div class="grid md:grid-cols-2 gap-3">
-              <a href="https://github.com/latitudegames/Scripting" target="_blank" class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle hover:border-bd-accent-primary/50 transition-colors">
+            <div class="grid gap-3">
+              <a href="https://help.aidungeon.com/scripting" target="_blank" class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle hover:border-bd-accent-primary/50 transition-colors">
                 <h4 class="text-xs font-semibold text-bd-text-primary flex items-center gap-1.5">
                   <FileCode class="w-3 h-3 text-bd-accent-primary" /> Official Documentation
                 </h4>
                 <p class="text-xs text-bd-text-muted mt-1">Latitude's scripting repository and examples</p>
-              </a>
-              <a href="https://docs.google.com/document/d/1DV6b0K-a5mTBpO1-ZbMSaXFOJxGi5MnNnHQCHF0c-DQ" target="_blank" class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle hover:border-bd-accent-primary/50 transition-colors">
-                <h4 class="text-xs font-semibold text-bd-text-primary flex items-center gap-1.5">
-                  <BookOpen class="w-3 h-3 text-bd-blue" /> Scripting Guidebook
-                </h4>
-                <p class="text-xs text-bd-text-muted mt-1">Comprehensive community scripting guide</p>
               </a>
             </div>
             <div class="flex flex-wrap gap-2">
