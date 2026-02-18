@@ -1563,12 +1563,13 @@ function getWeatherDisplay() {
 // Produces the bracket-wrapped environment string injected into the AI's context window.
 
 // Builds the context-injection string that the AI sees each turn.
-// Includes time, period, weekday, date, and optionally weather.
-// @returns {string} e.g. '[Time: 7:00 AM (Morning), Monday, June 1, 2026 | Weather: \u2600\ufe0f Clear skies (72\u00b0F)]'.
+// Includes time, period, weekday, date, season, and optionally weather.
+// @returns {string} e.g. '[Time: 7:00 AM (Morning), Monday, June 1, 2026 | Season: Summer | Weather: \u2600\ufe0f Clear skies (72\u00b0F)]'.
 function getTimeContext() {
   const s = state.chronos;
   const period = getTimePeriod(s.hour);
-  let ctx = '[Time: ' + getTimeString() + ' (' + period.name + '), ' + getWeekday() + ', ' + getDateString();
+  const season = getSeason(s.month);
+  let ctx = '[Time: ' + getTimeString() + ' (' + period.name + '), ' + getWeekday() + ', ' + getDateString() + ' | Season: ' + season.name;
   if (s.config.weatherEnabled) {
     ctx += ' | Weather: ' + getWeatherDisplay();
   }
@@ -1843,7 +1844,9 @@ const modifier = (text) => {
   let context = info.memoryLength ? text.slice(info.memoryLength) : text;
 
   // Remove previously injected output headers so the AI doesn't see repeated time banners.
-  context = context.replace(/\\[\\S+ \\d{1,2}:\\d{2}(?: [AP]M)? - (?:Midnight|Dawn|Morning|Afternoon|Evening|Night)\\]\\n?/g, '');
+  // Matches the output modifier's format: [<icon> <time> | <weekday>, <month> <day> ...]
+  // The \\| after the time distinguishes these from the [Time: ...] context line (which uses parentheses).
+  context = context.replace(/\\[\\S+ \\d{1,2}:\\d{2}(?: [AP]M)? \\|[^\\]]+\\]\\n?/g, '');
 
   const envContext = getTimeContext();
   context = envContext + '\\n' + context;
