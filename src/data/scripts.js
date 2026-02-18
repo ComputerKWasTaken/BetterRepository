@@ -877,7 +877,7 @@ modifier(text);`
     tags: ['widgets', 'time', 'clock', 'day-night', 'weather', 'betterscripts', 'context', 'commands'],
     source: 'BetterRepository',
     description: 'Day/night cycle with time periods, weekday tracking, weather, and time commands.',
-    purpose: 'Configurable time pacing. Time and weather injected into AI context. Settings and commands organized by category in Story Cards. Commands: :time, :date, :advance, :sleep, :settime, :setdate, :setweather, :weather, :chronos, :chronos help, :chronos reset, :timeskip/:skip.',
+    purpose: 'Configurable time pacing. Time and weather injected into AI context. Settings and commands organized by category in Story Cards. Commands: :time, :date, :advance, :sleep, :settime, :setdate, :setweather, :weather, :chronos, :chronos help, :chronos reset, :timeskip/:skip, :pause, :resume.',
     requiresExtension: 'BetterDungeon',
     files: {
       library: `// ============================================
@@ -932,7 +932,8 @@ state.chronos = state.chronos ?? {
     targetTemp: null
   },
   lastActionCount: -1,
-  initialized: false
+  initialized: false,
+  paused: false
 };
 
 // ============================================
@@ -1545,6 +1546,22 @@ const CHRONOS_COMMANDS = {
     return handleAdvanceTime(parseInt(m[1]), m[2]);
   },
 
+  pause: function () {
+    if (state.chronos.paused) {
+      return { output: '\\nTime is already paused.', isCommand: true };
+    }
+    state.chronos.paused = true;
+    return { output: '\\nTime paused. Time will not advance until you use :resume.', isCommand: true };
+  },
+
+  resume: function () {
+    if (!state.chronos.paused) {
+      return { output: '\\nTime is not currently paused.', isCommand: true };
+    }
+    state.chronos.paused = false;
+    return { output: '\\nTime resumed. Time will advance normally each turn.', isCommand: true };
+  },
+
   chronos: function (args) {
     const sub = args.trim().toLowerCase();
 
@@ -1625,7 +1642,7 @@ const modifier = (text) => {
     state.chronos.weather.temperature = state.chronos.weather.targetTemp;
   }
 
-  if (!isRetry() && !state.chronos.isCommand) {
+  if (!isRetry() && !state.chronos.isCommand && !state.chronos.paused) {
     advanceTime(state.chronos.config.minutesPerTurn);
 
     if (state.chronos.config.weatherEnabled && shouldChangeWeather()) {
