@@ -1577,7 +1577,8 @@ const CHRONOS_COMMANDS = {
       state.chronos.year = 1;
       state.chronos.weather = { current: 'clear', temperature: 70, lastChange: 0, targetTemp: null };
       state.chronos.initialized = false;
-      return { output: '\\nChronos has been reset to defaults.', isCommand: true };
+      state.chronos.paused = false;
+      return { output: '\nChronos has been reset to defaults.', isCommand: true };
     }
 
     if (sub === '') {
