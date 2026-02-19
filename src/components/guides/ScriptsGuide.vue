@@ -689,6 +689,56 @@ modifier(text);</pre>
                 </p>
               </div>
             </div>
+
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                <FileCode class="w-4 h-4 text-bd-accent-primary" />
+                Relationship to the Official API
+              </h3>
+              <p class="text-sm text-bd-text-secondary mb-3">
+                The <a href="https://help.aidungeon.com/scripting" target="_blank" class="text-bd-accent-primary hover:underline">official AI Dungeon scripting docs</a>
+                describe a <code class="text-bd-green">modifier(text)</code> pattern where each non-Library script defines a
+                <code class="text-bd-green">const modifier = (text) =&gt; { ... return { text }; };</code> function and ends with
+                <code class="text-bd-green">modifier(text);</code> as the last line.
+              </p>
+              <p class="text-sm text-bd-text-secondary mb-3">
+                The library-centric hook pattern is a <strong>community-evolved alternative</strong> used by experienced scripters.
+                Instead of returning <code class="text-bd-green">{ text }</code> from a modifier function, it assigns directly to
+                <code class="text-bd-green">globalThis.text</code> inside the library. AI Dungeon's runtime reads
+                <code class="text-bd-green">globalThis.text</code> after each script executes, so both approaches achieve the same result.
+                Similarly, <code class="text-bd-green">globalThis.stop = true</code> works the same as returning
+                <code class="text-bd-green">{ stop: true }</code>.
+              </p>
+              <div class="grid md:grid-cols-2 gap-3">
+                <div class="p-3 rounded bg-bd-bg-tertiary">
+                  <h4 class="text-xs font-semibold text-bd-text-muted mb-2">Official modifier pattern</h4>
+                  <div class="font-mono text-xs text-bd-text-secondary">
+                    <pre><span class="text-bd-purple">const</span> <span class="text-bd-cyan">modifier</span> = (<span class="text-bd-amber">text</span>) =&gt; {
+  <span class="text-bd-purple">let</span> modified = text;
+  <span class="text-bd-text-muted">// ... logic ...</span>
+  <span class="text-bd-purple">return</span> { <span class="text-bd-amber">text</span>: modified };
+};
+<span class="text-bd-cyan">modifier</span>(text);</pre>
+                  </div>
+                </div>
+                <div class="p-3 rounded bg-bd-bg-tertiary">
+                  <h4 class="text-xs font-semibold text-bd-text-muted mb-2">Hook pattern (globalThis)</h4>
+                  <div class="font-mono text-xs text-bd-text-secondary">
+                    <pre><span class="text-bd-text-muted">// All logic lives in library</span>
+<span class="text-bd-cyan">MyScript</span>(<span class="text-bd-green">"context"</span>);
+<span class="text-bd-text-muted">// Library sets globalThis.text</span>
+<span class="text-bd-text-muted">// directly — same end result</span></pre>
+                  </div>
+                </div>
+              </div>
+              <p class="text-xs text-bd-text-muted mt-3">
+                Both patterns use the same underlying API params (<code class="text-bd-green">text</code>, <code class="text-bd-green">state</code>,
+                <code class="text-bd-green">history</code>, <code class="text-bd-green">storyCards</code>, <code class="text-bd-green">info</code>)
+                and functions (<code class="text-bd-green">log</code>, <code class="text-bd-green">addStoryCard</code>,
+                <code class="text-bd-green">removeStoryCard</code>, <code class="text-bd-green">updateStoryCard</code>).
+                The hook pattern simply consolidates where the logic lives.
+              </p>
+            </div>
           </div>
         </Transition>
       </section>
