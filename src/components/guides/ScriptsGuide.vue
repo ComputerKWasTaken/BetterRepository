@@ -640,7 +640,11 @@ modifier(text);</pre>
                   Input File
                 </h4>
                 <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
-                  <pre><span class="text-bd-cyan">MyScript</span>(<span class="text-bd-green">"input"</span>);</pre>
+                  <pre><span class="text-bd-purple">const</span> <span class="text-bd-cyan">modifier</span> = (<span class="text-bd-amber">text</span>) =&gt; {
+  <span class="text-bd-cyan">MyScript</span>(<span class="text-bd-green">"input"</span>);
+  <span class="text-bd-purple">return</span> { <span class="text-bd-amber">text</span>: globalThis.text };
+};
+<span class="text-bd-cyan">modifier</span>(text);</pre>
                 </div>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
@@ -649,7 +653,11 @@ modifier(text);</pre>
                   Context File
                 </h4>
                 <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
-                  <pre><span class="text-bd-cyan">MyScript</span>(<span class="text-bd-green">"context"</span>);</pre>
+                  <pre><span class="text-bd-purple">const</span> <span class="text-bd-cyan">modifier</span> = (<span class="text-bd-amber">text</span>) =&gt; {
+  <span class="text-bd-cyan">MyScript</span>(<span class="text-bd-green">"context"</span>);
+  <span class="text-bd-purple">return</span> { <span class="text-bd-amber">text</span>: globalThis.text };
+};
+<span class="text-bd-cyan">modifier</span>(text);</pre>
                 </div>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
@@ -658,7 +666,11 @@ modifier(text);</pre>
                   Output File
                 </h4>
                 <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
-                  <pre><span class="text-bd-cyan">MyScript</span>(<span class="text-bd-green">"output"</span>);</pre>
+                  <pre><span class="text-bd-purple">const</span> <span class="text-bd-cyan">modifier</span> = (<span class="text-bd-amber">text</span>) =&gt; {
+  <span class="text-bd-cyan">MyScript</span>(<span class="text-bd-green">"output"</span>);
+  <span class="text-bd-purple">return</span> { <span class="text-bd-amber">text</span>: globalThis.text };
+};
+<span class="text-bd-cyan">modifier</span>(text);</pre>
                 </div>
               </div>
             </div>
@@ -674,8 +686,12 @@ modifier(text);</pre>
               </p>
               <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
                 <pre><span class="text-bd-text-muted">// Input file - run both scripts</span>
-<span class="text-bd-cyan">Chronos</span>(<span class="text-bd-green">"input"</span>);
-<span class="text-bd-cyan">InnerSelf</span>(<span class="text-bd-green">"input"</span>);</pre>
+<span class="text-bd-purple">const</span> <span class="text-bd-cyan">modifier</span> = (<span class="text-bd-amber">text</span>) =&gt; {
+  <span class="text-bd-cyan">Chronos</span>(<span class="text-bd-green">"input"</span>);
+  <span class="text-bd-cyan">InnerSelf</span>(<span class="text-bd-green">"input"</span>);
+  <span class="text-bd-purple">return</span> { <span class="text-bd-amber">text</span>: globalThis.text };
+};
+<span class="text-bd-cyan">modifier</span>(text);</pre>
               </div>
             </div>
 
@@ -702,11 +718,12 @@ modifier(text);</pre>
                 <code class="text-bd-green">modifier(text);</code> as the last line.
               </p>
               <p class="text-sm text-bd-text-secondary mb-3">
-                The library-centric hook pattern is a <strong>community-evolved alternative</strong> used by experienced scripters.
-                Instead of returning <code class="text-bd-green">{ text }</code> from a modifier function, it assigns directly to
-                <code class="text-bd-green">globalThis.text</code> inside the library. AI Dungeon's runtime reads
-                <code class="text-bd-green">globalThis.text</code> after each script executes, so both approaches achieve the same result.
-                Similarly, <code class="text-bd-green">globalThis.stop = true</code> works the same as returning
+                The library-centric hook pattern <strong>still uses the modifier wrapper</strong> in lifecycle files for compatibility,
+                but all actual logic lives inside the library function. The modifier delegates to the library and returns
+                <code class="text-bd-green">{ text: globalThis.text }</code>. Inside the library, code assigns directly to
+                <code class="text-bd-green">globalThis.text</code> rather than returning <code class="text-bd-green">{ text }</code> &mdash;
+                AI Dungeon's runtime reads <code class="text-bd-green">globalThis.text</code> after each script executes, so both approaches
+                achieve the same result. Similarly, <code class="text-bd-green">globalThis.stop = true</code> works the same as returning
                 <code class="text-bd-green">{ stop: true }</code>.
               </p>
               <div class="grid md:grid-cols-2 gap-3">
@@ -722,12 +739,13 @@ modifier(text);</pre>
                   </div>
                 </div>
                 <div class="p-3 rounded bg-bd-bg-tertiary">
-                  <h4 class="text-xs font-semibold text-bd-text-muted mb-2">Hook pattern (globalThis)</h4>
+                  <h4 class="text-xs font-semibold text-bd-text-muted mb-2">Hook pattern (modifier + library)</h4>
                   <div class="font-mono text-xs text-bd-text-secondary">
-                    <pre><span class="text-bd-text-muted">// All logic lives in library</span>
-<span class="text-bd-cyan">MyScript</span>(<span class="text-bd-green">"context"</span>);
-<span class="text-bd-text-muted">// Library sets globalThis.text</span>
-<span class="text-bd-text-muted">// directly — same end result</span></pre>
+                    <pre><span class="text-bd-purple">const</span> <span class="text-bd-cyan">modifier</span> = (<span class="text-bd-amber">text</span>) =&gt; {
+  <span class="text-bd-cyan">MyScript</span>(<span class="text-bd-green">"context"</span>);
+  <span class="text-bd-purple">return</span> { <span class="text-bd-amber">text</span>: globalThis.text };
+};
+<span class="text-bd-cyan">modifier</span>(text);</pre>
                   </div>
                 </div>
               </div>

@@ -1963,9 +1963,9 @@ if (hook === "output") {
 }
 
 };`,
-      input: `Chronos("input");`,
-      context: `Chronos("context");`,
-      output: `Chronos("output");`
+      input: `const modifier = (text) => { Chronos("input"); return { text: globalThis.text }; }; modifier(text);`,
+      context: `const modifier = (text) => { Chronos("context"); return { text: globalThis.text }; }; modifier(text);`,
+      output: `const modifier = (text) => { Chronos("output"); return { text: globalThis.text }; }; modifier(text);`
     }
   },
   {
