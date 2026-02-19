@@ -880,11 +880,16 @@ modifier(text);`
     purpose: 'Configurable time pacing. Time and weather injected into AI context. Settings and commands organized by category in Story Cards. Commands: :time, :date, :advance, :sleep, :settime, :setdate, :setweather, :weather, :chronos, :chronos help, :chronos reset, :timeskip/:skip, :pause, :resume.',
     requiresExtension: 'BetterDungeon',
     files: {
-      library: `// ============================================
+      library: `globalThis.Chronos = function Chronos(hook) {
+"use strict";
+
+// ============================================
 // LIBRARY - Chronos: In-Game Time System
 // ============================================
 // Direct-tracking time system for AI Dungeon.
 // All time state is stored in state.chronos and advanced each turn.
+// Uses the library-centric hook pattern: all logic lives here,
+// and each lifecycle file just calls Chronos("input"/"context"/"output").
 //
 // Features:
 // - Configurable time pacing (minutes per turn)
@@ -901,6 +906,8 @@ modifier(text);`
 //   Weather: :setweather
 //   System: :chronos help, :chronos reset
 //   Aliases: :timeskip/:skip
+
+if (!globalThis.state || typeof state !== "object") return;
 
 // ============================================
 // STATE INITIALIZATION
@@ -1774,30 +1781,44 @@ function handleChronosCommand(input) {
   const result = handler(args);
   if (!result) return { output: '\\nInvalid arguments for :' + cmdName + '. Type :chronos help for usage.', isCommand: true };
   return result;
-}`,
-      context: `// ============================================
-// CONTEXT MODIFIER - Chronos Time System
-// ============================================
-// Paste into: Context Modifier
-//
-// Responsibilities:
-// - Ensure the Chronos Settings/Commands story cards exist
-// - Read settings from the Settings card (syncSettingsFromCard)
-// - Advance time once per non-retry turn (unless paused or command turn)
-// - Optionally roll weather + temperature drift
-// - Inject a "[Time: ...]" line into the AI's context window
-// - Strip BetterScripts protocol messages ([[BD:...:BD]]) so the AI never sees them
-//
-// Requires: the Chronos Library file (functions + state initialization).
+}
 
-const modifier = (text) => {
+// ============================================
+// HOOK: INPUT
+// ============================================
+if (hook === "input") {
+  state.chronos.isCommand = false;
+
+  const trimmed = text.trim();
+
+  if (trimmed.startsWith(':')) {
+    const result = handleChronosCommand(trimmed);
+    if (result) {
+      state.chronos.pendingOutput = result.output;
+      state.chronos.isCommand = true;
+      // Use a single space instead of an empty string to avoid edge cases where
+      // an empty input can behave inconsistently across scenarios.
+      globalThis.text = ' ';
+      return;
+    }
+  }
+
+  delete state.message;
+  return;
+
+}
+
+// ============================================
+// HOOK: CONTEXT
+// ============================================
+if (hook === "context") {
   const settingsCard = findCard('Chronos Settings', true, SETTINGS_CARD_ENTRY, SETTINGS_CARD_DESCRIPTION);
   syncSettingsFromCard(settingsCard);
 
   // Ensure the Commands card exists as an in-game reference.
   const commandsCard = findCard('Chronos Commands', true, COMMANDS_CARD_ENTRY);
 
-  if (!state.chronos.config.enabled) return { text };
+  if (!state.chronos.config.enabled) return;
 
   if (!state.chronos.initialized) {
     state.chronos.initialized = true;
@@ -1829,6 +1850,7 @@ const modifier = (text) => {
   syncTimeToCard(settingsCard);
 
   // Strip BetterScripts protocol messages from the text before injecting into AI context.
+  let text = globalThis.text;
   text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
 
   const contextMemory = info.memoryLength ? text.slice(0, info.memoryLength) : '';
@@ -1845,64 +1867,18 @@ const modifier = (text) => {
   context = context.slice(-(info.maxChars - info.memoryLength));
   const finalText = contextMemory + context;
 
-  return { text: finalText };
-};
+  globalThis.text = finalText;
+  return;
 
-modifier(text);`,
-      input: `// ============================================
-// INPUT MODIFIER - Chronos Time System
+}
+
 // ============================================
-// Paste into: Input Modifier
-//
-// Use Story mode to type commands (e.g. :time, :advance 3 hours).
-// When a command is detected:
-// - The command is parsed + executed in the library (handleChronosCommand)
-// - The result is stored in state.chronos.pendingOutput
-// - The input text is replaced with a single space so the turn acts like a Continue
-//
-// Avoids stop:true (which can cause freezing/soft-locks in some scenarios).
-// Requires: the Chronos Library file (state.chronos + handleChronosCommand).
-
-const modifier = (text) => {
-  state.chronos.isCommand = false;
-
-  const trimmed = text.trim();
-
-  if (trimmed.startsWith(':')) {
-    const result = handleChronosCommand(trimmed);
-    if (result) {
-      state.chronos.pendingOutput = result.output;
-      state.chronos.isCommand = true;
-      // Use a single space instead of an empty string to avoid edge cases where
-      // an empty input can behave inconsistently across scenarios.
-      return { text: ' ' };
-    }
-  }
-
-  delete state.message;
-  return { text };
-};
-
-modifier(text);`,
-      output: `// ============================================
-// OUTPUT MODIFIER - Chronos Time System
+// HOOK: OUTPUT
 // ============================================
-// Paste into: Output Modifier
-//
-// Two display modes:
-// - Text header (default): prepends a one-line time header to normal story output
-// - BetterScripts widgets: emits [[BD:...:BD]] messages to render widgets in BetterDungeon
-//
-// Command turns:
-// - If state.chronos.pendingOutput is set, this replaces the AI output for that turn
-// - Also sets state.message so the player gets an info popup
-//
-// Requires: the Chronos Library file.
+if (hook === "output") {
+  if (!state.chronos.config.enabled) return;
 
-const modifier = (text) => {
-  if (!state.chronos.config.enabled) return { text };
-
-  let output = text;
+  let output = globalThis.text;
   let isCommandOutput = false;
 
   if (state.chronos.isCommand && state.chronos.pendingOutput) {
@@ -1933,7 +1909,8 @@ const modifier = (text) => {
       header += ']';
       output = header + '\\n' + output;
     }
-    return { text: output };
+    globalThis.text = output;
+    return;
   }
 
   const s = state.chronos;
@@ -1980,9 +1957,26 @@ const modifier = (text) => {
     }
   }
 
-  return { text: output + widgets };
-};
+  globalThis.text = output + widgets;
+  return;
 
+}
+
+};`,
+      input: `const modifier = (text) => {
+  Chronos("input");
+  return { text: globalThis.text };
+};
+modifier(text);`,
+      context: `const modifier = (text) => {
+  Chronos("context");
+  return { text: globalThis.text };
+};
+modifier(text);`,
+      output: `const modifier = (text) => {
+  Chronos("output");
+  return { text: globalThis.text };
+};
 modifier(text);`
     }
   },
