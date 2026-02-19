@@ -876,8 +876,8 @@ modifier(text);`
     essential: true,
     tags: ['widgets', 'time', 'clock', 'day-night', 'weather', 'betterscripts', 'context', 'commands'],
     source: 'BetterRepository',
-    description: 'Day/night cycle with time periods, weekday tracking, weather, and time commands.',
-    purpose: 'Configurable time pacing. Time and weather injected into AI context. Settings and commands organized by category in Story Cards. Commands: :time, :date, :advance, :sleep, :settime, :setdate, :setweather, :weather, :chronos, :chronos help, :chronos reset, :timeskip/:skip, :pause, :resume.',
+    description: 'An advanced, direct-tracking time and weather engine for AI Dungeon. Chronos features a 6-phase day/night cycle, accurate calendar tracking (including leap years), and dynamic, season-aware weather with realistic temperature drift.',
+    purpose: 'To keep the AI constantly aware of the current time, date, and environment. Players can configure time pacing through Story Cards and use a suite of in-game chat commands to manipulate the world (e.g., :time, :advance, :sleep, :weather).',
     requiresExtension: 'BetterDungeon',
     files: {
       library: `// ============================================
