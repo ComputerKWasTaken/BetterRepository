@@ -566,6 +566,133 @@ modifier(text);</pre>
         </Transition>
       </section>
 
+      <!-- Library-Centric Hook Pattern -->
+      <section id="guide-hook-pattern" class="card">
+        <button @click="toggleGuideSection('hook-pattern')" class="w-full flex items-center justify-between text-left">
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <GitMerge class="w-5 h-5 text-bd-emerald" />
+            Library-Centric Hook Pattern
+            <span class="tag bg-bd-emerald/20 text-bd-emerald text-xs">Recommended</span>
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('hook-pattern') }" />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('hook-pattern')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              Rather than splitting logic across separate script files, this pattern keeps <strong>all logic inside the Library file</strong>
+              within a single function on <code class="text-bd-green">globalThis</code>. Each lifecycle hook (Input, Context, Output) simply calls
+              that function with a <code class="text-bd-green">hook</code> parameter to control which behavior runs.
+            </p>
+            <div class="p-4 rounded-lg bg-bd-emerald/10 border border-bd-emerald/30">
+              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                <Check class="w-4 h-4 text-bd-emerald" />
+                Why Use This Pattern?
+              </h3>
+              <ul class="text-sm text-bd-text-secondary space-y-1">
+                <li>• <strong>Minimal script conflicts</strong> - All logic is self-contained in the Library, so other scripts can coexist without clashing</li>
+                <li>• <strong>Easy composability</strong> - To add another script (e.g. Inner Self), just paste its library function into your Library file and call it from each hook</li>
+                <li>• <strong>Single source of truth</strong> - No duplicated state or logic across files; everything lives in one place</li>
+                <li>• <strong>Clean lifecycle files</strong> - Input, Context, and Output files become one-liners</li>
+              </ul>
+            </div>
+
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
+              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                <Library class="w-4 h-4 text-bd-purple" />
+                Library File Structure
+              </h3>
+              <p class="text-xs text-bd-text-secondary mb-3">Define your script as a named function on <code class="text-bd-green">globalThis</code>, then branch on the <code class="text-bd-green">hook</code> parameter.</p>
+              <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
+                <pre><span class="text-bd-purple">globalThis</span>.<span class="text-bd-cyan">MyScript</span> = <span class="text-bd-purple">function</span> <span class="text-bd-cyan">MyScript</span>(<span class="text-bd-amber">hook</span>) {
+  <span class="text-bd-green">"use strict"</span>;
+
+  <span class="text-bd-text-muted">// State initialization (runs every call, ?? keeps existing values)</span>
+  <span class="text-bd-purple">const</span> S = (state.myScript ||= { count: 0 });
+
+  <span class="text-bd-text-muted">// Helper functions available to all hooks</span>
+  <span class="text-bd-purple">function</span> <span class="text-bd-cyan">formatStatus</span>() { <span class="text-bd-purple">return</span> <span class="text-bd-green">`Count: ${S.count}`</span>; }
+
+  <span class="text-bd-text-muted">// -------- hook: input --------</span>
+  <span class="text-bd-purple">if</span> (<span class="text-bd-amber">hook</span> === <span class="text-bd-green">"input"</span>) {
+    S.count += 1;
+    <span class="text-bd-purple">return</span>;
+  }
+
+  <span class="text-bd-text-muted">// -------- hook: context --------</span>
+  <span class="text-bd-purple">if</span> (<span class="text-bd-amber">hook</span> === <span class="text-bd-green">"context"</span>) {
+    <span class="text-bd-text-muted">// Modify globalThis.text for AI context</span>
+    <span class="text-bd-purple">return</span>;
+  }
+
+  <span class="text-bd-text-muted">// -------- hook: output --------</span>
+  <span class="text-bd-purple">if</span> (<span class="text-bd-amber">hook</span> === <span class="text-bd-green">"output"</span>) {
+    <span class="text-bd-text-muted">// Modify globalThis.text for player display</span>
+    <span class="text-bd-purple">return</span>;
+  }
+};</pre>
+              </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <ArrowRightToLine class="w-3 h-3 text-bd-green" />
+                  Input File
+                </h4>
+                <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
+                  <pre><span class="text-bd-cyan">MyScript</span>(<span class="text-bd-green">"input"</span>);</pre>
+                </div>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <Layers class="w-3 h-3 text-bd-blue" />
+                  Context File
+                </h4>
+                <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
+                  <pre><span class="text-bd-cyan">MyScript</span>(<span class="text-bd-green">"context"</span>);</pre>
+                </div>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <ArrowLeftToLine class="w-3 h-3 text-bd-amber" />
+                  Output File
+                </h4>
+                <div class="p-2 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
+                  <pre><span class="text-bd-cyan">MyScript</span>(<span class="text-bd-green">"output"</span>);</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
+              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                <GitMerge class="w-4 h-4 text-bd-blue" />
+                Composing Multiple Scripts
+              </h3>
+              <p class="text-sm text-bd-text-secondary mb-3">
+                Because each script is a self-contained function on <code class="text-bd-green">globalThis</code>, you can combine
+                multiple scripts by pasting their library functions together and calling each one from the hook files.
+              </p>
+              <div class="p-3 rounded bg-bd-bg-tertiary font-mono text-xs text-bd-text-secondary overflow-x-auto">
+                <pre><span class="text-bd-text-muted">// Input file - run both scripts</span>
+<span class="text-bd-cyan">Chronos</span>(<span class="text-bd-green">"input"</span>);
+<span class="text-bd-cyan">InnerSelf</span>(<span class="text-bd-green">"input"</span>);</pre>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+              <div class="flex items-start gap-3">
+                <Lightbulb class="w-5 h-5 text-bd-amber mt-0.5 flex-shrink-0" />
+                <p class="text-sm text-bd-text-secondary">
+                  <strong class="text-bd-text-primary">Tip:</strong> Scripts like <strong>Inner Self</strong> and <strong>Chronos</strong>
+                  already use this pattern. If you want to add them alongside your own script, just paste their library
+                  function into your Library file and add the corresponding call in each hook file.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
       <!-- Tips & Pitfalls (merged from Troubleshooting + Common Mistakes) -->
       <section id="guide-tips-pitfalls" class="card">
         <button @click="toggleGuideSection('tips-pitfalls')" class="w-full flex items-center justify-between text-left">
@@ -693,7 +820,7 @@ import {
   BookOpen, Layers, Library, ArrowRightToLine, ArrowLeftToLine, Database, 
   Lightbulb, Wrench, Plus, Search, ShieldAlert, RefreshCw, 
   ExternalLink, ChevronDown, ChevronUp, Info, MessageSquare,
-  Terminal, X
+  Terminal, X, GitMerge
 } from 'lucide-vue-next'
 
 // Guide table of contents sections
@@ -705,6 +832,7 @@ const guideSections = [
   { id: 'api-functions', label: 'API Functions' },
   { id: 'utility-functions', label: 'Utility Functions' },
   { id: 'common-patterns', label: 'Common Patterns' },
+  { id: 'hook-pattern', label: 'Hook Pattern' },
   { id: 'tips-pitfalls', label: 'Tips & Pitfalls' },
   { id: 'credits', label: 'Credits' }
 ]
