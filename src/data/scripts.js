@@ -934,7 +934,7 @@ state.chronos = state.chronos ?? {
     use12HourFormat: true,
     useBetterScripts: false,
     showTimeInOutput: true,
-    weatherEnabled: false,
+    weatherEnabled: true,
     enabled: true,
     weatherChangeCooldown: 15,
     temperatureUnit: 'F',
@@ -1120,7 +1120,7 @@ const SEASON_TEMPS = {
 
 // Default entry text for the "Chronos Settings" story card.
 // Players edit the values after each colon to configure the system.
-const SETTINGS_CARD_ENTRY = '--- General ---\\n> Enabled: true\\n> Minutes Per Turn: 2\\n\\n--- Display ---\\n> 12-Hour Format: true\\n> Show Time In Output: true\\n> Use BetterScripts: false\\n\\n--- Weather ---\\n> Weather Enabled: false\\n> Weather Change Cooldown: 15\\n> Temperature Unit: F\\n\\n--- Clock ---\\n> Wake Hour: 7\\n> Current Time: 7:00 AM\\n> Current Date: June 1, 2026';
+const SETTINGS_CARD_ENTRY = '--- General ---\n> Enabled: true\n> Minutes Per Turn: 2\n\n--- Display ---\n> 12-Hour Format: true\n> Show Time In Output: true\n> Use BetterScripts: false\n\n--- Weather ---\n> Weather Enabled: true\n> Weather Change Cooldown: 15\n> Temperature Unit: F\n\n--- Clock ---\n> Wake Hour: 7\n> Current Time: 7:00 AM\n> Current Date: June 1, 2026';
 
 // Description shown on the Chronos Settings story card.
 const SETTINGS_CARD_DESCRIPTION = 'Chronos time system settings. Organized by category. Edit the values after each colon to configure. Time and date update automatically.';
