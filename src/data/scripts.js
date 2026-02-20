@@ -1907,7 +1907,7 @@ if (hook === "output") {
         }
       }
       header += ']';
-      output = header + '\\n' + output;
+      output = '\\n' + header + '\\n' + output;
     }
     globalThis.text = output;
     return;
