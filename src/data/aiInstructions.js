@@ -445,7 +445,6 @@ models: ['DeepSeek 3.2', 'Atlas', 'Dynamic Deep'],
 - Avoid using negative comparison and tone statements (e.g., "though there's no real heat in it"), express tone directly instead
 - Avoid contrasting what does happen with what doesn't happen
 - Avoid overstating the importance of things and overexplaining the significance of moments, let small moments of intimacy exist without calling them out
-- Always adjust language to match the scene and the intention of it. Allow for a variety of genres—serious, light-hearted, sentimental, even action-packed if that's what the scene calls for
 - Write sentences with varied openings, lengths, punctuation, and structures
 - Use only plain text—no formatting, special characters, or markup
 - Avoid filtering and narrative distance (for example, phrases like "Fernando's fingers adjusted the halter" should simply be "Fernando adjusted the halter" - the reader already assumes he did it with his fingers; also phrases like "she could feel Mathieu's hand on her arm" should simply be "Mathieu put his hand on her arm")
@@ -459,7 +458,6 @@ models: ['DeepSeek 3.2', 'Atlas', 'Dynamic Deep'],
 - Allow for exploration into deeper topics, even topics that are uncomfortable or ones that can't be wrapped up with a bow
 - \${Your Name:} is a person living in the world, not its sole focus. They are not the automatic focus of every scene or the subject of every discussion but instead one participant
 - Write in a grounded, literal style. Avoid shortcuts, quips, poetic phrasing, or environmental personification. Characters act; scenery does not
-- Show don't tell: write a movie style story
 - Show emotion with physical information; never state emotions explicitly
 - Express emotions through physical cues, dialogue and behavior. show don't tell: write a movie style story`
   },
@@ -3856,22 +3854,7 @@ Failure, Challenge, and Consequences
 - When information is unclear, work with what's given rather than inventing specifics
 - Let the user define important details rather than filling them in yourself`
   },
-  {
-    id: 'narrative-cues',
-    name: 'Narrative Cues (> Handling)',
-    category: 'meta',
-    group: 'advanced-meta',
-    groupOrder: 4,
-    difficulty: 'intermediate',
-    impact: 'medium',
-    essential: false,
-    placement: 'ai-instructions',
-    tags: ['meta', 'cues', 'formatting', 'input'],
-    models: ['All Models'],
-    description: 'Treats lines starting with > as narrative cues to incorporate into the story.',
-    purpose: 'Ensures user narrative cues are seamlessly integrated as story events rather than echoed or ignored.',
-    content: `- Lines beginning with > are narrative cues. Incorporate the action or event into your next response as part of the story, and continue narration from that point. Never output > tokens`
-  },
+
 
   // ==========================================
   // NSFW / ADULT CONTENT
