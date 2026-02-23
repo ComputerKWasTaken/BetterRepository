@@ -89,6 +89,19 @@
           </div>
         </div>
 
+        <!-- Model Defaults & Optional Use -->
+        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+          <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-2">Model Defaults & When to Use Custom Instructions</h4>
+          <div class="space-y-2 text-xs text-bd-text-secondary">
+            <p>
+              Every AI model in AI Dungeon includes its own <strong>default system instructions</strong>, tuned specifically for that model's strengths and behavior patterns. AI Instructions are entirely <strong>optional</strong> — for many users, relying on model defaults is the most stable and effective choice.
+            </p>
+            <p>
+              Custom instructions work best when introduced to fix <strong>specific, recurring problems</strong> rather than preemptively. Since custom instructions replace defaults entirely, be aware that <strong>switching models may require revising your instructions</strong> — different models interpret them differently.
+            </p>
+          </div>
+        </div>
+
         <!-- Right tool for the job -->
         <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
           <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-2">Right Tool for the Job</h4>
@@ -572,12 +585,19 @@
             <p class="text-xs text-bd-text-secondary">Mixing character details, world facts, and lore into AI Instructions. Instructions are for <em>behavior rules</em>, not data.</p>
             <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Put facts in Plot Essentials or Story Cards. Keep AI Instructions focused on <em>how</em> the AI should write, not <em>what</em> to write about.</p>
           </div>
+          <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+            <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
+              <X class="w-3 h-3" /> Using Banned Words Instead of Instructions
+            </h4>
+            <p class="text-xs text-bd-text-secondary">Banned Words has been deprecated. Keyword blocking was less effective than behavioral guidance and didn't work well across different AI models.</p>
+            <p class="text-xs text-bd-green mt-2"><strong>Fix:</strong> Use AI Instructions instead. "Never use the word 'suddenly'" is more effective than keyword blocking and works better across different models.</p>
+          </div>
         </div>
       </div>
     </Transition>
   </section>
 
-  <!-- ===================== QUICK FIXES SECTION ===================== -->
+  <!-- ===================== QUICK FIXES SECTION===================== -->
   <section id="guide-quick-fixes" class="card">
     <button 
       @click="toggleGuideSection('quick-fixes')"
@@ -730,6 +750,22 @@
           </div>
         </div>
 
+        <!-- Context Viewer Details -->
+        <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+            <Eye class="w-4 h-4 text-bd-teal" />
+            What the Context Viewer Shows
+          </h3>
+          <div class="grid md:grid-cols-2 gap-2 text-xs text-bd-text-secondary">
+            <div>• <strong>Token breakdown</strong> per section (AI Instructions, Plot Essentials, etc.)</div>
+            <div>• <strong>Required Elements</strong> and their token consumption</div>
+            <div>• <strong>Triggered Story Cards</strong> and which triggers matched</div>
+            <div>• <strong>Memory Bank entries</strong> that were semantically retrieved</div>
+            <div>• <strong>History length</strong> — how many actions fit in context</div>
+            <div>• <strong>Total context usage</strong> vs. available space</div>
+          </div>
+        </div>
+
         <!-- Debugging Workflow -->
         <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
           <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
@@ -767,6 +803,28 @@
           </div>
         </div>
 
+        <!-- Response Quality Troubleshooting -->
+        <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+            <AlertTriangle class="w-4 h-4 text-bd-amber" />
+            Response Quality Troubleshooting
+          </h3>
+          <div class="space-y-2 text-xs text-bd-text-secondary">
+            <div class="flex items-start gap-2">
+              <span class="text-bd-amber font-semibold flex-shrink-0">Responses too generic?</span>
+              <span>Add more specific guidance in Author's Note, use genre tags in AI Instructions, or include style examples.</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-bd-amber font-semibold flex-shrink-0">Tone keeps shifting?</span>
+              <span>Make Author's Note more explicit, check for conflicting guidance between AI Instructions and Author's Note, or establish clearer baseline rules.</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-bd-amber font-semibold flex-shrink-0">AI ignores style guidance?</span>
+              <span>Move guidance to Author's Note (stronger position near end of context), use more direct language, or ensure guidance isn't buried in overly long text.</span>
+            </div>
+          </div>
+        </div>
+
         <!-- Raw Model Output tip -->
         <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
           <div class="flex items-start gap-2">
@@ -776,6 +834,178 @@
               This reveals if the AI is generating content that's being cut off by the interface's punctuation trimming.
             </p>
           </div>
+        </div>
+      </div>
+    </Transition>
+  </section>
+
+  <!-- ===================== CONTEXT POSITION & PRIORITY ===================== -->
+  <section id="guide-context-priority" class="card">
+    <button 
+      @click="toggleGuideSection('context-priority')"
+      class="w-full flex items-center justify-between text-left"
+    >
+      <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+        <Layers class="w-5 h-5 text-bd-blue" />
+        Context Position & Priority
+      </h2>
+      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('context-priority') }" />
+    </button>
+    
+    <Transition name="slide">
+      <div v-if="isGuideSectionExpanded('context-priority')" class="mt-4 space-y-4">
+        <p class="text-bd-text-secondary">
+          Understanding where AI Instructions sit in the context — and how the AI's attention varies across it — helps you write more effective instructions.
+        </p>
+
+        <!-- Context Assembly Order -->
+        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+            <Layers class="w-4 h-4 text-bd-blue" />
+            Context Assembly Order
+          </h3>
+          <p class="text-xs text-bd-text-secondary mb-3">
+            The AI reads context from top to bottom. Here's what it sees, in order:
+          </p>
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-2 text-xs">
+              <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple text-[10px] font-bold flex items-center justify-center">1</span>
+              <span class="text-bd-text-primary font-medium">AI Instructions</span>
+              <span class="text-bd-text-muted">— Behavioral rules (you are here)</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-green/20 text-bd-green text-[10px] font-bold flex items-center justify-center">2</span>
+              <span class="text-bd-text-primary font-medium">Plot Essentials</span>
+              <span class="text-bd-text-muted">— Key story facts</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-amber/20 text-bd-amber text-[10px] font-bold flex items-center justify-center">3</span>
+              <span class="text-bd-text-primary font-medium">Story Cards</span>
+              <span class="text-bd-text-muted">— Triggered character/location info</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-teal/20 text-bd-teal text-[10px] font-bold flex items-center justify-center">4</span>
+              <span class="text-bd-text-primary font-medium">Story Summary</span>
+              <span class="text-bd-text-muted">— Running plot summary</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-cyan/20 text-bd-cyan text-[10px] font-bold flex items-center justify-center">5</span>
+              <span class="text-bd-text-primary font-medium">Memory Bank</span>
+              <span class="text-bd-text-muted">— Semantically retrieved memories</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-blue/20 text-bd-blue text-[10px] font-bold flex items-center justify-center">6</span>
+              <span class="text-bd-text-primary font-medium">History</span>
+              <span class="text-bd-text-muted">— Recent story actions</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-pink/20 text-bd-pink text-[10px] font-bold flex items-center justify-center">7</span>
+              <span class="text-bd-text-primary font-medium">Author's Note</span>
+              <span class="text-bd-text-muted">— Scene-specific guidance</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-amber/20 text-bd-amber text-[10px] font-bold flex items-center justify-center">8</span>
+              <span class="text-bd-text-primary font-medium">Last Action</span>
+              <span class="text-bd-text-muted">— Most recent player input</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-red/20 text-bd-red text-[10px] font-bold flex items-center justify-center">9</span>
+              <span class="text-bd-text-primary font-medium">Front Memory</span>
+              <span class="text-bd-text-muted">— Script-injected text (not UI accessible)</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-text-muted/20 text-bd-text-muted text-[10px] font-bold flex items-center justify-center">10</span>
+              <span class="text-bd-text-primary font-medium">Buffer Tokens</span>
+              <span class="text-bd-text-muted">— Reserved for AI response</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Positional Influence -->
+        <div class="grid md:grid-cols-3 gap-3">
+          <div class="p-3 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
+            <h4 class="text-xs font-semibold text-bd-purple mb-2">Beginning (Positions 1–3)</h4>
+            <p class="text-xs text-bd-text-secondary">
+              Sets foundational rules and context. AI Instructions define behavior patterns, Plot Essentials establish key facts. <strong>Less immediate influence</strong> on specific word choices but shapes overall approach.
+            </p>
+          </div>
+          <div class="p-3 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
+            <h4 class="text-xs font-semibold text-bd-blue mb-2">Middle (Positions 4–6)</h4>
+            <p class="text-xs text-bd-text-secondary">
+              Provides narrative continuity. History shows story flow, memories fill in relevant background. This is where the AI picks up the story thread.
+            </p>
+          </div>
+          <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+            <h4 class="text-xs font-semibold text-bd-pink mb-2">End (Positions 7–10)</h4>
+            <p class="text-xs text-bd-text-secondary">
+              <strong>Strongest immediate influence.</strong> Author's Note shapes the tone of the next output, Last Action directly prompts the response, Front Memory has maximum influence.
+            </p>
+          </div>
+        </div>
+
+        <!-- 70/30 Split -->
+        <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+            <Zap class="w-4 h-4 text-bd-amber" />
+            The 70/30 Allocation Split
+          </h3>
+          <p class="text-xs text-bd-text-secondary mb-3">
+            Context is divided into two pools. AI Instructions belong to the <strong>Required Elements</strong> pool.
+          </p>
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="p-3 rounded-lg bg-bd-bg-tertiary">
+              <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Required Elements (up to 70%)</h4>
+              <ul class="text-xs text-bd-text-secondary space-y-1">
+                <li>• AI Instructions</li>
+                <li>• Plot Essentials</li>
+                <li>• Story Summary</li>
+                <li>• Author's Note</li>
+                <li>• Front Memory</li>
+                <li>• Last Action</li>
+              </ul>
+            </div>
+            <div class="p-3 rounded-lg bg-bd-bg-tertiary">
+              <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Dynamic Elements (~30%)</h4>
+              <ul class="text-xs text-bd-text-secondary space-y-1">
+                <li>• Story Cards (~25% of pool)</li>
+                <li>• History (~50% of pool)</li>
+                <li>• Memory Bank (~25% of pool)</li>
+              </ul>
+              <p class="text-xs text-bd-text-muted mt-2">If Required Elements use less than 70%, Dynamic Elements get the extra space.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trimming Priority -->
+        <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+            <AlertTriangle class="w-4 h-4 text-bd-amber" />
+            Trimming Priority
+          </h3>
+          <p class="text-xs text-bd-text-secondary mb-3">
+            When context exceeds available space, elements are trimmed in priority order. AI Instructions are medium priority — they can be trimmed if higher-priority elements take up too much space.
+          </p>
+          <div class="space-y-2">
+            <div class="flex items-center gap-3 text-xs">
+              <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-bold bg-bd-green/20 text-bd-green">ALWAYS FULL</span>
+              <span class="text-bd-text-secondary">Front Memory, Last Action</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+              <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-bold bg-bd-blue/20 text-bd-blue">HIGH PRIORITY</span>
+              <span class="text-bd-text-secondary">Author's Note, Plot Essentials</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+              <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-bold bg-bd-amber/20 text-bd-amber">MEDIUM</span>
+              <span class="text-bd-text-secondary">AI Instructions, Story Summary</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+              <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-bold bg-bd-text-muted/20 text-bd-text-muted">FLEXIBLE</span>
+              <span class="text-bd-text-secondary">Story Cards, History, Memory Bank</span>
+            </div>
+          </div>
+          <p class="text-xs text-bd-text-muted mt-3">
+            <strong>Practical implication:</strong> Keep AI Instructions focused and concise. If they're too long, they'll eat into other content budgets or get trimmed themselves.
+          </p>
         </div>
       </div>
     </Transition>
@@ -1001,6 +1231,95 @@
             </p>
           </div>
         </div>
+
+        <!-- Response Shaping Techniques -->
+        <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+            <Sparkles class="w-4 h-4 text-bd-purple" />
+            Response Shaping Techniques
+          </h3>
+          <p class="text-xs text-bd-text-secondary mb-3">
+            Beyond sampling parameters, you can shape AI responses through careful use of AI Instructions and Author's Note together.
+          </p>
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="p-3 rounded-lg bg-bd-bg-tertiary">
+              <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Pacing Control</h4>
+              <div class="space-y-1 text-xs text-bd-text-secondary">
+                <div><strong>Fast:</strong> <code class="text-bd-green">"Action scene. Quick cuts. Short sentences."</code></div>
+                <div><strong>Slow:</strong> <code class="text-bd-green">"Quiet moment. Sensory details. Let the scene breathe."</code></div>
+                <div class="text-bd-text-muted mt-1">Update Author's Note when pace should change.</div>
+              </div>
+            </div>
+            <div class="p-3 rounded-lg bg-bd-bg-tertiary">
+              <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Dialog vs. Description</h4>
+              <div class="space-y-1 text-xs text-bd-text-secondary">
+                <div><code class="text-bd-green">"Dialogue-heavy scene, let characters talk"</code></div>
+                <div><code class="text-bd-green">"Action and description, minimal dialogue"</code></div>
+                <div><code class="text-bd-green">"Balance dialogue with narrative prose"</code></div>
+              </div>
+            </div>
+            <div class="p-3 rounded-lg bg-bd-bg-tertiary">
+              <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Content Focus</h4>
+              <div class="space-y-1 text-xs text-bd-text-secondary">
+                <div><strong>Include:</strong> <code class="text-bd-green">"Emphasize the character's internal thoughts"</code></div>
+                <div><strong>Avoid:</strong> <code class="text-bd-green">"Don't introduce new major characters without player prompting"</code></div>
+              </div>
+            </div>
+            <div class="p-3 rounded-lg bg-bd-bg-tertiary">
+              <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Consistency</h4>
+              <div class="space-y-1 text-xs text-bd-text-secondary">
+                <div>• AI Instructions for <strong>permanent</strong> style rules</div>
+                <div>• Author's Note for <strong>current scene</strong> emphasis</div>
+                <div>• Story Cards for <strong>character-specific</strong> styles</div>
+                <div>• The AI also learns from your story's existing tone</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Instructions vs Author's Note -->
+        <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+            <Layers class="w-4 h-4 text-bd-blue" />
+            AI Instructions vs. Author's Note
+          </h3>
+          <p class="text-xs text-bd-text-secondary mb-3">
+            These two components work together but serve different purposes. Use both for maximum control.
+          </p>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="border-b border-bd-border-subtle">
+                  <th class="text-left py-2 pr-4 text-bd-text-muted font-semibold">Aspect</th>
+                  <th class="text-left py-2 pr-4 text-bd-text-primary font-semibold">AI Instructions</th>
+                  <th class="text-left py-2 text-bd-text-primary font-semibold">Author's Note</th>
+                </tr>
+              </thead>
+              <tbody class="text-bd-text-secondary">
+                <tr class="border-b border-bd-border-subtle/50">
+                  <td class="py-2 pr-4 font-medium">Position</td>
+                  <td class="py-2 pr-4">Beginning of context</td>
+                  <td class="py-2">Near end of context</td>
+                </tr>
+                <tr class="border-b border-bd-border-subtle/50">
+                  <td class="py-2 pr-4 font-medium">Scope</td>
+                  <td class="py-2 pr-4">Permanent rules</td>
+                  <td class="py-2">Scene-specific guidance</td>
+                </tr>
+                <tr class="border-b border-bd-border-subtle/50">
+                  <td class="py-2 pr-4 font-medium">Purpose</td>
+                  <td class="py-2 pr-4">Behavioral directives</td>
+                  <td class="py-2">Tone/style for current scene</td>
+                </tr>
+                <tr>
+                  <td class="py-2 pr-4 font-medium">Update Frequency</td>
+                  <td class="py-2 pr-4">Rarely changed</td>
+                  <td class="py-2">Updated as story progresses</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </Transition>
   </section>
@@ -1044,6 +1363,9 @@
       <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" class="btn btn-secondary text-xs">
         <Coins class="w-3 h-3" /> Tokenizer
       </a>
+      <a href="https://github.com/LewdLeah/Multiple-Choice-Assistant/tree/main/docs" target="_blank" class="btn btn-secondary text-xs">
+        <BookOpen class="w-3 h-3" /> LewdLeah's AI Dungeon Docs
+      </a>
         </div>
       </div>
     </Transition>
@@ -1075,6 +1397,7 @@ const guideSections = [
   { id: 'quick-fixes', label: 'Quick Fixes' },
   { id: 'header-advanced', label: 'Advanced', isHeader: true },
   { id: 'testing', label: 'Testing & Debugging' },
+  { id: 'context-priority', label: 'Context Position & Priority' },
   { id: 'genre-guides', label: 'Genre Guides' },
   { id: 'writing-tips', label: 'Writing Effective Instructions' },
   { id: 'credits', label: 'Credits' }

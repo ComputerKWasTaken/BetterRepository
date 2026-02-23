@@ -88,6 +88,26 @@
           </div>
         </div>
 
+        <!-- Token Selection Pipeline -->
+        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+            <Layers class="w-4 h-4 text-bd-purple" />
+            How Token Selection Works
+          </h3>
+          <div class="flex flex-wrap items-center gap-2 text-xs">
+            <div class="px-3 py-1.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-secondary">Calculate probabilities for every possible token</div>
+            <span class="text-bd-text-muted">→</span>
+            <div class="px-3 py-1.5 rounded bg-bd-purple/20 border border-bd-purple/30 text-bd-purple font-semibold">Top-K filter</div>
+            <span class="text-bd-text-muted">→</span>
+            <div class="px-3 py-1.5 rounded bg-bd-teal/20 border border-bd-teal/30 text-bd-teal font-semibold">Top-P filter</div>
+            <span class="text-bd-text-muted">→</span>
+            <div class="px-3 py-1.5 rounded bg-bd-amber/20 border border-bd-amber/30 text-bd-amber font-semibold">Temperature scaling</div>
+            <span class="text-bd-text-muted">→</span>
+            <div class="px-3 py-1.5 rounded bg-bd-green/20 border border-bd-green/30 text-bd-green font-semibold">Random selection</div>
+          </div>
+          <p class="text-xs text-bd-text-muted mt-2">Top-K and Top-P filter the token set. Temperature adjusts relative probabilities. Then the AI randomly picks from the filtered, adjusted distribution. This repeats for each token generated.</p>
+        </div>
+
         <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30">
           <div class="flex items-start gap-2">
             <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
@@ -119,6 +139,10 @@
         <p class="text-bd-text-secondary">
           Context Length determines the <strong>maximum number of tokens</strong> that can be sent to the AI model every turn. It's typically best to set this to the highest value so the AI always receives as much context about your Adventure as possible.
         </p>
+
+        <div class="p-2 rounded bg-bd-amber/5 border border-bd-amber/20">
+          <p class="text-xs text-bd-text-secondary"><strong>Note:</strong> Response tokens from the AI's output count toward context on the <em>next</em> turn. Longer responses mean less room for story history in subsequent context windows.</p>
+        </div>
 
         <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
           <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
@@ -236,6 +260,30 @@
           </div>
         </div>
 
+        <!-- Detailed Range Table -->
+        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+          <h3 class="font-semibold text-bd-text-primary mb-2">Temperature Range Reference</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-bd-text-secondary">
+              <thead>
+                <tr class="border-b border-bd-border-subtle">
+                  <th class="text-left py-2 font-medium text-bd-text-primary">Range</th>
+                  <th class="text-left py-2 font-medium text-bd-text-primary">Output Character</th>
+                  <th class="text-left py-2 font-medium text-bd-text-primary">Use Case</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-bd-border-subtle">
+                <tr><td class="py-1.5 font-mono text-bd-blue">0.2–0.4</td><td>Very predictable, may feel robotic</td><td>Strict factual or procedural content</td></tr>
+                <tr><td class="py-1.5 font-mono text-bd-blue">0.5–0.7</td><td>Coherent but somewhat predictable</td><td>Grounded, realistic stories</td></tr>
+                <tr><td class="py-1.5 font-mono text-bd-green">0.7–0.9</td><td>Balanced (default range)</td><td>General-purpose storytelling</td></tr>
+                <tr><td class="py-1.5 font-mono text-bd-amber">1.0–1.2</td><td>Creative, occasional surprises</td><td>Creative, experimental adventures</td></tr>
+                <tr><td class="py-1.5 font-mono text-bd-pink">1.3+</td><td>Chaotic, potentially incoherent</td><td>Extremely experimental play</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-[11px] text-bd-text-muted mt-2">Mathematically, lower temperature sharpens the probability peaks (high-probability tokens dominate). Higher temperature flattens the distribution (lower-probability tokens get more chance). Temperature = 1.0 leaves probabilities unmodified.</p>
+        </div>
+
         <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
           <div class="flex items-start gap-2">
             <AlertTriangle class="w-4 h-4 text-bd-pink flex-shrink-0 mt-0.5" />
@@ -277,11 +325,32 @@
         <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
           <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
             <Target class="w-4 h-4 text-bd-purple" />
-            Example
+            How It Works
           </h3>
-          <p class="text-xs text-bd-text-secondary">
-            If Top-K is set to <strong>20</strong>, the AI will only pick from the 20 most likely tokens every turn. This reduces randomness by <strong>excluding less likely options</strong> entirely.
+          <ol class="text-xs text-bd-text-secondary space-y-1 list-decimal list-inside">
+            <li>Sort all tokens by probability</li>
+            <li>Keep only the top K tokens</li>
+            <li>Renormalize probabilities among the remaining tokens</li>
+            <li>Sample from this reduced set</li>
+          </ol>
+          <p class="text-xs text-bd-text-muted mt-2">
+            Example: If Top-K = <strong>20</strong>, only the 20 most probable next words are considered. Setting K = 1 would always pick the single most likely token (greedy decoding).
           </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-2 text-xs">
+          <div class="p-2 rounded bg-bd-blue/10 border border-bd-blue/30 text-center">
+            <span class="font-semibold text-bd-blue">K = 10 or less</span>
+            <p class="text-bd-text-muted mt-1">Very constrained</p>
+          </div>
+          <div class="p-2 rounded bg-bd-green/10 border border-bd-green/30 text-center">
+            <span class="font-semibold text-bd-green">K = 20–40</span>
+            <p class="text-bd-text-muted mt-1">Balanced</p>
+          </div>
+          <div class="p-2 rounded bg-bd-amber/10 border border-bd-amber/30 text-center">
+            <span class="font-semibold text-bd-amber">K = 100+</span>
+            <p class="text-bd-text-muted mt-1">Minimal effect</p>
+          </div>
         </div>
 
         <div class="p-3 rounded-lg bg-bd-green/10 border border-bd-green/30">
@@ -289,7 +358,7 @@
             <Lightbulb class="w-3 h-3" /> When to Adjust
           </h4>
           <p class="text-xs text-bd-text-secondary">
-            <strong>Lower values</strong> = more focused, predictable story progression. <strong>Higher values</strong> = more variety, but may include unlikely tokens. Works best <strong>in tandem with Top-P</strong>.
+            <strong>Lower values</strong> = more focused, predictable story progression. <strong>Higher values</strong> = more variety, but may include unlikely tokens. Works best <strong>in tandem with Top-P</strong>. Not all models support Top-K — check if it’s available in your Advanced Settings.
           </p>
         </div>
       </div>
@@ -347,6 +416,19 @@
           </div>
         </div>
 
+        <!-- Top-K vs Top-P -->
+        <div class="p-3 rounded bg-bd-bg-tertiary border border-bd-border-subtle">
+          <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Top-K vs Top-P: Fixed vs Dynamic</h4>
+          <div class="grid md:grid-cols-2 gap-2 text-xs text-bd-text-secondary">
+            <div class="p-2 rounded bg-bd-purple/5 border border-bd-purple/20">
+              <strong class="text-bd-purple">Top-K:</strong> Fixed number of tokens, regardless of probability distribution.
+            </div>
+            <div class="p-2 rounded bg-bd-teal/5 border border-bd-teal/20">
+              <strong class="text-bd-teal">Top-P:</strong> Dynamic number, depending on how spread out the probabilities are. If one token has 95% probability and P=0.9, only that token is considered. If probabilities are spread evenly, many tokens qualify.
+            </div>
+          </div>
+        </div>
+
         <div class="p-3 rounded-lg bg-bd-green/10 border border-bd-green/30">
           <h4 class="text-xs font-semibold text-bd-green mb-2 flex items-center gap-1">
             <Lightbulb class="w-3 h-3" /> Recommendation
@@ -398,6 +480,10 @@
             </p>
           </div>
         </div>
+
+        <div class="p-2 rounded bg-bd-amber/5 border border-bd-amber/20">
+          <p class="text-xs text-bd-text-secondary"><strong>Penalty stacking:</strong> Presence, Frequency, and Repetition penalties all apply simultaneously. Combined effects can be stronger than intended — use only what’s necessary.</p>
+        </div>
       </div>
     </Transition>
   </section>
@@ -440,6 +526,19 @@
           <p class="text-xs text-bd-text-secondary">
             Defaults to <strong>zero</strong>. Keep it low because the AI will start trending towards strange outputs if you push it much past <strong>1</strong>.
           </p>
+        </div>
+
+        <!-- Try These First -->
+        <div class="p-3 rounded bg-bd-blue/10 border border-bd-blue/30">
+          <h4 class="text-xs font-semibold text-bd-blue mb-2">Before Using Penalties, Try These First</h4>
+          <ul class="text-xs text-bd-text-secondary space-y-1">
+            <li>• Raise <strong>Temperature</strong> (higher = more variety)</li>
+            <li>• Raise <strong>Top-P</strong> (higher = more token options)</li>
+            <li>• Edit <strong>Author's Note</strong> to encourage variety</li>
+            <li>• <strong>Regenerate</strong> problematic outputs</li>
+            <li>• Check if repetition originates from your context (Plot Essentials, Story Cards)</li>
+          </ul>
+          <p class="text-[11px] text-bd-text-muted mt-2">Penalties are a last resort. Latitude’s fine-tuned models (Wayfarer, etc.) may have built-in repetition handling that makes external penalties less necessary.</p>
         </div>
       </div>
     </Transition>
@@ -630,12 +729,53 @@
           </p>
         </div>
 
+        <!-- Common Adjustments -->
+        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+          <h3 class="font-semibold text-bd-text-primary mb-3">Common Adjustments</h3>
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
+              <h4 class="text-xs font-semibold text-bd-pink mb-1">AI Too Random / Chaotic</h4>
+              <ul class="text-[11px] text-bd-text-secondary space-y-0.5">
+                <li>• Lower Temperature (try 0.6–0.7)</li>
+                <li>• Lower Top-P (try 0.8)</li>
+                <li>• Add repetition penalty cautiously</li>
+              </ul>
+            </div>
+            <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
+              <h4 class="text-xs font-semibold text-bd-blue mb-1">AI Too Boring / Repetitive</h4>
+              <ul class="text-[11px] text-bd-text-secondary space-y-0.5">
+                <li>• Raise Temperature (try 0.9–1.0)</li>
+                <li>• Raise Top-P (try 0.95)</li>
+                <li>• Reduce repetition penalties</li>
+              </ul>
+            </div>
+            <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
+              <h4 class="text-xs font-semibold text-bd-green mb-1">Responses Too Short</h4>
+              <ul class="text-[11px] text-bd-text-secondary space-y-0.5">
+                <li>• Increase Response Length</li>
+                <li>• Adjust AI Instructions to encourage detail</li>
+              </ul>
+            </div>
+            <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
+              <h4 class="text-xs font-semibold text-bd-amber mb-1">AI Keeps Repeating Phrases</h4>
+              <ul class="text-[11px] text-bd-text-secondary space-y-0.5">
+                <li>• Enable Repetition Penalty gently (1.02–1.05)</li>
+                <li>• Check for repeated phrases in your context</li>
+                <li>• Regenerate with higher Temperature</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
         <div class="flex flex-wrap gap-2">
           <a href="https://help.aidungeon.com/faq/what-are-advanced-settings" target="_blank" class="btn btn-secondary text-xs">
             <BookOpen class="w-3 h-3" /> Official Guide
           </a>
           <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
             <MessageSquare class="w-3 h-3" /> Discord
+          </a>
+          <a href="https://github.com/LewdLeah/Multiple-Choice-Assistant/tree/main/docs" target="_blank" class="btn btn-secondary text-xs">
+            <BookOpen class="w-3 h-3" /> LewdLeah's AI Dungeon Docs
           </a>
         </div>
       </div>

@@ -89,6 +89,30 @@
                 </p>
               </div>
             </div>
+
+            <!-- Execution Pipeline -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <GitMerge class="w-4 h-4 text-bd-blue" />
+                Execution Pipeline
+              </h3>
+              <div class="flex flex-wrap items-center gap-2 text-xs">
+                <div class="px-3 py-1.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-secondary">Player Input</div>
+                <span class="text-bd-text-muted">→</span>
+                <div class="px-3 py-1.5 rounded bg-bd-green/20 border border-bd-green/30 text-bd-green font-semibold">onInput</div>
+                <span class="text-bd-text-muted">→</span>
+                <div class="px-3 py-1.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-secondary">Context Assembly</div>
+                <span class="text-bd-text-muted">→</span>
+                <div class="px-3 py-1.5 rounded bg-bd-blue/20 border border-bd-blue/30 text-bd-blue font-semibold">onModelContext</div>
+                <span class="text-bd-text-muted">→</span>
+                <div class="px-3 py-1.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-secondary">AI Generation</div>
+                <span class="text-bd-text-muted">→</span>
+                <div class="px-3 py-1.5 rounded bg-bd-amber/20 border border-bd-amber/30 text-bd-amber font-semibold">onOutput</div>
+                <span class="text-bd-text-muted">→</span>
+                <div class="px-3 py-1.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-secondary">Display</div>
+              </div>
+              <p class="text-xs text-bd-text-muted mt-2">The Library runs before each hook. Each hook receives <code class="text-bd-green">text</code> specific to its stage in the pipeline.</p>
+            </div>
           </div>
         </Transition>
       </section>
@@ -304,11 +328,31 @@
             <h3 class="font-semibold text-bd-text-primary mb-2"><code class="text-bd-green">state</code></h3>
             <p class="text-sm text-bd-text-secondary mb-2">Persistent object for storing data across turns. Special fields:</p>
             <ul class="text-sm text-bd-text-secondary space-y-1">
-              <li>• <code class="text-bd-cyan">state.memory.context</code> - Added to context beginning (replaces Memory)</li>
+              <li>• <code class="text-bd-cyan">state.memory.context</code> - Added to context beginning (replaces Plot Essentials)</li>
               <li>• <code class="text-bd-cyan">state.memory.authorsNote</code> - Added before last AI response</li>
-              <li>• <code class="text-bd-cyan">state.memory.frontMemory</code> - Added to context end</li>
+              <li>• <code class="text-bd-cyan">state.memory.frontMemory</code> - Added to context end (not visible in UI)</li>
               <li>• <code class="text-bd-cyan">state.message</code> - Shown to the player as info message</li>
             </ul>
+            <div class="mt-3 p-3 rounded bg-bd-amber/5 border border-bd-amber/20">
+              <h4 class="text-xs font-semibold text-bd-amber mb-2">state.memory Timing</h4>
+              <div class="grid md:grid-cols-3 gap-2 text-[11px] text-bd-text-secondary">
+                <div class="p-2 rounded bg-bd-bg-tertiary">
+                  <span class="font-semibold text-bd-green">onInput</span>
+                  <p class="text-bd-text-muted">Affects context assembly for <strong>current</strong> generation</p>
+                </div>
+                <div class="p-2 rounded bg-bd-bg-tertiary">
+                  <span class="font-semibold text-bd-blue">onModelContext</span>
+                  <p class="text-bd-text-muted">Does NOT affect current turn (context already assembled). Modify <code>text</code> directly instead</p>
+                </div>
+                <div class="p-2 rounded bg-bd-bg-tertiary">
+                  <span class="font-semibold text-bd-amber">onOutput</span>
+                  <p class="text-bd-text-muted">Affects <strong>next</strong> turn's generation</p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-2 p-2 rounded bg-bd-info/10 border border-bd-info/30">
+              <p class="text-[11px] text-bd-text-secondary"><strong>Serialization:</strong> State is serialized between turns. Stick to plain data (strings, numbers, arrays, objects). Complex objects with methods or circular references won't serialize properly.</p>
+            </div>
           </div>
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
             <h3 class="font-semibold text-bd-text-primary mb-2"><code class="text-bd-green">info</code></h3>
@@ -881,6 +925,9 @@ modifier(text);</pre>
             <div class="flex flex-wrap gap-2">
               <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
                 <MessageSquare class="w-3 h-3" /> Discord
+              </a>
+              <a href="https://github.com/LewdLeah/Multiple-Choice-Assistant/tree/main/docs" target="_blank" class="btn btn-secondary text-xs">
+                <BookOpen class="w-3 h-3" /> LewdLeah's AI Dungeon Docs
               </a>
             </div>
           </div>
