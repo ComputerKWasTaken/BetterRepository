@@ -878,10 +878,48 @@
         Showing {{ filteredTemplates.length }} of {{ templates.length }} templates
       </span>
     </div>
+    <!-- Category Jump Navigation (default view - no filters active) -->
+    <div v-if="!hasAnyFilters" class="sticky top-0 lg:top-0 bg-bd-bg-primary/95 backdrop-blur-sm -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-2 border-b border-bd-border-subtle" style="z-index: var(--bd-z-sticky)">
+      <div class="flex items-center gap-1">
+        <button
+          v-if="jumpNavCanScrollLeft"
+          @click="scrollJumpNav('left')"
+          class="flex-shrink-0 p-1 rounded-lg text-bd-text-muted hover:text-bd-text-secondary hover:bg-bd-bg-tertiary transition-all"
+          aria-label="Scroll left"
+        >
+          <ChevronLeft class="w-4 h-4" />
+        </button>
+        <div ref="jumpNavRef" class="flex items-center gap-2 overflow-x-auto scrollbar-hide" @scroll="updateJumpNavScroll">
+          <span class="text-xs text-bd-text-muted font-medium whitespace-nowrap flex-shrink-0">Jump to:</span>
+          <button
+            v-for="cat in jumpCategories"
+            :key="'jump-' + cat.id"
+            @click="scrollToCategory(cat.id)"
+            class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex-shrink-0"
+            :class="activeCategoryId === cat.id 
+              ? cat.bgClass + ' ' + cat.textClass
+              : 'text-bd-text-muted hover:text-bd-text-secondary hover:bg-bd-bg-tertiary'"
+          >
+            <component :is="cat.icon" class="w-3 h-3" />
+            {{ cat.name }}
+            <span class="opacity-60">({{ cat.count }})</span>
+          </button>
+        </div>
+        <button
+          v-if="jumpNavCanScrollRight"
+          @click="scrollJumpNav('right')"
+          class="flex-shrink-0 p-1 rounded-lg text-bd-text-muted hover:text-bd-text-secondary hover:bg-bd-bg-tertiary transition-all"
+          aria-label="Scroll right"
+        >
+          <ChevronRight class="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+
     <!-- Category Sections (default view) -->
     <div v-if="!hasAnyFilters" class="space-y-8">
       <!-- Author's Note Section -->
-      <section>
+      <section id="category-authors-note" :ref="el => setCategoryRef('authors-note', el)">
         <div class="flex items-center gap-3 mb-4">
           <div class="w-8 h-8 rounded-lg bg-bd-purple/20 flex items-center justify-center">
             <Feather class="w-4 h-4 text-bd-purple" />
@@ -902,7 +940,7 @@
         </div>
       </section>
       <!-- Plot Essentials Section -->
-      <section>
+      <section id="category-plot-essentials" :ref="el => setCategoryRef('plot-essentials', el)">
         <div class="flex items-center gap-3 mb-4">
           <div class="w-8 h-8 rounded-lg bg-bd-green/20 flex items-center justify-center">
             <BookMarked class="w-4 h-4 text-bd-green" />
@@ -923,7 +961,7 @@
         </div>
       </section>
       <!-- Story Summary Section -->
-      <section>
+      <section id="category-story-summary" :ref="el => setCategoryRef('story-summary', el)">
         <div class="flex items-center gap-3 mb-4">
           <div class="w-8 h-8 rounded-lg bg-bd-cyan/20 flex items-center justify-center">
             <ScrollText class="w-4 h-4 text-bd-cyan" />
@@ -944,7 +982,7 @@
         </div>
       </section>
       <!-- NSFW Section -->
-      <section v-if="nsfwComponents.length > 0">
+      <section v-if="nsfwComponents.length > 0" id="category-nsfw" :ref="el => setCategoryRef('nsfw', el)">
         <div class="flex items-center gap-3 mb-4">
           <div class="w-8 h-8 rounded-lg bg-bd-red/20 flex items-center justify-center">
             <Flame class="w-4 h-4 text-bd-red" />
@@ -1078,7 +1116,7 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, nextTick, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ResourceCard from '@/components/ui/ResourceCard.vue'
 import SearchBar from '@/components/ui/SearchBar.vue'
@@ -1098,7 +1136,7 @@ import {
   Users, Sword, Star, RefreshCw, MessageSquare, Heart, Volume2, Ruler,
   Rocket, Focus, AlertTriangle, Database, Brain, ArrowRightLeft,
   Sparkles, Scissors, MessageCircle, XCircle, Edit, SlidersHorizontal, Zap, Search,
-  ExternalLink, Award, ChevronDown, ChevronUp, Flame, ShieldAlert, Lock, GitPullRequest
+  ExternalLink, Award, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Flame, ShieldAlert, Lock, GitPullRequest
 } from 'lucide-vue-next'
 const route = useRoute()
 const { preferences, verifyAge, addToSearchHistory } = usePreferences()
@@ -1210,10 +1248,21 @@ onMounted(() => {
       guideObserver.observe(element)
     }
   })
+
+  // Initialize category observer if starting on templates tab
+  if (activeTab.value === 'templates') {
+    nextTick(() => {
+      setupPlotCategoryObserver()
+      updateJumpNavScroll()
+    })
+  }
 })
 onBeforeUnmount(() => {
   if (guideObserver) {
     guideObserver.disconnect()
+  }
+  if (plotCategoryObserver) {
+    plotCategoryObserver.disconnect()
   }
 })
 // Filter templates by category
@@ -1379,6 +1428,86 @@ const clearAll = () => {
   searchQuery.value = ''
   clearFilters()
 }
+
+// --- Category jump navigation ---
+const jumpCategories = computed(() => {
+  const cats = [
+    { id: 'authors-note', name: "Author's Note", icon: Feather, bgClass: 'bg-bd-purple/20', textClass: 'text-bd-purple', count: authorsNoteComponents.value.length },
+    { id: 'plot-essentials', name: 'Plot Essentials', icon: BookMarked, bgClass: 'bg-bd-green/20', textClass: 'text-bd-green', count: plotEssentialsComponents.value.length },
+    { id: 'story-summary', name: 'Story Summary', icon: ScrollText, bgClass: 'bg-bd-cyan/20', textClass: 'text-bd-cyan', count: storySummaryComponents.value.length },
+  ]
+  if (nsfwComponents.value.length > 0) {
+    cats.push({ id: 'nsfw', name: 'NSFW / Adult', icon: Flame, bgClass: 'bg-bd-red/20', textClass: 'text-bd-red', count: nsfwComponents.value.length })
+  }
+  return cats.filter(c => c.count > 0)
+})
+
+const activeCategoryId = ref(null)
+const categoryRefs = {}
+let plotCategoryObserver = null
+
+// Jump nav scroll arrows
+const jumpNavRef = ref(null)
+const jumpNavCanScrollLeft = ref(false)
+const jumpNavCanScrollRight = ref(false)
+
+const updateJumpNavScroll = () => {
+  const el = jumpNavRef.value
+  if (!el) return
+  jumpNavCanScrollLeft.value = el.scrollLeft > 0
+  jumpNavCanScrollRight.value = el.scrollLeft + el.clientWidth < el.scrollWidth - 1
+}
+
+const scrollJumpNav = (direction) => {
+  const el = jumpNavRef.value
+  if (!el) return
+  const scrollAmount = 200
+  el.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' })
+}
+
+const setCategoryRef = (categoryId, el) => {
+  if (el) categoryRefs[categoryId] = el
+}
+
+const scrollToCategory = (categoryId) => {
+  const el = categoryRefs[categoryId]
+  if (!el) return
+  const offset = 56
+  const top = el.getBoundingClientRect().top + window.scrollY - offset
+  window.scrollTo({ top, behavior: 'smooth' })
+  activeCategoryId.value = categoryId
+}
+
+const setupPlotCategoryObserver = () => {
+  if (plotCategoryObserver) plotCategoryObserver.disconnect()
+
+  plotCategoryObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          const id = entry.target.id?.replace('category-', '')
+          if (id) activeCategoryId.value = id
+        }
+      }
+    },
+    { rootMargin: '-60px 0px -70% 0px', threshold: 0 }
+  )
+
+  Object.values(categoryRefs).forEach(el => {
+    if (el) plotCategoryObserver.observe(el)
+  })
+}
+
+watch([() => activeTab.value, jumpCategories], ([tab]) => {
+  if (tab === 'templates') {
+    nextTick(() => {
+      setupPlotCategoryObserver()
+      updateJumpNavScroll()
+    })
+  } else {
+    if (plotCategoryObserver) plotCategoryObserver.disconnect()
+  }
+})
 </script>
 
 <style scoped>
@@ -1412,5 +1541,15 @@ const clearAll = () => {
   bottom: -30px;
   left: 5%;
   animation: float 10s ease-in-out infinite reverse;
+}
+
+/* === Hide scrollbar on category jump nav === */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 </style>
