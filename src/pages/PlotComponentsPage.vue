@@ -1116,7 +1116,7 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, nextTick, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ResourceCard from '@/components/ui/ResourceCard.vue'
 import SearchBar from '@/components/ui/SearchBar.vue'
