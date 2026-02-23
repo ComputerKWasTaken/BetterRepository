@@ -1169,9 +1169,52 @@ modifier(text);</pre>
       </span>
     </div>
 
+    <!-- Category Jump Navigation (default view - no filters active) -->
+    <div v-if="!hasAnyFilters" class="sticky top-0 lg:top-0 bg-bd-bg-primary/95 backdrop-blur-sm -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-2 border-b border-bd-border-subtle" style="z-index: var(--bd-z-sticky)">
+      <div class="flex items-center gap-1">
+        <button
+          v-if="hasPrevCategory"
+          @click="scrollToPrevCategory"
+          class="flex-shrink-0 p-1 rounded-lg text-bd-text-muted hover:text-bd-text-secondary hover:bg-bd-bg-tertiary transition-all"
+          aria-label="Previous category"
+        >
+          <ChevronLeft class="w-4 h-4" />
+        </button>
+        <div class="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+          <span class="text-xs text-bd-text-muted font-medium whitespace-nowrap flex-shrink-0">Jump to:</span>
+          <button
+            v-for="category in categoriesWithScripts"
+            :key="'jump-' + category.id"
+            @click="scrollToCategory(category.id)"
+            class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex-shrink-0"
+            :class="activeCategoryId === category.id 
+              ? getCategoryBgClass(category.color) + ' ' + getCategoryTextClass(category.color)
+              : 'text-bd-text-muted hover:text-bd-text-secondary hover:bg-bd-bg-tertiary'"
+          >
+            <component :is="getCategoryIcon(category.icon)" class="w-3 h-3" />
+            {{ category.name }}
+            <span class="opacity-60">({{ category.count }})</span>
+          </button>
+        </div>
+        <button
+          v-if="hasNextCategory"
+          @click="scrollToNextCategory"
+          class="flex-shrink-0 p-1 rounded-lg text-bd-text-muted hover:text-bd-text-secondary hover:bg-bd-bg-tertiary transition-all"
+          aria-label="Next category"
+        >
+          <ChevronRight class="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+
     <!-- Scripts by Category -->
     <div v-if="!hasAnyFilters" class="space-y-8">
-      <section v-for="category in categoriesWithScripts" :key="category.id">
+      <section 
+        v-for="category in categoriesWithScripts" 
+        :key="category.id"
+        :id="'category-' + category.id"
+        :ref="el => setCategoryRef(category.id, el)"
+      >
         <div class="flex items-center gap-3 mb-4">
           <div 
             class="w-8 h-8 rounded-lg flex items-center justify-center"
@@ -1242,7 +1285,7 @@ modifier(text);</pre>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ScriptItem from '@/components/ui/ScriptItem.vue'
 import SearchBar from '@/components/ui/SearchBar.vue'
@@ -1260,7 +1303,7 @@ import {
   BookOpen, GitPullRequest, HelpCircle, Check, Braces, FileCode, 
   Library, ArrowRightToLine, Layers, ArrowLeftToLine, Database, 
   Lightbulb, Wrench, Plus, Search, Bug, ShieldAlert, Eye, RefreshCw, 
-  ExternalLink, Settings, Award, ChevronDown, ChevronUp, Blocks, Info, MessageSquare,
+  ExternalLink, Settings, Award, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Blocks, Info, MessageSquare,
   Star, Rocket, SlidersHorizontal, Zap, X
 } from 'lucide-vue-next'
 
@@ -1368,6 +1411,16 @@ onMounted(() => {
     // Ensure we're on the collection tab so filtered results are visible
     if (!route.query.tab) activeTab.value = 'collection'
   }
+  // Initialize category observer if starting on collection tab
+  if (activeTab.value === 'collection') {
+    nextTick(() => {
+      setupCategoryObserver()
+    })
+  }
+})
+
+onUnmounted(() => {
+  if (categoryObserver) categoryObserver.disconnect()
 })
 
 const filteredScripts = computed(() => {
@@ -1492,6 +1545,79 @@ const categoriesWithScripts = computed(() => {
   return categories.value.filter(cat => cat.count > 0)
 })
 
+// --- Category jump navigation ---
+const activeCategoryId = ref(null)
+const categoryRefs = {}
+let categoryObserver = null
+
+// Category arrow navigation
+const activeCategoryIndex = computed(() => {
+  const cats = categoriesWithScripts.value
+  if (!activeCategoryId.value || !cats.length) return -1
+  return cats.findIndex(c => c.id === activeCategoryId.value)
+})
+
+const hasPrevCategory = computed(() => activeCategoryIndex.value > 0)
+const hasNextCategory = computed(() => {
+  const cats = categoriesWithScripts.value
+  return activeCategoryIndex.value < cats.length - 1
+})
+
+const scrollToPrevCategory = () => {
+  const cats = categoriesWithScripts.value
+  const idx = activeCategoryIndex.value
+  if (idx > 0) scrollToCategory(cats[idx - 1].id)
+}
+
+const scrollToNextCategory = () => {
+  const cats = categoriesWithScripts.value
+  const idx = activeCategoryIndex.value
+  if (idx < cats.length - 1) scrollToCategory(cats[idx + 1].id)
+}
+
+const setCategoryRef= (categoryId, el) => {
+  if (el) categoryRefs[categoryId] = el
+}
+
+const scrollToCategory = (categoryId) => {
+  const el = categoryRefs[categoryId]
+  if (!el) return
+  const offset = 56
+  const top = el.getBoundingClientRect().top + window.scrollY - offset
+  window.scrollTo({ top, behavior: 'smooth' })
+  activeCategoryId.value = categoryId
+}
+
+const setupCategoryObserver = () => {
+  if (categoryObserver) categoryObserver.disconnect()
+
+  categoryObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          const id = entry.target.id?.replace('category-', '')
+          if (id) activeCategoryId.value = id
+        }
+      }
+    },
+    { rootMargin: '-60px 0px -70% 0px', threshold: 0 }
+  )
+
+  Object.values(categoryRefs).forEach(el => {
+    if (el) categoryObserver.observe(el)
+  })
+}
+
+watch([() => activeTab.value, categoriesWithScripts], ([tab]) => {
+  if (tab === 'collection') {
+    nextTick(() => {
+      setupCategoryObserver()
+    })
+  } else {
+    if (categoryObserver) categoryObserver.disconnect()
+  }
+})
+
 const getScriptsForCategory = (categoryId) => {
   return getScriptsByCategory(categoryId)
 }
@@ -1576,5 +1702,15 @@ const clearFilters = () => {
   bottom: -30px;
   left: 5%;
   animation: float 10s ease-in-out infinite reverse;
+}
+
+/* === Hide scrollbar on category jump nav === */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 </style>

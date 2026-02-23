@@ -1539,20 +1539,38 @@
 
     <!-- Category Jump Navigation (default view - no filters active) -->
     <div v-if="!hasAnyFilters" class="sticky top-0 lg:top-0 bg-bd-bg-primary/95 backdrop-blur-sm -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-2 border-b border-bd-border-subtle" style="z-index: var(--bd-z-sticky)">
-      <div class="flex items-center gap-2 overflow-x-auto scrollbar-hide">
-        <span class="text-xs text-bd-text-muted font-medium whitespace-nowrap flex-shrink-0">Jump to:</span>
+      <div class="flex items-center gap-1">
         <button
-          v-for="category in categoriesWithInstructions"
-          :key="'jump-' + category.id"
-          @click="scrollToCategory(category.id)"
-          class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex-shrink-0"
-          :class="activeCategoryId === category.id 
-            ? getCategoryBgClass(category.id) + ' ' + getCategoryIconClass(category.id)
-            : 'text-bd-text-muted hover:text-bd-text-secondary hover:bg-bd-bg-tertiary'"
+          v-if="hasPrevCategory"
+          @click="scrollToPrevCategory"
+          class="flex-shrink-0 p-1 rounded-lg text-bd-text-muted hover:text-bd-text-secondary hover:bg-bd-bg-tertiary transition-all"
+          aria-label="Previous category"
         >
-          <component :is="getCategoryIcon(category.id)" class="w-3 h-3" />
-          {{ category.name }}
-          <span class="opacity-60">({{ category.instructions.length }})</span>
+          <ChevronLeft class="w-4 h-4" />
+        </button>
+        <div class="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+          <span class="text-xs text-bd-text-muted font-medium whitespace-nowrap flex-shrink-0">Jump to:</span>
+          <button
+            v-for="category in categoriesWithInstructions"
+            :key="'jump-' + category.id"
+            @click="scrollToCategory(category.id)"
+            class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex-shrink-0"
+            :class="activeCategoryId === category.id 
+              ? getCategoryBgClass(category.id) + ' ' + getCategoryIconClass(category.id)
+              : 'text-bd-text-muted hover:text-bd-text-secondary hover:bg-bd-bg-tertiary'"
+          >
+            <component :is="getCategoryIcon(category.id)" class="w-3 h-3" />
+            {{ category.name }}
+            <span class="opacity-60">({{ category.instructions.length }})</span>
+          </button>
+        </div>
+        <button
+          v-if="hasNextCategory"
+          @click="scrollToNextCategory"
+          class="flex-shrink-0 p-1 rounded-lg text-bd-text-muted hover:text-bd-text-secondary hover:bg-bd-bg-tertiary transition-all"
+          aria-label="Next category"
+        >
+          <ChevronRight class="w-4 h-4" />
         </button>
       </div>
     </div>
@@ -1791,7 +1809,7 @@ import {
   ListOrdered, Percent, UserPlus, Repeat, Rocket, Wrench, Clock, UserX,
   Shield, Focus, Type, Drama, MessageSquare, Skull, ExternalLink, Star,
   AlertTriangle, Plus, Tag, Braces, Split, AlignLeft, Cpu, Coins,
-  Check, X, TrendingUp, Wand2, Link2, Heart, ChevronDown, ChevronUp, UserCog, Flame,
+  Check, X, TrendingUp, Wand2, Link2, Heart, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, UserCog, Flame,
   ShieldAlert, Lock, Copy, Eye, GitPullRequest
 } from 'lucide-vue-next'
 
@@ -2028,7 +2046,32 @@ const activeCategoryId = ref(null)
 const categoryRefs = {}
 let categoryObserver = null
 
-const setCategoryRef = (categoryId, el) => {
+// Category arrow navigation
+const activeCategoryIndex = computed(() => {
+  const cats = categoriesWithInstructions.value
+  if (!activeCategoryId.value || !cats.length) return -1
+  return cats.findIndex(c => c.id === activeCategoryId.value)
+})
+
+const hasPrevCategory = computed(() => activeCategoryIndex.value > 0)
+const hasNextCategory = computed(() => {
+  const cats = categoriesWithInstructions.value
+  return activeCategoryIndex.value < cats.length - 1
+})
+
+const scrollToPrevCategory = () => {
+  const cats = categoriesWithInstructions.value
+  const idx = activeCategoryIndex.value
+  if (idx > 0) scrollToCategory(cats[idx - 1].id)
+}
+
+const scrollToNextCategory = () => {
+  const cats = categoriesWithInstructions.value
+  const idx = activeCategoryIndex.value
+  if (idx < cats.length - 1) scrollToCategory(cats[idx + 1].id)
+}
+
+const setCategoryRef= (categoryId, el) => {
   if (el) categoryRefs[categoryId] = el
 }
 
@@ -2068,7 +2111,9 @@ const setupCategoryObserver = () => {
 // Re-setup observer when the collection tab is shown or categories change
 watch([() => activeTab.value, categoriesWithInstructions], ([tab]) => {
   if (tab === 'collection') {
-    nextTick(() => setupCategoryObserver())
+    nextTick(() => {
+      setupCategoryObserver()
+    })
   } else {
     if (categoryObserver) categoryObserver.disconnect()
   }
@@ -2288,7 +2333,9 @@ onMounted(() => {
   }
   // Initialize category observer if starting on collection tab
   if (activeTab.value === 'collection') {
-    nextTick(() => setupCategoryObserver())
+    nextTick(() => {
+      setupCategoryObserver()
+    })
   }
 })
 
