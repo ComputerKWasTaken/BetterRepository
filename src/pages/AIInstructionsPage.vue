@@ -1541,14 +1541,14 @@
     <div v-if="!hasAnyFilters" class="sticky top-0 lg:top-0 bg-bd-bg-primary/95 backdrop-blur-sm -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-2 border-b border-bd-border-subtle" style="z-index: var(--bd-z-sticky)">
       <div class="flex items-center gap-1">
         <button
-          v-if="jumpNavCanScrollLeft"
-          @click="scrollJumpNav('left')"
+          v-if="hasPrevCategory"
+          @click="scrollToPrevCategory"
           class="flex-shrink-0 p-1 rounded-lg text-bd-text-muted hover:text-bd-text-secondary hover:bg-bd-bg-tertiary transition-all"
-          aria-label="Scroll left"
+          aria-label="Previous category"
         >
           <ChevronLeft class="w-4 h-4" />
         </button>
-        <div ref="jumpNavRef" class="flex items-center gap-2 overflow-x-auto scrollbar-hide" @scroll="updateJumpNavScroll">
+        <div class="flex items-center gap-2 overflow-x-auto scrollbar-hide">
           <span class="text-xs text-bd-text-muted font-medium whitespace-nowrap flex-shrink-0">Jump to:</span>
           <button
             v-for="category in categoriesWithInstructions"
@@ -1565,10 +1565,10 @@
           </button>
         </div>
         <button
-          v-if="jumpNavCanScrollRight"
-          @click="scrollJumpNav('right')"
+          v-if="hasNextCategory"
+          @click="scrollToNextCategory"
           class="flex-shrink-0 p-1 rounded-lg text-bd-text-muted hover:text-bd-text-secondary hover:bg-bd-bg-tertiary transition-all"
-          aria-label="Scroll right"
+          aria-label="Next category"
         >
           <ChevronRight class="w-4 h-4" />
         </button>
@@ -2046,26 +2046,32 @@ const activeCategoryId = ref(null)
 const categoryRefs = {}
 let categoryObserver = null
 
-// Jump nav scroll arrows
-const jumpNavRef = ref(null)
-const jumpNavCanScrollLeft = ref(false)
-const jumpNavCanScrollRight = ref(false)
+// Category arrow navigation
+const activeCategoryIndex = computed(() => {
+  const cats = categoriesWithInstructions.value
+  if (!activeCategoryId.value || !cats.length) return -1
+  return cats.findIndex(c => c.id === activeCategoryId.value)
+})
 
-const updateJumpNavScroll = () => {
-  const el = jumpNavRef.value
-  if (!el) return
-  jumpNavCanScrollLeft.value = el.scrollLeft > 0
-  jumpNavCanScrollRight.value = el.scrollLeft + el.clientWidth < el.scrollWidth - 1
+const hasPrevCategory = computed(() => activeCategoryIndex.value > 0)
+const hasNextCategory = computed(() => {
+  const cats = categoriesWithInstructions.value
+  return activeCategoryIndex.value < cats.length - 1
+})
+
+const scrollToPrevCategory = () => {
+  const cats = categoriesWithInstructions.value
+  const idx = activeCategoryIndex.value
+  if (idx > 0) scrollToCategory(cats[idx - 1].id)
 }
 
-const scrollJumpNav = (direction) => {
-  const el = jumpNavRef.value
-  if (!el) return
-  const scrollAmount = 200
-  el.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' })
+const scrollToNextCategory = () => {
+  const cats = categoriesWithInstructions.value
+  const idx = activeCategoryIndex.value
+  if (idx < cats.length - 1) scrollToCategory(cats[idx + 1].id)
 }
 
-const setCategoryRef = (categoryId, el) => {
+const setCategoryRef= (categoryId, el) => {
   if (el) categoryRefs[categoryId] = el
 }
 
@@ -2107,7 +2113,6 @@ watch([() => activeTab.value, categoriesWithInstructions], ([tab]) => {
   if (tab === 'collection') {
     nextTick(() => {
       setupCategoryObserver()
-      updateJumpNavScroll()
     })
   } else {
     if (categoryObserver) categoryObserver.disconnect()
@@ -2330,7 +2335,6 @@ onMounted(() => {
   if (activeTab.value === 'collection') {
     nextTick(() => {
       setupCategoryObserver()
-      updateJumpNavScroll()
     })
   }
 })
