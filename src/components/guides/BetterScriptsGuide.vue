@@ -89,6 +89,28 @@
               </p>
             </div>
 
+            <!-- Scripting Pipeline Context -->
+            <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                <Library class="w-4 h-4 text-bd-blue" />
+                Where BetterScripts Fits in the Scripting Pipeline
+              </h3>
+              <div class="flex flex-wrap items-center gap-2 text-xs">
+                <div class="px-3 py-1.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-secondary">Player Input</div>
+                <span class="text-bd-text-muted">→</span>
+                <div class="px-3 py-1.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-secondary">onInput</div>
+                <span class="text-bd-text-muted">→</span>
+                <div class="px-3 py-1.5 rounded bg-bd-blue/20 border border-bd-blue/30 text-bd-blue font-semibold">Context Modifier (strip tags)</div>
+                <span class="text-bd-text-muted">→</span>
+                <div class="px-3 py-1.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-secondary">AI Generation</div>
+                <span class="text-bd-text-muted">→</span>
+                <div class="px-3 py-1.5 rounded bg-bd-emerald/20 border border-bd-emerald/30 text-bd-emerald font-semibold">Output Modifier (emit widgets)</div>
+                <span class="text-bd-text-muted">→</span>
+                <div class="px-3 py-1.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-secondary">Display</div>
+              </div>
+              <p class="text-xs text-bd-text-muted mt-2">BetterScripts uses two hooks from AI Dungeon’s scripting system: the <strong>Context Modifier</strong> (onModelContext) strips protocol tags so the AI never sees them, and the <strong>Output Modifier</strong> (onOutput) appends widget protocol tags after each AI response. The <strong>Library</strong> runs before both hooks and initializes persistent state.</p>
+            </div>
+
             <!-- Capabilities + Requirements side by side -->
             <div class="grid md:grid-cols-2 gap-4">
               <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
@@ -139,6 +161,10 @@
             <p class="text-bd-text-secondary">
               Three files, three minutes. Add these to your AI Dungeon scenario and you're live.
             </p>
+
+            <div class="p-2 rounded bg-bd-amber/5 border border-bd-amber/20">
+              <p class="text-xs text-bd-text-secondary"><strong>State persistence:</strong> Use <code class="text-bd-cyan">state.game = state.game ?? { ... }</code> with nullish coalescing (<code>??</code>) in the Library to initialize state only once. State is serialized between turns, so stick to plain data (strings, numbers, arrays, objects). Avoid methods or circular references.</p>
+            </div>
 
             <!-- Step 1: Library -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
@@ -952,6 +978,10 @@ window.addEventListener('betterscripts:cleared', (e) => {
               <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-sm">
                 <MessageSquare class="w-4 h-4" />
                 Discord
+              </a>
+              <a href="https://github.com/LewdLeah/Multiple-Choice-Assistant/tree/main/docs" target="_blank" class="btn btn-secondary text-sm">
+                <BookOpen class="w-4 h-4" />
+                LewdLeah's Scripting Docs
               </a>
               <span class="text-xs text-bd-text-muted">Include your script code and console errors when reporting issues.</span>
             </div>

@@ -63,6 +63,62 @@
                 so what you put in plot components has a <em>big effect</em> on where your story goes. Choose wisely!
               </p>
             </div>
+
+            <!-- Five Plot Components Overview -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <Layers class="w-4 h-4 text-bd-blue" />
+                The Five Plot Components
+              </h3>
+              <div class="overflow-x-auto">
+                <table class="w-full text-xs">
+                  <thead>
+                    <tr class="border-b border-bd-border-subtle">
+                      <th class="text-left py-2 pr-4 text-bd-text-muted font-semibold">Component</th>
+                      <th class="text-left py-2 pr-4 text-bd-text-primary font-semibold">Purpose</th>
+                      <th class="text-left py-2 text-bd-text-primary font-semibold">Position in Context</th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-bd-text-secondary">
+                    <tr class="border-b border-bd-border-subtle/50">
+                      <td class="py-2 pr-4 font-medium">AI Instructions</td>
+                      <td class="py-2 pr-4">Behavioral rules for the AI</td>
+                      <td class="py-2">Very beginning</td>
+                    </tr>
+                    <tr class="border-b border-bd-border-subtle/50">
+                      <td class="py-2 pr-4 font-medium">Plot Essentials</td>
+                      <td class="py-2 pr-4">Key story facts (always present)</td>
+                      <td class="py-2">After AI Instructions</td>
+                    </tr>
+                    <tr class="border-b border-bd-border-subtle/50">
+                      <td class="py-2 pr-4 font-medium">Story Summary</td>
+                      <td class="py-2 pr-4">Running plot overview</td>
+                      <td class="py-2">After Story Cards</td>
+                    </tr>
+                    <tr class="border-b border-bd-border-subtle/50">
+                      <td class="py-2 pr-4 font-medium">Author's Note</td>
+                      <td class="py-2 pr-4">Short-term tone/style guidance</td>
+                      <td class="py-2">Near end (before last action)</td>
+                    </tr>
+                    <tr>
+                      <td class="py-2 pr-4 font-medium">Third Person</td>
+                      <td class="py-2 pr-4">Character name handling</td>
+                      <td class="py-2">N/A (affects formatting)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Required Elements Note -->
+            <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30">
+              <div class="flex items-start gap-2">
+                <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
+                <p class="text-xs text-bd-text-secondary">
+                  Plot Components are <strong>Required Elements</strong>, prioritized for inclusion in context (up to 70% of available space). They are always present unless trimmed for space. Without them, the AI relies on recent history alone, which works for casual play but may lose coherence in longer adventures.
+                </p>
+              </div>
+            </div>
           </div>
         </Transition>
       </section>
@@ -142,6 +198,32 @@
                 </div>
               </div>
 
+              <!-- Formatting Examples -->
+              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+                <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                  <Ruler class="w-4 h-4 text-bd-green" />
+                  Format Examples
+                </h3>
+                <div class="grid md:grid-cols-2 gap-3">
+                  <div>
+                    <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Structured Format</h4>
+                    <div class="p-2 rounded bg-bd-bg-primary font-mono text-xs text-bd-green">
+                      <div>SETTING: Medieval fantasy kingdom</div>
+                      <div>PROTAGONIST: Elara, elven ranger</div>
+                      <div>COMPANION: Marcus, human mage</div>
+                      <div>CURRENT: Traveling through marshes</div>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Narrative Format</h4>
+                    <div class="p-2 rounded bg-bd-bg-primary font-mono text-xs text-bd-green">
+                      Elara is an elven ranger on a quest for the Sunstone. She travels with Marcus, a human mage. Lord Varen hunts them. Currently crossing the Misty Marshes.
+                    </div>
+                  </div>
+                </div>
+                <p class="text-xs text-bd-text-muted mt-2">Both formats work. Choose what fits your scenario. Structured is easier to scan; narrative flows more naturally.</p>
+              </div>
+
               <!-- Official Writing Tips -->
               <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
                 <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
@@ -170,6 +252,39 @@
                   <Info class="w-3 h-3 flex-shrink-0" />
                   Details that only matter when a specific topic comes up are better suited for Story Cards.
                 </p>
+              </div>
+
+              <!-- PE vs Story Cards vs Story Summary -->
+              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+                <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                  <Layers class="w-4 h-4 text-bd-green" />
+                  When to Use What
+                </h3>
+                <div class="grid md:grid-cols-3 gap-2 text-xs text-bd-text-secondary">
+                  <div class="p-2 rounded-lg bg-bd-bg-primary border border-bd-green/20">
+                    <h4 class="font-semibold text-bd-green mb-1">Plot Essentials</h4>
+                    <p>Static key facts the AI should <strong>always</strong> know. Character details, world rules, current situation.</p>
+                  </div>
+                  <div class="p-2 rounded-lg bg-bd-bg-primary border border-bd-purple/20">
+                    <h4 class="font-semibold text-bd-purple mb-1">Story Cards</h4>
+                    <p>Conditional lore, only when <strong>triggered</strong>. Character details, locations, items that appear situationally.</p>
+                  </div>
+                  <div class="p-2 rounded-lg bg-bd-bg-primary border border-bd-cyan/20">
+                    <h4 class="font-semibold text-bd-cyan mb-1">Story Summary</h4>
+                    <p>Dynamic plot overview. What's <strong>happened</strong> so far. Can be auto-maintained or manually written.</p>
+                  </div>
+                </div>
+                <p class="text-xs text-bd-text-muted mt-2"><strong>Rule of thumb:</strong> If the AI should always know it → Plot Essentials. If only when mentioned → Story Cards. If it's plot history → Story Summary.</p>
+              </div>
+
+              <!-- Script Access -->
+              <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30">
+                <div class="flex items-start gap-2">
+                  <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
+                  <p class="text-xs text-bd-text-secondary">
+                    <strong>Script access:</strong> Scripts can set Plot Essentials via <code class="text-bd-green">state.memory.context</code>. The API uses "context" (legacy term) while the UI uses "Plot Essentials." Script-set values take priority over UI-configured content.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -248,7 +363,7 @@
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/20">
                 <h4 class="text-xs font-semibold text-bd-pink mb-1">Keep It Short</h4>
                 <p class="text-xs text-bd-text-secondary">
-                  <strong>3-4 sentences max.</strong> AN sits near the end of context where attention is highest, so overloading it makes the AI fixate on those details instead of the actual story.
+                  <strong>3-4 sentences max.</strong> AN sits near the end of context where attention is highest, so overloading it makes the AI fixate on those details instead of the actual story. Very long notes risk being treated as narrative text rather than guidance.
                 </p>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/20">
@@ -268,6 +383,40 @@
                 <p class="text-xs text-bd-text-secondary">
                   Tags work well in AN: <code class="text-bd-green text-[10px]">Tags: noblebright, magical, fantastical, fun</code> because they're concise and model-friendly.
                 </p>
+              </div>
+            </div>
+
+            <!-- When to Update AN -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <RefreshCw class="w-4 h-4 text-bd-pink" />
+                When to Update Author's Note
+              </h3>
+              <div class="grid md:grid-cols-2 gap-3 text-xs text-bd-text-secondary">
+                <div>
+                  <h4 class="font-semibold text-bd-text-primary mb-1">Scene-Based Updates</h4>
+                  <ul class="space-y-1">
+                    <li>• Entering a dungeon → <code class="text-bd-green">"Dark, dangerous. Tension. Unknown threats."</code></li>
+                    <li>• Tavern scene → <code class="text-bd-green">"Relaxed atmosphere. Character interactions."</code></li>
+                    <li>• Battle → <code class="text-bd-green">"Action. Fast pace. Consequences."</code></li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-bd-text-primary mb-1">Mood Keywords</h4>
+                  <p>Use emotional keywords the AI interprets to shape prose:</p>
+                  <p class="mt-1"><code class="text-bd-green">"Melancholy"</code>, <code class="text-bd-green">"Hopeful"</code>, <code class="text-bd-green">"Desperate"</code>, <code class="text-bd-green">"Triumphant"</code></p>
+                  <p class="text-bd-text-muted mt-1">Pick 2-3 key elements. Less is often more.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- AN Troubleshooting -->
+            <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+              <h4 class="text-xs font-semibold text-bd-amber mb-2">AN Troubleshooting</h4>
+              <div class="grid md:grid-cols-3 gap-2 text-xs text-bd-text-secondary">
+                <div><strong>AI ignores AN?</strong> Try shorter text, check for conflicts with AI Instructions, or use more specific language.</div>
+                <div><strong>Tone doesn't match?</strong> Be more specific, use genre terms the AI recognizes, include example adjectives.</div>
+                <div><strong>AN keeps resetting?</strong> Check if scripts are modifying it via <code class="text-bd-green">state.memory.authorsNote</code>.</div>
               </div>
             </div>
           </div>
@@ -442,9 +591,51 @@
                 <li>After every <strong>4 actions</strong>, the system summarizes that batch into a new memory</li>
                 <li>New memories are appended to the <strong>Story Summary</strong> plot component</li>
                 <li>When the summary grows long, it's <strong>re-summarized</strong> by an AI model to stay concise</li>
-                <li>The Memory Bank uses <strong>embedding vectors</strong> to match stored memories to your current action by relevance</li>
+                <li>The Memory Bank uses <strong>embedding vectors</strong> (semantic similarity) to match stored memories to your current action by relevance</li>
                 <li>Relevant memories are dynamically included in context (~25% of dynamic token budget)</li>
               </ol>
+            </div>
+
+            <!-- 8-Action Buffer -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <Database class="w-4 h-4 text-bd-cyan" />
+                The 8-Action Buffer
+              </h3>
+              <p class="text-xs text-bd-text-secondary mb-2">
+                Your most recent 4 actions are <strong>never summarized</strong>, creating a buffer that allows editing/undoing recent actions without affecting memories.
+              </p>
+              <div class="grid md:grid-cols-3 gap-2 text-xs">
+                <div class="p-2 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                  <span class="font-semibold text-bd-text-primary">Actions 1–4</span>
+                  <p class="text-bd-text-muted">Summarized at action 8</p>
+                </div>
+                <div class="p-2 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                  <span class="font-semibold text-bd-text-primary">Actions 5–8</span>
+                  <p class="text-bd-text-muted">Still in buffer at action 8</p>
+                </div>
+                <div class="p-2 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                  <span class="font-semibold text-bd-text-primary">Current 4 actions</span>
+                  <p class="text-bd-text-muted">Always preserved in full</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Manual Editing with Auto Summarization -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <Edit class="w-4 h-4 text-bd-amber" />
+                Editing with Auto Summarization
+              </h3>
+              <p class="text-xs text-bd-text-secondary mb-2">
+                Even with Auto Summarization enabled, <strong>your edits are preserved</strong>. The re-summarization model considers your changes and incorporates them into future summaries.
+              </p>
+              <div class="grid md:grid-cols-2 gap-2 text-xs text-bd-text-secondary">
+                <div>• <strong>Edit recent actions</strong> (within buffer): Changes are considered when eventually summarized</div>
+                <div>• <strong>Edit older actions</strong>: Won't auto-update — manually edit Story Summary instead</div>
+                <div>• <strong>Undo recent actions</strong>: Works normally within the 4-action buffer</div>
+                <div>• <strong>Existing adventures</strong>: Enabling summarizes the last ~8000 tokens as initial summary</div>
+              </div>
             </div>
 
             <!-- Token Budget Note -->
@@ -519,6 +710,55 @@
                     dividers, making your story easier to read while keeping the raw markers intact for the AI.
                   </p>
                 </div>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
+      <!-- Scripting Integration -->
+      <section id="guide-scripting-integration" class="card">
+        <button
+          @click="toggleGuideSection('scripting-integration')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <ScrollText class="w-5 h-5 text-bd-cyan" />
+            Scripting Integration
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('scripting-integration') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('scripting-integration')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              Scripts can dynamically modify Plot Components via the <code class="text-bd-green">state.memory</code> object, allowing content that changes based on game state.
+            </p>
+            <div class="grid md:grid-cols-3 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30">
+                <h4 class="text-xs font-semibold text-bd-green mb-2">Plot Essentials</h4>
+                <code class="text-xs text-bd-green block">state.memory.context</code>
+                <p class="text-xs text-bd-text-muted mt-1">Sets Plot Essentials content. Script-set values take priority over UI content.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2">Author's Note</h4>
+                <code class="text-xs text-bd-green block">state.memory.authorsNote</code>
+                <p class="text-xs text-bd-text-muted mt-1">Sets Author's Note. Changes take effect on the next generation.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
+                <h4 class="text-xs font-semibold text-bd-amber mb-2">Front Memory</h4>
+                <code class="text-xs text-bd-green block">state.memory.frontMemory</code>
+                <p class="text-xs text-bd-text-muted mt-1">Hidden text injected at the very end of context. Not accessible from UI — powerful position for immediate influence.</p>
+              </div>
+            </div>
+            <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30">
+              <div class="flex items-start gap-2">
+                <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
+                <p class="text-xs text-bd-text-secondary">
+                  There's no direct <code class="text-bd-green">state.memory</code> property for AI Instructions. Scripts can influence AI Instructions indirectly through the context modifier hook (<code class="text-bd-green">onModelContext</code>). See the <router-link to="/guides?tab=scripts" class="text-bd-accent-primary hover:underline font-medium">Scripts Guide</router-link> for details.
+                </p>
               </div>
             </div>
           </div>
@@ -657,6 +897,9 @@
               <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
                 <MessageSquare class="w-3 h-3" /> Discord
               </a>
+              <a href="https://github.com/LewdLeah/Multiple-Choice-Assistant/tree/main/docs" target="_blank" class="btn btn-secondary text-xs">
+                <BookMarked class="w-3 h-3" /> LewdLeah's AI Dungeon Docs
+              </a>
             </div>
           </div>
         </Transition>
@@ -689,6 +932,7 @@ const guideSections = [
   { id: 'memory-summary', label: 'Memory + Summary' },
   { id: 'header-advanced', label: 'Advanced', isHeader: true },
   { id: 'scene-transitions', label: 'Scene Transitions' },
+  { id: 'scripting-integration', label: 'Scripting Integration' },
   { id: 'tips-pitfalls', label: 'Tips & Pitfalls' },
   { id: 'credits', label: 'Credits' }
 ]

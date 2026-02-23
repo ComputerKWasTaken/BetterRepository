@@ -70,6 +70,14 @@
               <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline">Plot Components</router-link> 
               you can use to guide the AI.
             </p>
+            <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30">
+              <div class="flex items-start gap-2">
+                <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
+                <p class="text-xs text-bd-text-secondary">
+                  Story Cards are <strong>Dynamic Elements</strong>, sharing the 30% dynamic token budget with Memory Bank entries and action history. They get roughly <strong>~25% of dynamic tokens</strong>. Cards are ranked by recency and frequency of trigger matches — frequently referenced cards are prioritized.
+                </p>
+              </div>
+            </div>
           </div>
         </Transition>
       </section>
@@ -220,6 +228,15 @@
                     <li><strong>AI output:</strong> Triggers for the <em>next</em> response only. The same output that activates a card cannot use it.</li>
                   </ol>
                   <p class="text-xs text-bd-text-muted mt-2">The AI does not know Story Cards exist. It only sees Entry text labeled "World Lore:" when a card is active.</p>
+                  <div class="mt-3 p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+                    <h4 class="text-xs font-semibold text-bd-text-primary mb-2">Trigger Evaluation Window</h4>
+                    <div class="grid md:grid-cols-3 gap-2 text-xs text-bd-text-secondary">
+                      <div>• <strong>Minimum:</strong> 4 recent actions are always checked for trigger matches</div>
+                      <div>• <strong>Dynamic:</strong> If >500 tokens available for cards: (tokens ÷ 100) actions checked</div>
+                      <div>• <strong>Example:</strong> 900 tokens available → 9 recent actions are scanned</div>
+                    </div>
+                    <p class="text-xs text-bd-text-muted mt-2">Once triggered, cards stay in context until pushed out by token limits. There's no fixed turn count — frequently referenced cards are prioritized over older or less relevant ones.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -291,6 +308,49 @@
               </div>
             </div>
           </div>
+
+          <!-- Field Summary Table -->
+          <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+            <h3 class="font-semibold text-bd-text-primary mb-3">Field Visibility Summary</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs">
+                <thead>
+                  <tr class="border-b border-bd-border-subtle">
+                    <th class="text-left py-2 pr-4 text-bd-text-muted font-semibold">Field</th>
+                    <th class="text-left py-2 pr-4 text-bd-text-primary font-semibold">AI Sees?</th>
+                    <th class="text-left py-2 text-bd-text-primary font-semibold">Purpose</th>
+                  </tr>
+                </thead>
+                <tbody class="text-bd-text-secondary">
+                  <tr class="border-b border-bd-border-subtle/50">
+                    <td class="py-2 pr-4 font-medium">Entry</td>
+                    <td class="py-2 pr-4 text-bd-green font-semibold">Yes (when triggered)</td>
+                    <td class="py-2">Information shown to AI as "World Lore:"</td>
+                  </tr>
+                  <tr class="border-b border-bd-border-subtle/50">
+                    <td class="py-2 pr-4 font-medium">Triggers</td>
+                    <td class="py-2 pr-4 text-bd-pink font-semibold">No</td>
+                    <td class="py-2">Keywords that activate the card</td>
+                  </tr>
+                  <tr class="border-b border-bd-border-subtle/50">
+                    <td class="py-2 pr-4 font-medium">Name/Title</td>
+                    <td class="py-2 pr-4 text-bd-pink font-semibold">No</td>
+                    <td class="py-2">Your reference label only</td>
+                  </tr>
+                  <tr class="border-b border-bd-border-subtle/50">
+                    <td class="py-2 pr-4 font-medium">Type</td>
+                    <td class="py-2 pr-4 text-bd-pink font-semibold">No</td>
+                    <td class="py-2">Organization + Character Creator</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-4 font-medium">Notes</td>
+                    <td class="py-2 pr-4 text-bd-pink font-semibold">No*</td>
+                    <td class="py-2">Your private notes (*shown in Character Creator)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
           </div>
         </Transition>
       </section>
@@ -340,6 +400,28 @@
                   <span>Avoid excessive physical description details unless relevant to the story.</span>
                 </li>
               </ul>
+            </div>
+
+            <!-- Card Networks -->
+            <div class="mb-6">
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <GitMerge class="w-4 h-4 text-bd-purple" />
+                Card Networks & Chained Activation
+              </h3>
+              <div class="space-y-3">
+                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/20">
+                  <h4 class="text-xs font-semibold text-bd-purple mb-1">Reference Other Cards</h4>
+                  <p class="text-xs text-bd-text-secondary">Mention one entity inside another card's Entry to encourage chained activation. If Card A is active and mentions Card B's name, the AI is more likely to output that name, triggering Card B next turn.</p>
+                </div>
+                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/20">
+                  <h4 class="text-xs font-semibold text-bd-green mb-1">Embed Triggers in Plot Essentials</h4>
+                  <p class="text-xs text-bd-text-secondary">Listing key entity names in Plot Essentials primes the AI to use those names. When the AI outputs them, their Story Cards trigger. Example: PE says "Friends: Joe, Dave" → AI mentions Joe → Joe's card activates.</p>
+                </div>
+                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/20">
+                  <h4 class="text-xs font-semibold text-bd-blue mb-1">Parent-Child Relationships</h4>
+                  <p class="text-xs text-bd-text-secondary">For complex entities: create a main card for the overall entity and sub-cards for specific details. The main card's Entry references sub-card triggers, creating a hierarchy.</p>
+                </div>
+              </div>
             </div>
           </div>
         </Transition>
@@ -623,6 +705,99 @@
         </Transition>
       </section>
 
+      <!-- Card Generation -->
+      <section id="guide-card-generation" class="card">
+        <button
+          @click="toggleGuideSection('card-generation')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Sparkles class="w-5 h-5 text-bd-green" />
+            AI Card Generation
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('card-generation') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('card-generation')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              AI Dungeon can generate Story Card content using AI, streamlining the creation of characters, locations, and other elements.
+            </p>
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-1">Speed Create Mode</h4>
+                <p class="text-xs text-bd-text-secondary">The "Finish" button becomes "Next," letting you save the current card and immediately create another of the same type. Useful for batch card creation.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-1">Include Story Summary</h4>
+                <p class="text-xs text-bd-text-secondary">When enabled, the generator considers your Story Summary, helping new cards fit the context of your existing story.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-1">Log Generation in Notes</h4>
+                <p class="text-xs text-bd-text-secondary">Every AI generation (including retries) is saved to the card's Notes field. Useful for comparing options and picking the best parts.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-1">AI Instructions for Generator</h4>
+                <p class="text-xs text-bd-text-secondary">Tell the generator what kind of card you want: style preferences, content guidelines, specific details. E.g., "Create a morally ambiguous character" or "Design a noir-style location."</p>
+              </div>
+            </div>
+            <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+              <p class="text-xs text-bd-text-secondary">
+                <strong class="text-bd-amber">Tip:</strong> AI-generated content is a starting point. Always edit for accuracy to your vision, remove irrelevant details, and add specific information the generator missed.
+              </p>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
+      <!-- Import/Export -->
+      <section id="guide-import-export" class="card">
+        <button
+          @click="toggleGuideSection('import-export')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Download class="w-5 h-5 text-bd-cyan" />
+            Import & Export
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('import-export') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('import-export')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              Story Cards can be exported to JSON and imported from JSON, enabling sharing, backup, and bulk management. <strong class="text-bd-warning">Web only</strong> — native iOS/Android apps do not support this feature.
+            </p>
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <h3 class="font-semibold text-bd-text-primary mb-2">JSON Format</h3>
+              <div class="p-2 rounded bg-bd-bg-primary font-mono text-xs text-bd-green overflow-x-auto">
+                <div>[{</div>
+                <div>&nbsp;&nbsp;"keys": "Marcus,Sir Marcus,the knight",</div>
+                <div>&nbsp;&nbsp;"value": "Sir Marcus is a veteran knight...",</div>
+                <div>&nbsp;&nbsp;"type": "character",</div>
+                <div>&nbsp;&nbsp;"title": "Sir Marcus",</div>
+                <div>&nbsp;&nbsp;"description": "Optional notes"</div>
+                <div>}]</div>
+              </div>
+              <p class="text-xs text-bd-text-muted mt-2">Only <code class="text-bd-green">keys</code> (triggers) and <code class="text-bd-green">value</code> (entry) are required.</p>
+            </div>
+            <div class="p-4 rounded-lg bg-bd-warning/10 border border-bd-warning/30">
+              <div class="flex items-start gap-2">
+                <AlertTriangle class="w-4 h-4 text-bd-warning flex-shrink-0 mt-0.5" />
+                <div class="text-xs text-bd-text-secondary">
+                  <p class="font-semibold text-bd-warning">Importing replaces ALL existing cards</p>
+                  <p class="mt-1">This is not a merge. To add cards without losing existing ones: export first, add new cards to the JSON, then import the combined file.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
       <!-- Credits -->
       <section id="guide-credits" class="card">
         <button
@@ -655,6 +830,9 @@
               <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
                 <MessageSquare class="w-3 h-3" /> Discord
               </a>
+              <a href="https://github.com/LewdLeah/Multiple-Choice-Assistant/tree/main/docs" target="_blank" class="btn btn-secondary text-xs">
+                <FileText class="w-3 h-3" /> LewdLeah's AI Dungeon Docs
+              </a>
             </div>
           </div>
         </Transition>
@@ -673,7 +851,7 @@ import {
   Download, Search, Infinity, Space, Target,
   CaseSensitive, Scissors, Quote, GitMerge, X,
   ChevronDown, ChevronUp, Info, MessageSquare,
-  Brain, Coins
+  Brain, Coins, Sparkles
 } from 'lucide-vue-next'
 
 // Guide table of contents sections
@@ -688,6 +866,8 @@ const guideSections = [
   { id: 'header-advanced', label: 'Advanced', isHeader: true },
   { id: 'trigger-mastery', label: 'Trigger Mastery' },
   { id: 'tips-pitfalls', label: 'Tips & Pitfalls' },
+  { id: 'card-generation', label: 'AI Card Generation' },
+  { id: 'import-export', label: 'Import & Export' },
   { id: 'credits', label: 'Credits' }
 ]
 
