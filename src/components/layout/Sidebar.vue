@@ -28,7 +28,7 @@
               BetterRepository
             </h1>
             <div class="flex items-center gap-2">
-              <span class="text-xs text-bd-text-muted">v1.2.0</span>
+              <span class="text-xs text-bd-text-muted">v1.2.1</span>
             </div>
           </div>
         </router-link>
