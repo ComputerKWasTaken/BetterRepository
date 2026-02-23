@@ -15,17 +15,21 @@
             </button>
           </div>
         </div>
-        <button
-          v-for="section in guideSections"
-          :key="section.id"
-          @click="scrollToGuideSection(section.id)"
-          class="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors hover:bg-bd-bg-tertiary"
-          :class="[
-            isGuideSectionExpanded(section.id) ? 'text-bd-text-primary' : 'text-bd-text-muted'
-          ]"
-        >
-          {{ section.label }}
-        </button>
+        <template v-for="section in guideSections" :key="section.id">
+          <div v-if="section.isHeader" class="pt-3 pb-1 px-3 text-[10px] font-bold uppercase tracking-widest text-bd-text-muted">
+            {{ section.label }}
+          </div>
+          <button
+            v-else
+            @click="scrollToGuideSection(section.id)"
+            class="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors hover:bg-bd-bg-tertiary"
+            :class="[
+              isGuideSectionExpanded(section.id) ? 'text-bd-text-primary' : 'text-bd-text-muted'
+            ]"
+          >
+            {{ section.label }}
+          </button>
+        </template>
       </div>
     </aside>
 
@@ -457,6 +461,13 @@
         </Transition>
       </section>
 
+      <!-- ===================== ADVANCED SECTION DIVIDER ===================== -->
+      <div class="flex items-center gap-3 pt-4">
+        <div class="h-px flex-1 bg-bd-border-subtle"></div>
+        <span class="text-xs font-bold uppercase tracking-widest text-bd-text-muted">Advanced</span>
+        <div class="h-px flex-1 bg-bd-border-subtle"></div>
+      </div>
+
       <!-- Scene Transitions -->
       <section id="guide-scene-transitions" class="card">
         <button
@@ -669,19 +680,21 @@ import {
 
 // Guide table of contents sections
 const guideSections = [
+  { id: 'header-core', label: 'Core', isHeader: true },
   { id: 'intro', label: 'Intro' },
   { id: 'plot-essentials', label: 'Plot Essentials' },
   { id: 'authors-note', label: "Author's Note" },
   { id: 'story-cards', label: 'Story Cards' },
   { id: 'ai-instructions', label: 'AI Instructions' },
   { id: 'memory-summary', label: 'Memory + Summary' },
+  { id: 'header-advanced', label: 'Advanced', isHeader: true },
   { id: 'scene-transitions', label: 'Scene Transitions' },
   { id: 'tips-pitfalls', label: 'Tips & Pitfalls' },
   { id: 'credits', label: 'Credits' }
 ]
 
 // Track which guide sections are expanded (all expanded by default)
-const expandedGuideSections = ref(new Set(guideSections.map(s => s.id)))
+const expandedGuideSections = ref(new Set(guideSections.filter(s => !s.isHeader).map(s => s.id)))
 
 const toggleGuideSection = (sectionId) => {
   if (expandedGuideSections.value.has(sectionId)) {
@@ -706,7 +719,7 @@ const scrollToGuideSection = (sectionId) => {
 }
 
 const expandAllGuideSections = () => {
-  expandedGuideSections.value = new Set(guideSections.map(s => s.id))
+  expandedGuideSections.value = new Set(guideSections.filter(s => !s.isHeader).map(s => s.id))
 }
 
 const collapseAllGuideSections = () => {
