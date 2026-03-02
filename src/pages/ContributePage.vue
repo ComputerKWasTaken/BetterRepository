@@ -386,7 +386,7 @@
     </section>
 
     <!-- Component Ruleset Guidelines -->
-    <section ref="rulesetRef" :class="['contribute-section', { 'is-visible': visibleSections.ruleset || true }]">
+    <section ref="rulesetRef" :class="['contribute-section', { 'is-visible': visibleSections.ruleset }]">
       <div class="card-elevated border border-bd-border">
         <div class="flex items-center gap-2 mb-4">
           <ListOrdered class="w-5 h-5 text-bd-accent-primary" />
@@ -821,6 +821,7 @@ const spotlightRef = ref(null)
 const altRef = ref(null)
 const faqRef = ref(null)
 const ctaRef = ref(null)
+const rulesetRef = ref(null)
 
 const visibleSections = reactive({
   stats: false,
@@ -833,6 +834,7 @@ const visibleSections = reactive({
   alt: false,
   faq: false,
   cta: false,
+  ruleset: false,
 })
 
 let observer = null
@@ -853,6 +855,7 @@ onMounted(() => {
           else if (el === altRef.value) visibleSections.alt = true
           else if (el === faqRef.value) visibleSections.faq = true
           else if (el === ctaRef.value) visibleSections.cta = true
+          else if (el === rulesetRef.value) visibleSections.ruleset = true
           observer.unobserve(el)
         }
       })
@@ -860,7 +863,7 @@ onMounted(() => {
     { threshold: 0.15 }
   )
 
-  const refs = [statsRef, whyRef, easyRef, submitRef, checklistRef, exampleRef, spotlightRef, altRef, faqRef, ctaRef]
+  const refs = [statsRef, whyRef, easyRef, submitRef, checklistRef, rulesetRef, exampleRef, spotlightRef, altRef, faqRef, ctaRef]
   refs.forEach((r) => { if (r.value) observer.observe(r.value) })
 })
 
