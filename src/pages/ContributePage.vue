@@ -385,6 +385,112 @@
       </div>
     </section>
 
+    <!-- Component Ruleset Guidelines -->
+    <section ref="rulesetRef" :class="['contribute-section', { 'is-visible': visibleSections.ruleset || true }]">
+      <div class="card-elevated border border-bd-border">
+        <div class="flex items-center gap-2 mb-4">
+          <ListOrdered class="w-5 h-5 text-bd-accent-primary" />
+          <h2 class="text-lg font-semibold text-bd-text-primary">AI Instruction Component Ruleset</h2>
+        </div>
+        <p class="text-sm text-bd-text-secondary mb-4">
+          All AI Instruction components must follow these rules to ensure consistency across the entire collection.
+        </p>
+
+        <div class="space-y-3">
+          <!-- Rule 1 -->
+          <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="w-5 h-5 rounded-md bg-bd-accent-primary/20 text-bd-accent-light text-xs font-bold flex items-center justify-center">1</span>
+              <h4 class="text-sm font-semibold text-bd-text-primary">One-Line Dash Standard</h4>
+            </div>
+            <p class="text-sm text-bd-text-secondary pl-7">
+              Every component's content must be a <strong class="text-bd-text-primary">single line</strong> starting with <code class="text-bd-accent-light bg-bd-bg-primary px-1 rounded">- </code>. No multi-line content blocks allowed.
+            </p>
+            <div class="mt-2 pl-7 flex flex-col gap-1">
+              <div class="flex items-center gap-2 text-xs">
+                <Check class="w-3.5 h-3.5 text-bd-success" />
+                <code class="text-bd-text-secondary">- Avoid using adverbs in your responses.</code>
+              </div>
+              <div class="flex items-center gap-2 text-xs">
+                <X class="w-3.5 h-3.5 text-bd-error" />
+                <code class="text-bd-text-muted line-through">Avoid using adverbs.\nDon't use -ly words.\nKeep modifiers minimal.</code>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rule 2 -->
+          <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="w-5 h-5 rounded-md bg-bd-accent-primary/20 text-bd-accent-light text-xs font-bold flex items-center justify-center">2</span>
+              <h4 class="text-sm font-semibold text-bd-text-primary">Single Concept Per Component</h4>
+            </div>
+            <p class="text-sm text-bd-text-secondary pl-7">
+              Each component addresses <strong class="text-bd-text-primary">one instruction concept</strong>. If an instruction needs multiple sub-rules, they belong in separate components or as variants.
+            </p>
+          </div>
+
+          <!-- Rule 3 -->
+          <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="w-5 h-5 rounded-md bg-bd-accent-primary/20 text-bd-accent-light text-xs font-bold flex items-center justify-center">3</span>
+              <h4 class="text-sm font-semibold text-bd-text-primary">Concise & Direct</h4>
+            </div>
+            <p class="text-sm text-bd-text-secondary pl-7">
+              Instructions must be clear and actionable. No filler, no padding, no redundant phrasing. The AI should immediately understand what to do.
+            </p>
+          </div>
+
+          <!-- Rule 4 -->
+          <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="w-5 h-5 rounded-md bg-bd-accent-primary/20 text-bd-accent-light text-xs font-bold flex items-center justify-center">4</span>
+              <h4 class="text-sm font-semibold text-bd-text-primary">Difficulty Rating</h4>
+            </div>
+            <div class="text-sm text-bd-text-secondary pl-7 space-y-1">
+              <p><strong class="text-bd-green">Beginner:</strong> Simple, works out of the box with any model</p>
+              <p><strong class="text-bd-amber">Intermediate:</strong> May need tuning or complementary components</p>
+              <p><strong class="text-bd-pink">Advanced:</strong> Requires understanding of AI behavior, may conflict with others</p>
+            </div>
+          </div>
+
+          <!-- Rule 5 -->
+          <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="w-5 h-5 rounded-md bg-bd-accent-primary/20 text-bd-accent-light text-xs font-bold flex items-center justify-center">5</span>
+              <h4 class="text-sm font-semibold text-bd-text-primary">Impact Rating</h4>
+            </div>
+            <div class="text-sm text-bd-text-secondary pl-7 space-y-1">
+              <p><strong class="text-bd-text-primary">High:</strong> Dramatically changes AI output (perspective, anti-repetition)</p>
+              <p><strong class="text-bd-text-primary">Medium:</strong> Noticeably shapes output (pacing, dialogue style)</p>
+              <p><strong class="text-bd-text-primary">Low:</strong> Subtle refinement (formatting, minor restriction)</p>
+            </div>
+          </div>
+
+          <!-- Rule 6 -->
+          <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="w-5 h-5 rounded-md bg-bd-accent-primary/20 text-bd-accent-light text-xs font-bold flex items-center justify-center">6</span>
+              <h4 class="text-sm font-semibold text-bd-text-primary">Variant Rules</h4>
+            </div>
+            <p class="text-sm text-bd-text-secondary pl-7">
+              Variants are alternate versions of the same concept at different strengths. Each variant follows the one-line dash standard. Variants must be meaningfully different, not just rephrased.
+            </p>
+          </div>
+
+          <!-- Rule 7 -->
+          <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="w-5 h-5 rounded-md bg-bd-accent-primary/20 text-bd-accent-light text-xs font-bold flex items-center justify-center">7</span>
+              <h4 class="text-sm font-semibold text-bd-text-primary">No Redundancy</h4>
+            </div>
+            <p class="text-sm text-bd-text-secondary pl-7">
+              Before creating a component, verify it doesn't duplicate an existing one. If similar, consider making it a variant of the existing component.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Example Submission -->
     <section ref="exampleRef" :class="['contribute-section', { 'is-visible': visibleSections.example }]">
       <div class="card-elevated border border-bd-border">
@@ -409,8 +515,7 @@
 <span class="text-bd-amber font-medium">**Description:**</span> <span class="text-bd-text-secondary">Makes the AI write shorter, punchier sentences. Good for action scenes.</span>
 
 <span class="text-bd-amber font-medium">**Content:**</span>
-<span class="text-bd-text-primary">Write in a concise, punchy style. Use short sentences. Avoid purple prose.
-Favor active voice over passive. Every word should earn its place.</span></pre>
+<span class="text-bd-text-primary">- Write in a concise, punchy style with short sentences, active voice, and no purple prose.</span></pre>
         </div>
       </div>
     </section>
@@ -585,7 +690,8 @@ import {
   ScrollText, Bookmark, Drama, Code, GitMerge, MessageCircle,
   ExternalLink, Github, FileText, Award, Heart, Users, Star,
   ChevronRight, Lightbulb, Bug, Pencil, HelpCircle, RefreshCw,
-  Sparkles, Package, Send, Loader, AlertCircle, BookOpen
+  Sparkles, Package, Send, Loader, AlertCircle, BookOpen,
+  ListOrdered, X
 } from 'lucide-vue-next'
 
 // --- Community impact stats (pulled from actual data) ---
