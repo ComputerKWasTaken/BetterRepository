@@ -132,6 +132,9 @@
             <div class="flex-1 min-w-0">
               <div class="flex items-center gap-2">
                 <span class="font-medium text-sm text-bd-text-primary truncate">{{ comp.name }}</span>
+                <span v-if="comp.essential" class="px-1.5 py-0.5 rounded text-[10px] bg-bd-amber/20 text-bd-amber font-medium">
+                  Essential
+                </span>
                 <span class="px-1.5 py-0.5 rounded text-[10px] bg-bd-purple/15 text-bd-purple">
                   {{ getDirectiveCategoryName(comp.directiveCategory) }}
                 </span>
@@ -219,6 +222,21 @@
             </button>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Directive Preview -->
+    <div v-if="directivePreviewText" class="card space-y-3">
+      <div class="flex items-center justify-between">
+        <h4 class="text-sm font-semibold text-bd-text-primary flex items-center gap-2">
+          <Eye class="w-4 h-4 text-bd-purple" />
+          Directive Preview
+        </h4>
+        <span class="text-xs text-bd-text-muted">{{ directivePreviewText.length }} characters</span>
+      </div>
+      <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/20 text-sm text-bd-text-secondary leading-relaxed">
+        <span class="text-bd-purple font-medium">## Directive</span><br/>
+        {{ directivePreviewText }}
       </div>
     </div>
 
@@ -573,12 +591,18 @@ const directiveComponents = computed(() =>
   COMPONENTS.filter(c => c.isDirective)
 )
 
-// Filtered directive components based on selected category
+// Filtered directive components based on selected category, essentials first
 const filteredDirectiveComponents = computed(() => {
+  let result = directiveComponents.value
   if (selectedDirectiveCategory.value) {
-    return directiveComponents.value.filter(c => c.directiveCategory === selectedDirectiveCategory.value)
+    result = result.filter(c => c.directiveCategory === selectedDirectiveCategory.value)
   }
-  return directiveComponents.value
+  // Sort essential components to the top
+  return [...result].sort((a, b) => {
+    if (a.essential && !b.essential) return -1
+    if (!a.essential && b.essential) return 1
+    return 0
+  })
 })
 
 // Get directive category name by id
@@ -710,6 +734,23 @@ const savedBuilds = computed(() =>
 const hasAnythingToBuild = computed(() =>
   currentDirectiveComponents.value.length > 0 || currentBuildInstructions.value.length > 0
 )
+
+// Directive preview text (prose rendering of selected directive components)
+const directivePreviewText = computed(() => {
+  if (currentDirectiveComponents.value.length === 0) return ''
+  const proseParts = currentDirectiveComponents.value.map(item => {
+    const comp = COMPONENTS.find(c => c.id === item.id)
+    if (!comp) return null
+    let content
+    if (item.variantIndex !== null && comp.variants) {
+      content = comp.variants[item.variantIndex]?.content
+    } else {
+      content = comp.content
+    }
+    return toProse(content)
+  }).filter(Boolean)
+  return proseParts.join(' ')
+})
 
 // Helper: strip leading "- " from content to produce prose
 const toProse = (content) => {
@@ -941,9 +982,11 @@ const initializeDefaults = () => {
   const hasComponents = build.instructions && build.instructions.length > 0
 
   if (!hasDirective && !hasComponents) {
-    // Default directive: Varying Novel (With Rules), POV Second Person Present
-    addToDirective('role-unified', 1) // Varying Novel (With Rules) variant
+    // Default directive: Unified Storyteller (Varying Novel), Follow User's Rules (With Thinking Mode), POV Second Person Present, AI Dungeon > Token
+    addToDirective('role-unified', 0) // Varying Novel variant
+    addToDirective('follow-user-rules', 1) // With Thinking Mode variant
     addToDirective('pov-tense', 0) // Second Person Present variant
+    addToDirective('ai-dungeon-action-types', null) // > Token
 
     // Default instruction components
     addToBuild('anti-repetition', 0) // Comprehensive variant

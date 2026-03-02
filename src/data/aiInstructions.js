@@ -6,8 +6,7 @@
 
 // ============================================
 // COMPONENT RULESET (Internal Documentation)
-// All components MUST follow these rules. See ContributePage.vue
-// for the external contributor-facing version.
+// All components MUST follow these rules.
 // ============================================
 //
 // 1. ONE-LINE DASH STANDARD
@@ -41,6 +40,57 @@
 // 7. NO REDUNDANCY
 //    Before creating a component, verify it doesn't duplicate an existing one.
 //    If similar, consider making it a variant of the existing component.
+//
+
+// ============================================
+// SET RULESET (Internal Documentation)
+// All instruction sets MUST follow these rules.
+// ============================================
+//
+// 1. CATEGORY ASSIGNMENT
+//    Every set must have a `category` field matching one of the SET_CATEGORIES ids:
+//    essential, playstyle, model-optimized, specialized.
+//    Essential = core sets for all users. Playstyle = universal player-preference sets.
+//    Model-optimized = tuned for specific AI models. Specialized = focused on one goal.
+//
+// 2. THREE LENGTH VARIANTS (Lite / Standard / Max)
+//    Every set's `content` must be an object with `lite`, `standard`, and `max` keys.
+//    - Lite: Concise version, ~4-6 lines. Best for short-context models or minimal setups.
+//    - Standard: Balanced version with category headers. The recommended default.
+//    - Max: Extended version with thorough coverage. For long-context models.
+//    Each variant must be self-contained and functional on its own.
+//
+// 3. PLAYER CONTROL SEPARATION
+//    Sets must NOT include player-control instructions in their content.
+//    Player control (blocking/neutral/acting) is handled externally via
+//    PLAYER_CONTROL_VARIANTS and applied by the UI at copy time.
+//    This keeps set content clean and avoids disorganized appending.
+//
+// 4. CATEGORY HEADERS IN STANDARD & MAX
+//    Standard and Max variants should use `## Category Name` headers to
+//    organize instructions into logical sections (e.g., ## Core Style,
+//    ## Characters & Dialogue, ## Pacing & Flow). Lite variants omit headers
+//    for brevity. Headers must match the actual content that follows them.
+//
+// 5. DIRECTIVE + COMPONENTS STRUCTURE
+//    Every set should begin with a directive line (the AI's role statement),
+//    followed by organized instruction components. The directive line should
+//    be the first line of content, setting the AI's identity and perspective.
+//
+// 6. UNIVERSAL APPLICABILITY
+//    Playstyle sets must work in ANY genre or scenario type. They should not
+//    reference specific settings, characters, or story types. Essential and
+//    playstyle sets target universal player preferences, not niche use cases.
+//
+// 7. NO REDUNDANCY ACROSS SETS
+//    Before creating a set, verify it serves a distinct purpose not already
+//    covered by existing sets. If two sets overlap significantly, consider
+//    whether one should be a variant of the other or merged.
+//
+// 8. METADATA COMPLETENESS
+//    Every set must include: id, name, category, difficulty, impact, essential,
+//    placement, tags, models, description, purpose, and content (with all 3
+//    length variants). Tags should include the category and key descriptors.
 //
 
 // ============================================
@@ -1361,7 +1411,7 @@ export const COMPONENTS = [
   // ROLE & PERSONA
   // ==========================================
   
-  // --- Essential Foundation ---
+  // --- Essential Foundation (these 4 appear at top of directive picker) ---
   {
     id: 'role-unified',
     name: 'Unified Storyteller Role',
@@ -1377,20 +1427,19 @@ export const COMPONENTS = [
     placement: 'ai-instructions',
     tags: ['role', 'novelist', 'storyteller', 'dungeon-master', 'author', 'foundation', 'essential', 'varying-novel'],
     models: ['All Models'],
-    combinesWith: ['thinking-mode', 'anti-repetition'],
+    combinesWith: ['follow-user-rules', 'thinking-mode', 'anti-repetition'],
     description: 'A versatile storytelling role that combines novelist, storyteller, and game master approaches.',
     purpose: 'The most flexible role that adapts to any story type - from novels to interactive adventures. The "varying novel" phrasing encourages the AI to treat each response as a new chapter of an evolving story.',
     variants: [
       { label: 'Varying Novel', content: '- The user would like you to pick up a varying novel about the main character.' },
-      { label: 'Varying Novel (With Rules)', content: '- The user would like you to pick up a varying novel about the main character; enable thinking mode and proceed by following all rules below.' },
       { label: 'Novelist', content: '- You are a talented novelist continuing a story about the main character.' },
       { label: 'Storyteller', content: '- You are a master storyteller weaving an engaging tale about the main character.' },
       { label: 'Dungeon Master', content: '- You are an experienced Dungeon Master running an adventure for the player.' }
     ]
   },
   {
-    id: 'thinking-mode',
-    name: 'Thinking Mode',
+    id: 'follow-user-rules',
+    name: 'Follow User\'s Rules',
     category: 'role-persona',
     isDirective: true,
     directiveCategory: 'key-rules',
@@ -1401,12 +1450,15 @@ export const COMPONENTS = [
     impact: 'high',
     essential: true,
     placement: 'ai-instructions',
-    tags: ['mode', 'thinking', 'reasoning', 'quality', 'essential'],
-    models: ['DeepSeek', 'Raven', 'Atlas'],
-    combinesWith: ['role-unified', 'anti-repetition'],
-    description: 'An instruction designed to gaslight models trained to utilize a "thinking mode" to "use" it.',
-    purpose: 'Often improves output quality and coherence by forcing the model to engage in deeper reasoning.',
-    content: '- Enable thinking mode for internal reasoning before responding.'
+    tags: ['rules', 'follow', 'obey', 'foundation', 'essential', 'key-rules'],
+    models: ['All Models'],
+    combinesWith: ['role-unified', 'thinking-mode', 'pov-tense'],
+    description: 'Instructs the AI to follow all user-defined rules below the directive.',
+    purpose: 'The critical bridge between the directive and the instruction components. Tells the AI to treat all subsequent rules as authoritative. Best paired with a role statement.',
+    variants: [
+      { label: 'Proceed by Rules', content: '- Proceed by following all rules below.' },
+      { label: 'With Thinking Mode', content: '- Enable thinking mode and proceed by following all rules below.' }
+    ]
   },
   {
     id: 'pov-tense',
@@ -1431,6 +1483,26 @@ export const COMPONENTS = [
       { label: 'Third Person Present', content: '- Write in third person, present tense'},
       { label: 'First Person Present', content: '- Write in first person, present tense' }
     ]
+  },
+  {
+    id: 'thinking-mode',
+    name: 'Thinking Mode',
+    category: 'role-persona',
+    isDirective: true,
+    directiveCategory: 'key-rules',
+    group: 'core-roles',
+    groupLabel: 'Core Role Statements',
+    groupOrder: 2,
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['mode', 'thinking', 'reasoning', 'quality'],
+    models: ['DeepSeek', 'Raven', 'Atlas'],
+    combinesWith: ['role-unified', 'follow-user-rules', 'anti-repetition'],
+    description: 'An instruction designed to gaslight models trained to utilize a "thinking mode" to "use" it.',
+    purpose: 'Often improves output quality and coherence by forcing the model to engage in deeper reasoning. Now also available as a variant of Follow User\'s Rules.',
+    content: '- Enable thinking mode for internal reasoning before responding.'
   },
 
   // --- Directive Style ---
@@ -5325,7 +5397,32 @@ export function getSetContent(set, lengthVariant = 'standard', playerControlVari
   const baseContent = typeof set.content === 'object' ? (set.content[lengthVariant] || set.content.standard) : set.content
   const pcVariant = PLAYER_CONTROL_VARIANTS.find(v => v.id === playerControlVariant)
   const pcInstructions = pcVariant?.instructions || ''
-  return baseContent + pcInstructions
+
+  // If no player control instructions, return base content as-is
+  if (!pcInstructions) return baseContent
+
+  // Smart placement: insert player control as a dedicated section after the directive
+  // Find the first ## header that isn't the Directive to insert before it
+  const lines = baseContent.split('\n')
+  let insertIndex = -1
+
+  for (let i = 0; i < lines.length; i++) {
+    // Find the first ## section header after the directive
+    if (lines[i].startsWith('## ') && lines[i] !== '## Directive') {
+      insertIndex = i
+      break
+    }
+  }
+
+  if (insertIndex !== -1) {
+    // Insert a ## Player Agency section before the first non-directive header
+    const pcSection = `## Player Agency${pcInstructions}\n`
+    lines.splice(insertIndex, 0, pcSection)
+    return lines.join('\n')
+  }
+
+  // Fallback for lite variants or sets without headers: append with a header
+  return baseContent + '\n\n## Player Agency' + pcInstructions
 }
 
 // --- COMPONENT HELPERS ---

@@ -4,14 +4,52 @@
 // Templates for Author's Notes, Plot Essentials, and Story Summaries.
 // These are ready-to-use templates that users can copy and customize.
 // =============================================================================
+
+// ============================================
+// TEMPLATE RULESET (Internal Documentation)
+// All templates MUST follow these rules.
+// ============================================
 //
-// METADATA SCHEMA:
-// - difficulty: 'beginner' | 'intermediate' | 'advanced'
-// - impact: 'high' | 'medium' | 'low' - How much this affects story coherence
-// - essential: boolean - Is this a must-have template?
-// - useCase: string - When to use this template
-// - combinesWith: string[] - Template IDs that work well together
-// =============================================================================
+// 1. FILL-IN-THE-BLANK FORMAT
+//    Templates use bracket placeholders [like this] or ${} syntax for
+//    user-customizable fields. Every placeholder must be self-explanatory.
+//    Example: "Setting: [e.g., Dark Fantasy, Sci-Fi, Modern]" not "Setting: "
+//
+// 2. CATEGORY ASSIGNMENT
+//    Every template must have a `category` field matching one of the
+//    TEMPLATE_CATEGORIES ids: authors-note, plot-essentials, story-summary, nsfw.
+//    The category determines placement strength and intended use.
+//
+// 3. CONCISE & STRUCTURED
+//    Templates should be as short as possible while remaining useful.
+//    Author's Notes especially must stay concise — they have the strongest
+//    influence but limited space. Use line breaks and labels for clarity.
+//
+// 4. DIFFICULTY RATING
+//    - beginner: Simple fill-in-the-blank, works immediately
+//    - intermediate: Requires understanding of AI behavior or story structure
+//    - advanced: Complex multi-section templates needing regular updates
+//
+// 5. IMPACT RATING
+//    - high: Strongly shapes AI output (AN templates, character sheets)
+//    - medium: Noticeably guides output (scene anchors, trackers)
+//    - low: Subtle organizational aid (glossaries, inventories)
+//
+// 6. SELF-CONTAINED PURPOSE
+//    Each template must serve a distinct, standalone purpose. Templates
+//    should not require other templates to function, though they can
+//    complement each other (noted via `combinesWith`).
+//
+// 7. NO REDUNDANCY
+//    Before creating a template, verify it doesn't duplicate an existing
+//    one. If similar, consider extending the existing template with more
+//    placeholder options rather than creating a near-duplicate.
+//
+// 8. METADATA COMPLETENESS
+//    Every template must include: id, name, category, difficulty, impact,
+//    essential, tags, description, purpose, and content. Optional fields:
+//    useCase, combinesWith.
+//
 
 // ============================================
 // TEMPLATE CATEGORIES
