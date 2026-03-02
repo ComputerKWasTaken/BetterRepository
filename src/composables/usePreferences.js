@@ -17,10 +17,11 @@ const defaultPreferences = {
   // NSFW age verification (persists across sessions)
   nsfwVerified: false,
   // Saved instruction builds
-  // Format: { id: string, name: string, instructions: [{id, variantIndex?}], createdAt: timestamp, updatedAt: timestamp }
+  // Format: { id: string, name: string, directiveText: string, instructions: [{id, variantIndex?}], createdAt: timestamp, updatedAt: timestamp }
   savedBuilds: [],
   // Current working build (auto-saved)
   currentBuild: {
+    directiveText: '', // Free-form directive text (role, persona, key rules)
     instructions: [] // Array of { id: string, variantIndex?: number }
   }
 }
@@ -136,7 +137,18 @@ export function usePreferences() {
 
   // Clear current build
   const clearBuild = () => {
+    preferences.value.currentBuild.directiveText = ''
     preferences.value.currentBuild.instructions = []
+  }
+
+  // Set directive text
+  const setDirectiveText = (text) => {
+    preferences.value.currentBuild.directiveText = text
+  }
+
+  // Get directive text
+  const getDirectiveText = () => {
+    return preferences.value.currentBuild.directiveText || ''
   }
 
   // Save current build with a name
@@ -145,6 +157,7 @@ export function usePreferences() {
     const build = {
       id: `build-${now}`,
       name: name.trim() || `Build ${preferences.value.savedBuilds.length + 1}`,
+      directiveText: preferences.value.currentBuild.directiveText || '',
       instructions: [...preferences.value.currentBuild.instructions],
       createdAt: now,
       updatedAt: now
@@ -157,6 +170,7 @@ export function usePreferences() {
   const loadBuild = (buildId) => {
     const build = preferences.value.savedBuilds.find(b => b.id === buildId)
     if (build) {
+      preferences.value.currentBuild.directiveText = build.directiveText || ''
       preferences.value.currentBuild.instructions = [...build.instructions]
       return true
     }
@@ -226,6 +240,8 @@ export function usePreferences() {
     isInBuild,
     reorderBuild,
     clearBuild,
+    setDirectiveText,
+    getDirectiveText,
     saveBuild,
     loadBuild,
     updateSavedBuild,

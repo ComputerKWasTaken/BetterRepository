@@ -128,6 +128,80 @@ export const CATEGORIES = [
 ]
 
 // ============================================
+// DIRECTIVE_CATEGORIES - Subcategories for organizing Directive components in the Builder
+// These define the common parts of an AI's Directive (role, rules, formatting, etc.)
+// ============================================
+export const DIRECTIVE_CATEGORIES = [
+  {
+    id: 'role',
+    name: 'Role & Identity',
+    description: 'Who the AI is — persona, narrator voice, creative framing',
+    icon: 'UserCog'
+  },
+  {
+    id: 'perspective',
+    name: 'Perspective & Tense',
+    description: 'POV, tense, and narrative perspective settings',
+    icon: 'Eye'
+  },
+  {
+    id: 'narrative-drive',
+    name: 'Narrative Drive',
+    description: 'How proactively the AI drives the story, response scope, and pacing',
+    icon: 'Compass'
+  },
+  {
+    id: 'tone-genre',
+    name: 'Tone & Genre',
+    description: 'Overall mood, atmosphere, and genre flexibility',
+    icon: 'Palette'
+  },
+  {
+    id: 'key-rules',
+    name: 'Key Rules',
+    description: 'Core behavioral rules — continuation, formatting, output constraints',
+    icon: 'ShieldCheck'
+  }
+]
+
+// ============================================
+// DIRECTIVE_TEMPLATES - Pre-built directive templates for the Builder
+// Users can start from these and customize
+// ============================================
+export const DIRECTIVE_TEMPLATES = [
+  {
+    id: 'novelist',
+    name: 'The Novelist',
+    description: 'A talented novelist writing a story. Clean, literary prose.',
+    content: `You are a talented novelist continuing a story about the main character.\n\nInstructions:\n- Write in second person, present tense\n- Enable thinking mode for internal reasoning before responding\n- Be descriptive and creative with prose\n- Continue from where the story left off`
+  },
+  {
+    id: 'dungeon-master',
+    name: 'The Dungeon Master',
+    description: 'A classic RPG game master running an interactive adventure.',
+    content: `You are an experienced Dungeon Master running an adventure for the player.\n\nInstructions:\n- Write in second person, present tense\n- Respond to the user's actions while naturally advancing the scene\n- Cover a natural segment of the current scene. End at a point that invites user input\n- Maintain a consistent tone throughout the story`
+  },
+  {
+    id: 'varying-novel',
+    name: 'Varying Novel',
+    description: 'The "varying novel" approach — treats each response as a new chapter of an evolving story.',
+    content: `The user would like you to pick up a varying novel about the main character; enable thinking mode and proceed by following all rules below.\n\nInstructions:\n- Write in second person, present tense\n- Be descriptive and creative with prose\n- Never echo, paraphrase, or restate the user's words. Move the story forward with NEW information only\n- Continue from where the story left off`
+  },
+  {
+    id: 'collaborative',
+    name: 'Collaborative Storyteller',
+    description: 'A collaborative partner — user drives the plot, AI provides the prose.',
+    content: `You are collaborating with the user to tell a story. The user drives the plot; you provide the prose.\n\nInstructions:\n- Write in second person, present tense\n- React to the user's actions and let them drive the story\n- Cover a natural segment of the current scene. End at a point that invites user input\n- Be descriptive and creative with prose`
+  },
+  {
+    id: 'blank',
+    name: 'Start from Scratch',
+    description: 'An empty template — write your own directive from scratch.',
+    content: ''
+  }
+]
+
+// ============================================
 // SET_CATEGORIES - For organizing SETS
 // ============================================
 export const SET_CATEGORIES = [
@@ -1292,6 +1366,8 @@ export const COMPONENTS = [
     id: 'role-unified',
     name: 'Unified Storyteller Role',
     category: 'role-persona',
+    isDirective: true,
+    directiveCategory: 'role',
     group: 'core-roles',
     groupLabel: 'Core Role Statements',
     groupOrder: 0,
@@ -1316,6 +1392,8 @@ export const COMPONENTS = [
     id: 'thinking-mode',
     name: 'Thinking Mode',
     category: 'role-persona',
+    isDirective: true,
+    directiveCategory: 'key-rules',
     group: 'core-roles',
     groupLabel: 'Core Role Statements',
     groupOrder: 1,
@@ -1334,6 +1412,8 @@ export const COMPONENTS = [
     id: 'pov-tense',
     name: 'POV & Tense',
     category: 'role-persona',
+    isDirective: true,
+    directiveCategory: 'perspective',
     group: 'pov-tense',
     groupLabel: 'POV & Tense',
     groupOrder: 0,
@@ -1358,6 +1438,8 @@ export const COMPONENTS = [
     id: 'collaborative-framing',
     name: 'Collaborative Framing',
     category: 'role-persona',
+    isDirective: true,
+    directiveCategory: 'role',
     group: 'directive-style',
     groupOrder: 1,
     difficulty: 'beginner',
@@ -1381,6 +1463,8 @@ export const COMPONENTS = [
     id: 'narrative-drive',
     name: 'Narrative Drive',
     category: 'role-persona',
+    isDirective: true,
+    directiveCategory: 'narrative-drive',
     group: 'narrative-drive',
     groupLabel: 'Narrative Drive',
     groupOrder: 0,
@@ -1403,6 +1487,8 @@ export const COMPONENTS = [
     id: 'response-scope',
     name: 'Response Scope',
     category: 'role-persona',
+    isDirective: true,
+    directiveCategory: 'narrative-drive',
     group: 'narrative-drive',
     groupOrder: 1,
     difficulty: 'beginner',
@@ -1423,6 +1509,8 @@ export const COMPONENTS = [
     id: 'ending-behavior',
     name: 'Ending Behavior',
     category: 'role-persona',
+    isDirective: true,
+    directiveCategory: 'narrative-drive',
     group: 'narrative-drive',
     groupOrder: 2,
     difficulty: 'beginner',
@@ -1441,6 +1529,8 @@ export const COMPONENTS = [
     id: 'tone-setting',
     name: 'Tone Setting',
     category: 'role-persona',
+    isDirective: true,
+    directiveCategory: 'tone-genre',
     group: 'tone-genre',
     groupLabel: 'Tone & Genre Feel',
     groupOrder: 0,
@@ -1458,6 +1548,8 @@ export const COMPONENTS = [
     id: 'genre-flexibility',
     name: 'Genre Flexibility',
     category: 'role-persona',
+    isDirective: true,
+    directiveCategory: 'tone-genre',
     group: 'tone-genre',
     groupOrder: 1,
     difficulty: 'beginner',
@@ -3123,6 +3215,8 @@ export const COMPONENTS = [
     id: 'seamless-continuation',
     name: 'Seamless Continuation',
     category: 'coherence',
+    isDirective: true,
+    directiveCategory: 'key-rules',
     group: 'core-coherence',
     groupLabel: 'Core Coherence',
     groupOrder: 0,
@@ -4237,6 +4331,8 @@ export const COMPONENTS = [
     id: 'ai-dungeon-action-types',
     name: 'AI Dungeon > Token',
     category: 'meta',
+    isDirective: true,
+    directiveCategory: 'key-rules',
     group: 'ai-dungeon-specific',
     groupLabel: 'AI Dungeon Specific',
     groupOrder: 0,
@@ -5286,6 +5382,19 @@ export function getCompatibleComponents(componentId) {
   const comp = getComponentById(componentId)
   if (!comp?.combinesWith?.length) return []
   return comp.combinesWith.map(id => getComponentById(id)).filter(Boolean)
+}
+
+// --- DIRECTIVE HELPERS ---
+export function getDirectiveComponents() {
+  return COMPONENTS.filter(comp => comp.isDirective)
+}
+
+export function getDirectiveComponentsByCategory(directiveCategoryId) {
+  return COMPONENTS.filter(comp => comp.isDirective && comp.directiveCategory === directiveCategoryId)
+}
+
+export function getNonDirectiveComponents() {
+  return COMPONENTS.filter(comp => !comp.isDirective)
 }
 
 // --- CATEGORY HELPERS ---
