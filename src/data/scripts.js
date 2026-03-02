@@ -3,15 +3,64 @@
 // =============================================================================
 // Script examples and categories for AI Dungeon's scripting system.
 // Scripts use JavaScript to modify context, input, and output.
-//
-// METADATA SCHEMA:
-// - difficulty: 'beginner' | 'intermediate' | 'advanced'
-// - impact: 'high' | 'medium' | 'low'
-// - essential: boolean (recommended for new scripters)
-// - source: 'Official Guidebook' | 'Community' | 'BetterRepository'
-// - githubUrl: string (optional)
-// - externalUrl: string (optional)
 // =============================================================================
+
+// ============================================
+// SCRIPT RULESET (Internal Documentation)
+// All scripts MUST follow these rules.
+// ============================================
+//
+// 1. FILE TYPE DECLARATION
+//    Every script must declare its `fileType` ('input', 'output', or 'context')
+//    or use the `files` object for multi-file scripts. The file type determines
+//    when the script runs in the AI Dungeon pipeline.
+//
+// 2. MODIFIER PATTERN
+//    All scripts must use the standard modifier pattern:
+//    `const modifier = (text) => { ... return { text } }` followed by
+//    `modifier(text)`. Do not deviate from this structure.
+//
+// 3. CATEGORY ASSIGNMENT
+//    Every script must have a `category` field matching one of the
+//    SCRIPT_CATEGORIES ids: basics, game-systems, tracking, commands,
+//    magic, utilities, betterscripts.
+//
+// 4. CLEAR COMMENTS
+//    Scripts must include inline comments explaining non-obvious logic.
+//    The target audience is intermediate JavaScript users who understand
+//    basic programming but may not know AI Dungeon's scripting API.
+//
+// 5. DIFFICULTY RATING
+//    - beginner: Simple text manipulation or state tracking
+//    - intermediate: Complex state management, regex, or multi-file scripts
+//    - advanced: Full game systems, complex context manipulation, or widget integration
+//
+// 6. IMPACT RATING
+//    - high: Fundamentally changes gameplay (quest systems, command parsers)
+//    - medium: Adds notable mechanics (dice rolling, inventory tracking)
+//    - low: Minor enhancements (text replacement, simple counters)
+//
+// 7. SOURCE ATTRIBUTION
+//    Every script must have a `source` field: 'Official Guidebook' for scripts
+//    from AI Dungeon docs, 'Community' for community contributions, or
+//    'BetterRepository' for originals. Include `githubUrl` or `externalUrl`
+//    when applicable.
+//
+// 8. SAFE DEFAULTS
+//    Scripts must initialize state safely (e.g., `state.items = state.items || []`).
+//    Never assume state exists from previous turns. Scripts must handle edge
+//    cases gracefully without throwing errors.
+//
+// 9. NO REDUNDANCY
+//    Before creating a script, verify it doesn't duplicate an existing one.
+//    If similar, consider extending the existing script or making it more
+//    configurable rather than creating a near-duplicate.
+//
+// 10. METADATA COMPLETENESS
+//     Every script must include: id, name, category, difficulty, impact,
+//     essential, tags, source, description, purpose, and either content
+//     (with fileType) or files (for multi-file scripts).
+//
 
 import { searchCollectionSmart } from './shared'
 

@@ -52,6 +52,7 @@
               <p class="text-sm text-bd-text-secondary mb-3">
                 Complete instruction packages ready to paste directly into your AI's system prompt. 
                 Each set is a curated combination of components designed to work well together.
+                Use the controls below to customize length and player control preferences before copying.
               </p>
               <div class="flex flex-wrap gap-3 text-xs">
                 <div class="flex items-center gap-1.5 text-bd-text-muted">
@@ -67,100 +68,310 @@
           </div>
         </div>
 
-        <!-- Sets Grid -->
-        <div class="grid gap-4">
-          <div 
-            v-for="set in sets" 
-            :key="set.id"
-            class="card hover:border-bd-accent-primary/30 transition-all cursor-pointer group"
-            :class="{ 'border-bd-accent-primary/50 bg-bd-bg-tertiary': expandedSet === set.id }"
-            @click="toggleSetExpand(set.id)"
-          >
-            <!-- Set Header -->
-            <div class="flex items-start gap-4">
-              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-bd-amber/20 to-bd-orange/20 flex items-center justify-center flex-shrink-0 group-hover:from-bd-amber/30 group-hover:to-bd-orange/30 transition-all">
-                <Layers class="w-6 h-6 text-bd-amber" />
+        <!-- Global Controls: Length Variant + Player Control -->
+        <div class="card bg-bd-bg-secondary border-bd-border-subtle">
+          <div class="grid md:grid-cols-2 gap-6">
+            <!-- Length Variant Selector -->
+            <div>
+              <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <SlidersHorizontal class="w-3.5 h-3.5" /> Set Length
+              </h4>
+              <div class="flex gap-2">
+                <button
+                  v-for="lv in lengthVariants"
+                  :key="lv.id"
+                  @click="selectedLengthVariant = lv.id"
+                  class="flex-1 px-3 py-2.5 rounded-lg text-sm font-medium transition-all border text-center"
+                  :class="selectedLengthVariant === lv.id
+                    ? 'bg-bd-accent-primary/20 text-bd-accent-light border-bd-accent-primary/40'
+                    : 'bg-bd-bg-tertiary text-bd-text-muted border-bd-border-subtle hover:text-bd-text-secondary hover:border-bd-border-default'"
+                >
+                  {{ lv.label }}
+                </button>
               </div>
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-2 flex-wrap mb-1">
-                  <h3 class="font-semibold text-bd-text-primary text-lg">{{ set.name }}</h3>
-                  <span v-if="set.essential" class="tag bg-bd-green/20 text-bd-green text-xs font-medium">
-                    <Star class="w-3 h-3" /> Recommended
-                  </span>
-                </div>
-                <p class="text-sm text-bd-text-secondary">{{ set.description }}</p>
-                
-                <!-- Metadata Row -->
-                <div class="flex items-center gap-3 mt-3 flex-wrap">
-                  <span class="tag text-xs" :class="{
-                    'bg-bd-green/20 text-bd-green': set.difficulty === 'beginner',
-                    'bg-bd-amber/20 text-bd-amber': set.difficulty === 'intermediate',
-                    'bg-bd-pink/20 text-bd-pink': set.difficulty === 'advanced'
-                  }">
-                    {{ set.difficulty === 'beginner' ? 'Easy to Use' : set.difficulty === 'intermediate' ? 'Intermediate' : 'Advanced' }}
-                  </span>
-                  <span v-if="set.models?.length" class="flex items-center gap-1 text-xs text-bd-text-muted">
-                    <Cpu class="w-3 h-3" />
-                    {{ set.models.join(', ') }}
-                  </span>
-                  <span v-if="set.settings" class="flex items-center gap-1 text-xs text-bd-text-muted">
-                    <SlidersHorizontal class="w-3 h-3" />
-                    Temp: {{ set.settings.temperature }} · Length: {{ set.settings.maxTokens }}
-                  </span>
-                </div>
-              </div>
-              <div class="flex flex-col items-center gap-1">
-                <ChevronDown 
-                  class="w-5 h-5 text-bd-text-muted transition-transform" 
-                  :class="{ 'rotate-180': expandedSet === set.id }"
-                />
-                <span class="text-xs text-bd-text-muted">{{ expandedSet === set.id ? 'Close' : 'View' }}</span>
-              </div>
+              <p class="text-xs text-bd-text-muted mt-2">
+                {{ lengthVariants.find(lv => lv.id === selectedLengthVariant)?.description }}
+              </p>
             </div>
 
-            <!-- Expanded Content -->
-            <Transition name="slide">
-              <div v-if="expandedSet === set.id" class="mt-5 pt-5 border-t border-bd-border-subtle" @click.stop>
-                <!-- Purpose -->
-                <div class="mb-4 p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                  <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-1 flex items-center gap-1">
-                    <Target class="w-3 h-3" /> Best For
-                  </h4>
-                  <p class="text-sm text-bd-text-secondary">{{ set.purpose }}</p>
-                </div>
-
-                <!-- Content -->
-                <div class="mb-4">
-                  <div class="flex items-center justify-between mb-2">
-                    <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider flex items-center gap-1">
-                      <FileText class="w-3 h-3" /> Full Instructions
-                    </h4>
-                    <button 
-                      @click.stop="copySetContent(set.content, set.id)"
-                      class="btn text-xs py-1.5 px-3 transition-all"
-                      :class="copiedSetId === set.id ? 'btn-success bg-bd-green text-white' : 'btn-primary'"
-                    >
-                      <Check v-if="copiedSetId === set.id" class="w-3.5 h-3.5" />
-                      <Copy v-else class="w-3.5 h-3.5" />
-                      {{ copiedSetId === set.id ? 'Copied!' : 'Copy to Clipboard' }}
-                    </button>
-                  </div>
-                  <pre class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle text-sm text-bd-text-secondary font-mono whitespace-pre-wrap overflow-x-auto max-h-80 leading-relaxed">{{ set.content }}</pre>
-                </div>
-
-                <!-- Tags -->
-                <div v-if="set.tags?.length" class="flex items-center gap-2 flex-wrap">
-                  <span class="text-xs text-bd-text-muted">Tags:</span>
-                  <span 
-                    v-for="tag in set.tags" 
-                    :key="tag"
-                    class="tag text-xs"
-                  >{{ tag }}</span>
-                </div>
+            <!-- Player Control Selector -->
+            <div>
+              <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <Shield class="w-3.5 h-3.5" /> Player Control
+              </h4>
+              <div class="flex gap-2">
+                <button
+                  v-for="pc in playerControlVariants"
+                  :key="pc.id"
+                  @click="selectedPlayerControl = pc.id"
+                  class="flex-1 px-3 py-2.5 rounded-lg text-sm font-medium transition-all border text-center"
+                  :class="selectedPlayerControl === pc.id
+                    ? 'bg-bd-accent-primary/20 text-bd-accent-light border-bd-accent-primary/40'
+                    : 'bg-bd-bg-tertiary text-bd-text-muted border-bd-border-subtle hover:text-bd-text-secondary hover:border-bd-border-default'"
+                >
+                  {{ pc.label }}
+                </button>
               </div>
-            </Transition>
+              <p class="text-xs text-bd-text-muted mt-2">
+                {{ playerControlVariants.find(pc => pc.id === selectedPlayerControl)?.description }}
+              </p>
+            </div>
           </div>
         </div>
+
+        <!-- Category Filter Tabs -->
+        <div class="flex gap-2 flex-wrap">
+          <button
+            @click="selectedSetCategory = null"
+            class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all border"
+            :class="!selectedSetCategory
+              ? 'bg-bd-accent-primary/20 text-bd-accent-light border-bd-accent-primary/40'
+              : 'bg-bd-bg-tertiary text-bd-text-muted border-bd-border-subtle hover:text-bd-text-secondary'"
+          >
+            All Sets
+          </button>
+          <button
+            v-for="cat in setCategoriesWithSets"
+            :key="cat.id"
+            @click="toggleSetCategory(cat.id)"
+            class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all border flex items-center gap-1.5"
+            :class="selectedSetCategory === cat.id
+              ? (setCategoryColorMap[cat.id]?.bg || 'bg-bd-accent-primary/20') + ' ' + (setCategoryColorMap[cat.id]?.text || 'text-bd-accent-light') + ' ' + (setCategoryColorMap[cat.id]?.border || 'border-bd-accent-primary/40')
+              : 'bg-bd-bg-tertiary text-bd-text-muted border-bd-border-subtle hover:text-bd-text-secondary'"
+          >
+            <component :is="setCategoryIconMap[cat.id] || Layers" class="w-3.5 h-3.5" />
+            {{ cat.name }}
+            <span class="text-xs opacity-60">({{ cat.sets.length }})</span>
+          </button>
+        </div>
+
+        <!-- Sets Grid - Grouped by Category -->
+        <template v-if="!selectedSetCategory">
+          <div v-for="catGroup in setCategoriesWithSets" :key="catGroup.id" class="space-y-3">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                :class="setCategoryColorMap[catGroup.id]?.bg || 'bg-bd-tag-bg'"
+              >
+                <component :is="setCategoryIconMap[catGroup.id] || Layers" class="w-4 h-4"
+                  :class="setCategoryColorMap[catGroup.id]?.text || 'text-bd-text-muted'" />
+              </div>
+              <h3 class="text-sm font-semibold text-bd-text-primary">{{ catGroup.name }}</h3>
+              <span class="text-xs text-bd-text-muted">{{ catGroup.description }}</span>
+            </div>
+            <div class="grid gap-3 ml-0">
+              <div 
+                v-for="set in catGroup.sets" 
+                :key="set.id"
+                class="card hover:border-bd-accent-primary/30 transition-all cursor-pointer group"
+                :class="{ 'border-bd-accent-primary/50 bg-bd-bg-tertiary': expandedSet === set.id }"
+                @click="toggleSetExpand(set.id)"
+              >
+                <!-- Set Header -->
+                <div class="flex items-start gap-4">
+                  <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all"
+                    :class="(setCategoryColorMap[set.category]?.bg || 'bg-bd-tag-bg') + ' group-hover:opacity-80'"
+                  >
+                    <component :is="setCategoryIconMap[set.category] || Layers" class="w-5 h-5"
+                      :class="setCategoryColorMap[set.category]?.text || 'text-bd-text-muted'" />
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap mb-1">
+                      <h3 class="font-semibold text-bd-text-primary">{{ set.name }}</h3>
+                      <span v-if="set.essential" class="tag bg-bd-green/20 text-bd-green text-xs font-medium">
+                        <Star class="w-3 h-3" /> Recommended
+                      </span>
+                    </div>
+                    <p class="text-sm text-bd-text-secondary">{{ set.description }}</p>
+                    
+                    <!-- Metadata Row -->
+                    <div class="flex items-center gap-3 mt-2 flex-wrap">
+                      <span class="tag text-xs" :class="{
+                        'bg-bd-green/20 text-bd-green': set.difficulty === 'beginner',
+                        'bg-bd-amber/20 text-bd-amber': set.difficulty === 'intermediate',
+                        'bg-bd-pink/20 text-bd-pink': set.difficulty === 'advanced'
+                      }">
+                        {{ set.difficulty === 'beginner' ? 'Easy to Use' : set.difficulty === 'intermediate' ? 'Intermediate' : 'Advanced' }}
+                      </span>
+                      <span v-if="set.models?.length" class="flex items-center gap-1 text-xs text-bd-text-muted">
+                        <Cpu class="w-3 h-3" />
+                        {{ set.models.join(', ') }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="flex flex-col items-center gap-1">
+                    <ChevronDown 
+                      class="w-5 h-5 text-bd-text-muted transition-transform" 
+                      :class="{ 'rotate-180': expandedSet === set.id }"
+                    />
+                    <span class="text-xs text-bd-text-muted">{{ expandedSet === set.id ? 'Close' : 'View' }}</span>
+                  </div>
+                </div>
+
+                <!-- Expanded Content -->
+                <Transition name="slide">
+                  <div v-if="expandedSet === set.id" class="mt-5 pt-5 border-t border-bd-border-subtle" @click.stop>
+                    <!-- Purpose -->
+                    <div class="mb-4 p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                      <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-1 flex items-center gap-1">
+                        <Target class="w-3 h-3" /> Best For
+                      </h4>
+                      <p class="text-sm text-bd-text-secondary">{{ set.purpose }}</p>
+                    </div>
+
+                    <!-- Active Variant Info -->
+                    <div class="mb-3 flex items-center gap-3 flex-wrap text-xs">
+                      <span class="tag bg-bd-accent-primary/15 text-bd-accent-light border border-bd-accent-primary/30">
+                        <SlidersHorizontal class="w-3 h-3" />
+                        {{ lengthVariants.find(l => l.id === selectedLengthVariant)?.label }} Length
+                      </span>
+                      <span class="tag bg-bd-accent-primary/15 text-bd-accent-light border border-bd-accent-primary/30">
+                        <Shield class="w-3 h-3" />
+                        {{ playerControlVariants.find(p => p.id === selectedPlayerControl)?.label }}
+                      </span>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="mb-4">
+                      <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider flex items-center gap-1">
+                          <FileText class="w-3 h-3" /> Full Instructions
+                        </h4>
+                        <button 
+                          @click.stop="copySetContent(set)"
+                          class="btn text-xs py-1.5 px-3 transition-all"
+                          :class="copiedSetId === set.id ? 'btn-success bg-bd-green text-white' : 'btn-primary'"
+                        >
+                          <Check v-if="copiedSetId === set.id" class="w-3.5 h-3.5" />
+                          <Copy v-else class="w-3.5 h-3.5" />
+                          {{ copiedSetId === set.id ? 'Copied!' : 'Copy to Clipboard' }}
+                        </button>
+                      </div>
+                      <pre class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle text-sm text-bd-text-secondary font-mono whitespace-pre-wrap overflow-x-auto max-h-80 leading-relaxed">{{ getDisplayContent(set) }}</pre>
+                    </div>
+
+                    <!-- Tags -->
+                    <div v-if="set.tags?.length" class="flex items-center gap-2 flex-wrap">
+                      <span class="text-xs text-bd-text-muted">Tags:</span>
+                      <span 
+                        v-for="tag in set.tags" 
+                        :key="tag"
+                        class="tag text-xs"
+                      >{{ tag }}</span>
+                    </div>
+                  </div>
+                </Transition>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- Filtered Sets (when a category is selected) -->
+        <template v-else>
+          <div class="grid gap-3">
+            <div 
+              v-for="set in filteredSets" 
+              :key="set.id"
+              class="card hover:border-bd-accent-primary/30 transition-all cursor-pointer group"
+              :class="{ 'border-bd-accent-primary/50 bg-bd-bg-tertiary': expandedSet === set.id }"
+              @click="toggleSetExpand(set.id)"
+            >
+              <!-- Set Header -->
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all"
+                  :class="(setCategoryColorMap[set.category]?.bg || 'bg-bd-tag-bg') + ' group-hover:opacity-80'"
+                >
+                  <component :is="setCategoryIconMap[set.category] || Layers" class="w-5 h-5"
+                    :class="setCategoryColorMap[set.category]?.text || 'text-bd-text-muted'" />
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap mb-1">
+                    <h3 class="font-semibold text-bd-text-primary">{{ set.name }}</h3>
+                    <span v-if="set.essential" class="tag bg-bd-green/20 text-bd-green text-xs font-medium">
+                      <Star class="w-3 h-3" /> Recommended
+                    </span>
+                  </div>
+                  <p class="text-sm text-bd-text-secondary">{{ set.description }}</p>
+                  
+                  <!-- Metadata Row -->
+                  <div class="flex items-center gap-3 mt-2 flex-wrap">
+                    <span class="tag text-xs" :class="{
+                      'bg-bd-green/20 text-bd-green': set.difficulty === 'beginner',
+                      'bg-bd-amber/20 text-bd-amber': set.difficulty === 'intermediate',
+                      'bg-bd-pink/20 text-bd-pink': set.difficulty === 'advanced'
+                    }">
+                      {{ set.difficulty === 'beginner' ? 'Easy to Use' : set.difficulty === 'intermediate' ? 'Intermediate' : 'Advanced' }}
+                    </span>
+                    <span v-if="set.models?.length" class="flex items-center gap-1 text-xs text-bd-text-muted">
+                      <Cpu class="w-3 h-3" />
+                      {{ set.models.join(', ') }}
+                    </span>
+                  </div>
+                </div>
+                <div class="flex flex-col items-center gap-1">
+                  <ChevronDown 
+                    class="w-5 h-5 text-bd-text-muted transition-transform" 
+                    :class="{ 'rotate-180': expandedSet === set.id }"
+                  />
+                  <span class="text-xs text-bd-text-muted">{{ expandedSet === set.id ? 'Close' : 'View' }}</span>
+                </div>
+              </div>
+
+              <!-- Expanded Content -->
+              <Transition name="slide">
+                <div v-if="expandedSet === set.id" class="mt-5 pt-5 border-t border-bd-border-subtle" @click.stop>
+                  <!-- Purpose -->
+                  <div class="mb-4 p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                    <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-1 flex items-center gap-1">
+                      <Target class="w-3 h-3" /> Best For
+                    </h4>
+                    <p class="text-sm text-bd-text-secondary">{{ set.purpose }}</p>
+                  </div>
+
+                  <!-- Active Variant Info -->
+                  <div class="mb-3 flex items-center gap-3 flex-wrap text-xs">
+                    <span class="tag bg-bd-accent-primary/15 text-bd-accent-light border border-bd-accent-primary/30">
+                      <SlidersHorizontal class="w-3 h-3" />
+                      {{ lengthVariants.find(l => l.id === selectedLengthVariant)?.label }} Length
+                    </span>
+                    <span class="tag bg-bd-accent-primary/15 text-bd-accent-light border border-bd-accent-primary/30">
+                      <Shield class="w-3 h-3" />
+                      {{ playerControlVariants.find(p => p.id === selectedPlayerControl)?.label }}
+                    </span>
+                  </div>
+
+                  <!-- Content -->
+                  <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                      <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider flex items-center gap-1">
+                        <FileText class="w-3 h-3" /> Full Instructions
+                      </h4>
+                      <button 
+                        @click.stop="copySetContent(set)"
+                        class="btn text-xs py-1.5 px-3 transition-all"
+                        :class="copiedSetId === set.id ? 'btn-success bg-bd-green text-white' : 'btn-primary'"
+                      >
+                        <Check v-if="copiedSetId === set.id" class="w-3.5 h-3.5" />
+                        <Copy v-else class="w-3.5 h-3.5" />
+                        {{ copiedSetId === set.id ? 'Copied!' : 'Copy to Clipboard' }}
+                      </button>
+                    </div>
+                    <pre class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle text-sm text-bd-text-secondary font-mono whitespace-pre-wrap overflow-x-auto max-h-80 leading-relaxed">{{ getDisplayContent(set) }}</pre>
+                  </div>
+
+                  <!-- Tags -->
+                  <div v-if="set.tags?.length" class="flex items-center gap-2 flex-wrap">
+                    <span class="text-xs text-bd-text-muted">Tags:</span>
+                    <span 
+                      v-for="tag in set.tags" 
+                      :key="tag"
+                      class="tag text-xs"
+                    >{{ tag }}</span>
+                  </div>
+                </div>
+              </Transition>
+            </div>
+          </div>
+        </template>
 
         <!-- Bottom CTA -->
         <div class="card bg-bd-bg-tertiary border-dashed text-center py-6">
@@ -1794,10 +2005,13 @@ import {
   INSTRUCTIONS, 
   CATEGORIES,
   SETS,
+  SET_CATEGORIES,
+  PLAYER_CONTROL_VARIANTS,
   getEssentialInstructions,
   getStarterSet,
   getHighImpactInstructions,
-  getBeginnerInstructions
+  getBeginnerInstructions,
+  getSetContent
 } from '@/data/aiInstructions'
 import { searchCollectionWithScores } from '@/data/shared'
 import { AI_INSTRUCTIONS_CONTRIBUTORS as aiInstructionsContributors } from '@/data/contributors'
@@ -1822,8 +2036,37 @@ const tabs = [
 ]
 
 const sets = ref(SETS)
+const setCategories = ref(SET_CATEGORIES)
+const playerControlVariants = ref(PLAYER_CONTROL_VARIANTS)
 const expandedSet = ref(null)
 const copiedSetId = ref(null)
+const selectedSetCategory = ref(null)
+const selectedLengthVariant = ref('standard')
+const selectedPlayerControl = ref('neutral')
+
+const lengthVariants = [
+  { id: 'lite', label: 'Lite', description: 'Concise — saves context tokens' },
+  { id: 'standard', label: 'Standard', description: 'Balanced coverage' },
+  { id: 'max', label: 'Max', description: 'Comprehensive — thorough rules' }
+]
+
+const filteredSets = computed(() => {
+  if (!selectedSetCategory.value) return sets.value
+  return sets.value.filter(s => s.category === selectedSetCategory.value)
+})
+
+const setCategoriesWithSets = computed(() => {
+  return setCategories.value
+    .map(cat => ({
+      ...cat,
+      sets: sets.value.filter(s => s.category === cat.id)
+    }))
+    .filter(cat => cat.sets.length > 0)
+})
+
+const toggleSetCategory = (catId) => {
+  selectedSetCategory.value = selectedSetCategory.value === catId ? null : catId
+}
 
 const toggleSetExpand = (setId) => {
   if (expandedSet.value === setId) {
@@ -1833,16 +2076,35 @@ const toggleSetExpand = (setId) => {
   }
 }
 
-const copySetContent = async (content, setId) => {
+const getDisplayContent = (set) => {
+  return getSetContent(set, selectedLengthVariant.value, selectedPlayerControl.value)
+}
+
+const copySetContent = async (set) => {
   try {
+    const content = getDisplayContent(set)
     await navigator.clipboard.writeText(content)
-    copiedSetId.value = setId
+    copiedSetId.value = set.id
     setTimeout(() => {
       copiedSetId.value = null
     }, 2000)
   } catch (err) {
     console.error('Failed to copy:', err)
   }
+}
+
+const setCategoryIconMap = {
+  'essential': Star,
+  'playstyle': Swords,
+  'model-optimized': Cpu,
+  'specialized': Target,
+}
+
+const setCategoryColorMap = {
+  'essential': { bg: 'bg-bd-amber/20', text: 'text-bd-amber', border: 'border-bd-amber/30' },
+  'playstyle': { bg: 'bg-bd-purple/20', text: 'text-bd-purple', border: 'border-bd-purple/30' },
+  'model-optimized': { bg: 'bg-bd-cyan/20', text: 'text-bd-cyan', border: 'border-bd-cyan/30' },
+  'specialized': { bg: 'bg-bd-green/20', text: 'text-bd-green', border: 'border-bd-green/30' },
 }
 
 const route = useRoute()

@@ -409,8 +409,7 @@
 <span class="text-bd-amber font-medium">**Description:**</span> <span class="text-bd-text-secondary">Makes the AI write shorter, punchier sentences. Good for action scenes.</span>
 
 <span class="text-bd-amber font-medium">**Content:**</span>
-<span class="text-bd-text-primary">Write in a concise, punchy style. Use short sentences. Avoid purple prose.
-Favor active voice over passive. Every word should earn its place.</span></pre>
+<span class="text-bd-text-primary">- Write in a concise, punchy style with short sentences, active voice, and no purple prose.</span></pre>
         </div>
       </div>
     </section>
@@ -585,7 +584,8 @@ import {
   ScrollText, Bookmark, Drama, Code, GitMerge, MessageCircle,
   ExternalLink, Github, FileText, Award, Heart, Users, Star,
   ChevronRight, Lightbulb, Bug, Pencil, HelpCircle, RefreshCw,
-  Sparkles, Package, Send, Loader, AlertCircle, BookOpen
+  Sparkles, Package, Send, Loader, AlertCircle, BookOpen,
+  X
 } from 'lucide-vue-next'
 
 // --- Community impact stats (pulled from actual data) ---

@@ -165,6 +165,117 @@
       </div>
     </section>
 
+    <!-- What's New Section -->
+    <section ref="whatsNewRef" id="whats-new" :class="['home-section', { 'is-visible': visibleSections.whatsNew }]">
+      <div class="card relative overflow-hidden">
+        <!-- Top accent bar -->
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-accent-primary via-bd-purple to-bd-cyan" />
+
+        <div class="pt-1">
+          <div class="flex items-center justify-between mb-5">
+            <div class="flex items-center gap-2.5">
+              <Megaphone class="w-5 h-5 text-bd-accent-primary" />
+              <h2 class="text-lg font-semibold text-bd-text-primary">What's New in <span class="text-gradient">V1.3</span></h2>
+            </div>
+            <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-bd-accent-primary/15 text-bd-accent-light">Latest</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- AI Instructions Overhaul -->
+            <div class="whats-new-card group" style="animation-delay: 0ms">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 rounded-lg bg-bd-amber/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-amber/25 transition-colors">
+                  <ScrollText class="w-4 h-4 text-bd-amber" />
+                </div>
+                <h3 class="font-semibold text-sm text-bd-text-primary">AI Instructions Overhaul</h3>
+              </div>
+              <ul class="space-y-1.5 text-sm text-bd-text-secondary">
+                <li class="flex items-start gap-2">
+                  <RefreshCw class="w-3 h-3 text-bd-accent-primary flex-shrink-0 mt-1" />
+                  <span>All 213 components rewritten to a strict one-line standard for consistency</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <Tag class="w-3 h-3 text-bd-accent-primary flex-shrink-0 mt-1" />
+                  <span>Standardized complexity and impact metrics across every component</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- New Playstyle Sets -->
+            <div class="whats-new-card group" style="animation-delay: 80ms">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 rounded-lg bg-bd-purple/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-purple/25 transition-colors">
+                  <Layers class="w-4 h-4 text-bd-purple" />
+                </div>
+                <h3 class="font-semibold text-sm text-bd-text-primary">6 New Playstyle Sets</h3>
+              </div>
+              <ul class="space-y-1.5 text-sm text-bd-text-secondary">
+                <li class="flex items-start gap-2">
+                  <Sparkles class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
+                  <span>The Minimalist, Novelist, Director, Sandbox, Storyteller, and Immersionist</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <Sparkles class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
+                  <span>Universal sets designed for any scenario genre or style</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Set Variants -->
+            <div class="whats-new-card group" style="animation-delay: 160ms">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 rounded-lg bg-bd-cyan/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-cyan/25 transition-colors">
+                  <SlidersHorizontal class="w-4 h-4 text-bd-cyan" />
+                </div>
+                <h3 class="font-semibold text-sm text-bd-text-primary">Set Variants System</h3>
+              </div>
+              <ul class="space-y-1.5 text-sm text-bd-text-secondary">
+                <li class="flex items-start gap-2">
+                  <SlidersHorizontal class="w-3 h-3 text-bd-cyan flex-shrink-0 mt-1" />
+                  <span>3 length variants per set: Lite, Standard, and Max</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <SlidersHorizontal class="w-3 h-3 text-bd-cyan flex-shrink-0 mt-1" />
+                  <span>3 player control options: Player Control, Neutral, and Full AI Agency</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Builder Revamp -->
+            <div class="whats-new-card group" style="animation-delay: 240ms">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 rounded-lg bg-bd-green/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-green/25 transition-colors">
+                  <Wrench class="w-4 h-4 text-bd-green" />
+                </div>
+                <h3 class="font-semibold text-sm text-bd-text-primary">Builder Revamp</h3>
+              </div>
+              <ul class="space-y-1.5 text-sm text-bd-text-secondary">
+                <li class="flex items-start gap-2">
+                  <Wrench class="w-3 h-3 text-bd-green flex-shrink-0 mt-1" />
+                  <span>New directive builder with prose output and default preselections</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <Wrench class="w-3 h-3 text-bd-green flex-shrink-0 mt-1" />
+                  <span>Category-organized output with automatic section headers</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <div class="mt-5 pt-4 border-t border-bd-border-subtle flex items-center justify-center">
+            <router-link 
+              to="/ai-instructions" 
+              class="inline-flex items-center gap-2 text-sm font-medium text-bd-accent-primary hover:text-bd-accent-light transition-colors"
+            >
+              Explore AI Instructions
+              <ArrowRight class="w-3.5 h-3.5" />
+            </router-link>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Resource Categories with gradient accent borders -->
     <section ref="categoriesRef" :class="['home-section', { 'is-visible': visibleSections.categories }]">
       <div class="section-header mb-5">
@@ -353,8 +464,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted, onUnmounted, reactive, nextTick } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { INSTRUCTIONS, CATEGORIES } from '@/data/aiInstructions'
 import { TEMPLATES } from '@/data/plotComponents'
 import { STORY_CARDS, STORY_CARD_TEMPLATES } from '@/data/storyCards'
@@ -364,10 +475,12 @@ import { MAJOR_CONTRIBUTORS as majorContributors } from '@/data/contributors'
 import { 
   Search, LayoutGrid, Lightbulb, ScrollText, Heart, Sparkles, ArrowRight,
   GitPullRequest, MessageCircle, ExternalLink, Bookmark, Drama, Code,
-  Award, Users, ChevronRight, Package, Layers, LayoutDashboard, Infinity, X
+  Award, Users, ChevronRight, Package, Layers, LayoutDashboard, Infinity, X,
+  Megaphone, RefreshCw, Tag, SlidersHorizontal, Wrench
 } from 'lucide-vue-next'
 
 const router = useRouter()
+const route = useRoute()
 
 // --- Platform detection for keyboard hint ---
 const isMac = navigator.userAgent.includes('Mac')
@@ -379,12 +492,14 @@ const searchInputRef = ref(null)
 const searchContainerRef = ref(null)
 
 // --- Section refs for IntersectionObserver staggered reveal ---
+const whatsNewRef = ref(null)
 const categoriesRef = ref(null)
 const statsRef = ref(null)
 const quickStartRef = ref(null)
 const creditsRef = ref(null)
 
 const visibleSections = reactive({
+  whatsNew: false,
   categories: false,
   stats: false,
   quickStart: false,
@@ -399,7 +514,8 @@ onMounted(() => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const el = entry.target
-          if (el === categoriesRef.value) visibleSections.categories = true
+          if (el === whatsNewRef.value) visibleSections.whatsNew = true
+          else if (el === categoriesRef.value) visibleSections.categories = true
           else if (el === statsRef.value) visibleSections.stats = true
           else if (el === quickStartRef.value) visibleSections.quickStart = true
           else if (el === creditsRef.value) visibleSections.credits = true
@@ -410,11 +526,22 @@ onMounted(() => {
     { threshold: 0.15 }
   )
 
-  const refs = [categoriesRef, statsRef, quickStartRef, creditsRef]
+  const refs = [whatsNewRef, categoriesRef, statsRef, quickStartRef, creditsRef]
   refs.forEach((r) => { if (r.value) observer.observe(r.value) })
 
   // Close search results when clicking outside
   document.addEventListener('mousedown', handleClickOutside)
+
+  // Scroll to What's New section if coming from sidebar link
+  if (route.query.section === 'whats-new') {
+    nextTick(() => {
+      const el = document.getElementById('whats-new')
+      if (el) {
+        visibleSections.whatsNew = true
+        setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
+      }
+    })
+  }
 })
 
 onUnmounted(() => {
@@ -588,6 +715,20 @@ const handleClickOutside = (e) => {
 .home-section.is-visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* === What's New cards === */
+.whats-new-card {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: var(--bd-bg-primary);
+  border: 1px solid var(--bd-border-subtle);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.whats-new-card:hover {
+  border-color: var(--bd-border-default);
+  transform: translateY(-1px);
 }
 
 /* === Contributor chips === */

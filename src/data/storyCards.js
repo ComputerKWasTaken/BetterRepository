@@ -4,17 +4,57 @@
 // Example Story Cards and templates for AI Dungeon.
 // Story Cards are notes for the AI about characters, locations, and concepts.
 // =============================================================================
+
+// ============================================
+// STORY CARD RULESET (Internal Documentation)
+// All story cards and templates MUST follow these rules.
+// ============================================
 //
-// METADATA SCHEMA:
-// - difficulty: 'beginner' | 'intermediate' | 'advanced'
-//   How complex the card is to understand and use effectively
-// - impact: 'high' | 'medium' | 'low'
-//   How much the card affects story consistency
-// - essential: boolean
-//   Whether this is a must-have example/template
-// - useCase: string
-//   When and why to use this type of card
-// =============================================================================
+// 1. TRIGGER FORMAT
+//    Every story card must have a `triggers` field with comma-separated
+//    trigger phrases. These are the keywords that activate the card in
+//    context. Use the most natural, in-story references a player would use.
+//    Example: triggers: 'Kira,the scout,Kira the Scout'
+//
+// 2. ENTRY AS PROSE
+//    The `entry` field must be written as natural prose, not bullet points.
+//    The AI reads story cards as narrative context, so entries should read
+//    like encyclopedia entries or character descriptions, not lists.
+//
+// 3. CATEGORY ASSIGNMENT
+//    Every card must have a `category` field matching one of the
+//    STORY_CARD_CATEGORIES ids: character, location, faction, item,
+//    creature, concept, event, culture, vehicle, role, rumor, relationship.
+//
+// 4. CONCISE BUT COMPLETE
+//    Story cards should contain enough detail to maintain consistency
+//    without being so long they waste context tokens. Aim for 3-6
+//    sentences for simple cards, 6-10 for complex ones.
+//
+// 5. DIFFICULTY RATING
+//    - beginner: Simple card with obvious use case
+//    - intermediate: Requires understanding of trigger placement or AI behavior
+//    - advanced: Complex cards with interconnected lore or subtle effects
+//
+// 6. IMPACT RATING
+//    - high: Core to story consistency (main characters, key locations)
+//    - medium: Enhances consistency (recurring NPCs, factions)
+//    - low: Flavor and detail (minor items, background lore)
+//
+// 7. SHOW, DON'T PRESCRIBE
+//    Story card entries describe what IS, not what the AI should DO.
+//    Wrong: "When the player meets Kira, she should be suspicious."
+//    Right: "Kira is suspicious of strangers and keeps her hand near her knife."
+//
+// 8. NO REDUNDANCY
+//    Before creating a card, verify it doesn't duplicate an existing one.
+//    Cards covering the same entity should be merged, not duplicated.
+//
+// 9. METADATA COMPLETENESS
+//    Every card must include: id, name, category, difficulty, impact,
+//    essential, tags, source, description, triggers, and entry.
+//    Optional: useCase, combinesWith.
+//
 
 // ============================================
 // STORY CARD CATEGORIES

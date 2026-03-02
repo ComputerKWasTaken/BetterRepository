@@ -28,7 +28,7 @@
               BetterRepository
             </h1>
             <div class="flex items-center gap-2">
-              <span class="text-xs text-bd-text-muted">v1.2.1</span>
+              <router-link to="/?section=whats-new" class="text-xs text-bd-text-muted hover:text-bd-accent-primary transition-colors">v1.3</router-link>
             </div>
           </div>
         </router-link>
