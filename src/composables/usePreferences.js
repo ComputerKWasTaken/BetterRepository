@@ -17,12 +17,12 @@ const defaultPreferences = {
   // NSFW age verification (persists across sessions)
   nsfwVerified: false,
   // Saved instruction builds
-  // Format: { id: string, name: string, directiveText: string, instructions: [{id, variantIndex?}], createdAt: timestamp, updatedAt: timestamp }
+  // Format: { id: string, name: string, directiveComponents: [{id, variantIndex?}], instructions: [{id, variantIndex?}], createdAt: timestamp, updatedAt: timestamp }
   savedBuilds: [],
   // Current working build (auto-saved)
   currentBuild: {
-    directiveText: '', // Free-form directive text (role, persona, key rules)
-    instructions: [] // Array of { id: string, variantIndex?: number }
+    directiveComponents: [], // Array of { id: string, variantIndex?: number } — rendered as prose in ## Directive
+    instructions: [] // Array of { id: string, variantIndex?: number } — rendered as dashed lines under category headers
   }
 }
 
@@ -137,18 +137,52 @@ export function usePreferences() {
 
   // Clear current build
   const clearBuild = () => {
-    preferences.value.currentBuild.directiveText = ''
+    preferences.value.currentBuild.directiveComponents = []
     preferences.value.currentBuild.instructions = []
   }
 
-  // Set directive text
-  const setDirectiveText = (text) => {
-    preferences.value.currentBuild.directiveText = text
+  // ===========================================
+  // DIRECTIVE COMPONENT FUNCTIONS
+  // ===========================================
+
+  // Add directive component to current build
+  const addToDirective = (instructionId, variantIndex = null) => {
+    if (!preferences.value.currentBuild.directiveComponents) {
+      preferences.value.currentBuild.directiveComponents = []
+    }
+    const existing = preferences.value.currentBuild.directiveComponents.find(
+      i => i.id === instructionId && i.variantIndex === variantIndex
+    )
+    if (!existing) {
+      preferences.value.currentBuild.directiveComponents.push({
+        id: instructionId,
+        variantIndex
+      })
+    }
   }
 
-  // Get directive text
-  const getDirectiveText = () => {
-    return preferences.value.currentBuild.directiveText || ''
+  // Remove directive component from current build
+  const removeFromDirective = (instructionId, variantIndex = null) => {
+    if (!preferences.value.currentBuild.directiveComponents) return
+    preferences.value.currentBuild.directiveComponents = preferences.value.currentBuild.directiveComponents.filter(
+      i => !(i.id === instructionId && i.variantIndex === variantIndex)
+    )
+  }
+
+  // Check if directive component is in current build
+  const isInDirective = (instructionId, variantIndex = null) => {
+    if (!preferences.value.currentBuild.directiveComponents) return false
+    return preferences.value.currentBuild.directiveComponents.some(
+      i => i.id === instructionId && i.variantIndex === variantIndex
+    )
+  }
+
+  // Reorder directive components in current build
+  const reorderDirective = (fromIndex, toIndex) => {
+    const directives = [...(preferences.value.currentBuild.directiveComponents || [])]
+    const [moved] = directives.splice(fromIndex, 1)
+    directives.splice(toIndex, 0, moved)
+    preferences.value.currentBuild.directiveComponents = directives
   }
 
   // Save current build with a name
@@ -157,7 +191,7 @@ export function usePreferences() {
     const build = {
       id: `build-${now}`,
       name: name.trim() || `Build ${preferences.value.savedBuilds.length + 1}`,
-      directiveText: preferences.value.currentBuild.directiveText || '',
+      directiveComponents: [...(preferences.value.currentBuild.directiveComponents || [])],
       instructions: [...preferences.value.currentBuild.instructions],
       createdAt: now,
       updatedAt: now
@@ -170,7 +204,7 @@ export function usePreferences() {
   const loadBuild = (buildId) => {
     const build = preferences.value.savedBuilds.find(b => b.id === buildId)
     if (build) {
-      preferences.value.currentBuild.directiveText = build.directiveText || ''
+      preferences.value.currentBuild.directiveComponents = [...(build.directiveComponents || [])]
       preferences.value.currentBuild.instructions = [...build.instructions]
       return true
     }
@@ -240,8 +274,10 @@ export function usePreferences() {
     isInBuild,
     reorderBuild,
     clearBuild,
-    setDirectiveText,
-    getDirectiveText,
+    addToDirective,
+    removeFromDirective,
+    isInDirective,
+    reorderDirective,
     saveBuild,
     loadBuild,
     updateSavedBuild,
