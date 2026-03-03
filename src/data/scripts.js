@@ -948,6 +948,7 @@ modifier(text);`
 // - Temperature simulation with smooth drift
 // - Story card-based settings (Chronos Settings card)
 // - BetterScripts widget integration
+// - state.message toast notifications for command feedback
 //
 // Commands (by category):
 //   Status: :time, :date, :weather, :chronos
@@ -1931,7 +1932,8 @@ if (hook === "output") {
   let isCommandOutput = false;
 
   if (state.chronos.isCommand && state.chronos.pendingOutput) {
-    output = state.chronos.pendingOutput;
+    // Use state.message to display command output as a toast notification
+    // instead of injecting it into the story text.
     state.message = state.chronos.pendingOutput;
     state.chronos.pendingOutput = null;
     state.chronos.isCommand = false;

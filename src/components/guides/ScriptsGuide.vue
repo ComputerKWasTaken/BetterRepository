@@ -331,7 +331,9 @@
               <li>• <code class="text-bd-cyan">state.memory.context</code> - Added to context beginning (replaces Plot Essentials)</li>
               <li>• <code class="text-bd-cyan">state.memory.authorsNote</code> - Added before last AI response</li>
               <li>• <code class="text-bd-cyan">state.memory.frontMemory</code> - Added to context end (not visible in UI)</li>
-              <li>• <code class="text-bd-cyan">state.message</code> - Shown to the player as info message</li>
+              <li>• <code class="text-bd-cyan">state.message</code> - Shown to the player as a toast notification
+                <span class="tag bg-bd-green/20 text-bd-green text-[10px] ml-1">Now Working</span>
+              </li>
             </ul>
             <div class="mt-3 p-3 rounded bg-bd-amber/5 border border-bd-amber/20">
               <h4 class="text-xs font-semibold text-bd-amber mb-2">state.memory Timing</h4>
