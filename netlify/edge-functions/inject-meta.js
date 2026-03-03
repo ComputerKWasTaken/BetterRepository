@@ -1,15 +1,16 @@
 /**
  * Netlify Edge Function: inject-meta
  *
- * Intercepts HTML responses and injects page-specific Open Graph and Twitter Card
+ * Intercepts HTML responses and replaces page-specific Open Graph and Twitter Card
  * meta tags based on the request URL path. This ensures that social media crawlers
  * (Discord, Slack, Twitter, Facebook) which don't execute JavaScript still receive
  * the correct embed information for each page.
+ *
+ * Each tag is replaced individually so that unrelated tags (theme-color, author,
+ * keywords) are never touched and no duplicate tags are created.
  */
 
-const SITE_NAME = 'BetterRepository'
 const SITE_URL = 'https://better-repository.netlify.app'
-const DEFAULT_IMAGE = `${SITE_URL}/betterrepository_logo.png`
 
 /**
  * Page-specific metadata keyed by URL path.
@@ -54,6 +55,26 @@ const PAGE_META = {
   },
 }
 
+/**
+ * Replace the content attribute of a specific meta tag matched by attribute + key.
+ * For example, replaceMetaContent(html, 'property', 'og:title', 'New Title')
+ * replaces <meta property="og:title" content="..."> with the new content value.
+ */
+function replaceMetaContent(html, attr, key, newContent) {
+  const pattern = new RegExp(
+    `(<meta\\s+${attr}="${key}"\\s+content=")([^"]*)(")`,
+    'i'
+  )
+  return html.replace(pattern, `$1${escapeAttr(newContent)}$3`)
+}
+
+/**
+ * Replace <title>...</title> content.
+ */
+function replaceTitle(html, newTitle) {
+  return html.replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(newTitle)}</title>`)
+}
+
 export default async (request, context) => {
   const response = await context.next()
 
@@ -70,43 +91,47 @@ export default async (request, context) => {
   const meta = PAGE_META[path] || PAGE_META['/']
   const ogUrl = `${SITE_URL}${path}`
 
-  const html = await response.text()
+  let html = await response.text()
 
-  // Build the replacement meta tags
-  const metaTags = `
-    <meta name="description" content="${escapeAttr(meta.description)}" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="${escapeAttr(SITE_NAME)}" />
-    <meta property="og:title" content="${escapeAttr(meta.title)}" />
-    <meta property="og:description" content="${escapeAttr(meta.description)}" />
-    <meta property="og:image" content="${escapeAttr(DEFAULT_IMAGE)}" />
-    <meta property="og:url" content="${escapeAttr(ogUrl)}" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="${escapeAttr(meta.title)}" />
-    <meta name="twitter:description" content="${escapeAttr(meta.description)}" />
-    <meta name="twitter:image" content="${escapeAttr(DEFAULT_IMAGE)}" />`
+  // Replace <title>
+  html = replaceTitle(html, meta.title)
 
-  // Replace the existing static meta block with page-specific tags.
-  // We replace from the "Meta Tags" comment through the closing OG image tag.
-  const updatedHtml = html.replace(
-    /<!-- Meta Tags -->[\s\S]*?<meta property="og:image"[^>]*>/,
-    `<!-- Meta Tags -->${metaTags}`
-  )
+  // Replace standard meta description
+  html = replaceMetaContent(html, 'name', 'description', meta.description)
 
-  return new Response(updatedHtml, {
+  // Replace Open Graph tags (individually to preserve all other tags)
+  html = replaceMetaContent(html, 'property', 'og:title', meta.title)
+  html = replaceMetaContent(html, 'property', 'og:description', meta.description)
+  html = replaceMetaContent(html, 'property', 'og:url', ogUrl)
+
+  // Replace Twitter Card tags
+  html = replaceMetaContent(html, 'name', 'twitter:title', meta.title)
+  html = replaceMetaContent(html, 'name', 'twitter:description', meta.description)
+
+  return new Response(html, {
     status: response.status,
     headers: response.headers,
   })
 }
 
 /**
- * Escape a string for safe insertion into an HTML attribute.
+ * Escape a string for safe insertion into an HTML attribute value.
  */
 function escapeAttr(str) {
   return str
     .replace(/&/g, '&amp;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+}
+
+/**
+ * Escape a string for safe insertion into HTML text content.
+ */
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
 }
