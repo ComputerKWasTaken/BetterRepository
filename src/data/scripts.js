@@ -1777,7 +1777,7 @@ const CHRONOS_COMMANDS = {
     const sub = args.trim().toLowerCase();
 
     if (sub === 'help') {
-      return { output: \`\\n\${COMMANDS_CARD_ENTRY}\`, isCommand: true };
+      return { output: '\\nCommands: :time, :date, :weather, :advance, :sleep, :settime, :setdate, :setweather, :pause, :resume, :chronos reset\\nSee the Chronos Commands story card for full details.', isCommand: true };
     }
 
     if (sub === 'reset') {
@@ -1846,6 +1846,9 @@ if (hook === "input") {
     if (result) {
       state.chronos.pendingOutput = result.output;
       state.chronos.isCommand = true;
+      // Set state.message immediately in the input hook so the platform
+      // picks it up reliably. Strip leading/trailing whitespace for clean toast display.
+      state.message = result.output.trim();
       // Use a single space instead of an empty string to avoid edge cases where
       // an empty input can behave inconsistently across scenarios.
       globalThis.text = ' ';
@@ -1932,9 +1935,8 @@ if (hook === "output") {
   let isCommandOutput = false;
 
   if (state.chronos.isCommand && state.chronos.pendingOutput) {
-    // Use state.message to display command output as a toast notification
-    // instead of injecting it into the story text.
-    state.message = state.chronos.pendingOutput;
+    // state.message was already set in the input hook for reliable toast display.
+    // Clean up the pending output flag.
     state.chronos.pendingOutput = null;
     state.chronos.isCommand = false;
     isCommandOutput = true;
