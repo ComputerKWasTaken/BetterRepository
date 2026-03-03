@@ -11,6 +11,11 @@
   to = "/index.html"
   status = 200
 
+# Edge Function for page-specific Open Graph meta tags
+[[edge_functions]]
+  function = "inject-meta"
+  path = "/*"
+
 # Headers for better caching and security
 [[headers]]
   for = "/*"
