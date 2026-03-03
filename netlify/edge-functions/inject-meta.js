@@ -23,7 +23,7 @@ const PAGE_META = {
   },
   '/ai-instructions': {
     title: 'AI Instructions - BetterRepository',
-    description: 'Browse 213+ AI instruction components and 6 playstyle sets. Customize AI writing style, pacing, and tone for your AI Dungeon adventures.',
+    description: 'Browse over 200+ AI instruction components and sets. Customize AI writing style, pacing, and tone for your AI Dungeon adventures.',
   },
   '/plot-components': {
     title: 'Plot Components - BetterRepository',

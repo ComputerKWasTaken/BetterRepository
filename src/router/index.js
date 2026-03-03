@@ -34,7 +34,7 @@ const routes = [
       title: 'AI Instructions - BetterRepository',
       description: 'Master AI behavior with curated instruction sets and individual components. Pre-built playstyle sets, length variants, and a directive builder for AI Dungeon.',
       ogTitle: 'AI Instructions - BetterRepository',
-      ogDescription: 'Browse 213+ AI instruction components and 6 playstyle sets. Customize AI writing style, pacing, and tone for your AI Dungeon adventures.',
+      ogDescription: 'Browse over 200+ AI instruction components and sets. Customize AI writing style, pacing, and tone for your AI Dungeon adventures.',
       path: '/ai-instructions'
     }
   },
