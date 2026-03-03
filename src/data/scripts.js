@@ -1484,7 +1484,7 @@ function handleAdvanceTime(amount, unit) {
   const minutesPerUnit = UNIT_TO_MINUTES[unitLower];
   if (!minutesPerUnit) {
     const validUnits = 'minutes, hours, days, weeks, months, years';
-    return { output: \`\\nUnknown time unit: \${unit}\\nValid units: \${validUnits}\`, isCommand: true };
+    return { output: \`Unknown time unit: \${unit}. Valid: \${validUnits}\`, isCommand: true };
   }
   const totalMinutes = amount * minutesPerUnit;
   if (state.chronos.config.weatherEnabled) {
@@ -1501,9 +1501,9 @@ function handleAdvanceTime(amount, unit) {
   }
   advanceTime(totalMinutes);
   const period = getTimePeriod(state.chronos.hour);
-  let out = \`\\nAdvanced \${amount} \${unitLower}.\\n\${period.icon} \${period.name}, \${getTimeString()} - \${getWeekday()}, \${getDateString()}\`;
+  let out = \`Advanced \${amount} \${unitLower}. \${period.icon} \${period.name}, \${getTimeString()} - \${getWeekday()}, \${getDateString()}\`;
   if (state.chronos.config.weatherEnabled) {
-    out += \`\\n\${getWeatherDisplay()}\`;
+    out += \` | \${getWeatherDisplay()}\`;
   }
   return { output: out, isCommand: true };
 }
@@ -1639,10 +1639,9 @@ const CHRONOS_COMMANDS = {
   time: function () {
     const s = state.chronos;
     const period = getTimePeriod(s.hour);
-    let out = \`\\n\\u{1F550} \${getTimeString()} - \${period.icon} \${period.name}\`;
-    out += \`\\n\\u{1F4C5} \${getWeekday()}, \${getDateString()} (Turn \${info.actionCount || 0})\`;
+    let out = \`\${period.icon} \${getTimeString()} - \${period.name} | \${getWeekday()}, \${getDateString()} (Turn \${info.actionCount || 0})\`;
     if (s.config.weatherEnabled) {
-      out += \`\\n\${getWeatherDisplay()}\`;
+      out += \` | \${getWeatherDisplay()}\`;
     }
     return { output: out, isCommand: true };
   },
@@ -1651,9 +1650,7 @@ const CHRONOS_COMMANDS = {
   date: function () {
     const s = state.chronos;
     const season = getSeason(s.month);
-    let out = \`\\n\${getWeekday()}, \${getDateString()}\`;
-    out += \`\\nSeason: \${season.name}\`;
-    return { output: out, isCommand: true };
+    return { output: \`\${getWeekday()}, \${getDateString()} | \${season.name}\`, isCommand: true };
   },
 
   // :advance <N> <unit> - Jumps time forward by the specified amount (e.g. :advance 3 hours).
@@ -1666,12 +1663,12 @@ const CHRONOS_COMMANDS = {
   // :sleep - Fast-forwards to the configured wake hour, simulating overnight weather.
   sleep: function () {
     if (!skipToMorning()) {
-      return { output: '\\nYou are already up. It is morning.', isCommand: true };
+      return { output: 'You are already up. It is morning.', isCommand: true };
     }
     const period = getTimePeriod(state.chronos.hour);
-    let out = \`\\nYou rest and wake refreshed.\\n\${period.icon} \${period.name}, \${getTimeString()} - \${getWeekday()}, \${getDateString()}\`;
+    let out = \`Rested until \${period.name}, \${getTimeString()} - \${getWeekday()}, \${getDateString()}\`;
     if (state.chronos.config.weatherEnabled) {
-      out += \`\\n\${getWeatherDisplay()}\`;
+      out += \` | \${getWeatherDisplay()}\`;
     }
     return { output: out, isCommand: true };
   },
@@ -1685,7 +1682,7 @@ const CHRONOS_COMMANDS = {
     setTimeTo(hour, minute);
     const period = getTimePeriod(state.chronos.hour);
     return {
-      output: \`\\nTime set to \${period.name}, \${getTimeString()}.\`,
+      output: \`Time set to \${period.name}, \${getTimeString()}.\`,
       isCommand: true
     };
   },
@@ -1698,14 +1695,14 @@ const CHRONOS_COMMANDS = {
     const mo = parseInt(m[2]);
     const y = parseInt(m[3]);
     if (mo < 1 || mo > 12) {
-      return { output: '\\nInvalid month. Must be 1-12.', isCommand: true };
+      return { output: 'Invalid month. Must be 1-12.', isCommand: true };
     }
     if (y < 1) {
-      return { output: '\\nInvalid year. Must be 1 or greater.', isCommand: true };
+      return { output: 'Invalid year. Must be 1 or greater.', isCommand: true };
     }
     setDateTo(d, mo, y);
     return {
-      output: \`\\nDate set to \${getWeekday()}, \${getDateString()}.\`,
+      output: \`Date set to \${getWeekday()}, \${getDateString()}.\`,
       isCommand: true
     };
   },
@@ -1713,29 +1710,29 @@ const CHRONOS_COMMANDS = {
   // :setweather <condition> - Overrides the current weather (e.g. :setweather rain).
   setweather: function (args) {
     if (!state.chronos.config.weatherEnabled) {
-      return { output: '\\nWeather is disabled. Enable it in the Chronos Settings story card.', isCommand: true };
+      return { output: 'Weather is disabled. Enable it in the Chronos Settings story card.', isCommand: true };
     }
     const requested = args.trim().replace(/ /g, '_');
     if (!WEATHER_CONDITIONS[requested]) {
       const valid = Object.keys(WEATHER_CONDITIONS).join(', ');
-      return { output: \`\\nUnknown condition: \${requested}\\nValid: \${valid}\`, isCommand: true };
+      return { output: \`Unknown condition: \${requested}. Valid: \${valid}\`, isCommand: true };
     }
     state.chronos.weather.current = requested;
     state.chronos.weather.targetTemp = calcTargetTemp();
     state.chronos.weather.temperature = state.chronos.weather.targetTemp;
     state.chronos.weather.lastChange = info.actionCount || 0;
-    return { output: \`\\nWeather set to \${getWeatherDisplay()}\`, isCommand: true };
+    return { output: \`Weather set to \${getWeatherDisplay()}\`, isCommand: true };
   },
 
   // :weather - Displays the current weather condition, temperature, and season.
   weather: function () {
     if (!state.chronos.config.weatherEnabled) {
-      return { output: '\\nWeather is disabled. Enable it in the Chronos Settings story card.', isCommand: true };
+      return { output: 'Weather is disabled. Enable it in the Chronos Settings story card.', isCommand: true };
     }
     const s = state.chronos;
     const season = getSeason(s.month);
     return {
-      output: \`\\n\${getWeatherDisplay()}\\n\${season.name} - \${getTimePeriod(s.hour).name}\`,
+      output: \`\${getWeatherDisplay()} | \${season.name} - \${getTimePeriod(s.hour).name}\`,
       isCommand: true
     };
   },
@@ -1757,19 +1754,19 @@ const CHRONOS_COMMANDS = {
   // :pause - Suspends automatic time advancement until :resume is used.
   pause: function () {
     if (state.chronos.paused) {
-      return { output: '\\nTime is already paused.', isCommand: true };
+      return { output: 'Time is already paused.', isCommand: true };
     }
     state.chronos.paused = true;
-    return { output: '\\nTime paused. Time will not advance until you use :resume.', isCommand: true };
+    return { output: 'Time paused. Use :resume to continue.', isCommand: true };
   },
 
   // :resume - Resumes automatic time advancement after a :pause.
   resume: function () {
     if (!state.chronos.paused) {
-      return { output: '\\nTime is not currently paused.', isCommand: true };
+      return { output: 'Time is not paused.', isCommand: true };
     }
     state.chronos.paused = false;
-    return { output: '\\nTime resumed. Time will advance normally each turn.', isCommand: true };
+    return { output: 'Time resumed.', isCommand: true };
   },
 
   // :chronos [help|reset] - Shows full diagnostic status, help text, or resets all state.
@@ -1789,26 +1786,18 @@ const CHRONOS_COMMANDS = {
       state.chronos.weather = { current: 'clear', temperature: 70, lastChange: 0, targetTemp: null };
       state.chronos.initialized = false;
       state.chronos.paused = false;
-      return { output: '\\nChronos has been reset to defaults.', isCommand: true };
+      return { output: 'Chronos reset to defaults.', isCommand: true };
     }
 
     if (sub === '') {
       const s = state.chronos;
       const period = getTimePeriod(s.hour);
       const season = getSeason(s.month);
-      let out = '\\n--- Chronos Status ---';
-      out += \`\\nTime: \${period.name}, \${getTimeString()} (\${s.config.use12HourFormat ? '12h' : '24h'})\`;
-      out += \`\\nDate: \${getWeekday()}, \${getDateString()}\`;
-      out += \`\\nSeason: \${season.name}\`;
-      out += \`\\nStatus: \${s.paused ? 'Paused' : 'Running'}\`;
-      out += \`\\nPacing: \${s.config.minutesPerTurn} min/turn | Turn \${info.actionCount || 0}\`;
+      let out = \`\${period.name}, \${getTimeString()} | \${getWeekday()}, \${getDateString()} | \${season.name}\`;
+      out += \` | \${s.paused ? 'Paused' : 'Running'} (\${s.config.minutesPerTurn} min/turn)\`;
       if (s.config.weatherEnabled) {
-        out += \`\\nWeather: \${getWeatherDisplay()} (\${s.config.temperatureUnit})\`;
-      } else {
-        out += '\\nWeather: Disabled';
+        out += \` | \${getWeatherDisplay()}\`;
       }
-      out += \`\\nDisplay: \${s.config.useBetterScripts ? 'Widgets' : s.config.showTimeInOutput ? 'Text' : 'Context only'}\`;
-      out += '\\n---';
       return { output: out, isCommand: true };
     }
 
@@ -1827,9 +1816,9 @@ function handleChronosCommand(input) {
   const cmdName = parsed[1].toLowerCase();
   const args = (parsed[2] || '').toLowerCase();
   const handler = CHRONOS_COMMANDS[cmdName];
-  if (!handler) return { output: '\\nUnknown command: :' + cmdName + '. Type :chronos help for commands.', isCommand: true };
+  if (!handler) return { output: 'Unknown command: :' + cmdName + '. Type :chronos help for commands.', isCommand: true };
   const result = handler(args);
-  if (!result) return { output: '\\nInvalid arguments for :' + cmdName + '. Type :chronos help for usage.', isCommand: true };
+  if (!result) return { output: 'Invalid arguments for :' + cmdName + '. Type :chronos help for usage.', isCommand: true };
   return result;
 }
 
@@ -1837,26 +1826,25 @@ function handleChronosCommand(input) {
 // HOOK: INPUT
 // ============================================
 if (hook === "input") {
+  // Clean up any leftover flags from a previous command turn
+  // (context/output hooks may have been skipped if stop was returned).
   state.chronos.isCommand = false;
+  state.chronos.pendingOutput = null;
 
   const trimmed = text.trim();
 
   if (trimmed.startsWith(':')) {
     const result = handleChronosCommand(trimmed);
     if (result) {
-      state.chronos.pendingOutput = result.output;
       state.chronos.isCommand = true;
-      // Set state.message immediately in the input hook so the platform
-      // picks it up reliably. Strip leading/trailing whitespace for clean toast display.
-      state.message = result.output.trim();
-      // Use a single space instead of an empty string to avoid edge cases where
-      // an empty input can behave inconsistently across scenarios.
+      // Store the message for the modifier to set on state.message directly.
+      state.chronos.pendingMessage = result.output.trim();
       globalThis.text = ' ';
       return;
     }
   }
 
-  delete state.message;
+  state.chronos.pendingMessage = null;
   return;
 
 }
@@ -1935,8 +1923,6 @@ if (hook === "output") {
   let isCommandOutput = false;
 
   if (state.chronos.isCommand && state.chronos.pendingOutput) {
-    // state.message was already set in the input hook for reliable toast display.
-    // Clean up the pending output flag.
     state.chronos.pendingOutput = null;
     state.chronos.isCommand = false;
     isCommandOutput = true;
@@ -2018,7 +2004,17 @@ if (hook === "output") {
 };`,
       input: `const modifier = (text) => {
   Chronos("input");
-  return { text: globalThis.text };
+  // Set state.message directly in the modifier scope (not inside the Library
+  // function) so the platform reliably picks it up for toast display.
+  if (state.chronos && state.chronos.pendingMessage) {
+    state.message = state.chronos.pendingMessage;
+  } else {
+    delete state.message;
+  }
+  // Return stop: true on command turns to halt the pipeline and prevent
+  // AI generation, matching the official command parser pattern.
+  const stop = !!(state.chronos && state.chronos.isCommand);
+  return { text: globalThis.text, stop };
 };
 modifier(text);`,
       context: `const modifier = (text) => {
