@@ -1,234 +1,157 @@
 /* ============================================
-   BetterRepository Theme Variables
-   Dark Mode Design System
+   BetterRepository — Theme Variables (Local Copy)
+   ============================================
+   Canonical source: Project Management/design/theme-variables.css
+   Keep in sync when the canonical file is updated.
    ============================================ */
 
 :root {
-  /* ==========================================
-     CORE PALETTE
-     ========================================== */
-  
-  /* Background Layers (darkest to lightest) */
-  --bd-bg-primary: #0d0d0f;
-  --bd-bg-secondary: #16161a;
-  --bd-bg-tertiary: #1e1e24;
-  --bd-bg-elevated: #252530;
-  --bd-bg-overlay: rgba(0, 0, 0, 0.85);
-  
-  /* Text Hierarchy */
-  --bd-text-primary: #e8e8ec;
+  /* === Backgrounds === */
+  --bd-bg-primary:    #0d0d0f;
+  --bd-bg-secondary:  #16161a;
+  --bd-bg-tertiary:   #1e1e24;
+  --bd-bg-elevated:   #252530;
+  --bd-bg-overlay:    rgba(0, 0, 0, 0.85);
+
+  /* === Text === */
+  --bd-text-primary:   #e8e8ec;
   --bd-text-secondary: #a0a0a8;
-  --bd-text-muted: #6b6b75;
-  --bd-text-inverse: #0d0d0f;
-  
-  /* Brand Orange (Primary Accent) */
-  --bd-accent-primary: #ff9500;
+  --bd-text-muted:     #6b6b75;
+  --bd-text-inverse:   #0d0d0f;
+
+  /* === Brand / Accent === */
+  --bd-accent-primary:   #ff9500;
   --bd-accent-secondary: #e07800;
-  --bd-accent-light: #ffb84d;
-  --bd-accent-glow: rgba(255, 149, 0, 0.12);
-  --bd-accent-rgb: 255, 149, 0;
-  
-  /* ==========================================
-     SEMANTIC COLORS
-     ========================================== */
-  
-  /* Category Colors */
-  --bd-blue: #3b82f6;
-  --bd-purple: #a855f7;
-  --bd-green: #22c55e;
-  --bd-amber: #fbbf24;
-  --bd-pink: #ec4899;
-  --bd-cyan: #06b6d4;
-  --bd-emerald: #10b981;
-  --bd-red: #ef4444;
-  --bd-orange: #f97316;
-  --bd-teal: #14b8a6;
-  --bd-indigo: #6366f1;
-  --bd-rose: #f43f5e;
-  --bd-slate: #94a3b8;
-  --bd-gray: #6b7280;
-  
-  /* Status Colors */
-  --bd-success: #22c55e;
-  --bd-success-bg: rgba(34, 197, 94, 0.15);
+  --bd-accent-light:     #ffb84d;
+  --bd-accent-glow:      rgba(255, 149, 0, 0.12);
+  --bd-accent-muted:     rgba(255, 149, 0, 0.15);
+
+  /* === Status === */
+  --bd-success:        #22c55e;
+  --bd-success-bg:     rgba(34, 197, 94, 0.15);
   --bd-success-border: rgba(34, 197, 94, 0.3);
-  
-  --bd-error: #ef4444;
-  --bd-error-bg: rgba(239, 68, 68, 0.15);
-  --bd-error-border: rgba(239, 68, 68, 0.3);
-  
-  --bd-warning: #f59e0b;
-  --bd-warning-bg: rgba(245, 158, 11, 0.15);
+
+  --bd-error:          #ef4444;
+  --bd-error-bg:       rgba(239, 68, 68, 0.15);
+  --bd-error-border:   rgba(239, 68, 68, 0.3);
+
+  --bd-warning:        #f59e0b;
+  --bd-warning-bg:     rgba(245, 158, 11, 0.15);
   --bd-warning-border: rgba(245, 158, 11, 0.3);
-  
-  --bd-info: #3b82f6;
-  --bd-info-bg: rgba(59, 130, 246, 0.15);
-  --bd-info-border: rgba(59, 130, 246, 0.3);
-  
-  /* ==========================================
-     BORDERS & DIVIDERS
-     ========================================== */
-  --bd-border-subtle: rgba(255, 255, 255, 0.06);
-  --bd-border-default: rgba(255, 255, 255, 0.1);
-  --bd-border-strong: rgba(255, 255, 255, 0.15);
-  --bd-border-accent: rgba(255, 149, 0, 0.25);
-  --bd-border-focus: var(--bd-accent-primary);
-  
-  /* ==========================================
-     TYPOGRAPHY
-     ========================================== */
-  --bd-font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --bd-font-mono: 'Roboto Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
-  
-  /* Responsive Font Scale */
-  --bd-text-xs: 0.75rem;     /* 12px */
-  --bd-text-sm: 0.875rem;    /* 14px */
-  --bd-text-base: 1rem;      /* 16px */
-  --bd-text-lg: 1.125rem;    /* 18px */
-  --bd-text-xl: 1.25rem;     /* 20px */
-  --bd-text-2xl: 1.5rem;     /* 24px */
-  --bd-text-3xl: 1.875rem;   /* 30px */
-  --bd-text-4xl: 2.25rem;    /* 36px */
-  
-  --bd-leading-tight: 1.25;
-  --bd-leading-normal: 1.5;
-  --bd-leading-relaxed: 1.625;
-  
-  /* ==========================================
-     SPACING SCALE
-     ========================================== */
-  --bd-space-1: 0.25rem;   /* 4px */
-  --bd-space-2: 0.5rem;    /* 8px */
-  --bd-space-3: 0.75rem;   /* 12px */
-  --bd-space-4: 1rem;      /* 16px */
-  --bd-space-5: 1.25rem;   /* 20px */
-  --bd-space-6: 1.5rem;    /* 24px */
-  --bd-space-8: 2rem;      /* 32px */
-  --bd-space-10: 2.5rem;   /* 40px */
-  --bd-space-12: 3rem;     /* 48px */
-  --bd-space-16: 4rem;     /* 64px */
-  
-  /* ==========================================
-     BORDER RADIUS
-     ========================================== */
-  --bd-radius-sm: 0.25rem;   /* 4px */
-  --bd-radius-md: 0.375rem;  /* 6px */
-  --bd-radius-lg: 0.5rem;    /* 8px */
-  --bd-radius-xl: 0.75rem;   /* 12px */
-  --bd-radius-2xl: 1rem;     /* 16px */
-  --bd-radius-full: 9999px;
-  
-  /* ==========================================
-     SHADOWS & EFFECTS
-     ========================================== */
-  --bd-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --bd-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  --bd-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-  --bd-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
-  --bd-shadow-glow: 0 0 20px var(--bd-accent-glow);
-  --bd-shadow-glow-lg: 0 0 40px rgba(255, 149, 0, 0.2);
-  
-  /* ==========================================
-     TRANSITIONS
-     ========================================== */
-  --bd-transition-fast: 150ms ease;
-  --bd-transition-normal: 200ms ease;
-  --bd-transition-slow: 300ms ease;
-  --bd-transition-spring: 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  
-  /* ==========================================
-     ANIMATIONS
-     ========================================== */
-  --bd-anim-fade-in: 0.3s ease-out;
-  --bd-anim-slide-up: 0.3s ease-out;
-  --bd-anim-float: 6s ease-in-out infinite;
-  --bd-anim-scale-in: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  --bd-anim-shimmer: 2s linear infinite;
-  --bd-anim-gradient-shift: 8s ease infinite;
-  
-  /* Hero Orb Defaults */
-  --bd-orb-blur: 80px;
-  --bd-orb-opacity: 0.3;
-  --bd-orb-float-slow: 10s;
-  --bd-orb-float-fast: 8s;
-  
-  /* ==========================================
-     Z-INDEX SCALE
-     ========================================== */
-  --bd-z-base: 0;
-  --bd-z-dropdown: 100;
-  --bd-z-sticky: 200;
-  --bd-z-fixed: 300;
-  --bd-z-modal-backdrop: 400;
-  --bd-z-modal: 500;
-  --bd-z-popover: 600;
-  --bd-z-tooltip: 700;
-  --bd-z-toast: 800;
-  
-  /* ==========================================
-     COMPONENT TOKENS
-     ========================================== */
-  
-  /* Sidebar */
-  --bd-sidebar-width: 16rem;  /* 256px */
-  --bd-sidebar-bg: var(--bd-bg-secondary);
-  
-  /* Cards */
-  --bd-card-bg: var(--bd-bg-secondary);
-  --bd-card-border: var(--bd-border-subtle);
-  --bd-card-hover-border: var(--bd-border-default);
-  --bd-card-radius: var(--bd-radius-xl);
-  
-  /* Buttons */
-  --bd-btn-height-sm: 2rem;
-  --bd-btn-height-md: 2.5rem;
-  --bd-btn-height-lg: 3rem;
-  --bd-btn-radius: var(--bd-radius-lg);
-  
-  /* Inputs */
-  --bd-input-bg: var(--bd-bg-elevated);
-  --bd-input-border: var(--bd-border-default);
-  --bd-input-radius: var(--bd-radius-lg);
-  --bd-input-focus-ring: 0 0 0 3px var(--bd-accent-glow);
-  
-  /* Tags */
+
+  --bd-info:           #3b82f6;
+  --bd-info-bg:        rgba(59, 130, 246, 0.15);
+  --bd-info-border:    rgba(59, 130, 246, 0.3);
+
+  /* === Category Colors === */
+  --bd-blue:    #3b82f6;
+  --bd-purple:  #a855f7;
+  --bd-green:   #22c55e;
+  --bd-amber:   #fbbf24;
+  --bd-cyan:    #06b6d4;
+  --bd-orange:  #f97316;
+  --bd-pink:    #ec4899;
+  --bd-emerald: #10b981;
+  --bd-red:     #ef4444;
+  --bd-teal:    #14b8a6;
+  --bd-indigo:  #6366f1;
+  --bd-rose:    #f43f5e;
+  --bd-slate:   #94a3b8;
+  --bd-gray:    #6b7280;
+
+  /* === Borders === */
+  --bd-border-subtle:  rgba(255, 255, 255, 0.06);
+  --bd-border-default: rgba(255, 255, 255, 0.10);
+  --bd-border-strong:  rgba(255, 255, 255, 0.15);
+  --bd-border-accent:  rgba(255, 149, 0, 0.25);
+  --bd-border-focus:   var(--bd-accent-primary);
+
+  /* === Tag === */
   --bd-tag-bg: rgba(255, 255, 255, 0.08);
-  --bd-tag-radius: var(--bd-radius-full);
-  
-  /* Hero Sections */
-  --bd-hero-bg: var(--bd-bg-secondary);
-  --bd-hero-border: var(--bd-border-subtle);
-  --bd-hero-radius: var(--bd-radius-2xl);
-  --bd-hero-padding-y: 2.5rem;
-  --bd-hero-padding-x: 1.5rem;
-}
 
-/* ==========================================
-   ACCESSIBILITY
-   ========================================== */
-@media (prefers-reduced-motion: reduce) {
-  :root {
-    --bd-transition-fast: 0ms;
-    --bd-transition-normal: 0ms;
-    --bd-transition-slow: 0ms;
-    --bd-transition-spring: 0ms;
-    --bd-anim-fade-in: 0ms;
-    --bd-anim-slide-up: 0ms;
-    --bd-anim-float: 0ms;
-    --bd-anim-scale-in: 0ms;
-    --bd-anim-shimmer: 0ms;
-    --bd-anim-gradient-shift: 0ms;
-    --bd-orb-float-slow: 0ms;
-    --bd-orb-float-fast: 0ms;
-  }
-}
+  /* === Typography === */
+  --bd-font-family-primary: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --bd-font-family-mono:    'Roboto Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
 
-/* High Contrast Mode Support */
-@media (prefers-contrast: high) {
-  :root {
-    --bd-border-subtle: rgba(255, 255, 255, 0.2);
-    --bd-border-default: rgba(255, 255, 255, 0.3);
-    --bd-text-secondary: #c0c0c8;
-    --bd-text-muted: #9090a0;
-  }
+  --bd-font-size-xs:  10px;
+  --bd-font-size-sm:  11px;
+  --bd-font-size-base: 12px;
+  --bd-font-size-md:  13px;
+  --bd-font-size-lg:  14px;
+  --bd-font-size-xl:  16px;
+  --bd-font-size-2xl: 18px;
+  --bd-font-size-3xl: 22px;
+
+  --bd-font-weight-normal:   400;
+  --bd-font-weight-medium:   500;
+  --bd-font-weight-semibold: 600;
+  --bd-font-weight-bold:     700;
+
+  --bd-line-height-tight:   1.4;
+  --bd-line-height-normal:  1.5;
+  --bd-line-height-relaxed: 1.6;
+
+  /* === Spacing === */
+  --bd-space-1:  4px;
+  --bd-space-2:  8px;
+  --bd-space-3:  12px;
+  --bd-space-4:  16px;
+  --bd-space-5:  20px;
+  --bd-space-6:  24px;
+  --bd-space-8:  32px;
+  --bd-space-10: 40px;
+  --bd-space-12: 48px;
+
+  /* === Border Radius === */
+  --bd-radius-sm:   4px;
+  --bd-radius-md:   6px;
+  --bd-radius-lg:   8px;
+  --bd-radius-xl:   10px;
+  --bd-radius-2xl:  12px;
+  --bd-radius-3xl:  16px;
+  --bd-radius-full: 9999px;
+
+  /* === Shadows === */
+  --bd-shadow-sm:       0 1px 2px rgba(0, 0, 0, 0.2);
+  --bd-shadow-md:       0 2px 8px rgba(0, 0, 0, 0.3);
+  --bd-shadow-lg:       0 4px 16px rgba(0, 0, 0, 0.4);
+  --bd-shadow-xl:       0 8px 32px rgba(0, 0, 0, 0.5);
+  --bd-shadow-glow:     0 0 20px rgba(255, 149, 0, 0.12);
+  --bd-shadow-glow-lg:  0 0 30px rgba(255, 149, 0, 0.20);
+
+  /* === Transitions === */
+  --bd-transition-fast:   0.15s ease;
+  --bd-transition-normal: 0.2s ease;
+  --bd-transition-slow:   0.3s ease;
+
+  /* === Z-Index === */
+  --bd-z-base:            0;
+  --bd-z-elevated:        1;
+  --bd-z-sticky:          100;
+  --bd-z-fixed:           200;
+  --bd-z-dropdown:        1000;
+  --bd-z-modal-backdrop:  9000;
+  --bd-z-modal:           10000;
+  --bd-z-toast:           99999;
+  --bd-z-loading:         999999;
+
+  /* === Component Tokens === */
+  --bd-btn-primary-bg:      linear-gradient(135deg, var(--bd-accent-primary) 0%, var(--bd-accent-secondary) 100%);
+  --bd-btn-primary-hover:   linear-gradient(135deg, var(--bd-accent-light) 0%, var(--bd-accent-primary) 100%);
+  --bd-btn-secondary-bg:    rgba(255, 255, 255, 0.08);
+  --bd-btn-secondary-hover: rgba(255, 255, 255, 0.12);
+
+  --bd-input-bg:           var(--bd-bg-elevated);
+  --bd-input-border:       var(--bd-border-default);
+  --bd-input-focus-border: var(--bd-border-focus);
+  --bd-input-focus-ring:   0 0 0 3px var(--bd-accent-glow);
+
+  --bd-card-bg:           var(--bd-bg-secondary);
+  --bd-card-border:       var(--bd-border-subtle);
+  --bd-card-hover-bg:     var(--bd-bg-tertiary);
+  --bd-card-hover-border: var(--bd-border-default);
+  --bd-card-radius:       var(--bd-radius-xl);
+
+  --bd-loading-bg:      linear-gradient(180deg, rgba(30, 30, 40, 0.95) 0%, rgba(20, 20, 28, 0.98) 100%);
+  --bd-loading-spinner: var(--bd-accent-primary);
 }
