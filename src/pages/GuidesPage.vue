@@ -69,6 +69,11 @@
     </div>
 
     <!-- Guide Content -->
+    <GettingStartedGuide v-if="activeTab === 'getting-started'" />
+    <GameModesGuide v-if="activeTab === 'game-modes'" />
+    <ScenariosAdventuresGuide v-if="activeTab === 'scenarios-adventures'" />
+    <ContextMemoryGuide v-if="activeTab === 'context-memory'" />
+    <AIModelsGuide v-if="activeTab === 'ai-models'" />
     <AIInstructionsGuide v-if="activeTab === 'ai-instructions'" />
     <PlotComponentsGuide v-if="activeTab === 'plot-components'" />
     <StoryCardsGuide v-if="activeTab === 'story-cards'" />
@@ -81,6 +86,11 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import GettingStartedGuide from '@/components/guides/GettingStartedGuide.vue'
+import GameModesGuide from '@/components/guides/GameModesGuide.vue'
+import ScenariosAdventuresGuide from '@/components/guides/ScenariosAdventuresGuide.vue'
+import ContextMemoryGuide from '@/components/guides/ContextMemoryGuide.vue'
+import AIModelsGuide from '@/components/guides/AIModelsGuide.vue'
 import AIInstructionsGuide from '@/components/guides/AIInstructionsGuide.vue'
 import PlotComponentsGuide from '@/components/guides/PlotComponentsGuide.vue'
 import StoryCardsGuide from '@/components/guides/StoryCardsGuide.vue'
@@ -88,7 +98,8 @@ import ScriptsGuide from '@/components/guides/ScriptsGuide.vue'
 import BetterScriptsGuide from '@/components/guides/BetterScriptsGuide.vue'
 import AdvancedSettingsGuide from '@/components/guides/AdvancedSettingsGuide.vue'
 import { 
-  BookOpen, ScrollText, Bookmark, Drama, Code, Terminal, Settings
+  BookOpen, ScrollText, Bookmark, Drama, Code, Terminal, Settings,
+  Sparkles, Gamepad2, Map, Brain, Cpu
 } from 'lucide-vue-next'
 
 const route = useRoute()
@@ -96,6 +107,11 @@ const router = useRouter()
 
 // Primary tabs for core resource guides with colored dot indicators
 const primaryTabs = [
+  { id: 'getting-started', label: 'Getting Started', icon: Sparkles, dotClass: 'dot--green', activeClass: 'guide-tab--active-green' },
+  { id: 'game-modes', label: 'Game Modes', icon: Gamepad2, dotClass: 'dot--amber', activeClass: 'guide-tab--active-amber' },
+  { id: 'scenarios-adventures', label: 'Scenarios', icon: Map, dotClass: 'dot--purple', activeClass: 'guide-tab--active-purple' },
+  { id: 'context-memory', label: 'Context & Memory', icon: Brain, dotClass: 'dot--blue', activeClass: 'guide-tab--active-blue' },
+  { id: 'ai-models', label: 'AI Models', icon: Cpu, dotClass: 'dot--cyan', activeClass: 'guide-tab--active-cyan' },
   { id: 'ai-instructions', label: 'AI Instructions', icon: ScrollText, dotClass: 'dot--amber', activeClass: 'guide-tab--active-amber' },
   { id: 'plot-components', label: 'Plot Components', icon: Bookmark, dotClass: 'dot--blue', activeClass: 'guide-tab--active-blue' },
   { id: 'story-cards', label: 'Story Cards', icon: Drama, dotClass: 'dot--purple', activeClass: 'guide-tab--active-purple' },
@@ -110,7 +126,7 @@ const secondaryTabs = [
 
 const allTabs = [...primaryTabs, ...secondaryTabs]
 const validTabIds = allTabs.map(t => t.id)
-const activeTab = ref('ai-instructions')
+const activeTab = ref('getting-started')
 
 // Switch tab and update URL query parameter
 const switchTab = (tabId) => {
@@ -226,6 +242,7 @@ watch(() => route.query.tab, (newTab) => {
 .dot--blue { background: #3b82f6; }
 .dot--purple { background: #a855f7; }
 .dot--cyan { background: #06b6d4; }
+.dot--green { background: #22c55e; }
 
 /* Dim the dot when inactive */
 .guide-tab--inactive .guide-tab__dot {
@@ -285,6 +302,16 @@ watch(() => route.query.tab, (newTab) => {
 
 .guide-tab--active-cyan .guide-tab__dot {
   box-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
+}
+
+.guide-tab--active-green {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.25);
+  color: #22c55e;
+}
+
+.guide-tab--active-green .guide-tab__dot {
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
 }
 
 /* === Active secondary tab with neutral accent === */
