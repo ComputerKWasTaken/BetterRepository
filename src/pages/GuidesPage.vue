@@ -80,6 +80,10 @@
     <ScriptsGuide v-if="activeTab === 'scripts'" />
     <BetterScriptsGuide v-if="activeTab === 'betterscripts'" />
     <AdvancedSettingsGuide v-if="activeTab === 'advanced-settings'" />
+    <GlossaryTermsGuide v-if="activeTab === 'glossary'" />
+    <SystemSettingsGuide v-if="activeTab === 'system-settings'" />
+    <TipsAndTricksGuide v-if="activeTab === 'tips-tricks'" />
+    <CreatingContentGuide v-if="activeTab === 'creating-content'" />
   </div>
 </template>
 
@@ -97,9 +101,13 @@ import StoryCardsGuide from '@/components/guides/StoryCardsGuide.vue'
 import ScriptsGuide from '@/components/guides/ScriptsGuide.vue'
 import BetterScriptsGuide from '@/components/guides/BetterScriptsGuide.vue'
 import AdvancedSettingsGuide from '@/components/guides/AdvancedSettingsGuide.vue'
+import GlossaryTermsGuide from '@/components/guides/GlossaryTermsGuide.vue'
+import SystemSettingsGuide from '@/components/guides/SystemSettingsGuide.vue'
+import TipsAndTricksGuide from '@/components/guides/TipsAndTricksGuide.vue'
+import CreatingContentGuide from '@/components/guides/CreatingContentGuide.vue'
 import { 
   BookOpen, ScrollText, Bookmark, Drama, Code, Terminal, Settings,
-  Sparkles, Gamepad2, Map, Brain, Cpu
+  Sparkles, Gamepad2, Map, Brain, Cpu, BookMarked, Sliders, Lightbulb, PenTool
 } from 'lucide-vue-next'
 
 const route = useRoute()
@@ -116,6 +124,10 @@ const primaryTabs = [
   { id: 'plot-components', label: 'Plot Components', icon: Bookmark, dotClass: 'dot--blue', activeClass: 'guide-tab--active-blue' },
   { id: 'story-cards', label: 'Story Cards', icon: Drama, dotClass: 'dot--purple', activeClass: 'guide-tab--active-purple' },
   { id: 'scripts', label: 'Scripts', icon: Code, dotClass: 'dot--cyan', activeClass: 'guide-tab--active-cyan' },
+  { id: 'creating-content', label: 'Creating Content', icon: PenTool, dotClass: 'dot--purple', activeClass: 'guide-tab--active-purple' },
+  { id: 'system-settings', label: 'System Settings', icon: Sliders, dotClass: 'dot--blue', activeClass: 'guide-tab--active-blue' },
+  { id: 'tips-tricks', label: 'Tips & Tricks', icon: Lightbulb, dotClass: 'dot--amber', activeClass: 'guide-tab--active-amber' },
+  { id: 'glossary', label: 'Glossary', icon: BookMarked, dotClass: 'dot--green', activeClass: 'guide-tab--active-green' },
 ]
 
 // Secondary tabs for supplemental guides
