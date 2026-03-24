@@ -175,88 +175,48 @@
           <div class="flex items-center justify-between mb-5">
             <div class="flex items-center gap-2.5">
               <Megaphone class="w-5 h-5 text-bd-accent-primary" />
-              <h2 class="text-lg font-semibold text-bd-text-primary">What's New in <span class="text-gradient">V1.3</span></h2>
+              <h2 class="text-lg font-semibold text-bd-text-primary">What's New in <span class="text-gradient">V1.4</span></h2>
             </div>
             <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-bd-accent-primary/15 text-bd-accent-light">Latest</span>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- AI Instructions Overhaul -->
+            <!-- Story Card Builder -->
             <div class="whats-new-card group" style="animation-delay: 0ms">
               <div class="flex items-center gap-3 mb-3">
                 <div class="w-9 h-9 rounded-lg bg-bd-amber/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-amber/25 transition-colors">
-                  <ScrollText class="w-4 h-4 text-bd-amber" />
+                  <Hammer class="w-4 h-4 text-bd-amber" />
                 </div>
-                <h3 class="font-semibold text-sm text-bd-text-primary">AI Instructions Overhaul</h3>
+                <h3 class="font-semibold text-sm text-bd-text-primary">Story Card Builder</h3>
               </div>
               <ul class="space-y-1.5 text-sm text-bd-text-secondary">
                 <li class="flex items-start gap-2">
-                  <RefreshCw class="w-3 h-3 text-bd-accent-primary flex-shrink-0 mt-1" />
-                  <span>All 213 components rewritten to a strict one-line standard for consistency</span>
+                  <Edit3 class="w-3 h-3 text-bd-accent-primary flex-shrink-0 mt-1" />
+                  <span>Craft, refine, and save Story Card sets directly in your browser</span>
                 </li>
                 <li class="flex items-start gap-2">
-                  <Tag class="w-3 h-3 text-bd-accent-primary flex-shrink-0 mt-1" />
-                  <span>Standardized complexity and impact metrics across every component</span>
+                  <RefreshCw class="w-3 h-3 text-bd-accent-primary flex-shrink-0 mt-1" />
+                  <span>Full AI Dungeon-compatible JSON import and export</span>
                 </li>
               </ul>
             </div>
 
-            <!-- New Playstyle Sets -->
+            <!-- Proactive Analytics -->
             <div class="whats-new-card group" style="animation-delay: 80ms">
               <div class="flex items-center gap-3 mb-3">
                 <div class="w-9 h-9 rounded-lg bg-bd-purple/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-purple/25 transition-colors">
-                  <Layers class="w-4 h-4 text-bd-purple" />
+                  <Activity class="w-4 h-4 text-bd-purple" />
                 </div>
-                <h3 class="font-semibold text-sm text-bd-text-primary">6 New Playstyle Sets</h3>
+                <h3 class="font-semibold text-sm text-bd-text-primary">Proactive Analytics</h3>
               </div>
               <ul class="space-y-1.5 text-sm text-bd-text-secondary">
                 <li class="flex items-start gap-2">
-                  <Sparkles class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
-                  <span>The Minimalist, Novelist, Director, Sandbox, Storyteller, and Immersionist</span>
+                  <ShieldAlert class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
+                  <span>Real-time builder warnings for missing triggers and double newlines</span>
                 </li>
                 <li class="flex items-start gap-2">
-                  <Sparkles class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
-                  <span>Universal sets designed for any scenario genre or style</span>
-                </li>
-              </ul>
-            </div>
-
-            <!-- Set Variants -->
-            <div class="whats-new-card group" style="animation-delay: 160ms">
-              <div class="flex items-center gap-3 mb-3">
-                <div class="w-9 h-9 rounded-lg bg-bd-cyan/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-cyan/25 transition-colors">
-                  <SlidersHorizontal class="w-4 h-4 text-bd-cyan" />
-                </div>
-                <h3 class="font-semibold text-sm text-bd-text-primary">Set Variants System</h3>
-              </div>
-              <ul class="space-y-1.5 text-sm text-bd-text-secondary">
-                <li class="flex items-start gap-2">
-                  <SlidersHorizontal class="w-3 h-3 text-bd-cyan flex-shrink-0 mt-1" />
-                  <span>3 length variants per set: Lite, Standard, and Max</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <SlidersHorizontal class="w-3 h-3 text-bd-cyan flex-shrink-0 mt-1" />
-                  <span>3 player control options: Player Control, Neutral, and Full AI Agency</span>
-                </li>
-              </ul>
-            </div>
-
-            <!-- Builder Revamp -->
-            <div class="whats-new-card group" style="animation-delay: 240ms">
-              <div class="flex items-center gap-3 mb-3">
-                <div class="w-9 h-9 rounded-lg bg-bd-green/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-green/25 transition-colors">
-                  <Wrench class="w-4 h-4 text-bd-green" />
-                </div>
-                <h3 class="font-semibold text-sm text-bd-text-primary">Builder Revamp</h3>
-              </div>
-              <ul class="space-y-1.5 text-sm text-bd-text-secondary">
-                <li class="flex items-start gap-2">
-                  <Wrench class="w-3 h-3 text-bd-green flex-shrink-0 mt-1" />
-                  <span>New directive builder with prose output and default preselections</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <Wrench class="w-3 h-3 text-bd-green flex-shrink-0 mt-1" />
-                  <span>Category-organized output with automatic section headers</span>
+                  <Eye class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
+                  <span>Live visualization of how the AI views your story cards in context</span>
                 </li>
               </ul>
             </div>
@@ -265,10 +225,10 @@
           <!-- CTA -->
           <div class="mt-5 pt-4 border-t border-bd-border-subtle flex items-center justify-center">
             <router-link 
-              to="/ai-instructions" 
+              to="/story-cards?tab=builder" 
               class="inline-flex items-center gap-2 text-sm font-medium text-bd-accent-primary hover:text-bd-accent-light transition-colors"
             >
-              Explore AI Instructions
+              Try the Story Card Builder
               <ArrowRight class="w-3.5 h-3.5" />
             </router-link>
           </div>
@@ -476,7 +436,7 @@ import {
   Search, LayoutGrid, Lightbulb, ScrollText, Heart, Sparkles, ArrowRight,
   GitPullRequest, MessageCircle, ExternalLink, Bookmark, Drama, Code,
   Award, Users, ChevronRight, Package, Layers, LayoutDashboard, Infinity, X,
-  Megaphone, RefreshCw, Tag, SlidersHorizontal, Wrench
+  Megaphone, RefreshCw, Tag, SlidersHorizontal, Wrench, Hammer, Activity, ShieldAlert, Eye, Edit3
 } from 'lucide-vue-next'
 
 const router = useRouter()

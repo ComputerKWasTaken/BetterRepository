@@ -1058,6 +1058,13 @@
         </div>
       </section>
     </template>
+
+    <!-- ==================== BUILDER TAB ==================== -->
+    <template v-if="activeTab === 'builder'">
+      <div class="animate-fade-in">
+        <StoryCardBuilder />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -1065,6 +1072,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import StoryCardItem from '@/components/ui/StoryCardItem.vue'
+import StoryCardBuilder from '@/components/ui/StoryCardBuilder.vue'
 import SearchBar from '@/components/ui/SearchBar.vue'
 import { usePreferences } from '@/composables/usePreferences'
 import { 
@@ -1087,7 +1095,7 @@ import {
   Download, Search, Infinity, ExternalLink, BookOpen, Space, Target,
   CaseSensitive, Scissors, Quote, Clock, GitMerge, X, Star, Rocket,
   SlidersHorizontal, ChevronDown, ChevronUp, Info, MessageSquare,
-  Brain, Coins
+  Brain, Coins, Hammer
 } from 'lucide-vue-next'
 
 const route = useRoute()
@@ -1095,6 +1103,7 @@ const activeTab = ref('examples')
 
 const tabs = [
   { id: 'examples', label: 'Templates', icon: Layers },
+  { id: 'builder', label: 'Builder', icon: Hammer },
 ]
 
 
@@ -1186,7 +1195,7 @@ const collapseAllGuideSections = () => {
 
 // Handle initial search query and tab from URL (e.g. from global search)
 onMounted(() => {
-  if (route.query.tab && ['examples'].includes(route.query.tab)) {
+  if (route.query.tab && ['examples', 'builder'].includes(route.query.tab)) {
     activeTab.value = route.query.tab
   }
   if (route.query.q) {
