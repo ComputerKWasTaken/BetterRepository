@@ -159,6 +159,11 @@
                 <AlertTriangle class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
                 <span><strong>"{{ editorTitle }}" not found in Entry.</strong> The AI doesn't see the Title field, so you must mention the name in the Entry itself so the AI knows who/what this card is about.</span>
               </div>
+              <!-- Character name mentioned only once -->
+              <div v-else-if="titleMentionCount === 1" class="flex items-start gap-1.5 text-[11px] text-bd-info">
+                <AlertTriangle class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                <span>"{{ editorTitle }}" is only mentioned once. Mentioning the name multiple times improves AI recognition, especially in longer entries.</span>
+              </div>
               <!-- Long entry warning (graduated) -->
               <div v-if="editorEntry.length > 1000" class="flex items-start gap-1.5 text-[11px] text-bd-error">
                 <AlertTriangle class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
@@ -203,6 +208,11 @@
               <div v-if="shortTriggers.length > 0" class="flex items-start gap-1.5 text-[11px] text-bd-amber">
                 <AlertTriangle class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
                 <span>Short trigger{{ shortTriggers.length > 1 ? 's' : '' }}: <code class="text-bd-purple">{{ shortTriggers.join(', ') }}</code>. Triggers under 4 characters may cause false matches (e.g. "orc" matches "porch"). Consider adding a space to the trigger to prevent this.</span>
+              </div>
+              <!-- Trigger overlaps with other cards -->
+              <div v-if="triggerOverlaps.length > 0" class="flex items-start gap-1.5 text-[11px] text-bd-amber">
+                <AlertTriangle class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                <span><strong>Shared triggers:</strong> {{ triggerOverlaps.map(o => `"${o.trigger}" is also used by ${o.card}`).join('; ') }}. Cards sharing triggers may cause unexpected behavior.</span>
               </div>
             </div>
           </div>
@@ -550,6 +560,34 @@ const shortTriggers = computed(() => {
     .split(',')
     .map(t => t.trim())
     .filter(t => t.length > 0 && t.length < 4)
+})
+
+// Detect trigger overlaps with other cards in the working set
+const triggerOverlaps = computed(() => {
+  if (!editorTriggers.value.trim()) return []
+  const myTriggers = editorTriggers.value.split(',').map(t => t.trim().toLowerCase()).filter(Boolean)
+  const overlaps = []
+  for (const card of currentCards.value) {
+    // Skip the card currently being edited
+    if (card.id === editingCardId.value) continue
+    if (!card.triggers) continue
+    const otherTriggers = card.triggers.split(',').map(t => t.trim().toLowerCase()).filter(Boolean)
+    for (const trigger of myTriggers) {
+      if (otherTriggers.includes(trigger)) {
+        overlaps.push({ trigger, card: card.title || 'Untitled' })
+      }
+    }
+  }
+  return overlaps
+})
+
+// Count how many times the title is mentioned in the entry
+const titleMentionCount = computed(() => {
+  const title = editorTitle.value.trim()
+  if (!title || title.length < 2 || !editorEntry.value.trim()) return 0
+  const regex = new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi')
+  const matches = editorEntry.value.match(regex)
+  return matches ? matches.length : 0
 })
 
 // Computed
