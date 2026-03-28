@@ -1,6 +1,6 @@
 {
   "name": "better-repository",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "A curated collection of AI Instructions, Plot Components, Story Cards, and Scripts for AI Dungeon",
   "type": "module",
   "scripts": {
