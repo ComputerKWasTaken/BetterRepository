@@ -34,7 +34,9 @@ const defaultPreferences = {
   // Current working multiscript entries (auto-saved)
   currentMultiscriptEntries: [], // Array of { id, scriptId?, name, functionName, type: 'library'|'custom', code? }
   // Saved multiscript builds
-  savedMultiscriptBuilds: [] // Array of { id, name, entries: [...], createdAt, updatedAt }
+  savedMultiscriptBuilds: [], // Array of { id, name, entries: [...], createdAt, updatedAt }
+  // Saved custom scripts (user's personal script library)
+  savedCustomScripts: [] // Array of { id, name, functionName, hooks: { library?, input?, context?, output? }, createdAt, updatedAt }
 }
 
 // Load preferences from cookie
@@ -461,6 +463,53 @@ export function usePreferences() {
     preferences.value.savedMultiscriptBuilds = preferences.value.savedMultiscriptBuilds.filter(b => b.id !== buildId)
   }
 
+  // ===========================================
+  // CUSTOM SCRIPT LIBRARY FUNCTIONS
+  // ===========================================
+
+  const ensureCustomScripts = () => {
+    if (!preferences.value.savedCustomScripts) {
+      preferences.value.savedCustomScripts = []
+    }
+  }
+
+  // Save a new custom script to the user's library
+  const saveCustomScript = (script = {}) => {
+    ensureCustomScripts()
+    const now = Date.now()
+    const newScript = {
+      id: `cs-${now}-${Math.random().toString(36).substring(2, 7)}`,
+      name: script.name || '',
+      functionName: script.functionName || '',
+      hooks: script.hooks || {},  // { library?, input?, context?, output? }
+      createdAt: now,
+      updatedAt: now
+    }
+    preferences.value.savedCustomScripts.unshift(newScript)
+    return newScript.id
+  }
+
+  // Update an existing custom script
+  const updateCustomScript = (scriptId, updates) => {
+    ensureCustomScripts()
+    const index = preferences.value.savedCustomScripts.findIndex(s => s.id === scriptId)
+    if (index !== -1) {
+      preferences.value.savedCustomScripts[index] = {
+        ...preferences.value.savedCustomScripts[index],
+        ...updates,
+        updatedAt: Date.now()
+      }
+      return true
+    }
+    return false
+  }
+
+  // Delete a custom script from the user's library
+  const deleteCustomScript = (scriptId) => {
+    ensureCustomScripts()
+    preferences.value.savedCustomScripts = preferences.value.savedCustomScripts.filter(s => s.id !== scriptId)
+  }
+
   return {
     preferences,
     toggleFavorite,
@@ -507,6 +556,10 @@ export function usePreferences() {
     clearMultiscriptEntries,
     saveMultiscriptBuild,
     loadMultiscriptBuild,
-    deleteMultiscriptBuild
+    deleteMultiscriptBuild,
+    // Custom Script Library functions
+    saveCustomScript,
+    updateCustomScript,
+    deleteCustomScript
   }
 }

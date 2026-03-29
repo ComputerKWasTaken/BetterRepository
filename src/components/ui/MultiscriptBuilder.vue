@@ -80,7 +80,7 @@
                 <span class="w-5 h-5 rounded-full bg-bd-green/30 text-bd-green text-xs font-bold flex items-center justify-center">1</span>
                 <span class="text-sm font-semibold text-bd-text-primary">Choose Scripts</span>
               </div>
-              <p class="text-xs text-bd-text-secondary">Select scripts from the library or paste in custom code.</p>
+              <p class="text-xs text-bd-text-secondary">Select scripts from the library, add your own custom scripts, or create new ones.</p>
             </div>
             <div class="p-3 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
               <div class="flex items-center gap-2 mb-2">
@@ -94,7 +94,7 @@
                 <span class="w-5 h-5 rounded-full bg-bd-purple/30 text-bd-purple text-xs font-bold flex items-center justify-center">3</span>
                 <span class="text-sm font-semibold text-bd-text-primary">Copy & Paste</span>
               </div>
-              <p class="text-xs text-bd-text-secondary">Copy each generated file into AI Dungeon's script editor.</p>
+              <p class="text-xs text-bd-text-secondary">Copy the generated Library file and the static hook files into AI Dungeon.</p>
             </div>
           </div>
           <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
@@ -120,27 +120,38 @@
             Add Scripts
           </h3>
 
-          <!-- Tab Toggle: Library / Custom -->
+          <!-- Tab Toggle: Library / Your Scripts / Create New -->
           <div class="flex gap-1 p-1 rounded-lg bg-bd-bg-tertiary">
             <button
               @click="addMode = 'library'"
-              class="flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-all"
+              class="flex-1 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all"
               :class="addMode === 'library'
                 ? 'bg-bd-bg-primary text-bd-text-primary shadow-sm'
                 : 'text-bd-text-muted hover:text-bd-text-secondary'"
             >
               <Library class="w-3.5 h-3.5 inline mr-1" />
-              From Library
+              Library
             </button>
             <button
-              @click="addMode = 'custom'"
-              class="flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-all"
-              :class="addMode === 'custom'
+              @click="addMode = 'yours'"
+              class="flex-1 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all relative"
+              :class="addMode === 'yours'
                 ? 'bg-bd-bg-primary text-bd-text-primary shadow-sm'
                 : 'text-bd-text-muted hover:text-bd-text-secondary'"
             >
-              <FileCode class="w-3.5 h-3.5 inline mr-1" />
-              Custom Script
+              <User class="w-3.5 h-3.5 inline mr-1" />
+              Your Scripts
+              <span v-if="savedCustomScripts.length" class="ml-1 px-1 py-0 rounded-full bg-bd-purple/20 text-bd-purple text-[9px]">{{ savedCustomScripts.length }}</span>
+            </button>
+            <button
+              @click="addMode = 'create'"
+              class="flex-1 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all"
+              :class="addMode === 'create'
+                ? 'bg-bd-bg-primary text-bd-text-primary shadow-sm'
+                : 'text-bd-text-muted hover:text-bd-text-secondary'"
+            >
+              <PenTool class="w-3.5 h-3.5 inline mr-1" />
+              Create New
             </button>
           </div>
 
@@ -187,60 +198,142 @@
             </div>
           </div>
 
-          <!-- Custom Mode: Paste Code -->
-          <div v-if="addMode === 'custom'" class="space-y-3">
+          <!-- Your Scripts Mode -->
+          <div v-if="addMode === 'yours'" class="space-y-3">
+            <div v-if="savedCustomScripts.length === 0" class="text-center py-8 border-2 border-dashed border-bd-border-subtle rounded-lg">
+              <User class="w-8 h-8 text-bd-text-muted mx-auto mb-2" />
+              <p class="text-sm text-bd-text-muted">No custom scripts saved yet</p>
+              <p class="text-xs text-bd-text-muted mt-1">Use the "Create New" tab to build and save a script</p>
+            </div>
+            <div v-else class="max-h-72 overflow-y-auto space-y-1 pr-1">
+              <div
+                v-for="cs in savedCustomScripts"
+                :key="cs.id"
+                class="p-3 rounded-lg border bg-bd-bg-primary border-bd-border-subtle hover:border-bd-purple/40 transition-all group"
+              >
+                <div class="flex items-center justify-between gap-2">
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-1.5 mb-0.5">
+                      <span class="text-sm font-medium text-bd-text-primary truncate">{{ cs.name }}</span>
+                      <span class="tag text-[9px] bg-bd-purple/20 text-bd-purple">Custom</span>
+                    </div>
+                    <div class="flex items-center gap-1 mt-0.5">
+                      <span v-for="hook in getActiveHooks(cs)" :key="hook" class="tag text-[8px]" :class="hookBadgeClass(hook)">
+                        {{ hook }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      @click="addCustomScriptToBuild(cs)"
+                      :disabled="isCustomScriptAdded(cs.id)"
+                      class="p-1 rounded transition-colors"
+                      :class="isCustomScriptAdded(cs.id) ? 'text-bd-green cursor-default' : 'text-bd-text-muted hover:text-bd-cyan hover:bg-bd-cyan/10'"
+                      :title="isCustomScriptAdded(cs.id) ? 'Already added' : 'Add to build'"
+                    >
+                      <Check v-if="isCustomScriptAdded(cs.id)" class="w-3.5 h-3.5" />
+                      <Plus v-else class="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      @click="editCustomScript(cs)"
+                      class="p-1 rounded text-bd-text-muted hover:text-bd-amber hover:bg-bd-amber/10 transition-colors"
+                      title="Edit"
+                    >
+                      <Pencil class="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      @click="handleDeleteCustomScript(cs.id)"
+                      class="p-1 rounded text-bd-text-muted hover:text-bd-error hover:bg-bd-error/10 transition-colors"
+                      title="Delete"
+                    >
+                      <Trash2 class="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Create New Custom Script Mode -->
+          <div v-if="addMode === 'create'" class="space-y-4">
             <div>
               <label class="block text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-1.5">
-                Function Name
+                Script Name
               </label>
               <input
                 v-model="customName"
                 type="text"
-                placeholder="MyCustomScript"
+                placeholder="My Custom Script"
                 class="input text-sm w-full"
               />
               <p class="text-[10px] text-bd-text-muted mt-1">
-                Must be unique. Used as <code class="text-bd-cyan">globalThis.{{ customName || 'MyScript' }}</code>
+                Will be registered as <code class="text-bd-cyan">globalThis.{{ customFunctionName || 'MyScript' }}</code>
               </p>
             </div>
-            <div>
-              <label class="block text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-1.5">
-                Hook Type
-              </label>
-              <div class="flex gap-1.5">
-                <button
-                  v-for="ht in hookTypes"
-                  :key="ht.id"
-                  @click="customHookType = ht.id"
-                  class="px-2.5 py-1 rounded-lg text-xs font-medium transition-colors"
-                  :class="customHookType === ht.id
-                    ? `${ht.activeClass}`
-                    : 'bg-bd-bg-tertiary text-bd-text-muted hover:text-bd-text-primary'"
-                >
-                  {{ ht.label }}
-                </button>
-              </div>
-            </div>
+
+            <!-- Multi-hook tabs -->
             <div>
               <label class="block text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-1.5">
                 Script Code
-                <span class="text-bd-text-muted font-normal normal-case ml-1">(paste your code)</span>
+                <span class="text-bd-text-muted font-normal normal-case ml-1">(add code for each hook your script needs)</span>
               </label>
+              <div class="flex gap-0.5 mb-2">
+                <button
+                  v-for="ht in hookEditorTabs"
+                  :key="ht.id"
+                  @click="activeCustomHookTab = ht.id"
+                  class="px-2.5 py-1 rounded-t-lg text-[11px] font-medium transition-all flex items-center gap-1"
+                  :class="activeCustomHookTab === ht.id
+                    ? `${ht.activeClass} border-b-2`
+                    : 'text-bd-text-muted hover:text-bd-text-secondary'"
+                >
+                  <span>{{ ht.icon }}</span>
+                  {{ ht.label }}
+                  <span v-if="customHooks[ht.id]?.trim()" class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                </button>
+              </div>
               <textarea
-                v-model="customCode"
-                rows="8"
-                placeholder="// Paste your script code here...&#10;// It will be wrapped in a globalThis function automatically."
+                v-model="customHooks[activeCustomHookTab]"
+                rows="10"
+                :placeholder="hookPlaceholder"
                 class="input text-sm w-full resize-y font-mono"
               />
+              <p class="text-[10px] text-bd-text-muted mt-1">
+                {{ hookHelpText }}
+              </p>
             </div>
-            <button
-              @click="addCustomScript"
-              class="btn btn-primary text-sm w-full"
-              :disabled="!customName.trim() || !customCode.trim()"
-            >
-              <Plus class="w-4 h-4" />
-              Add Custom Script
-            </button>
+
+            <!-- Active hooks summary -->
+            <div v-if="activeCustomHookCount > 0" class="flex items-center gap-1.5 text-[11px]">
+              <span class="text-bd-text-muted">Active hooks:</span>
+              <span v-for="hook in activeCustomHookList" :key="hook" class="tag text-[9px]" :class="hookBadgeClass(hook)">{{ hook }}</span>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="flex gap-2">
+              <button
+                @click="handleSaveAndAddCustom"
+                class="btn btn-primary text-sm flex-1"
+                :disabled="!customName.trim() || activeCustomHookCount === 0"
+              >
+                <Plus class="w-4 h-4" />
+                Save & Add to Build
+              </button>
+              <button
+                @click="handleSaveCustomOnly"
+                class="btn btn-secondary text-sm"
+                :disabled="!customName.trim() || activeCustomHookCount === 0"
+              >
+                <Save class="w-4 h-4" />
+                Save Only
+              </button>
+            </div>
+
+            <!-- Editing indicator -->
+            <div v-if="editingCustomScriptId" class="flex items-center justify-between p-2 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+              <span class="text-xs text-bd-amber font-medium">Editing: {{ customName }}</span>
+              <button @click="resetCustomEditor" class="text-xs text-bd-text-muted hover:text-bd-text-primary transition-colors">Cancel</button>
+            </div>
           </div>
         </div>
 
@@ -256,7 +349,7 @@
 
           <!-- Pipeline Visualization -->
           <div v-if="currentEntries.length > 0" class="flex flex-wrap items-center gap-1.5 text-[10px] p-2 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-            <span class="px-2 py-0.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-muted">Input</span>
+            <span class="px-2 py-0.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-muted">Turn Start</span>
             <span class="text-bd-text-muted">→</span>
             <span class="px-2 py-0.5 rounded bg-bd-cyan/20 border border-bd-cyan/30 text-bd-cyan font-semibold">Dispatcher</span>
             <template v-for="(entry, i) in currentEntries" :key="entry.id">
@@ -300,7 +393,7 @@
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-1.5">
                     <span class="text-sm font-medium text-bd-text-primary truncate">{{ entry.name }}</span>
-                    <span v-if="entry.type === 'custom'" class="tag text-[9px] bg-bd-amber/20 text-bd-amber">Custom</span>
+                    <span v-if="entry.type === 'custom'" class="tag text-[9px] bg-bd-purple/20 text-bd-purple">Custom</span>
                     <span v-else class="tag text-[9px] bg-bd-cyan/20 text-bd-cyan">Library</span>
                   </div>
                   <p class="text-[10px] text-bd-text-muted font-mono truncate">
@@ -323,7 +416,7 @@
           <div v-else class="text-center py-8 border-2 border-dashed border-bd-border-subtle rounded-lg">
             <Blocks class="w-8 h-8 text-bd-text-muted mx-auto mb-2" />
             <p class="text-sm text-bd-text-muted">No scripts added yet</p>
-            <p class="text-xs text-bd-text-muted mt-1">Choose scripts from the library or paste custom code</p>
+            <p class="text-xs text-bd-text-muted mt-1">Choose scripts from the library or create custom ones</p>
           </div>
 
           <!-- Save Build & Clear -->
@@ -355,75 +448,77 @@
 
       <!-- Right: Generated Output -->
       <div class="space-y-4">
+        <!-- Library Code (Primary Output) -->
         <div class="card space-y-4">
           <div class="flex items-center justify-between">
             <h3 class="font-semibold text-bd-text-primary flex items-center gap-2">
-              <FileCode class="w-4 h-4 text-bd-green" />
-              Generated Scripts
+              <BookOpen class="w-4 h-4 text-bd-purple" />
+              Generated Library
+              <span class="text-xs font-normal text-bd-text-muted">— paste into AI Dungeon's Library tab</span>
             </h3>
             <button
               v-if="currentEntries.length > 0"
-              @click="copyAllFiles"
+              @click="copySingleFile('library')"
               class="btn btn-primary text-sm"
             >
               <Clipboard class="w-4 h-4" />
-              {{ copiedAll ? 'Copied All!' : 'Copy All' }}
+              {{ copiedFile === 'library' ? 'Copied!' : 'Copy Library' }}
             </button>
           </div>
 
           <!-- No scripts state -->
-          <div v-if="currentEntries.length === 0" class="text-center py-12 border-2 border-dashed border-bd-border-subtle rounded-lg">
+          <div v-if="currentEntries.length === 0" class="text-center py-16 border-2 border-dashed border-bd-border-subtle rounded-lg">
             <Code class="w-10 h-10 text-bd-text-muted mx-auto mb-3" />
-            <p class="text-sm text-bd-text-muted">Add scripts to see the generated output</p>
+            <p class="text-sm text-bd-text-muted">Add scripts to see the generated Library</p>
+            <p class="text-xs text-bd-text-muted mt-1">The Library file is where all your combined script code lives</p>
           </div>
 
-          <!-- Output Tabs & Code -->
-          <template v-else>
-            <!-- File Tabs -->
-            <div class="flex gap-1 border-b border-bd-border-subtle pb-2">
-              <button
-                v-for="tab in outputTabs"
-                :key="tab.id"
-                @click="activeOutputTab = tab.id"
-                class="px-3 py-1.5 rounded-t-lg text-xs font-medium transition-all flex items-center gap-1.5"
-                :class="activeOutputTab === tab.id
-                  ? `${tab.activeClass} border-b-2`
-                  : 'text-bd-text-muted hover:text-bd-text-secondary'"
-              >
-                <span class="text-sm">{{ tab.icon }}</span>
-                {{ tab.label }}
-              </button>
-            </div>
+          <!-- Library Code Display -->
+          <div v-else class="relative">
+            <pre class="code-block-scrollable whitespace-pre-wrap text-xs max-h-[600px] overflow-y-auto">{{ generatedFiles.library }}</pre>
+          </div>
+        </div>
 
-            <!-- Generated Code Display -->
-            <div class="relative">
-              <button
-                @click="copySingleFile(activeOutputTab)"
-                class="absolute top-2 right-2 btn btn-secondary text-xs py-1 px-2"
-                style="z-index: 1"
-              >
-                {{ copiedFile === activeOutputTab ? '✓ Copied!' : '📋 Copy' }}
-              </button>
-              <pre class="code-block-scrollable whitespace-pre-wrap text-xs max-h-[600px] overflow-y-auto">{{ generatedFiles[activeOutputTab] }}</pre>
-            </div>
-
-            <!-- File Summary -->
-            <div class="grid grid-cols-4 gap-2">
-              <div
-                v-for="tab in outputTabs"
-                :key="'summary-' + tab.id"
-                class="p-2 rounded-lg text-center cursor-pointer transition-all"
-                :class="activeOutputTab === tab.id
-                  ? `${tab.summaryActiveClass}`
-                  : 'bg-bd-bg-tertiary hover:bg-bd-bg-primary'"
-                @click="activeOutputTab = tab.id"
-              >
-                <span class="text-lg block">{{ tab.icon }}</span>
-                <span class="text-[10px] font-medium block" :class="activeOutputTab === tab.id ? tab.summaryTextClass : 'text-bd-text-muted'">{{ tab.label }}</span>
-                <span class="text-[9px] text-bd-text-muted">{{ getFileLineCount(tab.id) }} lines</span>
+        <!-- Static Hook Files (Secondary) -->
+        <div v-if="currentEntries.length > 0" class="card space-y-3">
+          <button @click="showStaticFiles = !showStaticFiles" class="w-full flex items-center justify-between text-left">
+            <h3 class="text-sm font-semibold text-bd-text-primary flex items-center gap-2">
+              <ArrowRightLeft class="w-4 h-4 text-bd-blue" />
+              Hook Files
+              <span class="text-xs font-normal text-bd-text-muted">— Input, Context, Output</span>
+            </h3>
+            <ChevronDown class="w-4 h-4 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !showStaticFiles }" />
+          </button>
+          <Transition name="slide">
+            <div v-if="showStaticFiles" class="space-y-3">
+              <div class="p-3 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
+                <p class="text-xs text-bd-text-secondary">
+                  <strong class="text-bd-text-primary">These files are always the same</strong> regardless of which scripts you compose.
+                  They simply call the dispatcher, which routes each lifecycle hook to the scripts in your Library file. Copy each one into the corresponding tab in AI Dungeon's script editor.
+                </p>
+              </div>
+              <div class="grid gap-2">
+                <div v-for="hook in staticHookFiles" :key="hook.id"
+                  class="p-3 rounded-lg border transition-all"
+                  :class="hook.borderClass"
+                >
+                  <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm">{{ hook.icon }}</span>
+                      <span class="text-xs font-semibold uppercase tracking-wider" :class="hook.textClass">{{ hook.label }}</span>
+                    </div>
+                    <button
+                      @click="copySingleFile(hook.id)"
+                      class="btn btn-secondary text-xs py-1 px-2"
+                    >
+                      {{ copiedFile === hook.id ? '✓ Copied!' : '📋 Copy' }}
+                    </button>
+                  </div>
+                  <pre class="text-[11px] font-mono text-bd-text-secondary whitespace-pre-wrap leading-relaxed bg-bd-bg-primary rounded p-2">{{ generatedFiles[hook.id] }}</pre>
+                </div>
               </div>
             </div>
-          </template>
+          </Transition>
         </div>
 
         <!-- Paste Instructions -->
@@ -434,13 +529,11 @@
               <h4 class="font-semibold text-bd-text-primary mb-1">How to Use</h4>
               <ol class="text-sm text-bd-text-secondary space-y-1">
                 <li>1. Open your AI Dungeon scenario's <strong>Script Editor</strong></li>
-                <li>2. Paste the <strong class="text-bd-purple">Library</strong> file into the Library tab</li>
-                <li>3. Paste the <strong class="text-bd-green">Input</strong> file into the Input tab</li>
-                <li>4. Paste the <strong class="text-bd-blue">Context</strong> file into the Context tab</li>
-                <li>5. Paste the <strong class="text-bd-amber">Output</strong> file into the Output tab</li>
+                <li>2. Paste the <strong class="text-bd-purple">Library</strong> file (above) into the Library tab</li>
+                <li>3. Expand "Hook Files" above and copy each into the matching tab</li>
               </ol>
               <p class="text-xs text-bd-text-muted mt-2">
-                That's it! All {{ currentEntries.length }} script{{ currentEntries.length === 1 ? '' : 's' }} will run together automatically.
+                All {{ currentEntries.length }} script{{ currentEntries.length === 1 ? '' : 's' }} will run together automatically each turn.
               </p>
             </div>
           </div>
@@ -451,11 +544,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, inject } from 'vue'
+import { ref, computed, reactive, onMounted, onUnmounted, inject } from 'vue'
 import {
   Blocks, FolderOpen, Trash2, HelpCircle, ChevronDown, ChevronUp,
   Plus, Check, X, Library, FileCode, Search, GitMerge, Save,
-  Clipboard, Code, Lightbulb
+  Clipboard, Code, Lightbulb, BookOpen, ArrowRightLeft, User,
+  PenTool, Pencil
 } from 'lucide-vue-next'
 import { usePreferences } from '@/composables/usePreferences'
 import {
@@ -476,7 +570,10 @@ const {
   clearMultiscriptEntries,
   saveMultiscriptBuild,
   loadMultiscriptBuild,
-  deleteMultiscriptBuild
+  deleteMultiscriptBuild,
+  saveCustomScript,
+  updateCustomScript,
+  deleteCustomScript
 } = usePreferences()
 
 // ============================================
@@ -487,31 +584,36 @@ const addMode = ref('library')
 const librarySearch = ref('')
 const showHowItWorks = ref(false)
 const showSavedBuilds = ref(false)
+const showStaticFiles = ref(false)
 const savedBuildsDropdown = ref(null)
 const buildName = ref('')
 
-// Custom script form
+// Custom script editor
 const customName = ref('')
-const customCode = ref('')
-const customHookType = ref('library')
+const customHooks = reactive({
+  library: '',
+  input: '',
+  context: '',
+  output: ''
+})
+const activeCustomHookTab = ref('library')
+const editingCustomScriptId = ref(null)
 
-// Output tabs
-const activeOutputTab = ref('library')
+// Output
 const copiedFile = ref(null)
 const copiedAll = ref(false)
 
-const hookTypes = [
-  { id: 'library', label: 'Full Library', activeClass: 'bg-bd-purple/20 text-bd-purple' },
-  { id: 'input', label: 'Input', activeClass: 'bg-bd-green/20 text-bd-green' },
-  { id: 'context', label: 'Context', activeClass: 'bg-bd-blue/20 text-bd-blue' },
-  { id: 'output', label: 'Output', activeClass: 'bg-bd-amber/20 text-bd-amber' }
+const hookEditorTabs = [
+  { id: 'library', label: 'Library', icon: '📚', activeClass: 'text-bd-purple border-bd-purple' },
+  { id: 'input', label: 'Input', icon: '➡️', activeClass: 'text-bd-green border-bd-green' },
+  { id: 'context', label: 'Context', icon: '🧠', activeClass: 'text-bd-blue border-bd-blue' },
+  { id: 'output', label: 'Output', icon: '⬅️', activeClass: 'text-bd-amber border-bd-amber' }
 ]
 
-const outputTabs = [
-  { id: 'library', label: 'Library', icon: '📚', activeClass: 'text-bd-purple border-bd-purple', summaryActiveClass: 'bg-bd-purple/10 border border-bd-purple/30', summaryTextClass: 'text-bd-purple' },
-  { id: 'input', label: 'Input', icon: '➡️', activeClass: 'text-bd-green border-bd-green', summaryActiveClass: 'bg-bd-green/10 border border-bd-green/30', summaryTextClass: 'text-bd-green' },
-  { id: 'context', label: 'Context', icon: '🧠', activeClass: 'text-bd-blue border-bd-blue', summaryActiveClass: 'bg-bd-blue/10 border border-bd-blue/30', summaryTextClass: 'text-bd-blue' },
-  { id: 'output', label: 'Output', icon: '⬅️', activeClass: 'text-bd-amber border-bd-amber', summaryActiveClass: 'bg-bd-amber/10 border border-bd-amber/30', summaryTextClass: 'text-bd-amber' }
+const staticHookFiles = [
+  { id: 'input', label: 'Input', icon: '➡️', borderClass: 'bg-bd-bg-tertiary border-bd-green/30', textClass: 'text-bd-green' },
+  { id: 'context', label: 'Context', icon: '🧠', borderClass: 'bg-bd-bg-tertiary border-bd-blue/30', textClass: 'text-bd-blue' },
+  { id: 'output', label: 'Output', icon: '⬅️', borderClass: 'bg-bd-bg-tertiary border-bd-amber/30', textClass: 'text-bd-amber' }
 ]
 
 // ============================================
@@ -520,6 +622,7 @@ const outputTabs = [
 
 const currentEntries = computed(() => preferences.value.currentMultiscriptEntries || [])
 const savedBuilds = computed(() => preferences.value.savedMultiscriptBuilds || [])
+const savedCustomScripts = computed(() => preferences.value.savedCustomScripts || [])
 
 const allLibraryScripts = computed(() => getBuilderCompatibleScripts())
 
@@ -536,6 +639,36 @@ const filteredLibraryScripts = computed(() => {
   return scripts
 })
 
+const customFunctionName = computed(() => toPascalCase(customName.value || ''))
+
+const activeCustomHookCount = computed(() => {
+  return Object.values(customHooks).filter(v => v?.trim()).length
+})
+
+const activeCustomHookList = computed(() => {
+  return Object.entries(customHooks)
+    .filter(([_, v]) => v?.trim())
+    .map(([k]) => k)
+})
+
+const hookPlaceholder = computed(() => {
+  const tab = activeCustomHookTab.value
+  if (tab === 'library') return '// Shared code that runs once when the library loads.\n// State initialization, helper functions, etc.\n\nstate.myVar = state.myVar ?? 0;'
+  if (tab === 'input') return '// Runs when the player submits input.\n// Use text to access the player\'s input.\n\n// Example:\n// if (text.startsWith(":command")) { ... }'
+  if (tab === 'context') return '// Runs when the AI builds its context.\n// Modify text to change what the AI sees.\n\n// Example:\n// text = text + "\\nExtra context for the AI."'
+  if (tab === 'output') return '// Runs when the AI generates output.\n// Modify text to change the AI\'s response.\n\n// Example:\n// text = text.replace(/badword/gi, "***")'
+  return '// Enter your script code here...'
+})
+
+const hookHelpText = computed(() => {
+  const tab = activeCustomHookTab.value
+  if (tab === 'library') return 'Library code runs once when the script loads. Put state init and helpers here. No modifier wrapping needed.'
+  if (tab === 'input') return 'Input hook code runs when the player acts. The variable "text" contains the player\'s input.'
+  if (tab === 'context') return 'Context hook code runs when the AI builds context. Modify "text" to shape what the AI reads.'
+  if (tab === 'output') return 'Output hook code runs after the AI generates its response. Modify "text" to filter or augment the output.'
+  return ''
+})
+
 // Generate the 4 output files
 const generatedFiles = computed(() => {
   const entries = currentEntries.value
@@ -543,7 +676,6 @@ const generatedFiles = computed(() => {
     return { library: '', input: '', context: '', output: '' }
   }
 
-  // Collect function names
   const functionNames = entries.map(e => e.functionName)
 
   // Build the library file
@@ -555,16 +687,13 @@ const generatedFiles = computed(() => {
   libraryParts.push('// ============================================')
   libraryParts.push('')
 
-  // Add each script's library function
   for (let i = 0; i < entries.length; i++) {
     const entry = entries[i]
     libraryParts.push(`// --- Script ${i + 1}: ${entry.name} ---`)
 
     if (entry.type === 'custom') {
-      // Custom scripts: wrap the code in a globalThis function
       libraryParts.push(generateCustomHookCode(entry))
     } else {
-      // Library scripts: convert to hook pattern
       const script = allLibraryScripts.value.find(s => s.id === entry.scriptId)
       if (script) {
         libraryParts.push(convertToHookPattern(script))
@@ -575,7 +704,7 @@ const generatedFiles = computed(() => {
     libraryParts.push('')
   }
 
-  // Add script registry
+  // Script registry
   libraryParts.push('// --- Script Registry ---')
   libraryParts.push('globalThis.__scripts = [')
   functionNames.forEach((name, i) => {
@@ -584,7 +713,7 @@ const generatedFiles = computed(() => {
   libraryParts.push('];')
   libraryParts.push('')
 
-  // Add hook dispatcher
+  // Hook dispatcher
   libraryParts.push('// --- Hook Dispatcher ---')
   libraryParts.push('globalThis.__runScripts = function __runScripts(hook) {')
   libraryParts.push('  for (const name of globalThis.__scripts) {')
@@ -595,16 +724,16 @@ const generatedFiles = computed(() => {
   libraryParts.push('  }')
   libraryParts.push('};')
 
-  // Generate lifecycle files
+  // Static lifecycle files
   const makeLifecycleFile = (hookName) => {
-    const lines = []
-    lines.push(`// Generated by BetterRepository Multiscript Builder`)
-    lines.push(`const modifier = (text) => {`)
-    lines.push(`  globalThis.__runScripts("${hookName}");`)
-    lines.push(`  return { text: globalThis.text };`)
-    lines.push(`};`)
-    lines.push(`modifier(text);`)
-    return lines.join('\n')
+    return [
+      `// Generated by BetterRepository Multiscript Builder`,
+      `const modifier = (text) => {`,
+      `  globalThis.__runScripts("${hookName}");`,
+      `  return { text: globalThis.text };`,
+      `};`,
+      `modifier(text);`
+    ].join('\n')
   }
 
   return {
@@ -623,9 +752,11 @@ const isScriptAdded = (scriptId) => {
   return currentEntries.value.some(e => e.scriptId === scriptId)
 }
 
-const isHookPattern = (script) => {
-  return isHookPatternScript(script)
+const isCustomScriptAdded = (customScriptId) => {
+  return currentEntries.value.some(e => e.customScriptId === customScriptId)
 }
+
+const isHookPattern = (script) => isHookPatternScript(script)
 
 const fileTypeBadgeClass = (fileType) => {
   const map = {
@@ -637,6 +768,24 @@ const fileTypeBadgeClass = (fileType) => {
   return map[fileType] || 'bg-bd-tag-bg text-bd-text-muted'
 }
 
+const hookBadgeClass = (hook) => {
+  const map = {
+    'library': 'bg-bd-purple/20 text-bd-purple',
+    'input': 'bg-bd-green/20 text-bd-green',
+    'context': 'bg-bd-blue/20 text-bd-blue',
+    'output': 'bg-bd-amber/20 text-bd-amber'
+  }
+  return map[hook] || 'bg-bd-tag-bg text-bd-text-muted'
+}
+
+const getActiveHooks = (customScript) => {
+  if (!customScript.hooks) return []
+  return Object.entries(customScript.hooks)
+    .filter(([_, v]) => v?.trim())
+    .map(([k]) => k)
+}
+
+// --- Library scripts ---
 const addLibraryScript = (script) => {
   if (isScriptAdded(script.id)) return
   const fnName = getScriptFunctionName(script)
@@ -649,48 +798,154 @@ const addLibraryScript = (script) => {
   toast(`Added "${script.name}"`, 'success')
 }
 
-const addCustomScript = () => {
-  if (!customName.value.trim() || !customCode.value.trim()) return
-  const fnName = toPascalCase(customName.value)
-  if (!fnName) {
-    toast('Please enter a valid function name', 'error')
-    return
-  }
-  // Check for duplicate function names
-  if (currentEntries.value.some(e => e.functionName === fnName)) {
-    toast(`A script with function name "${fnName}" already exists`, 'error')
-    return
-  }
-  addMultiscriptEntry({
-    name: customName.value.trim(),
-    functionName: fnName,
-    type: 'custom',
-    code: JSON.stringify({
-      hookType: customHookType.value,
-      content: customCode.value
-    })
-  })
-  toast(`Added custom script "${customName.value}"`, 'success')
+// --- Custom scripts ---
+const resetCustomEditor = () => {
   customName.value = ''
-  customCode.value = ''
-  customHookType.value = 'library'
+  customHooks.library = ''
+  customHooks.input = ''
+  customHooks.context = ''
+  customHooks.output = ''
+  activeCustomHookTab.value = 'library'
+  editingCustomScriptId.value = null
 }
 
+const buildCustomScriptData = () => {
+  const fnName = toPascalCase(customName.value)
+  if (!fnName) {
+    toast('Please enter a valid script name', 'error')
+    return null
+  }
+  return {
+    name: customName.value.trim(),
+    functionName: fnName,
+    hooks: {
+      library: customHooks.library || '',
+      input: customHooks.input || '',
+      context: customHooks.context || '',
+      output: customHooks.output || ''
+    }
+  }
+}
+
+const handleSaveAndAddCustom = () => {
+  const data = buildCustomScriptData()
+  if (!data) return
+
+  let savedId
+  if (editingCustomScriptId.value) {
+    updateCustomScript(editingCustomScriptId.value, data)
+    savedId = editingCustomScriptId.value
+    // Update any existing build entries that reference this custom script
+    const existingEntry = currentEntries.value.find(e => e.customScriptId === savedId)
+    if (existingEntry) {
+      // Remove and re-add to get updated code
+      removeMultiscriptEntry(existingEntry.id)
+    }
+    toast(`Updated and added "${data.name}"`, 'success')
+  } else {
+    savedId = saveCustomScript(data)
+    toast(`Saved and added "${data.name}"`, 'success')
+  }
+
+  // Add to current build
+  addMultiscriptEntry({
+    customScriptId: savedId,
+    name: data.name,
+    functionName: data.functionName,
+    type: 'custom',
+    code: JSON.stringify(data.hooks)
+  })
+
+  resetCustomEditor()
+  addMode.value = 'yours'
+}
+
+const handleSaveCustomOnly = () => {
+  const data = buildCustomScriptData()
+  if (!data) return
+
+  if (editingCustomScriptId.value) {
+    updateCustomScript(editingCustomScriptId.value, data)
+    toast(`Updated "${data.name}"`, 'success')
+  } else {
+    saveCustomScript(data)
+    toast(`Saved "${data.name}" to your scripts`, 'success')
+  }
+
+  resetCustomEditor()
+  addMode.value = 'yours'
+}
+
+const addCustomScriptToBuild = (cs) => {
+  if (isCustomScriptAdded(cs.id)) return
+  addMultiscriptEntry({
+    customScriptId: cs.id,
+    name: cs.name,
+    functionName: cs.functionName,
+    type: 'custom',
+    code: JSON.stringify(cs.hooks)
+  })
+  toast(`Added "${cs.name}"`, 'success')
+}
+
+const editCustomScript = (cs) => {
+  customName.value = cs.name
+  customHooks.library = cs.hooks?.library || ''
+  customHooks.input = cs.hooks?.input || ''
+  customHooks.context = cs.hooks?.context || ''
+  customHooks.output = cs.hooks?.output || ''
+  editingCustomScriptId.value = cs.id
+  activeCustomHookTab.value = 'library'
+  addMode.value = 'create'
+}
+
+const handleDeleteCustomScript = (scriptId) => {
+  if (confirm('Delete this custom script? It will also be removed from any builds using it.')) {
+    deleteCustomScript(scriptId)
+    toast('Custom script deleted', 'success')
+  }
+}
+
+// --- Code generation for custom scripts ---
 const generateCustomHookCode = (entry) => {
   try {
-    const data = JSON.parse(entry.code)
+    const hooks = JSON.parse(entry.code)
     const fnName = entry.functionName
-    const content = data.content || ''
-    const hookType = data.hookType || 'library'
+    const libraryCode = hooks.library?.trim() || ''
+    const inputCode = hooks.input?.trim() || ''
+    const contextCode = hooks.context?.trim() || ''
+    const outputCode = hooks.output?.trim() || ''
 
-    if (hookType === 'library') {
-      // Full library code - wrap in globalThis function
-      return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n${content.split('\n').map(l => `  ${l}`).join('\n')}\n};`
+    let body = ''
+
+    if (libraryCode) {
+      body += `  // --- Shared Library ---\n`
+      body += libraryCode.split('\n').map(l => `  ${l}`).join('\n')
+      body += '\n\n'
     }
 
-    // Single hook type
-    const body = content.trim()
-    return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n  // -------- hook: ${hookType} --------\n  if (hook === "${hookType}") {\n${body.split('\n').map(l => `    ${l}`).join('\n')}\n    return;\n  }\n};`
+    if (inputCode) {
+      body += `  // -------- hook: input --------\n`
+      body += `  if (hook === "input") {\n`
+      body += inputCode.split('\n').map(l => `    ${l}`).join('\n')
+      body += `\n    return;\n  }\n\n`
+    }
+
+    if (contextCode) {
+      body += `  // -------- hook: context --------\n`
+      body += `  if (hook === "context") {\n`
+      body += contextCode.split('\n').map(l => `    ${l}`).join('\n')
+      body += `\n    return;\n  }\n\n`
+    }
+
+    if (outputCode) {
+      body += `  // -------- hook: output --------\n`
+      body += `  if (hook === "output") {\n`
+      body += outputCode.split('\n').map(l => `    ${l}`).join('\n')
+      body += `\n    return;\n  }`
+    }
+
+    return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n${body}\n};`
   } catch {
     return `// Error parsing custom script "${entry.name}"`
   }
@@ -708,7 +963,7 @@ const moveEntry = (index, direction) => {
 }
 
 const handleClearAll = () => {
-  if (confirm('Clear all scripts? This cannot be undone.')) {
+  if (confirm('Clear all scripts from the build? This cannot be undone.')) {
     clearMultiscriptEntries()
   }
 }
@@ -738,49 +993,12 @@ const copySingleFile = async (fileType) => {
   try {
     await navigator.clipboard.writeText(generatedFiles.value[fileType])
     copiedFile.value = fileType
-    toast(`${fileType.charAt(0).toUpperCase() + fileType.slice(1)} file copied!`, 'success')
+    const label = fileType.charAt(0).toUpperCase() + fileType.slice(1)
+    toast(`${label} file copied!`, 'success')
     setTimeout(() => { copiedFile.value = null }, 2000)
   } catch {
     toast('Failed to copy', 'error')
   }
-}
-
-const copyAllFiles = async () => {
-  try {
-    const allContent = [
-      '// ============================',
-      '// LIBRARY FILE',
-      '// ============================',
-      generatedFiles.value.library,
-      '',
-      '// ============================',
-      '// INPUT FILE',
-      '// ============================',
-      generatedFiles.value.input,
-      '',
-      '// ============================',
-      '// CONTEXT FILE',
-      '// ============================',
-      generatedFiles.value.context,
-      '',
-      '// ============================',
-      '// OUTPUT FILE',
-      '// ============================',
-      generatedFiles.value.output
-    ].join('\n')
-    await navigator.clipboard.writeText(allContent)
-    copiedAll.value = true
-    toast('All files copied to clipboard!', 'success')
-    setTimeout(() => { copiedAll.value = false }, 2000)
-  } catch {
-    toast('Failed to copy', 'error')
-  }
-}
-
-const getFileLineCount = (fileType) => {
-  const content = generatedFiles.value[fileType]
-  if (!content) return 0
-  return content.split('\n').length
 }
 
 // Close dropdown on outside click
