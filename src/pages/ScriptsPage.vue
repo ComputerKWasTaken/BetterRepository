@@ -1281,6 +1281,11 @@ modifier(text);</pre>
     </section>
 
     </template>
+
+    <!-- ==================== BUILDER TAB ==================== -->
+    <template v-if="activeTab === 'builder'">
+      <MultiscriptBuilder />
+    </template>
   </div>
 </template>
 
@@ -1288,6 +1293,7 @@ modifier(text);</pre>
 import { ref, computed, onMounted, nextTick, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ScriptItem from '@/components/ui/ScriptItem.vue'
+import MultiscriptBuilder from '@/components/ui/MultiscriptBuilder.vue'
 import SearchBar from '@/components/ui/SearchBar.vue'
 import { usePreferences } from '@/composables/usePreferences'
 import { 
@@ -1312,6 +1318,7 @@ const activeTab = ref('collection')
 
 const tabs = [
   { id: 'collection', label: 'Examples', icon: Layers },
+  { id: 'builder', label: 'Multiscript Builder', icon: Blocks },
 ]
 
 
@@ -1403,7 +1410,7 @@ const collapseAllGuideSections = () => {
 
 // Handle initial search query and tab from URL (e.g. from global search)
 onMounted(() => {
-  if (route.query.tab && ['collection'].includes(route.query.tab)) {
+  if (route.query.tab && ['collection', 'builder'].includes(route.query.tab)) {
     activeTab.value = route.query.tab
   }
   if (route.query.q) {

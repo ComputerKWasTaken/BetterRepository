@@ -3193,3 +3193,195 @@ export const updateCategoryCounts = () => {
 
 // Initialize counts on load
 updateCategoryCounts()
+
+// ============================================
+// MULTISCRIPT BUILDER HELPERS
+// ============================================
+
+// Check if a script uses the library-centric hook pattern
+// (has a files.library that defines a globalThis function with hook parameter)
+export const isHookPatternScript = (script) => {
+  if (!script.files || !script.files.library) return false
+  const lib = script.files.library
+  return /globalThis\.[A-Za-z_$][A-Za-z0-9_$]*\s*=\s*function/.test(lib)
+}
+
+// Convert a string to PascalCase function name
+export const toPascalCase = (str) => {
+  return str
+    .replace(/[^a-zA-Z0-9\s]/g, '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('')
+}
+
+// Extract or generate a PascalCase function name for a script
+export const getScriptFunctionName = (script) => {
+  // If it's a hook pattern script, extract the name from the library
+  if (isHookPatternScript(script)) {
+    const match = script.files.library.match(/globalThis\.([A-Za-z_$][A-Za-z0-9_$]*)\s*=\s*function/)
+    if (match) return match[1]
+  }
+  // Otherwise generate from the script name
+  return toPascalCase(script.name || 'CustomScript')
+}
+
+// Get all scripts that have code content (suitable for the builder)
+export const getBuilderCompatibleScripts = () => {
+  return SCRIPTS.filter(s => !!(s.content || s.files))
+}
+
+// Extract the body of a modifier function from script content.
+// Given: `const modifier = (text) => { ...body... }; modifier(text);`
+// Returns the body (the statements inside the arrow function).
+export const extractModifierBody = (code) => {
+  if (!code || typeof code !== 'string') return ''
+
+  // Remove leading/trailing whitespace
+  let cleaned = code.trim()
+
+  // Remove comment-only lines at the very start
+  const lines = cleaned.split('\n')
+  let startIdx = 0
+  for (let i = 0; i < lines.length; i++) {
+    const trimmed = lines[i].trim()
+    if (trimmed === '' || trimmed.startsWith('//')) {
+      startIdx = i + 1
+    } else {
+      break
+    }
+  }
+  cleaned = lines.slice(startIdx).join('\n').trim()
+
+  // Try to match the modifier pattern:
+  // const modifier = (text) => { ...body... }\n[;]\nmodifier(text)[;]
+  // We need to find the opening brace of the arrow function body and its matching close
+  const arrowMatch = cleaned.match(/const\s+modifier\s*=\s*\(?\s*text\s*\)?\s*=>\s*\{/)
+  if (!arrowMatch) {
+    // If it doesn't match the modifier pattern, return the whole thing
+    // (might be raw library code like state initialization)
+    return cleaned
+  }
+
+  const bodyStart = cleaned.indexOf('{', arrowMatch.index) + 1
+
+  // Find the matching closing brace
+  let depth = 1
+  let bodyEnd = bodyStart
+  for (let i = bodyStart; i < cleaned.length; i++) {
+    if (cleaned[i] === '{') depth++
+    else if (cleaned[i] === '}') {
+      depth--
+      if (depth === 0) {
+        bodyEnd = i
+        break
+      }
+    }
+  }
+
+  let body = cleaned.substring(bodyStart, bodyEnd).trim()
+
+  // Remove trailing `return { text }` or `return { text: ... }` — the hook pattern
+  // uses globalThis.text instead of returning
+  // Keep the rest of the logic but convert the return
+  body = body.replace(
+    /return\s*\{\s*text\s*:\s*([^}]+)\}\s*;?\s*$/,
+    'globalThis.text = $1;'
+  )
+  body = body.replace(
+    /return\s*\{\s*text\s*,\s*stop\s*:\s*([^}]+)\}\s*;?\s*$/,
+    'globalThis.text = text;\n    globalThis.stop = $1;'
+  )
+  body = body.replace(
+    /return\s*\{\s*text\s*,\s*stop\s*\}\s*;?\s*$/,
+    'globalThis.text = text;\n    if (stop) globalThis.stop = true;'
+  )
+  body = body.replace(
+    /return\s*\{\s*text\s*\}\s*;?\s*$/,
+    'globalThis.text = text;'
+  )
+  // Handle simple `return { text }` without semicolon at very end
+  body = body.replace(
+    /return\s*\{\s*text\s*\}\s*$/,
+    'globalThis.text = text;'
+  )
+
+  return body
+}
+
+// Convert any script format into a hook-pattern library function.
+// Returns the full `globalThis.FnName = function FnName(hook) { ... };` string.
+export const convertToHookPattern = (script) => {
+  const fnName = getScriptFunctionName(script)
+  const stateKey = fnName.charAt(0).toLowerCase() + fnName.slice(1)
+
+  // Case 1: Already a hook-pattern script — return library content as-is
+  if (isHookPatternScript(script)) {
+    return script.files.library
+  }
+
+  // Case 2: Multi-file script with separate lifecycle files
+  if (script.files) {
+    const libraryCode = script.files.library || ''
+    const inputBody = script.files.input ? extractModifierBody(script.files.input) : ''
+    const contextBody = script.files.context ? extractModifierBody(script.files.context) : ''
+    const outputBody = script.files.output ? extractModifierBody(script.files.output) : ''
+
+    let body = ''
+
+    // Add library code (state init, helper functions) at the top
+    if (libraryCode) {
+      body += `  // --- Shared Library ---\n`
+      body += libraryCode.split('\n').map(l => `  ${l}`).join('\n')
+      body += '\n\n'
+    }
+
+    if (inputBody) {
+      body += `  // -------- hook: input --------\n`
+      body += `  if (hook === "input") {\n`
+      body += inputBody.split('\n').map(l => `    ${l}`).join('\n')
+      body += `\n    return;\n  }\n\n`
+    }
+
+    if (contextBody) {
+      body += `  // -------- hook: context --------\n`
+      body += `  if (hook === "context") {\n`
+      body += contextBody.split('\n').map(l => `    ${l}`).join('\n')
+      body += `\n    return;\n  }\n\n`
+    }
+
+    if (outputBody) {
+      body += `  // -------- hook: output --------\n`
+      body += `  if (hook === "output") {\n`
+      body += outputBody.split('\n').map(l => `    ${l}`).join('\n')
+      body += `\n    return;\n  }`
+    }
+
+    return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n${body}\n};`
+  }
+
+  // Case 3: Single-file script with content + fileType
+  if (script.content && script.fileType) {
+    // Library-type scripts don't need hook wrapping — they're shared code
+    if (script.fileType === 'library') {
+      // Wrap raw library code in a globalThis function
+      const code = script.content.trim()
+      return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n${code.split('\n').map(l => `  ${l}`).join('\n')}\n};`
+    }
+
+    const hookName = script.fileType === 'context' ? 'context'
+      : script.fileType === 'output' ? 'output'
+        : 'input'
+    const body = extractModifierBody(script.content)
+
+    return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n  // -------- hook: ${hookName} --------\n  if (hook === "${hookName}") {\n${body.split('\n').map(l => `    ${l}`).join('\n')}\n    return;\n  }\n};`
+  }
+
+  // Case 4: Raw content without fileType — treat as library
+  if (script.content) {
+    return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n${script.content.trim().split('\n').map(l => `  ${l}`).join('\n')}\n};`
+  }
+
+  return `// No code content found for ${script.name || 'script'}`
+}
