@@ -6,7 +6,6 @@
         <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
           <Blocks class="w-5 h-5 text-bd-cyan" />
           Multiscript Builder
-          <span class="tag bg-bd-cyan/20 text-bd-cyan text-xs">v1.5</span>
         </h2>
         <p class="text-sm text-bd-text-muted mt-1">
           Combine multiple scripts into one unified set. Select scripts, set execution order, and copy the generated files into AI Dungeon.
