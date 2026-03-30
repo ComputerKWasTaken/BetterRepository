@@ -1,7 +1,4 @@
 ﻿Empty Scripts: [
-  "input\\stackable-inventory-system.js",
   "input\\story-arc-engine.js",
-  "library\\stackable-inventory-system.js",
-  "output\\stackable-inventory-system.js",
   "output\\story-arc-engine.js"
 ]
