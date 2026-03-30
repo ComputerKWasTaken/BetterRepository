@@ -6,9 +6,10 @@
         <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
           <Blocks class="w-5 h-5 text-bd-cyan" />
           Multiscript Builder
+          <span class="tag text-[9px] bg-bd-cyan/20 text-bd-cyan">New</span>
         </h2>
         <p class="text-sm text-bd-text-muted mt-1">
-          Combine multiple scripts into one unified set. Select scripts, set execution order, and copy the generated files into AI Dungeon.
+          Combine multiple AI Dungeon scripts into a single, unified set.
         </p>
       </div>
       <div class="flex items-center gap-2">
@@ -133,67 +134,6 @@
             <p class="text-[10px] text-bd-text-muted">At each hook, the dispatcher calls every script in order. Each script only executes the code for that hook.</p>
           </div>
 
-          <!-- Caveats -->
-          <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/30 space-y-3">
-            <h4 class="text-xs font-bold text-bd-text-primary uppercase tracking-wider flex items-center gap-2">
-              <AlertTriangle class="w-3.5 h-3.5 text-bd-pink" />
-              Compatibility & Caveats
-            </h4>
-            <p class="text-xs text-bd-text-secondary leading-relaxed">
-              The hook pattern itself is <strong class="text-bd-text-primary">safe and reliable</strong> — it simply organizes code.
-              However, conflicts can arise from <strong class="text-bd-text-primary">what the combined scripts do</strong>:
-            </p>
-            <div class="grid md:grid-cols-2 gap-2">
-              <div class="p-2.5 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <div class="flex items-center gap-1.5 mb-1">
-                  <span class="text-xs">✏️</span>
-                  <span class="text-[11px] font-semibold text-bd-text-primary">Text Mutation</span>
-                </div>
-                <p class="text-[10px] text-bd-text-muted leading-relaxed">
-                  Scripts that modify <code class="text-bd-pink">text</code> (input, context, or output) run sequentially —
-                  Script B sees whatever Script A left behind. Two scripts rewriting the same text can produce unexpected results.
-                </p>
-              </div>
-              <div class="p-2.5 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <div class="flex items-center gap-1.5 mb-1">
-                  <span class="text-xs">⏸️</span>
-                  <span class="text-[11px] font-semibold text-bd-text-primary">Stop Behavior</span>
-                </div>
-                <p class="text-[10px] text-bd-text-muted leading-relaxed">
-                  Returning <code class="text-bd-pink">{ stop: true }</code> prevents the AI from generating a response.
-                  A command script that stops the loop will also prevent downstream scripts from seeing AI output.
-                </p>
-              </div>
-              <div class="p-2.5 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <div class="flex items-center gap-1.5 mb-1">
-                  <span class="text-xs">🗃️</span>
-                  <span class="text-[11px] font-semibold text-bd-text-primary">State Collisions</span>
-                </div>
-                <p class="text-[10px] text-bd-text-muted leading-relaxed">
-                  Two scripts using the same <code class="text-bd-pink">state</code> keys (e.g., <code>state.hp</code>) will overwrite each other.
-                  Well-written scripts namespace their state (e.g., <code>state.chronos</code>).
-                </p>
-              </div>
-              <div class="p-2.5 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <div class="flex items-center gap-1.5 mb-1">
-                  <span class="text-xs">💬</span>
-                  <span class="text-[11px] font-semibold text-bd-text-primary">Story Card Conflicts</span>
-                </div>
-                <p class="text-[10px] text-bd-text-muted leading-relaxed">
-                  Scripts that programmatically add, remove, or modify Story Cards can clash with each other, especially if they search by title or index.
-                </p>
-              </div>
-            </div>
-            <div class="p-2.5 rounded bg-bd-amber/10 border border-bd-amber/30">
-              <p class="text-[10px] text-bd-text-secondary">
-                <strong class="text-bd-amber">Bottom line:</strong>
-                Scripts that only <em>read</em> state and <em>append</em> to text (like display widgets or context injectors) combine safely.
-                Scripts that <em>rewrite</em> text, <em>stop</em> the game loop, or <em>mutate</em> shared state need care.
-                When in doubt, test in a private scenario first.
-              </p>
-            </div>
-          </div>
-
           <!-- Learn More link -->
           <div class="flex items-center justify-center pt-1">
             <router-link
@@ -203,6 +143,74 @@
               Learn more about scripting in the Guides
               <ArrowRight class="w-3 h-3" />
             </router-link>
+          </div>
+        </div>
+      </Transition>
+    </div>
+
+    <!-- Compatibility & Caveats (separate collapsible) -->
+    <div class="card">
+      <button @click="showCaveats = !showCaveats" class="w-full flex items-center justify-between text-left">
+        <h3 class="text-sm font-semibold text-bd-text-primary flex items-center gap-2">
+          <AlertTriangle class="w-4 h-4 text-bd-pink" />
+          Compatibility & Caveats
+        </h3>
+        <ChevronDown class="w-4 h-4 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !showCaveats }" />
+      </button>
+      <Transition name="slide">
+        <div v-if="showCaveats" class="mt-4 space-y-3">
+          <p class="text-xs text-bd-text-secondary leading-relaxed">
+            The hook pattern itself is <strong class="text-bd-text-primary">safe and reliable</strong> — it simply organizes code.
+            However, conflicts can arise from <strong class="text-bd-text-primary">what the combined scripts do</strong>:
+          </p>
+          <div class="grid md:grid-cols-2 gap-2">
+            <div class="p-2.5 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <div class="flex items-center gap-1.5 mb-1">
+                <span class="text-xs">✏️</span>
+                <span class="text-[11px] font-semibold text-bd-text-primary">Text Mutation</span>
+              </div>
+              <p class="text-[10px] text-bd-text-muted leading-relaxed">
+                Scripts that modify <code class="text-bd-pink">text</code> (input, context, or output) run sequentially —
+                Script B sees whatever Script A left behind. Two scripts rewriting the same text can produce unexpected results.
+              </p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <div class="flex items-center gap-1.5 mb-1">
+                <span class="text-xs">⏸️</span>
+                <span class="text-[11px] font-semibold text-bd-text-primary">Stop Behavior</span>
+              </div>
+              <p class="text-[10px] text-bd-text-muted leading-relaxed">
+                Returning <code class="text-bd-pink">{ stop: true }</code> prevents the AI from generating a response.
+                A command script that stops the loop will also prevent downstream scripts from seeing AI output.
+              </p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <div class="flex items-center gap-1.5 mb-1">
+                <span class="text-xs">🗃️</span>
+                <span class="text-[11px] font-semibold text-bd-text-primary">State Collisions</span>
+              </div>
+              <p class="text-[10px] text-bd-text-muted leading-relaxed">
+                Two scripts using the same <code class="text-bd-pink">state</code> keys (e.g., <code>state.hp</code>) will overwrite each other.
+                Well-written scripts namespace their state (e.g., <code>state.chronos</code>).
+              </p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <div class="flex items-center gap-1.5 mb-1">
+                <span class="text-xs">💬</span>
+                <span class="text-[11px] font-semibold text-bd-text-primary">Story Card Conflicts</span>
+              </div>
+              <p class="text-[10px] text-bd-text-muted leading-relaxed">
+                Scripts that programmatically add, remove, or modify Story Cards can clash with each other, especially if they search by title or index.
+              </p>
+            </div>
+          </div>
+          <div class="p-2.5 rounded bg-bd-amber/10 border border-bd-amber/30">
+            <p class="text-[10px] text-bd-text-secondary">
+              <strong class="text-bd-amber">Bottom line:</strong>
+              Scripts that only <em>read</em> state and <em>append</em> to text (like display widgets or context injectors) combine safely.
+              Scripts that <em>rewrite</em> text, <em>stop</em> the game loop, or <em>mutate</em> shared state need care.
+              When in doubt, test in a private scenario first.
+            </p>
           </div>
         </div>
       </Transition>
@@ -522,7 +530,7 @@
           <div v-else class="text-center py-8 border-2 border-dashed border-bd-border-subtle rounded-lg">
             <Blocks class="w-8 h-8 text-bd-text-muted mx-auto mb-2" />
             <p class="text-sm text-bd-text-muted">No scripts added yet</p>
-            <p class="text-xs text-bd-text-muted mt-1">Choose scripts from the library or create custom ones</p>
+            <p class="text-xs text-bd-text-muted mt-1">← Use the "Add Scripts" panel above to get started</p>
           </div>
 
           <!-- Save Build & Clear -->
@@ -554,13 +562,31 @@
 
       <!-- Right: Generated Output -->
       <div class="space-y-4 min-w-0">
+        <!-- Inline step bar (when scripts exist) -->
+        <div v-if="currentEntries.length > 0" class="flex items-center gap-2 text-[10px] p-2.5 rounded-lg bg-bd-bg-secondary border border-bd-border-subtle">
+          <span class="flex items-center gap-1 text-bd-green font-semibold">
+            <Check class="w-3 h-3" />
+            1. Scripts chosen
+          </span>
+          <span class="text-bd-text-muted">→</span>
+          <span class="flex items-center gap-1 font-semibold" :class="currentEntries.length > 1 ? 'text-bd-green' : 'text-bd-blue'">
+            <component :is="currentEntries.length > 1 ? Check : ArrowRight" class="w-3 h-3" />
+            2. Order set
+          </span>
+          <span class="text-bd-text-muted">→</span>
+          <span class="flex items-center gap-1 text-bd-purple font-semibold">
+            <Clipboard class="w-3 h-3" />
+            3. Copy & paste below
+          </span>
+        </div>
+
         <!-- Library Code (Primary Output) -->
         <div class="card space-y-4">
           <div class="flex items-center justify-between">
             <h3 class="font-semibold text-bd-text-primary flex items-center gap-2">
               <BookOpen class="w-4 h-4 text-bd-purple" />
               Generated Library
-              <span class="text-xs font-normal text-bd-text-muted">— paste into AI Dungeon's Library tab</span>
+              <span v-if="currentEntries.length > 0" class="text-xs font-normal text-bd-text-muted">— paste into AI Dungeon's Library tab</span>
             </h3>
             <button
               v-if="currentEntries.length > 0"
@@ -573,10 +599,24 @@
           </div>
 
           <!-- No scripts state -->
-          <div v-if="currentEntries.length === 0" class="text-center py-16 border-2 border-dashed border-bd-border-subtle rounded-lg">
-            <Code class="w-10 h-10 text-bd-text-muted mx-auto mb-3" />
-            <p class="text-sm text-bd-text-muted">Add scripts to see the generated Library</p>
-            <p class="text-xs text-bd-text-muted mt-1">The Library file is where all your combined script code lives</p>
+          <div v-if="currentEntries.length === 0" class="py-12 border-2 border-dashed border-bd-border-subtle rounded-lg">
+            <div class="flex flex-col items-center text-center max-w-xs mx-auto">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-8 h-8 rounded-lg bg-bd-green/15 flex items-center justify-center">
+                  <Plus class="w-4 h-4 text-bd-green" />
+                </div>
+                <ArrowRight class="w-4 h-4 text-bd-text-muted" />
+                <div class="w-8 h-8 rounded-lg bg-bd-purple/15 flex items-center justify-center">
+                  <GitMerge class="w-4 h-4 text-bd-purple" />
+                </div>
+                <ArrowRight class="w-4 h-4 text-bd-text-muted" />
+                <div class="w-8 h-8 rounded-lg bg-bd-cyan/15 flex items-center justify-center">
+                  <Clipboard class="w-4 h-4 text-bd-cyan" />
+                </div>
+              </div>
+              <p class="text-sm font-medium text-bd-text-secondary">Add scripts to generate your Library</p>
+              <p class="text-xs text-bd-text-muted mt-1">Use the panel on the left to choose scripts, then copy the generated code into AI Dungeon.</p>
+            </div>
           </div>
 
           <!-- Library Code Display -->
@@ -627,25 +667,27 @@
           </Transition>
         </div>
 
-        <!-- How to Use -->
-        <div v-if="currentEntries.length > 0" class="p-4 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
-          <div class="flex items-start gap-3">
-            <Lightbulb class="w-5 h-5 text-bd-amber flex-shrink-0 mt-0.5" />
-            <div>
-              <h4 class="font-semibold text-bd-text-primary mb-1">How to Use</h4>
-              <ol class="text-sm text-bd-text-secondary space-y-1">
-                <li>1. Open your AI Dungeon scenario's <strong>Script Editor</strong></li>
-                <li>2. Paste the <strong class="text-bd-purple">Library</strong> code above into the <strong>Library</strong> tab</li>
-                <li>3. Expand "Hook Files" and copy each file into the matching tab (<strong class="text-bd-green">Input</strong>, <strong class="text-bd-blue">Context</strong>, <strong class="text-bd-amber">Output</strong>)</li>
-                <li>4. Save and play — all {{ currentEntries.length }} script{{ currentEntries.length === 1 ? '' : 's' }} will run automatically</li>
-              </ol>
-              <div class="mt-2 p-2 rounded bg-bd-bg-primary/50 border border-bd-border-subtle">
-                <p class="text-[10px] text-bd-text-muted">
-                  <strong class="text-bd-text-secondary">Note:</strong> Scripts only work in <strong>Simple Start</strong> and <strong>Character Creator</strong> scenarios.
-                  Remember that updating scripts on a published scenario affects <strong>all existing adventures</strong> using it.
-                </p>
-              </div>
-            </div>
+        <!-- How to Paste -->
+        <div v-if="currentEntries.length > 0" class="card space-y-3">
+          <h3 class="text-sm font-semibold text-bd-text-primary flex items-center gap-2">
+            <Lightbulb class="w-4 h-4 text-bd-amber" />
+            Pasting Into AI Dungeon
+          </h3>
+          <div class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-2 text-sm">
+            <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple text-[10px] font-bold flex items-center justify-center">1</span>
+            <span class="text-bd-text-secondary">Open your scenario's <strong class="text-bd-text-primary">Script Editor</strong></span>
+            <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple text-[10px] font-bold flex items-center justify-center">2</span>
+            <span class="text-bd-text-secondary">Paste the <strong class="text-bd-purple">Library</strong> code above into the <strong class="text-bd-text-primary">Library</strong> tab</span>
+            <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple text-[10px] font-bold flex items-center justify-center">3</span>
+            <span class="text-bd-text-secondary">Expand the <strong class="text-bd-text-primary">Hook Files</strong> section and copy each into its tab</span>
+            <span class="w-5 h-5 rounded-full bg-bd-green/20 text-bd-green text-[10px] font-bold flex items-center justify-center">✓</span>
+            <span class="text-bd-text-secondary">Save and play — all <strong class="text-bd-text-primary">{{ currentEntries.length }}</strong> script{{ currentEntries.length === 1 ? '' : 's' }} will run each turn</span>
+          </div>
+          <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-border-subtle">
+            <p class="text-[10px] text-bd-text-muted">
+              <strong class="text-bd-text-secondary">Note:</strong> Scripts only work in <strong>Simple Start</strong> and <strong>Character Creator</strong> scenarios.
+              Updating scripts on a published scenario affects <strong>all existing adventures</strong>.
+            </p>
           </div>
         </div>
       </div>
@@ -692,9 +734,10 @@ const {
 
 const addMode = ref('library')
 const librarySearch = ref('')
-const showHowItWorks = ref(false)
+const showHowItWorks = ref(true)
 const showSavedBuilds = ref(false)
 const showStaticFiles = ref(false)
+const showCaveats = ref(false)
 const savedBuildsDropdown = ref(null)
 const buildName = ref('')
 
