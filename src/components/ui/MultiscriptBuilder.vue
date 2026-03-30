@@ -63,7 +63,7 @@
       </div>
     </div>
 
-    <!-- How It Works (collapsed by default) -->
+    <!-- How It Works -->
     <div class="card">
       <button @click="showHowItWorks = !showHowItWorks" class="w-full flex items-center justify-between text-left">
         <h3 class="text-sm font-semibold text-bd-text-primary flex items-center gap-2">
@@ -73,7 +73,8 @@
         <ChevronDown class="w-4 h-4 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !showHowItWorks }" />
       </button>
       <Transition name="slide">
-        <div v-if="showHowItWorks" class="mt-4 space-y-3">
+        <div v-if="showHowItWorks" class="mt-4 space-y-4">
+          <!-- Quick Steps -->
           <div class="grid md:grid-cols-3 gap-3">
             <div class="p-3 rounded-lg bg-bd-green/10 border border-bd-green/30">
               <div class="flex items-center gap-2 mb-2">
@@ -94,16 +95,114 @@
                 <span class="w-5 h-5 rounded-full bg-bd-purple/30 text-bd-purple text-xs font-bold flex items-center justify-center">3</span>
                 <span class="text-sm font-semibold text-bd-text-primary">Copy & Paste</span>
               </div>
-              <p class="text-xs text-bd-text-secondary">Copy the generated Library file and the static hook files into AI Dungeon.</p>
+              <p class="text-xs text-bd-text-secondary">Copy the generated Library and three hook files into AI Dungeon's script editor.</p>
             </div>
           </div>
-          <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-            <p class="text-xs text-bd-text-secondary">
-              <strong class="text-bd-text-primary">How it works:</strong> The builder uses the
-              <strong class="text-bd-emerald">library-centric hook pattern</strong> to consolidate all scripts into the Library file.
-              Each lifecycle file (Input, Context, Output) simply calls a dispatcher that runs every script in order.
-              This means you never need to manually merge scripts again.
+
+          <!-- How the pattern works -->
+          <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-3">
+            <h4 class="text-xs font-bold text-bd-text-primary uppercase tracking-wider flex items-center gap-2">
+              <GitMerge class="w-3.5 h-3.5 text-bd-emerald" />
+              The Library-Centric Hook Pattern
+            </h4>
+            <p class="text-xs text-bd-text-secondary leading-relaxed">
+              AI Dungeon scenarios have 4 script tabs: <strong class="text-bd-text-primary">Library</strong>, <strong class="text-bd-text-primary">Input</strong>, <strong class="text-bd-text-primary">Context</strong>, and <strong class="text-bd-text-primary">Output</strong>.
+              Normally, you can only have one script per tab — which means running two scripts together requires manually merging their code.
             </p>
+            <p class="text-xs text-bd-text-secondary leading-relaxed">
+              The builder solves this by consolidating <strong class="text-bd-text-primary">all script logic into the Library file</strong>.
+              Each script becomes a self-contained function on <code class="text-bd-cyan">globalThis</code>, and the Input, Context, and Output files become
+              simple one-liners that call a dispatcher. The dispatcher runs every script function in order, passing the current lifecycle hook name.
+            </p>
+            <!-- Mini pipeline -->
+            <div class="flex flex-wrap items-center gap-1.5 text-[10px] pt-1">
+              <span class="px-2 py-0.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-muted">Player acts</span>
+              <span class="text-bd-text-muted">→</span>
+              <span class="px-2 py-0.5 rounded bg-bd-green/20 border border-bd-green/30 text-bd-green font-semibold">Input hook</span>
+              <span class="text-bd-text-muted">→</span>
+              <span class="px-2 py-0.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-muted">Context assembly</span>
+              <span class="text-bd-text-muted">→</span>
+              <span class="px-2 py-0.5 rounded bg-bd-blue/20 border border-bd-blue/30 text-bd-blue font-semibold">Context hook</span>
+              <span class="text-bd-text-muted">→</span>
+              <span class="px-2 py-0.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-muted">AI generates</span>
+              <span class="text-bd-text-muted">→</span>
+              <span class="px-2 py-0.5 rounded bg-bd-amber/20 border border-bd-amber/30 text-bd-amber font-semibold">Output hook</span>
+              <span class="text-bd-text-muted">→</span>
+              <span class="px-2 py-0.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-muted">Display</span>
+            </div>
+            <p class="text-[10px] text-bd-text-muted">At each hook, the dispatcher calls every script in order. Each script only executes the code for that hook.</p>
+          </div>
+
+          <!-- Caveats -->
+          <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/30 space-y-3">
+            <h4 class="text-xs font-bold text-bd-text-primary uppercase tracking-wider flex items-center gap-2">
+              <AlertTriangle class="w-3.5 h-3.5 text-bd-pink" />
+              Compatibility & Caveats
+            </h4>
+            <p class="text-xs text-bd-text-secondary leading-relaxed">
+              The hook pattern itself is <strong class="text-bd-text-primary">safe and reliable</strong> — it simply organizes code.
+              However, conflicts can arise from <strong class="text-bd-text-primary">what the combined scripts do</strong>:
+            </p>
+            <div class="grid md:grid-cols-2 gap-2">
+              <div class="p-2.5 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <div class="flex items-center gap-1.5 mb-1">
+                  <span class="text-xs">✏️</span>
+                  <span class="text-[11px] font-semibold text-bd-text-primary">Text Mutation</span>
+                </div>
+                <p class="text-[10px] text-bd-text-muted leading-relaxed">
+                  Scripts that modify <code class="text-bd-pink">text</code> (input, context, or output) run sequentially —
+                  Script B sees whatever Script A left behind. Two scripts rewriting the same text can produce unexpected results.
+                </p>
+              </div>
+              <div class="p-2.5 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <div class="flex items-center gap-1.5 mb-1">
+                  <span class="text-xs">⏸️</span>
+                  <span class="text-[11px] font-semibold text-bd-text-primary">Stop Behavior</span>
+                </div>
+                <p class="text-[10px] text-bd-text-muted leading-relaxed">
+                  Returning <code class="text-bd-pink">{ stop: true }</code> prevents the AI from generating a response.
+                  A command script that stops the loop will also prevent downstream scripts from seeing AI output.
+                </p>
+              </div>
+              <div class="p-2.5 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <div class="flex items-center gap-1.5 mb-1">
+                  <span class="text-xs">🗃️</span>
+                  <span class="text-[11px] font-semibold text-bd-text-primary">State Collisions</span>
+                </div>
+                <p class="text-[10px] text-bd-text-muted leading-relaxed">
+                  Two scripts using the same <code class="text-bd-pink">state</code> keys (e.g., <code>state.hp</code>) will overwrite each other.
+                  Well-written scripts namespace their state (e.g., <code>state.chronos</code>).
+                </p>
+              </div>
+              <div class="p-2.5 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <div class="flex items-center gap-1.5 mb-1">
+                  <span class="text-xs">💬</span>
+                  <span class="text-[11px] font-semibold text-bd-text-primary">Story Card Conflicts</span>
+                </div>
+                <p class="text-[10px] text-bd-text-muted leading-relaxed">
+                  Scripts that programmatically add, remove, or modify Story Cards can clash with each other, especially if they search by title or index.
+                </p>
+              </div>
+            </div>
+            <div class="p-2.5 rounded bg-bd-amber/10 border border-bd-amber/30">
+              <p class="text-[10px] text-bd-text-secondary">
+                <strong class="text-bd-amber">Bottom line:</strong>
+                Scripts that only <em>read</em> state and <em>append</em> to text (like display widgets or context injectors) combine safely.
+                Scripts that <em>rewrite</em> text, <em>stop</em> the game loop, or <em>mutate</em> shared state need care.
+                When in doubt, test in a private scenario first.
+              </p>
+            </div>
+          </div>
+
+          <!-- Learn More link -->
+          <div class="flex items-center justify-center pt-1">
+            <router-link
+              to="/guides?section=scripts&expand=hook-pattern"
+              class="inline-flex items-center gap-1.5 text-xs font-medium text-bd-accent-primary hover:text-bd-accent-light transition-colors"
+            >
+              Learn more about scripting in the Guides
+              <ArrowRight class="w-3 h-3" />
+            </router-link>
           </div>
         </div>
       </Transition>
@@ -528,7 +627,7 @@
           </Transition>
         </div>
 
-        <!-- Paste Instructions -->
+        <!-- How to Use -->
         <div v-if="currentEntries.length > 0" class="p-4 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
           <div class="flex items-start gap-3">
             <Lightbulb class="w-5 h-5 text-bd-amber flex-shrink-0 mt-0.5" />
@@ -536,12 +635,16 @@
               <h4 class="font-semibold text-bd-text-primary mb-1">How to Use</h4>
               <ol class="text-sm text-bd-text-secondary space-y-1">
                 <li>1. Open your AI Dungeon scenario's <strong>Script Editor</strong></li>
-                <li>2. Paste the <strong class="text-bd-purple">Library</strong> file (above) into the Library tab</li>
-                <li>3. Expand "Hook Files" above and copy each into the matching tab</li>
+                <li>2. Paste the <strong class="text-bd-purple">Library</strong> code above into the <strong>Library</strong> tab</li>
+                <li>3. Expand "Hook Files" and copy each file into the matching tab (<strong class="text-bd-green">Input</strong>, <strong class="text-bd-blue">Context</strong>, <strong class="text-bd-amber">Output</strong>)</li>
+                <li>4. Save and play — all {{ currentEntries.length }} script{{ currentEntries.length === 1 ? '' : 's' }} will run automatically</li>
               </ol>
-              <p class="text-xs text-bd-text-muted mt-2">
-                All {{ currentEntries.length }} script{{ currentEntries.length === 1 ? '' : 's' }} will run together automatically each turn.
-              </p>
+              <div class="mt-2 p-2 rounded bg-bd-bg-primary/50 border border-bd-border-subtle">
+                <p class="text-[10px] text-bd-text-muted">
+                  <strong class="text-bd-text-secondary">Note:</strong> Scripts only work in <strong>Simple Start</strong> and <strong>Character Creator</strong> scenarios.
+                  Remember that updating scripts on a published scenario affects <strong>all existing adventures</strong> using it.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -556,7 +659,7 @@ import {
   Blocks, FolderOpen, Trash2, HelpCircle, ChevronDown, ChevronUp,
   Plus, Check, X, Library, FileCode, Search, GitMerge, Save,
   Clipboard, Code, Lightbulb, BookOpen, ArrowRightLeft, User,
-  PenTool, Pencil
+  PenTool, Pencil, AlertTriangle, ArrowRight
 } from 'lucide-vue-next'
 import { usePreferences } from '@/composables/usePreferences'
 import {
