@@ -3364,8 +3364,8 @@ export const convertToHookPattern = (script) => {
 
   // Case 3: Single-file script with content + fileType
   if (script.content && script.fileType) {
-    // Library-type scripts don't need hook wrapping — they're shared code
-    if (script.fileType === 'library') {
+    // Library/helper-type scripts don't need hook wrapping — they're shared code
+    if (script.fileType === 'library' || script.fileType === 'helper') {
       // Wrap raw library code in a globalThis function
       const code = script.content.trim()
       return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n${code.split('\n').map(l => `  ${l}`).join('\n')}\n};`

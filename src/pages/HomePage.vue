@@ -175,14 +175,34 @@
           <div class="flex items-center justify-between mb-5">
             <div class="flex items-center gap-2.5">
               <Megaphone class="w-5 h-5 text-bd-accent-primary" />
-              <h2 class="text-lg font-semibold text-bd-text-primary">What's New in <span class="text-gradient">V1.4</span></h2>
+              <h2 class="text-lg font-semibold text-bd-text-primary">What's New in <span class="text-gradient">V1.5</span></h2>
             </div>
             <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-bd-accent-primary/15 text-bd-accent-light">Latest</span>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Story Card Builder -->
+            <!-- Multiscript Builder -->
             <div class="whats-new-card group" style="animation-delay: 0ms">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 rounded-lg bg-bd-cyan/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-cyan/25 transition-colors">
+                  <Blocks class="w-4 h-4 text-bd-cyan" />
+                </div>
+                <h3 class="font-semibold text-sm text-bd-text-primary">Multiscript Builder</h3>
+              </div>
+              <ul class="space-y-1.5 text-sm text-bd-text-secondary">
+                <li class="flex items-start gap-2">
+                  <Code class="w-3 h-3 text-bd-cyan flex-shrink-0 mt-1" />
+                  <span>Combine multiple scripts into one unified set using the library-centric hook pattern</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <Wrench class="w-3 h-3 text-bd-cyan flex-shrink-0 mt-1" />
+                  <span>Create, save, and reuse custom scripts with multi-hook support</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Story Card Builder (v1.4) -->
+            <div class="whats-new-card group" style="animation-delay: 80ms">
               <div class="flex items-center gap-3 mb-3">
                 <div class="w-9 h-9 rounded-lg bg-bd-amber/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-amber/25 transition-colors">
                   <Hammer class="w-4 h-4 text-bd-amber" />
@@ -200,30 +220,17 @@
                 </li>
               </ul>
             </div>
-
-            <!-- Proactive Analytics -->
-            <div class="whats-new-card group" style="animation-delay: 80ms">
-              <div class="flex items-center gap-3 mb-3">
-                <div class="w-9 h-9 rounded-lg bg-bd-purple/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-purple/25 transition-colors">
-                  <Activity class="w-4 h-4 text-bd-purple" />
-                </div>
-                <h3 class="font-semibold text-sm text-bd-text-primary">Proactive Analytics</h3>
-              </div>
-              <ul class="space-y-1.5 text-sm text-bd-text-secondary">
-                <li class="flex items-start gap-2">
-                  <ShieldAlert class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
-                  <span>Real-time builder warnings for missing triggers and double newlines</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <Eye class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
-                  <span>Live visualization of how the AI views your story cards in context</span>
-                </li>
-              </ul>
-            </div>
           </div>
 
           <!-- CTA -->
-          <div class="mt-5 pt-4 border-t border-bd-border-subtle flex items-center justify-center">
+          <div class="mt-5 pt-4 border-t border-bd-border-subtle flex items-center justify-center gap-6">
+            <router-link 
+              to="/scripts?tab=builder" 
+              class="inline-flex items-center gap-2 text-sm font-medium text-bd-cyan hover:text-bd-cyan/80 transition-colors"
+            >
+              Try the Multiscript Builder
+              <ArrowRight class="w-3.5 h-3.5" />
+            </router-link>
             <router-link 
               to="/story-cards?tab=builder" 
               class="inline-flex items-center gap-2 text-sm font-medium text-bd-accent-primary hover:text-bd-accent-light transition-colors"
@@ -436,7 +443,8 @@ import {
   Search, LayoutGrid, Lightbulb, ScrollText, Heart, Sparkles, ArrowRight,
   GitPullRequest, MessageCircle, ExternalLink, Bookmark, Drama, Code,
   Award, Users, ChevronRight, Package, Layers, LayoutDashboard, Infinity, X,
-  Megaphone, RefreshCw, Tag, SlidersHorizontal, Wrench, Hammer, Activity, ShieldAlert, Eye, Edit3
+  Megaphone, RefreshCw, Tag, SlidersHorizontal, Wrench, Hammer, Activity, ShieldAlert, Eye, Edit3,
+  Blocks
 } from 'lucide-vue-next'
 
 const router = useRouter()
