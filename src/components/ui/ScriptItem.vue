@@ -245,7 +245,8 @@ const fileTypeClass = computed(() => {
     'input': 'bg-bd-green/20 text-bd-green',
     'context': 'bg-bd-blue/20 text-bd-blue',
     'output': 'bg-bd-amber/20 text-bd-amber',
-    'library': 'bg-bd-purple/20 text-bd-purple'
+    'library': 'bg-bd-purple/20 text-bd-purple',
+    'helper': 'bg-bd-cyan/20 text-bd-cyan'
   }
   return classMap[props.script.fileType] || 'bg-bd-tag-bg text-bd-text-muted'
 })
@@ -255,7 +256,8 @@ const getFileIcon = (fileType) => {
     'library': '📚',
     'input': '➡️',
     'context': '🧠',
-    'output': '⬅️'
+    'output': '⬅️',
+    'helper': '🔧'
   }
   return icons[fileType] || '📝'
 }

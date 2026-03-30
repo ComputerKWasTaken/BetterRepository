@@ -11,9 +11,10 @@
 // ============================================
 //
 // 1. FILE TYPE DECLARATION
-//    Every script must declare its `fileType` ('input', 'output', or 'context')
+//    Every script must declare its `fileType` ('input', 'output', 'context', or 'helper')
 //    or use the `files` object for multi-file scripts. The file type determines
-//    when the script runs in the AI Dungeon pipeline.
+//    when the script runs in the AI Dungeon pipeline. Helper scripts are utility
+//    functions meant to be placed in the Library file.
 //
 // 2. MODIFIER PATTERN
 //    All scripts must use the standard modifier pattern:
@@ -665,7 +666,7 @@ modifier(text)`
     author: 'LewdLeah',
     description: 'Creates a new story card with all properties set properly.',
     purpose: 'Simplifies story card creation in scripts. Returns the created card object.',
-    fileType: 'library',
+    fileType: 'helper',
     content: `function buildCard(title = "", entry = "", type = "character", 
               keys = title, description = "", insertionIndex = 0) {
     if (![type, title, keys, entry, description].every(arg => 
@@ -706,7 +707,7 @@ modifier(text)`
     author: 'LewdLeah',
     description: 'Find story cards using a predicate function.',
     purpose: 'Like Array.find but specialized for story cards. Can return all matches or just the first.',
-    fileType: 'library',
+    fileType: 'helper',
     content: `function getCard(predicate, getAll = false) {
     if (typeof predicate !== "function") {
         throw new Error("getCard: function required");
@@ -741,7 +742,7 @@ modifier(text)`
     source: 'BetterRepository',
     description: 'Pattern for initializing persistent state variables.',
     purpose: 'Ensures variables persist across turns without resetting. Put in Library.',
-    fileType: 'library',
+    fileType: 'helper',
     content: `// Initialize state variables with default values
 // These persist across turns and won't reset
 state.playerHP = state.playerHP ?? 100;

@@ -110,9 +110,9 @@
     </div>
 
     <!-- Main Builder Grid -->
-    <div class="grid lg:grid-cols-[1fr_1fr] gap-6">
+    <div class="grid lg:grid-cols-[1fr_1fr] gap-6 overflow-hidden">
       <!-- Left: Script Selection & List -->
-      <div class="space-y-4">
+      <div class="space-y-4 min-w-0">
         <!-- Add Script Section -->
         <div class="card space-y-4">
           <h3 class="font-semibold text-bd-text-primary flex items-center gap-2">
@@ -393,8 +393,15 @@
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-1.5">
                     <span class="text-sm font-medium text-bd-text-primary truncate">{{ entry.name }}</span>
-                    <span v-if="entry.type === 'custom'" class="tag text-[9px] bg-bd-purple/20 text-bd-purple">Custom</span>
-                    <span v-else class="tag text-[9px] bg-bd-cyan/20 text-bd-cyan">Library</span>
+                    <template v-if="entry.type === 'custom'">
+                      <span class="tag text-[9px] bg-bd-purple/20 text-bd-purple">Custom</span>
+                    </template>
+                    <template v-else-if="entry.scriptFormat === 'multi-file'">
+                      <span class="tag text-[9px] bg-bd-amber/20 text-bd-amber">Multi-file</span>
+                    </template>
+                    <template v-else-if="entry.scriptFormat">
+                      <span class="tag text-[9px]" :class="hookBadgeClass(entry.scriptFormat)">{{ entry.scriptFormat }}</span>
+                    </template>
                   </div>
                   <p class="text-[10px] text-bd-text-muted font-mono truncate">
                     globalThis.{{ entry.functionName }}
@@ -447,7 +454,7 @@
       </div>
 
       <!-- Right: Generated Output -->
-      <div class="space-y-4">
+      <div class="space-y-4 min-w-0">
         <!-- Library Code (Primary Output) -->
         <div class="card space-y-4">
           <div class="flex items-center justify-between">
@@ -763,7 +770,8 @@ const fileTypeBadgeClass = (fileType) => {
     'input': 'bg-bd-green/20 text-bd-green',
     'context': 'bg-bd-blue/20 text-bd-blue',
     'output': 'bg-bd-amber/20 text-bd-amber',
-    'library': 'bg-bd-purple/20 text-bd-purple'
+    'library': 'bg-bd-purple/20 text-bd-purple',
+    'helper': 'bg-bd-cyan/20 text-bd-cyan'
   }
   return map[fileType] || 'bg-bd-tag-bg text-bd-text-muted'
 }
@@ -773,7 +781,8 @@ const hookBadgeClass = (hook) => {
     'library': 'bg-bd-purple/20 text-bd-purple',
     'input': 'bg-bd-green/20 text-bd-green',
     'context': 'bg-bd-blue/20 text-bd-blue',
-    'output': 'bg-bd-amber/20 text-bd-amber'
+    'output': 'bg-bd-amber/20 text-bd-amber',
+    'helper': 'bg-bd-cyan/20 text-bd-cyan'
   }
   return map[hook] || 'bg-bd-tag-bg text-bd-text-muted'
 }
@@ -786,6 +795,12 @@ const getActiveHooks = (customScript) => {
 }
 
 // --- Library scripts ---
+const getScriptFormat = (script) => {
+  if (script.files) return 'multi-file'
+  if (script.fileType) return script.fileType
+  return 'library'
+}
+
 const addLibraryScript = (script) => {
   if (isScriptAdded(script.id)) return
   const fnName = getScriptFunctionName(script)
@@ -793,7 +808,8 @@ const addLibraryScript = (script) => {
     scriptId: script.id,
     name: script.name,
     functionName: fnName,
-    type: 'library'
+    type: 'library',
+    scriptFormat: getScriptFormat(script)
   })
   toast(`Added "${script.name}"`, 'success')
 }

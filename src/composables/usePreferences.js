@@ -399,9 +399,11 @@ export function usePreferences() {
     const newEntry = {
       id: `ms-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       scriptId: entry.scriptId || null,
+      customScriptId: entry.customScriptId || null,
       name: entry.name || '',
       functionName: entry.functionName || '',
       type: entry.type || 'library', // 'library' (from data) or 'custom'
+      scriptFormat: entry.scriptFormat || null, // original type: input/output/context/helper/multi-file
       code: entry.code || null  // custom code for 'custom' type
     }
     preferences.value.currentMultiscriptEntries.push(newEntry)
