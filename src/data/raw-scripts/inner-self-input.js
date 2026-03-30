@@ -1,0 +1,1 @@
+// Paste Inner Self Input script here
