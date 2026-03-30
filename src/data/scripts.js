@@ -245,19 +245,6 @@ export const SCRIPTS = [
     scenarioLink: 'https://play.aidungeon.com/scenario/piAUFAqzm2xZ/story-arc-engine-wip'
   },
   {
-    id: 'reputex-engine',
-    name: 'ReputeX Engine',
-    category: 'game-systems',
-    difficulty: 'advanced',
-    impact: 'high',
-    essential: false,
-    tags: ['reputation', 'npc', 'faction', 'lexicon', 'dynamic'],
-    source: 'Community',
-    author: 'LeMillennialJesus',
-    description: 'A modular, AI-driven reputation and language engine for dynamic storytelling scenarios.',
-    purpose: 'Tracks global faction reputation, dynamically adjusts interpersonal traits, integrates narrative behavior rules, and shifts NPC behavior based on player reputation.'
-  },
-  {
     id: 'death-island',
     name: 'Death Island',
     category: 'game-systems',
