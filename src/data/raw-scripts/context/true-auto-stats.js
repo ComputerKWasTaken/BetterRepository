@@ -1,1 +1,11 @@
-// Paste True Auto Stats Context script here
+// TAS Context Script
+
+// Every script needs a modifier function
+const modifier = (text) => {
+    text = onContext_TAS(text);
+
+    return { text }
+}
+
+// Don't modify this part
+modifier(text)

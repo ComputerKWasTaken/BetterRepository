@@ -1,1 +1,10 @@
-// Paste True Auto Stats Input script here
+// TAS Input Script
+
+const modifier = (text) => {
+    text = onInput_TAS(text);
+
+    return { text }
+}//end of modifier
+
+// Don't modify this part
+modifier(text)

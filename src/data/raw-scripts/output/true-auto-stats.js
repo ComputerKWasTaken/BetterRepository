@@ -1,1 +1,11 @@
-// Paste True Auto Stats Output script here
+// TAS Output Script
+
+// Every script needs a modifier function
+const modifier = (text) => {
+    text = onOutput_TAS(text);
+
+    return { text }
+}//end of modifier
+
+// Don't modify this part
+modifier(text)

@@ -1,11 +1,7 @@
 ﻿Empty Scripts: [
-  "context\\true-auto-stats.js",
   "input\\stackable-inventory-system.js",
   "input\\story-arc-engine.js",
-  "input\\true-auto-stats.js",
   "library\\stackable-inventory-system.js",
-  "library\\true-auto-stats.js",
   "output\\stackable-inventory-system.js",
-  "output\\story-arc-engine.js",
-  "output\\true-auto-stats.js"
+  "output\\story-arc-engine.js"
 ]
