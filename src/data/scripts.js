@@ -500,21 +500,25 @@ export const SCRIPTS = [
 // DYNAMIC SCRIPT LOADING
 // ============================================
 // Automatically load script contents from the raw-scripts folder using Vite
-const rawScripts = import.meta.glob('./raw-scripts/*.js', { query: '?raw', import: 'default', eager: true })
+const rawScripts = import.meta.glob('./raw-scripts/**/*.js', { query: '?raw', import: 'default', eager: true })
 
 SCRIPTS.forEach(script => {
-  const contentPath = `./raw-scripts/${script.id}.js`
-  if (rawScripts[contentPath]) {
-    script.content = rawScripts[contentPath]
-  }
-
-  const prefix = `./raw-scripts/${script.id}-`
-  for (const path in rawScripts) {
-    if (path.startsWith(prefix)) {
-      if (!script.files) script.files = {}
-      const fileType = path.substring(prefix.length, path.length - 3) // remove .js
-      script.files[fileType] = rawScripts[path]
+  // Single file scripts
+  if (script.fileType) {
+    const contentPath = `./raw-scripts/${script.fileType}/${script.id}.js`
+    if (rawScripts[contentPath]) {
+      script.content = rawScripts[contentPath]
     }
+  } else {
+    // Multi-file scripts
+    const types = ['library', 'input', 'context', 'output', 'helper']
+    types.forEach(type => {
+      const path = `./raw-scripts/${type}/${script.id}.js`
+      if (rawScripts[path]) {
+        if (!script.files) script.files = {}
+        script.files[type] = rawScripts[path]
+      }
+    })
   }
 })
 
