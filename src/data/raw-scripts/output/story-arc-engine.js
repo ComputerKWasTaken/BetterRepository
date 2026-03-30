@@ -1,1 +1,12 @@
-// Paste Story Arc Engine Output Script here
+//Output Script
+
+
+// Every script needs a modifier function
+const modifier = (text) => {
+    text = onOutput_SAE(text);
+
+    return { text }
+}
+
+// Don't modify this part
+modifier(text)

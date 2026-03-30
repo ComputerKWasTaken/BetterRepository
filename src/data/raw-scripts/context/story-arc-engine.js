@@ -1,8 +1,9 @@
-//Input Script
+//Context Script
+
 
 // Every script needs a modifier function
 const modifier = (text) => {
-    text = onInput_SAE(text);
+    text = onContext_SAE(text);
 
     return { text }
 }
