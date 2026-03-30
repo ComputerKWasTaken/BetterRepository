@@ -271,6 +271,45 @@ modifier(text)`
 
   // ========== TRACKING & STATE ==========
   {
+    id: 'true-auto-stats',
+    name: 'True Auto Stats (TAS)',
+    category: 'tracking',
+    difficulty: 'advanced',
+    impact: 'high',
+    essential: false,
+    tags: ['stats', 'rpg', 'inventory', 'skills', 'combat'],
+    source: 'Community',
+    author: 'Yi1i1i',
+    description: 'Automatically creates, tracks, and updates player stats during your adventure using story cards.',
+    purpose: 'Interprets numerical stats for the AI, tracks inventory/skills/HP, and provides a customizable RPG stat system without needing manual commands.',
+    scenarioLink: 'https://play.aidungeon.com/scenario/M8phJMfTapai/tas-wip',
+    files: {
+      library: `// Paste True Auto Stats Library script here`,
+      input: `// Paste True Auto Stats Input script here`,
+      context: `// Paste True Auto Stats Context script here`,
+      output: `// Paste True Auto Stats Output script here`
+    }
+  },
+  {
+    id: 'stackable-inventory-system',
+    name: 'Stackable Inventory System (SIS)',
+    category: 'tracking',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['inventory', 'commands', 'items', 'story-cards'],
+    source: 'Community',
+    author: 'bottledfox',
+    description: 'A lightweight, plug-and-play inventory system that auto-stacks items in a live story card.',
+    purpose: 'Manages inventory using slash commands (/take, /use, /drop, /give, /throw) with a rules checker to determine if items can reasonably be stored.',
+    scenarioLink: 'https://play.aidungeon.link/scenario/-3ouuszCAReF/stackable-inventory-system-sis',
+    files: {
+      library: `// Paste Stackable Inventory System Library script here`,
+      input: `// Paste Stackable Inventory System Input script here`,
+      output: `// Paste Stackable Inventory System Output script here`
+    }
+  },
+  {
     id: 'notes-system',
     name: 'Notes System',
     category: 'tracking',
@@ -347,6 +386,43 @@ modifier(text)`
   },
 
   // ========== GAME SYSTEMS ==========
+  {
+    id: 'story-arc-engine',
+    name: 'Story Arc Engine',
+    category: 'game-systems',
+    difficulty: 'advanced',
+    impact: 'high',
+    essential: false,
+    tags: ['story', 'pacing', 'context-injection', 'automation'],
+    source: 'Community',
+    author: 'Yi1i1i',
+    description: 'Automatically helps guide and enhance your story by generating a "Story Arc" — a high-level plot outline made up of key events.',
+    purpose: 'Keeps long stories focused and immersive, reduces inconsistencies, and encourages richer story progression by generating arcs based on player behavior.',
+    scenarioLink: 'https://play.aidungeon.com/scenario/piAUFAqzm2xZ/story-arc-engine-wip',
+    files: {
+      input: `// Paste Story Arc Engine Input Script here`,
+      output: `// Paste Story Arc Engine Output Script here`
+    }
+  },
+  {
+    id: 'reputex-engine',
+    name: 'ReputeX Engine',
+    category: 'game-systems',
+    difficulty: 'advanced',
+    impact: 'high',
+    essential: false,
+    tags: ['reputation', 'npc', 'faction', 'lexicon', 'dynamic'],
+    source: 'Community',
+    author: 'LeMillennialJesus',
+    description: 'A modular, AI-driven reputation and language engine for dynamic storytelling scenarios.',
+    purpose: 'Tracks global faction reputation, dynamically adjusts interpersonal traits, integrates narrative behavior rules, and shifts NPC behavior based on player reputation.',
+    files: {
+      library: `// Paste ReputeX Engine Library Script here`,
+      input: `// Paste ReputeX Engine Input Script here`,
+      context: `// Paste ReputeX Engine Context Script here`,
+      output: `// Paste ReputeX Engine Output Script here`
+    }
+  },
   {
     id: 'death-island',
     name: 'Death Island',
@@ -655,6 +731,26 @@ modifier(text)`
 
   // ========== UTILITIES ==========
   {
+    id: 'localized-languages',
+    name: 'Localized Languages (LoLa)',
+    category: 'utilities',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['translation', 'international', 'auto-cards', 'input-formatting'],
+    source: 'Community',
+    author: 'LewdLeah',
+    description: 'Helps players enjoy coherent AI Dungeon adventures using any international language. Improves player inputs and supports optional Auto-Cards integration.',
+    purpose: 'Enforces language consistency by intercepting player input and formatting it correctly, with options for auto-card translation hooks.',
+    scenarioLink: 'https://play.aidungeon.link/scenario/AX2nXYIPzcKd/localized-languages',
+    files: {
+      library: `// Paste LoLa Library script here`,
+      input: `// Paste LoLa Input script here`,
+      context: `// Paste LoLa Context script here`,
+      output: `// Paste LoLa Output script here`
+    }
+  },
+  {
     id: 'build-card',
     name: 'buildCard()',
     category: 'utilities',
@@ -763,8 +859,13 @@ state.flags = state.flags ?? {};`
     author: 'LewdLeah',
     description: 'Automatically writes & updates plot-relevant story cards during gameplay.',
     purpose: 'Builds a living reference of your adventure\'s world by detecting named entities and managing long-term memory updates.',
-    githubUrl: 'https://github.com/LewdLeah/Auto-Cards',
-    scenarioLink: 'https://play.aidungeon.com/scenario/Ddt0Akd-lVtj/auto-cards'
+    scenarioLink: 'https://play.aidungeon.com/scenario/Ddt0Akd-lVtj/auto-cards',
+    files: {
+      library: `// Paste Auto-Cards Library script here`,
+      input: `// Paste Auto-Cards Input script here`,
+      context: `// Paste Auto-Cards Context script here`,
+      output: `// Paste Auto-Cards Output script here`
+    }
   },
   {
     id: 'inner-self',
@@ -778,7 +879,12 @@ state.flags = state.flags ?? {};`
     author: 'LewdLeah',
     description: 'Improves character goals, secrets, planning, and self-reflection.',
     purpose: 'Maintains NPC "brains" that allow them to learn from experiences, form opinions, and adapt behavior over time.',
-    githubUrl: 'https://github.com/LewdLeah/Inner-Self'
+    files: {
+      library: `// Paste Inner Self Library script here`,
+      input: `// Paste Inner Self Input script here`,
+      context: `// Paste Inner Self Context script here`,
+      output: `// Paste Inner Self Output script here`
+    }
   },
   {
     id: 'better-say-actions',
