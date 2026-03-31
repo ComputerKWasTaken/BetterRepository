@@ -84,7 +84,7 @@
             class="text-sm text-bd-accent-primary hover:underline flex items-center gap-2"
           >
             <Github class="w-4 h-4" />
-            View on GitHub
+            View GitHub (Install Guide)
             <ExternalLink class="w-3 h-3" />
           </a>
           <a 

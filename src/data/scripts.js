@@ -60,7 +60,8 @@
 // 10. METADATA COMPLETENESS
 //     Every script must include: id, name, category, difficulty, impact,
 //     essential, tags, source, description, purpose, and either content
-//     (with fileType) or files (for multi-file scripts).
+//     (with fileType) or files (for multi-file scripts). Include githubUrl
+//     if the script has specific installation instructions on GitHub.
 //
 
 import { searchCollectionSmart } from './shared'
@@ -310,8 +311,9 @@ export const SCRIPTS = [
     tags: ['translation', 'international', 'auto-cards', 'input-formatting'],
     source: 'Community',
     author: 'LewdLeah',
-    description: 'Helps players enjoy coherent AI Dungeon adventures using any international language. Improves player inputs and supports optional Auto-Cards integration.',
-    purpose: 'Enforces language consistency by intercepting player input and formatting it correctly, with options for auto-card translation hooks.',
+    description: 'Helps players enjoy coherent AI Dungeon adventures using any international language. Improves player inputs.',
+    purpose: 'Enforces language consistency by intercepting player input and formatting it correctly.',
+    githubUrl: 'https://github.com/LewdLeah/Localized-Languages',
     scenarioLink: 'https://play.aidungeon.link/scenario/AX2nXYIPzcKd/localized-languages'
   },
   {
@@ -380,7 +382,8 @@ export const SCRIPTS = [
     source: 'Community',
     author: 'LewdLeah',
     description: 'Improves character goals, secrets, planning, and self-reflection.',
-    purpose: 'Maintains NPC "brains" that allow them to learn from experiences, form opinions, and adapt behavior over time.'
+    purpose: 'Maintains NPC "brains" that allow them to learn from experiences, form opinions, and adapt behavior over time.',
+    scenarioLink: 'https://play.aidungeon.com/scenario/tsu1WMJXaaAZ/inner-self'
   },
   {
     id: 'better-say-actions',

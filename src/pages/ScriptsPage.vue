@@ -1036,7 +1036,7 @@ modifier(text);</pre>
         <AlertTriangle class="w-5 h-5 text-bd-warning flex-shrink-0 mt-0.5" />
         <div>
           <h3 class="font-semibold text-bd-text-primary mb-1">Advanced Feature</h3>
-          <p class="text-sm text-bd-text-secondary">
+          <p class="text-sm text-bd-text-secondary mb-2">
             Scripts require JavaScript knowledge. Make sure to backup your scenarios before applying scripts.
             Enable "Run Dangerous Scripts" in Account Settings if scripts don't work.
           </p>
@@ -1310,7 +1310,7 @@ import {
   Library, ArrowRightToLine, Layers, ArrowLeftToLine, Database, 
   Lightbulb, Wrench, Plus, Search, Bug, ShieldAlert, Eye, RefreshCw, 
   ExternalLink, Settings, Award, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Blocks, Info, MessageSquare,
-  Star, Rocket, SlidersHorizontal, Zap, X
+  Star, Rocket, SlidersHorizontal, Zap, X, Github
 } from 'lucide-vue-next'
 
 const route = useRoute()
