@@ -483,10 +483,13 @@ The user would like you to pick up a varying novel about the main character. Ena
 - Avoid negative definition, parataxis, hypotaxis, defamiliarization, simile, metaphor, echoed dialogue, foreshadowing, sensory intimacy, sounds, and smells`,
       standard: `The user would like you to pick up a varying novel. Enable thinking mode and proceed by following all of the user's rules:
 - Use second person, present tense
+- Begin in medias res. Treat everything in prompts as given circumstances and implied narrative. Respond in scene, with no expository recap
+- Integrate user-provided narrative elements seamlessly into the ongoing story without restatement or rephrasing, treating them as established canonical facts that require no summary
+- All characters avoid quoting, echoing, or repeating what other characters have said
 - Avoid verbal echoing, paraphrasing, or restating the user's speech. Avoid having NPCs repeat what the user's speech or parrot what they say
 - Each NPC should have a unique personality and motivation which is reflected in their dialogue and actions
 - Ensure characters act and speak like how their personality is defined. Speech should never feel generic
-- Prioritize complex personality; avoid overly clinical, diagnostic, commanding, or esoteric behavior
+- Prioritize complex personality; avoid overly clinical, analytical, calculating, diagnostic, commanding, or esoteric behavior
 - Characters are people in situations, not job titles performing functions
 - Characters should only know what they logically have information on. Avoid suspicion or automatic knowledge
 - Treat each character as a closed epistemic system; avoid transfer of knowledge between characters without explicit in-story transmission; avoid ambient narrative osmosis
@@ -501,14 +504,22 @@ The user would like you to pick up a varying novel about the main character. Ena
 - No character should physically harm/bruise/mark those they are close with
 - Avoid contradicting the user's speech with NPC responses
 - Avoid using memory as metaphor or metaphor as memory
-- Avoid negative definition, parataxis, hypotaxis, contrasting action, antithesis, defamiliarization, hendiadys, anaphora, adverbial phrases, absolute phrases, manner adverbial, olfactory imagery, dramatic pauses, foreshadowing, sounds, smells, simile, metaphor, echoic dialogue, mirroring, parenthetical asides, and kinesthetic imagery
+- Avoid tautology, negative definition, parataxis, hypotaxis, contrasting action, antithesis, and defamiliarization
+- Avoid hendiadys, anaphora, adverbial phrases, absolute phrases, and appositive phrases
+- Avoid mirroring, echolalia, echoic dialogue, confirmation, reflective repetition, and manner adverbial
+- Avoid dramatic pauses, foreshadowing, simile, metaphor, parenthetical asides, cliché supernatural signaling, purple prose, anadiplosis, hypallage, thinking aloud, staccato dialogue rhythm, Hemingwayesque writing, processing beats, and subtext
+- Avoid sounds, smells, synesthesia, olfactory imagery, and kinesthetic imagery
+- Avoid synecdoche, metonymy, and somatization
 - Avoid inflating, escalating, or overemphasizing situations that are simple, mundane, or already explained; keep reactions proportional to the situation; let details remain rather than giving them undue importance or meaning`,
       max: `The user would like you to pick up a varying novel. Enable thinking mode and proceed by following all of the user's rules:
 - Use second person, present tense
+- Begin in medias res. Treat everything in prompts as given circumstances and implied narrative. Respond in scene, with no expository recap
+- Integrate user-provided narrative elements seamlessly into the ongoing story without restatement or rephrasing, treating them as established canonical facts that require no summary
+- All characters avoid quoting, echoing, or repeating what other characters have said
 - Avoid verbal echoing, paraphrasing, or restating the user's speech. Avoid having NPCs repeat what the user's speech or parrot what they say
 - Each NPC should have a unique personality and motivation which is reflected in their dialogue and actions
 - Ensure characters act and speak like how their personality is defined. Speech should never feel generic or trope-y
-- Prioritize complex personality; avoid overly clinical, diagnostic, scientific, commanding, poetic, or esoteric behavior
+- Prioritize complex personality; avoid overly clinical, analytical, calculating, diagnostic, scientific, commanding, poetic, or esoteric behavior
 - Characters are people in situations, not job titles performing functions
 - Characters should only know what they logically have information on. Avoid suspicion or automatic knowledge unless supported by context
 - Treat each character as a closed epistemic system; avoid transfer of knowledge between characters without explicit in-story transmission; avoid ambient narrative osmosis
@@ -527,7 +538,12 @@ The user would like you to pick up a varying novel about the main character. Ena
 - When introducing a character in a scene, mention their appearance including hairstyle, clothing, and additional important details
 - No extreme reactions; let emotions change naturally and proportionally
 - Avoid using memory as metaphor or metaphor as memory
-- Avoid negative definition, parataxis, hypotaxis, contrasting action, antithesis, defamiliarization, hendiadys, anaphora, adverbial phrases, absolute phrases, manner adverbial, olfactory imagery, dramatic pauses, foreshadowing, sounds, smells, simile, metaphor, echoic dialogue, mirroring, parenthetical asides, and kinesthetic imagery
+- Avoid tautology, negative definition, parataxis, hypotaxis, contrasting action, antithesis, and defamiliarization
+- Avoid hendiadys, anaphora, adverbial phrases, absolute phrases, and appositive phrases
+- Avoid mirroring, echolalia, echoic dialogue, confirmation, reflective repetition, and manner adverbial
+- Avoid dramatic pauses, foreshadowing, simile, metaphor, parenthetical asides, cliché supernatural signaling, purple prose, anadiplosis, hypallage, thinking aloud, staccato dialogue rhythm, Hemingwayesque writing, processing beats, and subtext
+- Avoid sounds, smells, synesthesia, olfactory imagery, and kinesthetic imagery
+- Avoid synecdoche, metonymy, and somatization
 - Avoid inflating, escalating, or overemphasizing situations that are simple, mundane, or already explained; keep reactions proportional to the situation; let details remain rather than giving them undue importance or meaning
 - No using syntactic patterns for descriptive modifications; no literary metanoic antithesis
 - No telling how things are done; show it through action instead; no adjectives or adverbs when describing action`
@@ -2013,6 +2029,23 @@ export const COMPONENTS = [
     purpose: 'Prevents the narrator from assigning weight or meaning to actions. A touch is just a touch, not "a gesture that spoke volumes."',
     content: `- Let actions sit on their own, without giving them weight, importance, comparison, so on`
   },
+  {
+    id: 'no-synecdoche-metonymy',
+    name: 'No Synecdoche/Metonymy/Somatization',
+    category: 'writing-style',
+    group: 'description-weeding',
+    groupOrder: 4,
+    difficulty: 'advanced',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['style', 'literary', 'device', 'prohibition', 'omg'],
+    models: ['All Models'],
+    combinesWith: ['no-figurative-language', 'tight-prose'],
+    description: 'Avoids synecdoche, metonymy, and somatization.',
+    purpose: 'Prevents substituting part for whole ("all hands on deck"), using associated concepts as stand-ins ("the crown" for monarchy), and expressing emotions purely through body symptoms ("her stomach churned with anxiety").',
+    content: `- Avoid synecdoche, metonymy, and somatization`
+  },
 
   // --- Atmosphere & Sensory ---
   {
@@ -2596,6 +2629,23 @@ export const COMPONENTS = [
     purpose: 'For screenplay or chat-style formatting. Each line of dialogue is prefixed with the speaker\'s name.',
     content: `- All speech and dialogue should be formatted as follows: NAME: "..."`
   },
+  {
+    id: 'no-back-and-forth',
+    name: 'No Circular Banter',
+    category: 'dialogue',
+    group: 'dialogue-style',
+    groupOrder: 8,
+    difficulty: 'beginner',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['dialogue', 'banter', 'repetition', 'circular', 'omg'],
+    models: ['All Models'],
+    combinesWith: ['anti-repetition', 'genuine-interaction'],
+    description: 'Prevents predictable back-and-forth banter exchanges.',
+    purpose: 'Stops the AI from writing circular dialogue patterns like "You\'re an asshole." / "You love it." or predictable teasing exchanges that go nowhere.',
+    content: `- Avoid circular or predictable back-and-forth banter; dialogue should progress the conversation or reveal character rather than loop through stock exchanges.`
+  },
 
   // --- Advanced Dialogue ---
   {
@@ -2970,6 +3020,23 @@ export const COMPONENTS = [
     purpose: 'Ensures new characters get a visual introduction including hairstyle, clothing, notable features so the reader can picture them.',
     content: `- When introducing a character in a scene, mention their appearance including hairstyle, clothing, and additional important details`
   },
+  {
+    id: 'safe-driving',
+    name: 'Safe Vehicle Operation',
+    category: 'characterization',
+    group: 'npc-behavior',
+    groupOrder: 8,
+    difficulty: 'beginner',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['npc-behavior', 'safety', 'realism', 'driving', 'omg'],
+    models: ['All Models'],
+    combinesWith: ['characters-not-clumsy'],
+    description: 'Characters operate vehicles and machinery safely.',
+    purpose: 'Prevents the AI from randomly making characters drive recklessly, swerve for no reason, or operate equipment unsafely when it doesn\'t fit the scene.',
+    content: `- Characters do not drive or operate vehicles and machinery unsafely unless the situation explicitly calls for it.`
+  },
 
   // --- Character Details ---
   {
@@ -3057,12 +3124,15 @@ export const COMPONENTS = [
     impact: 'medium',
     essential: false,
     placement: 'ai-instructions',
-    tags: ['behavior', 'caring', 'gentle', 'comfort'],
+    tags: ['behavior', 'caring', 'gentle', 'comfort', 'kooling-katie'],
     models: ['All Models'],
     description: 'Replaces clinical observations with gentle care.',
-    purpose: 'Changes how characters express concern, offers help instead of pointing out problems.',
+    purpose: 'Changes how characters express concern, offers help instead of pointing out problems. Prevents cliché observations like "you\'re favoring your left side" and replaces them with genuine check-ins.',
     author: 'Kooling Katie',
-    content: `- Write with a gentle, forgiving narrative tone; characters are kind by default and the world allows for softness and recovery.`
+    variants: [
+      { label: 'Standard', content: `- Write with a gentle, forgiving narrative tone; characters express concern through offers to help and genuine check-ins rather than clinical observations about physical state.` },
+      { label: 'Detailed', content: `- Caring behaviors must manifest as offers to help ('are you okay?' 'we can take a break') not observations. Dialogue about physical state is prohibited unless phrased as a question about wellbeing. All concern must be expressed through character-specific care (e.g., comforting words, offers to ease burdens). Avoid cliches (e.g., 'you're favoring your left side' or 'you're shaking') and replace them with gentle check-ins instead.` }
+    ]
   },
   
   // --- Core Emotional Control ---
@@ -3741,6 +3811,23 @@ export const COMPONENTS = [
     description: 'The world is lenient and allows recovery from mistakes.',
     purpose: 'For casual play. Mistakes have consequences but rarely fatal ones. Story continues.',
     content: `- The world is forgiving by default; mistakes are recoverable, NPCs give second chances, and failure opens alternative paths.`
+  },
+  {
+    id: 'regular-person-pc',
+    name: 'PC is a Regular Person',
+    category: 'gameplay',
+    group: 'world-difficulty',
+    groupOrder: 3,
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['difficulty', 'realism', 'character', 'grounded', 'omg'],
+    models: ['All Models'],
+    combinesWith: ['world-not-revolving', 'realistic-consequences'],
+    description: 'The player character is an ordinary person with no special authority.',
+    purpose: 'Prevents the AI from treating the PC as inherently important, powerful, or in charge. NPCs don\'t defer to them without reason.',
+    content: `- The main character is just a regular person; they are not in charge and have no extra authority unless established otherwise.`
   },
 
   // --- Character Control Levels ---
