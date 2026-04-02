@@ -52,7 +52,7 @@
     <Transition name="slide">
       <div v-if="isGuideSectionExpanded('overview')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          AI Dungeon's underlying AI models were trained on vast amounts of text that includes <strong>markdown, code, and structured formatting</strong>. Because of this, certain symbols and syntax patterns carry meaning to the AI even inside a plain-text adventure. Learning to use them gives you more precise control over the narrative.
+          AI Dungeon's AI models were trained on vast amounts of text including <strong>markdown, code, and structured formatting</strong>. Because of this, certain symbols carry meaning to the AI even inside a plain-text adventure, giving you more precise control over the narrative.
         </p>
 
         <div class="grid md:grid-cols-2 gap-3">
@@ -62,7 +62,7 @@
               Why They Work
             </h3>
             <p class="text-xs text-bd-text-secondary">
-              The AI recognizes markdown and structural formatting from its training data. Symbols like <code class="text-bd-amber">##</code>, <code class="text-bd-amber">[]</code>, and <code class="text-bd-amber">**</code> trigger learned associations with headings, annotations, and emphasis, giving you influence over how the AI interprets your input.
+              Symbols like <code class="text-bd-amber">##</code>, <code class="text-bd-amber">[]</code>, and <code class="text-bd-amber">**</code> trigger learned associations from the AI's training data — headings, annotations, emphasis — giving you influence over how it interprets your input.
             </p>
           </div>
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
@@ -71,7 +71,7 @@
               How to Use This Guide
             </h3>
             <p class="text-xs text-bd-text-secondary">
-              Each section below covers a specific symbol or syntax. You'll find what it does, why it works, and practical examples you can copy straight into AI Dungeon. Experiment and combine them to find what works best for your play style.
+              Each section covers a symbol: what it does, why it works, and practical examples you can use in AI Dungeon. Experiment and combine them to find what suits your play style.
             </p>
           </div>
         </div>
@@ -80,15 +80,9 @@
           <div class="flex items-start gap-2">
             <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
             <p class="text-xs text-bd-text-secondary">
-              <strong>Keep in mind:</strong> These techniques work because of patterns in the AI's training data. Results may vary between models. None of these are "official" features of AI Dungeon; they're community-discovered tricks that leverage how language models process text.
+              <strong>Community knowledge:</strong> None of these are official AI Dungeon features — they're community-discovered tricks that leverage how language models process text. This info isn't widely documented, and different players may give different answers. There are hundreds of approaches to the same problems with AI (both a blessing and a curse), so this guide focuses on the most reliable, well-tested techniques.
             </p>
           </div>
-        </div>
-
-        <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-          <p class="text-xs text-bd-text-secondary">
-            <strong>A note on discovery:</strong> This information isn't widely documented. There are hundreds of solutions to the same problems with AI, which is both a blessing and a curse. The community has pieced together these techniques through extensive research and experimentation, and different players may give you different answers. This guide represents the most reliable and well-tested approaches.
-          </p>
         </div>
       </div>
     </Transition>
@@ -111,7 +105,7 @@
     <Transition name="slide">
       <div v-if="isGuideSectionExpanded('double-hash')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          The double hash <code class="text-bd-amber">##</code> acts as a <strong>direct command to the AI</strong>. It's considered the most effective single symbol for steering AI behavior. Place it at the start of a line followed by your instruction.
+          The double hash <code class="text-bd-amber">##</code> is a <strong>direct command to the AI</strong> and the most effective single symbol for steering its behavior. Place it at the start of a line followed by your instruction.
         </p>
 
         <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
@@ -120,7 +114,7 @@
             Why It Works
           </h3>
           <p class="text-xs text-bd-text-secondary">
-            In markdown, <code>##</code> denotes a <strong>second-level heading</strong>, which the AI interprets as a new section of story or a high-level directive. It effectively tells the AI: "this is a new section heading; treat what follows as a major instruction." This is why <code>##</code> works better than <code>#</code> (too broad) or <code>###</code> (too specific) for commands.
+            In markdown, <code>##</code> is a <strong>second-level heading</strong> — the AI interprets it as a new story section or high-level directive. Think of it as saying: "this is a major instruction." It works better than <code>#</code> (too broad) or <code>###</code> (too specific) for commands.
           </p>
         </div>
 
@@ -155,7 +149,7 @@
             BetterDungeon's Command Mode
           </h3>
           <p class="text-xs text-bd-text-secondary mb-3">
-            The <a href="https://github.com/ComputerKWasTaken/BetterDungeon" target="_blank" class="text-bd-accent-primary hover:underline font-medium">BetterDungeon</a> browser extension has a <strong>Command Mode</strong> feature that puts this knowledge into practice. It adds a dedicated Command button to AI Dungeon's input menu that automatically formats your text using <code class="text-bd-amber">##</code> and other symbols.
+            The <a href="https://github.com/ComputerKWasTaken/BetterDungeon" target="_blank" class="text-bd-accent-primary hover:underline font-medium">BetterDungeon</a> extension's <strong>Command Mode</strong> puts this into practice — it adds a Command button to AI Dungeon's input menu that automatically formats your text with <code class="text-bd-amber">##</code> and other symbols.
           </p>
           <div class="flex flex-col md:flex-row gap-4 items-start">
             <div class="flex-shrink-0 rounded-lg overflow-hidden border border-bd-border-subtle">
@@ -208,7 +202,7 @@
     <Transition name="slide">
       <div v-if="isGuideSectionExpanded('square-brackets')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          Wrapping text in square brackets <code class="text-bd-blue">[ ]</code> tells the AI to <strong>keep something in mind</strong> without directly mentioning it in the story output. Think of it as a note from the author to the AI.
+          Square brackets <code class="text-bd-blue">[ ]</code> tell the AI to <strong>keep something in mind</strong> without mentioning it in the story output — like a note from the author to the AI.
         </p>
 
         <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
@@ -217,7 +211,7 @@
             Why It Works
           </h3>
           <p class="text-xs text-bd-text-secondary">
-            In the AI's training data, square brackets are commonly used as <strong>editorial annotations or author's notes</strong>, like <code>[Editor's note: ...]</code> or <code>[Translation: ...]</code>. The AI has learned that bracketed text is metadata, meaning it should be considered but not directly echoed in the narrative output.
+            In the AI's training data, square brackets appear as <strong>editorial annotations</strong> — <code>[Editor's note: ...]</code>, <code>[Translation: ...]</code>, etc. The AI treats bracketed text as metadata: something to consider but not echo in the narrative.
           </p>
         </div>
 
@@ -273,7 +267,7 @@
     <Transition name="slide">
       <div v-if="isGuideSectionExpanded('curly-braces')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          Curly braces <code class="text-bd-purple">{ }</code> act as a <strong>container for structured information</strong>. They work similarly to square brackets but are better at keeping the AI from mixing up separate pieces of data, especially useful in Story Cards.
+          Curly braces <code class="text-bd-purple">{ }</code> act as a <strong>container for structured information</strong>, similar to square brackets but better at keeping the AI from mixing up separate data blocks — especially useful in Story Cards.
         </p>
 
         <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
@@ -282,7 +276,7 @@
             Why It Works
           </h3>
           <p class="text-xs text-bd-text-secondary">
-            In programming and data formats (JSON, JavaScript, CSS), curly braces define <strong>distinct blocks or objects</strong>. The AI recognizes this structure from its training data and tends to treat content inside curly braces as a self-contained unit, helping to prevent information from bleeding between different entries.
+            In programming and data formats (JSON, JavaScript, CSS), curly braces define <strong>distinct blocks or objects</strong>. The AI recognizes this and treats content inside curly braces as a self-contained unit, preventing information from bleeding between entries.
           </p>
         </div>
 
@@ -314,7 +308,7 @@
           <div class="flex items-start gap-2">
             <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
             <p class="text-xs text-bd-text-secondary">
-              <strong>Note:</strong> Curly braces don't work perfectly all the time. The AI may still occasionally mix up information, but they perform better than square brackets when you need to keep multiple data blocks distinct within Story Cards.
+              Curly braces aren't perfect — the AI may still occasionally mix up information. But they outperform square brackets when keeping multiple data blocks distinct within Story Cards.
             </p>
           </div>
         </div>
@@ -338,7 +332,7 @@
     <Transition name="slide">
       <div v-if="isGuideSectionExpanded('greater-than')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          The greater-than symbol <code class="text-bd-green">&gt;</code> is used as a <strong>player action marker</strong>. In AI Dungeon, it precedes your Do and Say inputs. While it doesn't do much on its own, it works together with AI Dungeon's input system to signal actions.
+          The greater-than symbol <code class="text-bd-green">&gt;</code> is a <strong>player action marker</strong>. AI Dungeon automatically prepends it to your Do and Say inputs.
         </p>
 
         <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
@@ -347,7 +341,7 @@
             Why It Works
           </h3>
           <p class="text-xs text-bd-text-secondary">
-            In markdown, <code>&gt;</code> creates a <strong>blockquote</strong>. In interactive fiction and text adventures, it traditionally indicates player input. The AI has seen this convention throughout its training data and associates <code>&gt;</code> with a player taking an action, which helps it understand the boundary between narration and player input.
+            In markdown, <code>&gt;</code> creates a <strong>blockquote</strong>. In interactive fiction, it traditionally indicates player input. The AI associates <code>&gt;</code> with a player taking an action, helping it distinguish narration from player input.
           </p>
         </div>
 
@@ -366,7 +360,7 @@
               <Info class="w-3 h-3" /> How It's Used
             </h4>
             <p class="text-xs text-bd-text-secondary">
-              AI Dungeon automatically prepends <code>&gt;</code> to your <strong>Do</strong> and <strong>Say</strong> inputs. By itself, the symbol doesn't steer the AI, but combined with AI Dungeon's input system (AIN), it instructs the AI on what to do with the following token.
+              By itself <code>&gt;</code> doesn't steer the AI, but combined with AI Dungeon's input system it instructs the model on how to handle the text that follows. You generally don't need to type it manually.
             </p>
           </div>
         </div>
@@ -390,7 +384,7 @@
     <Transition name="slide">
       <div v-if="isGuideSectionExpanded('single-quotes')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          Wrapping words in single quotes <code class="text-bd-teal">' '</code> adds <strong>emphasis</strong>, signaling to the AI that those words are particularly important or should be treated as a distinct term.
+          Single quotes <code class="text-bd-teal">' '</code> add <strong>emphasis</strong>, signaling that the wrapped words are particularly important or should be treated as a distinct term.
         </p>
 
         <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
@@ -399,7 +393,7 @@
             Why It Works
           </h3>
           <p class="text-xs text-bd-text-secondary">
-            In written text, single quotes are used to highlight <strong>specific terms, titles, or concepts</strong> that deserve attention. The AI recognizes this convention and gives extra weight to quoted terms when generating its response.
+            In written text, single quotes highlight <strong>specific terms, titles, or concepts</strong>. The AI gives extra weight to quoted terms when generating its response.
           </p>
         </div>
 
@@ -446,7 +440,7 @@
     <Transition name="slide">
       <div v-if="isGuideSectionExpanded('bold-asterisks')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          Double asterisks <code class="text-bd-pink">**</code> around words provide <strong>strong emphasis</strong>, equivalent to bold in markdown. The AI interprets this as a signal that the wrapped text is especially important.
+          Double asterisks <code class="text-bd-pink">**</code> around words create <strong>strong emphasis</strong> (bold in markdown). The AI treats wrapped text as especially important.
         </p>
 
         <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
@@ -455,7 +449,7 @@
             Why It Works
           </h3>
           <p class="text-xs text-bd-text-secondary">
-            <code>**text**</code> is the markdown syntax for <strong>bold text</strong>. The AI was extensively trained on markdown-formatted content and recognizes this as strong emphasis. While AI Dungeon's interface doesn't render the markdown visually, the AI still processes and respects the emphasis when generating output.
+            <code>**text**</code> is markdown for <strong>bold text</strong>. The AI was extensively trained on markdown content and recognizes this as strong emphasis. AI Dungeon's interface won't render the bold visually, but the AI still respects it during generation.
           </p>
         </div>
 
@@ -487,7 +481,7 @@
           <div class="flex items-start gap-2">
             <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
             <p class="text-xs text-bd-text-secondary">
-              <strong>Markdown in AI Dungeon:</strong> AI Dungeon's interface can't render markdown visually, so you won't see bold text. But the AI model itself fully understands markdown syntax. The emphasis is interpreted during text generation, not during display.
+              <strong>Markdown in AI Dungeon:</strong> The interface can't render markdown visually, but the AI model fully understands it. The emphasis is interpreted during generation, not display — so it works even though you can't see it.
             </p>
           </div>
         </div>
@@ -511,7 +505,7 @@
     <Transition name="slide">
       <div v-if="isGuideSectionExpanded('other-markdown')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          Beyond the main symbols, <strong>other markdown elements</strong> can also influence the AI since it was trained on large amounts of markdown-formatted text. Here are a few additional patterns you can experiment with.
+          The AI recognizes <strong>other markdown elements</strong> from its training data. Here are a few additional patterns worth experimenting with.
         </p>
 
         <div class="space-y-3">
@@ -523,7 +517,7 @@
               <h3 class="font-semibold text-bd-text-primary text-sm">Italic / Light Emphasis</h3>
             </div>
             <p class="text-xs text-bd-text-secondary">
-              Single asterisks give a lighter emphasis than double. Useful for subtle hints or stylistic nudges. Think of it as whispering a suggestion to the AI rather than commanding it.
+              Single asterisks give lighter emphasis than double — like whispering a suggestion to the AI rather than commanding it.
             </p>
             <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary mt-2"><code>[The mood is *unsettling* but not outright horror]</code></pre>
           </div>
@@ -536,7 +530,7 @@
               <h3 class="font-semibold text-bd-text-primary text-sm">Dash Lists</h3>
             </div>
             <p class="text-xs text-bd-text-secondary">
-              Markdown lists help organize information clearly for the AI. Use them in Story Cards or AI Instructions to present structured data the AI can parse easily.
+              Markdown lists organize information clearly for the AI. Great in Story Cards or AI Instructions for structured data.
             </p>
             <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary mt-2"><code>- Name: Kael
 - Race: Elf
@@ -552,7 +546,7 @@
               <h3 class="font-semibold text-bd-text-primary text-sm">Horizontal Rule (Section Break)</h3>
             </div>
             <p class="text-xs text-bd-text-secondary">
-              Three dashes create a horizontal rule in markdown. The AI interprets this as a hard section break, which can help separate distinct blocks of information in Story Cards or instructions.
+              Three dashes create a horizontal rule — the AI interprets this as a hard section break, useful for separating distinct blocks in Story Cards or instructions.
             </p>
             <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary mt-2"><code>[Setting: Medieval Fantasy]
 ---
@@ -579,7 +573,7 @@
     <Transition name="slide">
       <div v-if="isGuideSectionExpanded('combining')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          The real power comes from <strong>combining these symbols together</strong>. Each symbol has a different function, and stacking them can create stronger, more precise instructions for the AI.
+          The real power comes from <strong>combining symbols</strong>. Each has a different function, and stacking them creates stronger, more precise instructions.
         </p>
 
         <!-- Combination Examples -->
@@ -691,7 +685,7 @@ Character: **Sera**
 
         <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
           <p class="text-xs text-bd-text-secondary">
-            These symbols and tricks are <strong>community-discovered</strong> techniques that come from understanding how the AI's training data works. They aren't magic, they're just patterns the AI has learned to recognize. The more you experiment, the better you'll get at steering your adventures exactly where you want them.
+            These are <strong>community-discovered</strong> techniques — not magic, just patterns the AI learned to recognize. The more you experiment, the better you'll get at steering your adventures exactly where you want them.
           </p>
         </div>
 
