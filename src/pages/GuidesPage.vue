@@ -74,6 +74,7 @@
     <StoryCardsGuide v-if="activeTab === 'story-cards'" />
     <ScriptsGuide v-if="activeTab === 'scripts'" />
     <BetterScriptsGuide v-if="activeTab === 'betterscripts'" />
+    <SymbolsCommandsGuide v-if="activeTab === 'symbols-commands'" />
     <AdvancedSettingsGuide v-if="activeTab === 'advanced-settings'" />
   </div>
 </template>
@@ -87,8 +88,9 @@ import StoryCardsGuide from '@/components/guides/StoryCardsGuide.vue'
 import ScriptsGuide from '@/components/guides/ScriptsGuide.vue'
 import BetterScriptsGuide from '@/components/guides/BetterScriptsGuide.vue'
 import AdvancedSettingsGuide from '@/components/guides/AdvancedSettingsGuide.vue'
+import SymbolsCommandsGuide from '@/components/guides/SymbolsCommandsGuide.vue'
 import { 
-  BookOpen, ScrollText, Bookmark, Drama, Code, Terminal, Settings
+  BookOpen, ScrollText, Bookmark, Drama, Code, Terminal, Settings, Hash
 } from 'lucide-vue-next'
 
 const route = useRoute()
@@ -104,6 +106,7 @@ const primaryTabs = [
 
 // Secondary tabs for supplemental guides
 const secondaryTabs = [
+  { id: 'symbols-commands', label: 'Symbols & Commands', icon: Hash },
   { id: 'betterscripts', label: 'BetterScripts', icon: Terminal },
   { id: 'advanced-settings', label: 'Advanced Settings', icon: Settings },
 ]
