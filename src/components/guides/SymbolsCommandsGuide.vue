@@ -84,6 +84,12 @@
             </p>
           </div>
         </div>
+
+        <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+          <p class="text-xs text-bd-text-secondary">
+            <strong>A note on discovery:</strong> This information isn't widely documented. There are hundreds of solutions to the same problems with AI, which is both a blessing and a curse. The community has pieced together these techniques through extensive research and experimentation, and different players may give you different answers. This guide represents the most reliable and well-tested approaches.
+          </p>
+        </div>
       </div>
     </Transition>
   </section>
@@ -139,6 +145,47 @@
               <li>&#8226; Introducing new plot elements or characters</li>
               <li>&#8226; Giving the AI strong narrative direction</li>
             </ul>
+          </div>
+        </div>
+
+        <!-- BetterDungeon Command Mode -->
+        <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-accent-primary/30">
+          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+            <Terminal class="w-4 h-4 text-bd-accent-primary" />
+            BetterDungeon's Command Mode
+          </h3>
+          <p class="text-xs text-bd-text-secondary mb-3">
+            The <a href="https://github.com/ComputerKWasTaken/BetterDungeon" target="_blank" class="text-bd-accent-primary hover:underline font-medium">BetterDungeon</a> browser extension has a <strong>Command Mode</strong> feature that puts this knowledge into practice. It adds a dedicated Command button to AI Dungeon's input menu that automatically formats your text using <code class="text-bd-amber">##</code> and other symbols.
+          </p>
+          <div class="flex flex-col md:flex-row gap-4 items-start">
+            <div class="flex-shrink-0 rounded-lg overflow-hidden border border-bd-border-subtle">
+              <img src="/command-mode-preview.png" alt="BetterDungeon Command Mode showing Standard, Subtle, and OOC sub-modes" class="w-full md:w-56 h-auto" />
+            </div>
+            <div class="flex-1 space-y-2">
+              <div class="text-xs text-bd-text-secondary space-y-2">
+                <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-border-subtle">
+                  <span class="font-semibold text-bd-amber">Standard</span>
+                  <code class="ml-2 text-bd-text-muted">## Your Command:</code>
+                  <p class="mt-1 text-bd-text-muted">Direct story instructions using the double hash command.</p>
+                </div>
+                <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-border-subtle">
+                  <span class="font-semibold text-bd-blue">Subtle</span>
+                  <code class="ml-2 text-bd-text-muted">[## Your Command:]</code>
+                  <p class="mt-1 text-bd-text-muted">Indirect guidance wrapped in brackets, combining <code>##</code> with <code>[]</code> for softer direction.</p>
+                </div>
+                <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-border-subtle">
+                  <span class="font-semibold text-bd-purple">OOC</span>
+                  <code class="ml-2 text-bd-text-muted">((OOC ... | User: Your Question?))</code>
+                  <p class="mt-1 text-bd-text-muted">Ask the AI a direct question outside of the story context.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3 flex items-center gap-2">
+            <a href="https://github.com/ComputerKWasTaken/BetterDungeon" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-bd-accent-primary hover:underline">
+              <ExternalLink class="w-3 h-3" />
+              Get BetterDungeon (Chrome, Edge, Firefox)
+            </a>
           </div>
         </div>
       </div>
@@ -666,7 +713,7 @@ import { ref } from 'vue'
 import { 
   Info, Lightbulb, Sparkles, Zap, AlertTriangle,
   BookOpen, MessageSquare, Hash, Bold, Quote, FileCode, Layers,
-  Braces, Brackets, ChevronRight, Check,
+  Braces, Brackets, ChevronRight, Check, Terminal, ExternalLink,
   ChevronDown, ChevronUp
 } from 'lucide-vue-next'
 
