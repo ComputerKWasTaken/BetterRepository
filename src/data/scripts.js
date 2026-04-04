@@ -589,7 +589,11 @@ updateCategoryCounts()
 export const isHookPatternScript = (script) => {
   if (!script.files || !script.files.library) return false
   const lib = script.files.library
+  // Match globalThis.X = function (Standard hook pattern)
+  // OR standalone function X(hook) (Inner Self pattern)
+  // OR standalone function X(inHook, inText, inStop) (Auto Cards pattern)
   return /globalThis\.[A-Za-z_$][A-Za-z0-9_$]*\s*=\s*function/.test(lib)
+    || /^function\s+[A-Za-z_$][A-Za-z0-9_$]*\s*\(\s*(?:hook|inHook,\s*inText,\s*inStop)\s*\)/m.test(lib)
 }
 
 // Convert a string to PascalCase function name
@@ -607,6 +611,7 @@ export const getScriptFunctionName = (script) => {
   // If it's a hook pattern script, extract the name from the library
   if (isHookPatternScript(script)) {
     const match = script.files.library.match(/globalThis\.([A-Za-z_$][A-Za-z0-9_$]*)\s*=\s*function/)
+      || script.files.library.match(/^function\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*\(\s*(?:hook|inHook,\s*inText,\s*inStop)\s*\)/m)
     if (match) return match[1]
   }
   // Otherwise generate from the script name
@@ -704,7 +709,12 @@ export const convertToHookPattern = (script) => {
 
   // Case 1: Already a hook-pattern script — return library content as-is
   if (isHookPatternScript(script)) {
-    return script.files.library
+    const lib = script.files.library
+    // If it uses a function declaration (not globalThis assignment), add registration
+    if (!/globalThis\.[A-Za-z_$]/.test(lib)) {
+      return `${lib}\nglobalThis.${fnName} = ${fnName};`
+    }
+    return lib
   }
 
   // Case 2: Multi-file script with separate lifecycle files
