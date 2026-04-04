@@ -78,7 +78,7 @@ state.chronos = state.chronos ?? {
 // Serializes an arbitrary message object into the BetterScripts protocol wrapper.
 // @param {Object} msg - The message payload to encode.
 // @returns {string} The protocol-wrapped JSON string.
-function bdMessage(msg) { return \`[[BD:\${JSON.stringify(msg)}:BD]]\`; }
+function bdMessage(msg) { return `[[BD:${JSON.stringify(msg)}:BD]]`; }
 
 // Creates (or updates) a BetterScripts widget by ID.
 // @param {string} id  - Unique widget identifier (re-using an ID updates the existing widget).
@@ -453,9 +453,9 @@ function getTimeString() {
   if (state.chronos.config.use12HourFormat) {
     const hour12 = h % 12 || 12;
     const ampm = h < 12 ? 'AM' : 'PM';
-    return \`\${hour12}:\${String(m).padStart(2, '0')} \${ampm}\`;
+    return `\${hour12}:\${String(m).padStart(2, '0')} \${ampm}`;
   }
-  return \`\${String(h).padStart(2, '0')}:\${String(m).padStart(2, '0')}\`;
+  return `\${String(h).padStart(2, '0')}:\${String(m).padStart(2, '0')}`;
 }
 
 // Advances the in-game clock by the given number of minutes.
@@ -552,7 +552,7 @@ function handleAdvanceTime(amount, unit) {
   const minutesPerUnit = UNIT_TO_MINUTES[unitLower];
   if (!minutesPerUnit) {
     const validUnits = 'minutes, hours, days, weeks, months, years';
-    return { output: \`\\nUnknown time unit: \${unit}\\nValid units: \${validUnits}\`, isCommand: true };
+    return { output: `\\nUnknown time unit: \${unit}\\nValid units: \${validUnits}`, isCommand: true };
   }
   const totalMinutes = amount * minutesPerUnit;
   if (state.chronos.config.weatherEnabled) {
@@ -569,9 +569,9 @@ function handleAdvanceTime(amount, unit) {
   }
   advanceTime(totalMinutes);
   const period = getTimePeriod(state.chronos.hour);
-  let out = \`\\nAdvanced \${amount} \${unitLower}.\\n\${period.icon} \${period.name}, \${getTimeString()} - \${getWeekday()}, \${getDateString()}\`;
+  let out = `\\nAdvanced \${amount} \${unitLower}.\\n\${period.icon} \${period.name}, \${getTimeString()} - \${getWeekday()}, \${getDateString()}`;
   if (state.chronos.config.weatherEnabled) {
-    out += \`\\n\${getWeatherDisplay()}\`;
+    out += `\\n\${getWeatherDisplay()}`;
   }
   return { output: out, isCommand: true };
 }
@@ -707,10 +707,10 @@ const CHRONOS_COMMANDS = {
   time: function () {
     const s = state.chronos;
     const period = getTimePeriod(s.hour);
-    let out = \`\\n\\u{1F550} \${getTimeString()} - \${period.icon} \${period.name}\`;
-    out += \`\\n\\u{1F4C5} \${getWeekday()}, \${getDateString()} (Turn \${info.actionCount || 0})\`;
+    let out = `\\n\\u{1F550} \${getTimeString()} - \${period.icon} \${period.name}`;
+    out += `\\n\\u{1F4C5} \${getWeekday()}, \${getDateString()} (Turn \${info.actionCount || 0})`;
     if (s.config.weatherEnabled) {
-      out += \`\\n\${getWeatherDisplay()}\`;
+      out += `\\n\${getWeatherDisplay()}`;
     }
     return { output: out, isCommand: true };
   },
@@ -719,8 +719,8 @@ const CHRONOS_COMMANDS = {
   date: function () {
     const s = state.chronos;
     const season = getSeason(s.month);
-    let out = \`\\n\${getWeekday()}, \${getDateString()}\`;
-    out += \`\\nSeason: \${season.name}\`;
+    let out = `\\n\${getWeekday()}, \${getDateString()}`;
+    out += `\\nSeason: \${season.name}`;
     return { output: out, isCommand: true };
   },
 
@@ -737,9 +737,9 @@ const CHRONOS_COMMANDS = {
       return { output: '\\nYou are already up. It is morning.', isCommand: true };
     }
     const period = getTimePeriod(state.chronos.hour);
-    let out = \`\\nYou rest and wake refreshed.\\n\${period.icon} \${period.name}, \${getTimeString()} - \${getWeekday()}, \${getDateString()}\`;
+    let out = `\\nYou rest and wake refreshed.\\n\${period.icon} \${period.name}, \${getTimeString()} - \${getWeekday()}, \${getDateString()}`;
     if (state.chronos.config.weatherEnabled) {
-      out += \`\\n\${getWeatherDisplay()}\`;
+      out += `\\n\${getWeatherDisplay()}`;
     }
     return { output: out, isCommand: true };
   },
@@ -753,7 +753,7 @@ const CHRONOS_COMMANDS = {
     setTimeTo(hour, minute);
     const period = getTimePeriod(state.chronos.hour);
     return {
-      output: \`\\nTime set to \${period.name}, \${getTimeString()}.\`,
+      output: `\\nTime set to \${period.name}, \${getTimeString()}.`,
       isCommand: true
     };
   },
@@ -773,7 +773,7 @@ const CHRONOS_COMMANDS = {
     }
     setDateTo(d, mo, y);
     return {
-      output: \`\\nDate set to \${getWeekday()}, \${getDateString()}.\`,
+      output: `\\nDate set to \${getWeekday()}, \${getDateString()}.`,
       isCommand: true
     };
   },
@@ -786,13 +786,13 @@ const CHRONOS_COMMANDS = {
     const requested = args.trim().replace(/ /g, '_');
     if (!WEATHER_CONDITIONS[requested]) {
       const valid = Object.keys(WEATHER_CONDITIONS).join(', ');
-      return { output: \`\\nUnknown condition: \${requested}\\nValid: \${valid}\`, isCommand: true };
+      return { output: `\\nUnknown condition: \${requested}\\nValid: \${valid}`, isCommand: true };
     }
     state.chronos.weather.current = requested;
     state.chronos.weather.targetTemp = calcTargetTemp();
     state.chronos.weather.temperature = state.chronos.weather.targetTemp;
     state.chronos.weather.lastChange = info.actionCount || 0;
-    return { output: \`\\nWeather set to \${getWeatherDisplay()}\`, isCommand: true };
+    return { output: `\\nWeather set to \${getWeatherDisplay()}`, isCommand: true };
   },
 
   // :weather - Displays the current weather condition, temperature, and season.
@@ -803,7 +803,7 @@ const CHRONOS_COMMANDS = {
     const s = state.chronos;
     const season = getSeason(s.month);
     return {
-      output: \`\\n\${getWeatherDisplay()}\\n\${season.name} - \${getTimePeriod(s.hour).name}\`,
+      output: `\\n\${getWeatherDisplay()}\\n\${season.name} - \${getTimePeriod(s.hour).name}`,
       isCommand: true
     };
   },
@@ -845,7 +845,7 @@ const CHRONOS_COMMANDS = {
     const sub = args.trim().toLowerCase();
 
     if (sub === 'help') {
-      return { output: \`\\n\${COMMANDS_CARD_ENTRY}\`, isCommand: true };
+      return { output: `\\n\${COMMANDS_CARD_ENTRY}`, isCommand: true };
     }
 
     if (sub === 'reset') {
@@ -865,17 +865,17 @@ const CHRONOS_COMMANDS = {
       const period = getTimePeriod(s.hour);
       const season = getSeason(s.month);
       let out = '\\n--- Chronos Status ---';
-      out += \`\\nTime: \${period.name}, \${getTimeString()} (\${s.config.use12HourFormat ? '12h' : '24h'})\`;
-      out += \`\\nDate: \${getWeekday()}, \${getDateString()}\`;
-      out += \`\\nSeason: \${season.name}\`;
-      out += \`\\nStatus: \${s.paused ? 'Paused' : 'Running'}\`;
-      out += \`\\nPacing: \${s.config.minutesPerTurn} min/turn | Turn \${info.actionCount || 0}\`;
+      out += `\\nTime: \${period.name}, \${getTimeString()} (\${s.config.use12HourFormat ? '12h' : '24h'})`;
+      out += `\\nDate: \${getWeekday()}, \${getDateString()}`;
+      out += `\\nSeason: \${season.name}`;
+      out += `\\nStatus: \${s.paused ? 'Paused' : 'Running'}`;
+      out += `\\nPacing: \${s.config.minutesPerTurn} min/turn | Turn \${info.actionCount || 0}`;
       if (s.config.weatherEnabled) {
-        out += \`\\nWeather: \${getWeatherDisplay()} (\${s.config.temperatureUnit})\`;
+        out += `\\nWeather: \${getWeatherDisplay()} (\${s.config.temperatureUnit})`;
       } else {
         out += '\\nWeather: Disabled';
       }
-      out += \`\\nDisplay: \${s.config.useBetterScripts ? 'Widgets' : s.config.showTimeInOutput ? 'Text' : 'Context only'}\`;
+      out += `\\nDisplay: \${s.config.useBetterScripts ? 'Widgets' : s.config.showTimeInOutput ? 'Text' : 'Context only'}`;
       out += '\\n---';
       return { output: out, isCommand: true };
     }
