@@ -632,7 +632,7 @@
               </p>
               <div class="grid md:grid-cols-2 gap-2 text-xs text-bd-text-secondary">
                 <div>• <strong>Edit recent actions</strong> (within buffer): Changes are considered when eventually summarized</div>
-                <div>• <strong>Edit older actions</strong>: Won't auto-update — manually edit Story Summary instead</div>
+                <div>• <strong>Edit older actions</strong>: Won't auto-update, manually edit Story Summary instead</div>
                 <div>• <strong>Undo recent actions</strong>: Works normally within the 4-action buffer</div>
                 <div>• <strong>Existing adventures</strong>: Enabling summarizes the last ~8000 tokens as initial summary</div>
               </div>

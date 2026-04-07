@@ -548,7 +548,7 @@
                 <ul class="text-[11px] text-bd-text-secondary space-y-1">
                   <li>• <strong>Input:</strong> Text box with default value showing available input structure. Modify to test different inputs.</li>
                   <li>• <strong>Submit:</strong> Sends the input, library, and script to the server for a test run.</li>
-                  <li>• <strong>Output:</strong> Shows results — <code>text</code>, <code>stop</code>, <code>logs</code>, <code>state</code>, and <code>storyCards</code>.</li>
+                  <li>• <strong>Output:</strong> Shows results: <code>text</code>, <code>stop</code>, <code>logs</code>, <code>state</code>, and <code>storyCards</code>.</li>
                 </ul>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
@@ -558,7 +558,7 @@
                 </h3>
                 <p class="text-sm text-bd-text-secondary mb-2">Shows recent console logs from adventures <strong>you personally started</strong> from this scenario.</p>
                 <ul class="text-[11px] text-bd-text-secondary space-y-1">
-                  <li>• Logs are pushed in <strong>real time</strong> — keep the editor open alongside a play test tab</li>
+                  <li>• Logs are pushed in <strong>real time</strong>, keep the editor open alongside a play test tab</li>
                   <li>• Only logs from adventures created by the scenario creator appear</li>
                   <li>• Logs are saved for <strong>15 minutes</strong></li>
                 </ul>

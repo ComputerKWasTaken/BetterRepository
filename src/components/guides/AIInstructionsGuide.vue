@@ -94,10 +94,10 @@
           <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-2">Model Defaults & When to Use Custom Instructions</h4>
           <div class="space-y-2 text-xs text-bd-text-secondary">
             <p>
-              Every AI model in AI Dungeon includes its own <strong>default system instructions</strong>, tuned specifically for that model's strengths and behavior patterns. AI Instructions are entirely <strong>optional</strong> — for many users, relying on model defaults is the most stable and effective choice.
+              Every AI model in AI Dungeon includes its own <strong>default system instructions</strong>, tuned specifically for that model's strengths and behavior patterns. AI Instructions are entirely <strong>optional</strong>, and for many users, relying on model defaults is the most stable and effective choice.
             </p>
             <p>
-              Custom instructions work best when introduced to fix <strong>specific, recurring problems</strong> rather than preemptively. Since custom instructions replace defaults entirely, be aware that <strong>switching models may require revising your instructions</strong> — different models interpret them differently.
+              Custom instructions work best when introduced to fix <strong>specific, recurring problems</strong> rather than preemptively. Since custom instructions replace defaults entirely, be aware that <strong>switching models may require revising your instructions</strong>, as different models interpret them differently.
             </p>
           </div>
         </div>
@@ -761,7 +761,7 @@
             <div>• <strong>Required Elements</strong> and their token consumption</div>
             <div>• <strong>Triggered Story Cards</strong> and which triggers matched</div>
             <div>• <strong>Memory Bank entries</strong> that were semantically retrieved</div>
-            <div>• <strong>History length</strong> — how many actions fit in context</div>
+            <div>• <strong>History length</strong>: how many actions fit in context</div>
             <div>• <strong>Total context usage</strong> vs. available space</div>
           </div>
         </div>
@@ -855,7 +855,7 @@
     <Transition name="slide">
       <div v-if="isGuideSectionExpanded('context-priority')" class="mt-4 space-y-4">
         <p class="text-bd-text-secondary">
-          Understanding where AI Instructions sit in the context — and how the AI's attention varies across it — helps you write more effective instructions.
+          Understanding where AI Instructions sit in the context, and how the AI's attention varies across it, helps you write more effective instructions.
         </p>
 
         <!-- Context Assembly Order -->
@@ -871,52 +871,52 @@
             <div class="flex items-center gap-2 text-xs">
               <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple text-[10px] font-bold flex items-center justify-center">1</span>
               <span class="text-bd-text-primary font-medium">AI Instructions</span>
-              <span class="text-bd-text-muted">— Behavioral rules (you are here)</span>
+              <span class="text-bd-text-muted">: Behavioral rules (you are here)</span>
             </div>
             <div class="flex items-center gap-2 text-xs">
               <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-green/20 text-bd-green text-[10px] font-bold flex items-center justify-center">2</span>
               <span class="text-bd-text-primary font-medium">Plot Essentials</span>
-              <span class="text-bd-text-muted">— Key story facts</span>
+              <span class="text-bd-text-muted">: Key story facts</span>
             </div>
             <div class="flex items-center gap-2 text-xs">
               <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-amber/20 text-bd-amber text-[10px] font-bold flex items-center justify-center">3</span>
               <span class="text-bd-text-primary font-medium">Story Cards</span>
-              <span class="text-bd-text-muted">— Triggered character/location info</span>
+              <span class="text-bd-text-muted">: Triggered character/location info</span>
             </div>
             <div class="flex items-center gap-2 text-xs">
               <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-teal/20 text-bd-teal text-[10px] font-bold flex items-center justify-center">4</span>
               <span class="text-bd-text-primary font-medium">Story Summary</span>
-              <span class="text-bd-text-muted">— Running plot summary</span>
+              <span class="text-bd-text-muted">: Running plot summary</span>
             </div>
             <div class="flex items-center gap-2 text-xs">
               <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-cyan/20 text-bd-cyan text-[10px] font-bold flex items-center justify-center">5</span>
               <span class="text-bd-text-primary font-medium">Memory Bank</span>
-              <span class="text-bd-text-muted">— Semantically retrieved memories</span>
+              <span class="text-bd-text-muted">: Semantically retrieved memories</span>
             </div>
             <div class="flex items-center gap-2 text-xs">
               <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-blue/20 text-bd-blue text-[10px] font-bold flex items-center justify-center">6</span>
               <span class="text-bd-text-primary font-medium">History</span>
-              <span class="text-bd-text-muted">— Recent story actions</span>
+              <span class="text-bd-text-muted">: Recent story actions</span>
             </div>
             <div class="flex items-center gap-2 text-xs">
               <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-pink/20 text-bd-pink text-[10px] font-bold flex items-center justify-center">7</span>
               <span class="text-bd-text-primary font-medium">Author's Note</span>
-              <span class="text-bd-text-muted">— Scene-specific guidance</span>
+              <span class="text-bd-text-muted">: Scene-specific guidance</span>
             </div>
             <div class="flex items-center gap-2 text-xs">
               <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-amber/20 text-bd-amber text-[10px] font-bold flex items-center justify-center">8</span>
               <span class="text-bd-text-primary font-medium">Last Action</span>
-              <span class="text-bd-text-muted">— Most recent player input</span>
+              <span class="text-bd-text-muted">: Most recent player input</span>
             </div>
             <div class="flex items-center gap-2 text-xs">
               <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-red/20 text-bd-red text-[10px] font-bold flex items-center justify-center">9</span>
               <span class="text-bd-text-primary font-medium">Front Memory</span>
-              <span class="text-bd-text-muted">— Script-injected text (not UI accessible)</span>
+              <span class="text-bd-text-muted">: Script-injected text (not UI accessible)</span>
             </div>
             <div class="flex items-center gap-2 text-xs">
               <span class="flex-shrink-0 w-5 h-5 rounded-full bg-bd-text-muted/20 text-bd-text-muted text-[10px] font-bold flex items-center justify-center">10</span>
               <span class="text-bd-text-primary font-medium">Buffer Tokens</span>
-              <span class="text-bd-text-muted">— Reserved for AI response</span>
+              <span class="text-bd-text-muted">: Reserved for AI response</span>
             </div>
           </div>
         </div>
@@ -983,7 +983,7 @@
             Trimming Priority
           </h3>
           <p class="text-xs text-bd-text-secondary mb-3">
-            When context exceeds available space, elements are trimmed in priority order. AI Instructions are medium priority — they can be trimmed if higher-priority elements take up too much space.
+            When context exceeds available space, elements are trimmed in priority order. AI Instructions are medium priority and can be trimmed if higher-priority elements take up too much space.
           </p>
           <div class="space-y-2">
             <div class="flex items-center gap-3 text-xs">

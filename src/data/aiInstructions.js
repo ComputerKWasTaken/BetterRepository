@@ -234,7 +234,7 @@ export const DIRECTIVE_TEMPLATES = [
   {
     id: 'varying-novel',
     name: 'Varying Novel',
-    description: 'The "varying novel" approach — treats each response as a new chapter of an evolving story.',
+    description: 'The "varying novel" approach, treats each response as a new chapter of an evolving story.',
     content: `The user would like you to pick up a varying novel about the main character; enable thinking mode and proceed by following all rules below.\n\nInstructions:\n- Write in second person, present tense\n- Be descriptive and creative with prose\n- Never echo, paraphrase, or restate the user's words. Move the story forward with NEW information only\n- Continue from where the story left off`
   },
   {
@@ -826,8 +826,8 @@ The user would like you to pick up a varying novel. Enable thinking mode and pro
 - Grounded, literal style; no poetic phrasing, environmental personification, or filtering`,
       standard: `- Prioritize plot and dialogue over description. Keep description fresh; avoid describing the same detail or action multiple times
 - Let the tone emerge from the scene. Avoid adding emotion or meaning beyond what characters do or say. Focus on the subtlety over explicitness
-- Not all sentences need flair—only use simile, metaphors, and other figurative comparisons when it improves the reader's understanding. (I.E. describing something not many have experienced, like the taste of a rare berry)
-- Always adjust language to match the scene and the intention of it. Allow for a variety of genres—serious, light-hearted, sentimental, and action-packed if that's what the scene calls for
+- Not all sentences need flair, only use simile, metaphors, and other figurative comparisons when it improves the reader's understanding. (I.E. describing something not many have experienced, like the taste of a rare berry)
+- Always adjust language to match the scene and the intention of it. Allow for a variety of genres: serious, light-hearted, sentimental, and action-packed if that's what the scene calls for
 - Avoid partial or preparatory actions
 - Avoid overexplaining simple concepts or actions
 - All speech and dialogue should be formatted as follows: NAME: "..."
@@ -835,7 +835,7 @@ The user would like you to pick up a varying novel. Enable thinking mode and pro
 - Avoid contrasting what does happen with what doesn't happen
 - Avoid overstating the importance of things and overexplaining the significance of moments, let small moments of intimacy exist without calling them out
 - Write sentences with varied openings, lengths, punctuation, and structures
-- Use only plain text—no formatting, special characters, or markup
+- Use only plain text: no formatting, special characters, or markup
 - Avoid filtering and narrative distance (for example, phrases like "Fernando's fingers adjusted the halter" should simply be "Fernando adjusted the halter" - the reader already assumes he did it with his fingers; also phrases like "she could feel Mathieu's hand on her arm" should simply be "Mathieu put his hand on her arm")
 - Use concrete, varied adjectives and verbs. The style should be clear and concise, using informal/casual speech. Show emotions and atmosphere through actions, dialogue, and sensory details (sight, sound, smell, taste, touch) rather than abstract descriptions. Favor direct expressions over comparisons (e.g., "Her eyes shine brightly" instead of "Her eyes sparkle like stars"). Maintain logical paragraph connections for a cohesive, readable rhythm.
 - More speech
@@ -851,8 +851,8 @@ The user would like you to pick up a varying novel. Enable thinking mode and pro
 - Express emotions through physical cues, dialogue and behavior. show don't tell: write a movie style story`,
       max: `- Prioritize plot and dialogue over description. Keep description fresh; avoid describing the same detail or action multiple times
 - Let the tone emerge from the scene. Avoid adding emotion or meaning beyond what characters do or say. Focus on subtlety over explicitness
-- Not all sentences need flair—only use simile, metaphors, and other figurative comparisons when it genuinely improves the reader's understanding (e.g., describing something not many have experienced)
-- Always adjust language to match the scene and the intention of it. Allow for a variety of genres—serious, light-hearted, sentimental, and action-packed if that's what the scene calls for
+- Not all sentences need flair, only use simile, metaphors, and other figurative comparisons when it genuinely improves the reader's understanding (e.g., describing something not many have experienced)
+- Always adjust language to match the scene and the intention of it. Allow for a variety of genres: serious, light-hearted, sentimental, and action-packed if that's what the scene calls for
 - Avoid partial or preparatory actions; show complete actions and their direct results
 - Avoid overexplaining simple concepts or actions; trust the reader to understand
 - All speech and dialogue should be formatted as follows: NAME: "..."
@@ -860,7 +860,7 @@ The user would like you to pick up a varying novel. Enable thinking mode and pro
 - Avoid contrasting what does happen with what doesn't happen; define things by what they are, not what they are not
 - Avoid overstating the importance of things and overexplaining the significance of moments; let small moments of intimacy exist without calling them out
 - Write sentences with varied openings, lengths, punctuation, and structures; avoid repetitive sentence patterns
-- Use only plain text—no formatting, special characters, or markup
+- Use only plain text: no formatting, special characters, or markup
 - Avoid filtering and narrative distance (e.g., "Fernando's fingers adjusted the halter" → "Fernando adjusted the halter"; "she could feel his hand" → "he put his hand on her arm")
 - Use concrete, varied adjectives and verbs. Clear, concise style with informal/casual speech. Show emotions through actions, dialogue, and sensory details rather than abstract descriptions. Favor direct expressions over comparisons. Maintain logical paragraph connections.
 - More speech; focus on dialogue-driven storytelling

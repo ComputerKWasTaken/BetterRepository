@@ -358,7 +358,7 @@
             <Lightbulb class="w-3 h-3" /> When to Adjust
           </h4>
           <p class="text-xs text-bd-text-secondary">
-            <strong>Lower values</strong> = more focused, predictable story progression. <strong>Higher values</strong> = more variety, but may include unlikely tokens. Works best <strong>in tandem with Top-P</strong>. Not all models support Top-K — check if it’s available in your Advanced Settings.
+            <strong>Lower values</strong> = more focused, predictable story progression. <strong>Higher values</strong> = more variety, but may include unlikely tokens. Works best <strong>in tandem with Top-P</strong>. Not all models support Top-K: check if it’s available in your Advanced Settings.
           </p>
         </div>
       </div>
@@ -482,7 +482,7 @@
         </div>
 
         <div class="p-2 rounded bg-bd-amber/5 border border-bd-amber/20">
-          <p class="text-xs text-bd-text-secondary"><strong>Penalty stacking:</strong> Presence, Frequency, and Repetition penalties all apply simultaneously. Combined effects can be stronger than intended — use only what’s necessary.</p>
+          <p class="text-xs text-bd-text-secondary"><strong>Penalty stacking:</strong> Presence, Frequency, and Repetition penalties all apply simultaneously. Combined effects can be stronger than intended, use only what’s necessary.</p>
         </div>
       </div>
     </Transition>
