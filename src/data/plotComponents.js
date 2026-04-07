@@ -22,7 +22,7 @@
 //
 // 3. CONCISE & STRUCTURED
 //    Templates should be as short as possible while remaining useful.
-//    Author's Notes especially must stay concise — they have the strongest
+//    Author's Notes especially must stay concise because they have the strongest
 //    influence but limited space. Use line breaks and labels for clarity.
 //
 // 4. DIFFICULTY RATING

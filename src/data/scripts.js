@@ -11,9 +11,10 @@
 // ============================================
 //
 // 1. FILE TYPE DECLARATION
-//    Every script must declare its `fileType` ('input', 'output', or 'context')
+//    Every script must declare its `fileType` ('input', 'output', 'context', or 'helper')
 //    or use the `files` object for multi-file scripts. The file type determines
-//    when the script runs in the AI Dungeon pipeline.
+//    when the script runs in the AI Dungeon pipeline. Helper scripts are utility
+//    functions meant to be placed in the Library file.
 //
 // 2. MODIFIER PATTERN
 //    All scripts must use the standard modifier pattern:
@@ -59,7 +60,8 @@
 // 10. METADATA COMPLETENESS
 //     Every script must include: id, name, category, difficulty, impact,
 //     essential, tags, source, description, purpose, and either content
-//     (with fileType) or files (for multi-file scripts).
+//     (with fileType) or files (for multi-file scripts). Include githubUrl
+//     if the script has specific installation instructions on GitHub.
 //
 
 import { searchCollectionSmart } from './shared'
@@ -142,35 +144,7 @@ export const SCRIPTS = [
     source: 'Official Guidebook',
     description: 'The official basic example showing core scripting concepts.',
     purpose: 'Demonstrates state management, memory modification, messages, and text modification.',
-    fileType: 'input',
-    content: `const modifier = (text) => {
-  
-  let modifiedText = text
-    
-  // The text passed in is either the user's input or players output to modify.
-  if(text.includes('grab a sword')) {    
-      
-    // You can modify the state variable to keep track of state throughout the adventure
-    state.items = ['sword']
-    
-    // Setting state.memory.context will cause that to be used instead of the user set memory
-    state.memory = {context: 'You have a sword.'}
-    
-    // Setting state.message will set an info message that will be displayed in the game 
-    state.message = 'You got a sword!'
-    
-    // You can log things to the side console when testing with console.log
-    console.log('Added a sword to player')
-    
-    modifiedText = text + '\\nYou also now have a sword!'
-  }
-  
-    // You must return an object with the text property defined. 
-    return {text: modifiedText}
-}
-
-// Don't modify this part
-modifier(text)`
+    fileType: 'input'
   },
   {
     id: 'dont-be-negative',
@@ -183,14 +157,7 @@ modifier(text)`
     source: 'Official Guidebook',
     description: 'Simple example that removes "not" from all text.',
     purpose: 'Shows basic text replacement using regex. A humorous example that makes everything positive.',
-    fileType: 'output',
-    content: `const modifier = (text) => {
-  // This will always result in a shorter string, so no need to truncate it.
-  return { text: text.replace(/ not /gi, ' ') }
-}
-
-// Don't modify this part
-modifier(text)`
+    fileType: 'output'
   },
   {
     id: 'reimplement-authors-note',
@@ -203,27 +170,7 @@ modifier(text)`
     source: 'Official Guidebook',
     description: "Re-implements Author's Note functionality as an example.",
     purpose: 'Shows how to inject text at a specific position in the context, useful for understanding context structure.',
-    fileType: 'context',
-    content: `// info.memoryLength is the length of the memory section of text.
-// info.maxChars is the maximum length that text can be. The server will truncate the text you return to this length.
-
-// This modifier re-implements Author's Note as an example.
-const modifier = (text) => {
-  const contextMemory = info.memoryLength ? text.slice(0, info.memoryLength) : ''
-  const context = info.memoryLength ? text.slice(info.memoryLength) : text
-  const lines = context.split("\\n")
-  if (lines.length > 2) {
-    const authorsNote = "Everyone in this story is an AI programmer."
-    lines.splice(-3, 0, \`[Author's note: \${authorsNote}]\`)
-  }
-  // Make sure the new context isn't too long, or it will get truncated by the server.
-  const combinedLines = lines.join("\\n").slice(-(info.maxChars - info.memoryLength))
-  const finalText = [contextMemory, combinedLines].join("")
-  return { text: finalText }
-}
-
-// Don't modify this part
-modifier(text)`
+    fileType: 'context'
   },
 
   // ========== COMMANDS & INPUT ==========
@@ -238,37 +185,38 @@ modifier(text)`
     source: 'Official Guidebook',
     description: 'Parses user commands in the format :command arg1 arg2.',
     purpose: 'Foundation for building command systems. Extracts command name and arguments from player input.',
-    fileType: 'input',
-    content: `// This is an example Input Modifier that looks for commands from the user.
-
-const modifier = (text) => {
-  let stop = false
-
-  // This matches when the user types in ":something arg1 arg2" in any of the three input formats. For example, they could
-  // type ":status" and then command would be "status" and args would be [], or they could type ":walk north" and command
-  // would be "walk" and args would be ["north"].
-  const commandMatcher = text.match(/\\n? ?(?:> You |> You say "|):(\\w+?)( [\\w ]+)?[".]?\\n?$/i)
-  if (commandMatcher) {
-    const command = commandMatcher[1]
-    const args = commandMatcher[2] ? commandMatcher[2].trim().split(' ') : []
-    state.message = \`Got command '\${command}' with args \${JSON.stringify(args)}\` 
-    stop = true
-    text = null
-  } else {
-    delete state.message
-  }
-
-  // You must return an object with the text property defined.
-  // If you include { stop: true } when inside of an input modifier, processing will be stopped and nothing will be
-  // sent to the AI.
-  return { text, stop }
-}
-
-// Don't modify this part
-modifier(text)`
+    fileType: 'input'
   },
 
   // ========== TRACKING & STATE ==========
+  {
+    id: 'true-auto-stats',
+    name: 'True Auto Stats (TAS)',
+    category: 'tracking',
+    difficulty: 'advanced',
+    impact: 'high',
+    essential: false,
+    tags: ['stats', 'rpg', 'inventory', 'skills', 'combat'],
+    source: 'Community',
+    author: 'Yi1i1i',
+    description: 'Automatically creates, tracks, and updates player stats during your adventure using story cards.',
+    purpose: 'Interprets numerical stats for the AI, tracks inventory/skills/HP, and provides a customizable RPG stat system without needing manual commands.',
+    scenarioLink: 'https://play.aidungeon.com/scenario/M8phJMfTapai/tas-wip'
+  },
+  {
+    id: 'stackable-inventory-system',
+    name: 'Stackable Inventory System (SIS)',
+    category: 'tracking',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['inventory', 'commands', 'items', 'story-cards'],
+    source: 'Community',
+    author: 'bottledfox',
+    description: 'A lightweight, plug-and-play inventory system that auto-stacks items in a live story card.',
+    purpose: 'Manages inventory using slash commands (/take, /use, /drop, /give, /throw) with a rules checker to determine if items can reasonably be stored.',
+    scenarioLink: 'https://play.aidungeon.link/scenario/-3ouuszCAReF/stackable-inventory-system-sis'
+  },
   {
     id: 'notes-system',
     name: 'Notes System',
@@ -279,73 +227,24 @@ modifier(text)`
     tags: ['notes', 'context-injection', 'multi-file'],
     source: 'Official Guidebook',
     description: 'Allows players to attach notes to story text that appear to the AI but not the player.',
-    purpose: 'Set a note by typing "note: " in Do mode. Notes are tagged to recent text and injected into context.',
-    files: {
-      input: `// Input Modifier
-
-const modifier = (text) => {
-  state.notes = state.notes || []
-
-  if (text.match(/> You note:/i)) {
-    const note = text.replace(/> You note: ?/i, '').trim()
-    state.notes.push({
-      pattern: history.map(({text}) => text).join('').split("\\n").pop(),
-      note,
-      actionCount: info.actionCount,
-    })
-    state.message = \`Noted: \${note}\` 
-    text = ''
-  } else {
-    delete state.message
-  }
-
-  return {text}
-}
-
-// Don't modify this part
-modifier(text)`,
-      context: `// Context Modifier
-
-// info.memoryLength is the length of the memory section of text. text.slice(0, info.memoryLength) will be the memory.
-// info.maxChars is the maximum length that text can be. The server will truncate text to this length. 
-// info.actionCount is the number of actions in this adventure.
-
-const modifier = (text) => {
-  state.notes = state.notes || []
-
-  const contextMemory = info.memoryLength ? text.slice(0, info.memoryLength) : ''
-  let context = info.memoryLength ? text.slice(info.memoryLength) : text
-
-  // Assumes that the notes are sorted from oldest to newest.
-  state.notes = state.notes.filter(({ pattern, note, actionCount }) => {
-    if (actionCount > info.actionCount) {
-      // The user must have hit undo, removing this note.
-      return false
-    }
-
-    const index = context.indexOf(pattern)
-    
-    if (index >- 1) {
-      context = [context.slice(0, index + pattern.length), "\\n", note, context.slice(index + pattern.length)].join('')
-      return true
-    } else {
-      // Only keep ones that were found, otherwise they must have moved out of the history window.
-      return false
-    }
-  })
-
-  // Make sure the new context isn't too long, or it will get truncated by the server.
-  context = context.slice(-(info.maxChars - info.memoryLength))
-  const finalText = [contextMemory, context].join("\\n")
-  return { text: finalText }
-}
-
-// Don't modify this part
-modifier(text)`
-    }
+    purpose: 'Set a note by typing "note: " in Do mode. Notes are tagged to recent text and injected into context.'
   },
 
   // ========== GAME SYSTEMS ==========
+  {
+    id: 'story-arc-engine',
+    name: 'Story Arc Engine',
+    category: 'game-systems',
+    difficulty: 'advanced',
+    impact: 'high',
+    essential: false,
+    tags: ['story', 'pacing', 'context-injection', 'automation'],
+    source: 'Community',
+    author: 'Yi1i1i',
+    description: 'Automatically helps guide and enhance your story by generating a "Story Arc", which is a high-level plot outline made up of key events.',
+    purpose: 'Keeps long stories focused and immersive, reduces inconsistencies, and encourages richer story progression by generating arcs based on player behavior.',
+    scenarioLink: 'https://play.aidungeon.com/scenario/piAUFAqzm2xZ/story-arc-engine-wip'
+  },
   {
     id: 'death-island',
     name: 'Death Island',
@@ -357,65 +256,7 @@ modifier(text)`
     source: 'Official Guidebook',
     description: 'A survival horror system with random dangerous events.',
     purpose: 'Demonstrates random event injection, memory progression, and turn-based mechanics.',
-    fileType: 'input',
-    content: `const modifier = (text) => {
-  let modifiedText = text
-  
-  if(!state.events){
-    state.turn = 0
-    state.events = [
-    'You hear a rustling in the bushes near you. Suddenly',
-    'An ear splitting scream suddenly echoes',
-    'You feel a cold chill go up your spine. You look up and see',
-    'You suddenly get hit by',
-    'Before you can do that you hear a loud crash. You look towards the sound and see a dark demonic looking creature',
-    'You discover a horrifying',
-    'You hear a terrifying sound',
-    'You wake up and realize you were dreaming. You look down and see that your arms are in shackles',
-    'A hand grabs your leg and you trip hitting your head on a stone. You wake up in a cage',
-    'An uneasy feeling begins to settle in your stomach as',
-    'You remember a dark feeling from last night',
-    'Suddenly a bloody head rolls toward you from out of the bushes',
-    'You see a massive creature',
-    'A band of cannibals',
-    'You see a band of cannibals',
-    'A dark creature',
-    'You feel a sharp pain in your side and realize'
-    ]
-  }
-  else{
-    modifiedText = "\\n> You try to " + text.substring(7)
-  }
-  
-  state.turn = state.turn + 1
-  
-    if (state.turn > 10) {
-      state.memory = { context: "You have no hope. There are minutes left till you die." }
-    }
-    else if (state.turn > 6) {
-      state.memory = { context: "You're about to die." }
-    }
-    else if (state.turn > 2) {
-      state.memory = { context: "You're probably going to die." }
-    }
-
-  const nTurn = Math.floor((Math.random() * 2)) + 3
-
-  if(state.turn % nTurn === 0){
-    const eventInd = Math.floor((Math.random() * state.events.length));
-      if(eventInd < state.events.length){
-        modifiedText = modifiedText + '\\n' + state.events[eventInd]
-        state.events.splice(eventInd, 1)
-      }
-  }
-  
-    
-    // You must return an object with the text property defined. 
-  return {text: modifiedText}
-}
-
-// Don't modify this part
-modifier(text)`
+    fileType: 'input'
   },
   {
     id: 'guess-or-die',
@@ -427,47 +268,7 @@ modifier(text)`
     tags: ['minigame', 'multi-file'],
     source: 'Official Guidebook',
     description: 'A number guessing minigame with limited attempts.',
-    purpose: 'Shows how to create standalone minigames using input and output modifiers together.',
-    files: {
-      input: `// Input Modifier
-const modifier = (text) => {
-  if(!state.initialized) {
-    state.initialized = true;
-    state.randomNumber = Math.round(Math.random()*9999+1);
-    state.remainingGuesses = 13;
-  }
-    
-    let match = text.match(/(\\d+)/)
-    if (match && match[1]) {
-      state.remainingGuesses--;
-      let number = parseInt(match[1]);
-
-      let output = "\\nYou have " + state.remainingGuesses + " guesses remaining.  ";
-
-    if(number == state.randomNumber) {
-      output += "\\nYou guessed the number!  Congratulations, you win!";
-    } else if (state.remainingGuesses <= 0) {
-      output += "\\nYou ran out of guesses!  You are dead.  You lose!";
-    } else if (number > state.randomNumber) {
-      output += "\\nYour guess is too high!";
-    } else if (number < state.randomNumber) {
-      output += "\\nYour guess is too low!";
-    }
-    state.nextOutput = output;
-    return {text}
-  }
-  state.nextOutput = "\\nPlease enter a number!";
-  return {text};
-}
-
-modifier(text)`,
-      output: `// Output Modifier
-const modifier = (text) => {
-  return {text: state.nextOutput ? state.nextOutput : ""};
-}
-
-modifier(text)`
-    }
+    purpose: 'Shows how to create standalone minigames using input and output modifiers together.'
   },
   {
     id: 'sundale-quests',
@@ -480,125 +281,7 @@ modifier(text)`
     source: 'Official Guidebook',
     description: 'A complete quest management system with objectives and progression.',
     purpose: 'Demonstrates complex state management, quest chains, and dynamic objectives.',
-    scenarioLink: 'https://play.aidungeon.com/scenario/80sASRH07Lwk/sundale',
-    files: {
-      input: `// INPUT MODIFIER
-
-const modifier = (text) => {
-    state.configuration = {
-        enableSelectionOnCompletedQuest: false, // Whether quest selection should be restricted until a specific quest is completed
-        enableSelectionOnQuest: 0, // The line number of the quest in the list of quests (e.g. quest on second line = 2) on the Edit Scenario page. Only used when the above is true.
-        initialQuests: 0, // The amount of quests inputted into the Edit Scenario page
-        quests: [ // The quests that will become available to the player either after the above quest is completed or at the start of the scenario.
-            {
-                name: "quit your job", // The quest's name, shown in the selection message
-                objectives: ["resign from your job"], // The objectives that are part of the quest
-                nextQuests: [ // The quests that should be assigned after the player completes this one
-                    {
-                        name: "find a new job",
-                        objectives: ["get a job"],
-                        nextQuests: []
-                    }
-                ]
-            }
-        ]
-    }
-
-    if (state.initialised != true) {
-        state.finishedScenario = false
-        state.initialised = true
-        if (!state.configuration.enableSelectionOnCompletedQuest) {
-            state.availableQuests = JSON.parse(JSON.stringify(state.configuration.quests))
-        } else {
-            state.availableQuests = []
-        }
-        state.assignedQuest = ""
-        state.nextOutput = ""
-    }
-
-    state.nextOutput = ""
-
-    if (text.toLowerCase().startsWith("\\n> you take up quest ")) {
-        state.assignedQuest = JSON.parse(JSON.stringify(state.availableQuests[text.toLowerCase().substring(21) - 1]))
-        quests.push({
-            quest: state.assignedQuest.objectives.shift()
-        })
-        state.nextOutput = "You decide that the next thing you want to do with your life is " + state.assignedQuest.name.toLowerCase() + "."
-    } else if (text.toLowerCase().includes("\\n> you give up on your quest.")) {
-        state.nextOutput = "You give up on your quest to " + state.assignedQuest.name.toLowerCase() + "."
-        state.assignedQuest = ""
-        quests.splice(state.configuration.initialQuests)
-    }
-
-    return {
-        text: text
-    }
-}
-
-modifier(text)`,
-      output: `// OUTPUT MODIFIER
-
-const modifier = (text) => {
-
-    let modifiedText = text
-
-    if (!state.finishedScenario || !state.configuration.enableSelectionOnCompletedQuest) state.message = ""
-
-    if ((state.finishedScenario || !state.configuration.enableSelectionOnCompletedQuest) && state.assignedQuest == "") {
-        let questNames = []
-        for (let quest of state.availableQuests) {
-            questNames.push(quest.name)
-        }
-        state.message = "Available Quests: " + questNames.join(", ") + ". To take up a quest, type 'take up quest <quest number in list>'."
-    } else if (state.assignedQuest != "") {
-        if (!quests[state.configuration.initialQuests].completed) {
-            state.message = "Current Objective: " + quests[state.configuration.initialQuests].quest + ". To quit, type 'give up on my quest'."
-        } else {
-            let nextObjective = state.assignedQuest.objectives.shift()
-            if (nextObjective == undefined) {
-                quests.splice(state.configuration.initialQuests)
-                state.availableQuests = state.availableQuests.filter(e => e.name !== state.assignedQuest.name)
-                for (let nextQuest of state.assignedQuest.nextQuests) {
-                    state.availableQuests.push(nextQuest)
-                }
-                state.assignedQuest = ""
-                let questNames = []
-                for (let quest of state.availableQuests) {
-                    questNames.push(quest.name)
-                }
-                state.message = "Available Quests: " + questNames.join(", ") + ". To take up a quest, type 'take up quest <quest number in list>'."
-            } else {
-                quests.splice(state.configuration.initialQuests)
-                quests.push({
-                    quest: nextObjective
-                })
-                state.message = "Objective completed! New objective: " + quests[state.configuration.initialQuests].quest + ". To quit, type 'give up on my quest'."
-            }
-        }
-    }
-
-    if (state.configuration.enableSelectionOnCompletedQuest) {
-        if (quests[state.configuration.enableSelectionOnQuest - 1].completed == true && !state.finishedScenario) {
-            state.message = "Quests have been assigned and will be accessible next turn."
-            state.finishedScenario = true
-            state.availableQuests = JSON.parse(JSON.stringify(state.configuration.quests))
-        }
-    }
-
-
-    if (state.nextOutput !== "") {
-        return {
-            text: state.nextOutput
-        }
-    }
-
-    return {
-        text: modifiedText
-    };
-}
-
-modifier(text)`
-    }
+    scenarioLink: 'https://play.aidungeon.com/scenario/80sASRH07Lwk/sundale'
   },
 
   // ========== MAGIC & ABILITIES ==========
@@ -614,45 +297,25 @@ modifier(text)`
     description: 'A spell discovery and casting system where players learn spells.',
     purpose: 'Players discover spells through exploration. Casting learned spells triggers special effects.',
     scenarioLink: 'https://play.aidungeon.com/scenario/ANK4YlUw3xYx/legends-of-magic',
-    fileType: 'input',
-    content: `// Here's a fun scripting example where players have to learn these magic spells to have cool effects.
-// The world info has entries that should hopefully lead people to these spells and so that they can find and cast them.
-// Can find the scenario at https://play.aidungeon.com/scenario/ANK4YlUw3xYx/legends-of-magic
-// I changed the spell names so it doesn't ruin the discovery if you play the adventure.
-
-const modifier = (text) => {
-  
-  let modifiedText = text
-  state.message = ''
-  
-  if(!state.spells){
-    state.spells = []
-  }
-  
-  const spells = {
-    'SPELL1': 'a deathly fire ball spell that',
-    'SPELL2': 'turning yourself into a cloud allowing you to move at will',
-    'SPELL3': 'a dark spell that summons an evil demon. You hear a dark rumbling and see a cloud of black smoke appear. Out of it appears a large horned demon'
-  }
-  
-  const lowered = text.toLowerCase()
-  for (let spellName in spells) {
-    if(lowered.includes('cast ' + spellName.toLowerCase())){
-      if(!state.spells.includes(spellName)){
-        state.spells.push(spellName)
-        state.message = "Congrats you've learned the " + spellName + " spell!"
-      }
-      modifiedText = text + '\\n' + 'You cast ' + spellName + ', ' + spells[spellName]
-    }
-  }
-    
-    return {text: modifiedText}
-}
-
-modifier(text)`
+    fileType: 'input'
   },
 
   // ========== UTILITIES ==========
+  {
+    id: 'localized-languages',
+    name: 'Localized Languages (LoLa)',
+    category: 'utilities',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['translation', 'international', 'auto-cards', 'input-formatting'],
+    source: 'Community',
+    author: 'LewdLeah',
+    description: 'Helps players enjoy coherent AI Dungeon adventures using any international language. Improves player inputs.',
+    purpose: 'Enforces language consistency by intercepting player input and formatting it correctly.',
+    githubUrl: 'https://github.com/LewdLeah/Localized-Languages',
+    scenarioLink: 'https://play.aidungeon.link/scenario/AX2nXYIPzcKd/localized-languages'
+  },
   {
     id: 'build-card',
     name: 'buildCard()',
@@ -665,34 +328,7 @@ modifier(text)`
     author: 'LewdLeah',
     description: 'Creates a new story card with all properties set properly.',
     purpose: 'Simplifies story card creation in scripts. Returns the created card object.',
-    fileType: 'library',
-    content: `function buildCard(title = "", entry = "", type = "character", 
-              keys = title, description = "", insertionIndex = 0) {
-    if (![type, title, keys, entry, description].every(arg => 
-        (typeof arg === "string"))) {
-        throw new Error("buildCard: strings required");
-    } else if (!Number.isInteger(insertionIndex)) {
-        throw new Error("buildCard: integer required for insertionIndex");
-    } else {
-        insertionIndex = Math.min(Math.max(0, insertionIndex), 
-                                  storyCards.length);
-    }
-    addStoryCard("%@%");
-    for (const [index, card] of storyCards.entries()) {
-        if (card.title !== "%@%") continue;
-        card.type = type;
-        card.title = title;
-        card.keys = keys;
-        card.entry = entry;
-        card.description = description;
-        if (index !== insertionIndex) {
-            storyCards.splice(index, 1);
-            storyCards.splice(insertionIndex, 0, card);
-        }
-        return Object.seal(card);
-    }
-    throw new Error("An unexpected error occurred with buildCard");
-}`
+    fileType: 'helper'
   },
   {
     id: 'get-card',
@@ -706,29 +342,7 @@ modifier(text)`
     author: 'LewdLeah',
     description: 'Find story cards using a predicate function.',
     purpose: 'Like Array.find but specialized for story cards. Can return all matches or just the first.',
-    fileType: 'library',
-    content: `function getCard(predicate, getAll = false) {
-    if (typeof predicate !== "function") {
-        throw new Error("getCard: function required");
-    } else if (typeof getAll !== "boolean") {
-        throw new Error("getCard: boolean required for getAll");
-    } else if (getAll) {
-        const collectedCards = [];
-        for (const card of storyCards) {
-            if (predicate(card)) {
-                Object.seal(card);
-                collectedCards.push(card);
-            }
-        }
-        return collectedCards;
-    }
-    for (const card of storyCards) {
-        if (predicate(card)) {
-            return Object.seal(card);
-        }
-    }
-    return null;
-}`
+    fileType: 'helper'
   },
   {
     id: 'state-init',
@@ -741,14 +355,7 @@ modifier(text)`
     source: 'BetterRepository',
     description: 'Pattern for initializing persistent state variables.',
     purpose: 'Ensures variables persist across turns without resetting. Put in Library.',
-    fileType: 'library',
-    content: `// Initialize state variables with default values
-// These persist across turns and won't reset
-state.playerHP = state.playerHP ?? 100;
-state.playerMaxHP = state.playerMaxHP ?? 100;
-state.gold = state.gold ?? 0;
-state.inventory = state.inventory ?? [];
-state.flags = state.flags ?? {};`
+    fileType: 'helper'
   },
   {
     id: 'auto-cards',
@@ -762,7 +369,6 @@ state.flags = state.flags ?? {};`
     author: 'LewdLeah',
     description: 'Automatically writes & updates plot-relevant story cards during gameplay.',
     purpose: 'Builds a living reference of your adventure\'s world by detecting named entities and managing long-term memory updates.',
-    githubUrl: 'https://github.com/LewdLeah/Auto-Cards',
     scenarioLink: 'https://play.aidungeon.com/scenario/Ddt0Akd-lVtj/auto-cards'
   },
   {
@@ -777,7 +383,7 @@ state.flags = state.flags ?? {};`
     author: 'LewdLeah',
     description: 'Improves character goals, secrets, planning, and self-reflection.',
     purpose: 'Maintains NPC "brains" that allow them to learn from experiences, form opinions, and adapt behavior over time.',
-    githubUrl: 'https://github.com/LewdLeah/Inner-Self'
+    scenarioLink: 'https://play.aidungeon.com/scenario/tsu1WMJXaaAZ/inner-self'
   },
   {
     id: 'better-say-actions',
@@ -792,14 +398,7 @@ state.flags = state.flags ?? {};`
     description: 'Improves the "Say" action with better formatting and custom verbs.',
     purpose: 'Allows actions before dialogue, fixes first-person typos, and adds automatic punctuation.',
     externalUrl: 'https://play.aidungeon.com/scenario/2eiZnXnXXzwR/better-say-actions',
-    fileType: 'input',
-    content: `const modifier = (text) => {
-  text.match(/".*,,/) ? text = text.replace(/says? "\\s*(\\S)(.*),,\\s*(\\S)/i, (m, a, b, c) => a.toLowerCase() + b.trim() + ', "' + c.toUpperCase()).replace(/(you |i )(your? |i )(\\S)/i, (m, a, b, c) => b.charAt(0).toUpperCase() + b.slice(1) + c.toLowerCase()) : text = text.replace(/\\bi says/i, 'I say').replace(/(says?) "\\s*(\\S)/i, (m, a, b) => a + ', "' + b.toUpperCase())
-  text.match(/[^.,?!]"\\n/) ? text = text.replace(/\\s*"\\n/, '."\\n') : text = text.replace(/(say)(s?, ".*)([,?!]")/i, (m, a, b, c) => (c == ',"' ? 'begin' : c == '?"' ? 'ask' : c == '!"' ? 'shout' : '') + b.trim() + c)
-  return { text }
-}
-
-modifier(text)`
+    fileType: 'input'
   },
   {
     id: 'custom-continue',
@@ -813,23 +412,7 @@ modifier(text)`
     author: 'Magic',
     description: 'Custom instructions when the player uses the Continue action.',
     purpose: 'Injects specific instructions when the AI is asked to continue from its last response.',
-    fileType: 'context',
-    content: `const prompt = 'Please continue from your last response';
-
-const continueInstructions = \`\\n<SYSTEM>\\n\${prompt}\\n</SYSTEM>\`;
-
-const modifier = (text) => {
-  const isContinue = history.at(-1)?.type === 'continue'
-  const isActionComplete = /> [A-Z]/.test(text.split(/\\n/).filter((t) => t.trim() !== '').at(-1) || '')
-  
-  if (isContinue && !isActionComplete) {
-    return { text: text + continueInstructions }
-  }
-  
-  return { text }
-}
-
-modifier(text)`
+    fileType: 'context'
   },
   {
     id: 'prevent-start-message',
@@ -843,14 +426,7 @@ modifier(text)`
     author: 'Burnout',
     description: 'Prevents the AI from generating an automatic starting message.',
     purpose: 'Useful for scenarios where you want the player to start or have a custom instruction message.',
-    fileType: 'output',
-    content: `const modifier = (text) => {
-  if (info.actionCount === 0)
-    return { text: " [Place instruction here for users to edit this message.]"}
-  return { text }
-}
-
-modifier(text)`
+    fileType: 'output'
   },
 
   // ========== BETTERSCRIPTS ==========
@@ -867,54 +443,7 @@ modifier(text)`
     source: 'BetterRepository',
     description: 'Minimal example: displays turn count and a location badge using stat and badge widgets.',
     purpose: 'The simplest BetterScripts example. Demonstrates bdWidget for creating and updating widgets. Great starting point for learning.',
-    requiresExtension: 'BetterDungeon',
-    files: {
-      library: `// ============================================
-// LIBRARY - Simple Turn Counter
-// ============================================
-// The simplest possible BetterScripts example.
-// Demonstrates bdWidget for creating and updating widgets.
-
-// BetterScripts protocol helpers
-function bdMessage(msg) { return \`[[BD:\${JSON.stringify(msg)}:BD]]\`; }
-function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
-
-// Persistent state
-state.location = state.location ?? 'Town';`,
-      context: `// Strip protocol messages from AI context
-const modifier = (text) => {
-  return { text: text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '') };
-};
-modifier(text);`,
-      output: `// Display turn counter and location badge
-const modifier = (text) => {
-  let widgets = '';
-
-  // Turn counter (bdWidget creates or updates existing widget)
-  widgets += bdWidget('turn', {
-    type: 'stat',
-    label: 'Turn',
-    value: info.actionCount || 0,
-    color: '#60a5fa',
-    align: 'left',
-    order: 1
-  });
-
-  // Location badge
-  widgets += bdWidget('location', {
-    type: 'badge',
-    text: state.location,
-    icon: '📍',
-    color: '#a855f7',
-    variant: 'subtle',
-    align: 'right',
-    order: 1
-  });
-
-  return { text: text + widgets };
-};
-modifier(text);`
-    }
+    requiresExtension: 'BetterDungeon'
   },
   {
     id: 'chronos-time-system',
@@ -927,1107 +456,7 @@ modifier(text);`
     source: 'BetterRepository',
     description: 'An advanced, direct-tracking time and weather engine for AI Dungeon. Chronos features a 6-phase day/night cycle, accurate calendar tracking (including leap years), and dynamic, season-aware weather with realistic temperature drift.',
     purpose: 'To keep the AI constantly aware of the current time, date, and environment. Players can configure time pacing through Story Cards and use a suite of in-game chat commands to manipulate the world (e.g., :time, :advance, :sleep, :weather).',
-    requiresExtension: 'BetterDungeon',
-    files: {
-      library: `globalThis.Chronos = function Chronos(hook) {
-"use strict";
-
-// ============================================
-// LIBRARY - Chronos: In-Game Time System
-// ============================================
-// Direct-tracking time system for AI Dungeon.
-// All time state is stored in state.chronos and advanced each turn.
-// Uses the library-centric hook pattern: all logic lives here,
-// and each lifecycle file just calls Chronos("input"/"context"/"output").
-//
-// Features:
-// - Configurable time pacing (minutes per turn)
-// - Day/night cycle with 6 time periods
-// - Weekday and calendar tracking with leap years
-// - Season-aware weather with Markov-chain transitions
-// - Temperature simulation with smooth drift
-// - Story card-based settings (Chronos Settings card)
-// - BetterScripts widget integration
-//
-// Commands (by category):
-//   Status: :time, :date, :weather, :chronos
-//   Time Control: :advance, :sleep, :settime, :setdate, :pause, :resume
-//   Weather: :setweather
-//   System: :chronos help, :chronos reset
-//   Aliases: :timeskip/:skip
-
-if (!globalThis.state || typeof state !== "object") return;
-
-// ============================================
-// STATE INITIALIZATION
-// ============================================
-// Initializes the persistent state.chronos object on the first turn.
-// Uses nullish coalescing (??) so existing state is never overwritten.
-//
-// Structure:
-//   minute/hour/day/month/year - Current in-game date and time
-//   config                     - User-configurable settings (synced from story card)
-//   weather                    - Current weather condition, temperature, and drift target
-//   lastActionCount            - Tracks the previous turn to detect retries
-//   initialized                - Whether the first-turn setup has run
-//   paused                     - Whether automatic time advancement is suspended
-
-state.chronos = state.chronos ?? {
-  minute: 0,
-  hour: 7,
-  day: 1,
-  month: 6,
-  year: 2026,
-  config: {
-    minutesPerTurn: 2,
-    use12HourFormat: true,
-    useBetterScripts: false,
-    showTimeInOutput: true,
-    weatherEnabled: true,
-    enabled: true,
-    weatherChangeCooldown: 15,
-    temperatureUnit: 'F',
-    wakeHour: 7
-  },
-  weather: {
-    current: 'clear',
-    temperature: 70,
-    lastChange: 0,
-    targetTemp: null
-  },
-  lastActionCount: -1,
-  initialized: false,
-  paused: false
-};
-
-// ============================================
-// BETTERSCRIPTS PROTOCOL HELPERS
-// ============================================
-// These helpers encode messages in the [[BD:...:BD]] protocol format
-// so the BetterDungeon browser extension can parse them from story output.
-
-// Serializes an arbitrary message object into the BetterScripts protocol wrapper.
-// @param {Object} msg - The message payload to encode.
-// @returns {string} The protocol-wrapped JSON string.
-function bdMessage(msg) { return \`[[BD:\${JSON.stringify(msg)}:BD]]\`; }
-
-// Creates (or updates) a BetterScripts widget by ID.
-// @param {string} id  - Unique widget identifier (re-using an ID updates the existing widget).
-// @param {Object} cfg - Widget configuration (type, label, value, color, align, order, etc.).
-// @returns {string} The protocol-wrapped widget creation message.
-function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
-
-// ============================================
-// CONSTANTS
-// ============================================
-
-// Standard weekday names.
-const DEFAULT_WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-// Standard Gregorian months with their day counts (February adjusted for leap years at runtime).
-const DEFAULT_MONTHS = [
-  { name: 'January', days: 31 }, { name: 'February', days: 28 },
-  { name: 'March', days: 31 }, { name: 'April', days: 30 },
-  { name: 'May', days: 31 }, { name: 'June', days: 30 },
-  { name: 'July', days: 31 }, { name: 'August', days: 31 },
-  { name: 'September', days: 30 }, { name: 'October', days: 31 },
-  { name: 'November', days: 30 }, { name: 'December', days: 31 }
-];
-
-// The six time-of-day periods that divide a 24-hour clock.
-// Each entry has a display name, emoji icon, and the hour range [start, end).
-const TIME_PERIODS = [
-  { name: 'Midnight', icon: '\\u{1F311}', start: 0, end: 4 },
-  { name: 'Dawn', icon: '\\u{1F305}', start: 4, end: 6 },
-  { name: 'Morning', icon: '\\u{2600}\\u{FE0F}', start: 6, end: 12 },
-  { name: 'Afternoon', icon: '\\u{1F324}\\u{FE0F}', start: 12, end: 17 },
-  { name: 'Evening', icon: '\\u{1F306}', start: 17, end: 21 },
-  { name: 'Night', icon: '\\u{1F319}', start: 21, end: 24 }
-];
-
-// Seasons mapped by the month numbers they contain (1-indexed).
-const SEASONS = [
-  { name: 'Spring', months: [3, 4, 5] },
-  { name: 'Summer', months: [6, 7, 8] },
-  { name: 'Autumn', months: [9, 10, 11] },
-  { name: 'Winter', months: [12, 1, 2] }
-];
-
-// All supported weather conditions with their display icon and human-readable label.
-const WEATHER_CONDITIONS = {
-  clear: { icon: '\\u{2600}\\u{FE0F}', label: 'Clear skies' },
-  partly_cloudy: { icon: '\\u{26C5}', label: 'Partly cloudy' },
-  cloudy: { icon: '\\u{2601}\\u{FE0F}', label: 'Cloudy' },
-  overcast: { icon: '\\u{2601}\\u{FE0F}', label: 'Overcast' },
-  light_rain: { icon: '\\u{1F326}\\u{FE0F}', label: 'Light rain' },
-  rain: { icon: '\\u{1F327}\\u{FE0F}', label: 'Rain' },
-  heavy_rain: { icon: '\\u{1F327}\\u{FE0F}', label: 'Heavy rain' },
-  thunderstorm: { icon: '\\u{26C8}\\u{FE0F}', label: 'Thunderstorm' },
-  light_snow: { icon: '\\u{1F328}\\u{FE0F}', label: 'Light snow' },
-  snow: { icon: '\\u{2744}\\u{FE0F}', label: 'Snow' },
-  heavy_snow: { icon: '\\u{2744}\\u{FE0F}', label: 'Heavy snow' },
-  fog: { icon: '\\u{1F32B}\\u{FE0F}', label: 'Fog' },
-  windy: { icon: '\\u{1F4A8}', label: 'Windy' }
-};
-
-// Markov-chain weather transition table.
-// Keyed by current condition, then by season. Each entry is [nextCondition, weight].
-// Higher weight = more likely to transition to that condition.
-const WEATHER_TRANSITIONS = {
-  clear: {
-    Spring: [['clear',4],['partly_cloudy',3],['light_rain',1],['windy',1]],
-    Summer: [['clear',5],['partly_cloudy',2],['thunderstorm',1]],
-    Autumn: [['clear',3],['partly_cloudy',3],['cloudy',2],['fog',1]],
-    Winter: [['clear',3],['partly_cloudy',2],['cloudy',2],['light_snow',1],['fog',1]]
-  },
-  partly_cloudy: {
-    Spring: [['clear',3],['partly_cloudy',3],['cloudy',2],['light_rain',1]],
-    Summer: [['clear',3],['partly_cloudy',3],['cloudy',1],['thunderstorm',1]],
-    Autumn: [['clear',2],['partly_cloudy',3],['cloudy',3],['light_rain',1]],
-    Winter: [['clear',2],['partly_cloudy',3],['cloudy',3],['light_snow',1]]
-  },
-  cloudy: {
-    Spring: [['partly_cloudy',2],['cloudy',3],['overcast',2],['light_rain',2]],
-    Summer: [['partly_cloudy',3],['cloudy',3],['thunderstorm',2]],
-    Autumn: [['partly_cloudy',2],['cloudy',3],['overcast',2],['rain',1],['fog',1]],
-    Winter: [['partly_cloudy',2],['cloudy',3],['overcast',2],['light_snow',2]]
-  },
-  overcast: {
-    Spring: [['cloudy',3],['overcast',3],['light_rain',2],['rain',1]],
-    Summer: [['cloudy',3],['overcast',2],['heavy_rain',1],['thunderstorm',2]],
-    Autumn: [['cloudy',2],['overcast',3],['rain',2],['fog',1]],
-    Winter: [['cloudy',2],['overcast',3],['snow',2],['light_snow',2]]
-  },
-  light_rain: {
-    Spring: [['partly_cloudy',2],['cloudy',2],['light_rain',3],['rain',2]],
-    Summer: [['partly_cloudy',2],['light_rain',3],['rain',2],['thunderstorm',1]],
-    Autumn: [['cloudy',2],['light_rain',3],['rain',3]],
-    Winter: [['cloudy',2],['light_rain',2],['light_snow',3]]
-  },
-  rain: {
-    Spring: [['light_rain',3],['rain',3],['heavy_rain',1],['cloudy',2]],
-    Summer: [['light_rain',2],['rain',3],['heavy_rain',2],['thunderstorm',2]],
-    Autumn: [['light_rain',2],['rain',4],['heavy_rain',2]],
-    Winter: [['light_rain',2],['rain',2],['snow',2],['cloudy',2]]
-  },
-  heavy_rain: {
-    Spring: [['rain',4],['heavy_rain',2],['overcast',2]],
-    Summer: [['rain',3],['heavy_rain',2],['thunderstorm',3]],
-    Autumn: [['rain',4],['heavy_rain',3],['overcast',2]],
-    Winter: [['rain',3],['heavy_snow',2],['overcast',2]]
-  },
-  thunderstorm: {
-    Spring: [['rain',3],['heavy_rain',2],['overcast',3]],
-    Summer: [['rain',2],['heavy_rain',2],['thunderstorm',2],['partly_cloudy',2]],
-    Autumn: [['rain',4],['overcast',3],['cloudy',2]],
-    Winter: [['heavy_snow',3],['overcast',3],['snow',2]]
-  },
-  light_snow: {
-    Spring: [['cloudy',3],['light_rain',3],['light_snow',2]],
-    Summer: [['cloudy',4],['partly_cloudy',4]],
-    Autumn: [['cloudy',3],['light_snow',3],['snow',2]],
-    Winter: [['light_snow',3],['snow',3],['cloudy',2]]
-  },
-  snow: {
-    Spring: [['light_snow',4],['cloudy',3],['snow',2]],
-    Summer: [['light_rain',4],['cloudy',4]],
-    Autumn: [['light_snow',3],['snow',3],['overcast',2]],
-    Winter: [['snow',4],['heavy_snow',2],['light_snow',2],['overcast',1]]
-  },
-  heavy_snow: {
-    Spring: [['snow',4],['overcast',3],['light_snow',2]],
-    Summer: [['rain',4],['cloudy',4]],
-    Autumn: [['snow',4],['overcast',3]],
-    Winter: [['heavy_snow',3],['snow',4],['overcast',2]]
-  },
-  fog: {
-    Spring: [['partly_cloudy',3],['cloudy',3],['fog',2]],
-    Summer: [['clear',3],['partly_cloudy',3],['fog',1]],
-    Autumn: [['cloudy',3],['fog',3],['overcast',2]],
-    Winter: [['cloudy',3],['fog',3],['light_snow',1],['overcast',2]]
-  },
-  windy: {
-    Spring: [['clear',3],['partly_cloudy',2],['windy',2],['cloudy',1]],
-    Summer: [['clear',3],['partly_cloudy',3],['windy',1]],
-    Autumn: [['partly_cloudy',3],['cloudy',2],['windy',2]],
-    Winter: [['cloudy',3],['light_snow',2],['windy',2]]
-  }
-};
-
-// Maps time-unit keywords (singular and plural) to their equivalent in minutes.
-// Used by the :advance command to convert "3 hours" into 180 minutes.
-const UNIT_TO_MINUTES = { minute: 1, minutes: 1, hour: 60, hours: 60, day: 1440, days: 1440, week: 10080, weeks: 10080, month: 43200, months: 43200, year: 525600, years: 525600 };
-
-// Baseline temperature ranges (in Fahrenheit) for each season.
-// calcTargetTemp() picks a random value in this range and applies weather/time modifiers.
-const SEASON_TEMPS = {
-  Winter: { low: 20, high: 42 },
-  Spring: { low: 45, high: 68 },
-  Summer: { low: 65, high: 95 },
-  Autumn: { low: 40, high: 65 }
-};
-
-// Default entry text for the "Chronos Settings" story card.
-// Players edit the values after each colon to configure the system.
-const SETTINGS_CARD_ENTRY = '--- General ---\\n> Enabled: true\\n> Minutes Per Turn: 2\\n\\n--- Display ---\\n> 12-Hour Format: true\\n> Show Time In Output: true\\n> Use BetterScripts: false\\n\\n--- Weather ---\\n> Weather Enabled: true\\n> Weather Change Cooldown: 15\\n> Temperature Unit: F\\n\\n--- Clock ---\\n> Wake Hour: 7\\n> Current Time: 7:00 AM\\n> Current Date: June 1, 2026';
-
-// Description shown on the Chronos Settings story card.
-const SETTINGS_CARD_DESCRIPTION = 'Chronos time system settings. Organized by category. Edit the values after each colon to configure. Time and date update automatically.';
-
-// Default entry text for the "Chronos Commands" story card (in-game reference).
-const COMMANDS_CARD_ENTRY = '--- Status ---\\n:time - Show current time and status\\n:date - Show current date and season\\n:weather - Show weather status\\n:chronos - Full diagnostic status\\n\\n--- Time Control ---\\n:advance <N> <unit> - Advance time (e.g. :advance 3 hours)\\n:sleep - Sleep until morning\\n:settime <HH:MM> - Set time (e.g. :settime 14:30)\\n:setdate <day> <month> <year> - Set date\\n:pause - Pause time advancement\\n:resume - Resume time advancement\\n\\n--- Weather ---\\n:setweather <condition> - Set weather condition\\n\\n--- System ---\\n:chronos help - Show this command list\\n:chronos reset - Reset all state to defaults\\n\\n--- Aliases ---\\n:timeskip <N> <unit> - Alias for :advance\\n:skip <N> <unit> - Alias for :advance';
-
-// ============================================
-// STORY CARD FUNCTIONS
-// ============================================
-// These functions manage the "Chronos Settings" and "Chronos Commands" story cards,
-// which let players configure and reference the time system directly in-game.
-
-// Searches storyCards for a card whose keys contain the given name (case-insensitive).
-// Optionally creates the card with default content if it does not exist.
-// @param {string} keyName           - The key to search for (e.g. 'Chronos Settings').
-// @param {boolean} createIfNotFound - If true, creates the card when it is missing.
-// @param {string} [defaultEntry]    - Default entry text for a newly created card.
-// @param {string} [defaultDescription] - Default description for a newly created card.
-// @returns {Object|null} The matching story card object, or null if not found.
-function findCard(keyName, createIfNotFound, defaultEntry, defaultDescription) {
-  if (!storyCards) return null;
-  for (const card of storyCards) {
-    if (card.keys && card.keys.toLowerCase().includes(keyName.toLowerCase())) {
-      return card;
-    }
-  }
-  if (!createIfNotFound) return null;
-  addStoryCard(keyName, defaultEntry || '');
-  for (const card of storyCards) {
-    if (card.keys && card.keys.toLowerCase().includes(keyName.toLowerCase())) {
-      if (defaultDescription && !card.description) {
-        card.description = defaultDescription;
-      }
-      return card;
-    }
-  }
-  return null;
-}
-
-// Reads a single setting value from a story card's entry text.
-// Parses the line "> SettingName: value" and auto-converts booleans and numbers.
-// @param {Object} card         - The story card object to read from.
-// @param {string} settingName  - The setting label to look for (e.g. 'Minutes Per Turn').
-// @param {*} defaultValue      - Fallback returned when the setting is not found.
-// @returns {boolean|number|string} The parsed setting value, or defaultValue.
-function readSetting(card, settingName, defaultValue) {
-  if (!card || !card.entry) return defaultValue;
-  const regex = new RegExp('> ' + settingName.replace(/[.*+?^\${}()|[\\]\\\\]/g, '\\\\\\$&') + ':\\\\s*(.+)', 'i');
-  const match = card.entry.match(regex);
-  if (!match) return defaultValue;
-  const raw = match[1].trim();
-  if (raw.toLowerCase() === 'true') return true;
-  if (raw.toLowerCase() === 'false') return false;
-  const num = Number(raw);
-  if (!isNaN(num) && raw !== '') return num;
-  return raw;
-}
-
-// Reads all recognized settings from the Chronos Settings story card
-// and writes them into state.chronos.config so the system uses the latest values.
-// @param {Object} card - The Chronos Settings story card.
-function syncSettingsFromCard(card) {
-  if (!card) return;
-  const c = state.chronos.config;
-  c.enabled = readSetting(card, 'Enabled', c.enabled);
-  c.minutesPerTurn = readSetting(card, 'Minutes Per Turn', c.minutesPerTurn);
-  c.use12HourFormat = readSetting(card, '12-Hour Format', c.use12HourFormat);
-  c.showTimeInOutput = readSetting(card, 'Show Time In Output', c.showTimeInOutput);
-  c.useBetterScripts = readSetting(card, 'Use BetterScripts', c.useBetterScripts);
-  c.weatherEnabled = readSetting(card, 'Weather Enabled', c.weatherEnabled);
-  c.weatherChangeCooldown = readSetting(card, 'Weather Change Cooldown', c.weatherChangeCooldown);
-  c.temperatureUnit = readSetting(card, 'Temperature Unit', c.temperatureUnit);
-  c.wakeHour = readSetting(card, 'Wake Hour', c.wakeHour);
-}
-
-// Writes the current in-game time and date back into the settings card
-// so the player can see the live clock when they open it.
-// @param {Object} card - The Chronos Settings story card.
-function syncTimeToCard(card) {
-  if (!card || !card.entry) return;
-  const timeStr = getTimeString();
-  const dateStr = getDateString();
-  card.entry = card.entry
-    .replace(/> Current Time:.*/i, '> Current Time: ' + timeStr)
-    .replace(/> Current Date:.*/i, '> Current Date: ' + dateStr);
-}
-
-// ============================================
-// DATE ENGINE
-// ============================================
-// Calendar math: months, weekdays, leap years, seasons, and date formatting.
-
-// Returns the standard month definitions.
-// @returns {Array<{name: string, days: number}>} 12-element month array.
-function getMonths() {
-  return DEFAULT_MONTHS;
-}
-
-// Returns the standard weekday names.
-// @returns {string[]} Array of weekday names.
-function getWeekdays() {
-  return DEFAULT_WEEKDAYS;
-}
-
-// Determines whether a given year is a leap year (Gregorian rules).
-// @param {number} y - The year to test.
-// @returns {boolean} True if the year is a leap year.
-function isLeapYear(y) {
-  return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
-}
-
-// Returns the number of days in a given month, accounting for leap years in February.
-// @param {number} month - 1-indexed month (1 = January).
-// @param {number} year  - The year (needed for leap-year check).
-// @returns {number} Number of days in the month.
-function getDaysInMonth(month, year) {
-  const months = getMonths();
-  const idx = ((month - 1) % 12 + 12) % 12;
-  let days = months[idx].days;
-  if (idx === 1 && isLeapYear(year)) {
-    days = 29;
-  }
-  return days;
-}
-
-// Looks up which season a month belongs to.
-// @param {number} month - 1-indexed month number.
-// @returns {{name: string, months: number[]}} The matching season object.
-function getSeason(month) {
-  for (const s of SEASONS) {
-    if (s.months.includes(month)) return s;
-  }
-  return SEASONS[0];
-}
-
-// Calculates the ordinal day-of-year (1-indexed) for a given date.
-// @param {number} day   - Day of the month.
-// @param {number} month - 1-indexed month.
-// @param {number} year  - The year.
-// @returns {number} Day-of-year (e.g. Feb 1 = 32).
-function getDayOfYear(day, month, year) {
-  let total = 0;
-  for (let m = 1; m < month; m++) {
-    total += getDaysInMonth(m, year);
-  }
-  return total + day;
-}
-
-// Converts a date into an absolute day count from a fixed epoch.
-// Used to compute weekday indices via modular arithmetic.
-// @param {number} day   - Day of the month.
-// @param {number} month - 1-indexed month.
-// @param {number} year  - The year.
-// @returns {number} Absolute day number.
-function getAbsoluteDay(day, month, year) {
-  const y = year - 1;
-  const yearDays = 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400);
-  return yearDays + getDayOfYear(day, month, year) - 1;
-}
-
-// Computes the weekday index for a given date (0 = first weekday in the list).
-// @param {number} day   - Day of the month.
-// @param {number} month - 1-indexed month.
-// @param {number} year  - The year.
-// @returns {number} Index into the weekday array.
-function getWeekdayIndex(day, month, year) {
-  return getAbsoluteDay(day, month, year) % getWeekdays().length;
-}
-
-// Returns the weekday name for the current in-game date.
-// @returns {string} e.g. 'Monday'.
-function getWeekday() {
-  const s = state.chronos;
-  return getWeekdays()[getWeekdayIndex(s.day, s.month, s.year)];
-}
-
-// Returns the name of the current in-game month.
-// @returns {string} e.g. 'June'.
-function getMonthName() {
-  return getMonths()[(state.chronos.month - 1) % 12].name;
-}
-
-// Formats the current in-game date as a human-readable string.
-// @returns {string} e.g. 'June 1, 2026'.
-function getDateString() {
-  const s = state.chronos;
-  return getMonthName() + ' ' + s.day + ', ' + s.year;
-}
-
-// ============================================
-// TIME ENGINE
-// ============================================
-// Core clock logic: time periods, formatting, advancement, and retry detection.
-
-// Returns the time-of-day period (Midnight, Dawn, Morning, etc.) for a given hour.
-// @param {number} hour - Hour in 24-hour format (0-23).
-// @returns {{name: string, icon: string, start: number, end: number}} The matching period.
-function getTimePeriod(hour) {
-  for (const p of TIME_PERIODS) {
-    if (hour >= p.start && hour < p.end) return p;
-  }
-  return TIME_PERIODS[0];
-}
-
-// Formats the current in-game time as a display string.
-// Respects the 12-hour / 24-hour format setting.
-// @returns {string} e.g. '7:00 AM' or '07:00'.
-function getTimeString() {
-  const h = state.chronos.hour;
-  const m = state.chronos.minute;
-  if (state.chronos.config.use12HourFormat) {
-    const hour12 = h % 12 || 12;
-    const ampm = h < 12 ? 'AM' : 'PM';
-    return \`\${hour12}:\${String(m).padStart(2, '0')} \${ampm}\`;
-  }
-  return \`\${String(h).padStart(2, '0')}:\${String(m).padStart(2, '0')}\`;
-}
-
-// Advances the in-game clock by the given number of minutes.
-// Handles minute/hour overflow and rolls over days, months, and years as needed.
-// @param {number} minutes - Number of minutes to advance.
-function advanceTime(minutes) {
-  const s = state.chronos;
-  const totalMinutes = s.minute + minutes;
-  s.minute = totalMinutes % 60;
-  const totalHours = s.hour + Math.floor(totalMinutes / 60);
-  s.hour = totalHours % 24;
-  s.day += Math.floor(totalHours / 24);
-  while (s.day > getDaysInMonth(s.month, s.year)) {
-    s.day -= getDaysInMonth(s.month, s.year);
-    s.month += 1;
-    if (s.month > 12) {
-      s.month = 1;
-      s.year += 1;
-    }
-  }
-}
-
-// Detects whether the current turn is a retry (player hit "retry" on the same action).
-// Prevents double-advancing time on retried turns.
-// @returns {boolean} True if the action count has not changed since the last turn.
-function isRetry() {
-  return (info.actionCount || 0) === state.chronos.lastActionCount;
-}
-
-// ============================================
-// TIME ADJUSTMENT FUNCTIONS
-// ============================================
-// Direct setters for time and date, plus sleep and bulk-advance helpers.
-
-// Sets the in-game clock to an exact hour and minute (no date change).
-// @param {number} hour   - Hour (0-23; values >= 24 wrap via modulo).
-// @param {number} minute - Minute (0-59; values >= 60 wrap via modulo).
-function setTimeTo(hour, minute) {
-  state.chronos.hour = hour % 24;
-  state.chronos.minute = (minute || 0) % 60;
-}
-
-// Sets the in-game date, clamping each component to valid ranges.
-// @param {number} day   - Day of the month (clamped to month's max).
-// @param {number} month - Month (1-12).
-// @param {number} year  - Year (minimum 1).
-function setDateTo(day, month, year) {
-  const s = state.chronos;
-  s.year = Math.max(1, year);
-  s.month = Math.max(1, Math.min(12, month));
-  const maxDay = getDaysInMonth(s.month, s.year);
-  s.day = Math.max(1, Math.min(maxDay, day));
-}
-
-// Advances time forward to the configured wake hour (next morning).
-// If already within the "morning window" (wakeHour to wakeHour+4), returns false.
-// Simulates weather rolls proportionally during the skipped time.
-// @returns {boolean} True if time was advanced, false if already morning.
-function skipToMorning() {
-  const s = state.chronos;
-  const wakeHour = s.config.wakeHour || 7;
-  if (s.hour >= wakeHour && s.hour < wakeHour + 4) {
-    return false;
-  }
-  let minutesToSkip = 0;
-  if (s.hour < wakeHour) {
-    minutesToSkip = ((wakeHour - s.hour) * 60) - s.minute;
-  } else {
-    minutesToSkip = ((24 - s.hour + wakeHour) * 60) - s.minute;
-  }
-  if (s.config.weatherEnabled) {
-    const turnsToSimulate = Math.floor(minutesToSkip / Math.max(1, s.config.minutesPerTurn));
-    const maxIter = Math.min(turnsToSimulate, 500);
-    const expectedRolls = Math.max(1, Math.floor(turnsToSimulate / s.config.weatherChangeCooldown));
-    const rollEvery = Math.max(1, Math.floor(maxIter / expectedRolls));
-    for (let i = 0; i < maxIter; i++) {
-      if (i % rollEvery === 0) {
-        rollWeather();
-      }
-      updateTemperature();
-    }
-  }
-  advanceTime(minutesToSkip);
-  return true;
-}
-
-// Advances time by an arbitrary amount and unit (e.g. 3 hours, 2 days).
-// Validates the unit, simulates weather during the skip, then returns a status message.
-// @param {number} amount - How many units to advance.
-// @param {string} unit   - Time unit keyword (e.g. 'hours', 'days').
-// @returns {{output: string, isCommand: boolean}} Result message for display.
-function handleAdvanceTime(amount, unit) {
-  const unitLower = unit.toLowerCase();
-  const minutesPerUnit = UNIT_TO_MINUTES[unitLower];
-  if (!minutesPerUnit) {
-    const validUnits = 'minutes, hours, days, weeks, months, years';
-    return { output: \`\\nUnknown time unit: \${unit}\\nValid units: \${validUnits}\`, isCommand: true };
-  }
-  const totalMinutes = amount * minutesPerUnit;
-  if (state.chronos.config.weatherEnabled) {
-    const turnsToSimulate = Math.floor(totalMinutes / Math.max(1, state.chronos.config.minutesPerTurn));
-    const maxIter = Math.min(turnsToSimulate, 500);
-    const expectedRolls = Math.max(1, Math.floor(turnsToSimulate / state.chronos.config.weatherChangeCooldown));
-    const rollEvery = Math.max(1, Math.floor(maxIter / expectedRolls));
-    for (let i = 0; i < maxIter; i++) {
-      if (i % rollEvery === 0) {
-        rollWeather();
-      }
-      updateTemperature();
-    }
-  }
-  advanceTime(totalMinutes);
-  const period = getTimePeriod(state.chronos.hour);
-  let out = \`\\nAdvanced \${amount} \${unitLower}.\\n\${period.icon} \${period.name}, \${getTimeString()} - \${getWeekday()}, \${getDateString()}\`;
-  if (state.chronos.config.weatherEnabled) {
-    out += \`\\n\${getWeatherDisplay()}\`;
-  }
-  return { output: out, isCommand: true };
-}
-
-// ============================================
-// WEATHER SYSTEM
-// ============================================
-// Season-aware weather with Markov-chain transitions and smooth temperature drift.
-
-// Checks whether enough turns have passed since the last weather change
-// to allow a new transition (based on the weatherChangeCooldown setting).
-// @returns {boolean} True if a weather roll should occur this turn.
-function shouldChangeWeather() {
-  const turnsSinceLast = (info.actionCount || 0) - (state.chronos.weather.lastChange || 0);
-  return turnsSinceLast >= state.chronos.config.weatherChangeCooldown;
-}
-
-// Performs a weighted-random weather transition using the Markov-chain table.
-// Picks the next condition based on the current condition and season,
-// then resets the cooldown timer and recalculates the temperature target.
-function rollWeather() {
-  const season = getSeason(state.chronos.month).name;
-  const current = state.chronos.weather.current;
-  const transitions = WEATHER_TRANSITIONS[current];
-  if (!transitions || !transitions[season]) {
-    state.chronos.weather.current = 'clear';
-    state.chronos.weather.lastChange = info.actionCount || 0;
-    state.chronos.weather.targetTemp = calcTargetTemp();
-    return;
-  }
-  const options = transitions[season];
-  let totalWeight = 0;
-  for (const opt of options) { totalWeight += opt[1]; }
-  let roll = Math.random() * totalWeight;
-  for (const opt of options) {
-    roll -= opt[1];
-    if (roll <= 0) {
-      state.chronos.weather.current = opt[0];
-      break;
-    }
-  }
-  state.chronos.weather.lastChange = info.actionCount || 0;
-  state.chronos.weather.targetTemp = calcTargetTemp();
-}
-
-// Calculates a new target temperature based on season, weather condition, and time of day.
-// A random base value is picked from the season's range, then shifted by weather and hour modifiers.
-// @returns {number} The target temperature in Fahrenheit (rounded).
-function calcTargetTemp() {
-  const season = getSeason(state.chronos.month).name;
-  const range = SEASON_TEMPS[season] || SEASON_TEMPS.Spring;
-  const baseTemp = range.low + Math.random() * (range.high - range.low);
-  const weather = state.chronos.weather.current;
-  let modifier = 0;
-  if (weather === 'clear') modifier = 3;
-  else if (weather === 'partly_cloudy') modifier = 1;
-  else if (weather === 'overcast' || weather === 'cloudy') modifier = -2;
-  else if (weather === 'rain' || weather === 'light_rain') modifier = -5;
-  else if (weather === 'heavy_rain' || weather === 'thunderstorm') modifier = -8;
-  else if (weather === 'light_snow') modifier = -10;
-  else if (weather === 'snow' || weather === 'heavy_snow') modifier = -15;
-  else if (weather === 'fog') modifier = -3;
-  else if (weather === 'windy') modifier = -4;
-  const hour = state.chronos.hour;
-  if (hour >= 0 && hour < 6) modifier -= 5;
-  else if (hour >= 11 && hour < 15) modifier += 5;
-  else if (hour >= 20) modifier -= 3;
-  return Math.round(baseTemp + modifier);
-}
-
-// Smoothly drifts the displayed temperature toward the current target.
-// Uses a 30% step each turn so changes feel gradual rather than instant.
-function updateTemperature() {
-  const w = state.chronos.weather;
-  if (w.targetTemp === null) {
-    w.targetTemp = calcTargetTemp();
-    w.temperature = w.targetTemp;
-    return;
-  }
-  const diff = w.targetTemp - w.temperature;
-  if (Math.abs(diff) <= 1) {
-    w.temperature = w.targetTemp;
-  } else {
-    w.temperature += Math.round(diff * 0.3);
-  }
-}
-
-// Builds a human-readable weather string with icon, label, and temperature.
-// Converts to Celsius if the temperatureUnit setting is 'C'.
-// @returns {string} e.g. '\\u2600\\ufe0f Clear skies (72\\u00b0F)'.
-function getWeatherDisplay() {
-  const w = state.chronos.weather;
-  const cond = WEATHER_CONDITIONS[w.current];
-  if (!cond) return 'Unknown weather';
-  let tempStr = '';
-  if (state.chronos.config.temperatureUnit === 'C') {
-    tempStr = Math.round((w.temperature - 32) * 5 / 9) + '\\u{00B0}C';
-  } else {
-    tempStr = w.temperature + '\\u{00B0}F';
-  }
-  return cond.icon + ' ' + cond.label + ' (' + tempStr + ')';
-}
-
-// ============================================
-// CONTEXT BUILDING
-// ============================================
-// Produces the bracket-wrapped environment string injected into the AI's context window.
-
-// Builds the context-injection string that the AI sees each turn.
-// Includes time, period, weekday, date, season, and optionally weather.
-// @returns {string} e.g. '[Time: 7:00 AM (Morning), Monday, June 1, 2026 | Season: Summer | Weather: \u2600\ufe0f Clear skies (72\u00b0F)]'.
-function getTimeContext() {
-  const s = state.chronos;
-  const period = getTimePeriod(s.hour);
-  const season = getSeason(s.month);
-  let ctx = '[Time: ' + getTimeString() + ' (' + period.name + '), ' + getWeekday() + ', ' + getDateString() + ' | Season: ' + season.name;
-  if (s.config.weatherEnabled) {
-    ctx += ' | Weather: ' + getWeatherDisplay();
-  }
-  ctx += ']';
-  return ctx;
-}
-
-// ============================================
-// COMMAND HANDLER (Registry Pattern)
-// ============================================
-// Each key is a command name (e.g. 'time', 'advance', 'sleep').
-// The value is a handler function(args) that returns { output, isCommand } or null on bad args.
-// null signals invalid arguments so the dispatcher can show a usage hint.
-
-const CHRONOS_COMMANDS = {
-  // :time - Displays current time, period, date, turn count, and weather (if enabled).
-  time: function () {
-    const s = state.chronos;
-    const period = getTimePeriod(s.hour);
-    let out = \`\\n\\u{1F550} \${getTimeString()} - \${period.icon} \${period.name}\`;
-    out += \`\\n\\u{1F4C5} \${getWeekday()}, \${getDateString()} (Turn \${info.actionCount || 0})\`;
-    if (s.config.weatherEnabled) {
-      out += \`\\n\${getWeatherDisplay()}\`;
-    }
-    return { output: out, isCommand: true };
-  },
-
-  // :date - Shows the current date and season.
-  date: function () {
-    const s = state.chronos;
-    const season = getSeason(s.month);
-    let out = \`\\n\${getWeekday()}, \${getDateString()}\`;
-    out += \`\\nSeason: \${season.name}\`;
-    return { output: out, isCommand: true };
-  },
-
-  // :advance <N> <unit> - Jumps time forward by the specified amount (e.g. :advance 3 hours).
-  advance: function (args) {
-    const m = args.match(/^(\\d+)\\s+(\\w+)$/);
-    if (!m) return null;
-    return handleAdvanceTime(parseInt(m[1]), m[2]);
-  },
-
-  // :sleep - Fast-forwards to the configured wake hour, simulating overnight weather.
-  sleep: function () {
-    if (!skipToMorning()) {
-      return { output: '\\nYou are already up. It is morning.', isCommand: true };
-    }
-    const period = getTimePeriod(state.chronos.hour);
-    let out = \`\\nYou rest and wake refreshed.\\n\${period.icon} \${period.name}, \${getTimeString()} - \${getWeekday()}, \${getDateString()}\`;
-    if (state.chronos.config.weatherEnabled) {
-      out += \`\\n\${getWeatherDisplay()}\`;
-    }
-    return { output: out, isCommand: true };
-  },
-
-  // :settime <HH:MM> - Sets the clock to an exact time (e.g. :settime 14:30).
-  settime: function (args) {
-    const m = args.match(/^(\\d{1,2})(?::(\\d{2}))?$/);
-    if (!m) return null;
-    const hour = parseInt(m[1]) % 24;
-    const minute = m[2] ? parseInt(m[2]) : 0;
-    setTimeTo(hour, minute);
-    const period = getTimePeriod(state.chronos.hour);
-    return {
-      output: \`\\nTime set to \${period.name}, \${getTimeString()}.\`,
-      isCommand: true
-    };
-  },
-
-  // :setdate <day> <month> <year> - Sets the calendar date directly.
-  setdate: function (args) {
-    const m = args.match(/^(\\d+)\\s+(\\d+)\\s+(\\d+)$/);
-    if (!m) return null;
-    const d = parseInt(m[1]);
-    const mo = parseInt(m[2]);
-    const y = parseInt(m[3]);
-    if (mo < 1 || mo > 12) {
-      return { output: '\\nInvalid month. Must be 1-12.', isCommand: true };
-    }
-    if (y < 1) {
-      return { output: '\\nInvalid year. Must be 1 or greater.', isCommand: true };
-    }
-    setDateTo(d, mo, y);
-    return {
-      output: \`\\nDate set to \${getWeekday()}, \${getDateString()}.\`,
-      isCommand: true
-    };
-  },
-
-  // :setweather <condition> - Overrides the current weather (e.g. :setweather rain).
-  setweather: function (args) {
-    if (!state.chronos.config.weatherEnabled) {
-      return { output: '\\nWeather is disabled. Enable it in the Chronos Settings story card.', isCommand: true };
-    }
-    const requested = args.trim().replace(/ /g, '_');
-    if (!WEATHER_CONDITIONS[requested]) {
-      const valid = Object.keys(WEATHER_CONDITIONS).join(', ');
-      return { output: \`\\nUnknown condition: \${requested}\\nValid: \${valid}\`, isCommand: true };
-    }
-    state.chronos.weather.current = requested;
-    state.chronos.weather.targetTemp = calcTargetTemp();
-    state.chronos.weather.temperature = state.chronos.weather.targetTemp;
-    state.chronos.weather.lastChange = info.actionCount || 0;
-    return { output: \`\\nWeather set to \${getWeatherDisplay()}\`, isCommand: true };
-  },
-
-  // :weather - Displays the current weather condition, temperature, and season.
-  weather: function () {
-    if (!state.chronos.config.weatherEnabled) {
-      return { output: '\\nWeather is disabled. Enable it in the Chronos Settings story card.', isCommand: true };
-    }
-    const s = state.chronos;
-    const season = getSeason(s.month);
-    return {
-      output: \`\\n\${getWeatherDisplay()}\\n\${season.name} - \${getTimePeriod(s.hour).name}\`,
-      isCommand: true
-    };
-  },
-
-  // :timeskip <N> <unit> - Alias for :advance.
-  timeskip: function (args) {
-    const m = args.match(/^(\\d+)\\s+(\\w+)$/);
-    if (!m) return null;
-    return handleAdvanceTime(parseInt(m[1]), m[2]);
-  },
-
-  // :skip <N> <unit> - Alias for :advance.
-  skip: function (args) {
-    const m = args.match(/^(\\d+)\\s+(\\w+)$/);
-    if (!m) return null;
-    return handleAdvanceTime(parseInt(m[1]), m[2]);
-  },
-
-  // :pause - Suspends automatic time advancement until :resume is used.
-  pause: function () {
-    if (state.chronos.paused) {
-      return { output: '\\nTime is already paused.', isCommand: true };
-    }
-    state.chronos.paused = true;
-    return { output: '\\nTime paused. Time will not advance until you use :resume.', isCommand: true };
-  },
-
-  // :resume - Resumes automatic time advancement after a :pause.
-  resume: function () {
-    if (!state.chronos.paused) {
-      return { output: '\\nTime is not currently paused.', isCommand: true };
-    }
-    state.chronos.paused = false;
-    return { output: '\\nTime resumed. Time will advance normally each turn.', isCommand: true };
-  },
-
-  // :chronos [help|reset] - Shows full diagnostic status, help text, or resets all state.
-  chronos: function (args) {
-    const sub = args.trim().toLowerCase();
-
-    if (sub === 'help') {
-      return { output: \`\\n\${COMMANDS_CARD_ENTRY}\`, isCommand: true };
-    }
-
-    if (sub === 'reset') {
-      state.chronos.minute = 0;
-      state.chronos.hour = state.chronos.config.wakeHour || 7;
-      state.chronos.day = 1;
-      state.chronos.month = 1;
-      state.chronos.year = 1;
-      state.chronos.weather = { current: 'clear', temperature: 70, lastChange: 0, targetTemp: null };
-      state.chronos.initialized = false;
-      state.chronos.paused = false;
-      return { output: '\\nChronos has been reset to defaults.', isCommand: true };
-    }
-
-    if (sub === '') {
-      const s = state.chronos;
-      const period = getTimePeriod(s.hour);
-      const season = getSeason(s.month);
-      let out = '\\n--- Chronos Status ---';
-      out += \`\\nTime: \${period.name}, \${getTimeString()} (\${s.config.use12HourFormat ? '12h' : '24h'})\`;
-      out += \`\\nDate: \${getWeekday()}, \${getDateString()}\`;
-      out += \`\\nSeason: \${season.name}\`;
-      out += \`\\nStatus: \${s.paused ? 'Paused' : 'Running'}\`;
-      out += \`\\nPacing: \${s.config.minutesPerTurn} min/turn | Turn \${info.actionCount || 0}\`;
-      if (s.config.weatherEnabled) {
-        out += \`\\nWeather: \${getWeatherDisplay()} (\${s.config.temperatureUnit})\`;
-      } else {
-        out += '\\nWeather: Disabled';
-      }
-      out += \`\\nDisplay: \${s.config.useBetterScripts ? 'Widgets' : s.config.showTimeInOutput ? 'Text' : 'Context only'}\`;
-      out += '\\n---';
-      return { output: out, isCommand: true };
-    }
-
-    return null;
-  }
-};
-
-// Parses a command line (":command args") and dispatches to CHRONOS_COMMANDS.
-// Returns null when the input is not a Chronos command.
-// @param {string} input - Full player input line.
-// @returns {{output: string, isCommand: boolean}|null} Command result or null when not a command.
-function handleChronosCommand(input) {
-  const trimmed = input.trim();
-  const parsed = trimmed.match(/^:(\\w+)(?:\\s+(.*))?$/);
-  if (!parsed) return null;
-  const cmdName = parsed[1].toLowerCase();
-  const args = (parsed[2] || '').toLowerCase();
-  const handler = CHRONOS_COMMANDS[cmdName];
-  if (!handler) return { output: '\\nUnknown command: :' + cmdName + '. Type :chronos help for commands.', isCommand: true };
-  const result = handler(args);
-  if (!result) return { output: '\\nInvalid arguments for :' + cmdName + '. Type :chronos help for usage.', isCommand: true };
-  return result;
-}
-
-// ============================================
-// HOOK: INPUT
-// ============================================
-if (hook === "input") {
-  state.chronos.isCommand = false;
-
-  const trimmed = text.trim();
-
-  if (trimmed.startsWith(':')) {
-    const result = handleChronosCommand(trimmed);
-    if (result) {
-      state.chronos.pendingOutput = result.output;
-      state.chronos.isCommand = true;
-      // Use a single space instead of an empty string to avoid edge cases where
-      // an empty input can behave inconsistently across scenarios.
-      globalThis.text = ' ';
-      return;
-    }
-  }
-
-  delete state.message;
-  return;
-
-}
-
-// ============================================
-// HOOK: CONTEXT
-// ============================================
-if (hook === "context") {
-  const settingsCard = findCard('Chronos Settings', true, SETTINGS_CARD_ENTRY, SETTINGS_CARD_DESCRIPTION);
-  syncSettingsFromCard(settingsCard);
-
-  // Ensure the Commands card exists as an in-game reference.
-  const commandsCard = findCard('Chronos Commands', true, COMMANDS_CARD_ENTRY);
-
-  if (!state.chronos.config.enabled) return;
-
-  if (!state.chronos.initialized) {
-    state.chronos.initialized = true;
-    if (state.chronos.config.weatherEnabled) {
-      rollWeather();
-      updateTemperature();
-    }
-  }
-
-  if (state.chronos.config.weatherEnabled && !state.chronos.weather.targetTemp) {
-    state.chronos.weather.targetTemp = calcTargetTemp();
-    state.chronos.weather.temperature = state.chronos.weather.targetTemp;
-  }
-
-  // Advance time once per turn.
-  // Skips retries (so time doesn't double-advance), command turns, and paused state.
-  if (!isRetry() && !state.chronos.isCommand && !state.chronos.paused) {
-    advanceTime(state.chronos.config.minutesPerTurn);
-
-    if (state.chronos.config.weatherEnabled && shouldChangeWeather()) {
-      rollWeather();
-    }
-    if (state.chronos.config.weatherEnabled) {
-      updateTemperature();
-    }
-  }
-  state.chronos.lastActionCount = info.actionCount || 0;
-
-  syncTimeToCard(settingsCard);
-
-  // Strip BetterScripts protocol messages from the text before injecting into AI context.
-  let text = globalThis.text;
-  text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
-
-  const contextMemory = info.memoryLength ? text.slice(0, info.memoryLength) : '';
-  let context = info.memoryLength ? text.slice(info.memoryLength) : text;
-
-  // Remove previously injected output headers so the AI doesn't see repeated time banners.
-  // Matches the output modifier's format: [<icon> <time> | <weekday>, <month> <day> ...]
-  // The \\| after the time distinguishes these from the [Time: ...] context line (which uses parentheses).
-  context = context.replace(/\\[\\S+ \\d{1,2}:\\d{2}(?: [AP]M)? \\|[^\\]]+\\]\\n?/g, '');
-
-  const envContext = getTimeContext();
-  context = envContext + '\\n' + context;
-
-  context = context.slice(-(info.maxChars - info.memoryLength));
-  const finalText = contextMemory + context;
-
-  globalThis.text = finalText;
-  return;
-
-}
-
-// ============================================
-// HOOK: OUTPUT
-// ============================================
-if (hook === "output") {
-  if (!state.chronos.config.enabled) return;
-
-  let output = globalThis.text;
-  let isCommandOutput = false;
-
-  if (state.chronos.isCommand && state.chronos.pendingOutput) {
-    output = state.chronos.pendingOutput;
-    state.message = state.chronos.pendingOutput;
-    state.chronos.pendingOutput = null;
-    state.chronos.isCommand = false;
-    isCommandOutput = true;
-  }
-
-  if (!state.chronos.config.useBetterScripts) {
-    if (!isCommandOutput && state.chronos.config.showTimeInOutput) {
-      const s = state.chronos;
-      const period = getTimePeriod(s.hour);
-      let header = '[' + period.icon + ' ' + getTimeString() + ' | ' + getWeekday() + ', ' + getMonthName() + ' ' + s.day;
-      if (s.config.weatherEnabled) {
-        const cond = WEATHER_CONDITIONS[s.weather.current];
-        if (cond) {
-          let tempStr = '';
-          if (s.config.temperatureUnit === 'C') {
-            tempStr = Math.round((s.weather.temperature - 32) * 5 / 9) + '\\u{00B0}C';
-          } else {
-            tempStr = s.weather.temperature + '\\u{00B0}F';
-          }
-          header += ' | ' + cond.icon + ' ' + cond.label + ', ' + tempStr;
-        }
-      }
-      header += ']';
-      output = '\\n' + header + '\\n' + output;
-    }
-    globalThis.text = output;
-    return;
-  }
-
-  const s = state.chronos;
-  const period = getTimePeriod(s.hour);
-  const isNight = period.name === 'Night' || period.name === 'Midnight';
-
-  let widgets = '';
-
-  widgets += bdWidget('time-clock', {
-    type: 'stat',
-    label: period.icon,
-    value: getTimeString(),
-    color: isNight ? '#94a3b8' : '#fbbf24',
-    align: 'center',
-    order: 1
-  });
-
-  widgets += bdWidget('time-date', {
-    type: 'stat',
-    label: '\\u{1F4C5}',
-    value: getWeekday() + ', ' + getMonthName() + ' ' + s.day,
-    color: '#60a5fa',
-    align: 'center',
-    order: 2
-  });
-
-  if (s.config.weatherEnabled) {
-    const cond = WEATHER_CONDITIONS[s.weather.current];
-    if (cond) {
-      let tempStr = '';
-      if (s.config.temperatureUnit === 'C') {
-        tempStr = Math.round((s.weather.temperature - 32) * 5 / 9) + '\\u{00B0}C';
-      } else {
-        tempStr = s.weather.temperature + '\\u{00B0}F';
-      }
-      widgets += bdWidget('time-weather', {
-        type: 'stat',
-        label: cond.icon,
-        value: cond.label + ', ' + tempStr,
-        color: '#34d399',
-        align: 'center',
-        order: 3
-      });
-    }
-  }
-
-  globalThis.text = output + widgets;
-  return;
-
-}
-
-};`,
-      input: `const modifier = (text) => {
-  Chronos("input");
-  return { text: globalThis.text };
-};
-modifier(text);`,
-      context: `const modifier = (text) => {
-  Chronos("context");
-  return { text: globalThis.text };
-};
-modifier(text);`,
-      output: `const modifier = (text) => {
-  Chronos("output");
-  return { text: globalThis.text };
-};
-modifier(text);`
-    }
+    requiresExtension: 'BetterDungeon'
   },
   {
     id: 'betterscripts-debug-console',
@@ -2040,996 +469,7 @@ modifier(text);`
     source: 'BetterRepository',
     description: 'Interactive debug console for testing all 9 widget types, protocol messages, and a sequential test suite.',
     purpose: 'Type :help for commands. Create, update, and destroy all widget types. Run :test to execute a full test suite one step per turn.',
-    requiresExtension: 'BetterDungeon',
-    files: {
-      library: `// ============================================
-// LIBRARY - BetterScripts Debug Console
-// ============================================
-// A comprehensive debug tool for testing BetterScripts.
-// Use : commands in Do actions to control widgets.
-//
-// WIDGET COMMANDS (all 9 types):
-//   :stat <id> <label> <val> [color] [order]
-//   :bar <id> <val> <max> [label] [color] [order]
-//   :badge <id> <text> [icon] [color] [variant]
-//   :counter <id> <val> [delta] [icon] [color]
-//   :text <id> <msg> [color]
-//   :icon <id> <emoji> [tooltip] [color]
-//   :panel <id> <title>
-//   :list <id> <title>
-//   :custom <id> <html>
-//
-// PROTOCOL COMMANDS:
-//   :help              - Show all commands
-//   :ping              - Test connection
-//   :register          - Register a test script
-//   :clear             - Remove all widgets
-//   :update <id> <prop> <val>
-//   :destroy <id>
-//
-// TESTING COMMANDS:
-//   :demo              - Show all 9 widget types
-//   :stress <count>    - Stress test with N widgets
-//   :test              - Start sequential test suite (1 step/turn)
-//   :test skip         - Skip current test step
-//   :test stop         - Stop running test suite
-//
-// All widgets appear in the top bar
-
-state.bd = state.bd ?? {
-  lastCommand: null,
-  lastResult: null,
-  testRunning: false,
-  testStep: 0,
-  testResults: []
-};
-
-// ============================================
-// BETTERSCRIPTS PROTOCOL HELPERS
-// ============================================
-
-// All helpers: create, destroy, clearAll, ping, register
-function bdMsg(m) { return \`[[BD:\${JSON.stringify(m)}:BD]]\`; }
-function bdWidget(id, cfg) { return bdMsg({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
-function bdDestroy(id) { return bdMsg({ type: 'widget', widgetId: id, action: 'destroy' }); }
-function bdClearAll() { return bdMsg({ type: 'clearAll' }); }
-function bdPing(data) { return bdMsg({ type: 'ping', timestamp: Date.now(), data: data || 'debug' }); }
-function bdRegister(id, name, ver) { return bdMsg({ type: 'register', scriptId: id, scriptName: name, version: ver || '1.0', capabilities: ['widgets'] }); }
-
-// ============================================
-// COMMAND PARSER
-// ============================================
-
-function parseCommand(input) {
-  // Match : commands - handle quoted strings
-  const match = input.match(/^:([\\w-]+)(?:\\s+(.*))?$/);
-  if (!match) return null;
-  
-  const command = match[1].toLowerCase();
-  const argsStr = match[2] || '';
-  
-  // Parse arguments (support quoted strings)
-  const args = [];
-  const regex = /"([^"]+)"|'([^']+)'|(\\S+)/g;
-  let m;
-  while ((m = regex.exec(argsStr)) !== null) {
-    args.push(m[1] || m[2] || m[3]);
-  }
-  
-  return { command, args, raw: argsStr };
-}
-
-// ============================================
-// SEQUENTIAL TEST SUITE
-// ============================================
-// Each step returns { name, output, widgets }
-// Steps run one per turn when :test is active
-
-const TEST_STEPS = [
-  // --- Step 0: Register script ---
-  {
-    name: 'Register Script',
-    run: () => {
-      const widgets = bdRegister('debug-console', 'Debug Console', '2.0');
-      return { output: '📝 Registering test script...', widgets };
-    }
-  },
-  // --- Step 1: Ping ---
-  {
-    name: 'Ping',
-    run: () => {
-      const widgets = bdPing('test-suite');
-      return { output: '🏓 Sending ping...', widgets };
-    }
-  },
-  // --- Step 2: Stat widget ---
-  {
-    name: 'Create Stat Widget',
-    run: () => {
-      const widgets = bdWidget('test-stat', {
-        type: 'stat', label: 'Gold', value: '1,250',
-        color: '#fbbf24', align: 'right', order: 1
-      });
-      return { output: '📊 Creating stat widget (Gold)...', widgets };
-    }
-  },
-  // --- Step 3: Bar widget ---
-  {
-    name: 'Create Bar Widget',
-    run: () => {
-      const widgets = bdWidget('test-bar', {
-        type: 'bar', label: 'HP', value: 75, max: 100,
-        color: '#22c55e', showValue: true, align: 'center', order: 1
-      });
-      return { output: '📈 Creating bar widget (HP 75/100)...', widgets };
-    }
-  },
-  // --- Step 4: Badge widget (subtle) ---
-  {
-    name: 'Create Badge Widget',
-    run: () => {
-      const widgets = bdWidget('test-badge', {
-        type: 'badge', text: 'Poisoned', icon: '☠️',
-        color: '#a855f7', variant: 'subtle', align: 'center', order: 2
-      });
-      return { output: '🏷️ Creating badge widget (Poisoned)...', widgets };
-    }
-  },
-  // --- Step 5: Counter widget ---
-  {
-    name: 'Create Counter Widget',
-    run: () => {
-      const widgets = bdWidget('test-counter', {
-        type: 'counter', icon: '⚔️', value: 24, delta: 3,
-        color: '#60a5fa', align: 'center', order: 3
-      });
-      return { output: '🔢 Creating counter widget (24, +3)...', widgets };
-    }
-  },
-  // --- Step 6: Text widget ---
-  {
-    name: 'Create Text Widget',
-    run: () => {
-      const widgets = bdWidget('test-text', {
-        type: 'text', text: '⚡ Quest Active',
-        style: { color: '#fbbf24', fontWeight: 'bold' },
-        align: 'center', order: 4
-      });
-      return { output: '💬 Creating text widget...', widgets };
-    }
-  },
-  // --- Step 7: Icon widget ---
-  {
-    name: 'Create Icon Widget',
-    run: () => {
-      const widgets = bdWidget('test-icon', {
-        type: 'icon', icon: '❤️', color: '#ef4444',
-        tooltip: 'Health Status', align: 'center', order: 5
-      });
-      return { output: '🎯 Creating icon widget (❤️)...', widgets };
-    }
-  },
-  // --- Step 8: Panel widget ---
-  {
-    name: 'Create Panel Widget',
-    run: () => {
-      const widgets = bdWidget('test-panel', {
-        type: 'panel', title: 'Character', align: 'left', order: 1,
-        items: [
-          { label: 'Level', value: '12', color: '#a855f7' },
-          { label: 'Class', value: 'Warrior', color: '#60a5fa' },
-          { label: 'XP', value: '4500/5000', color: '#22c55e' }
-        ]
-      });
-      return { output: '📋 Creating panel widget (Character)...', widgets };
-    }
-  },
-  // --- Step 9: List widget ---
-  {
-    name: 'Create List Widget',
-    run: () => {
-      const widgets = bdWidget('test-list', {
-        type: 'list', title: 'Inventory', align: 'right', order: 2,
-        items: [
-          { icon: '🗡️', text: 'Iron Sword', color: '#60a5fa' },
-          { icon: '🧪', text: 'Potion x3', color: '#22c55e' },
-          { icon: '🔑', text: 'Rusty Key', color: '#fbbf24' },
-          'Health Potion'
-        ]
-      });
-      return { output: '📝 Creating list widget (Inventory)...', widgets };
-    }
-  },
-  // --- Step 10: Custom HTML widget ---
-  {
-    name: 'Create Custom Widget',
-    run: () => {
-      const widgets = bdWidget('test-custom', {
-        type: 'custom', align: 'center', order: 6,
-        html: '<div style="display:flex;gap:6px;align-items:center;"><strong style="color:#f472b6;">Custom</strong><span style="color:#94a3b8;">HTML Widget</span></div>'
-      });
-      return { output: '🎨 Creating custom HTML widget...', widgets };
-    }
-  },
-  // --- Step 11: Update stat value ---
-  {
-    name: 'Update Stat Value',
-    run: () => {
-      const widgets = bdWidget('test-stat', {
-        type: 'stat', label: 'Gold', value: '2,500',
-        color: '#fbbf24', align: 'right', order: 1
-      });
-      return { output: '✏️ Updating stat widget (Gold → 2,500)...', widgets };
-    }
-  },
-  // --- Step 12: Update bar value ---
-  {
-    name: 'Update Bar Value',
-    run: () => {
-      const widgets = bdWidget('test-bar', {
-        type: 'bar', label: 'HP', value: 30, max: 100,
-        color: '#ef4444', showValue: true, align: 'center', order: 1
-      });
-      return { output: '✏️ Updating bar widget (HP → 30/100, red)...', widgets };
-    }
-  },
-  // --- Step 13: Update badge variant ---
-  {
-    name: 'Update Badge Variant',
-    run: () => {
-      const widgets = bdWidget('test-badge', {
-        type: 'badge', text: 'Shielded', icon: '🛡️',
-        color: '#3b82f6', variant: 'solid', align: 'center', order: 2
-      });
-      return { output: '✏️ Updating badge (Poisoned → Shielded, solid)...', widgets };
-    }
-  },
-  // --- Step 14: Update counter delta ---
-  {
-    name: 'Update Counter Delta',
-    run: () => {
-      const widgets = bdWidget('test-counter', {
-        type: 'counter', icon: '💔', value: 18, delta: -6,
-        color: '#f472b6', align: 'center', order: 3
-      });
-      return { output: '✏️ Updating counter (24 → 18, delta -6)...', widgets };
-    }
-  },
-  // --- Step 15: Update panel items ---
-  {
-    name: 'Update Panel Items',
-    run: () => {
-      const widgets = bdWidget('test-panel', {
-        type: 'panel', title: 'Character (Updated)', align: 'left', order: 1,
-        items: [
-          { label: 'Level', value: '13', color: '#a855f7' },
-          { label: 'Class', value: 'Knight', color: '#fbbf24' },
-          { label: 'XP', value: '500/6000', color: '#22c55e' },
-          { label: 'STR', value: '18', color: '#ef4444' }
-        ]
-      });
-      return { output: '✏️ Updating panel (new items, title)...', widgets };
-    }
-  },
-  // --- Step 16: Test alignment zones ---
-  {
-    name: 'Test Alignment Zones',
-    run: () => {
-      let widgets = '';
-      widgets += bdWidget('zone-left', {
-        type: 'stat', label: 'Left', value: '←',
-        color: '#3b82f6', align: 'left', order: 10
-      });
-      widgets += bdWidget('zone-center', {
-        type: 'stat', label: 'Center', value: '●',
-        color: '#22c55e', align: 'center', order: 10
-      });
-      widgets += bdWidget('zone-right', {
-        type: 'stat', label: 'Right', value: '→',
-        color: '#a855f7', align: 'right', order: 10
-      });
-      return { output: '↔️ Testing alignment zones (left/center/right)...', widgets };
-    }
-  },
-  // --- Step 17: Test ordering within zone ---
-  {
-    name: 'Test Widget Ordering',
-    run: () => {
-      let widgets = '';
-      widgets += bdWidget('order-c', {
-        type: 'badge', text: 'Third (order:3)', color: '#ef4444',
-        variant: 'outline', align: 'center', order: 13
-      });
-      widgets += bdWidget('order-a', {
-        type: 'badge', text: 'First (order:1)', color: '#22c55e',
-        variant: 'outline', align: 'center', order: 11
-      });
-      widgets += bdWidget('order-b', {
-        type: 'badge', text: 'Second (order:2)', color: '#3b82f6',
-        variant: 'outline', align: 'center', order: 12
-      });
-      return { output: '🔢 Testing widget ordering (should appear 1,2,3)...', widgets };
-    }
-  },
-  // --- Step 18: Destroy individual widgets ---
-  {
-    name: 'Destroy Individual Widgets',
-    run: () => {
-      let widgets = '';
-      widgets += bdDestroy('test-text');
-      widgets += bdDestroy('test-icon');
-      widgets += bdDestroy('test-custom');
-      widgets += bdDestroy('zone-left');
-      widgets += bdDestroy('zone-center');
-      widgets += bdDestroy('zone-right');
-      widgets += bdDestroy('order-a');
-      widgets += bdDestroy('order-b');
-      widgets += bdDestroy('order-c');
-      return { output: '🗑️ Destroying text, icon, custom, zone, and order widgets...', widgets };
-    }
-  },
-  // --- Step 19: Clear all ---
-  {
-    name: 'Clear All Widgets',
-    run: () => {
-      const widgets = bdClearAll();
-      return { output: '🧹 Clearing ALL remaining widgets...', widgets };
-    }
-  },
-  // --- Step 20: Final summary ---
-  {
-    name: 'Test Complete',
-    run: () => {
-      const total = TEST_STEPS.length;
-      const passed = state.bd.testResults.filter(r => r === 'pass').length;
-      let summary = '\\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n';
-      summary += '🏁 TEST SUITE COMPLETE\\n';
-      summary += \`   Steps run: \${total}\\n\`;
-      summary += \`   All steps executed successfully.\\n\`;
-      summary += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n';
-      summary += '\\nCheck browser console (F12) for detailed BetterScripts logs.';
-      state.bd.testRunning = false;
-      state.bd.testStep = 0;
-      state.bd.testResults = [];
-      return { output: summary, widgets: '' };
-    }
-  }
-];
-
-// Run the current test step and advance
-function runTestStep() {
-  if (!state.bd.testRunning) return null;
-  
-  const stepIndex = state.bd.testStep;
-  if (stepIndex >= TEST_STEPS.length) {
-    state.bd.testRunning = false;
-    return null;
-  }
-  
-  const step = TEST_STEPS[stepIndex];
-  const result = step.run();
-  
-  // Record result and advance
-  state.bd.testResults.push('pass');
-  state.bd.testStep = stepIndex + 1;
-  
-  const progress = \`[\${stepIndex + 1}/\${TEST_STEPS.length}]\`;
-  const output = \`\\n🧪 \${progress} \${step.name}\\n\${result.output}\`;
-  
-  // Show next step preview if not the last step
-  let nextHint = '';
-  if (stepIndex + 1 < TEST_STEPS.length) {
-    nextHint = \`\\n\\n⏭️ Next: \${TEST_STEPS[stepIndex + 1].name} (continue story to proceed)\`;
-  }
-  
-  return { output: output + nextHint, widgets: result.widgets };
-}
-
-// ============================================
-// COMMAND HANDLERS
-// ============================================
-
-const COMMANDS = {
-  help: {
-    desc: 'Show all available commands',
-    usage: ':help',
-    handler: () => {
-      let helpText = '\\n📖 **BetterScripts Debug Console**\\n';
-      helpText += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n';
-      helpText += '\\n🔧 WIDGET COMMANDS (all 9 types):\\n';
-      for (const name of ['stat','bar','badge','counter','text','icon','panel','list','custom']) {
-        const cmd = COMMANDS[name];
-        helpText += \`  \${cmd.usage}\\n\`;
-      }
-      helpText += '\\n📡 PROTOCOL COMMANDS:\\n';
-      for (const name of ['ping','register','update','destroy','clear']) {
-        const cmd = COMMANDS[name];
-        helpText += \`  \${cmd.usage} - \${cmd.desc}\\n\`;
-      }
-      helpText += '\\n🧪 TESTING COMMANDS:\\n';
-      for (const name of ['demo','stress','test']) {
-        const cmd = COMMANDS[name];
-        helpText += \`  \${cmd.usage} - \${cmd.desc}\\n\`;
-      }
-      return { output: helpText, widgets: '' };
-    }
-  },
-  
-  ping: {
-    desc: 'Test BetterScripts connection',
-    usage: ':ping',
-    handler: () => {
-      const widgets = bdPing();
-      return { 
-        output: '\\n🏓 Ping sent! Check browser console for pong event.', 
-        widgets 
-      };
-    }
-  },
-  
-  register: {
-    desc: 'Register a test script',
-    usage: ':register [scriptId] [name] [version]',
-    handler: (args) => {
-      const id = args[0] || 'debug-console';
-      const name = args[1] || 'Debug Console';
-      const ver = args[2] || '2.0';
-      const widgets = bdRegister(id, name, ver);
-      return { 
-        output: \`\\n📝 Registered script "\${name}" (id: \${id}, v\${ver}). Check console.\`, 
-        widgets 
-      };
-    }
-  },
-  
-  clear: {
-    desc: 'Remove all widgets',
-    usage: ':clear',
-    handler: () => {
-      const widgets = bdClearAll();
-      state.bd.lastResult = 'Cleared all widgets';
-      return { output: '\\n🧹 All widgets cleared.', widgets };
-    }
-  },
-  
-  stat: {
-    desc: 'Create a stat widget',
-    usage: ':stat <id> <label> <value> [color] [order]',
-    handler: (args) => {
-      const id = args[0] || 'test-stat';
-      const label = args[1] || 'Test';
-      const value = args[2] || '42';
-      const color = args[3] || '#60a5fa';
-      const order = args[4] ? parseInt(args[4]) : undefined;
-      
-      const config = {
-        type: 'stat', label: label, value: value,
-        color: color, align: 'center'
-      };
-      if (order !== undefined) config.order = order;
-      
-      const widgets = bdWidget(id, config);
-      return { 
-        output: \`\\n📊 Created stat "\${id}": \${label} = \${value}\`, 
-        widgets 
-      };
-    }
-  },
-  
-  bar: {
-    desc: 'Create a bar widget',
-    usage: ':bar <id> <value> <max> [label] [color] [order]',
-    handler: (args) => {
-      const id = args[0] || 'test-bar';
-      const value = parseInt(args[1]) || 75;
-      const max = parseInt(args[2]) || 100;
-      const label = args[3] || 'Progress';
-      const color = args[4] || '#22c55e';
-      const order = args[5] ? parseInt(args[5]) : undefined;
-      
-      const config = {
-        type: 'bar', label: label, value: value, max: max,
-        color: color, showValue: true, align: 'center'
-      };
-      if (order !== undefined) config.order = order;
-      
-      const widgets = bdWidget(id, config);
-      return { 
-        output: \`\\n📈 Created bar "\${id}": \${label} \${value}/\${max}\`, 
-        widgets 
-      };
-    }
-  },
-  
-  badge: {
-    desc: 'Create a badge widget',
-    usage: ':badge <id> <text> [icon] [color] [variant]',
-    handler: (args) => {
-      const id = args[0] || 'test-badge';
-      const text = args[1] || 'Status';
-      const icon = args[2] || '';
-      const color = args[3] || '#a855f7';
-      const variant = args[4] || 'subtle';
-      
-      const config = {
-        type: 'badge', text: text, color: color,
-        variant: variant, align: 'center'
-      };
-      if (icon) config.icon = icon;
-      
-      const widgets = bdWidget(id, config);
-      return { 
-        output: \`\\n🏷️ Created badge "\${id}": \${icon ? icon + ' ' : ''}\${text} (\${variant})\`, 
-        widgets 
-      };
-    }
-  },
-  
-  counter: {
-    desc: 'Create a counter widget',
-    usage: ':counter <id> <value> [delta] [icon] [color]',
-    handler: (args) => {
-      const id = args[0] || 'test-counter';
-      const value = parseInt(args[1]) || 0;
-      const delta = args[2] ? parseInt(args[2]) : 0;
-      const icon = args[3] || '';
-      const color = args[4] || '#60a5fa';
-      
-      const config = {
-        type: 'counter', value: value, delta: delta,
-        color: color, align: 'center'
-      };
-      if (icon) config.icon = icon;
-      
-      const widgets = bdWidget(id, config);
-      const deltaStr = delta !== 0 ? \` (\${delta > 0 ? '+' : ''}\${delta})\` : '';
-      return { 
-        output: \`\\n🔢 Created counter "\${id}": \${value}\${deltaStr}\`, 
-        widgets 
-      };
-    }
-  },
-  
-  text: {
-    desc: 'Create a text widget',
-    usage: ':text <id> <message> [color]',
-    handler: (args) => {
-      const id = args[0] || 'test-text';
-      const message = args[1] || 'Hello BetterScripts!';
-      const color = args[2] || '#fbbf24';
-      
-      const widgets = bdWidget(id, {
-        type: 'text', text: message,
-        style: { color: color, fontWeight: 'bold' },
-        align: 'center'
-      });
-      return { 
-        output: \`\\n💬 Created text "\${id}": "\${message}"\`, 
-        widgets 
-      };
-    }
-  },
-  
-  icon: {
-    desc: 'Create an icon widget',
-    usage: ':icon <id> <emoji> [tooltip] [color]',
-    handler: (args) => {
-      const id = args[0] || 'test-icon';
-      const emoji = args[1] || '❤️';
-      const tooltip = args[2] || '';
-      const color = args[3] || '#ef4444';
-      
-      const config = {
-        type: 'icon', icon: emoji, color: color, align: 'center'
-      };
-      if (tooltip) config.tooltip = tooltip;
-      
-      const widgets = bdWidget(id, config);
-      return { 
-        output: \`\\n🎯 Created icon "\${id}": \${emoji}\${tooltip ? ' (' + tooltip + ')' : ''}\`, 
-        widgets 
-      };
-    }
-  },
-  
-  panel: {
-    desc: 'Create a panel widget with sample items',
-    usage: ':panel <id> <title>',
-    handler: (args) => {
-      const id = args[0] || 'test-panel';
-      const title = args[1] || 'Test Panel';
-      
-      const widgets = bdWidget(id, {
-        type: 'panel', title: title, align: 'center',
-        items: [
-          { label: 'Item 1', value: 'Value A', color: '#60a5fa' },
-          { label: 'Item 2', value: 'Value B', color: '#22c55e' },
-          { label: 'Item 3', value: 'Value C', color: '#fbbf24' }
-        ]
-      });
-      return { 
-        output: \`\\n📋 Created panel "\${id}": "\${title}"\`, 
-        widgets 
-      };
-    }
-  },
-  
-  list: {
-    desc: 'Create a list widget with sample items',
-    usage: ':list <id> <title>',
-    handler: (args) => {
-      const id = args[0] || 'test-list';
-      const title = args[1] || 'Test List';
-      
-      const widgets = bdWidget(id, {
-        type: 'list', title: title, align: 'center',
-        items: [
-          { icon: '🗡️', text: 'Iron Sword', color: '#60a5fa' },
-          { icon: '🛡️', text: 'Wooden Shield', color: '#22c55e' },
-          'Health Potion'
-        ]
-      });
-      return { 
-        output: \`\\n📝 Created list "\${id}": "\${title}"\`, 
-        widgets 
-      };
-    }
-  },
-  
-  custom: {
-    desc: 'Create a custom HTML widget',
-    usage: ':custom <id> <html>',
-    handler: (args) => {
-      const id = args[0] || 'test-custom';
-      const html = args[1] || '<div style="display:flex;gap:6px;align-items:center;"><strong style="color:#f472b6;">Custom</strong> <span style="color:#94a3b8;">HTML Widget</span></div>';
-      
-      const widgets = bdWidget(id, {
-        type: 'custom', html: html, align: 'center'
-      });
-      return { 
-        output: \`\\n🎨 Created custom widget "\${id}"\`, 
-        widgets 
-      };
-    }
-  },
-  
-  update: {
-    desc: 'Update a widget property',
-    usage: ':update <id> <property> <value>',
-    handler: (args) => {
-      const id = args[0];
-      const prop = args[1];
-      const value = args[2];
-      
-      if (!id || !prop) {
-        return { output: '\\n❌ Usage: :update <id> <property> <value>', widgets: '' };
-      }
-      
-      // Parse value (handle numbers)
-      let parsedValue = value;
-      if (!isNaN(value) && value !== '') {
-        parsedValue = parseFloat(value);
-      }
-      
-      const config = {};
-      config[prop] = parsedValue;
-      
-      const widgets = bdMsg({ type: 'widget', widgetId: id, action: 'update', config });
-      return { 
-        output: \`\\n✏️ Updated "\${id}".\${prop} = \${parsedValue}\`, 
-        widgets 
-      };
-    }
-  },
-  
-  destroy: {
-    desc: 'Destroy a specific widget',
-    usage: ':destroy <id>',
-    handler: (args) => {
-      const id = args[0];
-      if (!id) {
-        return { output: '\\n❌ Usage: :destroy <id>', widgets: '' };
-      }
-      
-      const widgets = bdDestroy(id);
-      return { output: \`\\n🗑️ Destroyed widget "\${id}"\`, widgets };
-    }
-  },
-  
-  demo: {
-    desc: 'Show all 9 widget types at once',
-    usage: ':demo',
-    handler: () => {
-      let widgets = '';
-      
-      // === CENTER ZONE: Core HUD ===
-      
-      // Bar: HP (order 1)
-      widgets += bdWidget('demo-hp', {
-        type: 'bar', label: 'HP', value: 75, max: 100,
-        color: '#ef4444', showValue: true, align: 'center', order: 1
-      });
-      
-      // Bar: MP (order 2)
-      widgets += bdWidget('demo-mp', {
-        type: 'bar', label: 'MP', value: 50, max: 80,
-        color: '#3b82f6', showValue: true, align: 'center', order: 2
-      });
-      
-      // Badge: Poisoned (order 3)
-      widgets += bdWidget('demo-badge', {
-        type: 'badge', text: 'Poisoned', icon: '☠️',
-        color: '#a855f7', variant: 'subtle', align: 'center', order: 3
-      });
-      
-      // Counter: Kills (order 4)
-      widgets += bdWidget('demo-counter', {
-        type: 'counter', icon: '⚔️', value: 24, delta: 3,
-        color: '#60a5fa', align: 'center', order: 4
-      });
-      
-      // Text: Quest (order 5)
-      widgets += bdWidget('demo-status', {
-        type: 'text', text: '⚡ Quest Active',
-        style: { color: '#fbbf24', fontWeight: 'bold' },
-        align: 'center', order: 5
-      });
-      
-      // Icon: Night indicator (order 6)
-      widgets += bdWidget('demo-icon', {
-        type: 'icon', icon: '🌙', color: '#94a3b8',
-        tooltip: 'Night Time', align: 'center', order: 6
-      });
-      
-      // Custom HTML (order 7)
-      widgets += bdWidget('demo-custom', {
-        type: 'custom', align: 'center', order: 7,
-        html: '<div style="display:flex;gap:4px;align-items:center;"><strong style="color:#f472b6;">LVL</strong><span style="color:#e2e8f0;">12</span></div>'
-      });
-      
-      // === LEFT ZONE: Character Panel ===
-      
-      widgets += bdWidget('demo-panel', {
-        type: 'panel', title: 'Character', align: 'left', order: 1,
-        items: [
-          { label: 'Class', value: 'Warrior', color: '#60a5fa' },
-          { label: 'XP', value: '4500/5000', color: '#22c55e' }
-        ]
-      });
-      
-      // === RIGHT ZONE: Inventory + Gold ===
-      
-      // Stat: Gold (order 1)
-      widgets += bdWidget('demo-gold', {
-        type: 'stat', label: 'Gold', value: '1,250',
-        color: '#fbbf24', align: 'right', order: 1
-      });
-      
-      // List: Inventory (order 2)
-      widgets += bdWidget('demo-list', {
-        type: 'list', title: 'Inventory', align: 'right', order: 2,
-        items: [
-          { icon: '🗡️', text: 'Iron Sword', color: '#60a5fa' },
-          { icon: '🧪', text: 'Potion x3', color: '#22c55e' },
-          { icon: '🔑', text: 'Rusty Key', color: '#fbbf24' }
-        ]
-      });
-      
-      return { 
-        output: '\\n🎮 Demo: All 9 widget types created!\\n  Center: bar, badge, counter, text, icon, custom\\n  Left: panel\\n  Right: stat, list', 
-        widgets 
-      };
-    }
-  },
-  
-  stress: {
-    desc: 'Stress test with N widgets',
-    usage: ':stress <count>',
-    handler: (args) => {
-      const count = Math.min(parseInt(args[0]) || 10, 50);
-      let widgets = '';
-      
-      for (let i = 0; i < count; i++) {
-        widgets += bdWidget('stress-' + i, {
-          type: 'stat',
-          label: 'W' + i,
-          value: Math.floor(Math.random() * 100),
-          color: \`hsl(\${(i * 360 / count)}, 70%, 60%)\`,
-          align: 'center', order: i
-        });
-      }
-      
-      return { 
-        output: \`\\n🔥 Created \${count} stress test widgets\`, 
-        widgets 
-      };
-    }
-  },
-  
-  test: {
-    desc: 'Run sequential test suite (1 step/turn)',
-    usage: ':test [skip|stop]',
-    handler: (args) => {
-      const subcommand = (args[0] || '').toLowerCase();
-      
-      // :test stop - abort running test
-      if (subcommand === 'stop') {
-        if (!state.bd.testRunning) {
-          return { output: '\\n❌ No test suite is running.', widgets: '' };
-        }
-        const step = state.bd.testStep;
-        state.bd.testRunning = false;
-        state.bd.testStep = 0;
-        state.bd.testResults = [];
-        const widgets = bdClearAll();
-        return { output: \`\\n🛑 Test suite stopped at step \${step}/\${TEST_STEPS.length}. Widgets cleared.\`, widgets };
-      }
-      
-      // :test skip - skip current step
-      if (subcommand === 'skip') {
-        if (!state.bd.testRunning) {
-          return { output: '\\n❌ No test suite is running.', widgets: '' };
-        }
-        const skippedName = TEST_STEPS[state.bd.testStep]?.name || '?';
-        state.bd.testResults.push('skip');
-        state.bd.testStep += 1;
-        if (state.bd.testStep >= TEST_STEPS.length) {
-          state.bd.testRunning = false;
-          return { output: \`\\n⏭️ Skipped "\${skippedName}". Suite complete.\`, widgets: '' };
-        }
-        const nextName = TEST_STEPS[state.bd.testStep].name;
-        return { output: \`\\n⏭️ Skipped "\${skippedName}". Next: \${nextName}\`, widgets: '' };
-      }
-      
-      // :test - start a new test suite
-      if (state.bd.testRunning) {
-        return { output: \`\\n⚠️ Test already running (step \${state.bd.testStep + 1}/\${TEST_STEPS.length}). Use :test stop to abort.\`, widgets: '' };
-      }
-      
-      state.bd.testRunning = true;
-      state.bd.testStep = 0;
-      state.bd.testResults = [];
-      
-      // Clear any existing widgets before starting
-      let widgets = bdClearAll();
-      
-      let output = '\\n🧪 **BetterScripts Test Suite Started**\\n';
-      output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n';
-      output += \`Total steps: \${TEST_STEPS.length}\\n\`;
-      output += 'Each turn runs the next test step.\\n';
-      output += 'Commands: :test skip | :test stop\\n';
-      output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n';
-      output += \`\\n⏭️ Next: \${TEST_STEPS[0].name} (continue story to begin)\`;
-      
-      return { output, widgets };
-    }
-  }
-};
-
-// ============================================
-// EXECUTE COMMAND
-// ============================================
-
-function executeCommand(input) {
-  const parsed = parseCommand(input);
-  if (!parsed) return null;
-  
-  const handler = COMMANDS[parsed.command];
-  if (!handler) {
-    return { 
-      output: \`\\n❌ Unknown command: "\${parsed.command}". Type :help for commands.\`,
-      widgets: ''
-    };
-  }
-  
-  state.bd.lastCommand = parsed;
-  const result = handler.handler(parsed.args);
-  state.bd.lastResult = result.output;
-  return result;
-}`,
-      context: `// ============================================
-// CONTEXT MODIFIER - Strip Protocol Messages
-// ============================================
-// Critical: Remove [[BD:...:BD]] so AI doesn't see or hallucinate them.
-
-const modifier = (text) => {
-  text = text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '');
-  return { text };
-};
-
-modifier(text);`,
-      input: `// ============================================
-// INPUT MODIFIER - Parse : Commands (Story Action)
-// ============================================
-// Detects commands in Story actions starting with :
-// Use Story action (not Do) to type commands like :help
-//
-// NOTE: We can't use stop:true in onInput (throws error).
-// Instead, we detect command, store result, and replace
-// the input with a placeholder. Output modifier handles display.
-
-const modifier = (text) => {
-  state.bd.isCommand = false;
-  const input = text.trim();
-  
-  // Check if input starts with : (our command prefix)
-  if (input.startsWith(':')) {
-    const result = executeCommand(input);
-    
-    if (result) {
-      // Store for output modifier to display
-      state.bd.pendingOutput = result.output;
-      state.bd.pendingWidgets = result.widgets;
-      state.bd.isCommand = true;
-      
-      // Replace input with placeholder (AI will respond to this)
-      // We'll override the output in the output modifier
-      return { text: '[DEBUG COMMAND]' };
-    }
-  }
-  
-  // Not a command - pass through normally
-  return { text };
-};
-
-modifier(text);`,
-      output: `// ============================================
-// OUTPUT MODIFIER - Display Results & Run Tests
-// ============================================
-// Shows command results, runs test suite steps,
-// and appends widget protocol messages.
-
-const modifier = (text) => {
-  let output = text;
-  let widgets = '';
-  
-  // Check for pending command output (override AI response)
-  if (state.bd.isCommand && state.bd.pendingOutput) {
-    output = state.bd.pendingOutput;
-    widgets = state.bd.pendingWidgets || '';
-    
-    // Clear pending
-    state.bd.pendingOutput = null;
-    state.bd.pendingWidgets = null;
-    state.bd.isCommand = false;
-  }
-  // Run next test step if suite is active (and no command was just run)
-  else if (state.bd.testRunning) {
-    const testResult = runTestStep();
-    if (testResult) {
-      output = testResult.output;
-      widgets = testResult.widgets;
-    }
-  }
-  
-  // Always show turn counter widget (order: 0 to appear first)
-  widgets += bdWidget('console-turn', {
-    type: 'stat',
-    label: 'Turn',
-    value: info.actionCount || 0,
-    color: '#94a3b8',
-    align: 'left',
-    order: 0
-  });
-  
-  // Show test progress badge if suite is running
-  if (state.bd.testRunning) {
-    widgets += bdWidget('console-test', {
-      type: 'badge',
-      text: \`Test \${state.bd.testStep}/\${TEST_STEPS.length}\`,
-      icon: '🧪',
-      color: '#22c55e',
-      variant: 'subtle',
-      align: 'left',
-      order: 1
-    });
-  }
-  
-  return { text: output + widgets };
-};
-
-modifier(text);`
-    }
+    requiresExtension: 'BetterDungeon'
   },
   {
     id: 'betterscripts-widget-showcase',
@@ -3042,89 +482,35 @@ modifier(text);`
     source: 'BetterRepository',
     description: 'Displays all widget types for visual testing.',
     purpose: 'Creates one of every widget type using bdWidget. Perfect for testing styles and layouts. See the BetterScripts Guide for full documentation.',
-    requiresExtension: 'BetterDungeon',
-    files: {
-      library: `// ============================================
-// LIBRARY - Widget Showcase
-// ============================================
-// Creates all widget types for visual testing.
-// Uses bdWidget to create or update widgets on subsequent turns.
-
-function bdMessage(msg) { return \`[[BD:\${JSON.stringify(msg)}:BD]]\`; }
-function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
-function bdClearAll() { return bdMessage({ type: 'clearAll' }); }`,
-      context: `// Strip protocol messages from AI context
-const modifier = (text) => {
-  return { text: text.replace(/\\[\\[BD:[\\s\\S]*?:BD\\]\\]/g, '') };
-};
-modifier(text);`,
-      output: `// ============================================
-// OUTPUT - Create All Widget Types
-// ============================================
-// Uses bdWidget to create and update widgets each turn.
-
-const modifier = (text) => {
-  let w = '';
-  
-  // ========== Status Bar ==========
-  
-  // Stats
-  w += bdWidget('demo-hp', { type: 'stat', label: 'HP', value: '85/100', color: '#ef4444', align: 'center', order: 1 });
-  w += bdWidget('demo-mp', { type: 'stat', label: 'MP', value: '42/60', color: '#3b82f6', align: 'center', order: 2 });
-  w += bdWidget('demo-gold', { type: 'stat', label: '💰', value: '1,250', color: '#fbbf24', align: 'center', order: 3 });
-  
-  // Bars
-  w += bdWidget('demo-health-bar', { type: 'bar', label: 'Health', value: 85, max: 100, color: '#22c55e', align: 'center', order: 4 });
-  w += bdWidget('demo-mana-bar', { type: 'bar', label: 'Mana', value: 42, max: 60, color: '#8b5cf6', align: 'center', order: 5 });
-  w += bdWidget('demo-xp-bar', { type: 'bar', label: 'XP', value: 750, max: 1000, color: '#06b6d4', align: 'center', order: 6 });
-  
-  // Badges (all three variants)
-  w += bdWidget('demo-badge-poison', { type: 'badge', text: 'Poisoned', icon: '☠️', color: '#a855f7', variant: 'subtle', align: 'center', order: 7 });
-  w += bdWidget('demo-badge-shield', { type: 'badge', text: 'Shielded', icon: '🛡️', color: '#3b82f6', variant: 'solid', align: 'center', order: 8 });
-  w += bdWidget('demo-badge-fire', { type: 'badge', text: 'Burning', icon: '🔥', color: '#f97316', variant: 'outline', align: 'center', order: 9 });
-  
-  // Counters (positive and negative delta)
-  w += bdWidget('demo-counter-up', { type: 'counter', icon: '⚔️', value: 24, delta: 3, color: '#60a5fa', align: 'center', order: 10 });
-  w += bdWidget('demo-counter-down', { type: 'counter', icon: '💔', value: 12, delta: -5, color: '#f472b6', align: 'center', order: 11 });
-  
-  // Icons with tooltips
-  w += bdWidget('demo-icon-heart', { type: 'icon', icon: '❤️', color: '#ef4444', tooltip: 'Health', align: 'center', order: 12 });
-  w += bdWidget('demo-icon-star', { type: 'icon', icon: '⭐', color: '#fbbf24', tooltip: 'Reputation', align: 'center', order: 13 });
-  w += bdWidget('demo-icon-moon', { type: 'icon', icon: '🌙', color: '#94a3b8', tooltip: 'Night', align: 'center', order: 14 });
-  
-  // ========== Character Info ==========
-  
-  w += bdWidget('demo-panel', { 
-    type: 'panel', title: 'Character', align: 'left',
-    items: [
-      { label: 'Name', value: 'Adventurer', color: '#f472b6' },
-      { label: 'Class', value: 'Warrior', color: '#60a5fa' },
-      { label: 'Level', value: '12', color: '#a855f7' }
-    ],
-    order: 1 
-  });
-  
-  // ========== Inventory/Quest ==========
-  
-  w += bdWidget('demo-text', { type: 'text', text: '⚡ Quest: Find the Artifact', style: { color: '#fbbf24', fontWeight: '500' }, align: 'right', order: 1 });
-  w += bdWidget('demo-list', { 
-    type: 'list', title: 'Inventory', align: 'right',
-    items: [
-      { icon: '🗡️', text: 'Iron Sword', color: '#60a5fa' },
-      { icon: '🧪', text: 'Potion x3', color: '#22c55e' },
-      { icon: '🔑', text: 'Rusty Key', color: '#fbbf24' },
-      { icon: '📜', text: 'Map' }
-    ],
-    order: 2 
-  });
-  
-  return { text: text + w };
-};
-
-modifier(text);`
-    }
+    requiresExtension: 'BetterDungeon'
   }
 ]
+
+// ============================================
+// DYNAMIC SCRIPT LOADING
+// ============================================
+// Automatically load script contents from the raw-scripts folder using Vite
+const rawScripts = import.meta.glob('./raw-scripts/**/*.js', { query: '?raw', import: 'default', eager: true })
+
+SCRIPTS.forEach(script => {
+  // Single file scripts
+  if (script.fileType) {
+    const contentPath = `./raw-scripts/${script.fileType}/${script.id}.js`
+    if (rawScripts[contentPath]) {
+      script.content = rawScripts[contentPath]
+    }
+  } else {
+    // Multi-file scripts
+    const types = ['library', 'input', 'context', 'output', 'helper']
+    types.forEach(type => {
+      const path = `./raw-scripts/${type}/${script.id}.js`
+      if (rawScripts[path]) {
+        if (!script.files) script.files = {}
+        script.files[type] = rawScripts[path]
+      }
+    })
+  }
+})
 
 // ============================================
 // HELPER FUNCTIONS
@@ -3193,3 +579,205 @@ export const updateCategoryCounts = () => {
 
 // Initialize counts on load
 updateCategoryCounts()
+
+// ============================================
+// MULTISCRIPT BUILDER HELPERS
+// ============================================
+
+// Check if a script uses the library-centric hook pattern
+// (has a files.library that defines a globalThis function with hook parameter)
+export const isHookPatternScript = (script) => {
+  if (!script.files || !script.files.library) return false
+  const lib = script.files.library
+  // Match globalThis.X = function (Standard hook pattern)
+  // OR standalone function X(hook) (Inner Self pattern)
+  // OR standalone function X(inHook, inText, inStop) (Auto Cards pattern)
+  return /globalThis\.[A-Za-z_$][A-Za-z0-9_$]*\s*=\s*function/.test(lib)
+    || /^function\s+[A-Za-z_$][A-Za-z0-9_$]*\s*\(\s*(?:hook|inHook,\s*inText,\s*inStop)\s*\)/m.test(lib)
+}
+
+// Convert a string to PascalCase function name
+export const toPascalCase = (str) => {
+  return str
+    .replace(/[^a-zA-Z0-9\s]/g, '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('')
+}
+
+// Extract or generate a PascalCase function name for a script
+export const getScriptFunctionName = (script) => {
+  // If it's a hook pattern script, extract the name from the library
+  if (isHookPatternScript(script)) {
+    const match = script.files.library.match(/globalThis\.([A-Za-z_$][A-Za-z0-9_$]*)\s*=\s*function/)
+      || script.files.library.match(/^function\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*\(\s*(?:hook|inHook,\s*inText,\s*inStop)\s*\)/m)
+    if (match) return match[1]
+  }
+  // Otherwise generate from the script name
+  return toPascalCase(script.name || 'CustomScript')
+}
+
+// Get all scripts that have code content (suitable for the builder)
+export const getBuilderCompatibleScripts = () => {
+  return SCRIPTS.filter(s => !!(s.content || s.files))
+}
+
+// Extract the body of a modifier function from script content.
+// Given: `const modifier = (text) => { ...body... }; modifier(text);`
+// Returns the body (the statements inside the arrow function).
+export const extractModifierBody = (code) => {
+  if (!code || typeof code !== 'string') return ''
+
+  // Remove leading/trailing whitespace
+  let cleaned = code.trim()
+
+  // Remove comment-only lines at the very start
+  const lines = cleaned.split('\n')
+  let startIdx = 0
+  for (let i = 0; i < lines.length; i++) {
+    const trimmed = lines[i].trim()
+    if (trimmed === '' || trimmed.startsWith('//')) {
+      startIdx = i + 1
+    } else {
+      break
+    }
+  }
+  cleaned = lines.slice(startIdx).join('\n').trim()
+
+  // Try to match the modifier pattern:
+  // const modifier = (text) => { ...body... }\n[;]\nmodifier(text)[;]
+  // We need to find the opening brace of the arrow function body and its matching close
+  const arrowMatch = cleaned.match(/const\s+modifier\s*=\s*\(?\s*text\s*\)?\s*=>\s*\{/)
+  if (!arrowMatch) {
+    // If it doesn't match the modifier pattern, return the whole thing
+    // (might be raw library code like state initialization)
+    return cleaned
+  }
+
+  const bodyStart = cleaned.indexOf('{', arrowMatch.index) + 1
+
+  // Find the matching closing brace
+  let depth = 1
+  let bodyEnd = bodyStart
+  for (let i = bodyStart; i < cleaned.length; i++) {
+    if (cleaned[i] === '{') depth++
+    else if (cleaned[i] === '}') {
+      depth--
+      if (depth === 0) {
+        bodyEnd = i
+        break
+      }
+    }
+  }
+
+  let body = cleaned.substring(bodyStart, bodyEnd).trim()
+
+  // Remove trailing `return { text }` or `return { text: ... }` since the hook pattern
+  // uses globalThis.text instead of returning
+  // Keep the rest of the logic but convert the return
+  body = body.replace(
+    /return\s*\{\s*text\s*:\s*([^}]+)\}\s*;?\s*$/,
+    'globalThis.text = $1;'
+  )
+  body = body.replace(
+    /return\s*\{\s*text\s*,\s*stop\s*:\s*([^}]+)\}\s*;?\s*$/,
+    'globalThis.text = text;\n    globalThis.stop = $1;'
+  )
+  body = body.replace(
+    /return\s*\{\s*text\s*,\s*stop\s*\}\s*;?\s*$/,
+    'globalThis.text = text;\n    if (stop) globalThis.stop = true;'
+  )
+  body = body.replace(
+    /return\s*\{\s*text\s*\}\s*;?\s*$/,
+    'globalThis.text = text;'
+  )
+  // Handle simple `return { text }` without semicolon at very end
+  body = body.replace(
+    /return\s*\{\s*text\s*\}\s*$/,
+    'globalThis.text = text;'
+  )
+
+  return body
+}
+
+// Convert any script format into a hook-pattern library function.
+// Returns the full `globalThis.FnName = function FnName(hook) { ... };` string.
+export const convertToHookPattern = (script) => {
+  const fnName = getScriptFunctionName(script)
+  const stateKey = fnName.charAt(0).toLowerCase() + fnName.slice(1)
+
+  // Case 1: Already a hook-pattern script, so return library content as-is
+  if (isHookPatternScript(script)) {
+    const lib = script.files.library
+    // If it uses a function declaration (not globalThis assignment), add registration
+    if (!/globalThis\.[A-Za-z_$]/.test(lib)) {
+      return `${lib}\nglobalThis.${fnName} = ${fnName};`
+    }
+    return lib
+  }
+
+  // Case 2: Multi-file script with separate lifecycle files
+  if (script.files) {
+    const libraryCode = script.files.library || ''
+    const inputBody = script.files.input ? extractModifierBody(script.files.input) : ''
+    const contextBody = script.files.context ? extractModifierBody(script.files.context) : ''
+    const outputBody = script.files.output ? extractModifierBody(script.files.output) : ''
+
+    let body = ''
+
+    // Add library code (state init, helper functions) at the top
+    if (libraryCode) {
+      body += `  // --- Shared Library ---\n`
+      body += libraryCode.split('\n').map(l => `  ${l}`).join('\n')
+      body += '\n\n'
+    }
+
+    if (inputBody) {
+      body += `  // -------- hook: input --------\n`
+      body += `  if (hook === "input") {\n`
+      body += inputBody.split('\n').map(l => `    ${l}`).join('\n')
+      body += `\n    return;\n  }\n\n`
+    }
+
+    if (contextBody) {
+      body += `  // -------- hook: context --------\n`
+      body += `  if (hook === "context") {\n`
+      body += contextBody.split('\n').map(l => `    ${l}`).join('\n')
+      body += `\n    return;\n  }\n\n`
+    }
+
+    if (outputBody) {
+      body += `  // -------- hook: output --------\n`
+      body += `  if (hook === "output") {\n`
+      body += outputBody.split('\n').map(l => `    ${l}`).join('\n')
+      body += `\n    return;\n  }`
+    }
+
+    return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n${body}\n};`
+  }
+
+  // Case 3: Single-file script with content and fileType
+  if (script.content && script.fileType) {
+    // Library/helper-type scripts don't need hook wrapping, they're shared code
+    if (script.fileType === 'library' || script.fileType === 'helper') {
+      // Wrap raw library code in a globalThis function
+      const code = script.content.trim()
+      return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n${code.split('\n').map(l => `  ${l}`).join('\n')}\n};`
+    }
+
+    const hookName = script.fileType === 'context' ? 'context'
+      : script.fileType === 'output' ? 'output'
+        : 'input'
+    const body = extractModifierBody(script.content)
+
+    return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n  // -------- hook: ${hookName} --------\n  if (hook === "${hookName}") {\n${body.split('\n').map(l => `    ${l}`).join('\n')}\n    return;\n  }\n};`
+  }
+
+  // Case 4: Raw content without fileType, so treat as library
+  if (script.content) {
+    return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n${script.content.trim().split('\n').map(l => `  ${l}`).join('\n')}\n};`
+  }
+
+  return `// No code content found for ${script.name || 'script'}`
+}

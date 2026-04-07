@@ -632,7 +632,7 @@
               </p>
               <div class="grid md:grid-cols-2 gap-2 text-xs text-bd-text-secondary">
                 <div>• <strong>Edit recent actions</strong> (within buffer): Changes are considered when eventually summarized</div>
-                <div>• <strong>Edit older actions</strong>: Won't auto-update — manually edit Story Summary instead</div>
+                <div>• <strong>Edit older actions</strong>: Won't auto-update, manually edit Story Summary instead</div>
                 <div>• <strong>Undo recent actions</strong>: Works normally within the 4-action buffer</div>
                 <div>• <strong>Existing adventures</strong>: Enabling summarizes the last ~8000 tokens as initial summary</div>
               </div>
@@ -750,7 +750,7 @@
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
                 <h4 class="text-xs font-semibold text-bd-amber mb-2">Front Memory</h4>
                 <code class="text-xs text-bd-green block">state.memory.frontMemory</code>
-                <p class="text-xs text-bd-text-muted mt-1">Hidden text injected at the very end of context. Not accessible from UI — powerful position for immediate influence.</p>
+                <p class="text-xs text-bd-text-muted mt-1">Hidden text injected at the very end of context. Not accessible from UI, but provides a powerful position for immediate influence.</p>
               </div>
             </div>
             <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30">

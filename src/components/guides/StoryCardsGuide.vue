@@ -74,7 +74,7 @@
               <div class="flex items-start gap-2">
                 <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
                 <p class="text-xs text-bd-text-secondary">
-                  Story Cards are <strong>Dynamic Elements</strong>, sharing the 30% dynamic token budget with Memory Bank entries and action history. They get roughly <strong>~25% of dynamic tokens</strong>. Cards are ranked by recency and frequency of trigger matches — frequently referenced cards are prioritized.
+                  Story Cards are <strong>Dynamic Elements</strong>, sharing the 30% dynamic token budget with Memory Bank entries and action history. They get roughly <strong>~25% of dynamic tokens</strong>. Cards are ranked by recency and frequency of trigger matches, with frequently referenced cards being prioritized.
                 </p>
               </div>
             </div>
@@ -235,7 +235,7 @@
                       <div>• <strong>Dynamic:</strong> If >500 tokens available for cards: (tokens ÷ 100) actions checked</div>
                       <div>• <strong>Example:</strong> 900 tokens available → 9 recent actions are scanned</div>
                     </div>
-                    <p class="text-xs text-bd-text-muted mt-2">Once triggered, cards stay in context until pushed out by token limits. There's no fixed turn count — frequently referenced cards are prioritized over older or less relevant ones.</p>
+                    <p class="text-xs text-bd-text-muted mt-2">Once triggered, cards stay in context until pushed out by token limits. There's no fixed turn count, as frequently referenced cards are prioritized over older or less relevant ones.</p>
                   </div>
                 </div>
               </div>
@@ -770,7 +770,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('import-export')" class="mt-4 space-y-4">
             <p class="text-bd-text-secondary">
-              Story Cards can be exported to JSON and imported from JSON, enabling sharing, backup, and bulk management. <strong class="text-bd-warning">Web only</strong> — native iOS/Android apps do not support this feature.
+              Story Cards can be exported to JSON and imported from JSON, enabling sharing, backup, and bulk management. <strong class="text-bd-warning">Web only</strong> as native iOS/Android apps do not support this feature.
             </p>
             <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
               <h3 class="font-semibold text-bd-text-primary mb-2">JSON Format</h3>

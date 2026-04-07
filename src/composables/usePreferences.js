@@ -21,15 +21,22 @@ const defaultPreferences = {
   savedBuilds: [],
   // Current working build (auto-saved)
   currentBuild: {
-    directiveComponents: [], // Array of { id: string, variantIndex?: number } — rendered as prose in ## Directive
-    instructions: [] // Array of { id: string, variantIndex?: number } — rendered as dashed lines under category headers
+    directiveComponents: [], // Array of { id: string, variantIndex?: number } - rendered as prose in ## Directive
+    instructions: [] // Array of { id: string, variantIndex?: number } - rendered as dashed lines under category headers
   },
   // Story Card Builder
   // Current working story cards (auto-saved)
   currentStoryCards: [], // Array of { id, title, type, triggers, entry, notes }
   // Saved story card sets
   // Format: { id: string, name: string, cards: [{id, title, type, triggers, entry, notes}], createdAt: timestamp, updatedAt: timestamp }
-  savedStoryCardSets: []
+  savedStoryCardSets: [],
+  // Multiscript Builder
+  // Current working multiscript entries (auto-saved)
+  currentMultiscriptEntries: [], // Array of { id, scriptId?, name, functionName, type: 'library'|'custom', code? }
+  // Saved multiscript builds
+  savedMultiscriptBuilds: [], // Array of { id, name, entries: [...], createdAt, updatedAt }
+  // Saved custom scripts (user's personal script library)
+  savedCustomScripts: [] // Array of { id, name, functionName, hooks: { library?, input?, context?, output? }, createdAt, updatedAt }
 }
 
 // Load preferences from cookie
@@ -376,6 +383,135 @@ export function usePreferences() {
     preferences.value.nsfwVerified = false
   }
 
+  // ===========================================
+  // MULTISCRIPT BUILDER FUNCTIONS
+  // ===========================================
+
+  const ensureMultiscriptEntries = () => {
+    if (!preferences.value.currentMultiscriptEntries) {
+      preferences.value.currentMultiscriptEntries = []
+    }
+  }
+
+  // Add a multiscript entry
+  const addMultiscriptEntry = (entry = {}) => {
+    ensureMultiscriptEntries()
+    const newEntry = {
+      id: `ms-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      scriptId: entry.scriptId || null,
+      customScriptId: entry.customScriptId || null,
+      name: entry.name || '',
+      functionName: entry.functionName || '',
+      type: entry.type || 'library', // 'library' (from data) or 'custom'
+      scriptFormat: entry.scriptFormat || null, // original type: input/output/context/helper/multi-file
+      code: entry.code || null  // custom code for 'custom' type
+    }
+    preferences.value.currentMultiscriptEntries.push(newEntry)
+    return newEntry.id
+  }
+
+  // Remove a multiscript entry by ID
+  const removeMultiscriptEntry = (entryId) => {
+    ensureMultiscriptEntries()
+    preferences.value.currentMultiscriptEntries = preferences.value.currentMultiscriptEntries.filter(e => e.id !== entryId)
+  }
+
+  // Reorder multiscript entries
+  const reorderMultiscriptEntries = (fromIndex, toIndex) => {
+    ensureMultiscriptEntries()
+    const entries = [...preferences.value.currentMultiscriptEntries]
+    const [moved] = entries.splice(fromIndex, 1)
+    entries.splice(toIndex, 0, moved)
+    preferences.value.currentMultiscriptEntries = entries
+  }
+
+  // Clear all multiscript entries
+  const clearMultiscriptEntries = () => {
+    preferences.value.currentMultiscriptEntries = []
+  }
+
+  // Save current multiscript build as a named preset
+  const saveMultiscriptBuild = (name) => {
+    if (!preferences.value.savedMultiscriptBuilds) {
+      preferences.value.savedMultiscriptBuilds = []
+    }
+    ensureMultiscriptEntries()
+    const now = Date.now()
+    const build = {
+      id: `msbuild-${now}`,
+      name: name?.trim() || `Script Build ${preferences.value.savedMultiscriptBuilds.length + 1}`,
+      entries: JSON.parse(JSON.stringify(preferences.value.currentMultiscriptEntries)),
+      createdAt: now,
+      updatedAt: now
+    }
+    preferences.value.savedMultiscriptBuilds.unshift(build)
+    return build.id
+  }
+
+  // Load a saved multiscript build
+  const loadMultiscriptBuild = (buildId) => {
+    if (!preferences.value.savedMultiscriptBuilds) return false
+    const build = preferences.value.savedMultiscriptBuilds.find(b => b.id === buildId)
+    if (build) {
+      preferences.value.currentMultiscriptEntries = JSON.parse(JSON.stringify(build.entries))
+      return true
+    }
+    return false
+  }
+
+  // Delete a saved multiscript build
+  const deleteMultiscriptBuild = (buildId) => {
+    if (!preferences.value.savedMultiscriptBuilds) return
+    preferences.value.savedMultiscriptBuilds = preferences.value.savedMultiscriptBuilds.filter(b => b.id !== buildId)
+  }
+
+  // ===========================================
+  // CUSTOM SCRIPT LIBRARY FUNCTIONS
+  // ===========================================
+
+  const ensureCustomScripts = () => {
+    if (!preferences.value.savedCustomScripts) {
+      preferences.value.savedCustomScripts = []
+    }
+  }
+
+  // Save a new custom script to the user's library
+  const saveCustomScript = (script = {}) => {
+    ensureCustomScripts()
+    const now = Date.now()
+    const newScript = {
+      id: `cs-${now}-${Math.random().toString(36).substring(2, 7)}`,
+      name: script.name || '',
+      functionName: script.functionName || '',
+      hooks: script.hooks || {},  // { library?, input?, context?, output? }
+      createdAt: now,
+      updatedAt: now
+    }
+    preferences.value.savedCustomScripts.unshift(newScript)
+    return newScript.id
+  }
+
+  // Update an existing custom script
+  const updateCustomScript = (scriptId, updates) => {
+    ensureCustomScripts()
+    const index = preferences.value.savedCustomScripts.findIndex(s => s.id === scriptId)
+    if (index !== -1) {
+      preferences.value.savedCustomScripts[index] = {
+        ...preferences.value.savedCustomScripts[index],
+        ...updates,
+        updatedAt: Date.now()
+      }
+      return true
+    }
+    return false
+  }
+
+  // Delete a custom script from the user's library
+  const deleteCustomScript = (scriptId) => {
+    ensureCustomScripts()
+    preferences.value.savedCustomScripts = preferences.value.savedCustomScripts.filter(s => s.id !== scriptId)
+  }
+
   return {
     preferences,
     toggleFavorite,
@@ -414,6 +550,18 @@ export function usePreferences() {
     isNsfwVerified,
     setNsfwVerified,
     verifyAge,
-    resetAgeVerification
+    resetAgeVerification,
+    // Multiscript Builder functions
+    addMultiscriptEntry,
+    removeMultiscriptEntry,
+    reorderMultiscriptEntries,
+    clearMultiscriptEntries,
+    saveMultiscriptBuild,
+    loadMultiscriptBuild,
+    deleteMultiscriptBuild,
+    // Custom Script Library functions
+    saveCustomScript,
+    updateCustomScript,
+    deleteCustomScript
   }
 }
