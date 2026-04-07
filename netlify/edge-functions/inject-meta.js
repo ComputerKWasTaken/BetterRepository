@@ -39,7 +39,7 @@ const PAGE_META = {
   },
   '/guides': {
     title: 'Guides - BetterRepository',
-    description: 'Everything you need to master AI Dungeon. In-depth guides on AI Instructions, Plot Components, Story Cards, Scripting, and Advanced Settings.',
+    description: 'Everything you need to master AI Dungeon. In-depth guides on AI Instructions, Plot Components, Story Cards, Scripting, Symbols & Commands, and Advanced Settings.',
   },
   '/contribute': {
     title: 'Contribute to BetterRepository',

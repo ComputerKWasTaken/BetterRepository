@@ -80,9 +80,9 @@ const routes = [
     component: GuidesPage,
     meta: {
       title: 'Guides - BetterRepository',
-      description: 'Comprehensive guides for AI Dungeon covering AI Instructions, Plot Components, Story Cards, Scripts, BetterScripts, and Advanced Settings.',
+      description: 'Comprehensive guides for AI Dungeon covering AI Instructions, Plot Components, Story Cards, Scripts, Symbols & Commands, BetterScripts, and Advanced Settings.',
       ogTitle: 'Guides - BetterRepository',
-      ogDescription: 'Everything you need to master AI Dungeon. In-depth guides on AI Instructions, Plot Components, Story Cards, Scripting, and Advanced Settings.',
+      ogDescription: 'Everything you need to master AI Dungeon. In-depth guides on AI Instructions, Plot Components, Story Cards, Scripting, Symbols & Commands, and Advanced Settings.',
       path: '/guides'
     }
   },
