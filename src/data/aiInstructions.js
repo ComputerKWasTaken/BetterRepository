@@ -1417,7 +1417,6 @@ The user would like you to pick up a varying novel. Enable thinking mode and pro
   }
 ]
 
-
 // ============================================
 // COMPONENTS - Individual building blocks
 // These are modular instructions users can mix and match
@@ -1496,7 +1495,7 @@ export const COMPONENTS = [
     purpose: 'Establishes consistent POV and tense. Second person present is standard for interactive fiction.',
     variants: [
       { label: 'Second Person Present', content: '- Write in second person, present tense' },
-      { label: 'Third Person Present', content: '- Write in third person, present tense'},
+      { label: 'Third Person Present', content: '- Write in third person, present tense' },
       { label: 'First Person Present', content: '- Write in first person, present tense' }
     ]
   },
@@ -3491,7 +3490,7 @@ export const COMPONENTS = [
     name: 'No Adding Characters to Scenes',
     category: 'coherence',
     group: 'story-control',
-    groupOrder: 1.5,
+    groupOrder: 2,
     difficulty: 'beginner',
     impact: 'low',
     essential: false,
@@ -3508,7 +3507,7 @@ export const COMPONENTS = [
     name: 'Minimal History Addition',
     category: 'coherence',
     group: 'story-control',
-    groupOrder: 2,
+    groupOrder: 3,
     difficulty: 'beginner',
     impact: 'low',
     essential: false,
@@ -3524,7 +3523,7 @@ export const COMPONENTS = [
     name: 'Secrets & Mystery Buildup',
     category: 'coherence',
     group: 'story-control',
-    groupOrder: 3,
+    groupOrder: 4,
     difficulty: 'intermediate',
     impact: 'low',
     essential: false,
@@ -3541,7 +3540,7 @@ export const COMPONENTS = [
     name: 'Protect Secrets',
     category: 'coherence',
     group: 'story-control',
-    groupOrder: 4,
+    groupOrder: 5,
     difficulty: 'intermediate',
     impact: 'medium',
     essential: false,
@@ -4200,8 +4199,7 @@ export const COMPONENTS = [
     name: 'Metric System',
     category: 'formatting',
     group: 'technical-formatting',
-    groupLabel: 'Technical Formatting',
-    groupOrder: 0,
+    groupOrder: 1,
     difficulty: 'beginner',
     impact: 'low',
     essential: false,
@@ -4217,7 +4215,7 @@ export const COMPONENTS = [
     name: '24-Hour Time Format',
     category: 'formatting',
     group: 'technical-formatting',
-    groupOrder: 1,
+    groupOrder: 2,
     difficulty: 'beginner',
     impact: 'low',
     essential: false,
@@ -4233,7 +4231,7 @@ export const COMPONENTS = [
     name: 'No Phone Texts Unless Prompted',
     category: 'formatting',
     group: 'technical-formatting',
-    groupOrder: 2,
+    groupOrder: 3,
     difficulty: 'beginner',
     impact: 'low',
     essential: false,
@@ -4249,7 +4247,7 @@ export const COMPONENTS = [
     name: 'No Extra Beast Features',
     category: 'formatting',
     group: 'technical-formatting',
-    groupOrder: 3,
+    groupOrder: 4,
     difficulty: 'beginner',
     impact: 'low',
     essential: false,
@@ -4694,7 +4692,6 @@ export const COMPONENTS = [
     purpose: 'Respects user\'s creative control over their world and characters.',
     content: `- Do not assume the player's intentions, emotions, or planned actions; describe the world and let the player decide what to do.`
   },
-
 
   // ==========================================
   // NSFW / ADULT CONTENT
@@ -5440,15 +5437,22 @@ export const COMPONENTS = [
 // HELPER FUNCTIONS
 // ============================================
 
+// Max number of components returned in the starter set
+const STARTER_SET_LIMIT = 15
+
 // --- SET HELPERS ---
+
+/** Find a set by its unique ID */
 export function getSetById(id) {
   return SETS.find(set => set.id === id)
 }
 
+/** Return all sets marked as essential */
 export function getEssentialSets() {
   return SETS.filter(set => set.essential)
 }
 
+/** Search sets by name, description, or tags */
 export function searchSets(query) {
   const q = query.toLowerCase()
   return SETS.filter(set =>
@@ -5474,45 +5478,46 @@ export function getSetCategoryById(id) {
   return SET_CATEGORIES.find(cat => cat.id === id)
 }
 
+/** Return only SET_CATEGORIES that have at least one set */
 export function getSetCategoriesWithSets() {
   return SET_CATEGORIES.filter(cat =>
     SETS.some(set => set.category === cat.id)
   )
 }
 
+/**
+ * Resolve set content for a given length + player control variant.
+ * Inserts player control instructions as a dedicated ## section.
+ */
 export function getSetContent(set, lengthVariant = 'standard', playerControlVariant = 'neutral') {
-  const baseContent = typeof set.content === 'object' ? (set.content[lengthVariant] || set.content.standard) : set.content
-  const pcVariant = PLAYER_CONTROL_VARIANTS.find(v => v.id === playerControlVariant)
-  const pcInstructions = pcVariant?.instructions || ''
+  const baseContent = typeof set.content === 'object'
+    ? (set.content[lengthVariant] ?? set.content.standard)
+    : set.content
 
-  // If no player control instructions, return base content as-is
+  const pcVariant = PLAYER_CONTROL_VARIANTS.find(v => v.id === playerControlVariant)
+  const pcInstructions = pcVariant?.instructions ?? ''
+
   if (!pcInstructions) return baseContent
 
-  // Smart placement: insert player control as a dedicated section after the directive
   // Find the first ## header that isn't the Directive to insert before it
   const lines = baseContent.split('\n')
-  let insertIndex = -1
-
-  for (let i = 0; i < lines.length; i++) {
-    // Find the first ## section header after the directive
-    if (lines[i].startsWith('## ') && lines[i] !== '## Directive') {
-      insertIndex = i
-      break
-    }
-  }
+  const insertIndex = lines.findIndex(
+    line => line.startsWith('## ') && line !== '## Directive'
+  )
 
   if (insertIndex !== -1) {
-    // Insert a ## Player Agency section before the first non-directive header
     const pcSection = `## Player Agency${pcInstructions}\n`
     lines.splice(insertIndex, 0, pcSection)
     return lines.join('\n')
   }
 
-  // Fallback for lite variants or sets without headers: append with a header
+  // Fallback for lite variants or sets without headers
   return baseContent + '\n\n## Player Agency' + pcInstructions
 }
 
 // --- COMPONENT HELPERS ---
+
+/** Find a component by its unique ID */
 export function getComponentById(id) {
   return COMPONENTS.find(comp => comp.id === id)
 }
@@ -5525,6 +5530,7 @@ export function getEssentialComponents() {
   return COMPONENTS.filter(comp => comp.essential)
 }
 
+/** Search components by name, description, or tags */
 export function searchComponents(query) {
   const q = query.toLowerCase()
   return COMPONENTS.filter(comp =>
@@ -5542,10 +5548,11 @@ export function getComponentsByImpact(impact) {
   return COMPONENTS.filter(comp => comp.impact === impact)
 }
 
+/** Return components in a group, sorted by groupOrder */
 export function getComponentsByGroup(groupId) {
   return COMPONENTS
     .filter(comp => comp.group === groupId)
-    .sort((a, b) => (a.groupOrder || 0) - (b.groupOrder || 0))
+    .sort((a, b) => (a.groupOrder ?? 0) - (b.groupOrder ?? 0))
 }
 
 export function getComponentsByModel(model) {
@@ -5556,12 +5563,14 @@ export function getComponentsByPlacement(placement) {
   return COMPONENTS.filter(comp => comp.placement === placement)
 }
 
+/** Return all components that conflict with the given component */
 export function getConflictingComponents(componentId) {
   const comp = getComponentById(componentId)
   if (!comp?.conflicts?.length) return []
   return comp.conflicts.map(id => getComponentById(id)).filter(Boolean)
 }
 
+/** Return all components that combine well with the given component */
 export function getCompatibleComponents(componentId) {
   const comp = getComponentById(componentId)
   if (!comp?.combinesWith?.length) return []
@@ -5569,6 +5578,7 @@ export function getCompatibleComponents(componentId) {
 }
 
 // --- DIRECTIVE HELPERS ---
+
 export function getDirectiveComponents() {
   return COMPONENTS.filter(comp => comp.isDirective)
 }
@@ -5582,28 +5592,32 @@ export function getNonDirectiveComponents() {
 }
 
 // --- CATEGORY HELPERS ---
+
 export function getCategoryById(id) {
   return CATEGORIES.find(cat => cat.id === id)
 }
 
+/** Return only CATEGORIES that have at least one component */
 export function getCategoriesWithComponents() {
-  return CATEGORIES.filter(cat => 
+  return CATEGORIES.filter(cat =>
     COMPONENTS.some(comp => comp.category === cat.id)
   )
 }
 
 // --- GROUP HELPERS ---
+
+/** Build a deduplicated list of all component groups with labels */
 export function getAllGroups() {
   const groups = new Map()
-  COMPONENTS.forEach(comp => {
-    if (comp.group && comp.groupLabel) {
+  for (const comp of COMPONENTS) {
+    if (comp.group && comp.groupLabel && !groups.has(comp.group)) {
       groups.set(comp.group, {
         id: comp.group,
         label: comp.groupLabel,
         category: comp.category
       })
     }
-  })
+  }
   return Array.from(groups.values())
 }
 
@@ -5613,27 +5627,21 @@ export function getGroupsByCategory(categoryId) {
 
 // ============================================
 // COMPATIBILITY ALIASES
-// These maintain backwards compatibility with the original aiInstructions.js API
+// Backwards compatibility with the original aiInstructions.js API
 // ============================================
 
-// Alias COMPONENTS as INSTRUCTIONS for backwards compatibility
 export const INSTRUCTIONS = COMPONENTS
-
-// Alias helper functions for backwards compatibility
 export const getInstructionsByCategory = getComponentsByCategory
 export const getEssentialInstructions = getEssentialComponents
 export const searchInstructions = searchComponents
 
-// Additional helpers that the Vue page expects
+/** Curated starter set: essential + beginner-friendly high-impact components */
 export function getStarterSet() {
-  // Return a curated starter set: essential components + beginner-friendly high-impact ones
   const essential = COMPONENTS.filter(comp => comp.essential)
-  const beginnerHighImpact = COMPONENTS.filter(comp => 
+  const beginnerHighImpact = COMPONENTS.filter(comp =>
     comp.difficulty === 'beginner' && comp.impact === 'high' && !comp.essential
   )
-  // Combine and deduplicate
-  const combined = [...essential, ...beginnerHighImpact]
-  return combined.slice(0, 15)
+  return [...essential, ...beginnerHighImpact].slice(0, STARTER_SET_LIMIT)
 }
 
 export function getHighImpactInstructions() {
