@@ -2045,9 +2045,9 @@ const selectedLengthVariant = ref('standard')
 const selectedPlayerControl = ref('neutral')
 
 const lengthVariants = [
-  { id: 'lite', label: 'Lite', description: 'Concise — saves context tokens' },
+  { id: 'lite', label: 'Lite', description: 'Concise and saves context tokens' },
   { id: 'standard', label: 'Standard', description: 'Balanced coverage' },
-  { id: 'max', label: 'Max', description: 'Comprehensive — thorough rules' }
+  { id: 'max', label: 'Max', description: 'Comprehensive with thorough rules' }
 ]
 
 const filteredSets = computed(() => {

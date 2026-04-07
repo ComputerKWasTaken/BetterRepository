@@ -185,7 +185,7 @@ export const DIRECTIVE_CATEGORIES = [
   {
     id: 'role',
     name: 'Role & Identity',
-    description: 'Who the AI is — persona, narrator voice, creative framing',
+    description: 'Who the AI is: persona, narrator voice, creative framing',
     icon: 'UserCog'
   },
   {
@@ -209,7 +209,7 @@ export const DIRECTIVE_CATEGORIES = [
   {
     id: 'key-rules',
     name: 'Key Rules',
-    description: 'Core behavioral rules — continuation, formatting, output constraints',
+    description: 'Core behavioral rules: continuation, formatting, output constraints',
     icon: 'ShieldCheck'
   }
 ]
@@ -240,13 +240,13 @@ export const DIRECTIVE_TEMPLATES = [
   {
     id: 'collaborative',
     name: 'Collaborative Storyteller',
-    description: 'A collaborative partner — user drives the plot, AI provides the prose.',
+    description: 'A collaborative partner where user drives the plot, AI provides the prose.',
     content: `You are collaborating with the user to tell a story. The user drives the plot; you provide the prose.\n\nInstructions:\n- Write in second person, present tense\n- React to the user's actions and let them drive the story\n- Cover a natural segment of the current scene. End at a point that invites user input\n- Be descriptive and creative with prose`
   },
   {
     id: 'blank',
     name: 'Start from Scratch',
-    description: 'An empty template — write your own directive from scratch.',
+    description: 'An empty template to write your own directive from scratch.',
     content: ''
   }
 ]

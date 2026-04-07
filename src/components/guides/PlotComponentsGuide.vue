@@ -750,7 +750,7 @@
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
                 <h4 class="text-xs font-semibold text-bd-amber mb-2">Front Memory</h4>
                 <code class="text-xs text-bd-green block">state.memory.frontMemory</code>
-                <p class="text-xs text-bd-text-muted mt-1">Hidden text injected at the very end of context. Not accessible from UI — powerful position for immediate influence.</p>
+                <p class="text-xs text-bd-text-muted mt-1">Hidden text injected at the very end of context. Not accessible from UI, but provides a powerful position for immediate influence.</p>
               </div>
             </div>
             <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30">

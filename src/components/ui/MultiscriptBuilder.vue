@@ -108,7 +108,7 @@
             </h4>
             <p class="text-xs text-bd-text-secondary leading-relaxed">
               AI Dungeon scenarios have 4 script tabs: <strong class="text-bd-text-primary">Library</strong>, <strong class="text-bd-text-primary">Input</strong>, <strong class="text-bd-text-primary">Context</strong>, and <strong class="text-bd-text-primary">Output</strong>.
-              Normally, you can only have one script per tab — which means running two scripts together requires manually merging their code.
+              Normally, you can only have one script per tab, which means running two scripts together requires manually merging their code.
             </p>
             <p class="text-xs text-bd-text-secondary leading-relaxed">
               The builder solves this by consolidating <strong class="text-bd-text-primary">all script logic into the Library file</strong>.
@@ -160,7 +160,7 @@
       <Transition name="slide">
         <div v-if="showCaveats" class="mt-4 space-y-3">
           <p class="text-xs text-bd-text-secondary leading-relaxed">
-            The hook pattern itself is <strong class="text-bd-text-primary">safe and reliable</strong> — it simply organizes code.
+            The hook pattern itself is <strong class="text-bd-text-primary">safe and reliable</strong> as it simply organizes code.
             However, conflicts can arise from <strong class="text-bd-text-primary">what the combined scripts do</strong>:
           </p>
           <div class="grid md:grid-cols-2 gap-2">
@@ -170,7 +170,7 @@
                 <span class="text-[11px] font-semibold text-bd-text-primary">Text Mutation</span>
               </div>
               <p class="text-[10px] text-bd-text-muted leading-relaxed">
-                Scripts that modify <code class="text-bd-pink">text</code> (input, context, or output) run sequentially —
+                Scripts that modify <code class="text-bd-pink">text</code> (input, context, or output) run sequentially.
                 Script B sees whatever Script A left behind. Two scripts rewriting the same text can produce unexpected results.
               </p>
             </div>
@@ -586,7 +586,7 @@
             <h3 class="font-semibold text-bd-text-primary flex items-center gap-2">
               <BookOpen class="w-4 h-4 text-bd-purple" />
               Generated Library
-              <span v-if="currentEntries.length > 0" class="text-xs font-normal text-bd-text-muted">— paste into AI Dungeon's Library tab</span>
+              <span v-if="currentEntries.length > 0" class="text-xs font-normal text-bd-text-muted">(paste into AI Dungeon's Library tab)</span>
             </h3>
             <button
               v-if="currentEntries.length > 0"
@@ -631,7 +631,7 @@
             <h3 class="text-sm font-semibold text-bd-text-primary flex items-center gap-2">
               <ArrowRightLeft class="w-4 h-4 text-bd-blue" />
               Hook Files
-              <span class="text-xs font-normal text-bd-text-muted">— Input, Context, Output</span>
+              <span class="text-xs font-normal text-bd-text-muted">(Input, Context, Output)</span>
             </h3>
             <ChevronDown class="w-4 h-4 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !showStaticFiles }" />
           </button>
@@ -681,7 +681,7 @@
             <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple text-[10px] font-bold flex items-center justify-center">3</span>
             <span class="text-bd-text-secondary">Expand the <strong class="text-bd-text-primary">Hook Files</strong> section and copy each into its tab</span>
             <span class="w-5 h-5 rounded-full bg-bd-green/20 text-bd-green text-[10px] font-bold flex items-center justify-center">✓</span>
-            <span class="text-bd-text-secondary">Save and play — all <strong class="text-bd-text-primary">{{ currentEntries.length }}</strong> script{{ currentEntries.length === 1 ? '' : 's' }} will run each turn</span>
+            <span class="text-bd-text-secondary">Save and play. All <strong class="text-bd-text-primary">{{ currentEntries.length }}</strong> script{{ currentEntries.length === 1 ? '' : 's' }} will run each turn</span>
           </div>
           <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-border-subtle">
             <p class="text-[10px] text-bd-text-muted">

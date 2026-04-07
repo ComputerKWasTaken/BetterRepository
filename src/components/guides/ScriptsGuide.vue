@@ -161,7 +161,7 @@
               <ul class="text-[11px] text-bd-text-secondary space-y-1">
                 <li>• <strong class="text-bd-green">onInput:</strong> Throws error: <em>"Unable to run scenario scripts"</em></li>
                 <li>• <strong class="text-bd-blue">onModelContext:</strong> Throws error: <em>"Sorry, the AI is stumped..."</em></li>
-                <li>• <strong class="text-bd-amber">onOutput:</strong> Changes output to "stop" — <strong>don't do this</strong></li>
+                <li>• <strong class="text-bd-amber">onOutput:</strong> Changes output to "stop" (don't do this)</li>
               </ul>
             </div>
             <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
@@ -836,7 +836,7 @@ modifier(text);</pre>
                 The library-centric hook pattern <strong>still uses the modifier wrapper</strong> in lifecycle files for compatibility,
                 but all actual logic lives inside the library function. The modifier delegates to the library and returns
                 <code class="text-bd-green">{ text: globalThis.text }</code>. Inside the library, code assigns directly to
-                <code class="text-bd-green">globalThis.text</code> rather than returning <code class="text-bd-green">{ text }</code> &mdash;
+                <code class="text-bd-green">globalThis.text</code> rather than returning <code class="text-bd-green">{ text }</code>.
                 AI Dungeon's runtime reads <code class="text-bd-green">globalThis.text</code> after each script executes, so both approaches
                 achieve the same result. Similarly, <code class="text-bd-green">globalThis.stop = true</code> works the same as returning
                 <code class="text-bd-green">{ stop: true }</code>.

@@ -241,7 +241,7 @@ export const SCRIPTS = [
     tags: ['story', 'pacing', 'context-injection', 'automation'],
     source: 'Community',
     author: 'Yi1i1i',
-    description: 'Automatically helps guide and enhance your story by generating a "Story Arc" — a high-level plot outline made up of key events.',
+    description: 'Automatically helps guide and enhance your story by generating a "Story Arc", which is a high-level plot outline made up of key events.',
     purpose: 'Keeps long stories focused and immersive, reduces inconsistencies, and encourages richer story progression by generating arcs based on player behavior.',
     scenarioLink: 'https://play.aidungeon.com/scenario/piAUFAqzm2xZ/story-arc-engine-wip'
   },
@@ -673,7 +673,7 @@ export const extractModifierBody = (code) => {
 
   let body = cleaned.substring(bodyStart, bodyEnd).trim()
 
-  // Remove trailing `return { text }` or `return { text: ... }` — the hook pattern
+  // Remove trailing `return { text }` or `return { text: ... }` since the hook pattern
   // uses globalThis.text instead of returning
   // Keep the rest of the logic but convert the return
   body = body.replace(
@@ -707,7 +707,7 @@ export const convertToHookPattern = (script) => {
   const fnName = getScriptFunctionName(script)
   const stateKey = fnName.charAt(0).toLowerCase() + fnName.slice(1)
 
-  // Case 1: Already a hook-pattern script — return library content as-is
+  // Case 1: Already a hook-pattern script, so return library content as-is
   if (isHookPatternScript(script)) {
     const lib = script.files.library
     // If it uses a function declaration (not globalThis assignment), add registration
@@ -757,7 +757,7 @@ export const convertToHookPattern = (script) => {
     return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n${body}\n};`
   }
 
-  // Case 3: Single-file script with content + fileType
+  // Case 3: Single-file script with content and fileType
   if (script.content && script.fileType) {
     // Library/helper-type scripts don't need hook wrapping — they're shared code
     if (script.fileType === 'library' || script.fileType === 'helper') {
@@ -774,7 +774,7 @@ export const convertToHookPattern = (script) => {
     return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n  // -------- hook: ${hookName} --------\n  if (hook === "${hookName}") {\n${body.split('\n').map(l => `    ${l}`).join('\n')}\n    return;\n  }\n};`
   }
 
-  // Case 4: Raw content without fileType — treat as library
+  // Case 4: Raw content without fileType, so treat as library
   if (script.content) {
     return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n${script.content.trim().split('\n').map(l => `  ${l}`).join('\n')}\n};`
   }

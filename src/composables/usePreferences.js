@@ -21,8 +21,8 @@ const defaultPreferences = {
   savedBuilds: [],
   // Current working build (auto-saved)
   currentBuild: {
-    directiveComponents: [], // Array of { id: string, variantIndex?: number } — rendered as prose in ## Directive
-    instructions: [] // Array of { id: string, variantIndex?: number } — rendered as dashed lines under category headers
+    directiveComponents: [], // Array of { id: string, variantIndex?: number } - rendered as prose in ## Directive
+    instructions: [] // Array of { id: string, variantIndex?: number } - rendered as dashed lines under category headers
   },
   // Story Card Builder
   // Current working story cards (auto-saved)
