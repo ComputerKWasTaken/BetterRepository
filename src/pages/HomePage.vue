@@ -175,7 +175,7 @@
           <div class="flex items-center justify-between mb-5">
             <div class="flex items-center gap-2.5">
               <Megaphone class="w-5 h-5 text-bd-accent-primary" />
-              <h2 class="text-lg font-semibold text-bd-text-primary">What's New in <span class="text-gradient">V1.5</span></h2>
+              <h2 class="text-lg font-semibold text-bd-text-primary">What's New in <span class="text-gradient">V1.6</span></h2>
             </div>
             <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-bd-accent-primary/15 text-bd-accent-light">Latest</span>
           </div>
