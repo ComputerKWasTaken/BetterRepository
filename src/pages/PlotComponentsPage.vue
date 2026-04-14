@@ -1067,6 +1067,10 @@
     </section>
 
     </template>
+    <!-- ==================== BUILDER TAB ==================== -->
+    <template v-if="activeTab === 'builder'">
+      <PlotComponentBuilder />
+    </template>
     <!-- Age Verification Modal -->
     <Teleport to="body">
       <Transition name="fade">
@@ -1120,6 +1124,7 @@ import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ResourceCard from '@/components/ui/ResourceCard.vue'
 import SearchBar from '@/components/ui/SearchBar.vue'
+import PlotComponentBuilder from '@/components/ui/PlotComponentBuilder.vue'
 import { 
   TEMPLATES, 
   TEMPLATE_CATEGORIES,
@@ -1136,7 +1141,8 @@ import {
   Users, Sword, Star, RefreshCw, MessageSquare, Heart, Volume2, Ruler,
   Rocket, Focus, AlertTriangle, Database, Brain, ArrowRightLeft,
   Sparkles, Scissors, MessageCircle, XCircle, Edit, SlidersHorizontal, Zap, Search,
-  ExternalLink, Award, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Flame, ShieldAlert, Lock, GitPullRequest
+  ExternalLink, Award, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Flame, ShieldAlert, Lock, GitPullRequest,
+  Hammer
 } from 'lucide-vue-next'
 const route = useRoute()
 const { preferences, verifyAge, addToSearchHistory } = usePreferences()
@@ -1153,6 +1159,7 @@ const handleSearch = (query) => {
 }
 const tabs = [
   { id: 'templates', label: 'Templates', icon: Layers },
+  { id: 'builder', label: 'Builder', icon: Hammer },
 ]
 const templates = ref(TEMPLATES)
 const categories = ref(TEMPLATE_CATEGORIES)
@@ -1222,7 +1229,7 @@ const collapseAllGuideSections = () => {
 }
 onMounted(() => {
   // Handle initial search query and tab from URL (e.g. from global search)
-  if (route.query.tab && ['templates'].includes(route.query.tab)) {
+  if (route.query.tab && ['templates', 'builder'].includes(route.query.tab)) {
     activeTab.value = route.query.tab
   }
   if (route.query.q) {
