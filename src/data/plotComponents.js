@@ -31,7 +31,7 @@
 //    - advanced: Complex multi-section templates needing regular updates
 //
 // 5. IMPACT RATING
-//    - high: Strongly shapes AI output (AN templates, character sheets)
+//    - high: Strongly shapes AI output (AN templates, character sheet)
 //    - medium: Noticeably guides output (scene anchors, trackers)
 //    - low: Subtle organizational aid (glossaries, inventories)
 //
@@ -130,8 +130,7 @@ Theme:
     content: `Genre: [e.g., Dark Fantasy, Cozy Mystery, Space Opera]
 Tone: [e.g., Gritty, Lighthearted, Tense]
 Pacing: [e.g., Slow burn, Fast-paced, Methodical]
-
-Focus on [specific element you want emphasized]`
+Focus: [specific element to emphasize]`
   },
   {
     id: 'authors-note-mood',
@@ -144,7 +143,7 @@ Focus on [specific element you want emphasized]`
     useCase: 'Shifting mood temporarily for a specific scene.',
     description: 'Sets emotional atmosphere for the current scene.',
     purpose: 'Use to shift mood temporarily. Update or remove when the scene changes.',
-    content: `Current mood: [e.g., tense, melancholic, hopeful, eerie]
+    content: `Mood: [e.g., tense, melancholic, hopeful, eerie]
 Atmosphere: [e.g., foggy morning, bustling market, quiet tension]
 Focus: [e.g., character emotions, environmental details, dialogue]`
   },
@@ -161,7 +160,7 @@ Focus: [e.g., character emotions, environmental details, dialogue]`
     purpose: 'Defines who is telling the story and how. Strong effect on prose style.',
     content: `POV: [First person / Third person limited / Third person omniscient]
 Narrator: [Reliable / Unreliable / Character name]
-Voice: [e.g., Sardonic, Lyrical, Matter-of-fact, Stream of consciousness]`
+Voice: [e.g., Sardonic, Lyrical, Matter-of-fact]`
   },
   {
     id: 'authors-note-scene-setup',
@@ -176,10 +175,10 @@ Voice: [e.g., Sardonic, Lyrical, Matter-of-fact, Stream of consciousness]`
     description: 'Guides the AI through scene transitions.',
     purpose: 'Helps AI understand what\'s happening NOW. Update frequently during scene changes.',
     content: `[Current Scene]
-Location: [Where this scene takes place]
-Present: [Who is here]
-Situation: [What's happening or about to happen]
-Tone: [Mood of this specific scene]`
+Location: [where]
+Present: [who is here]
+Situation: [what's happening]
+Tone: [mood of this scene]`
   },
   {
     id: 'authors-note-combat',
@@ -196,8 +195,7 @@ Tone: [Mood of this specific scene]`
 Style: [Cinematic / Tactical / Brutal / Swashbuckling]
 Pacing: Fast, beat-by-beat
 Focus: Physical actions, positioning, consequences
-- Track injuries and fatigue realistically
-- Enemies act intelligently based on their capabilities`
+- Track injuries and fatigue realistically`
   },
   
   // ==========================================
@@ -245,26 +243,12 @@ Schedule:
     purpose: 'More detail than basic sheet. Use for complex characters in long-running stories.',
     content: `[Character: \${character.name}]
 Species: [Species] | Age: [Age] | Gender: [Gender]
-
-Appearance:
-- Build: [Body type, height]
-- Features: [Face, hair, distinguishing marks]
-- Style: [How they dress, carry themselves]
-
-Personality:
-- Core traits: [2-3 defining characteristics]
-- Quirks: [Habits, mannerisms]
-- Values: [What they care about]
-- Fears: [What they avoid]
-
-Background:
-- Origin: [Where they're from]
-- Occupation: [What they do]
-- Key events: [Formative experiences]
-
-Current State:
-- Goals: [What they want]
-- Struggles: [Current challenges]`
+Appearance: [Build, features, distinguishing marks]
+Personality: [2-3 core traits, quirks]
+Values: [What they care about]
+Background: [Origin, occupation]
+Goals: [What they want]
+Struggles: [Current challenges]`
   },
   {
     id: 'relationship-tracker',
@@ -279,9 +263,9 @@ Current State:
     description: 'Track character relationships and dynamics.',
     purpose: 'Prevents relationship amnesia. Update status after meaningful interactions.',
     content: `[Relationships]
-- [Name]: [Relation] - [Current status/feelings] - [Recent development]
-- [Name]: [Relation] - [Current status/feelings] - [Recent development]
-- [Name]: [Relation] - [Current status/feelings] - [Recent development]`
+- [Name]: [Relation] - [Status/feelings] - [Recent change]
+- [Name]: [Relation] - [Status/feelings] - [Recent change]
+- [Name]: [Relation] - [Status/feelings] - [Recent change]`
   },
   {
     id: 'party-tracker',
@@ -296,14 +280,12 @@ Current State:
     description: 'Prevents companions from disappearing.',
     purpose: 'Critical for party-based stories. Without this, the AI often forgets companions exist.',
     content: `[Current Party]
-- [Name]: [Role] - [Brief description] - [Current condition]
-- [Name]: [Role] - [Brief description] - [Current condition]
-- [Name]: [Role] - [Brief description] - [Current condition]
+- [Name]: [Role] - [Brief description] - [Condition]
+- [Name]: [Role] - [Brief description] - [Condition]
+- [Name]: [Role] - [Brief description] - [Condition]
 
-[Party Status]
-Morale: [How the group is feeling]
-Resources: [Food, money, supplies]
-Shared gear: [Important shared items]`
+Morale: [How the group feels]
+Supplies: [Food, money, gear]`
   },
   {
     id: 'current-scene',
@@ -318,10 +300,10 @@ Shared gear: [Important shared items]`
     description: 'Keeps the AI focused on the present scene.',
     purpose: 'Prevents the AI from reverting to old scenes. Critical for high-context stories.',
     content: `[Current Scene]
-Location: [Where]
-Present: [Who is here]
-Doing: [What's happening]
-Time: [When - time of day, how long since last scene]`
+Location: [where]
+Present: [who is here]
+Doing: [what's happening]
+Time: [when]`
   },
   {
     id: 'npc-roster',
@@ -336,12 +318,9 @@ Time: [When - time of day, how long since last scene]`
     description: 'Quick reference for important NPCs.',
     purpose: 'Helps AI keep NPCs consistent. Include only actively relevant characters.',
     content: `[Key NPCs]
-- [Name]: [Role] | [Key trait] | [Current status]
-- [Name]: [Role] | [Key trait] | [Current status]
-- [Name]: [Role] | [Key trait] | [Current status]
-
-[Recently Met]
-- [Name]: [Who they are] | [How you met]`
+- [Name]: [Role] | [Key trait] | [Status]
+- [Name]: [Role] | [Key trait] | [Status]
+- [Name]: [Role] | [Key trait] | [Status]`
   },
   {
     id: 'world-state',
@@ -355,10 +334,10 @@ Time: [When - time of day, how long since last scene]`
     description: 'Track world-level events and conditions.',
     purpose: 'For stories where the world itself is changing. Update after major events.',
     content: `[World State]
-Season/Weather: [Current conditions]
-Political climate: [Tensions, alliances, conflicts]
-Recent events: [Major happenings affecting the world]
-Rumors: [What people are talking about]`
+Season/Weather: [current conditions]
+Political climate: [tensions, alliances]
+Recent events: [major happenings]
+Rumors: [what people are talking about]`
   },
   {
     id: 'schedule-tracker',
@@ -373,17 +352,11 @@ Rumors: [What people are talking about]`
     description: 'Track scheduled events and time passage.',
     purpose: 'Helps AI understand when things should happen. Great for slice-of-life or timed plots.',
     content: `[Current Time]
-Date: [Day/Month]
-Time: [Approximate hour]
+Date: [Day/Month] | Time: [Hour]
 
 [Upcoming Events]
 - [Date/Time]: [Event]
-- [Date/Time]: [Event]
-
-[Routine]
-- Morning: [Typical activities]
-- Afternoon: [Typical activities]
-- Evening: [Typical activities]`
+- [Date/Time]: [Event]`
   },
   {
     id: 'secrets-tracker',
@@ -399,35 +372,30 @@ Time: [Approximate hour]
     content: `[Knowledge Boundaries]
 \${character.name} knows:
 - [Fact they know]
-- [Fact they know]
 
 \${character.name} does NOT know:
 - [Hidden information]
-- [Hidden information]
 
 [Secrets in play]
-- [Secret]: Known by [who knows]`
+- [Secret]: Known by [who]`
   },
   {
     id: 'inventory-detailed',
-    name: 'Detailed Inventory',
+    name: 'Inventory Tracker',
     category: 'plot-essentials',
     difficulty: 'intermediate',
     impact: 'low',
     essential: false,
     tags: ['inventory', 'items', 'equipment', 'resources'],
     useCase: 'Resource-management or survival stories.',
-    description: 'Detailed item and resource tracking.',
+    description: 'Track items and resources.',
     purpose: 'For stories where resources matter. The AI will reference these items.',
     content: `[Inventory]
-Weapons: [List]
-Armor/Clothing: [List]
-Tools: [List]
-Consumables: [Food, potions, etc.]
-Valuables: [Money, gems, trade goods]
-Special items: [Plot-relevant items]
-
-[Encumbrance: Light/Medium/Heavy]`
+Weapons: [list]
+Armor/Clothing: [list]
+Consumables: [food, potions, etc.]
+Valuables: [money, gems]
+Key items: [plot-relevant items]`
   },
   {
     id: 'quest-log',
@@ -442,12 +410,10 @@ Special items: [Plot-relevant items]
     description: 'Track active quests and missions.',
     purpose: 'Keeps the AI focused on current goals. Helps prevent "what was I doing?" moments.',
     content: `[Active Quests]
-- [Main Quest]: [Objective] - Status: [In Progress]
-- [Side Quest]: [Objective] - Status: [Started]
+- [Main Quest]: [Objective] - [In Progress]
+- [Side Quest]: [Objective] - [Started]
 
-[Objectives]
-- Current Goal: [Immediate next step]
-- Optional: [Bonus objective]`
+Current goal: [Immediate next step]`
   },
   {
     id: 'location-tracker',
@@ -460,16 +426,11 @@ Special items: [Plot-relevant items]
     useCase: 'Base building, ship management, or dungeon crawling.',
     combinesWith: ['inventory-detailed'],
     description: 'Track the status of specific locations or facilities.',
-    purpose: 'For managing a base, ship, or exploring a complex dungeon. Tracks state of specific areas.',
-    content: `[Location: Base/Ship Name]
-- [Room/Area]: [Status/Level] - [Notes]
-- [Room/Area]: [Status/Level] - [Notes]
-- [Room/Area]: [Status/Level] - [Notes]
-
-[Resources]
-- Power: [Level]
-- Supplies: [Amount]
-- Defense: [Status]`
+    purpose: 'For managing a base, ship, or exploring a complex dungeon.',
+    content: `[Location: Name]
+- [Room/Area]: [Status] - [Notes]
+- [Room/Area]: [Status] - [Notes]
+- [Room/Area]: [Status] - [Notes]`
   },
   {
     id: 'glossary-terms',
@@ -486,10 +447,168 @@ Special items: [Plot-relevant items]
     content: `[Glossary]
 - [Term]: [Definition]
 - [Term]: [Definition]
-- [Term]: [Definition]
 - [Term]: [Definition]`
   },
-  
+
+  // ==========================================
+  // NEW PLOT ESSENTIALS — General Use
+  // ==========================================
+  {
+    id: 'abilities-powers',
+    name: 'Abilities & Powers',
+    category: 'plot-essentials',
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: false,
+    tags: ['abilities', 'powers', 'magic', 'skills', 'combat'],
+    useCase: 'Stories with magic systems, superpowers, or special skills.',
+    combinesWith: ['plot-essentials-basic', 'rules-constraints'],
+    description: 'Track character abilities, magic, and skills.',
+    purpose: 'Keeps the AI consistent about what your character can and cannot do.',
+    content: `[Abilities: \${character.name}]
+- [Ability]: [What it does] - [Limitation/cost]
+- [Ability]: [What it does] - [Limitation/cost]
+- [Ability]: [What it does] - [Limitation/cost]
+
+Cannot do: [Important limitations]`
+  },
+  {
+    id: 'rules-constraints',
+    name: 'Rules & Constraints',
+    category: 'plot-essentials',
+    difficulty: 'intermediate',
+    impact: 'high',
+    essential: false,
+    tags: ['rules', 'constraints', 'world', 'laws', 'limits'],
+    useCase: 'Stories with hard rules like magic systems, sci-fi physics, or social laws.',
+    combinesWith: ['world-state', 'glossary-terms'],
+    description: 'Establish world rules the AI must follow.',
+    purpose: 'Prevents the AI from breaking your world\'s rules. Very effective for consistency.',
+    content: `[World Rules]
+- [Rule]: [How it works]
+- [Rule]: [How it works]
+- [Rule]: [How it works]
+
+[Consequences for breaking rules]
+- [What happens if broken]`
+  },
+  {
+    id: 'character-voice',
+    name: 'Character Voice Guide',
+    category: 'plot-essentials',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['voice', 'speech', 'dialogue', 'personality', 'mannerisms'],
+    useCase: 'When NPCs keep sounding the same or you want distinct speech patterns.',
+    combinesWith: ['npc-roster', 'plot-essentials-basic'],
+    description: 'Define how characters talk and behave.',
+    purpose: 'Gives NPCs distinct voices. Prevents everyone from sounding identical.',
+    content: `[Voice: Character Name]
+Speech style: [formal / casual / slang / archaic]
+Verbal tics: [catchphrases, filler words, accent notes]
+Personality in dialogue: [blunt / evasive / warm / sarcastic]
+
+[Voice: Character Name]
+Speech style: [formal / casual / slang / archaic]
+Verbal tics: [catchphrases, filler words, accent notes]
+Personality in dialogue: [blunt / evasive / warm / sarcastic]`
+  },
+  {
+    id: 'reputation-standing',
+    name: 'Reputation & Standing',
+    category: 'plot-essentials',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    tags: ['reputation', 'standing', 'social', 'perception', 'fame'],
+    useCase: 'When how NPCs treat you matters to the story.',
+    combinesWith: ['relationship-tracker', 'world-state'],
+    description: 'Track how others perceive your character.',
+    purpose: 'Influences how NPCs react to you. Great for social-heavy stories.',
+    content: `[Reputation: \${character.name}]
+Known as: [title, nickname, or description]
+General perception: [respected / feared / unknown / infamous]
+- [Group/Place]: [How they see you] - [Why]
+- [Group/Place]: [How they see you] - [Why]`
+  },
+  {
+    id: 'condition-status',
+    name: 'Condition & Status Effects',
+    category: 'plot-essentials',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    tags: ['condition', 'status', 'injuries', 'buffs', 'debuffs', 'health'],
+    useCase: 'Survival, combat-heavy, or consequence-driven stories.',
+    combinesWith: ['plot-essentials-basic', 'party-tracker'],
+    description: 'Track injuries, status effects, and ongoing conditions.',
+    purpose: 'Prevents the AI from forgetting you\'re injured or affected by something.',
+    content: `[Condition: \${character.name}]
+Health: [Healthy / Injured / Critical]
+Active effects:
+- [Effect]: [Source] - [Duration/severity]
+- [Effect]: [Source] - [Duration/severity]
+
+Needs: [Hunger, sleep, morale, etc.]`
+  },
+  {
+    id: 'travel-journey',
+    name: 'Travel & Journey Tracker',
+    category: 'plot-essentials',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    tags: ['travel', 'journey', 'map', 'destination', 'exploration'],
+    useCase: 'Road trips, quests, exploration, or any travel-based story.',
+    combinesWith: ['current-scene', 'party-tracker'],
+    description: 'Track travel routes and journey progress.',
+    purpose: 'Keeps the AI aware of where you are, where you\'re going, and what\'s in between.',
+    content: `[Journey]
+From: [Origin]
+To: [Destination]
+Progress: [How far along]
+Terrain: [What the current area is like]
+Hazards: [Known dangers on the route]`
+  },
+  {
+    id: 'economy-resources',
+    name: 'Economy & Resources',
+    category: 'plot-essentials',
+    difficulty: 'intermediate',
+    impact: 'low',
+    essential: false,
+    tags: ['economy', 'money', 'trade', 'resources', 'wealth'],
+    useCase: 'Merchant stories, kingdom management, or resource-driven plots.',
+    combinesWith: ['inventory-detailed', 'world-state'],
+    description: 'Track currency, trade, and economic standing.',
+    purpose: 'For stories where money and trade matter. Helps AI price things consistently.',
+    content: `[Economy]
+Currency: [Name and denominations]
+Wealth: [Current funds]
+Income: [Sources of money]
+Expenses: [Regular costs]
+Prices: [Cost of common goods for reference]`
+  },
+  {
+    id: 'daily-routine',
+    name: 'Daily Routine & Habits',
+    category: 'plot-essentials',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    tags: ['routine', 'habits', 'daily', 'lifestyle', 'slice-of-life'],
+    useCase: 'Slice-of-life, school settings, or any story with recurring daily patterns.',
+    combinesWith: ['schedule-tracker', 'current-scene'],
+    description: 'Define character\'s regular patterns and habits.',
+    purpose: 'Helps AI write consistent daily life. Great for stories with a "normal" baseline.',
+    content: `[Routine: \${character.name}]
+Morning: [Wake up, breakfast, etc.]
+Daytime: [Work, school, activities]
+Evening: [Dinner, hobbies, social]
+Habits: [Recurring quirks or rituals]`
+  },
+
   // ==========================================
   // STORY SUMMARY TEMPLATES
   // ==========================================
@@ -513,13 +632,11 @@ Special items: [Plot-relevant items]
 Recent events:
 - [Major event 1]
 - [Major event 2]
-- [Major event 3]
 
-Current goal: [What you're trying to accomplish]
-Main obstacle: [What's in the way]
+Current goal: [what you're trying to accomplish]
+Main obstacle: [what's in the way]
 
-Unresolved threads:
-- [Ongoing plot point]
+Unresolved:
 - [Ongoing plot point]`
   },
   {
@@ -535,13 +652,12 @@ Unresolved threads:
     description: 'Track multiple story arcs simultaneously.',
     purpose: 'For stories juggling several plotlines. Helps AI balance different threads.',
     content: `[Active Arcs]
-Main Plot: [Description] - Stage: [Beginning/Rising/Climax/Resolution]
-Subplot A: [Description] - Stage: [Current stage]
-Subplot B: [Description] - Stage: [Current stage]
-Personal Arc: [Character development thread] - Stage: [Current stage]
+Main Plot: [Description] - [Beginning/Rising/Climax/Resolution]
+Subplot: [Description] - [Stage]
+Personal Arc: [Character development] - [Stage]
 
-[Completed Arcs]
-- [Arc name]: [How it resolved]
+[Completed]
+- [Arc]: [How it resolved]
 
 [Foreshadowed]
 - [Setup that hasn't paid off yet]`
@@ -559,15 +675,10 @@ Personal Arc: [Character development thread] - Stage: [Current stage]
     description: 'Track standing with different groups.',
     purpose: 'For political stories. The AI will consider faction dynamics in NPC behavior.',
     content: `[Faction Standing]
-- [Faction A]: [Hostile/Unfriendly/Neutral/Friendly/Allied] - [Why]
-- [Faction B]: [Standing] - [Why]
-- [Faction C]: [Standing] - [Why]
+- [Faction]: [Hostile/Neutral/Friendly/Allied] - [Why]
+- [Faction]: [Standing] - [Why]
+- [Faction]: [Standing] - [Why]
 
-[Faction Dynamics]
-- [Faction A] vs [Faction B]: [Their relationship]
-- [Faction B] allied with [Faction C]: [Context]
-
-[Your reputation]
 Known for: [What factions know about you]`
   },
   {
@@ -585,17 +696,15 @@ Known for: [What factions know about you]`
     content: `[The Mystery]
 Central question: [What are we trying to figure out?]
 
-[Discovered Clues]
-- [Clue]: Found [where/when] - Implies [what it suggests]
-- [Clue]: Found [where/when] - Implies [what it suggests]
+[Clues Found]
+- [Clue]: [Where found] - [What it implies]
+- [Clue]: [Where found] - [What it implies]
 
-[Suspects/Theories]
-- [Theory 1]: Evidence for/against
-- [Theory 2]: Evidence for/against
+[Theories]
+- [Theory]: [Evidence for/against]
 
 [Still Unknown]
-- [Question we haven't answered]
-- [Lead we haven't followed]`
+- [Unanswered question]`
   },
   {
     id: 'character-growth',
@@ -609,26 +718,19 @@ Central question: [What are we trying to figure out?]
     description: 'Track character development over time.',
     purpose: 'For character-focused stories. Helps AI write consistent character growth.',
     content: `[Character Arc: \${character.name}]
-Started as: [Initial state/flaws/beliefs]
+Started as: [Initial state/flaws]
 Currently: [Where they are now]
 Growing toward: [Intended development]
 
-[Key moments]
-- [Event]: Changed [what about them]
-- [Event]: Learned [what lesson]
-
-[Internal conflicts]
-- [Struggle they're dealing with]
-
-[Relationships changed]
-- [Person]: From [old dynamic] to [new dynamic]`
+Key moments:
+- [Event]: Changed [what]
+- [Event]: Learned [what]`
   },
 
   // ==========================================
   // NSFW / ADULT TEMPLATES
   // ==========================================
-  // Templates for adult content and intimate scenes.
-  // 18+ only. Use with age verification.
+  // Trimmed to essentials. 18+ only.
   // ==========================================
   {
     id: 'nsfw-scene-note',
@@ -663,26 +765,7 @@ Growing toward: [Intended development]
 - Balance explicit physical content with emotional connection
 - Show desire, chemistry, and meaningful moments
 - Include tender touches alongside passionate ones
-- Characters express feelings through actions and words
-- Aftercare and pillow talk when appropriate`
-  },
-  {
-    id: 'nsfw-hardcore-note',
-    name: 'Hardcore Scene Note',
-    category: 'nsfw',
-    difficulty: 'intermediate',
-    impact: 'high',
-    essential: false,
-    tags: ['nsfw', 'hardcore', 'extreme', 'explicit'],
-    useCase: 'For intense, graphic content without restraint.',
-    description: 'Maximum explicitness for adult scenes.',
-    purpose: 'For users seeking the most graphic, unfiltered content.',
-    content: `[Hardcore Scene]
-- Write the most explicit, graphic content possible
-- Use vulgar, degrading language freely
-- Include rough, aggressive physical elements
-- Describe every act in pornographic detail
-- Nothing is too filthy, push all boundaries`
+- Characters express feelings through actions and words`
   },
   {
     id: 'nsfw-partner-profile',
@@ -698,18 +781,10 @@ Growing toward: [Intended development]
     purpose: 'Keeps intimate partners consistent. Update as you learn more about them.',
     content: `[Intimate Partner: Name]
 Relationship: [Partner/Lover/FWB/Spouse/etc.]
-
-Physical:
-- Body: [Build, features, notable attributes]
-- Intimate details: [Relevant physical specifics]
-
-Preferences:
-- Likes: [What they enjoy]
-- Dislikes: [What they avoid]
-- Kinks: [Special interests]
-
-Dynamic: [Dom/Sub/Switch/Vanilla/etc.]
-History: [Your intimate history together]`
+Body: [Build, features, notable attributes]
+Likes: [What they enjoy]
+Dislikes: [What they avoid]
+Dynamic: [Dom/Sub/Switch/Vanilla/etc.]`
   },
   {
     id: 'nsfw-boundaries',
@@ -723,178 +798,11 @@ History: [Your intimate history together]`
     description: 'Define what\'s on and off the table.',
     purpose: 'Prevents unwanted content. AI respects these boundaries.',
     content: `[Scene Boundaries]
-Green (enthusiastic yes):
-- [Acts/themes you want]
-- [Content you enjoy]
-
-Yellow (include carefully):
-- [Things that are okay sometimes]
-- [Context-dependent content]
-
-Red (never include):
-- [Hard limits]
-- [Content to avoid completely]`
+Green (yes): [Acts/themes you want]
+Yellow (carefully): [Things okay sometimes]
+Red (never): [Hard limits]`
   },
-  {
-    id: 'nsfw-kink-focus',
-    name: 'Kink Focus Note',
-    category: 'nsfw',
-    difficulty: 'intermediate',
-    impact: 'medium',
-    essential: false,
-    tags: ['nsfw', 'kink', 'fetish', 'specific'],
-    useCase: 'When you want scenes to emphasize specific kinks.',
-    description: 'Guides AI to focus on particular interests.',
-    purpose: 'Temporary note for scenes. Tells AI what to emphasize.',
-    content: `[Kink Focus: Scene Name]
-Primary focus: [Main kink/interest]
-Secondary: [Supporting elements]
 
-Include:
-- [Specific element you want]
-- [Another element]
-
-Tone: [Playful/Intense/Loving/Rough/etc.]
-Dynamic: [Power dynamic if relevant]`
-  },
-  {
-    id: 'nsfw-relationship-dynamic',
-    name: 'Intimate Relationship Dynamic',
-    category: 'nsfw',
-    difficulty: 'intermediate',
-    impact: 'medium',
-    essential: false,
-    tags: ['nsfw', 'relationship', 'dynamic', 'power'],
-    useCase: 'For ongoing intimate relationships with established dynamics.',
-    combinesWith: ['nsfw-partner-profile'],
-    description: 'Defines the intimate dynamic between characters.',
-    purpose: 'Establishes consistent power dynamics and roles.',
-    content: `[Intimate Dynamic: Character & Partner]
-Type: [D/s, Switch, Vanilla, etc.]
-
-Roles:
-- [Character]: [Their role/position]
-- [Partner]: [Their role/position]
-
-Established patterns:
-- [How scenes typically start]
-- [Common activities]
-- [Aftercare routine]
-
-Evolution: [How the dynamic has developed]`
-  },
-  {
-    id: 'nsfw-harem-tracker',
-    name: 'Harem / Multiple Partners',
-    category: 'nsfw',
-    difficulty: 'intermediate',
-    impact: 'medium',
-    essential: false,
-    tags: ['nsfw', 'harem', 'multiple', 'partners'],
-    useCase: 'For stories with multiple romantic/sexual partners.',
-    description: 'Track multiple intimate relationships.',
-    purpose: 'Keeps multiple partners distinct and consistent.',
-    content: `[Partners]
-
-[Name 1]
-- Status: [Relationship type]
-- Dynamic: [How you interact intimately]
-- Unique: [What's special about them]
-
-[Name 2]
-- Status: [Relationship type]
-- Dynamic: [How you interact intimately]
-- Unique: [What's special about them]
-
-[Group dynamics]
-- Know about each other: [Yes/No/Some]
-- Jealousy factor: [None/Some/High]
-- Group scenes: [Open to it / Not interested]`
-  },
-  {
-    id: 'nsfw-scene-tracker',
-    name: 'Intimate Scene Tracker',
-    category: 'nsfw',
-    difficulty: 'beginner',
-    impact: 'medium',
-    essential: false,
-    tags: ['nsfw', 'scene', 'tracking', 'history'],
-    useCase: 'To track intimate encounters for continuity.',
-    description: 'Log past intimate scenes.',
-    purpose: 'Helps maintain continuity in ongoing relationships.',
-    content: `[Intimate History]
-
-[Most Recent: Date/Context]
-- With: [Partner]
-- What happened: [Brief summary]
-- Notable: [Anything significant]
-
-[Previous encounters]
-- [Date]: [Partner] - [Brief note]
-- [Date]: [Partner] - [Brief note]
-
-[Firsts]
-- First kiss: [Who/When]
-- First time: [Who/When]
-- First [other milestone]: [Who/When]`
-  },
-  {
-    id: 'nsfw-tension-buildup',
-    name: 'Sexual Tension Tracker',
-    category: 'nsfw',
-    difficulty: 'beginner',
-    impact: 'medium',
-    essential: false,
-    tags: ['nsfw', 'tension', 'buildup', 'slow-burn'],
-    useCase: 'For slow-burn romances building toward intimacy.',
-    description: 'Track building tension between characters.',
-    purpose: 'Guides AI to build tension appropriately before payoff.',
-    content: `[Tension: Character & Interest]
-Current level: [Simmering/Building/Near breaking point]
-
-[Moments of tension]
-- [Loaded glance/accidental touch/etc.]
-- [Almost-kiss/interrupted moment/etc.]
-
-[What's stopping them]
-- [Obstacle/reason they haven't acted]
-
-[Signs of attraction]
-- They show: [How they show interest]
-- You show: [How you show interest]
-
-[When it breaks]: [What might finally push them over]`
-  },
-  {
-    id: 'nsfw-fantasy-species',
-    name: 'Fantasy Species Intimacy',
-    category: 'nsfw',
-    difficulty: 'intermediate',
-    impact: 'medium',
-    essential: false,
-    tags: ['nsfw', 'fantasy', 'monster', 'nonhuman'],
-    useCase: 'For intimate scenes with nonhuman characters.',
-    description: 'Define unique intimate traits of fantasy beings.',
-    purpose: 'Helps AI write consistent nonhuman intimate encounters.',
-    content: `[Species: Name]
-Type: [Monster/Alien/Fantasy race/etc.]
-
-Unique anatomy:
-- [Relevant physical differences]
-- [Special features or appendages]
-
-Biological traits:
-- [Heat cycles/mating instincts/etc.]
-- [Unusual fluids/pheromones/etc.]
-
-Cultural attitudes:
-- [How this species views intimacy]
-- [Mating rituals or customs]
-
-With humans:
-- [Compatibility notes]
-- [Size/physical considerations]`
-  },
   // ==========================================
   // COMBAT TEMPLATES
   // ==========================================
@@ -902,16 +810,16 @@ With humans:
     id: 'autonomous-combat',
     name: 'Autonomous and Realistic Combat',
     category: 'authors-note',
-    description: 'Allows NPCs and characters to attack and strike first without waiting for the player to make the first move. Second, NPCs also follow up with combo attacks/counters and don\'t stop attacking after just trying once, and finally NPCs in groups can attack simultaneously and together.',
-    content: `- All characters and enemies can attack and strike first to initiate and engage in combat
-- All characters and enemies in groups can attack simultaneously and together if they wish to, allowing for coordination
-- All Characters and enemies follow up with combo attacks and chain attacks in combat after landing or trying to land an initial attack`,
+    description: 'Allows NPCs and characters to attack and strike first without waiting for the player to make the first move. NPCs follow up with combo attacks/counters and groups can attack simultaneously.',
+    content: `- All characters and enemies can attack and strike first to initiate combat
+- All characters and enemies in groups can attack simultaneously and coordinate
+- All characters and enemies follow up with combo attacks and chain attacks after landing or trying to land an initial attack`,
     tags: ['combat', 'npc', 'enemies', 'action', 'battle', 'coordination'],
     difficulty: 'intermediate',
     impact: 'high',
     essential: false,
-    useCase: 'Use when you want more dynamic and unpredictable combat scenarios where NPCs act autonomously rather than waiting for player input',
-    combinesWith: ['dynamic-combat', 'group-tactics', 'realistic-injuries'],
+    useCase: 'Use when you want more dynamic combat where NPCs act autonomously rather than waiting for player input',
+    combinesWith: ['authors-note-combat'],
     credit: {
       author: 'Kyoi'
     }
