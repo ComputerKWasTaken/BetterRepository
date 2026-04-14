@@ -32,9 +32,9 @@ const routes = [
     component: AIInstructionsPage,
     meta: {
       title: 'AI Instructions - BetterRepository',
-      description: 'Master AI behavior with curated instruction sets and individual components. Pre-built playstyle sets, length variants, and a directive builder for AI Dungeon.',
+      description: 'Pre-built instruction sets, 200+ individual components, and a custom directive builder. Master AI writing style, pacing, and tone for your AI Dungeon adventures.',
       ogTitle: 'AI Instructions - BetterRepository',
-      ogDescription: 'Browse over 200+ AI instruction components and sets. Customize AI writing style, pacing, and tone for your AI Dungeon adventures.',
+      ogDescription: 'Pre-built instruction sets, 200+ individual components, and a custom directive builder. Master AI writing style, pacing, and tone for AI Dungeon.',
       path: '/ai-instructions'
     }
   },
@@ -56,9 +56,9 @@ const routes = [
     component: StoryCardsPage,
     meta: {
       title: 'Story Cards - BetterRepository',
-      description: 'Reusable Story Card templates for characters, locations, factions, and items. Learn to write effective Story Cards for AI Dungeon worldbuilding.',
+      description: 'Story Card templates, a visual card builder, and a complete writing guide. Create cards for characters, locations, factions, and items in AI Dungeon.',
       ogTitle: 'Story Cards - BetterRepository',
-      ogDescription: 'Ready-to-use Story Card templates and a complete guide to writing effective cards for characters, locations, factions, and more in AI Dungeon.',
+      ogDescription: 'Story Card templates, a visual card builder, and a complete writing guide for characters, locations, factions, and more in AI Dungeon.',
       path: '/story-cards'
     }
   },
@@ -68,9 +68,9 @@ const routes = [
     component: ScriptsPage,
     meta: {
       title: 'Scripts - BetterRepository',
-      description: 'Extend AI Dungeon with custom JavaScript scripts. Browse ready-to-use scripts and learn the Scripting API with input, context, and output modifiers.',
+      description: 'Extend AI Dungeon with custom JavaScript. Ready-to-use scripts, a Multiscript Builder for combining scripts, and a complete scripting API guide.',
       ogTitle: 'Scripts - BetterRepository',
-      ogDescription: 'Custom JavaScript scripts for AI Dungeon. Game mechanics, utilities, automation, and a complete scripting guide with lifecycle hooks and examples.',
+      ogDescription: 'Custom JavaScript scripts and a Multiscript Builder for AI Dungeon. Ready-to-use scripts, game mechanics, and a complete API reference with lifecycle hooks.',
       path: '/scripts'
     }
   },
@@ -82,7 +82,7 @@ const routes = [
       title: 'Guides - BetterRepository',
       description: 'Comprehensive guides for AI Dungeon covering AI Instructions, Plot Components, Story Cards, Scripts, Symbols & Commands, BetterScripts, and Advanced Settings.',
       ogTitle: 'Guides - BetterRepository',
-      ogDescription: 'Everything you need to master AI Dungeon. In-depth guides on AI Instructions, Plot Components, Story Cards, Scripting, Symbols & Commands, and Advanced Settings.',
+      ogDescription: 'Everything you need to master AI Dungeon. In-depth guides on AI Instructions, Plot Components, Story Cards, Scripting, BetterScripts, Symbols & Commands, and Advanced Settings.',
       path: '/guides'
     }
   },
