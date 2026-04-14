@@ -181,8 +181,28 @@
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Multiscript Builder -->
+            <!-- NSFW Control Options -->
             <div class="whats-new-card group" style="animation-delay: 0ms">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 rounded-lg bg-bd-red/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-red/25 transition-colors">
+                  <Flame class="w-4 h-4 text-bd-red" />
+                </div>
+                <h3 class="font-semibold text-sm text-bd-text-primary">NSFW Control Options</h3>
+              </div>
+              <ul class="space-y-1.5 text-sm text-bd-text-secondary">
+                <li class="flex items-start gap-2">
+                  <Shield class="w-3 h-3 text-bd-red flex-shrink-0 mt-1" />
+                  <span>New control variants (Off, Softcore, Explicit, Maximal) for Sets tab with age verification</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <Settings class="w-3 h-3 text-bd-red flex-shrink-0 mt-1" />
+                  <span>Append NSFW instructions to any set with romance-focused Softcore option</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Multiscript Builder -->
+            <div class="whats-new-card group" style="animation-delay: 80ms">
               <div class="flex items-center gap-3 mb-3">
                 <div class="w-9 h-9 rounded-lg bg-bd-cyan/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-cyan/25 transition-colors">
                   <Blocks class="w-4 h-4 text-bd-cyan" />
@@ -200,42 +220,22 @@
                 </li>
               </ul>
             </div>
-
-            <!-- Story Card Builder (v1.4) -->
-            <div class="whats-new-card group" style="animation-delay: 80ms">
-              <div class="flex items-center gap-3 mb-3">
-                <div class="w-9 h-9 rounded-lg bg-bd-amber/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-amber/25 transition-colors">
-                  <Hammer class="w-4 h-4 text-bd-amber" />
-                </div>
-                <h3 class="font-semibold text-sm text-bd-text-primary">Story Card Builder</h3>
-              </div>
-              <ul class="space-y-1.5 text-sm text-bd-text-secondary">
-                <li class="flex items-start gap-2">
-                  <Edit3 class="w-3 h-3 text-bd-accent-primary flex-shrink-0 mt-1" />
-                  <span>Craft, refine, and save Story Card sets directly in your browser</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <RefreshCw class="w-3 h-3 text-bd-accent-primary flex-shrink-0 mt-1" />
-                  <span>Full AI Dungeon-compatible JSON import and export</span>
-                </li>
-              </ul>
-            </div>
           </div>
 
           <!-- CTA -->
           <div class="mt-5 pt-4 border-t border-bd-border-subtle flex items-center justify-center gap-6">
-            <router-link 
-              to="/scripts?tab=builder" 
+            <router-link
+              to="/ai-instructions?tab=sets"
+              class="inline-flex items-center gap-2 text-sm font-medium text-bd-red hover:text-bd-red/80 transition-colors"
+            >
+              Try NSFW Controls
+              <ArrowRight class="w-3.5 h-3.5" />
+            </router-link>
+            <router-link
+              to="/scripts?tab=builder"
               class="inline-flex items-center gap-2 text-sm font-medium text-bd-cyan hover:text-bd-cyan/80 transition-colors"
             >
               Try the Multiscript Builder
-              <ArrowRight class="w-3.5 h-3.5" />
-            </router-link>
-            <router-link 
-              to="/story-cards?tab=builder" 
-              class="inline-flex items-center gap-2 text-sm font-medium text-bd-accent-primary hover:text-bd-accent-light transition-colors"
-            >
-              Try the Story Card Builder
               <ArrowRight class="w-3.5 h-3.5" />
             </router-link>
           </div>
@@ -439,12 +439,12 @@ import { STORY_CARDS, STORY_CARD_TEMPLATES } from '@/data/storyCards'
 import { SCRIPTS } from '@/data/scripts'
 import { useGlobalSearch } from '@/composables/useGlobalSearch'
 import { MAJOR_CONTRIBUTORS as majorContributors } from '@/data/contributors'
-import { 
+import {
   Search, LayoutGrid, Lightbulb, ScrollText, Heart, Sparkles, ArrowRight,
   GitPullRequest, MessageCircle, ExternalLink, Bookmark, Drama, Code,
   Award, Users, ChevronRight, Package, Layers, LayoutDashboard, Infinity, X,
   Megaphone, RefreshCw, Tag, SlidersHorizontal, Wrench, Hammer, Activity, ShieldAlert, Eye, Edit3,
-  Blocks
+  Blocks, Flame, Shield, Settings
 } from 'lucide-vue-next'
 
 const router = useRouter()
