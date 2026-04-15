@@ -803,27 +803,6 @@ Yellow (carefully): [Things okay sometimes]
 Red (never): [Hard limits]`
   },
 
-  // ==========================================
-  // COMBAT TEMPLATES
-  // ==========================================
-  {
-    id: 'autonomous-combat',
-    name: 'Autonomous and Realistic Combat',
-    category: 'authors-note',
-    description: 'Allows NPCs and characters to attack and strike first without waiting for the player to make the first move. NPCs follow up with combo attacks/counters and groups can attack simultaneously.',
-    content: `- All characters and enemies can attack and strike first to initiate combat
-- All characters and enemies in groups can attack simultaneously and coordinate
-- All characters and enemies follow up with combo attacks and chain attacks after landing or trying to land an initial attack`,
-    tags: ['combat', 'npc', 'enemies', 'action', 'battle', 'coordination'],
-    difficulty: 'intermediate',
-    impact: 'high',
-    essential: false,
-    useCase: 'Use when you want more dynamic combat where NPCs act autonomously rather than waiting for player input',
-    combinesWith: ['authors-note-combat'],
-    credit: {
-      author: 'Kyoi'
-    }
-  }
 ]
 
 // ============================================

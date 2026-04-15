@@ -4069,6 +4069,22 @@ export const COMPONENTS = [
     purpose: 'Problems have solutions. Difficulty is fair, not arbitrary.',
     content: `- Challenges are fair and solvable; enemies have exploitable weaknesses and the player always has viable options to succeed.`
   },
+  {
+    id: 'autonomous-combat',
+    name: 'Autonomous and Realistic Combat',
+    category: 'gameplay',
+    group: 'combat-styles',
+    groupOrder: 3,
+    difficulty: 'intermediate',
+    impact: 'high',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['combat', 'npc', 'enemies', 'action', 'battle', 'coordination'],
+    models: ['All Models'],
+    description: 'Allows NPCs and characters to attack and strike first without waiting for the player to make the first move. NPCs follow up with combo attacks/counters and groups can attack simultaneously.',
+    purpose: 'Use when you want more dynamic combat where NPCs act autonomously rather than waiting for player input.',
+    content: `- All characters and enemies can attack and strike first to initiate combat, groups can attack simultaneously and coordinate, and all follow up with combo attacks and chain attacks after landing or trying to land an initial attack.`
+  },
 
   // ==========================================
   // NARRATIVE
