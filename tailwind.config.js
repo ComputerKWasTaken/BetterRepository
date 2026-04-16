@@ -13,6 +13,7 @@ export default {
           secondary: '#16161a',
           tertiary: '#1e1e24',
           elevated: '#252530',
+          active: '#2c2c36',
         },
         // Text Colors
         'bd-text': {
@@ -20,6 +21,7 @@ export default {
           secondary: '#a0a0a8',
           muted: '#6b6b75',
           inverse: '#0d0d0f',
+          'on-accent': '#ffffff',
         },
         // Brand/Accent Colors
         'bd-accent': {
@@ -35,7 +37,7 @@ export default {
         },
         // Tag Background
         'bd-tag-bg': 'rgba(255, 255, 255, 0.08)',
-        // Category Colors
+        // Category Colors — base
         'bd-blue': '#3b82f6',
         'bd-purple': '#a855f7',
         'bd-green': '#22c55e',
@@ -50,11 +52,24 @@ export default {
         'bd-rose': '#f43f5e',
         'bd-slate': '#94a3b8',
         'bd-gray': '#6b7280',
+        // Category Colors — light variants
+        'bd-blue-light': '#60a5fa',
+        'bd-purple-light': '#c084fc',
+        'bd-green-light': '#4ade80',
+        'bd-amber-light': '#fcd34d',
+        'bd-cyan-light': '#22d3ee',
+        'bd-orange-light': '#fb923c',
         // Status Colors
         'bd-success': '#22c55e',
+        'bd-success-light': '#4ade80',
         'bd-error': '#ef4444',
+        'bd-error-light': '#f87171',
         'bd-warning': '#f59e0b',
+        'bd-warning-light': '#fbbf24',
         'bd-info': '#3b82f6',
+        'bd-info-light': '#60a5fa',
+        // Third-party brand
+        'bd-discord': '#5865F2',
       },
       fontFamily: {
         'sans': ['IBM Plex Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
@@ -63,6 +78,7 @@ export default {
       boxShadow: {
         'glow': '0 0 20px rgba(255, 149, 0, 0.12)',
         'glow-lg': '0 0 30px rgba(255, 149, 0, 0.2)',
+        'glow-xl': '0 4px 12px rgba(255, 149, 0, 0.3)',
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out',

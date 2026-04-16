@@ -1696,7 +1696,7 @@ const clearFilters = () => {
 .hero-orb--cyan {
   width: 220px;
   height: 220px;
-  background: #06b6d4;
+  background: var(--bd-cyan);
   top: -40px;
   right: -20px;
   animation: float 8s ease-in-out infinite;
@@ -1705,7 +1705,7 @@ const clearFilters = () => {
 .hero-orb--blue {
   width: 160px;
   height: 160px;
-  background: #3b82f6;
+  background: var(--bd-blue);
   bottom: -30px;
   left: 5%;
   animation: float 10s ease-in-out infinite reverse;

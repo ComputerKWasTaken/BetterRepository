@@ -647,7 +647,7 @@ const handleClickOutside = (e) => {
 .hero-orb--purple {
   width: 200px;
   height: 200px;
-  background: #a855f7;
+  background: var(--bd-purple);
   bottom: -40px;
   left: 10%;
   animation: float 10s ease-in-out infinite reverse;
@@ -656,7 +656,7 @@ const handleClickOutside = (e) => {
 .hero-orb--cyan {
   width: 160px;
   height: 160px;
-  background: #06b6d4;
+  background: var(--bd-cyan);
   top: 20%;
   left: -30px;
   animation: float 12s ease-in-out infinite 2s;

@@ -73,10 +73,10 @@
           <ChevronRight class="w-4 h-4 text-bd-text-muted group-hover:text-bd-accent-primary group-hover:translate-x-0.5 transition-all" />
         </router-link>
         <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" rel="noopener noreferrer"
-           class="group flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#5865F2]/10 border border-[#5865F2]/30 hover:border-[#5865F2] hover:bg-[#5865F2]/20 transition-all duration-300 hover:-translate-y-0.5">
-          <MessageCircle class="w-5 h-5 text-[#5865F2]" />
+           class="group flex items-center gap-2 px-5 py-2.5 rounded-full bg-bd-discord/10 border border-bd-discord/30 hover:border-bd-discord hover:bg-bd-discord/20 transition-all duration-300 hover:-translate-y-0.5">
+          <MessageCircle class="w-5 h-5 text-bd-discord" />
           <span class="text-sm text-bd-text-primary font-medium">Join Discord</span>
-          <ExternalLink class="w-3 h-3 text-bd-text-muted group-hover:text-[#5865F2] transition-colors" />
+          <ExternalLink class="w-3 h-3 text-bd-text-muted group-hover:text-bd-discord transition-colors" />
         </a>
       </div>
     </div>
@@ -436,7 +436,7 @@
             <a href="https://github.com/ComputerKWasTaken" target="_blank" rel="noopener noreferrer" class="text-bd-text-muted hover:text-bd-text-primary transition-colors hover:scale-110 transform">
               <Github class="w-5 h-5" />
             </a>
-            <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" rel="noopener noreferrer" class="text-bd-text-muted hover:text-[#5865F2] transition-colors hover:scale-110 transform">
+            <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" rel="noopener noreferrer" class="text-bd-text-muted hover:text-bd-discord transition-colors hover:scale-110 transform">
               <MessageCircle class="w-5 h-5" />
             </a>
           </div>
@@ -529,7 +529,7 @@ onUnmounted(() => {
 .hero-orb--purple {
   width: 220px;
   height: 220px;
-  background: #a855f7;
+  background: var(--bd-purple);
   bottom: -50px;
   left: 5%;
   animation: float 10s ease-in-out infinite reverse;
@@ -538,7 +538,7 @@ onUnmounted(() => {
 .hero-orb--cyan {
   width: 160px;
   height: 160px;
-  background: #06b6d4;
+  background: var(--bd-cyan);
   top: 30%;
   left: -20px;
   animation: float 12s ease-in-out infinite 2s;
