@@ -2624,7 +2624,7 @@ onUnmounted(() => {
 .hero-orb--amber {
   width: 220px;
   height: 220px;
-  background: #f59e0b;
+  background: var(--bd-warning);
   top: -40px;
   right: -20px;
   animation: float 8s ease-in-out infinite;
@@ -2633,7 +2633,7 @@ onUnmounted(() => {
 .hero-orb--purple {
   width: 160px;
   height: 160px;
-  background: #a855f7;
+  background: var(--bd-purple);
   bottom: -30px;
   left: 5%;
   animation: float 10s ease-in-out infinite reverse;

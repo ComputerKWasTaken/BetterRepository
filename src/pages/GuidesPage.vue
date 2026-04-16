@@ -154,7 +154,7 @@ watch(() => route.query.tab, (newTab) => {
 .hero-orb--blue {
   width: 220px;
   height: 220px;
-  background: #3b82f6;
+  background: var(--bd-blue);
   top: -40px;
   right: -20px;
   animation: float 8s ease-in-out infinite;
@@ -163,7 +163,7 @@ watch(() => route.query.tab, (newTab) => {
 .hero-orb--green {
   width: 160px;
   height: 160px;
-  background: #22c55e;
+  background: var(--bd-green);
   bottom: -30px;
   left: 5%;
   animation: float 10s ease-in-out infinite reverse;
@@ -172,7 +172,7 @@ watch(() => route.query.tab, (newTab) => {
 .hero-orb--purple {
   width: 140px;
   height: 140px;
-  background: #a855f7;
+  background: var(--bd-purple);
   top: 10%;
   left: 40%;
   animation: float 12s ease-in-out infinite 2s;
@@ -225,10 +225,10 @@ watch(() => route.query.tab, (newTab) => {
   transition: all 0.2s ease;
 }
 
-.dot--amber { background: #fbbf24; }
-.dot--blue { background: #3b82f6; }
-.dot--purple { background: #a855f7; }
-.dot--cyan { background: #06b6d4; }
+.dot--amber { background: var(--bd-amber); }
+.dot--blue { background: var(--bd-blue); }
+.dot--purple { background: var(--bd-purple); }
+.dot--cyan { background: var(--bd-cyan); }
 
 /* Dim the dot when inactive */
 .guide-tab--inactive .guide-tab__dot {
@@ -253,7 +253,7 @@ watch(() => route.query.tab, (newTab) => {
 .guide-tab--active-amber {
   background: rgba(251, 191, 36, 0.12);
   border-color: rgba(251, 191, 36, 0.25);
-  color: #fbbf24;
+  color: var(--bd-amber);
 }
 
 .guide-tab--active-amber .guide-tab__dot {
@@ -263,7 +263,7 @@ watch(() => route.query.tab, (newTab) => {
 .guide-tab--active-blue {
   background: rgba(59, 130, 246, 0.12);
   border-color: rgba(59, 130, 246, 0.25);
-  color: #3b82f6;
+  color: var(--bd-blue);
 }
 
 .guide-tab--active-blue .guide-tab__dot {
@@ -273,7 +273,7 @@ watch(() => route.query.tab, (newTab) => {
 .guide-tab--active-purple {
   background: rgba(168, 85, 247, 0.12);
   border-color: rgba(168, 85, 247, 0.25);
-  color: #a855f7;
+  color: var(--bd-purple);
 }
 
 .guide-tab--active-purple .guide-tab__dot {
@@ -283,7 +283,7 @@ watch(() => route.query.tab, (newTab) => {
 .guide-tab--active-cyan {
   background: rgba(6, 182, 212, 0.12);
   border-color: rgba(6, 182, 212, 0.25);
-  color: #06b6d4;
+  color: var(--bd-cyan);
 }
 
 .guide-tab--active-cyan .guide-tab__dot {

@@ -225,11 +225,11 @@ modifier(text);</code></pre>
   widgets += bdWidget('hp-bar', {
     type: 'bar', label: 'HP',
     value: state.game.hp, max: 100,
-    color: '#22c55e', align: 'left', order: 1
+    color: 'var(--bd-success)', align: 'left', order: 1
   });
   widgets += bdWidget('gold', {
     type: 'stat', label: 'Gold',
-    value: state.game.gold, color: '#fbbf24',
+    value: state.game.gold, color: 'var(--bd-amber)',
     align: 'right', order: 1
   });
 
@@ -320,9 +320,9 @@ modifier(text);</code></pre>
                   </div>
                 </div>
                 <div class="flex-shrink-0">
-                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                    <span class="text-[11px] text-[#8888aa]">Gold</span>
-                    <span class="text-[11px] font-semibold" style="color: #fbbf24;">1,250</span>
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-bd-bg-tertiary border border-bd-border-strong">
+                    <span class="text-[11px] text-bd-text-muted">Gold</span>
+                    <span class="text-[11px] font-semibold text-bd-amber">1,250</span>
                   </div>
                 </div>
               </div>
@@ -344,12 +344,12 @@ modifier(text);</code></pre>
                   </div>
                 </div>
                 <div class="flex-shrink-0">
-                  <div class="inline-flex items-center gap-2 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e] min-w-[160px]">
-                    <span class="text-[11px] text-[#8888aa] w-6">HP</span>
-                    <div class="flex-1 h-2.5 rounded-full bg-[#2a2a3e] overflow-hidden">
-                      <div class="h-full rounded-full" style="width: 75%; background: #22c55e;"></div>
+                  <div class="inline-flex items-center gap-2 px-2.5 py-1.5 rounded bg-bd-bg-tertiary border border-bd-border-strong min-w-[160px]">
+                    <span class="text-[11px] text-bd-text-muted w-6">HP</span>
+                    <div class="flex-1 h-2.5 rounded-full bg-bd-bg-elevated overflow-hidden">
+                      <div class="h-full rounded-full bg-bd-success" style="width: 75%;"></div>
                     </div>
-                    <span class="text-[10px] text-[#8888aa]">75/100</span>
+                    <span class="text-[10px] text-bd-text-muted">75/100</span>
                   </div>
                 </div>
               </div>
@@ -371,9 +371,9 @@ modifier(text);</code></pre>
                   </div>
                 </div>
                 <div class="flex-shrink-0 flex gap-1.5">
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px]" style="background: rgba(168,85,247,0.15); color: #a855f7;">☠️ Poisoned</span>
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px]" style="background: #fbbf24; color: #1a1a2e;">⚡ Buffed</span>
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] border" style="border-color: #22c55e; color: #22c55e;">Healthy</span>
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px]" style="background: rgba(168,85,247,0.15);" class="text-bd-purple">☠️ Poisoned</span>
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] bg-bd-amber text-bd-bg-tertiary">⚡ Buffed</span>
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] border border-bd-success text-bd-success">Healthy</span>
                 </div>
               </div>
               <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary mt-3">{ type: 'badge', text: 'Poisoned', icon: '☠️', color: '#a855f7', variant: 'subtle', align: 'center' }</pre>
@@ -393,10 +393,10 @@ modifier(text);</code></pre>
                   </div>
                 </div>
                 <div class="flex-shrink-0">
-                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-bd-bg-tertiary border border-bd-border-strong">
                     <span class="text-sm">💰</span>
-                    <span class="text-[11px] font-semibold" style="color: #fbbf24;">1250</span>
-                    <span class="text-[10px] font-medium" style="color: #22c55e;">+50</span>
+                    <span class="text-[11px] font-semibold text-bd-amber">1250</span>
+                    <span class="text-[10px] font-medium text-bd-success">+50</span>
                   </div>
                 </div>
               </div>
@@ -417,8 +417,8 @@ modifier(text);</code></pre>
                   </div>
                 </div>
                 <div class="flex-shrink-0">
-                  <div class="inline-flex px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                    <span class="text-[11px] font-bold" style="color: #fbbf24;">⚡ Quest Active</span>
+                  <div class="inline-flex px-2.5 py-1.5 rounded bg-bd-bg-tertiary border border-bd-border-strong">
+                    <span class="text-[11px] font-bold text-bd-amber">⚡ Quest Active</span>
                   </div>
                 </div>
               </div>
@@ -439,8 +439,8 @@ modifier(text);</code></pre>
                   </div>
                 </div>
                 <div class="flex-shrink-0 flex gap-1.5">
-                  <div class="inline-flex px-2 py-1 rounded bg-[#1a1a2e] border border-[#2a2a3e]" title="Health"><span class="text-base">❤️</span></div>
-                  <div class="inline-flex px-2 py-1 rounded bg-[#1a1a2e] border border-[#2a2a3e]" title="Night"><span class="text-base">🌙</span></div>
+                  <div class="inline-flex px-2 py-1 rounded bg-bd-bg-tertiary border border-bd-border-strong" title="Health"><span class="text-base">❤️</span></div>
+                  <div class="inline-flex px-2 py-1 rounded bg-bd-bg-tertiary border border-bd-border-strong" title="Night"><span class="text-base">🌙</span></div>
                 </div>
               </div>
               <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary mt-3">{ type: 'icon', icon: '❤️', color: '#ef4444', tooltip: 'Health', align: 'center' }</pre>
@@ -460,11 +460,11 @@ modifier(text);</code></pre>
                   </div>
                 </div>
                 <div class="flex-shrink-0">
-                  <div class="inline-block px-3 py-2 rounded bg-[#1a1a2e] border border-[#2a2a3e] min-w-[130px]">
-                    <div class="text-[10px] font-semibold text-[#8888aa] uppercase tracking-wider mb-1.5 pb-1 border-b border-[#2a2a3e]">Character</div>
+                  <div class="inline-block px-3 py-2 rounded bg-bd-bg-tertiary border border-bd-border-strong min-w-[130px]">
+                    <div class="text-[10px] font-semibold text-bd-text-muted uppercase tracking-wider mb-1.5 pb-1 border-b border-bd-border-strong">Character</div>
                     <div class="space-y-1">
-                      <div class="flex justify-between text-[11px]"><span class="text-[#8888aa]">LVL</span><span class="text-[#ccc]">5</span></div>
-                      <div class="flex justify-between text-[11px]"><span class="text-[#8888aa]">XP</span><span style="color: #60a5fa;">450/1000</span></div>
+                      <div class="flex justify-between text-[11px]"><span class="text-bd-text-muted">LVL</span><span class="text-bd-text-secondary">5</span></div>
+                      <div class="flex justify-between text-[11px]"><span class="text-bd-text-muted">XP</span><span class="text-bd-info-light">450/1000</span></div>
                     </div>
                   </div>
                 </div>
@@ -487,12 +487,12 @@ modifier(text);</code></pre>
                   </div>
                 </div>
                 <div class="flex-shrink-0">
-                  <div class="inline-block px-3 py-2 rounded bg-[#1a1a2e] border border-[#2a2a3e] min-w-[130px]">
-                    <div class="text-[10px] font-semibold text-[#8888aa] uppercase tracking-wider mb-1.5 pb-1 border-b border-[#2a2a3e]">Inventory</div>
+                  <div class="inline-block px-3 py-2 rounded bg-bd-bg-tertiary border border-bd-border-strong min-w-[130px]">
+                    <div class="text-[10px] font-semibold text-bd-text-muted uppercase tracking-wider mb-1.5 pb-1 border-b border-bd-border-strong">Inventory</div>
                     <div class="space-y-0.5">
-                      <div class="text-[11px] text-[#ccc]">🗡️ Iron Sword</div>
-                      <div class="text-[11px] text-[#ccc]">🛡️ Wooden Shield</div>
-                      <div class="text-[11px] text-[#ccc]">• Health Potion</div>
+                      <div class="text-[11px] text-bd-text-secondary">🗡️ Iron Sword</div>
+                      <div class="text-[11px] text-bd-text-secondary">🛡️ Wooden Shield</div>
+                      <div class="text-[11px] text-bd-text-secondary">• Health Potion</div>
                     </div>
                   </div>
                 </div>
@@ -515,9 +515,9 @@ modifier(text);</code></pre>
                   </div>
                 </div>
                 <div class="flex-shrink-0">
-                  <div class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                    <span class="text-[11px] font-bold text-[#ccc]">HP:</span>
-                    <span class="text-[11px]" style="color: #22c55e;">100</span>
+                  <div class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded bg-bd-bg-tertiary border border-bd-border-strong">
+                    <span class="text-[11px] font-bold text-bd-text-secondary">HP:</span>
+                    <span class="text-[11px] text-bd-success">100</span>
                   </div>
                 </div>
               </div>
@@ -547,30 +547,30 @@ modifier(text);</code></pre>
             <!-- Visual Layout Diagram -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <div class="text-[10px] text-bd-text-muted uppercase tracking-wider mb-2">Live Layout Preview</div>
-              <div class="rounded-lg border border-bd-border-subtle overflow-hidden bg-[#0d0d1a]">
+              <div class="rounded-lg border border-bd-border-subtle overflow-hidden bg-bd-bg-primary">
                 <!-- Top Bar -->
-                <div class="px-3 py-2 border-b border-[#2a2a3e]" style="background: rgba(34,197,94,0.08);">
+                <div class="px-3 py-2 border-b border-bd-border-strong" style="background: rgba(34,197,94,0.08);">
                   <div class="flex items-center justify-between gap-2">
                     <!-- Left zone -->
                     <div class="flex items-center gap-1.5 flex-wrap" style="background: rgba(59,130,246,0.06); border-radius: 4px; padding: 2px 4px;">
-                      <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                        <span class="text-[9px] text-[#8888aa]">LVL</span>
-                        <span class="text-[9px] font-semibold" style="color:#a855f7;">12</span>
+                      <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-bd-bg-tertiary border border-bd-border-strong">
+                        <span class="text-[9px] text-bd-text-muted">LVL</span>
+                        <span class="text-[9px] font-semibold text-bd-purple">12</span>
                       </div>
                     </div>
                     <!-- Center zone -->
                     <div class="flex items-center gap-1.5 flex-wrap justify-center flex-1" style="background: rgba(34,197,94,0.06); border-radius: 4px; padding: 2px 4px;">
-                      <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                        <span class="text-[10px] text-[#8888aa]">HP</span>
-                        <div class="w-14 h-1.5 rounded-full bg-[#2a2a3e] overflow-hidden"><div class="h-full rounded-full" style="width:75%;background:#22c55e;"></div></div>
+                      <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-bd-bg-tertiary border border-bd-border-strong">
+                        <span class="text-[10px] text-bd-text-muted">HP</span>
+                        <div class="w-14 h-1.5 rounded-full bg-bd-bg-elevated overflow-hidden"><div class="h-full rounded-full bg-bd-success" style="width:75%;"></div></div>
                       </div>
-                      <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px]" style="background:rgba(168,85,247,0.15);color:#a855f7;">☠️ Poisoned</div>
+                      <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] text-bd-purple" style="background:rgba(168,85,247,0.15);">☠️ Poisoned</div>
                     </div>
                     <!-- Right zone -->
                     <div class="flex items-center gap-1.5 flex-wrap justify-end" style="background: rgba(168,85,247,0.06); border-radius: 4px; padding: 2px 4px;">
-                      <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
+                      <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-bd-bg-tertiary border border-bd-border-strong">
                         <span class="text-[9px]">💰</span>
-                        <span class="text-[9px] font-semibold" style="color:#fbbf24;">1250</span>
+                        <span class="text-[9px] font-semibold text-bd-amber">1250</span>
                       </div>
                     </div>
                   </div>
@@ -1018,14 +1018,14 @@ window.addEventListener('betterscripts:cleared', (e) => {
               </div>
 
               <!-- Widget Preview -->
-              <div class="px-4 py-3 border-b border-bd-border-subtle" style="background: #0d0d1a;">
+              <div class="px-4 py-3 border-b border-bd-border-subtle bg-bd-bg-primary">
                 <div class="text-[10px] text-bd-text-muted uppercase tracking-wider mb-2">Widget Preview</div>
                 <div class="flex items-center justify-between gap-2 flex-wrap">
-                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                    <span class="text-[11px] text-[#8888aa]">Turn</span>
-                    <span class="text-[11px] font-semibold" style="color: #60a5fa;">5</span>
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-bd-bg-tertiary border border-bd-border-strong">
+                    <span class="text-[11px] text-bd-text-muted">Turn</span>
+                    <span class="text-[11px] font-semibold text-bd-info-light">5</span>
                   </div>
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px]" style="background: rgba(168,85,247,0.15); color: #a855f7;">📍 Town</span>
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] text-bd-purple" style="background: rgba(168,85,247,0.15);">📍 Town</span>
                 </div>
               </div>
 
@@ -1045,20 +1045,20 @@ window.addEventListener('betterscripts:cleared', (e) => {
               </div>
 
               <!-- Widget Preview -->
-              <div class="px-4 py-3 border-b border-bd-border-subtle" style="background: #0d0d1a;">
+              <div class="px-4 py-3 border-b border-bd-border-subtle bg-bd-bg-primary">
                 <div class="text-[10px] text-bd-text-muted uppercase tracking-wider mb-2">Widget Preview</div>
                 <div class="flex items-center justify-center gap-2 flex-wrap">
-                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                    <span class="text-[11px] text-[#8888aa]">&#9728;&#65039;</span>
-                    <span class="text-[11px] font-semibold" style="color: #fbbf24;">10:30 AM</span>
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-bd-bg-tertiary border border-bd-border-strong">
+                    <span class="text-[11px] text-bd-text-muted">&#9728;&#65039;</span>
+                    <span class="text-[11px] font-semibold text-bd-amber">10:30 AM</span>
                   </div>
-                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                    <span class="text-[11px] text-[#8888aa]">&#128197;</span>
-                    <span class="text-[11px] font-semibold" style="color: #60a5fa;">Wednesday, June 1</span>
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-bd-bg-tertiary border border-bd-border-strong">
+                    <span class="text-[11px] text-bd-text-muted">&#128197;</span>
+                    <span class="text-[11px] font-semibold text-bd-info-light">Wednesday, June 1</span>
                   </div>
-                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                    <span class="text-[11px] text-[#8888aa]">&#9925;</span>
-                    <span class="text-[11px] font-semibold" style="color: #34d399;">Partly cloudy, 62&#176;F</span>
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-bd-bg-tertiary border border-bd-border-strong">
+                    <span class="text-[11px] text-bd-text-muted">&#9925;</span>
+                    <span class="text-[11px] font-semibold text-bd-emerald">Partly cloudy, 62&#176;F</span>
                   </div>
                 </div>
               </div>
@@ -1079,41 +1079,41 @@ window.addEventListener('betterscripts:cleared', (e) => {
               </div>
 
               <!-- Widget Preview -->
-              <div class="px-4 py-3 border-b border-bd-border-subtle" style="background: #0d0d1a;">
+              <div class="px-4 py-3 border-b border-bd-border-subtle bg-bd-bg-primary">
                 <div class="text-[10px] text-bd-text-muted uppercase tracking-wider mb-2">Widget Preview</div>
                 <div class="flex gap-4">
                   <!-- Center widgets -->
                   <div class="flex-1 space-y-1.5">
                     <div class="flex items-center gap-2 flex-wrap">
-                      <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                        <span class="text-[11px] text-[#8888aa]">HP</span>
-                        <span class="text-[11px] font-semibold" style="color: #ef4444;">85/100</span>
+                      <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-bd-bg-tertiary border border-bd-border-strong">
+                        <span class="text-[11px] text-bd-text-muted">HP</span>
+                        <span class="text-[11px] font-semibold text-bd-error">85/100</span>
                       </div>
-                      <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e]">
-                        <span class="text-[11px] text-[#8888aa]">💰</span>
-                        <span class="text-[11px] font-semibold" style="color: #fbbf24;">1,250</span>
+                      <div class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-bd-bg-tertiary border border-bd-border-strong">
+                        <span class="text-[11px] text-bd-text-muted">💰</span>
+                        <span class="text-[11px] font-semibold text-bd-amber">1,250</span>
                       </div>
-                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px]" style="background: rgba(168,85,247,0.15); color: #a855f7;">☠️ Poisoned</span>
-                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px]" style="background: #3b82f6; color: #fff;">🛡️ Shielded</span>
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] text-bd-purple" style="background: rgba(168,85,247,0.15);">☠️ Poisoned</span>
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] bg-bd-blue text-bd-text-on-accent">🛡️ Shielded</span>
                     </div>
                     <div class="flex items-center gap-2">
-                      <span class="text-[10px] text-[#8888aa] w-12">Health</span>
-                      <div class="flex-1 h-2.5 rounded-full bg-[#2a2a3e] overflow-hidden"><div class="h-full rounded-full" style="width:85%;background:#22c55e;"></div></div>
-                      <span class="text-[10px] text-[#8888aa]">85/100</span>
+                      <span class="text-[10px] text-bd-text-muted w-12">Health</span>
+                      <div class="flex-1 h-2.5 rounded-full bg-bd-bg-elevated overflow-hidden"><div class="h-full rounded-full bg-bd-success" style="width:85%;"></div></div>
+                      <span class="text-[10px] text-bd-text-muted">85/100</span>
                     </div>
                     <div class="flex items-center gap-2">
-                      <span class="text-[10px] text-[#8888aa] w-12">XP</span>
-                      <div class="flex-1 h-2.5 rounded-full bg-[#2a2a3e] overflow-hidden"><div class="h-full rounded-full" style="width:75%;background:#06b6d4;"></div></div>
-                      <span class="text-[10px] text-[#8888aa]">750/1000</span>
+                      <span class="text-[10px] text-bd-text-muted w-12">XP</span>
+                      <div class="flex-1 h-2.5 rounded-full bg-bd-bg-elevated overflow-hidden"><div class="h-full rounded-full bg-bd-cyan" style="width:75%;"></div></div>
+                      <span class="text-[10px] text-bd-text-muted">750/1000</span>
                     </div>
                   </div>
                   <!-- Side panel -->
-                  <div class="hidden sm:block px-2.5 py-1.5 rounded bg-[#1a1a2e] border border-[#2a2a3e] min-w-[110px]">
-                    <div class="text-[9px] font-semibold text-[#8888aa] uppercase tracking-wider mb-1 pb-0.5 border-b border-[#2a2a3e]">Character</div>
+                  <div class="hidden sm:block px-2.5 py-1.5 rounded bg-bd-bg-tertiary border border-bd-border-strong min-w-[110px]">
+                    <div class="text-[9px] font-semibold text-bd-text-muted uppercase tracking-wider mb-1 pb-0.5 border-b border-bd-border-strong">Character</div>
                     <div class="space-y-0.5">
-                      <div class="flex justify-between text-[10px]"><span class="text-[#666]">Name</span><span style="color:#f472b6;">Adventurer</span></div>
-                      <div class="flex justify-between text-[10px]"><span class="text-[#666]">Class</span><span style="color:#60a5fa;">Warrior</span></div>
-                      <div class="flex justify-between text-[10px]"><span class="text-[#666]">Level</span><span style="color:#a855f7;">12</span></div>
+                      <div class="flex justify-between text-[10px]"><span class="text-bd-text-muted">Name</span><span class="text-bd-pink">Adventurer</span></div>
+                      <div class="flex justify-between text-[10px]"><span class="text-bd-text-muted">Class</span><span class="text-bd-info-light">Warrior</span></div>
+                      <div class="flex justify-between text-[10px]"><span class="text-bd-text-muted">Level</span><span class="text-bd-purple">12</span></div>
                     </div>
                   </div>
                 </div>

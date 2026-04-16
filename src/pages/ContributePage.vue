@@ -489,10 +489,10 @@
 
           <!-- Discord -->
           <div class="alt-card group">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-[#5865F2]/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
+            <div class="absolute top-0 right-0 w-20 h-20 bg-bd-discord/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
             <div class="relative">
               <div class="flex items-center gap-3 mb-2">
-                <MessageCircle class="w-5 h-5 text-[#5865F2]" />
+                <MessageCircle class="w-5 h-5 text-bd-discord" />
                 <h3 class="font-medium text-bd-text-primary">Discord</h3>
               </div>
               <p class="text-sm text-bd-text-secondary mb-3 leading-relaxed">
@@ -502,7 +502,7 @@
                 href="https://discord.gg/aidungeon" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                class="inline-flex items-center gap-1.5 text-sm font-medium text-[#5865F2] hover:text-[#5865F2]/80 transition-colors"
+                class="inline-flex items-center gap-1.5 text-sm font-medium text-bd-discord hover:text-bd-discord/80 transition-colors"
               >
                 Join Discord <ExternalLink class="w-3 h-3" />
               </a>
@@ -790,7 +790,7 @@ onUnmounted(() => {
 .hero-orb--purple {
   width: 200px;
   height: 200px;
-  background: #a855f7;
+  background: var(--bd-purple);
   bottom: -40px;
   left: 5%;
   animation: float 10s ease-in-out infinite reverse;
@@ -799,7 +799,7 @@ onUnmounted(() => {
 .hero-orb--cyan {
   width: 140px;
   height: 140px;
-  background: #06b6d4;
+  background: var(--bd-cyan);
   top: 30%;
   left: -20px;
   animation: float 12s ease-in-out infinite 2s;
