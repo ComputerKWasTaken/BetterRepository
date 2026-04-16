@@ -45,7 +45,7 @@ state.bd = state.bd ?? {
 // ============================================
 
 // All helpers: create, destroy, clearAll, ping, register
-function bdMsg(m) { return \`[[BD:\${JSON.stringify(m)}:BD]]\`; }
+function bdMsg(m) { return `[[BD:\${JSON.stringify(m)}:BD]]`; }
 function bdWidget(id, cfg) { return bdMsg({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
 function bdDestroy(id) { return bdMsg({ type: 'widget', widgetId: id, action: 'destroy' }); }
 function bdClearAll() { return bdMsg({ type: 'clearAll' }); }
@@ -58,7 +58,7 @@ function bdRegister(id, name, ver) { return bdMsg({ type: 'register', scriptId: 
 
 function parseCommand(input) {
   // Match : commands - handle quoted strings
-  const match = input.match(/^:([\\w-]+)(?:\\s+(.*))?$/);
+  const match = input.match(/^:([\w-]+)(?:\s+(.*))?$/);
   if (!match) return null;
   
   const command = match[1].toLowerCase();
@@ -66,7 +66,7 @@ function parseCommand(input) {
   
   // Parse arguments (support quoted strings)
   const args = [];
-  const regex = /"([^"]+)"|'([^']+)'|(\\S+)/g;
+  const regex = /"([^"]+)"|'([^']+)'|(\S+)/g;
   let m;
   while ((m = regex.exec(argsStr)) !== null) {
     args.push(m[1] || m[2] || m[3]);
@@ -338,12 +338,12 @@ const TEST_STEPS = [
     run: () => {
       const total = TEST_STEPS.length;
       const passed = state.bd.testResults.filter(r => r === 'pass').length;
-      let summary = '\\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n';
-      summary += '🏁 TEST SUITE COMPLETE\\n';
-      summary += \`   Steps run: \${total}\\n\`;
-      summary += \`   All steps executed successfully.\\n\`;
-      summary += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n';
-      summary += '\\nCheck browser console (F12) for detailed BetterScripts logs.';
+      let summary = '\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+      summary += '🏁 TEST SUITE COMPLETE\n';
+      summary += `   Steps run: \${total}\n`;
+      summary += `   All steps executed successfully.\n`;
+      summary += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+      summary += '\nCheck browser console (F12) for detailed BetterScripts logs.';
       state.bd.testRunning = false;
       state.bd.testStep = 0;
       state.bd.testResults = [];
@@ -369,13 +369,13 @@ function runTestStep() {
   state.bd.testResults.push('pass');
   state.bd.testStep = stepIndex + 1;
   
-  const progress = \`[\${stepIndex + 1}/\${TEST_STEPS.length}]\`;
-  const output = \`\\n🧪 \${progress} \${step.name}\\n\${result.output}\`;
+  const progress = `[\${stepIndex + 1}/\${TEST_STEPS.length}]`;
+  const output = `\n🧪 \${progress} \${step.name}\n\${result.output}`;
   
   // Show next step preview if not the last step
   let nextHint = '';
   if (stepIndex + 1 < TEST_STEPS.length) {
-    nextHint = \`\\n\\n⏭️ Next: \${TEST_STEPS[stepIndex + 1].name} (continue story to proceed)\`;
+    nextHint = `\n\n⏭️ Next: \${TEST_STEPS[stepIndex + 1].name} (continue story to proceed)`;
   }
   
   return { output: output + nextHint, widgets: result.widgets };
@@ -390,22 +390,22 @@ const COMMANDS = {
     desc: 'Show all available commands',
     usage: ':help',
     handler: () => {
-      let helpText = '\\n📖 **BetterScripts Debug Console**\\n';
-      helpText += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n';
-      helpText += '\\n🔧 WIDGET COMMANDS (all 9 types):\\n';
+      let helpText = '\n📖 **BetterScripts Debug Console**\n';
+      helpText += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+      helpText += '\n🔧 WIDGET COMMANDS (all 9 types):\n';
       for (const name of ['stat','bar','badge','counter','text','icon','panel','list','custom']) {
         const cmd = COMMANDS[name];
-        helpText += \`  \${cmd.usage}\\n\`;
+        helpText += `  \${cmd.usage}\n`;
       }
-      helpText += '\\n📡 PROTOCOL COMMANDS:\\n';
+      helpText += '\n📡 PROTOCOL COMMANDS:\n';
       for (const name of ['ping','register','update','destroy','clear']) {
         const cmd = COMMANDS[name];
-        helpText += \`  \${cmd.usage} - \${cmd.desc}\\n\`;
+        helpText += `  \${cmd.usage} - \${cmd.desc}\n`;
       }
-      helpText += '\\n🧪 TESTING COMMANDS:\\n';
+      helpText += '\n🧪 TESTING COMMANDS:\n';
       for (const name of ['demo','stress','test']) {
         const cmd = COMMANDS[name];
-        helpText += \`  \${cmd.usage} - \${cmd.desc}\\n\`;
+        helpText += `  \${cmd.usage} - \${cmd.desc}\n`;
       }
       return { output: helpText, widgets: '' };
     }
@@ -417,7 +417,7 @@ const COMMANDS = {
     handler: () => {
       const widgets = bdPing();
       return { 
-        output: '\\n🏓 Ping sent! Check browser console for pong event.', 
+        output: '\n🏓 Ping sent! Check browser console for pong event.', 
         widgets 
       };
     }
@@ -432,7 +432,7 @@ const COMMANDS = {
       const ver = args[2] || '2.0';
       const widgets = bdRegister(id, name, ver);
       return { 
-        output: \`\\n📝 Registered script "\${name}" (id: \${id}, v\${ver}). Check console.\`, 
+        output: `\n📝 Registered script "\${name}" (id: \${id}, v\${ver}). Check console.`, 
         widgets 
       };
     }
@@ -444,7 +444,7 @@ const COMMANDS = {
     handler: () => {
       const widgets = bdClearAll();
       state.bd.lastResult = 'Cleared all widgets';
-      return { output: '\\n🧹 All widgets cleared.', widgets };
+      return { output: '\n🧹 All widgets cleared.', widgets };
     }
   },
   
@@ -466,7 +466,7 @@ const COMMANDS = {
       
       const widgets = bdWidget(id, config);
       return { 
-        output: \`\\n📊 Created stat "\${id}": \${label} = \${value}\`, 
+        output: `\n📊 Created stat "\${id}": \${label} = \${value}`, 
         widgets 
       };
     }
@@ -491,7 +491,7 @@ const COMMANDS = {
       
       const widgets = bdWidget(id, config);
       return { 
-        output: \`\\n📈 Created bar "\${id}": \${label} \${value}/\${max}\`, 
+        output: `\n📈 Created bar "\${id}": \${label} \${value}/\${max}`, 
         widgets 
       };
     }
@@ -515,7 +515,7 @@ const COMMANDS = {
       
       const widgets = bdWidget(id, config);
       return { 
-        output: \`\\n🏷️ Created badge "\${id}": \${icon ? icon + ' ' : ''}\${text} (\${variant})\`, 
+        output: `\n🏷️ Created badge "\${id}": \${icon ? icon + ' ' : ''}\${text} (\${variant})`, 
         widgets 
       };
     }
@@ -538,9 +538,9 @@ const COMMANDS = {
       if (icon) config.icon = icon;
       
       const widgets = bdWidget(id, config);
-      const deltaStr = delta !== 0 ? \` (\${delta > 0 ? '+' : ''}\${delta})\` : '';
+      const deltaStr = delta !== 0 ? ` (\${delta > 0 ? '+' : ''}\${delta})` : '';
       return { 
-        output: \`\\n🔢 Created counter "\${id}": \${value}\${deltaStr}\`, 
+        output: `\n🔢 Created counter "\${id}": \${value}\${deltaStr}`, 
         widgets 
       };
     }
@@ -560,7 +560,7 @@ const COMMANDS = {
         align: 'center'
       });
       return { 
-        output: \`\\n💬 Created text "\${id}": "\${message}"\`, 
+        output: `\n💬 Created text "\${id}": "\${message}"`, 
         widgets 
       };
     }
@@ -582,7 +582,7 @@ const COMMANDS = {
       
       const widgets = bdWidget(id, config);
       return { 
-        output: \`\\n🎯 Created icon "\${id}": \${emoji}\${tooltip ? ' (' + tooltip + ')' : ''}\`, 
+        output: `\n🎯 Created icon "\${id}": \${emoji}\${tooltip ? ' (' + tooltip + ')' : ''}`, 
         widgets 
       };
     }
@@ -604,7 +604,7 @@ const COMMANDS = {
         ]
       });
       return { 
-        output: \`\\n📋 Created panel "\${id}": "\${title}"\`, 
+        output: `\n📋 Created panel "\${id}": "\${title}"`, 
         widgets 
       };
     }
@@ -626,7 +626,7 @@ const COMMANDS = {
         ]
       });
       return { 
-        output: \`\\n📝 Created list "\${id}": "\${title}"\`, 
+        output: `\n📝 Created list "\${id}": "\${title}"`, 
         widgets 
       };
     }
@@ -643,7 +643,7 @@ const COMMANDS = {
         type: 'custom', html: html, align: 'center'
       });
       return { 
-        output: \`\\n🎨 Created custom widget "\${id}"\`, 
+        output: `\n🎨 Created custom widget "\${id}"`, 
         widgets 
       };
     }
@@ -658,7 +658,7 @@ const COMMANDS = {
       const value = args[2];
       
       if (!id || !prop) {
-        return { output: '\\n❌ Usage: :update <id> <property> <value>', widgets: '' };
+        return { output: '\n❌ Usage: :update <id> <property> <value>', widgets: '' };
       }
       
       // Parse value (handle numbers)
@@ -672,7 +672,7 @@ const COMMANDS = {
       
       const widgets = bdMsg({ type: 'widget', widgetId: id, action: 'update', config });
       return { 
-        output: \`\\n✏️ Updated "\${id}".\${prop} = \${parsedValue}\`, 
+        output: `\n✏️ Updated "\${id}".\${prop} = \${parsedValue}`, 
         widgets 
       };
     }
@@ -684,11 +684,11 @@ const COMMANDS = {
     handler: (args) => {
       const id = args[0];
       if (!id) {
-        return { output: '\\n❌ Usage: :destroy <id>', widgets: '' };
+        return { output: '\n❌ Usage: :destroy <id>', widgets: '' };
       }
       
       const widgets = bdDestroy(id);
-      return { output: \`\\n🗑️ Destroyed widget "\${id}"\`, widgets };
+      return { output: `\n🗑️ Destroyed widget "\${id}"`, widgets };
     }
   },
   
@@ -772,7 +772,7 @@ const COMMANDS = {
       });
       
       return { 
-        output: '\\n🎮 Demo: All 9 widget types created!\\n  Center: bar, badge, counter, text, icon, custom\\n  Left: panel\\n  Right: stat, list', 
+        output: '\n🎮 Demo: All 9 widget types created!\n  Center: bar, badge, counter, text, icon, custom\n  Left: panel\n  Right: stat, list', 
         widgets 
       };
     }
@@ -790,13 +790,13 @@ const COMMANDS = {
           type: 'stat',
           label: 'W' + i,
           value: Math.floor(Math.random() * 100),
-          color: \`hsl(\${(i * 360 / count)}, 70%, 60%)\`,
+          color: `hsl(\${(i * 360 / count)}, 70%, 60%)`,
           align: 'center', order: i
         });
       }
       
       return { 
-        output: \`\\n🔥 Created \${count} stress test widgets\`, 
+        output: `\n🔥 Created \${count} stress test widgets`, 
         widgets 
       };
     }
@@ -811,35 +811,35 @@ const COMMANDS = {
       // :test stop - abort running test
       if (subcommand === 'stop') {
         if (!state.bd.testRunning) {
-          return { output: '\\n❌ No test suite is running.', widgets: '' };
+          return { output: '\n❌ No test suite is running.', widgets: '' };
         }
         const step = state.bd.testStep;
         state.bd.testRunning = false;
         state.bd.testStep = 0;
         state.bd.testResults = [];
         const widgets = bdClearAll();
-        return { output: \`\\n🛑 Test suite stopped at step \${step}/\${TEST_STEPS.length}. Widgets cleared.\`, widgets };
+        return { output: `\n🛑 Test suite stopped at step \${step}/\${TEST_STEPS.length}. Widgets cleared.`, widgets };
       }
       
       // :test skip - skip current step
       if (subcommand === 'skip') {
         if (!state.bd.testRunning) {
-          return { output: '\\n❌ No test suite is running.', widgets: '' };
+          return { output: '\n❌ No test suite is running.', widgets: '' };
         }
         const skippedName = TEST_STEPS[state.bd.testStep]?.name || '?';
         state.bd.testResults.push('skip');
         state.bd.testStep += 1;
         if (state.bd.testStep >= TEST_STEPS.length) {
           state.bd.testRunning = false;
-          return { output: \`\\n⏭️ Skipped "\${skippedName}". Suite complete.\`, widgets: '' };
+          return { output: `\n⏭️ Skipped "\${skippedName}". Suite complete.`, widgets: '' };
         }
         const nextName = TEST_STEPS[state.bd.testStep].name;
-        return { output: \`\\n⏭️ Skipped "\${skippedName}". Next: \${nextName}\`, widgets: '' };
+        return { output: `\n⏭️ Skipped "\${skippedName}". Next: \${nextName}`, widgets: '' };
       }
       
       // :test - start a new test suite
       if (state.bd.testRunning) {
-        return { output: \`\\n⚠️ Test already running (step \${state.bd.testStep + 1}/\${TEST_STEPS.length}). Use :test stop to abort.\`, widgets: '' };
+        return { output: `\n⚠️ Test already running (step \${state.bd.testStep + 1}/\${TEST_STEPS.length}). Use :test stop to abort.`, widgets: '' };
       }
       
       state.bd.testRunning = true;
@@ -849,13 +849,13 @@ const COMMANDS = {
       // Clear any existing widgets before starting
       let widgets = bdClearAll();
       
-      let output = '\\n🧪 **BetterScripts Test Suite Started**\\n';
-      output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n';
-      output += \`Total steps: \${TEST_STEPS.length}\\n\`;
-      output += 'Each turn runs the next test step.\\n';
-      output += 'Commands: :test skip | :test stop\\n';
-      output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n';
-      output += \`\\n⏭️ Next: \${TEST_STEPS[0].name} (continue story to begin)\`;
+      let output = '\n🧪 **BetterScripts Test Suite Started**\n';
+      output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+      output += `Total steps: \${TEST_STEPS.length}\n`;
+      output += 'Each turn runs the next test step.\n';
+      output += 'Commands: :test skip | :test stop\n';
+      output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+      output += `\n⏭️ Next: \${TEST_STEPS[0].name} (continue story to begin)`;
       
       return { output, widgets };
     }
@@ -873,7 +873,7 @@ function executeCommand(input) {
   const handler = COMMANDS[parsed.command];
   if (!handler) {
     return { 
-      output: \`\\n❌ Unknown command: "\${parsed.command}". Type :help for commands.\`,
+      output: `\n❌ Unknown command: "\${parsed.command}". Type :help for commands.`,
       widgets: ''
     };
   }
