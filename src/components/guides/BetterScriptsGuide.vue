@@ -67,8 +67,8 @@
                 <ArrowRight class="w-4 h-4 text-bd-emerald hidden sm:block mx-1 flex-shrink-0" />
                 <ArrowDown class="w-4 h-4 text-bd-emerald sm:hidden flex-shrink-0" />
                 <div class="px-3 py-2 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle text-center min-w-[120px]">
-                  <div class="text-xs font-semibold text-bd-text-primary">Protocol Tags</div>
-                  <div class="text-[10px] text-bd-text-muted mt-0.5 font-mono">[[BD:...:BD]]</div>
+                  <div class="text-xs font-semibold text-bd-text-primary">Invisible Encoding</div>
+                  <div class="text-[10px] text-bd-text-muted mt-0.5 font-mono">TagCipher / ZW Binary</div>
                 </div>
                 <ArrowRight class="w-4 h-4 text-bd-emerald hidden sm:block mx-1 flex-shrink-0" />
                 <ArrowDown class="w-4 h-4 text-bd-emerald sm:hidden flex-shrink-0" />
@@ -84,8 +84,8 @@
                 </div>
               </div>
               <p class="text-xs text-bd-text-muted text-center mt-3">
-                Scripts embed <code class="text-bd-emerald">[[BD:{json}:BD]]</code> tags in their output. 
-                BetterDungeon intercepts them, renders widgets, and strips the tags from view.
+                Scripts encode JSON as invisible Unicode characters: <strong>TagCipher</strong> (compact surrogates) for ASCII,
+                <strong>ZW Binary</strong> for non-ASCII. BetterDungeon auto-detects and decodes both — no DOM stripping needed.
               </p>
             </div>
 
@@ -100,7 +100,7 @@
                 <span class="text-bd-text-muted">→</span>
                 <div class="px-3 py-1.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-secondary">onInput</div>
                 <span class="text-bd-text-muted">→</span>
-                <div class="px-3 py-1.5 rounded bg-bd-blue/20 border border-bd-blue/30 text-bd-blue font-semibold">Context Modifier (strip tags)</div>
+                <div class="px-3 py-1.5 rounded bg-bd-blue/20 border border-bd-blue/30 text-bd-blue font-semibold">Context Modifier (strip ZW chars)</div>
                 <span class="text-bd-text-muted">→</span>
                 <div class="px-3 py-1.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-secondary">AI Generation</div>
                 <span class="text-bd-text-muted">→</span>
@@ -108,7 +108,7 @@
                 <span class="text-bd-text-muted">→</span>
                 <div class="px-3 py-1.5 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-secondary">Display</div>
               </div>
-              <p class="text-xs text-bd-text-muted mt-2">BetterScripts uses two hooks from AI Dungeon’s scripting system: the <strong>Context Modifier</strong> (onModelContext) strips protocol tags so the AI never sees them, and the <strong>Output Modifier</strong> (onOutput) appends widget protocol tags after each AI response. The <strong>Library</strong> runs before both hooks and initializes persistent state.</p>
+              <p class="text-xs text-bd-text-muted mt-2">BetterScripts uses two hooks from AI Dungeon’s scripting system: the <strong>Context Modifier</strong> (onModelContext) strips zero-width protocol chars so the AI never sees them, and the <strong>Output Modifier</strong> (onOutput) appends zero-width encoded widget messages after each AI response. The <strong>Library</strong> runs before both hooks and initializes persistent state.</p>
             </div>
 
             <!-- Capabilities + Requirements side by side -->
@@ -135,7 +135,7 @@
                   <li>• <strong>BetterDungeon</strong> browser extension installed</li>
                   <li>• AI Dungeon adventure with scripting enabled</li>
                   <li>• Basic JavaScript knowledge</li>
-                  <li>• A Context Modifier to strip protocol tags</li>
+                  <li>• A Context Modifier to strip zero-width chars</li>
                 </ul>
                 <a href="https://github.com/ComputerKWasTaken/BetterDungeon" target="_blank" class="inline-flex items-center gap-1.5 mt-3 text-xs text-bd-emerald hover:underline">
                   <ExternalLink class="w-3 h-3" />
@@ -172,14 +172,35 @@
                 <div class="w-6 h-6 rounded-full bg-bd-emerald text-white text-xs flex items-center justify-center font-bold">1</div>
                 <h3 class="font-semibold text-bd-text-primary">Library: State & Helpers</h3>
               </div>
-              <p class="text-xs text-bd-text-muted mb-2">Initialize persistent state and define the protocol helper functions.</p>
+              <p class="text-xs text-bd-text-muted mb-2">Initialize persistent state and define the zero-width encoding helpers.</p>
               <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code><span class="text-bd-text-muted">// Persistent game state (survives across turns)</span>
 state.game = state.game ?? { hp: 100, gold: 0 };
 
-<span class="text-bd-text-muted">// BetterScripts protocol helpers</span>
-function bdMessage(msg) {
-  return `[[BD:${JSON.stringify(msg)}:BD]]`;
+<span class="text-bd-text-muted">// Dual invisible encoding: TagCipher (ASCII) or ZW Binary (non-ASCII)</span>
+function bdEncode(str) {
+  if (/^[\x00-\x7F]*$/.test(str)) {
+    <span class="text-bd-text-muted">// TagCipher: 2 chars/byte via Unicode Tags Block surrogates</span>
+    let out = '\uFEFF';
+    for (let i = 0; i &lt; str.length; i++)
+      out += String.fromCharCode(0xDB40, 0xDC00 + str.charCodeAt(i));
+    return out + '\uFEFF';
+  }
+  <span class="text-bd-text-muted">// ZW Binary fallback: UTF-8 bytes as ZWNJ/ZWJ bits</span>
+  let out = '\u200B';
+  for (let i = 0; i &lt; str.length; i++) {
+    let cp = str.codePointAt(i);
+    if (cp &gt; 0xFFFF) i++;
+    const bytes = [];
+    if (cp &lt; 0x80)         bytes.push(cp);
+    else if (cp &lt; 0x800)   bytes.push(0xC0|(cp&gt;&gt;6), 0x80|(cp&amp;0x3F));
+    else if (cp &lt; 0x10000) bytes.push(0xE0|(cp&gt;&gt;12), 0x80|((cp&gt;&gt;6)&amp;0x3F), 0x80|(cp&amp;0x3F));
+    else bytes.push(0xF0|(cp&gt;&gt;18), 0x80|((cp&gt;&gt;12)&amp;0x3F), 0x80|((cp&gt;&gt;6)&amp;0x3F), 0x80|(cp&amp;0x3F));
+    for (const b of bytes)
+      for (let bit = 7; bit &gt;= 0; bit--) out += (b &gt;&gt; bit) &amp; 1 ? '\u200D' : '\u200C';
+  }
+  return out + '\u200B';
 }
+function bdMessage(msg) { return bdEncode(JSON.stringify(msg)); }
 function bdWidget(id, config) {
   return bdMessage({ type: 'widget', widgetId: id, action: 'create', config });
 }
@@ -195,15 +216,15 @@ function bdClearAll() {
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <div class="flex items-center gap-2 mb-3">
                 <div class="w-6 h-6 rounded-full bg-bd-emerald text-white text-xs flex items-center justify-center font-bold">2</div>
-                <h3 class="font-semibold text-bd-text-primary">Context Modifier: Strip Tags</h3>
+                <h3 class="font-semibold text-bd-text-primary">Context Modifier: Strip Zero-Width Chars</h3>
               </div>
               <div class="p-2 rounded bg-bd-pink/10 border border-bd-pink/30 mb-2">
                 <p class="text-xs text-bd-text-secondary">
-                  <strong class="text-bd-text-primary">Required.</strong> Without this, the AI will see and repeat the raw protocol tags.
+                  <strong class="text-bd-text-primary">Required.</strong> Without this, the AI wastes tokens on invisible zero-width characters.
                 </p>
               </div>
               <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-3 rounded bg-bd-bg-tertiary"><code>const modifier = (text) => {
-  return { text: text.replace(/\[\[BD:[\s\S]*?:BD\]\]/g, '') };
+  return { text: text.replace(/[\u200B-\u200D\uFEFF]|\uDB40[\uDC00-\uDC7F]/g, '') };
 };
 modifier(text);</code></pre>
             </div>
@@ -245,7 +266,7 @@ modifier(text);</code></pre>
                 <p class="text-sm font-semibold text-bd-text-primary">Done! Widgets will appear at the top of the adventure page.</p>
                 <p class="text-xs text-bd-text-muted mt-1">
                   <code class="text-bd-emerald">bdWidget</code> creates new widgets or updates existing ones in place - 
-                  no need for separate create/update logic. Protocol tags are stripped from the visible story text automatically.
+                  no need for separate create/update logic. Protocol messages are invisible zero-width chars — no DOM stripping needed.
                 </p>
               </div>
             </div>
@@ -665,8 +686,8 @@ bdWidget('xp', { ..., align: 'center', order: 3 });</pre>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('protocol')" class="mt-4 space-y-4">
             <p class="text-bd-text-secondary">
-              Under the hood, BetterScripts communicates via JSON messages wrapped in <code class="text-bd-emerald">[[BD:...:BD]]</code> delimiters.
-              The helper functions abstract this, but knowing the protocol is useful for debugging.
+              Under the hood, BetterScripts uses dual invisible encoding. <strong>TagCipher</strong> (FEFF-framed Unicode Tags Block surrogates) handles ASCII at 2 chars/byte.
+              <strong>ZW Binary</strong> (ZWSP-framed ZWNJ/ZWJ bits) handles non-ASCII via UTF-8 at 8 chars/byte. The encoder auto-selects the best strategy.
             </p>
 
             <!-- Helper Functions -->
@@ -705,7 +726,7 @@ bdWidget('xp', { ..., align: 'center', order: 3 });</pre>
                     <MessageSquare class="w-3.5 h-3.5 text-bd-purple" />
                     <code class="text-sm font-semibold text-bd-purple">bdMessage(payload)</code>
                   </div>
-                  <p class="text-xs text-bd-text-secondary">Low-level: wraps any JSON payload in protocol delimiters.</p>
+                  <p class="text-xs text-bd-text-secondary">Low-level: encodes any JSON payload as zero-width chars.</p>
                   <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-primary">bdMessage({ type: 'ping', data: 'hello' });</pre>
                 </div>
               </div>
@@ -714,7 +735,7 @@ bdWidget('xp', { ..., align: 'center', order: 3 });</pre>
             <!-- Raw Message Types -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
               <h3 class="font-semibold text-bd-text-primary mb-3">Message Types</h3>
-              <p class="text-xs text-bd-text-muted mb-3">Each message is a JSON object inside <code class="text-bd-emerald">[[BD:{ ... }:BD]]</code>. The <code class="text-bd-cyan">type</code> field determines the action.</p>
+              <p class="text-xs text-bd-text-muted mb-3">Each message is a JSON object encoded as zero-width binary. The <code class="text-bd-cyan">type</code> field determines the action.</p>
               <div class="overflow-x-auto">
                 <table class="w-full text-sm text-bd-text-secondary">
                   <thead>
@@ -862,7 +883,7 @@ window.addEventListener('betterscripts:cleared', (e) => {
                   Do
                 </h3>
                 <ul class="text-sm text-bd-text-secondary space-y-1.5">
-                  <li><strong>Strip context</strong> - Context Modifier removes <code class="text-bd-green">[[BD:...:BD]]</code> so the AI never sees them</li>
+                  <li><strong>Strip context</strong> - Context Modifier removes zero-width chars so the AI never wastes tokens on them</li>
                   <li><strong>Prefix widget IDs</strong> - <code class="text-bd-cyan">myscript_hp</code> avoids conflicts with other scripts</li>
                   <li><strong>Initialize state safely</strong> - <code class="text-bd-purple">state.x = state.x ?? default</code></li>
                   <li><strong>Use <code>bdWidget</code> for everything</strong> - it creates or updates in place</li>
@@ -876,7 +897,7 @@ window.addEventListener('betterscripts:cleared', (e) => {
                   Don't
                 </h3>
                 <ul class="text-sm text-bd-text-secondary space-y-1.5">
-                  <li><strong>Skip the Context Modifier</strong> - the AI will echo raw protocol tags</li>
+                  <li><strong>Skip the Context Modifier</strong> - the AI wastes tokens on invisible zero-width chars</li>
                   <li><strong>Reuse generic IDs</strong> - <code class="text-bd-red">'hp'</code> can clash between scripts</li>
                   <li><strong>Over-rely on custom HTML</strong> - built-in types are faster and safer</li>
                   <li><strong>Ignore mobile</strong> - test at smaller viewports</li>
@@ -898,7 +919,7 @@ window.addEventListener('betterscripts:cleared', (e) => {
                     The setting persists across sessions.
                   </p>
                   <ul class="text-xs text-bd-text-secondary space-y-1">
-                    <li>• Protocol tags stay visible in the story text</li>
+                    <li>• Decoded protocol messages logged to console</li>
                     <li>• Verbose console logging for every message and widget action</li>
                   </ul>
                 </div>
@@ -941,12 +962,12 @@ window.addEventListener('betterscripts:cleared', (e) => {
                   </thead>
                   <tbody class="divide-y divide-bd-border-subtle">
                     <tr>
-                      <td class="py-2 text-xs">Visible <code class="text-bd-green">[[BD:...]]</code> tags</td>
-                      <td class="py-2 text-xs">Ensure BetterDungeon is installed and enabled</td>
+                      <td class="py-2 text-xs">Widgets not rendering</td>
+                      <td class="py-2 text-xs">Ensure BetterDungeon is installed and enabled; check console for decode errors</td>
                     </tr>
                     <tr>
-                      <td class="py-2 text-xs">AI repeats protocol tags</td>
-                      <td class="py-2 text-xs">Add Context Modifier: <code class="text-bd-cyan">text.replace(/\[\[BD:[\s\S]*?:BD\]\]/g, '')</code></td>
+                      <td class="py-2 text-xs">AI output seems garbled or slow</td>
+                      <td class="py-2 text-xs">Add Context Modifier: <code class="text-bd-cyan">text.replace(/[\u200B-\u200D\uFEFF]|\uDB40[\uDC00-\uDC7F]/g, '')</code></td>
                     </tr>
                     <tr>
                       <td class="py-2 text-xs">Widgets not appearing</td>
