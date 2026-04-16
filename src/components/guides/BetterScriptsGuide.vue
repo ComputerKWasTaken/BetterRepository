@@ -371,7 +371,7 @@ modifier(text);</code></pre>
                   </div>
                 </div>
                 <div class="flex-shrink-0 flex gap-1.5">
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px]" style="background: rgba(168,85,247,0.15);" class="text-bd-purple">☠️ Poisoned</span>
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] text-bd-purple" style="background: rgba(168,85,247,0.15);">☠️ Poisoned</span>
                   <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] bg-bd-amber text-bd-bg-tertiary">⚡ Buffed</span>
                   <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] border border-bd-success text-bd-success">Healthy</span>
                 </div>
