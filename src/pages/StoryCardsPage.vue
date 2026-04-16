@@ -1375,7 +1375,7 @@ const clearAll = () => {
 .hero-orb--purple {
   width: 220px;
   height: 220px;
-  background: #a855f7;
+  background: var(--bd-purple);
   top: -40px;
   right: -20px;
   animation: float 8s ease-in-out infinite;
@@ -1384,7 +1384,7 @@ const clearAll = () => {
 .hero-orb--cyan {
   width: 160px;
   height: 160px;
-  background: #06b6d4;
+  background: var(--bd-cyan);
   bottom: -30px;
   left: 5%;
   animation: float 10s ease-in-out infinite reverse;

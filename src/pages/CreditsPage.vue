@@ -281,7 +281,7 @@ onUnmounted(() => {
 .hero-orb--purple {
   width: 180px;
   height: 180px;
-  background: #a855f7;
+  background: var(--bd-purple);
   bottom: -40px;
   left: 5%;
   animation: float 10s ease-in-out infinite reverse;
@@ -329,7 +329,7 @@ onUnmounted(() => {
   padding: 0.3rem 0.625rem;
   font-size: 0.75rem;
   background: rgba(251, 191, 36, 0.1);
-  color: #fbbf24;
+  color: var(--bd-amber);
   border: 1px solid rgba(251, 191, 36, 0.2);
 }
 
@@ -342,7 +342,7 @@ onUnmounted(() => {
   padding: 0.3rem 0.625rem;
   font-size: 0.75rem;
   background: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
+  color: var(--bd-blue);
   border: 1px solid rgba(59, 130, 246, 0.2);
 }
 
@@ -355,7 +355,7 @@ onUnmounted(() => {
   padding: 0.3rem 0.625rem;
   font-size: 0.75rem;
   background: rgba(168, 85, 247, 0.1);
-  color: #a855f7;
+  color: var(--bd-purple);
   border: 1px solid rgba(168, 85, 247, 0.2);
 }
 
@@ -368,7 +368,7 @@ onUnmounted(() => {
   padding: 0.3rem 0.625rem;
   font-size: 0.75rem;
   background: rgba(6, 182, 212, 0.1);
-  color: #06b6d4;
+  color: var(--bd-cyan);
   border: 1px solid rgba(6, 182, 212, 0.2);
 }
 

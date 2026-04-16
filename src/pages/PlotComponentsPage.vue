@@ -1539,7 +1539,7 @@ watch([() => activeTab.value, jumpCategories], ([tab]) => {
 .hero-orb--blue {
   width: 220px;
   height: 220px;
-  background: #3b82f6;
+  background: var(--bd-blue);
   top: -40px;
   right: -20px;
   animation: float 8s ease-in-out infinite;
@@ -1548,7 +1548,7 @@ watch([() => activeTab.value, jumpCategories], ([tab]) => {
 .hero-orb--green {
   width: 160px;
   height: 160px;
-  background: #22c55e;
+  background: var(--bd-green);
   bottom: -30px;
   left: 5%;
   animation: float 10s ease-in-out infinite reverse;
