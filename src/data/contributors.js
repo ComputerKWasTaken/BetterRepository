@@ -16,7 +16,7 @@
 export const AI_INSTRUCTIONS_CONTRIBUTORS = [
   'OffMetaGamer', 'Hawk', 'Dirty Kurtis', 'Shiny', 'Leshok', 'Dragranis',
   'BinKompliziert', 'Wilmar', 'Le Onyx', 'Little Hat', 'SeinSchetten',
-  'Zoocata', 'Monsieur Boo', 'CamSift', 'Jason_EcksStreams'
+  'Zoocata', 'Monsieur Boo', 'CamSift', 'Jason_EcksStreams', 'Derse'
 ]
 
 /** Contributors who created PEs, SSs, and ANs, or created guides for them */

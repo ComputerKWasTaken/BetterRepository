@@ -175,67 +175,95 @@
           <div class="flex items-center justify-between mb-5">
             <div class="flex items-center gap-2.5">
               <Megaphone class="w-5 h-5 text-bd-accent-primary" />
-              <h2 class="text-lg font-semibold text-bd-text-primary">What's New in <span class="text-gradient">V1.5</span></h2>
+              <h2 class="text-lg font-semibold text-bd-text-primary">What's New in <span class="text-gradient">V1.6</span></h2>
             </div>
             <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-bd-accent-primary/15 text-bd-accent-light">Latest</span>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Multiscript Builder -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- NSFW Control Options -->
             <div class="whats-new-card group" style="animation-delay: 0ms">
               <div class="flex items-center gap-3 mb-3">
-                <div class="w-9 h-9 rounded-lg bg-bd-cyan/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-cyan/25 transition-colors">
-                  <Blocks class="w-4 h-4 text-bd-cyan" />
+                <div class="w-9 h-9 rounded-lg bg-bd-red/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-red/25 transition-colors">
+                  <Flame class="w-4 h-4 text-bd-red" />
                 </div>
-                <h3 class="font-semibold text-sm text-bd-text-primary">Multiscript Builder</h3>
+                <h3 class="font-semibold text-sm text-bd-text-primary">NSFW Control Options</h3>
               </div>
               <ul class="space-y-1.5 text-sm text-bd-text-secondary">
                 <li class="flex items-start gap-2">
-                  <Code class="w-3 h-3 text-bd-cyan flex-shrink-0 mt-1" />
-                  <span>Combine multiple scripts into one unified set using the library-centric hook pattern</span>
+                  <Shield class="w-3 h-3 text-bd-red flex-shrink-0 mt-1" />
+                  <span>New control variants (Off, Softcore, Explicit, Maximal) for Sets tab</span>
                 </li>
                 <li class="flex items-start gap-2">
-                  <Wrench class="w-3 h-3 text-bd-cyan flex-shrink-0 mt-1" />
-                  <span>Create, save, and reuse custom scripts with multi-hook support</span>
+                  <Settings class="w-3 h-3 text-bd-red flex-shrink-0 mt-1" />
+                  <span>Append NSFW instructions to any set</span>
                 </li>
               </ul>
             </div>
 
-            <!-- Story Card Builder (v1.4) -->
+            <!-- Frontier -->
             <div class="whats-new-card group" style="animation-delay: 80ms">
               <div class="flex items-center gap-3 mb-3">
-                <div class="w-9 h-9 rounded-lg bg-bd-amber/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-amber/25 transition-colors">
-                  <Hammer class="w-4 h-4 text-bd-amber" />
+                <div class="w-9 h-9 rounded-lg bg-bd-purple/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-purple/25 transition-colors">
+                  <Rocket class="w-4 h-4 text-bd-purple" />
                 </div>
-                <h3 class="font-semibold text-sm text-bd-text-primary">Story Card Builder</h3>
+                <h3 class="font-semibold text-sm text-bd-text-primary">Frontier</h3>
+                <span class="ml-auto text-[10px] px-2 py-0.5 rounded-full font-medium bg-bd-purple/20 text-bd-purple">Coming Soon</span>
               </div>
               <ul class="space-y-1.5 text-sm text-bd-text-secondary">
                 <li class="flex items-start gap-2">
-                  <Edit3 class="w-3 h-3 text-bd-accent-primary flex-shrink-0 mt-1" />
-                  <span>Craft, refine, and save Story Card sets directly in your browser</span>
+                  <ArrowLeftRight class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
+                  <span>Two-way communication between scripts and BetterDungeon replaces one-way BetterScripts</span>
                 </li>
                 <li class="flex items-start gap-2">
-                  <RefreshCw class="w-3 h-3 text-bd-accent-primary flex-shrink-0 mt-1" />
-                  <span>Full AI Dungeon-compatible JSON import and export</span>
+                  <Sparkles class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
+                  <span>Scripts can ask the web, check time, call local models, and get real answers back</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Plot Component Builder -->
+            <div class="whats-new-card group" style="animation-delay: 160ms">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 rounded-lg bg-bd-green/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-green/25 transition-colors">
+                  <Hammer class="w-4 h-4 text-bd-green" />
+                </div>
+                <h3 class="font-semibold text-sm text-bd-text-primary">Plot Component Builder</h3>
+              </div>
+              <ul class="space-y-1.5 text-sm text-bd-text-secondary">
+                <li class="flex items-start gap-2">
+                  <Layers class="w-3 h-3 text-bd-green flex-shrink-0 mt-1" />
+                  <span>Pick any Author's Note, Plot Essential, or Story Summary template and customize it in-place</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <Wrench class="w-3 h-3 text-bd-green flex-shrink-0 mt-1" />
+                  <span>Quick-fill helpers auto-detect <code class="text-[11px] text-bd-accent-primary">[bracketed]</code> placeholders with live preview and placement guidance</span>
                 </li>
               </ul>
             </div>
           </div>
 
           <!-- CTA -->
-          <div class="mt-5 pt-4 border-t border-bd-border-subtle flex items-center justify-center gap-6">
-            <router-link 
-              to="/scripts?tab=builder" 
-              class="inline-flex items-center gap-2 text-sm font-medium text-bd-cyan hover:text-bd-cyan/80 transition-colors"
+          <div class="mt-5 pt-4 border-t border-bd-border-subtle flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+            <router-link
+              to="/ai-instructions?tab=sets"
+              class="inline-flex items-center gap-2 text-sm font-medium text-bd-red hover:text-bd-red/80 transition-colors"
             >
-              Try the Multiscript Builder
+              Try NSFW Controls
               <ArrowRight class="w-3.5 h-3.5" />
             </router-link>
-            <router-link 
-              to="/story-cards?tab=builder" 
-              class="inline-flex items-center gap-2 text-sm font-medium text-bd-accent-primary hover:text-bd-accent-light transition-colors"
+            <router-link
+              to="/guides?tab=frontier"
+              class="inline-flex items-center gap-2 text-sm font-medium text-bd-purple hover:text-bd-purple/80 transition-colors"
             >
-              Try the Story Card Builder
+              Learn About Frontier
+              <ArrowRight class="w-3.5 h-3.5" />
+            </router-link>
+            <router-link
+              to="/plot-components?tab=builder"
+              class="inline-flex items-center gap-2 text-sm font-medium text-bd-green hover:text-bd-green/80 transition-colors"
+            >
+              Try the Plot Component Builder
               <ArrowRight class="w-3.5 h-3.5" />
             </router-link>
           </div>
@@ -439,12 +467,12 @@ import { STORY_CARDS, STORY_CARD_TEMPLATES } from '@/data/storyCards'
 import { SCRIPTS } from '@/data/scripts'
 import { useGlobalSearch } from '@/composables/useGlobalSearch'
 import { MAJOR_CONTRIBUTORS as majorContributors } from '@/data/contributors'
-import { 
+import {
   Search, LayoutGrid, Lightbulb, ScrollText, Heart, Sparkles, ArrowRight,
   GitPullRequest, MessageCircle, ExternalLink, Bookmark, Drama, Code,
   Award, Users, ChevronRight, Package, Layers, LayoutDashboard, Infinity, X,
-  Megaphone, RefreshCw, Tag, SlidersHorizontal, Wrench, Hammer, Activity, ShieldAlert, Eye, Edit3,
-  Blocks
+  Megaphone, Wrench, Hammer,
+  Flame, Shield, Settings, Rocket, ArrowLeftRight
 } from 'lucide-vue-next'
 
 const router = useRouter()

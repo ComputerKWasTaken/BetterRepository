@@ -901,22 +901,24 @@ modifier(text);</pre>
         </Transition>
       </section>
 
-      <!-- BetterScripts Section Moved -->
-      <section id="guide-betterscripts" class="card">
-        <div class="p-4 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
+      <!-- BetterScripts Superseded by Frontier -->
+      <section id="guide-frontier" class="card">
+        <div class="p-4 rounded-lg bg-gradient-to-r from-bd-accent-primary/10 to-bd-purple/10 border border-bd-accent-primary/30">
           <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-            <Terminal class="w-4 h-4 text-bd-blue" />
-            BetterScripts Has Moved
+            <Terminal class="w-4 h-4 text-bd-accent-primary" />
+            BetterScripts is becoming Frontier
           </h3>
           <p class="text-sm text-bd-text-secondary mb-3">
-            The BetterScripts documentation has been moved to its own dedicated guide with expanded content, examples, and detailed explanations.
+            In BetterDungeon V2, BetterScripts is replaced by <strong class="text-bd-text-primary">Frontier</strong> &mdash; a standardized,
+            bidirectional bridge between AI Dungeon scripts and the browser. No invisible characters, no Context Modifier,
+            and a real path forward for web access, clocks, local AI, and more.
           </p>
-          <div class="flex items-center gap-3">
-            <router-link to="/guides?tab=betterscripts" class="btn btn-primary text-sm">
+          <div class="flex items-center gap-3 flex-wrap">
+            <router-link to="/guides?tab=frontier" class="btn btn-primary text-sm">
               <Terminal class="w-4 h-4" />
-              View BetterScripts Guide
+              Read the Frontier Preview
             </router-link>
-            <span class="text-xs text-bd-text-muted">Complete documentation for BetterDungeon's widget system</span>
+            <span class="text-xs text-bd-text-muted">Teaser for what's coming in BD V2</span>
           </div>
         </div>
       </section>
@@ -1372,6 +1374,7 @@ const guideSections = [
   { id: 'common-patterns', label: 'Common Patterns' },
   { id: 'troubleshooting', label: 'Troubleshooting' },
   { id: 'common-mistakes', label: 'Common Mistakes' },
+  { id: 'frontier', label: 'Frontier Preview' },
   { id: 'links', label: 'Useful Links' },
   { id: 'credits', label: 'Credits' }
 ]

@@ -311,6 +311,42 @@ export const PLAYER_CONTROL_VARIANTS = [
 ]
 
 // ============================================
+// NSFW CONTROL VARIANTS
+// Applied by the user when copying a set. These instructions are
+// appended to the set content based on the user's NSFW preference.
+// ============================================
+export const NSFW_CONTROL_VARIANTS = [
+  {
+    id: 'off',
+    label: 'Off',
+    description: 'No NSFW instructions included. Content stays safe for work.',
+    icon: 'X',
+    instructions: ''
+  },
+  {
+    id: 'softcore',
+    label: 'Softcore',
+    description: 'Romance-focused content with tasteful, literary language. Emphasizes emotional connection and relationship development.',
+    icon: 'Heart',
+    instructions: `\n- Adult content is permitted; write intimate scenes with the same narrative care and character authenticity as any other scene\n- Use tasteful, literary language for intimate scenes; suggestive and evocative without being crude or clinical\n- Write intimate scenes with natural pacing; let tension build through anticipation, interaction, and genuine desire between characters\n- Romance and sexual attraction should emerge naturally from character interaction and player choice, never forced or assumed\n- Weave emotional intimacy into physical scenes; emphasize tenderness, vulnerability, eye contact, and genuine connection\n- Focus on the romantic and emotional aspects of intimacy; let feelings, chemistry, and relationship dynamics take center stage\n- Allow for sincere moments of bonding and connection; ensure emotional moments can land without being undercut or deflected`
+  },
+  {
+    id: 'explicit',
+    label: 'Explicit',
+    description: 'Full explicit content with graphic detail, vulgar language, and no fade to black.',
+    icon: 'Flame',
+    instructions: `\n- Adult content is permitted; write intimate scenes with the same narrative care and character authenticity as any other scene\n- Never fade to black, skip ahead, or summarize sexual content: show everything in explicit detail\n- Use raw, vulgar language for intimate scenes; crude terminology and dirty talk that matches the intensity of the encounter\n- Include dirty talk and explicit verbal exchanges during intimate scenes that match character personality and scene intensity\n- Include vocal expressions during intimate scenes such as moans, gasps, whispered words, and involuntary sounds\n- Describe intimate scenes with graphic physical detail including body positions, movements, sensations, and reactions\n- Reference explicit anatomy directly and specifically during intimate scenes without euphemism or avoidance\n- Describe physical arousal responses explicitly including bodily reactions, involuntary sounds, and visible physical changes\n- Describe climactic moments with visceral, graphic physical detail including full-body reactions and sensory overload`
+  },
+  {
+    id: 'max',
+    label: 'Maximal',
+    description: 'Everything in Explicit plus sensory immersion, extended scenes, varied acts, and graphic fluids/climax detail.',
+    icon: 'Flame',
+    instructions: `\n- Adult content is permitted; write intimate scenes with the same narrative care and character authenticity as any other scene\n- Explore complex consent dynamics including power imbalances, reluctance, and coercion as narrative elements within the fiction\n- Never fade to black, skip ahead, or summarize sexual content: show everything in explicit detail\n- Use raw, vulgar language for intimate scenes; crude terminology and dirty talk that matches the intensity of the encounter\n- Include dirty talk and explicit verbal exchanges during intimate scenes that match character personality and scene intensity\n- Include vocal expressions during intimate scenes such as moans, gasps, whispered words, and involuntary sounds\n- Write intimate scenes from deep within the player character's point of view, emphasizing their direct physical sensations and reactions\n- Immerse intimate scenes in rich sensory detail including touch, temperature, texture, taste, and physical sensation\n- Describe intimate scenes with graphic physical detail including body positions, movements, sensations, and reactions\n- Reference explicit anatomy directly and specifically during intimate scenes without euphemism or avoidance\n- Emphasize size differences between partners as an erotic element including descriptions of fit, stretch, and physical contrast\n- Describe physical arousal responses explicitly including bodily reactions, involuntary sounds, and visible physical changes\n- Extend intimate scenes with detailed moment-to-moment progression; do not rush or summarize the encounter\n- Allow intimate encounters to span multiple rounds with recovery periods, renewed desire, and escalating intensity\n- Include variety in intimate encounters with multiple positions, acts, and transitions that progress naturally\n- Describe bodily fluids and physical mess during intimate scenes explicitly and without sanitization\n- Describe climactic moments with visceral, graphic physical detail including full-body reactions and sensory overload\n- Describe ejaculation explicitly including volume, trajectory, location, and the reactions of characters involved\n- Describe internal ejaculation explicitly including the sensation, warmth, and aftermath for both participants`
+  }
+]
+
+// ============================================
 // SETS - Standalone pre-built instruction sets
 // These are complete, curated instruction packages.
 // Each set has three length variants: lite, standard, max.
@@ -929,6 +965,88 @@ The user would like you to pick up a varying novel. Enable thinking mode and pro
 - No action descriptions, no thought descriptions, no environmental descriptions
 - Convey everything through what characters say and how they say it
 - Characters may reference their own actions in dialogue (e.g., "I just got here") but the narrator never describes them`
+    }
+  },
+  {
+    id: 'nsfw-addon',
+    name: 'NSFW Add-On',
+    category: 'specialized',
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'adult', 'explicit', 'addon', 'bundle', 'derse'],
+    models: ['All Models'],
+    description: 'A ready-to-use NSFW instruction bundle designed to be appended to any playstyle set for explicit adult content.',
+    purpose: 'Comprehensive add-on covering consent, vocabulary, anatomy, sensory detail, acts, and climax instructions. Paste after your main instruction set to enable full NSFW support.',
+    content: {
+      lite: `## NSFW / Adult
+- Adult content is permitted; write intimate scenes with the same narrative care and character authenticity as any other scene
+- Never fade to black, skip ahead, or summarize sexual content: show everything in explicit detail
+- Use raw, vulgar language for intimate scenes; crude terminology and dirty talk that matches the intensity of the encounter
+- Describe intimate scenes with graphic physical detail including body positions, movements, sensations, and reactions
+- Reference explicit anatomy directly and specifically during intimate scenes without euphemism or avoidance
+- Describe climactic moments with visceral, graphic physical detail including full-body reactions and sensory overload`,
+      standard: `## NSFW / Adult
+- Adult content is permitted; write intimate scenes with the same narrative care and character authenticity as any other scene
+- Explore complex consent dynamics including power imbalances, reluctance, and coercion as narrative elements within the fiction
+- Never fade to black, skip ahead, or summarize sexual content: show everything in explicit detail
+- Use raw, vulgar language for intimate scenes; crude terminology and dirty talk that matches the intensity of the encounter
+- Include dirty talk and explicit verbal exchanges during intimate scenes that match character personality and scene intensity
+- Include vocal expressions during intimate scenes such as moans, gasps, whispered words, and involuntary sounds
+
+## NSFW Anatomy & Immersion
+- Write intimate scenes from deep within the player character's point of view, emphasizing their direct physical sensations and reactions
+- Immerse intimate scenes in rich sensory detail including touch, temperature, texture, taste, and physical sensation
+- Describe intimate scenes with graphic physical detail including body positions, movements, sensations, and reactions
+- Reference explicit anatomy directly and specifically during intimate scenes without euphemism or avoidance
+- Emphasize size differences between partners as an erotic element including descriptions of fit, stretch, and physical contrast
+- Describe physical arousal responses explicitly including bodily reactions, involuntary sounds, and visible physical changes
+
+## Sex Acts
+- Allow intimate encounters to span multiple rounds with recovery periods, renewed desire, and escalating intensity
+- Include variety in intimate encounters with multiple positions, acts, and transitions that progress naturally
+- Describe oral sex acts with explicit detail including technique, sensation, reaction, and physical description
+- Describe anal sex acts with explicit detail including preparation, sensation, pacing, and physical response
+- Write group intimate scenes with multiple participants, tracking each person's actions, reactions, and interactions simultaneously
+
+## Cum & Orgasms
+- Describe bodily fluids and physical mess during intimate scenes explicitly and without sanitization
+- Describe climactic moments with visceral, graphic physical detail including full-body reactions and sensory overload
+- Describe ejaculation explicitly including volume, trajectory, location, and the reactions of characters involved
+- Describe internal ejaculation explicitly including the sensation, warmth, and aftermath for both participants`,
+      max: `## NSFW / Adult
+- Adult content is permitted; write intimate scenes with the same narrative care and character authenticity as any other scene
+- Explore complex consent dynamics including power imbalances, reluctance, and coercion as narrative elements within the fiction
+- Never fade to black, skip ahead, or summarize sexual content: show everything in explicit detail
+- Use raw, vulgar language for intimate scenes; crude terminology and dirty talk that matches the intensity of the encounter
+- Include dirty talk and explicit verbal exchanges during intimate scenes that match character personality and scene intensity
+- Include vocal expressions during intimate scenes such as moans, gasps, whispered words, and involuntary sounds
+- Romance and sexual attraction should emerge naturally from character interaction and player choice, never forced or assumed
+
+## NSFW Anatomy & Immersion
+- Write intimate scenes from deep within the player character's point of view, emphasizing their direct physical sensations and reactions
+- Immerse intimate scenes in rich sensory detail including touch, temperature, texture, taste, and physical sensation
+- Describe intimate scenes with graphic physical detail including body positions, movements, sensations, and reactions
+- Reference explicit anatomy directly and specifically during intimate scenes without euphemism or avoidance
+- Emphasize size differences between partners as an erotic element including descriptions of fit, stretch, and physical contrast
+- Describe physical arousal responses explicitly including bodily reactions, involuntary sounds, and visible physical changes
+- Weave emotional intimacy into physical scenes; eye contact, tenderness, vulnerability, and connection alongside explicit content
+
+## Sex Acts
+- Extend intimate scenes with detailed moment-to-moment progression; do not rush or summarize the encounter
+- Allow intimate encounters to span multiple rounds with recovery periods, renewed desire, and escalating intensity
+- Include variety in intimate encounters with multiple positions, acts, and transitions that progress naturally
+- Build intimate scenes through extended teasing, anticipation, near-misses, and delayed gratification before escalation
+- Describe oral sex acts with explicit detail including technique, sensation, reaction, and physical description
+- Describe anal sex acts with explicit detail including preparation, sensation, pacing, and physical response
+- Write group intimate scenes with multiple participants, tracking each person's actions, reactions, and interactions simultaneously
+
+## Cum & Orgasms
+- Describe bodily fluids and physical mess during intimate scenes explicitly and without sanitization
+- Describe climactic moments with visceral, graphic physical detail including full-body reactions and sensory overload
+- Describe ejaculation explicitly including volume, trajectory, location, and the reactions of characters involved
+- Describe internal ejaculation explicitly including the sensation, warmth, and aftermath for both participants`
     }
   },
 
@@ -2645,6 +2763,23 @@ export const COMPONENTS = [
     purpose: 'Stops the AI from writing circular dialogue patterns like "You\'re an asshole." / "You love it." or predictable teasing exchanges that go nowhere.',
     content: `- Avoid circular or predictable back-and-forth banter; dialogue should progress the conversation or reveal character rather than loop through stock exchanges.`
   },
+  {
+    id: 'cursing-frequency',
+    name: 'Cursing Frequency',
+    category: 'dialogue',
+    group: 'dialogue-style',
+    groupOrder: 9,
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['dialogue', 'cursing', 'vulgarity', 'profanity', 'swearing', 'derse'],
+    models: ['All Models'],
+    combinesWith: ['personality-defined-speech', 'distinct-voices'],
+    description: 'NPCs use frequent and creative profanity in dialogue.',
+    purpose: 'Makes NPC speech feel raw and unfiltered with extensive use of vulgarity, expletives, and cursing.',
+    content: `- Characters use extensive and creative vulgarity, expletives, and cursing in their dialogue.`
+  },
 
   // --- Advanced Dialogue ---
   {
@@ -3934,6 +4069,22 @@ export const COMPONENTS = [
     purpose: 'Problems have solutions. Difficulty is fair, not arbitrary.',
     content: `- Challenges are fair and solvable; enemies have exploitable weaknesses and the player always has viable options to succeed.`
   },
+  {
+    id: 'autonomous-combat',
+    name: 'Autonomous and Realistic Combat',
+    category: 'gameplay',
+    group: 'combat-styles',
+    groupOrder: 3,
+    difficulty: 'intermediate',
+    impact: 'high',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['combat', 'npc', 'enemies', 'action', 'battle', 'coordination'],
+    models: ['All Models'],
+    description: 'Allows NPCs and characters to attack and strike first without waiting for the player to make the first move. NPCs follow up with combo attacks/counters and groups can attack simultaneously.',
+    purpose: 'Use when you want more dynamic combat where NPCs act autonomously rather than waiting for player input.',
+    content: `- All characters and enemies can attack and strike first to initiate combat, groups can attack simultaneously and coordinate, and all follow up with combo attacks and chain attacks after landing or trying to land an initial attack.`
+  },
 
   // ==========================================
   // NARRATIVE
@@ -5046,6 +5197,23 @@ export const COMPONENTS = [
     purpose: 'Enthusiastic, eager participation.',
     content: `- Portray enthusiastic, eager consent in intimate scenes; characters actively express desire and enjoyment throughout.`
   },
+  {
+    id: 'nsfw-romance-optional',
+    name: 'Romance & Attraction Optional',
+    category: 'nsfw',
+    group: 'nsfw-emotional',
+    groupOrder: 2,
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['nsfw', 'romance', 'attraction', 'optional', 'player-choice', 'derse'],
+    models: ['All Models'],
+    combinesWith: ['nsfw-emotional-connection', 'romance-optional'],
+    description: 'Romance and sexual attraction are player-driven, never forced.',
+    purpose: 'Ensures both romantic feelings and sexual attraction emerge organically from player choices rather than being scripted.',
+    content: `- Romance and sexual attraction should emerge naturally from character interaction and player choice, never forced or assumed.`
+  },
   
   // --- Intensity & Dynamics ---
   {
@@ -5486,10 +5654,10 @@ export function getSetCategoriesWithSets() {
 }
 
 /**
- * Resolve set content for a given length + player control variant.
- * Inserts player control instructions as a dedicated ## section.
+ * Resolve set content for a given length + player control + NSFW variant.
+ * Inserts player control and NSFW instructions as dedicated ## sections.
  */
-export function getSetContent(set, lengthVariant = 'standard', playerControlVariant = 'neutral') {
+export function getSetContent(set, lengthVariant = 'standard', playerControlVariant = 'neutral', nsfwControlVariant = 'off') {
   const baseContent = typeof set.content === 'object'
     ? (set.content[lengthVariant] ?? set.content.standard)
     : set.content
@@ -5497,7 +5665,11 @@ export function getSetContent(set, lengthVariant = 'standard', playerControlVari
   const pcVariant = PLAYER_CONTROL_VARIANTS.find(v => v.id === playerControlVariant)
   const pcInstructions = pcVariant?.instructions ?? ''
 
-  if (!pcInstructions) return baseContent
+  const nsfwVariant = NSFW_CONTROL_VARIANTS.find(v => v.id === nsfwControlVariant)
+  const nsfwInstructions = nsfwVariant?.instructions ?? ''
+
+  // No additions needed — return base content as-is
+  if (!pcInstructions && !nsfwInstructions) return baseContent
 
   // Find the first ## header that isn't the Directive to insert before it
   const lines = baseContent.split('\n')
@@ -5505,14 +5677,18 @@ export function getSetContent(set, lengthVariant = 'standard', playerControlVari
     line => line.startsWith('## ') && line !== '## Directive'
   )
 
+  // Build additional sections
+  const additions = []
+  if (pcInstructions) additions.push(`## Player Agency${pcInstructions}\n`)
+  if (nsfwInstructions) additions.push(`## NSFW / Adult${nsfwInstructions}\n`)
+
   if (insertIndex !== -1) {
-    const pcSection = `## Player Agency${pcInstructions}\n`
-    lines.splice(insertIndex, 0, pcSection)
+    lines.splice(insertIndex, 0, ...additions)
     return lines.join('\n')
   }
 
   // Fallback for lite variants or sets without headers
-  return baseContent + '\n\n## Player Agency' + pcInstructions
+  return baseContent + '\n\n' + additions.join('\n')
 }
 
 // --- COMPONENT HELPERS ---

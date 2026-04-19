@@ -23,7 +23,7 @@ const PAGE_META = {
   },
   '/ai-instructions': {
     title: 'AI Instructions - BetterRepository',
-    description: 'Browse over 200+ AI instruction components and sets. Customize AI writing style, pacing, and tone for your AI Dungeon adventures.',
+    description: 'Pre-built instruction sets, 200+ individual components, and a custom directive builder. Master AI writing style, pacing, and tone for AI Dungeon.',
   },
   '/plot-components': {
     title: 'Plot Components - BetterRepository',
@@ -31,15 +31,15 @@ const PAGE_META = {
   },
   '/story-cards': {
     title: 'Story Cards - BetterRepository',
-    description: 'Ready-to-use Story Card templates and a complete guide to writing effective cards for characters, locations, factions, and more in AI Dungeon.',
+    description: 'Story Card templates, a visual card builder, and a complete writing guide for characters, locations, factions, and more in AI Dungeon.',
   },
   '/scripts': {
     title: 'Scripts - BetterRepository',
-    description: 'Custom JavaScript scripts for AI Dungeon. Game mechanics, utilities, automation, and a complete scripting guide with lifecycle hooks and examples.',
+    description: 'Custom JavaScript scripts and a Multiscript Builder for AI Dungeon. Ready-to-use scripts, game mechanics, and a complete API reference with lifecycle hooks.',
   },
   '/guides': {
     title: 'Guides - BetterRepository',
-    description: 'Everything you need to master AI Dungeon. In-depth guides on AI Instructions, Plot Components, Story Cards, Scripting, Symbols & Commands, and Advanced Settings.',
+    description: 'Everything you need to master AI Dungeon. In-depth guides on AI Instructions, Plot Components, Story Cards, Scripting, BetterScripts, Symbols & Commands, and Advanced Settings.',
   },
   '/contribute': {
     title: 'Contribute to BetterRepository',

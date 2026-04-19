@@ -68,9 +68,9 @@
           </div>
         </div>
 
-        <!-- Global Controls: Length Variant + Player Control -->
+        <!-- Global Controls: Length Variant + Player Control + NSFW Control -->
         <div class="card bg-bd-bg-secondary border-bd-border-subtle">
-          <div class="grid md:grid-cols-2 gap-6">
+          <div class="grid md:grid-cols-3 gap-6">
             <!-- Length Variant Selector -->
             <div>
               <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-3 flex items-center gap-1.5">
@@ -114,6 +114,31 @@
               </div>
               <p class="text-xs text-bd-text-muted mt-2">
                 {{ playerControlVariants.find(pc => pc.id === selectedPlayerControl)?.description }}
+              </p>
+            </div>
+
+            <!-- NSFW Control Selector -->
+            <div>
+              <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <Flame class="w-3.5 h-3.5" /> NSFW Control
+              </h4>
+              <div class="flex gap-2">
+                <button
+                  v-for="nc in nsfwControlVariants"
+                  :key="nc.id"
+                  @click="handleNsfwControlSelect(nc.id)"
+                  class="flex-1 px-3 py-2.5 rounded-lg text-sm font-medium transition-all border text-center"
+                  :class="selectedNsfwControl === nc.id
+                    ? nc.id === 'off'
+                      ? 'bg-bd-accent-primary/20 text-bd-accent-light border-bd-accent-primary/40'
+                      : 'bg-bd-red/20 text-bd-red border-bd-red/40'
+                    : 'bg-bd-bg-tertiary text-bd-text-muted border-bd-border-subtle hover:text-bd-text-secondary hover:border-bd-border-default'"
+                >
+                  {{ nc.label }}
+                </button>
+              </div>
+              <p class="text-xs text-bd-text-muted mt-2">
+                {{ nsfwControlVariants.find(nc => nc.id === selectedNsfwControl)?.description }}
               </p>
             </div>
           </div>
@@ -228,6 +253,10 @@
                         <Shield class="w-3 h-3" />
                         {{ playerControlVariants.find(p => p.id === selectedPlayerControl)?.label }}
                       </span>
+                      <span v-if="selectedNsfwControl !== 'off'" class="tag bg-bd-red/20 text-bd-red border border-bd-red/30">
+                        <Flame class="w-3 h-3" />
+                        {{ nsfwControlVariants.find(n => n.id === selectedNsfwControl)?.label }}
+                      </span>
                     </div>
 
                     <!-- Content -->
@@ -336,6 +365,10 @@
                     <span class="tag bg-bd-accent-primary/15 text-bd-accent-light border border-bd-accent-primary/30">
                       <Shield class="w-3 h-3" />
                       {{ playerControlVariants.find(p => p.id === selectedPlayerControl)?.label }}
+                    </span>
+                    <span v-if="selectedNsfwControl !== 'off'" class="tag bg-bd-red/20 text-bd-red border border-bd-red/30">
+                      <Flame class="w-3 h-3" />
+                      {{ nsfwControlVariants.find(n => n.id === selectedNsfwControl)?.label }}
                     </span>
                   </div>
 
@@ -2007,6 +2040,7 @@ import {
   SETS,
   SET_CATEGORIES,
   PLAYER_CONTROL_VARIANTS,
+  NSFW_CONTROL_VARIANTS,
   getEssentialInstructions,
   getStarterSet,
   getHighImpactInstructions,
@@ -2038,11 +2072,13 @@ const tabs = [
 const sets = ref(SETS)
 const setCategories = ref(SET_CATEGORIES)
 const playerControlVariants = ref(PLAYER_CONTROL_VARIANTS)
+const nsfwControlVariants = ref(NSFW_CONTROL_VARIANTS)
 const expandedSet = ref(null)
 const copiedSetId = ref(null)
 const selectedSetCategory = ref(null)
 const selectedLengthVariant = ref('standard')
 const selectedPlayerControl = ref('neutral')
+const selectedNsfwControl = ref('off')
 
 const lengthVariants = [
   { id: 'lite', label: 'Lite', description: 'Concise and saves context tokens' },
@@ -2077,7 +2113,7 @@ const toggleSetExpand = (setId) => {
 }
 
 const getDisplayContent = (set) => {
-  return getSetContent(set, selectedLengthVariant.value, selectedPlayerControl.value)
+  return getSetContent(set, selectedLengthVariant.value, selectedPlayerControl.value, selectedNsfwControl.value)
 }
 
 const copySetContent = async (set) => {
@@ -2478,6 +2514,22 @@ const confirmAge = () => {
 const cancelAgeVerification = () => {
   showAgeVerification.value = false
   pendingNsfwAction.value = null
+}
+
+// Handle NSFW control variant selection with age verification gating
+const handleNsfwControlSelect = (variantId) => {
+  if (variantId === 'off') {
+    selectedNsfwControl.value = 'off'
+    return
+  }
+  if (!nsfwVerified.value) {
+    pendingNsfwAction.value = () => {
+      selectedNsfwControl.value = variantId
+    }
+    showAgeVerification.value = true
+    return
+  }
+  selectedNsfwControl.value = variantId
 }
 
 // Handle age verification request from Builder component
