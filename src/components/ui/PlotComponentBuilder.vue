@@ -28,7 +28,7 @@
       </div>
 
       <!-- Category Filter Pills -->
-      <div class="flex flex-wrap gap-1.5">
+      <div class="flex flex-wrap items-center gap-1.5">
         <button
           @click="pickerCategory = null"
           class="px-2.5 py-1 rounded-lg text-xs font-medium transition-colors"
@@ -44,12 +44,15 @@
           @click="pickerCategory = cat.id"
           class="px-2.5 py-1 rounded-lg text-xs font-medium transition-colors flex items-center gap-1"
           :class="pickerCategory === cat.id
-            ? `bg-${cat.color}/20 text-${cat.color}`
+            ? cat.activeClass
             : 'bg-bd-bg-tertiary text-bd-text-muted hover:text-bd-text-primary'"
         >
           <component :is="cat.icon" class="w-3 h-3" />
           {{ cat.name }}
         </button>
+        <span class="ml-auto text-[10px] text-bd-text-muted">
+          {{ filteredPickerTemplates.length }} template{{ filteredPickerTemplates.length === 1 ? '' : 's' }}
+        </span>
       </div>
 
       <!-- Template Grid -->
@@ -151,7 +154,19 @@
               <!-- Unfilled placeholders hint -->
               <div v-if="unfilledPlaceholders.length > 0" class="flex items-start gap-1.5 text-[11px] text-bd-blue">
                 <Info class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
-                <span>{{ unfilledPlaceholders.length }} placeholder{{ unfilledPlaceholders.length === 1 ? '' : 's' }} remaining: <code v-for="(p, i) in unfilledPlaceholders.slice(0, 5)" :key="i" class="text-bd-accent-primary">{{ p }}{{ i < Math.min(unfilledPlaceholders.length, 5) - 1 ? ', ' : '' }}</code>{{ unfilledPlaceholders.length > 5 ? ` +${unfilledPlaceholders.length - 5} more` : '' }}</span>
+                <div class="flex-1 min-w-0">
+                  <span class="mr-1">{{ unfilledPlaceholders.length }} placeholder{{ unfilledPlaceholders.length === 1 ? '' : 's' }} remaining:</span>
+                  <span class="inline-flex flex-wrap gap-1 align-middle">
+                    <code
+                      v-for="(p, i) in unfilledPlaceholders.slice(0, 5)"
+                      :key="i"
+                      class="px-1 py-0.5 rounded bg-bd-blue/10 text-bd-accent-primary font-mono text-[10px]"
+                    >{{ p }}</code>
+                    <span v-if="unfilledPlaceholders.length > 5" class="text-bd-text-muted">
+                      +{{ unfilledPlaceholders.length - 5 }} more
+                    </span>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -184,7 +199,8 @@
                   :key="index"
                   class="flex items-start gap-2"
                 >
-                  <label class="text-xs font-medium text-bd-text-secondary whitespace-nowrap pt-2 min-w-[100px] truncate" :title="placeholder.label">
+                  <label class="text-xs font-medium text-bd-text-secondary whitespace-nowrap pt-2 min-w-[100px] truncate flex items-center gap-1" :title="placeholder.label">
+                    <Check v-if="isPlaceholderApplied(placeholder)" class="w-3 h-3 text-bd-green flex-shrink-0" />
                     {{ placeholder.label }}
                   </label>
                   <input
@@ -216,7 +232,7 @@
                 <ul class="text-sm text-bd-text-secondary space-y-1">
                   <li>&#8226; <strong>Edit freely</strong> — the textarea is your main workspace, change anything you want</li>
                   <li>&#8226; Replace <code class="text-bd-accent-primary">[bracketed text]</code> with your own details</li>
-                  <li>&#8226; Leave <code class="text-bd-green">${'${character.name}'}</code> as-is — AI Dungeon fills it automatically</li>
+                  <li v-pre>&#8226; Leave <code class="text-bd-green">${character.name}</code> as-is — AI Dungeon fills it automatically</li>
                   <li>&#8226; Keep it <strong>concise</strong> — shorter entries give the AI more room to work</li>
                   <li>&#8226; Add or remove lines as needed for your story</li>
                 </ul>
@@ -317,9 +333,9 @@ import { ref, computed, nextTick, inject } from 'vue'
 import {
   Hammer, Layers, FileText, Eye, Lightbulb, Zap, Check, Clipboard,
   ChevronDown, RotateCcw, AlertTriangle, Info, MapPin, Link2, Target,
-  Feather, BookMarked, ScrollText, Flame
+  Feather, BookMarked, ScrollText
 } from 'lucide-vue-next'
-import { TEMPLATES, TEMPLATE_CATEGORIES } from '@/data/plotComponents'
+import { TEMPLATES } from '@/data/plotComponents'
 
 const toast = inject('toast', () => {})
 
@@ -334,19 +350,25 @@ const editorTextarea = ref(null)
 const showQuickFill = ref(true)
 const justCopied = ref(false)
 
-// Categories for the picker (exclude nsfw from builder)
+// Categories for the picker (exclude nsfw from builder).
+// `activeClass` is a static Tailwind string so JIT picks it up reliably.
 const builderCategories = [
-  { id: 'authors-note', name: "Author's Note", icon: Feather, color: 'bd-purple' },
-  { id: 'plot-essentials', name: 'Plot Essentials', icon: BookMarked, color: 'bd-green' },
-  { id: 'story-summary', name: 'Story Summary', icon: ScrollText, color: 'bd-cyan' }
+  { id: 'authors-note', name: "Author's Note", icon: Feather, activeClass: 'bg-bd-purple/20 text-bd-purple' },
+  { id: 'plot-essentials', name: 'Plot Essentials', icon: BookMarked, activeClass: 'bg-bd-green/20 text-bd-green' },
+  { id: 'story-summary', name: 'Story Summary', icon: ScrollText, activeClass: 'bg-bd-cyan/20 text-bd-cyan' }
 ]
 
+// Essentials first, then alphabetical within each group.
 const filteredPickerTemplates = computed(() => {
   let templates = TEMPLATES.filter(t => t.category !== 'nsfw')
   if (pickerCategory.value) {
     templates = templates.filter(t => t.category === pickerCategory.value)
   }
-  return templates
+  return [...templates].sort((a, b) => {
+    const essentialDelta = (b.essential ? 1 : 0) - (a.essential ? 1 : 0)
+    if (essentialDelta !== 0) return essentialDelta
+    return (a.name || '').localeCompare(b.name || '')
+  })
 })
 
 // ============================================
@@ -379,11 +401,15 @@ const clearBuilder = () => {
 
 const loadComboTemplate = (templateId) => {
   const template = TEMPLATES.find(t => t.id === templateId)
-  if (template) {
-    selectTemplate(template)
-    // Scroll to top of builder
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+  if (!template) return
+  // Don't silently pull NSFW templates into the builder.
+  if (template.category === 'nsfw') {
+    toast('That combo lives in the NSFW templates library', 'info')
+    return
   }
+  selectTemplate(template)
+  // Scroll to top of builder
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 // ============================================
@@ -483,6 +509,11 @@ const applyAllPlaceholders = () => {
 const hasAnyFilledPlaceholder = computed(() =>
   detectedPlaceholders.value.some(p => p.value.trim())
 )
+
+// A placeholder is considered applied once its raw token is no longer in the editor.
+const isPlaceholderApplied = (placeholder) => {
+  return placeholder.value.trim() !== '' && !editorContent.value.includes(placeholder.raw)
+}
 
 // Detect unfilled placeholders still in the editor
 const unfilledPlaceholders = computed(() => {

@@ -73,7 +73,7 @@
     <PlotComponentsGuide v-if="activeTab === 'plot-components'" />
     <StoryCardsGuide v-if="activeTab === 'story-cards'" />
     <ScriptsGuide v-if="activeTab === 'scripts'" />
-    <BetterScriptsGuide v-if="activeTab === 'betterscripts'" />
+    <FrontierGuide v-if="activeTab === 'frontier'" />
     <SymbolsCommandsGuide v-if="activeTab === 'symbols-commands'" />
     <AdvancedSettingsGuide v-if="activeTab === 'advanced-settings'" />
   </div>
@@ -86,11 +86,11 @@ import AIInstructionsGuide from '@/components/guides/AIInstructionsGuide.vue'
 import PlotComponentsGuide from '@/components/guides/PlotComponentsGuide.vue'
 import StoryCardsGuide from '@/components/guides/StoryCardsGuide.vue'
 import ScriptsGuide from '@/components/guides/ScriptsGuide.vue'
-import BetterScriptsGuide from '@/components/guides/BetterScriptsGuide.vue'
+import FrontierGuide from '@/components/guides/FrontierGuide.vue'
 import AdvancedSettingsGuide from '@/components/guides/AdvancedSettingsGuide.vue'
 import SymbolsCommandsGuide from '@/components/guides/SymbolsCommandsGuide.vue'
 import { 
-  BookOpen, ScrollText, Bookmark, Drama, Code, Terminal, Settings, Hash
+  BookOpen, ScrollText, Bookmark, Drama, Code, Compass, Settings, Hash
 } from 'lucide-vue-next'
 
 const route = useRoute()
@@ -107,7 +107,7 @@ const primaryTabs = [
 // Secondary tabs for supplemental guides
 const secondaryTabs = [
   { id: 'symbols-commands', label: 'Symbols & Commands', icon: Hash },
-  { id: 'betterscripts', label: 'BetterScripts', icon: Terminal },
+  { id: 'frontier', label: 'Frontier (Preview)', icon: Compass },
   { id: 'advanced-settings', label: 'Advanced Settings', icon: Settings },
 ]
 
