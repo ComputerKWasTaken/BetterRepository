@@ -28,13 +28,13 @@
             <strong class="text-bd-text-primary">Frontier</strong> is the new foundation replacing BetterScripts.
             It's a standardized, bidirectional channel between the AI Dungeon script sandbox and BetterDungeon,
             built to <em>unshackle</em> scenarios from the sandbox's walls. With a player's permission, your
-            scripts can finally reach the web, track real time, or tap a local AI &mdash; while your adventure
+            scripts can finally reach the web, track real time, or tap a local AI, while your adventure
             text stays completely clean.
           </p>
           <p class="text-sm text-bd-text-muted leading-relaxed">
             Frontier isn't a feature. It's a <strong class="text-bd-text-secondary">platform</strong>. Widgets
             become just the first module (<strong class="text-bd-text-secondary">Scripture</strong>); everything
-            that comes next &mdash; web, clock, local AI &mdash; slots in the same way.
+            that comes next: web, clock, local AI all slot in the same way.
           </p>
         </div>
       </div>
@@ -211,7 +211,7 @@
         <h2 class="text-lg font-semibold text-bd-text-primary">Under the hood, in plain terms</h2>
       </div>
       <p class="text-bd-text-secondary">
-        Frontier rides AI Dungeon's own rails. No side channels, no invisible text, no bespoke backend &mdash;
+        Frontier rides AI Dungeon's own rails. No side channels, no invisible text, no bespoke backend;
         just story cards and the subscription AI Dungeon already uses.
       </p>
 
@@ -234,7 +234,7 @@
           </div>
           <p class="text-xs text-bd-text-secondary leading-relaxed">
             Every turn has a stable id. Scripts stash per-turn values keyed by that id; BD looks up whichever
-            id is currently the tail. Undo, retry, edit, and continue all just work &mdash; no invisible
+            id is currently the tail. Undo, retry, edit, and continue all just work with no invisible
             characters required.
           </p>
         </div>
@@ -275,7 +275,7 @@
         <div class="flex items-center justify-between px-4 py-2 border-b border-bd-border-subtle bg-bd-bg-elevated/40">
           <div class="flex items-center gap-2">
             <FileCode class="w-3.5 h-3.5 text-bd-text-muted" />
-            <span class="text-xs font-mono text-bd-text-muted">Scenario Library &mdash; Output Modifier</span>
+            <span class="text-xs font-mono text-bd-text-muted">Scenario Library — Output Modifier</span>
           </div>
           <span class="text-[10px] font-semibold text-bd-green uppercase tracking-wider">Illustrative</span>
         </div>
@@ -287,7 +287,7 @@
   ],
   <span class="text-bd-cyan">values</span>: { <span class="text-bd-cyan">hp</span>: state.player.hp, <span class="text-bd-cyan">gold</span>: state.player.gold },
 });
-<span class="text-bd-text-muted">// That's it. Undo, retry, edit, refresh &mdash; all handled by Frontier.</span></code></pre>
+<span class="text-bd-text-muted">// That's it. Undo, retry, edit, refresh: all handled by Frontier.</span></code></pre>
       </div>
 
       <div class="grid sm:grid-cols-2 gap-3 text-xs">
@@ -314,8 +314,8 @@
         <h2 class="text-lg font-semibold text-bd-text-primary">The roadmap, in phases</h2>
       </div>
       <p class="text-bd-text-secondary">
-        Frontier ships in layers. The first release &mdash; <strong class="text-bd-text-primary">Frontier Lite</strong>
-        &mdash; is one-way (scripts to BetterDungeon) and focuses on getting the foundation right. Everything else
+        Frontier ships in layers. The first release, <strong class="text-bd-text-primary">Frontier Lite</strong>,
+        is one-way (scripts to BetterDungeon) and focuses on getting the foundation right. Everything else
         extends it additively: nothing you build on Lite has to be rewritten later.
       </p>
 
@@ -326,7 +326,7 @@
           </span>
           <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <h3 class="font-semibold text-bd-text-primary text-sm">Phase 0 &mdash; Verify the foundations</h3>
+              <h3 class="font-semibold text-bd-text-primary text-sm">Phase 0: Verify the foundations</h3>
               <span class="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-bd-green/25 text-bd-green uppercase tracking-wider">Planned</span>
             </div>
             <p class="text-xs text-bd-text-secondary leading-relaxed">
@@ -343,7 +343,7 @@
           </span>
           <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <h3 class="font-semibold text-bd-text-primary text-sm">Phase 1 &mdash; Frontier Lite + Scripture</h3>
+              <h3 class="font-semibold text-bd-text-primary text-sm">Phase 1: Frontier Lite + Scripture</h3>
               <span class="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-bd-accent-primary/25 text-bd-accent-light uppercase tracking-wider">MVP</span>
             </div>
             <p class="text-xs text-bd-text-secondary leading-relaxed">
@@ -360,7 +360,7 @@
           </span>
           <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <h3 class="font-semibold text-bd-text-primary text-sm">Phase 2 &mdash; Full Frontier (two-way)</h3>
+              <h3 class="font-semibold text-bd-text-primary text-sm">Phase 2: Full Frontier (two-way)</h3>
               <span class="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-bd-purple/25 text-bd-purple uppercase tracking-wider">Post-MVP</span>
             </div>
             <p class="text-xs text-bd-text-secondary leading-relaxed">
@@ -377,7 +377,7 @@
           </span>
           <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <h3 class="font-semibold text-bd-text-primary text-sm">Phase 3+ &mdash; Beyond</h3>
+              <h3 class="font-semibold text-bd-text-primary text-sm">Phase 3+: Beyond</h3>
               <span class="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-bd-cyan/25 text-bd-cyan uppercase tracking-wider">Exploring</span>
             </div>
             <p class="text-xs text-bd-text-secondary leading-relaxed">
@@ -401,7 +401,7 @@
         <div class="p-4 rounded-xl bg-bd-bg-tertiary border border-bd-border-subtle space-y-1.5">
           <h3 class="text-sm font-semibold text-bd-text-primary">Do my BetterScripts widgets carry over automatically?</h3>
           <p class="text-xs text-bd-text-secondary leading-relaxed">
-            No. Frontier is a clean break &mdash; no backward compatibility with the old wire format. The
+            No. Frontier is a clean break with no backward compatibility with the old wire format. The
             migration is mechanical though: swap the BetterScripts snippet for the Frontier base Library
             plus the Scripture adapter, and your widget definitions map over almost one-to-one. A migration
             walkthrough will land with the V2 release notes.
@@ -494,7 +494,7 @@
           </div>
           <p class="text-xs text-bd-text-secondary leading-relaxed">
             A native APK so BetterDungeon finally rides along on your phone. Same features, same toggles, same
-            adventures &mdash; distributed outside the Play Store.
+            adventures, distributed outside the Play Store.
           </p>
         </div>
 
@@ -507,7 +507,7 @@
             <h3 class="font-semibold text-bd-text-primary text-sm">Firefox listing</h3>
           </div>
           <p class="text-xs text-bd-text-secondary leading-relaxed">
-            An official release on addons.mozilla.org. No more sideloading unsigned builds &mdash; just install
+            An official release on addons.mozilla.org. No more sideloading unsigned builds. Just install
             it like any other extension.
           </p>
         </div>
