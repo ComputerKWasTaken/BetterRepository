@@ -10,7 +10,7 @@ const modifier = (text) => {
       note,
       actionCount: info.actionCount,
     })
-    state.message = \`Noted: \${note}\` 
+    state.message = `Noted: ${note}`
     text = ''
   } else {
     delete state.message

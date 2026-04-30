@@ -1,6 +1,6 @@
 const prompt = 'Please continue from your last response';
 
-const continueInstructions = \`\\n<SYSTEM>\\n\${prompt}\\n</SYSTEM>\`;
+const continueInstructions = `\n<SYSTEM>\n${prompt}\n</SYSTEM>`;
 
 const modifier = (text) => {
   const isContinue = history.at(-1)?.type === 'continue'

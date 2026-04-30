@@ -10,7 +10,7 @@ const modifier = (text) => {
   if (commandMatcher) {
     const command = commandMatcher[1]
     const args = commandMatcher[2] ? commandMatcher[2].trim().split(' ') : []
-    state.message = \`Got command '\${command}' with args \${JSON.stringify(args)}\` 
+    state.message = `Got command '${command}' with args ${JSON.stringify(args)}`
     stop = true
     text = null
   } else {

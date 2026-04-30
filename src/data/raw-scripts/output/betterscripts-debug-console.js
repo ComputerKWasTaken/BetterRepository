@@ -41,7 +41,7 @@ const modifier = (text) => {
   if (state.bd.testRunning) {
     widgets += bdWidget('console-test', {
       type: 'badge',
-      text: \`Test \${state.bd.testStep}/\${TEST_STEPS.length}\`,
+      text: `Test ${state.bd.testStep}/${TEST_STEPS.length}`,
       icon: '🧪',
       color: '#22c55e',
       variant: 'subtle',
