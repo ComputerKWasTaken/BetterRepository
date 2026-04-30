@@ -180,8 +180,8 @@
                 <span class="text-[11px] font-semibold text-bd-text-primary">Stop Behavior</span>
               </div>
               <p class="text-[10px] text-bd-text-muted leading-relaxed">
-                Returning <code class="text-bd-pink">{ stop: true }</code> prevents the AI from generating a response.
-                A command script that stops the loop will also prevent downstream scripts from seeing AI output.
+                The builder passes <code class="text-bd-pink">{ stop: true }</code> through input and context hooks.
+                Input stop shows the normal script error, while context stop may surface as an internal processing error. Output hooks return text only.
               </p>
             </div>
             <div class="p-2.5 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
@@ -209,6 +209,7 @@
               <strong class="text-bd-amber">Bottom line:</strong>
               Scripts that only <em>read</em> state and <em>append</em> to text (like display widgets or context injectors) combine safely.
               Scripts that <em>rewrite</em> text, <em>stop</em> the game loop, or <em>mutate</em> shared state need care.
+              Avoid context-stop behavior unless a script explicitly depends on it, because AI Dungeon may present it as a failed action.
               When in doubt, test in a private scenario first.
             </p>
           </div>
