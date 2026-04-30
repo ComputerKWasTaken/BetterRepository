@@ -645,44 +645,124 @@ export const extractModifierBody = (code) => {
   }
   cleaned = lines.slice(startIdx).join('\n').trim()
 
-  // Try to match the modifier pattern:
-  // const modifier = (text) => { ...body... }\n[;]\nmodifier(text)[;]
-  // We need to find the opening brace of the arrow function body and its matching close
-  const arrowMatch = cleaned.match(/const\s+modifier\s*=\s*\(?\s*text\s*\)?\s*=>\s*\{/)
-  if (!arrowMatch) {
+  // Try to match common AI Dungeon modifier patterns.
+  const modifierPatterns = [
+    /(?:const|let|var)\s+modifier\s*=\s*\(?\s*text\s*\)?\s*=>\s*\{/,
+    /(?:const|let|var)\s+modifier\s*=\s*function\s*\(\s*text\s*\)\s*\{/,
+    /function\s+modifier\s*\(\s*text\s*\)\s*\{/
+  ]
+  let modifierMatch = null
+  for (const pattern of modifierPatterns) {
+    modifierMatch = cleaned.match(pattern)
+    if (modifierMatch) break
+  }
+
+  if (!modifierMatch) {
     // If it doesn't match the modifier pattern, return the whole thing
     // (might be raw library code like state initialization)
     return cleaned
   }
 
-  const bodyStart = cleaned.indexOf('{', arrowMatch.index) + 1
-
-  // Find the matching closing brace
-  let depth = 1
-  let bodyEnd = bodyStart
-  for (let i = bodyStart; i < cleaned.length; i++) {
-    if (cleaned[i] === '{') depth++
-    else if (cleaned[i] === '}') {
-      depth--
-      if (depth === 0) {
-        bodyEnd = i
-        break
-      }
-    }
-  }
+  const bodyStart = cleaned.indexOf('{', modifierMatch.index) + 1
+  const bodyEnd = findMatchingBrace(cleaned, bodyStart - 1)
+  if (bodyEnd === -1) return cleaned
 
   let body = cleaned.substring(bodyStart, bodyEnd).trim()
+
+  function findMatchingBrace(source, openIndex) {
+    let depth = 1
+    let mode = 'code'
+    let quote = ''
+    let inRegexClass = false
+
+    for (let i = openIndex + 1; i < source.length; i++) {
+      const char = source[i]
+      const next = source[i + 1]
+
+      if (mode === 'lineComment') {
+        if (char === '\n') mode = 'code'
+        continue
+      }
+
+      if (mode === 'blockComment') {
+        if (char === '*' && next === '/') {
+          mode = 'code'
+          i++
+        }
+        continue
+      }
+
+      if (mode === 'string') {
+        if (char === '\\') {
+          i++
+        } else if (char === quote) {
+          mode = 'code'
+        }
+        continue
+      }
+
+      if (mode === 'regex') {
+        if (char === '\\') {
+          i++
+        } else if (char === '[') {
+          inRegexClass = true
+        } else if (char === ']') {
+          inRegexClass = false
+        } else if (char === '/' && !inRegexClass) {
+          mode = 'code'
+        }
+        continue
+      }
+
+      if (char === '/' && next === '/') {
+        mode = 'lineComment'
+        i++
+        continue
+      }
+      if (char === '/' && next === '*') {
+        mode = 'blockComment'
+        i++
+        continue
+      }
+      if (char === '"' || char === "'" || char === '`') {
+        mode = 'string'
+        quote = char
+        continue
+      }
+      if (char === '/' && isLikelyRegexStart(source, i)) {
+        mode = 'regex'
+        inRegexClass = false
+        continue
+      }
+
+      if (char === '{') depth++
+      if (char === '}') depth--
+      if (depth === 0) return i
+    }
+    return -1
+  }
+
+  function isLikelyRegexStart(source, index) {
+    const left = source.slice(0, index).trimEnd()
+    if (!left) return true
+    if (/(return|case|throw|typeof|delete|void|new|in|of)$/.test(left)) return true
+    return '({[=,:;!&|?+-*~^<>'.includes(left[left.length - 1])
+  }
 
   // Remove trailing `return { text }` or `return { text: ... }` since the hook pattern
   // uses globalThis.text instead of returning
   // Keep the rest of the logic but convert the return
   body = body.replace(
-    /return\s*\{\s*text\s*:\s*([^}]+)\}\s*;?\s*$/,
-    'globalThis.text = $1;'
+    /return\s*\{\s*text\s*:\s*([^,}]+)\s*,\s*stop\s*:\s*([^}]+)\}\s*;?\s*$/,
+    'globalThis.text = $1;\n    if ($2) globalThis.stop = true;'
+  )
+  body = body.replace(
+    /return\s*\{\s*text\s*:\s*([^,}]+)\s*,\s*stop\s*\}\s*;?\s*$/,
+    'globalThis.text = $1;\n    if (stop) globalThis.stop = true;'
   )
   body = body.replace(
     /return\s*\{\s*text\s*,\s*stop\s*:\s*([^}]+)\}\s*;?\s*$/,
-    'globalThis.text = text;\n    globalThis.stop = $1;'
+    'globalThis.text = text;\n    if ($1) globalThis.stop = true;'
   )
   body = body.replace(
     /return\s*\{\s*text\s*,\s*stop\s*\}\s*;?\s*$/,
@@ -705,13 +785,12 @@ export const extractModifierBody = (code) => {
 // Returns the full `globalThis.FnName = function FnName(hook) { ... };` string.
 export const convertToHookPattern = (script) => {
   const fnName = getScriptFunctionName(script)
-  const stateKey = fnName.charAt(0).toLowerCase() + fnName.slice(1)
 
   // Case 1: Already a hook-pattern script, so return library content as-is
   if (isHookPatternScript(script)) {
     const lib = script.files.library
     // If it uses a function declaration (not globalThis assignment), add registration
-    if (!/globalThis\.[A-Za-z_$]/.test(lib)) {
+    if (!new RegExp(`globalThis\\.${fnName}\\b`).test(lib)) {
       return `${lib}\nglobalThis.${fnName} = ${fnName};`
     }
     return lib
@@ -754,7 +833,7 @@ export const convertToHookPattern = (script) => {
       body += `\n    return;\n  }`
     }
 
-    return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n${body}\n};`
+    return `globalThis.${fnName} = function ${fnName}(hook) {\n\n${body}\n};`
   }
 
   // Case 3: Single-file script with content and fileType
@@ -763,7 +842,7 @@ export const convertToHookPattern = (script) => {
     if (script.fileType === 'library' || script.fileType === 'helper') {
       // Wrap raw library code in a globalThis function
       const code = script.content.trim()
-      return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n${code.split('\n').map(l => `  ${l}`).join('\n')}\n};`
+      return `globalThis.${fnName} = function ${fnName}(hook) {\n\n${code.split('\n').map(l => `  ${l}`).join('\n')}\n};`
     }
 
     const hookName = script.fileType === 'context' ? 'context'
@@ -771,12 +850,12 @@ export const convertToHookPattern = (script) => {
         : 'input'
     const body = extractModifierBody(script.content)
 
-    return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n  // -------- hook: ${hookName} --------\n  if (hook === "${hookName}") {\n${body.split('\n').map(l => `    ${l}`).join('\n')}\n    return;\n  }\n};`
+    return `globalThis.${fnName} = function ${fnName}(hook) {\n\n  // -------- hook: ${hookName} --------\n  if (hook === "${hookName}") {\n${body.split('\n').map(l => `    ${l}`).join('\n')}\n    return;\n  }\n};`
   }
 
   // Case 4: Raw content without fileType, so treat as library
   if (script.content) {
-    return `globalThis.${fnName} = function ${fnName}(hook) {\n"use strict";\n\n${script.content.trim().split('\n').map(l => `  ${l}`).join('\n')}\n};`
+    return `globalThis.${fnName} = function ${fnName}(hook) {\n\n${script.content.trim().split('\n').map(l => `  ${l}`).join('\n')}\n};`
   }
 
   return `// No code content found for ${script.name || 'script'}`

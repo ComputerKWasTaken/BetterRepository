@@ -834,6 +834,16 @@ function InnerSelf(hook) {
      * @returns {void}
      */
     const deindicate = (card = {}) => {
+        if (!card || (typeof card !== "object")) {
+            return;
+        }
+        const descriptor = Object.getOwnPropertyDescriptor(card, "title");
+        const canWriteTitle = descriptor
+            ? ((descriptor.writable !== false) || (typeof descriptor.set === "function"))
+            : Object.isExtensible(card);
+        if (!canWriteTitle) {
+            return;
+        }
         if (typeof card.title !== "string") {
             // Cry
             card.title = "";

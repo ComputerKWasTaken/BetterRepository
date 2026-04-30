@@ -293,7 +293,7 @@ function feedAIPrompt(text) {
 function saveStoryArc(text) {
     if (state.saveOutput) {
         // Copy the generated story arc from the output text
-        outputtedArc = text;
+        let outputtedArc = text;
 
         // Clean story arc text to ensure no incomplete numbered lines
         log("Before: ", outputtedArc);
@@ -338,7 +338,7 @@ function saveStoryArc(text) {
 
             // Trim notes on char limit to prevent memory overfill
             if (arcSC.description.length > 3000) {
-                halfIndex = Math.floor(arcSC.description.length / 2);
+                const halfIndex = Math.floor(arcSC.description.length / 2);
                 arcSC.description = arcSC.description.slice(0, halfIndex);
 
                 console.log("Trimming arcSC description to prevent memory overload.");
@@ -400,7 +400,7 @@ function logContextToSettingsSC(text) {
 
     // Trim notes on char limit to prevent memory overfill
     if (settingsSC.description.length > 3000) {
-        halfIndex = Math.floor(settingsSC.description.length / 2);
+        const halfIndex = Math.floor(settingsSC.description.length / 2);
         settingsSC.description = settingsSC.description.slice(0, halfIndex);
 
         console.log("Trimming settingsSC description to prevent memory overload.");
