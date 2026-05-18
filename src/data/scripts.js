@@ -584,16 +584,28 @@ updateCategoryCounts()
 // MULTISCRIPT BUILDER HELPERS
 // ============================================
 
-// Check if a script uses the library-centric hook pattern
-// (has a files.library that defines a globalThis function with hook parameter)
+const hookPatternFunctionPatterns = [
+  /globalThis\.([A-Za-z_$][A-Za-z0-9_$]*)\s*=\s*function(?:\s+[A-Za-z_$][A-Za-z0-9_$]*)?\s*\(\s*(?:hook|inHook)\b[^)]*\)/m,
+  /globalThis\.([A-Za-z_$][A-Za-z0-9_$]*)\s*=\s*(?:\(\s*(?:hook|inHook)\b[^)]*\)|(?:hook|inHook))\s*=>\s*\{/m,
+  /^function\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*\(\s*(?:hook\s*\)|inHook\s*,\s*inText\s*,\s*inStop\s*\))/m
+]
+
+const getHookPatternFunctionMatch = (lib) => {
+  if (!lib || typeof lib !== 'string') return null
+  for (const pattern of hookPatternFunctionPatterns) {
+    const match = lib.match(pattern)
+    if (match) return match
+  }
+  return null
+}
+
+// Check if a script uses the library-centric hook pattern.
+// A Library file may expose helper functions on globalThis, so only treat it as
+// hook-pattern code when the exported/declared function's first argument is the
+// lifecycle hook. Otherwise, companion Input/Context/Output files must be merged.
 export const isHookPatternScript = (script) => {
   if (!script.files || !script.files.library) return false
-  const lib = script.files.library
-  // Match globalThis.X = function (Standard hook pattern)
-  // OR standalone function X(hook) (Inner Self pattern)
-  // OR standalone function X(inHook, inText, inStop) (Auto Cards pattern)
-  return /globalThis\.[A-Za-z_$][A-Za-z0-9_$]*\s*=\s*function/.test(lib)
-    || /^function\s+[A-Za-z_$][A-Za-z0-9_$]*\s*\(\s*(?:hook|inHook,\s*inText,\s*inStop)\s*\)/m.test(lib)
+  return !!getHookPatternFunctionMatch(script.files.library)
 }
 
 // Convert a string to PascalCase function name
@@ -610,8 +622,7 @@ export const toPascalCase = (str) => {
 export const getScriptFunctionName = (script) => {
   // If it's a hook pattern script, extract the name from the library
   if (isHookPatternScript(script)) {
-    const match = script.files.library.match(/globalThis\.([A-Za-z_$][A-Za-z0-9_$]*)\s*=\s*function/)
-      || script.files.library.match(/^function\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*\(\s*(?:hook|inHook,\s*inText,\s*inStop)\s*\)/m)
+    const match = getHookPatternFunctionMatch(script.files.library)
     if (match) return match[1]
   }
   // Otherwise generate from the script name
