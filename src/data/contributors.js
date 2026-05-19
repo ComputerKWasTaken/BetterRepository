@@ -31,7 +31,7 @@ export const STORY_CARDS_CONTRIBUTORS = [
 
 /** Contributors who wrote scripts and other tools, or created guides and resources for scripting */
 export const SCRIPTING_CONTRIBUTORS = [
-  'LewdLeah', 'Oli', 'Magic', 'BinKompliziert', 'MrJack', 'Burnout'
+  'LewdLeah', 'Oli', 'Magic', 'BinKompliziert', 'MrJack', 'Burnout', 'Worldsmythe'
 ]
 
 // -----------------------------------------------------------------------------

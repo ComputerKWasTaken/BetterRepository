@@ -317,6 +317,22 @@ export const SCRIPTS = [
     scenarioLink: 'https://play.aidungeon.link/scenario/AX2nXYIPzcKd/localized-languages'
   },
   {
+    id: 'foxtweaks',
+    name: 'FoxTweaks',
+    category: 'utilities',
+    difficulty: 'advanced',
+    impact: 'high',
+    essential: false,
+    tags: ['dice', 'formatting', 'redundancy', 'pronouns', 'random-names', 'configuration'],
+    source: 'Community',
+    author: 'Worldsmythe',
+    description: 'A unified script suite for dice rolls, paragraph formatting, redundant output cleanup, pronoun fixes, and random name replacement.',
+    purpose: 'Combines several quality-of-life script modules under one configuration card so creators can tune dice outcomes, output formatting, repetition handling, pronoun replacement, and name banks from a single setup.',
+    githubUrl: 'https://github.com/Worldsmythe/FoxTweaks',
+    externalUrl: 'https://discord.com/channels/903327676884979802/1506111353440702655/1506111353440702655',
+    scenarioLink: 'https://play.aidungeon.com/scenario/alR_ZUU1G_2-/foxtweaks-scenario-innerself'
+  },
+  {
     id: 'build-card',
     name: 'buildCard()',
     category: 'utilities',
