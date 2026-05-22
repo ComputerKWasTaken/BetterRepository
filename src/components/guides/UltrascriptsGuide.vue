@@ -21,15 +21,15 @@
 
         <div class="space-y-4 max-w-3xl">
           <h1 class="text-4xl md:text-5xl font-bold text-bd-text-primary tracking-tight leading-[1.1]">
-            Frontier makes scenarios feel <span class="text-gradient">alive</span>, not just clever.
+            Ultrascripts makes scenarios feel <span class="text-gradient">alive</span>, not just clever.
           </h1>
           <p class="text-lg text-bd-text-secondary leading-relaxed">
-            Frontier replaces BetterScripts, but the real upgrade is bigger than widgets. It lets a scenario track
+            Ultrascripts replaces BetterScripts, but the real upgrade is bigger than widgets. It lets a scenario track
             itself better, react better, and present itself better, so the whole experience feels more intentional
             instead of more improvised.
           </p>
           <p class="text-sm text-bd-text-muted leading-relaxed">
-            If BetterScripts made scenarios feel decorated, Frontier makes them feel designed.
+            If BetterScripts made scenarios feel decorated, Ultrascripts makes them feel designed.
           </p>
         </div>
       </div>
@@ -41,7 +41,7 @@
         <h2 class="text-lg font-semibold text-bd-text-primary">Why people should care</h2>
       </div>
       <p class="text-bd-text-secondary">
-        Frontier matters because it changes what a scenario can feel like in play.
+        Ultrascripts matters because it changes what a scenario can feel like in play.
       </p>
 
       <div class="grid md:grid-cols-2 gap-3">
@@ -84,7 +84,7 @@
             <div class="space-y-1.5">
               <h3 class="font-semibold text-bd-text-primary">Your story stays clean</h3>
               <p class="text-sm text-bd-text-secondary leading-relaxed">
-                Frontier does not ask authors to smear transport junk into the narrative. The writing stays clean,
+                Ultrascripts does not ask authors to smear transport junk into the narrative. The writing stays clean,
                 the AI sees the story instead of a carrier signal, and the whole scenario feels less hacked together.
               </p>
             </div>
@@ -99,7 +99,7 @@
             <div class="space-y-1.5">
               <h3 class="font-semibold text-bd-text-primary">Players keep control</h3>
               <p class="text-sm text-bd-text-secondary leading-relaxed">
-                Frontier is ambitious without being invasive. Players decide what they enable, which means authors
+                Ultrascripts is ambitious without being invasive. Players decide what they enable, which means authors
                 can build bold ideas without crossing the line into “this scenario is doing too much behind my back.”
               </p>
             </div>
@@ -143,7 +143,7 @@
             <div class="w-8 h-8 rounded-lg bg-bd-accent-primary/20 flex items-center justify-center">
               <Check class="w-4 h-4 text-bd-accent-primary" />
             </div>
-            <h3 class="font-semibold text-bd-text-primary">With Frontier</h3>
+            <h3 class="font-semibold text-bd-text-primary">With Ultrascripts</h3>
           </div>
           <ul class="space-y-2.5 text-sm">
             <li class="flex items-start gap-2 text-bd-text-secondary">
@@ -169,7 +169,7 @@
         <h2 class="text-lg font-semibold text-bd-text-primary">The kinds of scenarios this unlocks</h2>
       </div>
       <p class="text-bd-text-secondary">
-        The easiest way to understand Frontier is to picture the kinds of moments it makes possible.
+        The easiest way to understand Ultrascripts is to picture the kinds of moments it makes possible.
       </p>
 
       <div class="space-y-3">
@@ -198,7 +198,7 @@
               <h3 class="font-semibold text-bd-text-primary">A world that feels grounded</h3>
               <p class="text-sm text-bd-text-secondary leading-relaxed">
                 A city can know what time it is. A travel story can know the weather. A quiet camp scene can feel
-                different at dawn than it does at midnight. Frontier helps stories feel placed somewhere instead of nowhere.
+                different at dawn than it does at midnight. Ultrascripts helps stories feel placed somewhere instead of nowhere.
               </p>
             </div>
           </div>
@@ -228,7 +228,7 @@
               <h3 class="font-semibold text-bd-text-primary">Scripts that can think a little smarter</h3>
               <p class="text-sm text-bd-text-secondary leading-relaxed">
                 Some work belongs in the background: classifying, organizing, summarizing, shaping, cleaning up.
-                Frontier makes room for that kind of support work so the main story can stay focused on being a story.
+                Ultrascripts makes room for that kind of support work so the main story can stay focused on being a story.
               </p>
             </div>
           </div>
@@ -242,7 +242,7 @@
         <h2 class="text-lg font-semibold text-bd-text-primary">What it feels like to author with</h2>
       </div>
       <p class="text-bd-text-secondary">
-        The biggest quality-of-life win is that Frontier lets authors think less about transport and more about experience.
+        The biggest quality-of-life win is that Ultrascripts lets authors think less about transport and more about experience.
       </p>
 
       <div class="grid md:grid-cols-2 gap-3">
@@ -250,7 +250,7 @@
           <h3 class="text-sm font-semibold text-bd-text-primary">You think in features</h3>
           <p class="text-xs text-bd-text-secondary leading-relaxed">
             “I want a timer.” “I want a ritual tracker.” “I want an NPC control panel.” “I want weather to matter.”
-            Frontier keeps those as design ideas instead of turning them into plumbing problems.
+            Ultrascripts keeps those as design ideas instead of turning them into plumbing problems.
           </p>
         </div>
 
@@ -274,7 +274,7 @@
         <div class="flex items-start gap-3 p-4 rounded-xl bg-bd-green/10 border border-bd-green/30">
           <CheckCircle2 class="w-5 h-5 text-bd-green flex-shrink-0 mt-0.5" />
           <p class="text-sm text-bd-text-secondary leading-relaxed">
-            Frontier keeps communication out of the visible narrative, so the story reads like a story instead of a
+            Ultrascripts keeps communication out of the visible narrative, so the story reads like a story instead of a
             carrier signal.
           </p>
         </div>
@@ -305,7 +305,7 @@
 
       <div class="space-y-3">
         <div class="p-4 rounded-xl bg-bd-bg-tertiary border border-bd-border-subtle space-y-1.5">
-          <h3 class="text-sm font-semibold text-bd-text-primary">Do I need to use every part of Frontier?</h3>
+          <h3 class="text-sm font-semibold text-bd-text-primary">Do I need to use every part of Ultrascripts?</h3>
           <p class="text-xs text-bd-text-secondary leading-relaxed">
             No. Some scenarios will only use Scripture. Others will branch into weather, time, AI, or utility modules.
             The point is not that every scenario should do everything. The point is that they finally can grow when it helps.
@@ -323,7 +323,7 @@
         <div class="p-4 rounded-xl bg-bd-bg-tertiary border border-bd-border-subtle space-y-1.5">
           <h3 class="text-sm font-semibold text-bd-text-primary">What is the main takeaway?</h3>
           <p class="text-xs text-bd-text-secondary leading-relaxed">
-            Frontier makes a scenario feel authored on purpose. More reliable. More expressive. More like an experience
+            Ultrascripts makes a scenario feel authored on purpose. More reliable. More expressive. More like an experience
             someone meant to build, not just something they managed to jury-rig.
           </p>
         </div>
@@ -338,14 +338,14 @@
           <h2 class="text-lg font-semibold text-bd-text-primary">The pitch in one sentence</h2>
         </div>
         <p class="text-bd-text-secondary text-lg leading-relaxed max-w-3xl">
-          Frontier is worth caring about because it raises the ceiling on what a scenario can be while making the whole
+          Ultrascripts is worth caring about because it raises the ceiling on what a scenario can be while making the whole
           thing feel cleaner, sturdier, and more intentional.
         </p>
       </div>
     </section>
 
     <div class="text-center text-xs text-bd-text-muted italic pb-4">
-      BetterScripts proved people wanted more. Frontier is what “more” looks like when it is done properly.
+      BetterScripts proved people wanted more. Ultrascripts is what “more” looks like when it is done properly.
     </div>
   </div>
 </template>
