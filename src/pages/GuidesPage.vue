@@ -73,7 +73,7 @@
     <PlotComponentsGuide v-if="activeTab === 'plot-components'" />
     <StoryCardsGuide v-if="activeTab === 'story-cards'" />
     <ScriptsGuide v-if="activeTab === 'scripts'" />
-    <FrontierGuide v-if="activeTab === 'frontier'" />
+    <UltrascriptsGuide v-if="activeTab === 'ultrascripts'" />
     <SymbolsCommandsGuide v-if="activeTab === 'symbols-commands'" />
     <AdvancedSettingsGuide v-if="activeTab === 'advanced-settings'" />
   </div>
@@ -86,7 +86,7 @@ import AIInstructionsGuide from '@/components/guides/AIInstructionsGuide.vue'
 import PlotComponentsGuide from '@/components/guides/PlotComponentsGuide.vue'
 import StoryCardsGuide from '@/components/guides/StoryCardsGuide.vue'
 import ScriptsGuide from '@/components/guides/ScriptsGuide.vue'
-import FrontierGuide from '@/components/guides/FrontierGuide.vue'
+import UltrascriptsGuide from '@/components/guides/UltrascriptsGuide.vue'
 import AdvancedSettingsGuide from '@/components/guides/AdvancedSettingsGuide.vue'
 import SymbolsCommandsGuide from '@/components/guides/SymbolsCommandsGuide.vue'
 import { 
@@ -107,7 +107,7 @@ const primaryTabs = [
 // Secondary tabs for supplemental guides
 const secondaryTabs = [
   { id: 'symbols-commands', label: 'Symbols & Commands', icon: Hash },
-  { id: 'frontier', label: 'Frontier (Preview)', icon: Compass },
+  { id: 'ultrascripts', label: 'Ultrascripts (Preview)', icon: Compass },
   { id: 'advanced-settings', label: 'Advanced Settings', icon: Settings },
 ]
 

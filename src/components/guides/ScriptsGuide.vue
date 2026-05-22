@@ -932,22 +932,22 @@ modifier(text);</pre>
         </Transition>
       </section>
 
-      <!-- BetterScripts Superseded by Frontier -->
-      <section id="guide-frontier" class="card">
+      <!-- BetterScripts Superseded by Ultrascripts -->
+      <section id="guide-ultrascripts" class="card">
         <div class="p-4 rounded-lg bg-gradient-to-r from-bd-accent-primary/10 to-bd-purple/10 border border-bd-accent-primary/30">
           <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
             <Terminal class="w-4 h-4 text-bd-accent-primary" />
-            BetterScripts is becoming Frontier
+            BetterScripts is becoming Ultrascripts
           </h3>
           <p class="text-sm text-bd-text-secondary mb-3">
-            In BetterDungeon V2, BetterScripts is replaced by <strong class="text-bd-text-primary">Frontier</strong> &mdash; a standardized,
+            In BetterDungeon V2, BetterScripts is replaced by <strong class="text-bd-text-primary">Ultrascripts</strong> &mdash; a standardized,
             bidirectional bridge between AI Dungeon scripts and the browser. No invisible characters, no Context Modifier,
             and a real path forward for web access, clocks, local AI, and more.
           </p>
           <div class="flex items-center gap-3 flex-wrap">
-            <router-link to="/guides?tab=frontier" class="btn btn-primary text-sm">
+            <router-link to="/guides?tab=ultrascripts" class="btn btn-primary text-sm">
               <Terminal class="w-4 h-4" />
-              Read the Frontier Preview
+              Read the Ultrascripts Preview
             </router-link>
             <span class="text-xs text-bd-text-muted">Teaser for what's coming in BD V2</span>
           </div>
@@ -1024,7 +1024,7 @@ const guideSections = [
   { id: 'common-patterns', label: 'Common Patterns' },
   { id: 'hook-pattern', label: 'Hook Pattern' },
   { id: 'tips-pitfalls', label: 'Tips & Pitfalls' },
-  { id: 'frontier', label: 'Frontier Preview' },
+  { id: 'ultrascripts', label: 'Ultrascripts Preview' },
   { id: 'credits', label: 'Credits' }
 ]
 

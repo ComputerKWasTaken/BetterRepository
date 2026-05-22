@@ -201,13 +201,13 @@
               </ul>
             </div>
 
-            <!-- Frontier -->
+            <!-- Ultrascripts -->
             <div class="whats-new-card group" style="animation-delay: 80ms">
               <div class="flex items-center gap-3 mb-3">
                 <div class="w-9 h-9 rounded-lg bg-bd-purple/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-purple/25 transition-colors">
                   <Rocket class="w-4 h-4 text-bd-purple" />
                 </div>
-                <h3 class="font-semibold text-sm text-bd-text-primary">Frontier</h3>
+                <h3 class="font-semibold text-sm text-bd-text-primary">Ultrascripts</h3>
                 <span class="ml-auto text-[10px] px-2 py-0.5 rounded-full font-medium bg-bd-purple/20 text-bd-purple">Coming Soon</span>
               </div>
               <ul class="space-y-1.5 text-sm text-bd-text-secondary">
@@ -253,10 +253,10 @@
               <ArrowRight class="w-3.5 h-3.5" />
             </router-link>
             <router-link
-              to="/guides?tab=frontier"
+              to="/guides?tab=ultrascripts"
               class="inline-flex items-center gap-2 text-sm font-medium text-bd-purple hover:text-bd-purple/80 transition-colors"
             >
-              Learn About Frontier
+              Learn About Ultrascripts
               <ArrowRight class="w-3.5 h-3.5" />
             </router-link>
             <router-link
