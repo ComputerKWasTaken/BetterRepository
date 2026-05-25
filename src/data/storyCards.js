@@ -55,6 +55,45 @@
 //    essential, tags, source, description, triggers, and entry.
 //    Optional: useCase, combinesWith.
 //
+// ============================================
+// COMMAND PRESET RULESET (Internal Documentation)
+// All Story Card Command Presets MUST follow these rules.
+// ============================================
+//
+// Command Presets represent AI Dungeon's Story Card Command tab
+// configuration. They are a third data type alongside STORY_CARDS
+// (examples) and STORY_CARD_TEMPLATES (manual templates).
+//
+// A. REQUIRED COMMAND TOKEN
+//    The `command` field MUST contain the literal `{{title}}` token.
+//    AI Dungeon's editor disables "Finish" when this token is missing.
+//
+// B. COMMAND LENGTH
+//    The `command` field MUST be <= 2000 characters (AI Dungeon limit).
+//    The `additionalContext` field MUST also be <= 2000 characters.
+//
+// C. ENTRY FORMATTING
+//    `entryFormatting` is one of: 'none', 'curly' ({}), 'bracket' ([]).
+//    Use 'none' unless the prompt is explicitly designed to emit
+//    structured field blocks the engine can parse.
+//
+// D. PRESET DESCRIPTION
+//    The `description` describes the underlying generator behavior
+//    (which model, which context builder), NOT what the prompt does.
+//    What the prompt does belongs in `useCase`.
+//
+// E. METADATA COMPLETENESS
+//    Every preset must include: id, name, category (optional, may be
+//    null for general-purpose presets), difficulty, impact, essential,
+//    tags, description, useCase, command, entryFormatting,
+//    additionalContext, logInNotes, speedCreate.
+//    Optional: credit, source.
+//
+// F. CATEGORY ASSIGNMENT
+//    Set `category` to a STORY_CARD_CATEGORIES id when the preset is
+//    tuned for that specific category. Leave null for general presets
+//    that work across categories.
+//
 
 // ============================================
 // STORY CARD CATEGORIES
@@ -685,6 +724,243 @@ export const STORY_CARD_TEMPLATES = [
 ]
 
 // ============================================
+// STORY CARD COMMAND PRESETS
+// ============================================
+// Presets capture AI Dungeon's Story Card Command tab configuration:
+// the prompt template (with the required {{title}} token), the entry
+// formatting mode, additional generation context, and the
+// log-in-notes / speed-create toggles.
+//
+// Match the in-app field set exactly so presets can be copied verbatim
+// into the Story Card editor.
+export const STORY_CARD_COMMAND_PRESETS = [
+  // ========== GENERAL-PURPOSE PRESETS ==========
+  {
+    id: 'preset-basic-list-prompt',
+    name: 'Basic List Prompt',
+    category: null,
+    difficulty: 'beginner',
+    impact: 'high',
+    essential: true,
+    tags: ['general', 'starter', 'list', 'fields'],
+    source: 'AI Dungeon (default preset)',
+    description: 'Uses the player\'s selected story model and the same full-context prompt builder as normal story generation.',
+    useCase: 'Default starting point. Produces a flat list of clearly labeled fields, one per line, beginning with the name field. Works well for characters, locations, items, and most general entities.',
+    command: 'Generate an information card for {{title}} using clearly labeled fields which are each on their own line, beginning with a field that identifies the name of {{title}}. Each field should represent characteristics of {{title}}. Limit the response to 750 characters and do not use markdown or leave empty lines.',
+    entryFormatting: 'none',
+    additionalContext: '',
+    logInNotes: true,
+    speedCreate: false
+  },
+  {
+    id: 'preset-basic-prose-prompt',
+    name: 'Basic Prose Prompt',
+    category: null,
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: true,
+    tags: ['general', 'prose', 'narrative'],
+    source: 'AI Dungeon',
+    description: 'Generates cohesive, encyclopedic prose instead of labeled lists. Matches classic story card styles.',
+    useCase: 'Best for standard roleplay where you want the AI to read smooth paragraphs rather than lists of fields.',
+    command: 'Generate a concise information card for {{title}} that captures the most important identity, role, appearance, personality, and motivations. It must clearly identify {{title}} in third person. Limit the response to 750 characters and do not use markdown or leave empty lines.',
+    entryFormatting: 'none',
+    additionalContext: '',
+    logInNotes: true,
+    speedCreate: false
+  },
+  {
+    id: 'preset-condensed-prompt',
+    name: 'Condensed Prompt',
+    category: null,
+    difficulty: 'intermediate',
+    impact: 'high',
+    essential: false,
+    tags: ['general', 'token-saver', 'high-density'],
+    source: 'AI Dungeon Community',
+    description: 'Optimized for high context-density. Uses telegraphic prose to pack maximum facts into minimum tokens.',
+    useCase: 'Excellent for complex or long-running adventures where token budget is extremely tight.',
+    command: 'Write a high-density factual summary for {{title}}. Start with {{title}} name. Use short, punchy, declarative sentences. Prioritize permanent attributes and core identity. Omit unnecessary filler words (the, a, is). Avoid repeating facts, avoid meta-commentary, avoid transient details. Limit to 750 characters. No markdown. No empty lines.',
+    entryFormatting: 'none',
+    additionalContext: '',
+    logInNotes: true,
+    speedCreate: false
+  },
+
+  // ========== CATEGORY-SPECIFIC PRESETS ==========
+  {
+    id: 'preset-character-detailed',
+    name: 'Detailed Character Prompt',
+    category: 'character',
+    difficulty: 'intermediate',
+    impact: 'high',
+    essential: false,
+    tags: ['character', 'detailed', 'npc', 'personality'],
+    source: 'BetterRepository',
+    description: 'Character-focused prompt that emphasizes personality, motivations, and relationships.',
+    useCase: 'Creating rich NPCs with distinct voices and clear motivations that the AI can roleplay consistently.',
+    command: 'Generate a detailed character profile for {{title}}. Include: full name, age, occupation, physical appearance (distinctive features), personality traits (3-5 key traits), core motivation, greatest fear, speech patterns or verbal tics, relationship to protagonist, and a secret they keep. Write in third person. Limit to 750 characters. No markdown.',
+    entryFormatting: 'none',
+    additionalContext: '',
+    logInNotes: true,
+    speedCreate: false
+  },
+  {
+    id: 'preset-location-atmospheric',
+    name: 'Atmospheric Location Prompt',
+    category: 'location',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['location', 'atmosphere', 'sensory', 'immersive'],
+    source: 'BetterRepository',
+    description: 'Location prompt emphasizing sensory details and atmosphere over dry facts.',
+    useCase: 'Creating immersive locations that feel alive through sight, sound, smell, and mood.',
+    command: 'Generate an atmospheric description for {{title}}. Focus on sensory details: what you see, hear, smell. Describe the mood and feeling of the place. Include who frequents it, what activities happen there, any dangers or secrets. Write evocatively but concisely. Limit to 750 characters. No markdown.',
+    entryFormatting: 'none',
+    additionalContext: '',
+    logInNotes: true,
+    speedCreate: false
+  },
+  {
+    id: 'preset-item-mechanical',
+    name: 'Mechanical Item Prompt',
+    category: 'item',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['item', 'mechanical', 'stats', 'game-like'],
+    source: 'BetterRepository',
+    description: 'Item prompt with emphasis on mechanical properties and game-like attributes.',
+    useCase: 'Creating items with clear capabilities and limitations for consistent gameplay.',
+    command: 'Generate an item card for {{title}}. Include: item type, physical description, primary function, special properties or abilities, limitations or drawbacks, rarity, origin or creator, current condition. Be specific about what it can and cannot do. Limit to 750 characters. No markdown.',
+    entryFormatting: 'none',
+    additionalContext: '',
+    logInNotes: true,
+    speedCreate: false
+  },
+  {
+    id: 'preset-faction-political',
+    name: 'Political Faction Prompt',
+    category: 'faction',
+    difficulty: 'advanced',
+    impact: 'high',
+    essential: false,
+    tags: ['faction', 'political', 'organization', 'worldbuilding'],
+    source: 'BetterRepository',
+    description: 'Faction prompt focusing on political dynamics, goals, and inter-faction relationships.',
+    useCase: 'Creating factions with clear agendas that drive conflict and intrigue in the story.',
+    command: 'Generate a faction profile for {{title}}. Include: faction name, type of organization, founding purpose, current leadership, core ideology or goals, methods they use, allies and enemies, public perception vs reality, resources and influence, how they recruit, their relationship to the protagonist. Limit to 750 characters. No markdown.',
+    entryFormatting: 'none',
+    additionalContext: '',
+    logInNotes: true,
+    speedCreate: false
+  },
+  {
+    id: 'preset-creature-bestiary',
+    name: 'Bestiary Entry Prompt',
+    category: 'creature',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    tags: ['creature', 'bestiary', 'monster', 'wildlife'],
+    source: 'BetterRepository',
+    description: 'Creates creature entries in a naturalistic bestiary style.',
+    useCase: 'Documenting creatures with behavioral patterns the AI can reference during encounters.',
+    command: 'Generate a bestiary entry for {{title}}. Include: species name, classification, physical description, habitat, diet, behavior patterns, threat level, weaknesses, any useful materials that can be harvested, and local folklore about the creature. Write like a naturalist\'s field guide. Limit to 750 characters. No markdown.',
+    entryFormatting: 'none',
+    additionalContext: '',
+    logInNotes: true,
+    speedCreate: false
+  },
+  {
+    id: 'preset-event-historical',
+    name: 'Historical Event Prompt',
+    category: 'event',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['event', 'history', 'lore', 'worldbuilding'],
+    source: 'BetterRepository',
+    description: 'Creates historical event entries that establish world lore and consequences.',
+    useCase: 'Documenting past events that characters reference and that shape the current world.',
+    command: 'Generate a historical record for {{title}}. Include: event name, when it occurred, where it happened, key participants, what triggered it, what happened (brief narrative), immediate aftermath, long-term consequences still felt today, how it is remembered or commemorated. Write as historical documentation. Limit to 750 characters. No markdown.',
+    entryFormatting: 'none',
+    additionalContext: '',
+    logInNotes: true,
+    speedCreate: false
+  },
+  {
+    id: 'preset-curly-fields',
+    name: 'Curly Brace Fields Prompt',
+    category: null,
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['general', 'structured', 'fields', 'parsing'],
+    source: 'BetterRepository',
+    description: 'Generates entries with curly-brace field formatting for structured parsing.',
+    useCase: 'When you need machine-parseable fields or want clear visual separation of attributes.',
+    command: 'Generate an information card for {{title}} using labeled fields wrapped in curly braces like {Field: value}. Each field on its own line. Include name, type, key attributes, and relevant details. Limit to 750 characters. No markdown.',
+    entryFormatting: 'curly',
+    additionalContext: '',
+    logInNotes: true,
+    speedCreate: false
+  },
+  {
+    id: 'preset-bracket-fields',
+    name: 'Bracket Fields Prompt',
+    category: null,
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['general', 'structured', 'fields', 'parsing'],
+    source: 'BetterRepository',
+    description: 'Generates entries with square bracket field formatting.',
+    useCase: 'Alternative structured format that some users prefer for visual clarity.',
+    command: 'Generate an information card for {{title}} using labeled fields wrapped in square brackets like [Field: value]. Each field on its own line. Include name, type, key attributes, and relevant details. Limit to 750 characters. No markdown.',
+    entryFormatting: 'bracket',
+    additionalContext: '',
+    logInNotes: true,
+    speedCreate: false
+  },
+  {
+    id: 'preset-mystery-hook',
+    name: 'Mystery Hook Prompt',
+    category: 'concept',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['mystery', 'hook', 'investigation', 'plot'],
+    source: 'BetterRepository',
+    description: 'Creates mystery or investigation hooks with clues and red herrings.',
+    useCase: 'Setting up mysteries that the AI can consistently reference and gradually reveal.',
+    command: 'Generate a mystery card for {{title}}. Include: the central question or crime, known facts, key suspects or persons of interest, available clues, red herrings, the actual truth (hidden from characters), what triggers reveal of new information. Write factually. Limit to 750 characters. No markdown.',
+    entryFormatting: 'none',
+    additionalContext: '',
+    logInNotes: true,
+    speedCreate: false
+  },
+  {
+    id: 'preset-relationship-dynamic',
+    name: 'Relationship Dynamic Prompt',
+    category: 'relationship',
+    difficulty: 'intermediate',
+    impact: 'high',
+    essential: false,
+    tags: ['relationship', 'dynamic', 'character', 'interaction'],
+    source: 'BetterRepository',
+    description: 'Captures the dynamic between two characters for consistent interactions.',
+    useCase: 'Ensuring the AI portrays relationships with appropriate tension, affection, or history.',
+    command: 'Generate a relationship card for {{title}}. Include: the two parties involved, type of relationship, how it began, current status, what each thinks of the other, points of conflict, points of connection, shared secrets, how they typically interact, and how the relationship might evolve. Limit to 750 characters. No markdown.',
+    entryFormatting: 'none',
+    additionalContext: '',
+    logInNotes: true,
+    speedCreate: false
+  }
+]
+
+// ============================================
 // HELPER FUNCTIONS
 // ============================================
 
@@ -725,6 +1001,41 @@ export const getAllExamples = () => STORY_CARDS
 
 // Get all templates
 export const getAllTemplates = () => STORY_CARD_TEMPLATES
+
+// Get all command presets
+export const getAllCommandPresets = () => STORY_CARD_COMMAND_PRESETS
+
+// Get command presets by category (null = general-purpose presets)
+export const getCommandPresetsByCategory = (categoryId) => {
+  return STORY_CARD_COMMAND_PRESETS.filter(p => p.category === categoryId)
+}
+
+// Get general-purpose command presets (category === null)
+export const getGeneralCommandPresets = () => {
+  return STORY_CARD_COMMAND_PRESETS.filter(p => p.category === null)
+}
+
+// Get a command preset by id
+export const getCommandPresetById = (presetId) => {
+  return STORY_CARD_COMMAND_PRESETS.find(p => p.id === presetId)
+}
+
+// Search command presets
+export const searchCommandPresets = (query) => {
+  const lowerQuery = query.toLowerCase()
+  return STORY_CARD_COMMAND_PRESETS.filter(p =>
+    p.name.toLowerCase().includes(lowerQuery) ||
+    p.description.toLowerCase().includes(lowerQuery) ||
+    p.useCase.toLowerCase().includes(lowerQuery) ||
+    p.tags.some(tag => tag.toLowerCase().includes(lowerQuery)) ||
+    p.command.toLowerCase().includes(lowerQuery)
+  )
+}
+
+// Get essential command presets
+export const getEssentialCommandPresets = () => {
+  return STORY_CARD_COMMAND_PRESETS.filter(p => p.essential === true)
+}
 
 // Get category by ID
 export const getCategoryById = (categoryId) => {
@@ -793,8 +1104,9 @@ export const getStarterTemplates = () => {
   )
 }
 
-// Get card by ID (searches both examples and templates)
+// Get card by ID (searches examples, templates, and command presets)
 export const getCardById = (cardId) => {
-  return STORY_CARDS.find(c => c.id === cardId) || 
-         STORY_CARD_TEMPLATES.find(t => t.id === cardId)
+  return STORY_CARDS.find(c => c.id === cardId) ||
+         STORY_CARD_TEMPLATES.find(t => t.id === cardId) ||
+         STORY_CARD_COMMAND_PRESETS.find(p => p.id === cardId)
 }

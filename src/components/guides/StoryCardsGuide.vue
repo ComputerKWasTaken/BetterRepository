@@ -723,30 +723,173 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('card-generation')" class="mt-4 space-y-4">
             <p class="text-bd-text-secondary">
-              AI Dungeon can generate Story Card content using AI, streamlining the creation of characters, locations, and other elements.
+              The Story Card editor has two tabs. The <strong>Details</strong> tab is the manual form for writing a card by hand. The <strong>Command</strong> tab uses AI to draft the entry for you from a prompt template, and is where you choose a <strong>command preset</strong>.
             </p>
+
+            <!-- Details vs Command -->
             <div class="grid md:grid-cols-2 gap-3">
-              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <h4 class="text-xs font-semibold text-bd-text-primary mb-1">Speed Create Mode</h4>
-                <p class="text-xs text-bd-text-secondary">The "Finish" button becomes "Next," letting you save the current card and immediately create another of the same type. Useful for batch card creation.</p>
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <Pencil class="w-4 h-4 text-bd-blue" /> Details Tab
+                </h3>
+                <p class="text-xs text-bd-text-secondary">
+                  Write the card manually. Best when you already know exactly what the card should say, when porting prose from notes, or when adapting a <router-link to="/story-cards" class="text-bd-accent-primary hover:underline">repository template</router-link>.
+                </p>
               </div>
-              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <h4 class="text-xs font-semibold text-bd-text-primary mb-1">Include Story Summary</h4>
-                <p class="text-xs text-bd-text-secondary">When enabled, the generator considers your Story Summary, helping new cards fit the context of your existing story.</p>
-              </div>
-              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <h4 class="text-xs font-semibold text-bd-text-primary mb-1">Log Generation in Notes</h4>
-                <p class="text-xs text-bd-text-secondary">Every AI generation (including retries) is saved to the card's Notes field. Useful for comparing options and picking the best parts.</p>
-              </div>
-              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <h4 class="text-xs font-semibold text-bd-text-primary mb-1">AI Instructions for Generator</h4>
-                <p class="text-xs text-bd-text-secondary">Tell the generator what kind of card you want: style preferences, content guidelines, specific details. E.g., "Create a morally ambiguous character" or "Design a noir-style location."</p>
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <Sparkles class="w-4 h-4 text-bd-green" /> Command Tab
+                </h3>
+                <p class="text-xs text-bd-text-secondary">
+                  Generate the card with AI from a <strong>command preset</strong> plus the card's title. Use when you want a consistent house style across many cards, or when batch-creating.
+                </p>
               </div>
             </div>
+
+            <!-- Toggles -->
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
+                  <FileText class="w-3 h-3 text-bd-blue" /> Log Generations in Notes
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Every generation, including retries, is appended to the card's Notes field. Lossless history; great for picking and mixing parts of multiple drafts.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h4 class="text-xs font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
+                  <Zap class="w-3 h-3 text-bd-amber" /> Speed Create Mode
+                </h4>
+                <p class="text-xs text-bd-text-secondary">Skip the preview step. The generator commits the card and immediately opens the next one. Pairs well with batch worldbuilding.</p>
+              </div>
+            </div>
+
             <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
               <p class="text-xs text-bd-text-secondary">
-                <strong class="text-bd-amber">Tip:</strong> AI-generated content is a starting point. Always edit for accuracy to your vision, remove irrelevant details, and add specific information the generator missed.
+                <strong class="text-bd-amber">Tip:</strong> AI-generated content is a starting point. Always read the entry before saving and edit for accuracy, remove irrelevant details, and add specific information the generator missed.
               </p>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
+      <!-- Command Presets -->
+      <section id="guide-card-commands" class="card">
+        <button
+          @click="toggleGuideSection('card-commands')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Cog class="w-5 h-5 text-bd-purple" />
+            Command Presets
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('card-commands') }"
+          />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('card-commands')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              A <strong>command preset</strong> is a saved Story Card Command configuration: the prompt the AI follows, the format the entry should be shaped into, any extra context to consider, and how the editor behaves while generating. AI Dungeon ships one default preset (<strong>Basic List Prompt</strong>) and you can write your own.
+            </p>
+
+            <!-- Preset shape -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <h3 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-3">Anatomy of a Preset</h3>
+              <div class="grid md:grid-cols-2 gap-3">
+                <div>
+                  <h4 class="text-xs font-semibold text-bd-text-primary mb-1">Preset name &amp; description</h4>
+                  <p class="text-xs text-bd-text-secondary">Identifies the preset in the editor's dropdown. The description explains which model is used and how context is built.</p>
+                </div>
+                <div>
+                  <h4 class="text-xs font-semibold text-bd-text-primary mb-1">Story Card Command</h4>
+                  <p class="text-xs text-bd-text-secondary">The prompt template the AI follows. Up to 2000 characters. Must include the <code class="text-bd-green">&#123;&#123;title&#125;&#125;</code> token.</p>
+                </div>
+                <div>
+                  <h4 class="text-xs font-semibold text-bd-text-primary mb-1">Entry Formatting</h4>
+                  <p class="text-xs text-bd-text-secondary">One of <code class="text-bd-green">None</code>, <code class="text-bd-green">{}</code>, or <code class="text-bd-green">[]</code>. Tells the generator how to shape the output, either as free text or as labeled field blocks.</p>
+                </div>
+                <div>
+                  <h4 class="text-xs font-semibold text-bd-text-primary mb-1">Additional Generation Context</h4>
+                  <p class="text-xs text-bd-text-secondary">Extra lore, notes, or keywords to guide the generator. In scenarios, matching words here can also activate related Story Cards.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Required token callout -->
+            <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30">
+              <div class="flex items-start gap-2">
+                <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
+                <p class="text-xs text-bd-text-secondary">
+                  The <code class="text-bd-green">&#123;&#123;title&#125;&#125;</code> token is the <strong>only required token</strong>. The card's title is substituted in everywhere it appears. AI Dungeon disables <strong>Finish</strong> when the token is missing from the command.
+                </p>
+              </div>
+            </div>
+
+            <!-- Entry Formatting modes -->
+            <div>
+              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+                <Type class="w-4 h-4 text-bd-cyan" />
+                Entry Formatting Modes
+              </h3>
+              <div class="grid md:grid-cols-3 gap-3">
+                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                  <h4 class="text-xs font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
+                    <Quote class="w-3 h-3 text-bd-text-muted" /> None
+                  </h4>
+                  <p class="text-xs text-bd-text-secondary">Raw AI output, used as-is. Pick this when your prompt already controls structure (e.g. "fields on their own line").</p>
+                </div>
+                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                  <h4 class="text-xs font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
+                    <Quote class="w-3 h-3 text-bd-purple" /> <code class="text-bd-green">{}</code>
+                  </h4>
+                  <p class="text-xs text-bd-text-secondary">Curly-braced field blocks. Use when you want the generator to emit a structured object the engine can parse.</p>
+                </div>
+                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                  <h4 class="text-xs font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
+                    <Quote class="w-3 h-3 text-bd-amber" /> <code class="text-bd-green">[]</code>
+                  </h4>
+                  <p class="text-xs text-bd-text-secondary">Square-bracketed field blocks. Same idea as <code class="text-bd-green">{}</code>, with the alternate delimiter style some authors prefer.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Default preset showcase -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
+              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                <Sparkles class="w-4 h-4 text-bd-green" />
+                Default Preset: Basic List Prompt
+              </h3>
+              <p class="text-xs text-bd-text-secondary mb-2">
+                Uses your selected story model and the same full-context prompt builder as normal story generation. Produces a flat list of labeled fields, one per line, starting with a name field.
+              </p>
+              <pre class="p-2 rounded bg-bd-bg-tertiary text-xs text-bd-green overflow-x-auto whitespace-pre-wrap">Generate an information card for &#123;&#123;title&#125;&#125; using clearly labeled fields which are each on their own line, beginning with a field that identifies the name of &#123;&#123;title&#125;&#125;. Each field should represent characteristics of &#123;&#123;title&#125;&#125;. Limit the response to 750 characters and do not use markdown or leave empty lines.</pre>
+            </div>
+
+            <!-- Best practices -->
+            <div>
+              <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                <Lightbulb class="w-4 h-4 text-bd-amber" />
+                Writing Your Own Preset
+              </h3>
+              <ul class="text-sm text-bd-text-secondary space-y-1 list-disc list-inside">
+                <li>Always include <code class="text-bd-green">&#123;&#123;title&#125;&#125;</code>, ideally more than once so the model stays anchored on the subject.</li>
+                <li>Pick an Entry Formatting mode that matches the structure your prompt asks for. Don't ask for free prose with <code class="text-bd-green">{}</code> selected.</li>
+                <li>Cap output length in the prompt itself (e.g. "Limit the response to 750 characters"). Story Cards are token-budgeted, and runaway entries get partially ignored.</li>
+                <li>Treat Additional Generation Context as both a lore stash and a Story Card activation list, in scenarios.</li>
+                <li>Turn <strong>Log generations in notes</strong> on while iterating, then turn it off once the preset is stable.</li>
+              </ul>
+            </div>
+
+            <!-- Repository link -->
+            <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30">
+              <div class="flex items-start gap-2">
+                <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
+                <p class="text-xs text-bd-text-secondary">
+                  The BetterRepository tracks community presets in <code class="text-bd-green">STORY_CARD_COMMAND_PRESETS</code> (in <code class="text-bd-green">src/data/storyCards.js</code>), parallel to <code class="text-bd-green">STORY_CARDS</code> and <code class="text-bd-green">STORY_CARD_TEMPLATES</code>. To submit a preset, see the
+                  <router-link to="/contribute" class="text-bd-accent-primary hover:underline font-medium">Contribute</router-link>
+                  page.
+                </p>
+              </div>
             </div>
           </div>
         </Transition>
@@ -867,6 +1010,7 @@ const guideSections = [
   { id: 'trigger-mastery', label: 'Trigger Mastery' },
   { id: 'tips-pitfalls', label: 'Tips & Pitfalls' },
   { id: 'card-generation', label: 'AI Card Generation' },
+  { id: 'card-commands', label: 'Command Presets' },
   { id: 'import-export', label: 'Import & Export' },
   { id: 'credits', label: 'Credits' }
 ]

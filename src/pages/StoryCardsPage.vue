@@ -1059,6 +1059,199 @@
       </section>
     </template>
 
+    <!-- ==================== PRESETS TAB ==================== -->
+    <template v-if="activeTab === 'presets'">
+      <!-- Presets Introduction -->
+      <div class="card bg-gradient-to-r from-bd-purple/10 to-bd-cyan/10 border-bd-purple/30 relative overflow-hidden animate-fade-in">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-purple via-bd-cyan to-bd-green" />
+        <div class="flex items-start gap-4 pt-1">
+          <div class="w-12 h-12 rounded-xl bg-bd-purple/20 flex items-center justify-center flex-shrink-0">
+            <Cog class="w-6 h-6 text-bd-purple" />
+          </div>
+          <div class="flex-1">
+            <h2 class="text-lg font-semibold text-bd-text-primary mb-1">Story Card Command Presets</h2>
+            <p class="text-sm text-bd-text-secondary">
+              Pre-configured prompt templates for AI Dungeon's Story Card generator (the Command tab). 
+              Copy prompts to get high-density, structured, or atmospheric entries instantly.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Filter Buttons -->
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="text-xs text-bd-text-muted mr-1">Quick filters:</span>
+        <button 
+          @click="togglePresetQuickFilter('essential')"
+          class="btn text-sm"
+          :class="presetQuickFilter === 'essential' ? 'btn-primary' : 'btn-secondary'"
+        >
+          <Star class="w-4 h-4" />
+          Must-Have
+        </button>
+        <div class="flex-1"></div>
+        <button 
+          @click="showPresetFilters = !showPresetFilters"
+          class="btn btn-secondary text-sm"
+          :class="{ 'ring-2 ring-bd-accent-primary': hasActivePresetFilters }"
+        >
+          <SlidersHorizontal class="w-4 h-4" />
+          Advanced Filters
+          <span v-if="hasActivePresetFilters" class="w-2 h-2 rounded-full bg-bd-accent-primary"></span>
+        </button>
+      </div>
+
+      <!-- Search Bar -->
+      <SearchBar
+        v-model="presetsSearchQuery"
+        placeholder="Search command presets..."
+        :suggestions="presetSearchSuggestions"
+        :result-count="filteredPresets.length"
+        @search="handlePresetSearch"
+      />
+
+      <!-- Filter Panel -->
+      <Transition name="slide">
+        <div v-if="showPresetFilters" class="card-elevated space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-semibold text-bd-text-primary">Filters</h3>
+            <button 
+              v-if="hasActivePresetFilters"
+              @click="clearPresetFilters"
+              class="text-sm text-bd-accent-primary hover:underline"
+            >
+              Clear all
+            </button>
+          </div>
+
+          <!-- Category Filter -->
+          <div>
+            <h4 class="text-sm text-bd-text-muted mb-2">Category</h4>
+            <div class="flex flex-wrap gap-2">
+              <button 
+                @click="togglePresetCategory(null)"
+                class="tag cursor-pointer transition-all flex items-center gap-1.5"
+                :class="selectedPresetCategories.includes(null) 
+                  ? 'bg-bd-accent-primary/20 text-bd-accent-light border border-bd-accent-primary/30' 
+                  : 'hover:bg-bd-tag-bg'"
+              >
+                General Purpose
+              </button>
+              <button 
+                v-for="category in categories" 
+                :key="category.id"
+                @click="togglePresetCategory(category.id)"
+                class="tag cursor-pointer transition-all flex items-center gap-1.5"
+                :class="selectedPresetCategories.includes(category.id) 
+                  ? 'bg-bd-accent-primary/20 text-bd-accent-light border border-bd-accent-primary/30' 
+                  : 'hover:bg-bd-tag-bg'"
+              >
+                {{ category.name }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Difficulty Filter -->
+          <div>
+            <h4 class="text-sm text-bd-text-muted mb-2">Difficulty</h4>
+            <div class="flex flex-wrap gap-2">
+              <button 
+                v-for="diff in difficulties" 
+                :key="diff.id"
+                @click="togglePresetDifficulty(diff.id)"
+                class="tag cursor-pointer transition-all"
+                :class="selectedPresetDifficulties.includes(diff.id) 
+                  ? diff.activeClass 
+                  : 'hover:bg-bd-tag-bg'"
+              >
+                {{ diff.label }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Impact Filter -->
+          <div>
+            <h4 class="text-sm text-bd-text-muted mb-2">Impact</h4>
+            <div class="flex flex-wrap gap-2">
+              <button 
+                v-for="imp in impacts" 
+                :key="imp.id"
+                @click="togglePresetImpact(imp.id)"
+                class="tag cursor-pointer transition-all"
+                :class="selectedPresetImpacts.includes(imp.id) 
+                  ? imp.activeClass 
+                  : 'hover:bg-bd-tag-bg'"
+              >
+                {{ imp.label }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+
+      <!-- Results Summary -->
+      <div class="flex items-center justify-between text-sm">
+        <span class="text-bd-text-muted">
+          Showing {{ filteredPresets.length }} of {{ STORY_CARD_COMMAND_PRESETS.length }} presets
+        </span>
+      </div>
+
+      <!-- Presets Grid -->
+      <div class="grid gap-3 animate-fade-in">
+        <StoryCardPresetItem 
+          v-for="preset in filteredPresets" 
+          :key="preset.id"
+          :preset="preset"
+        />
+        
+        <!-- Empty State -->
+        <div v-if="filteredPresets.length === 0" class="text-center py-12">
+          <Cog class="w-12 h-12 text-bd-text-muted mx-auto mb-4 animate-spin-slow" />
+          <h3 class="text-lg font-semibold text-bd-text-primary mb-2">No presets found</h3>
+          <p class="text-bd-text-secondary">
+            Try adjusting your search or filters to find what you're looking for.
+          </p>
+          <button @click="clearAllPresets" class="btn btn-secondary mt-4">
+            Clear Search & Filters
+          </button>
+        </div>
+      </div>
+
+      <!-- Key Takeaways -->
+      <section v-if="!hasAnyPresetFilters" class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
+        <div class="flex items-start gap-3">
+          <Lightbulb class="w-5 h-5 text-bd-info flex-shrink-0 mt-0.5" />
+          <div>
+            <h3 class="font-semibold text-bd-text-primary mb-2">Command Gen Tips</h3>
+            <ul class="space-y-1 text-sm text-bd-text-secondary">
+              <li>• <strong>Required Token:</strong> Make sure your template always includes <code class="text-bd-green">&#123;&#123;title&#125;&#125;</code> to avoid the editor disabling the Finish button.</li>
+              <li>• <strong>Model Pairing:</strong> Select prompts optimized for the complexity of the current model. Short models love Flat Lists; large frontier models excel at detailed Psychological Dossiers.</li>
+              <li>• <strong>Token Stewardship:</strong> Keep entries capped below 1000 characters. Long cards get clipped or ignored during intensive context phases.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contribute CTA -->
+      <section v-if="!hasAnyPresetFilters" class="card-elevated">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/20 flex items-center justify-center flex-shrink-0">
+            <GitPullRequest class="w-6 h-6 text-bd-accent-primary" />
+          </div>
+          <div class="flex-1">
+            <h3 class="text-lg font-semibold text-bd-text-primary mb-2">Submit Your Command Presets</h3>
+            <p class="text-bd-text-secondary mb-4">
+              Do you have a highly reliable prompt template for a specific card type? Help other scenario authors by sharing your custom presets.
+            </p>
+            <router-link to="/contribute" class="btn btn-primary">
+              <GitPullRequest class="w-4 h-4" />
+              Share Your Command Presets
+            </router-link>
+          </div>
+        </div>
+      </section>
+    </template>
+
     <!-- ==================== BUILDER TAB ==================== -->
     <template v-if="activeTab === 'builder'">
       <div class="animate-fade-in">
@@ -1072,6 +1265,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import StoryCardItem from '@/components/ui/StoryCardItem.vue'
+import StoryCardPresetItem from '@/components/ui/StoryCardPresetItem.vue'
 import StoryCardBuilder from '@/components/ui/StoryCardBuilder.vue'
 import SearchBar from '@/components/ui/SearchBar.vue'
 import { usePreferences } from '@/composables/usePreferences'
@@ -1079,6 +1273,7 @@ import {
   STORY_CARDS, 
   STORY_CARD_TEMPLATES,
   STORY_CARD_CATEGORIES,
+  STORY_CARD_COMMAND_PRESETS,
   getEssentialExamples,
   getEssentialTemplates,
   getStarterExamples,
@@ -1103,6 +1298,7 @@ const activeTab = ref('examples')
 
 const tabs = [
   { id: 'examples', label: 'Templates', icon: Layers },
+  { id: 'presets', label: 'Command Presets', icon: Cog },
   { id: 'builder', label: 'Builder', icon: Hammer },
 ]
 
@@ -1131,6 +1327,134 @@ const handleSearch = (query) => {
     addToSearchHistory(query)
   }
 }
+
+// ===========================================
+// COMMAND PRESETS STATE & COMPUTEDS
+// ===========================================
+const presetsSearchQuery = ref('')
+const selectedPresetCategories = ref([])
+const selectedPresetDifficulties = ref([])
+const selectedPresetImpacts = ref([])
+const showPresetFilters = ref(false)
+const presetQuickFilter = ref(null)
+
+const presetSearchSuggestions = computed(() => {
+  const allTags = [...new Set(STORY_CARD_COMMAND_PRESETS.flatMap(p => p.tags || []))]
+  return allTags.slice(0, 20)
+})
+
+const handlePresetSearch = (query) => {
+  if (query.trim()) {
+    addToSearchHistory(query)
+  }
+}
+
+const filteredPresets = computed(() => {
+  let result = [...STORY_CARD_COMMAND_PRESETS]
+  
+  // Apply quick filter
+  if (presetQuickFilter.value === 'essential') {
+    result = result.filter(p => p.essential)
+  }
+  
+  // Filter by search query using fuzzy search
+  if (presetsSearchQuery.value) {
+    const searchResults = searchCollectionWithScores(
+      result,
+      presetsSearchQuery.value,
+      ['name', 'description', 'tags', 'command', 'useCase'],
+      { useTagAliases: true }
+    )
+    result = searchResults.map(r => r.item)
+  }
+  
+  // Filter by selected categories
+  if (selectedPresetCategories.value.length > 0) {
+    result = result.filter(p => selectedPresetCategories.value.includes(p.category))
+  }
+  
+  // Filter by selected difficulties
+  if (selectedPresetDifficulties.value.length > 0) {
+    result = result.filter(p => selectedPresetDifficulties.value.includes(p.difficulty))
+  }
+  
+  // Filter by selected impacts
+  if (selectedPresetImpacts.value.length > 0) {
+    result = result.filter(p => selectedPresetImpacts.value.includes(p.impact))
+  }
+  
+  // Sort alphabetically by name (if no search query)
+  if (!presetsSearchQuery.value) {
+    result.sort((a, b) => (a.name || '').localeCompare(b.name || ''))
+  }
+  
+  return result
+})
+
+const togglePresetQuickFilter = (filter) => {
+  if (presetQuickFilter.value === filter) {
+    presetQuickFilter.value = null
+  } else {
+    presetQuickFilter.value = filter
+    selectedPresetCategories.value = []
+    selectedPresetDifficulties.value = []
+    selectedPresetImpacts.value = []
+  }
+}
+
+const togglePresetCategory = (categoryId) => {
+  presetQuickFilter.value = null
+  const index = selectedPresetCategories.value.indexOf(categoryId)
+  if (index > -1) {
+    selectedPresetCategories.value.splice(index, 1)
+  } else {
+    selectedPresetCategories.value.push(categoryId)
+  }
+}
+
+const togglePresetDifficulty = (difficultyId) => {
+  presetQuickFilter.value = null
+  const index = selectedPresetDifficulties.value.indexOf(difficultyId)
+  if (index > -1) {
+    selectedPresetDifficulties.value.splice(index, 1)
+  } else {
+    selectedPresetDifficulties.value.push(difficultyId)
+  }
+}
+
+const togglePresetImpact = (impactId) => {
+  presetQuickFilter.value = null
+  const index = selectedPresetImpacts.value.indexOf(impactId)
+  if (index > -1) {
+    selectedPresetImpacts.value.splice(index, 1)
+  } else {
+    selectedPresetImpacts.value.push(impactId)
+  }
+}
+
+const clearPresetFilters = () => {
+  selectedPresetCategories.value = []
+  selectedPresetDifficulties.value = []
+  selectedPresetImpacts.value = []
+  presetQuickFilter.value = null
+}
+
+const clearAllPresets = () => {
+  presetsSearchQuery.value = ''
+  clearPresetFilters()
+}
+
+const hasActivePresetFilters = computed(() => 
+  selectedPresetCategories.value.length > 0 || 
+  selectedPresetDifficulties.value.length > 0 || 
+  selectedPresetImpacts.value.length > 0
+)
+
+const hasAnyPresetFilters = computed(() => 
+  presetsSearchQuery.value || 
+  presetQuickFilter.value || 
+  hasActivePresetFilters.value
+)
 
 const difficulties = [
   { id: 'beginner', label: 'Beginner', activeClass: 'bg-bd-green/20 text-bd-green border border-bd-green/30' },
@@ -1195,13 +1519,17 @@ const collapseAllGuideSections = () => {
 
 // Handle initial search query and tab from URL (e.g. from global search)
 onMounted(() => {
-  if (route.query.tab && ['examples', 'builder'].includes(route.query.tab)) {
+  if (route.query.tab && ['examples', 'presets', 'builder'].includes(route.query.tab)) {
     activeTab.value = route.query.tab
   }
   if (route.query.q) {
-    searchQuery.value = route.query.q
-    // Ensure we're on the examples tab so filtered results are visible
-    if (!route.query.tab) activeTab.value = 'examples'
+    if (activeTab.value === 'presets') {
+      presetsSearchQuery.value = route.query.q
+    } else {
+      searchQuery.value = route.query.q
+      // Ensure we're on the examples tab so filtered results are visible
+      if (!route.query.tab) activeTab.value = 'examples'
+    }
   }
 })
 
