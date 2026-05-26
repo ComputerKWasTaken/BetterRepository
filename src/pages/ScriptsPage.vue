@@ -1086,6 +1086,37 @@ modifier(text);</pre>
       @search="handleSearch"
     />
 
+    <section class="rounded-xl border border-bd-accent-primary/30 bg-bd-bg-secondary p-4">
+      <div class="flex flex-col gap-4">
+        <div>
+          <h3 class="text-sm font-semibold text-bd-text-primary">Ultrascripts scripts come in two flavors</h3>
+          <p class="text-xs text-bd-text-secondary mt-1">
+            Some scripts use BetterDungeon as an upgrade path. Others depend on Ultrascripts for their core mechanic. Browse them as different promises.
+          </p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-3">
+          <div class="rounded-lg border border-bd-emerald/30 bg-bd-bg-primary p-3">
+            <div class="flex items-center gap-2 mb-1">
+              <Zap class="w-4 h-4 text-bd-emerald" />
+              <h4 class="text-xs font-semibold text-bd-emerald">Enhanced with Ultrascripts</h4>
+            </div>
+            <p class="text-[11px] text-bd-text-secondary">
+              The core script still works in plain AI Dungeon. BetterDungeon adds optional sidebar UI, richer display, or smoother interaction on top.
+            </p>
+          </div>
+          <div class="rounded-lg border border-bd-purple/30 bg-bd-bg-primary p-3">
+            <div class="flex items-center gap-2 mb-1">
+              <Rocket class="w-4 h-4 text-bd-purple" />
+              <h4 class="text-xs font-semibold text-bd-purple">Requires Ultrascripts</h4>
+            </div>
+            <p class="text-[11px] text-bd-text-secondary">
+              The main value of the script depends on BetterDungeon being present. If Ultrascripts is missing, the script should be treated as a hard requirement, not an optional bonus.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Filter Panel -->
     <Transition name="slide">
       <div v-if="showFilters" class="card-elevated space-y-4">
@@ -1631,7 +1662,9 @@ const iconMap = {
   'Terminal': Terminal,
   'Wand2': Wand2,
   'FolderOpen': FolderOpen,
-  'Settings': Settings
+  'Settings': Settings,
+  'Zap': Zap,
+  'Rocket': Rocket
 }
 
 const getCategoryIcon = (iconName) => {

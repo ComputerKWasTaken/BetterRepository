@@ -397,6 +397,16 @@ modifier(text);</pre>
                 BetterDungeon ships <strong>Ultrascripts</strong>, a cards-based scripting platform that gives scenarios dynamic UI widgets,
                 external API access, hosted AI calls, and real-world context (time, weather, geolocation) through a bidirectional Story Card bridge.
               </p>
+              <div class="grid md:grid-cols-2 gap-3 text-[11px]">
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-emerald/20">
+                  <strong class="text-bd-emerald block mb-1">Enhanced with Ultrascripts</strong>
+                  The script still works without BetterDungeon, but Ultrascripts makes it richer.
+                </div>
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-purple/20">
+                  <strong class="text-bd-purple block mb-1">Requires Ultrascripts</strong>
+                  The core mechanic depends on BetterDungeon being present, so the scenario should say that clearly up front.
+                </div>
+              </div>
               <div class="flex items-center gap-2">
                 <router-link to="/ultrascripts" class="text-bd-accent-primary hover:underline font-semibold">Explore the Ultrascripts platform &rarr;</router-link>
               </div>

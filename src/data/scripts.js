@@ -24,7 +24,7 @@
 // 3. CATEGORY ASSIGNMENT
 //    Every script must have a `category` field matching one of the
 //    SCRIPT_CATEGORIES ids: basics, game-systems, tracking, commands,
-//    magic, utilities, betterscripts.
+//    magic, utilities, ultrascripts-enhanced, ultrascripts-required.
 //
 // 4. CLEAR COMMENTS
 //    Scripts must include inline comments explaining non-obvious logic.
@@ -119,11 +119,19 @@ export const SCRIPT_CATEGORIES = [
     count: 0
   },
   {
-    id: 'betterscripts',
-    name: 'BetterScripts',
-    icon: 'Terminal',
+    id: 'ultrascripts-enhanced',
+    name: 'Ultrascripts Enhanced',
+    icon: 'Zap',
     color: 'bd-emerald',
-    description: 'Scripts that use BetterDungeon widgets to display game state.',
+    description: 'Vanilla-first scripts whose core flow still works without BetterDungeon, but gain extra capability through Ultrascripts.',
+    count: 0
+  },
+  {
+    id: 'ultrascripts-required',
+    name: 'Requires Ultrascripts',
+    icon: 'Rocket',
+    color: 'bd-purple',
+    description: 'Scripts whose core behavior depends on BetterDungeon and the Ultrascripts runtime being available.',
     count: 0
   }
 ]
@@ -445,60 +453,65 @@ export const SCRIPTS = [
     fileType: 'output'
   },
 
-  // ========== BETTERSCRIPTS ==========
-  // Scripts that use BetterDungeon widgets to display game state.
-  // Requires the BetterDungeon browser extension.
+  // ========== ULTRASCRIPTS ==========
+  // BetterDungeon-powered scripts split into two buckets:
+  // 1. Enhanced with Ultrascripts: core scenario still works without the runtime.
+  // 2. Requires Ultrascripts: core behavior depends on BetterDungeon being present.
   {
     id: 'betterscripts-simple-counter',
     name: 'Simple Turn Counter',
-    category: 'betterscripts',
+    category: 'ultrascripts-required',
     difficulty: 'beginner',
     impact: 'low',
     essential: true,
-    tags: ['widgets', 'counter', 'turn', 'betterscripts', 'stat-widget', 'minimal'],
+    tags: ['widgets', 'counter', 'turn', 'ultrascripts', 'stat-widget', 'minimal'],
     source: 'BetterRepository',
-    description: 'Minimal example: displays turn count and a location badge using stat and badge widgets.',
-    purpose: 'The simplest BetterScripts example. Demonstrates bdWidget for creating and updating widgets. Great starting point for learning.',
-    requiresExtension: 'BetterDungeon'
+    description: 'Minimal example: displays turn count and a location badge using BetterDungeon sidebar widgets.',
+    purpose: 'A smallest-possible Ultrascripts-style sidebar example. Good for learning the extension-powered UI path before moving to larger systems.',
+    requiresExtension: 'BetterDungeon',
+    ultrascriptsMode: 'required'
   },
   {
     id: 'chronos-time-system',
     name: 'Chronos Time System',
-    category: 'betterscripts',
+    category: 'ultrascripts-enhanced',
     difficulty: 'intermediate',
     impact: 'high',
     essential: true,
-    tags: ['widgets', 'time', 'clock', 'day-night', 'weather', 'betterscripts', 'context', 'commands'],
+    tags: ['widgets', 'time', 'clock', 'day-night', 'weather', 'ultrascripts', 'context', 'commands'],
     source: 'BetterRepository',
-    description: 'An advanced, direct-tracking time and weather engine for AI Dungeon. Chronos features a 6-phase day/night cycle, accurate calendar tracking (including leap years), and dynamic, season-aware weather with realistic temperature drift.',
-    purpose: 'To keep the AI constantly aware of the current time, date, and environment. Players can configure time pacing through Story Cards and use a suite of in-game chat commands to manipulate the world (e.g., :time, :advance, :sleep, :weather).',
-    requiresExtension: 'BetterDungeon'
+    description: 'A direct-tracking time and weather engine for AI Dungeon with optional BetterDungeon-enhanced display.',
+    purpose: 'Keeps the AI aware of current time, date, and environment. The core simulation works as a normal script, while BetterDungeon can enhance it with sidebar-style display.',
+    requiresExtension: 'BetterDungeon',
+    ultrascriptsMode: 'enhanced'
   },
   {
     id: 'betterscripts-debug-console',
-    name: 'BetterScripts Debug Console',
-    category: 'betterscripts',
+    name: 'Ultrascripts Debug Console',
+    category: 'ultrascripts-required',
     difficulty: 'intermediate',
     impact: 'high',
     essential: true,
-    tags: ['widgets', 'debug', 'testing', 'betterscripts', 'commands', 'developer-tool', 'test-suite'],
+    tags: ['widgets', 'debug', 'testing', 'ultrascripts', 'commands', 'developer-tool', 'test-suite'],
     source: 'BetterRepository',
-    description: 'Interactive debug console for testing all 9 widget types, protocol messages, and a sequential test suite.',
-    purpose: 'Type :help for commands. Create, update, and destroy all widget types. Run :test to execute a full test suite one step per turn.',
-    requiresExtension: 'BetterDungeon'
+    description: 'Interactive debug console for testing BetterDungeon widget flows, protocol messages, and a sequential test suite.',
+    purpose: 'Type :help for commands. Create, update, and destroy widget surfaces, then run :test to exercise the extension-powered path one step per turn.',
+    requiresExtension: 'BetterDungeon',
+    ultrascriptsMode: 'required'
   },
   {
     id: 'betterscripts-widget-showcase',
-    name: 'Widget Showcase',
-    category: 'betterscripts',
+    name: 'Ultrascripts Widget Showcase',
+    category: 'ultrascripts-required',
     difficulty: 'beginner',
     impact: 'low',
     essential: false,
-    tags: ['widgets', 'demo', 'showcase', 'betterscripts', 'testing', 'all-widgets'],
+    tags: ['widgets', 'demo', 'showcase', 'ultrascripts', 'testing', 'all-widgets'],
     source: 'BetterRepository',
-    description: 'Displays all widget types for visual testing.',
-    purpose: 'Creates one of every widget type using bdWidget. Perfect for testing styles and layouts. See the BetterScripts Guide for full documentation.',
-    requiresExtension: 'BetterDungeon'
+    description: 'Displays the full BetterDungeon widget surface for visual testing.',
+    purpose: 'Creates one of every extension-powered widget style for layout and rendering checks. Best used when BetterDungeon is the point of the script.',
+    requiresExtension: 'BetterDungeon',
+    ultrascriptsMode: 'required'
   }
 ]
 

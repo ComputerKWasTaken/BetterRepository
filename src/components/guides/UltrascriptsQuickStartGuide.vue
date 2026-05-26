@@ -96,7 +96,8 @@
                 <strong class="text-bd-text-primary text-[12px] block mb-1">2. Requests take one turn to complete.</strong>
                 <p class="text-[11px]">
                   You <em>queue</em> a request this turn with <code>bd.us.call(...)</code> and <em>read</em> the result on the next turn with
-                  <code>bd.us.latest(...)</code>. The SDK handles request IDs, acks, and stale-response filtering for you.
+                  <code>bd.us.latest(...)</code>. The SDK handles request IDs and acks for you; for history-sensitive logic, still sanity-check
+                  <code>completedLiveCount</code> before you apply an older response to a newer turn.
                 </p>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
@@ -106,6 +107,74 @@
                   <code>bd.us.publishScripture(...)</code>. Scripture handles rendering, undo, redo &mdash; all automatic.
                 </p>
               </div>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
+      <!-- ===================== CREATOR REALITY CHECK ===================== -->
+      <section id="guide-creators" class="card">
+        <button @click="toggleGuideSection('creators')" class="w-full flex items-center justify-between text-left">
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <ShieldCheck class="w-5 h-5 text-bd-cyan" />
+            Creator Reality Check
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('creators') }" />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('creators')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
+            <p>
+              Decide which kind of scenario you are shipping <strong>before</strong> you build the script contract. Ultrascripts supports both of these author
+              postures cleanly, but they should be documented differently and coded differently.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
+                <h4 class="font-semibold text-bd-green text-[12px]">1. Enhanced with Ultrascripts</h4>
+                <p class="text-[11px]">
+                  The core scenario works without BetterDungeon. Ultrascripts adds better UI, extra data, or richer automation, but the scenario remains
+                  fully playable in plain AI Dungeon.
+                </p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
+                <h4 class="font-semibold text-bd-purple text-[12px]">2. Requires Ultrascripts</h4>
+                <p class="text-[11px]">
+                  The core mechanic depends on Ultrascripts modules. If the runtime is missing, the script should detect that immediately, stop pretending
+                  everything is fine, and tell the player clearly that BetterDungeon is required.
+                </p>
+              </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/30 space-y-1">
+                <h4 class="font-semibold text-bd-pink text-[12px]">No heartbeat</h4>
+                <p class="text-[11px]">
+                  Treat this as <strong>no Ultrascripts runtime</strong>. From your script's perspective, it does not matter whether the cause is
+                  "no BetterDungeon", "Ultrascripts disabled", or "runtime not live yet". Enhanced scripts fall back; required scripts surface a hard requirement.
+                </p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-1">
+                <h4 class="font-semibold text-bd-amber text-[12px]">Heartbeat present, module absent</h4>
+                <p class="text-[11px]">
+                  Ultrascripts exists, but that specific feature is unavailable. The player may have the module disabled, or their current platform may
+                  not surface it. Enhanced scripts skip that feature; required scripts should explain which module is needed.
+                </p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
+                <h4 class="font-semibold text-bd-green text-[12px]">Module present, setup incomplete</h4>
+                <p class="text-[11px]">
+                  The player still controls permissions and configuration. Read <code>sdk.config</code>, permission ops, or module-specific status before
+                  assuming AI, WebFetch, or geolocation is ready.
+                </p>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-lg bg-bd-cyan/10 border border-bd-cyan/30">
+              <p class="text-[11px]">
+                <strong class="text-bd-cyan">The practical rule:</strong> Enhanced scripts gate Ultrascripts writes with
+                <code class="text-bd-green">bd.us.available()</code> or <code class="text-bd-green">bd.us.has(...)</code>. Required scripts gate their
+                <em>entire core flow</em> the same way, then show a clear requirement message instead of silently limping along.
+              </p>
             </div>
           </div>
         </Transition>
@@ -184,6 +253,97 @@
                 </table>
               </div>
             </div>
+          </div>
+        </Transition>
+      </section>
+
+      <!-- ===================== FALLBACK PATTERN ===================== -->
+      <section id="guide-fallbacks" class="card">
+        <button @click="toggleGuideSection('fallbacks')" class="w-full flex items-center justify-between text-left">
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <AlertTriangle class="w-5 h-5 text-bd-amber" />
+            Enhanced Script Fallback Pattern
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('fallbacks') }" />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('fallbacks')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
+            <p>
+              This is the creator pattern worth memorizing. It preserves the nice Ultrascripts path when available and degrades cleanly when it is not.
+            </p>
+
+            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">bd.us.tick();
+
+var hp = state.hp !== undefined ? state.hp : 100;
+var usReady = bd.us.available();
+
+if (usReady &amp;&amp; bd.us.has('scripture')) {
+  bd.us.publishScripture({ hp: hp });
+} else {
+  text += '\n[HP: ' + hp + '/100]';
+}
+
+if (usReady &amp;&amp; bd.us.has('clock', 'now')) {
+  bd.us.call('clock', 'now');
+}
+
+bd.us.commit();</pre>
+
+            <ul class="space-y-1 text-[11px]">
+              <li>&middot; <code class="text-bd-green">bd.us.tick()</code> is always safe. No heartbeat just means no replies get synced.</li>
+              <li>&middot; Gate <code class="text-bd-green">publishScripture()</code> if you want non-BetterDungeon players to avoid reserved-card clutter.</li>
+              <li>&middot; Gate <code class="text-bd-green">call()</code> so you only write <code class="text-bd-green">ultrascripts:out</code> when a real module is mounted.</li>
+              <li>&middot; <code class="text-bd-green">commit()</code> is harmless when nothing was queued.</li>
+            </ul>
+          </div>
+        </Transition>
+      </section>
+
+      <!-- ===================== REQUIRED PATTERN ===================== -->
+      <section id="guide-required" class="card">
+        <button @click="toggleGuideSection('required')" class="w-full flex items-center justify-between text-left">
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Package class="w-5 h-5 text-bd-purple" />
+            Required Script Guard Pattern
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('required') }" />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('required')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
+            <p>
+              If Ultrascripts is the engine of the scenario, say so plainly and guard the core path immediately. Do not fake a broken fallback for a
+              script whose whole point depends on modules like <code>ai.chat</code>.
+            </p>
+
+            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">bd.us.tick();
+
+if (!bd.us.available() || !bd.us.has('ai', 'chat')) {
+  text = '[This scenario requires BetterDungeon with Ultrascripts AI enabled. Install BetterDungeon or switch to a non-Ultrascripts version.]\n' + text;
+  return text;
+}
+
+var cfg = bd.us.latest('sdk', 'config');
+var aiReady = cfg
+  &amp;&amp; cfg.status === 'ok'
+  &amp;&amp; cfg.data
+  &amp;&amp; cfg.data.ultrascripts
+  &amp;&amp; cfg.data.ultrascripts.ai
+  &amp;&amp; cfg.data.ultrascripts.ai.configured;
+
+if (!aiReady) {
+  text = '[This scenario requires the BetterDungeon AI module to be configured in the popup first.]\n' + text;
+  return text;
+}
+
+// Core Ultrascripts-dependent logic starts here.
+bd.us.call('ai', 'chat', { messages: [{ role: 'user', content: text }] });
+bd.us.commit();</pre>
+
+            <ul class="space-y-1 text-[11px]">
+              <li>&middot; Put the requirement in the scenario description and opening notes, not just in code.</li>
+              <li>&middot; Distinguish <strong>runtime missing</strong> from <strong>player setup incomplete</strong> so the message is actionable.</li>
+              <li>&middot; If you maintain both versions, label them clearly: one "Enhanced with Ultrascripts", one "Requires Ultrascripts".</li>
+            </ul>
           </div>
         </Transition>
       </section>
@@ -461,7 +621,8 @@ bd.us.commit();</pre>
 import { ref } from 'vue'
 import {
   ChevronDown, ChevronUp, Zap, Lightbulb, Package, Wand2, Rocket,
-  Copy, CheckCircle2, ArrowRight, BookOpen, LayoutDashboard, BrainCircuit, Network
+  Copy, CheckCircle2, ArrowRight, BookOpen, LayoutDashboard, BrainCircuit, Network,
+  ShieldCheck, AlertTriangle
 } from 'lucide-vue-next'
 
 // Sections ordered as a paved path: pitch -> model -> SDK -> step 1/2/3 -> full -> next.
@@ -469,8 +630,11 @@ const guideSections = [
   { id: 'header-intro', label: 'Introduction', isHeader: true },
   { id: 'pitch', label: '30-Second Pitch' },
   { id: 'model', label: 'Mental Model' },
+  { id: 'creators', label: 'Creator Reality Check' },
   { id: 'header-paste', label: 'Get the SDK', isHeader: true },
   { id: 'sdk', label: 'The SDK Helper' },
+  { id: 'fallbacks', label: 'Enhanced Fallback Pattern' },
+  { id: 'required', label: 'Required Script Guard' },
   { id: 'header-build', label: 'Build It', isHeader: true },
   { id: 'step1', label: '1. HP Bar' },
   { id: 'step2', label: '2. Call a Module' },
@@ -547,6 +711,7 @@ bd.us.liveCount = function () { return (info && info.actionCount) || 0; };
 
 // --- heartbeat-based capability check ---
 bd.us.heartbeat = function () { return bd.us._parseCard('ultrascripts:heartbeat'); };
+bd.us.available = function () { return !!bd.us.heartbeat(); };
 bd.us.has = function (moduleId, opName) {
   var hb = bd.us.heartbeat();
   var mods = (hb && hb.modules) || [];

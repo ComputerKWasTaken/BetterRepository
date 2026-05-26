@@ -13,6 +13,18 @@
             <span v-if="script.essential" class="badge badge-popular text-[9px]">
               Recommended
             </span>
+            <span
+              v-if="script.ultrascriptsMode === 'enhanced'"
+              class="tag text-[9px] bg-bd-emerald/20 text-bd-emerald"
+            >
+              Ultrascripts Enhanced
+            </span>
+            <span
+              v-else-if="script.ultrascriptsMode === 'required'"
+              class="tag text-[9px] bg-bd-purple/20 text-bd-purple"
+            >
+              Requires Ultrascripts
+            </span>
             <!-- Source Badge -->
             <span 
               v-if="script.source === 'Official Guidebook'"
@@ -51,6 +63,9 @@
         </span>
         <span v-if="script.files" class="tag text-[10px] bg-bd-amber/20 text-bd-amber">
           Multi-file
+        </span>
+        <span v-if="script.requiresExtension" class="tag text-[10px] bg-bd-cyan/20 text-bd-cyan">
+          BetterDungeon
         </span>
         <!-- External Only Badge -->
         <span v-if="isExternalOnly" class="tag text-[10px] bg-bd-cyan/20 text-bd-cyan">

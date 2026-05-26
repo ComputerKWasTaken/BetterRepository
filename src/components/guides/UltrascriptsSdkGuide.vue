@@ -83,6 +83,82 @@
         </Transition>
       </section>
 
+      <!-- ===================== CREATOR PROTOCOL ===================== -->
+      <section id="guide-protocol" class="card">
+        <button @click="toggleGuideSection('protocol')" class="w-full flex items-center justify-between text-left">
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <ShieldCheck class="w-5 h-5 text-bd-green" />
+            Creator Compatibility Protocol
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('protocol') }" />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('protocol')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
+            <p>
+              Start by classifying the scenario. Some scripts are <strong>enhanced with Ultrascripts</strong>; others <strong>require Ultrascripts</strong>.
+              The SDK helps you decide which layer the current player is in so your scenario can either adapt gracefully or enforce its requirement clearly.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
+                <h4 class="font-semibold text-bd-green text-[12px]">Enhanced with Ultrascripts</h4>
+                <p class="text-[11px]">
+                  Use the SDK to decide when to turn on extra UI, better data, or richer automation. Missing runtime means you stay on the plain-script path.
+                </p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
+                <h4 class="font-semibold text-bd-purple text-[12px]">Requires Ultrascripts</h4>
+                <p class="text-[11px]">
+                  Use the SDK to distinguish runtime absence from incomplete setup so your requirement message can tell the player exactly what they need.
+                </p>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-[11px] border-collapse">
+                <thead>
+                  <tr class="border-b border-bd-border-subtle">
+                    <th class="text-left py-2 px-2 font-semibold text-bd-text-primary">What you see</th>
+                    <th class="text-left py-2 px-2 font-semibold text-bd-text-primary">What it means</th>
+                    <th class="text-left py-2 px-2 font-semibold text-bd-text-primary">What to do</th>
+                  </tr>
+                </thead>
+                <tbody class="text-bd-text-secondary">
+                  <tr class="border-b border-bd-border-subtle/50">
+                    <td class="py-2 px-2"><code>!bd.us.available()</code></td>
+                    <td class="py-2 px-2">No heartbeat, so no live Ultrascripts runtime is available to your script.</td>
+                    <td class="py-2 px-2">Run plain AI Dungeon logic. Skip Scripture publishes and op calls.</td>
+                  </tr>
+                  <tr class="border-b border-bd-border-subtle/50">
+                    <td class="py-2 px-2"><code>bd.us.available()</code> but <code>!bd.us.has('module')</code></td>
+                    <td class="py-2 px-2">Ultrascripts exists, but that module is not mounted for this player.</td>
+                    <td class="py-2 px-2">Keep the rest of your Ultrascripts flow, but fall back for that one feature.</td>
+                  </tr>
+                  <tr class="border-b border-bd-border-subtle/50">
+                    <td class="py-2 px-2"><code>bd.us.has('sdk', 'config')</code> and no cached config yet</td>
+                    <td class="py-2 px-2">The runtime is present, but you have not asked for player configuration yet.</td>
+                    <td class="py-2 px-2">Queue <code>sdk.config</code> once, then read it on the next turn.</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 px-2"><code>cfg.data.ultrascripts...</code> says a feature is off or unconfigured</td>
+                    <td class="py-2 px-2">The player has explicitly not enabled that capability yet.</td>
+                    <td class="py-2 px-2">Respect it. Use a narrative fallback and document the optional upgrade path in scenario notes.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="p-3 rounded-lg bg-bd-green/10 border border-bd-green/30">
+              <p class="text-[11px]">
+                <strong class="text-bd-green">Important:</strong> a missing heartbeat is not a special-case error you need to diagnose. From the script side,
+                "no BetterDungeon", "Ultrascripts disabled", and "runtime not available" all collapse into the same safe creator behavior:
+                <strong>do the plain-script version instead.</strong>
+              </p>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
       <!-- ===================== OPS REFERENCE ===================== -->
       <section id="guide-ops" class="card">
         <button @click="toggleGuideSection('ops')" class="w-full flex items-center justify-between text-left">
@@ -218,6 +294,10 @@ function getHeartbeat() {
   return null;
 }
 
+bd.sdk.runtimePresent = function () {
+  return !!getHeartbeat();
+};
+
 bd.sdk.hasModule = function (moduleId) {
   var hb = getHeartbeat();
   var mods = (hb &amp;&amp; Array.isArray(hb.modules)) ? hb.modules : [];
@@ -238,6 +318,59 @@ bd.sdk.hasOp = function (moduleId, opName) {
   }
   return false;
 };</pre>
+          </div>
+        </Transition>
+      </section>
+
+      <!-- ===================== BOOTSTRAP ===================== -->
+      <section id="guide-bootstrap" class="card">
+        <button @click="toggleGuideSection('bootstrap')" class="w-full flex items-center justify-between text-left">
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <RefreshCw class="w-5 h-5 text-bd-amber" />
+            One-Shot Bootstrap Pattern
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('bootstrap') }" />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('bootstrap')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
+            <p>
+              Most creator flows only need to ask for <code>sdk.config</code> once per adventure, cache the last response, and branch from there. This is
+              the paved path when you are already using the <code>bd.us</code> helper from Quick Start.
+            </p>
+
+            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">state.bd = state.bd || {};
+state.bd.creator = state.bd.creator || {};
+
+bd.us.tick();
+
+var creator = state.bd.creator;
+var cfg = bd.us.latest('sdk', 'config');
+
+if (bd.us.available() &amp;&amp; bd.us.has('sdk', 'config') &amp;&amp; !creator.requestedSdkConfig) {
+  creator.requestedSdkConfig = true;
+  bd.us.call('sdk', 'config');
+}
+
+if (cfg &amp;&amp; cfg.status === 'ok') {
+  var aiReady = !!(cfg.data
+    &amp;&amp; cfg.data.ultrascripts
+    &amp;&amp; cfg.data.ultrascripts.ai
+    &amp;&amp; cfg.data.ultrascripts.ai.configured);
+
+  if (aiReady &amp;&amp; bd.us.has('ai', 'chat')) {
+    // safe to offer the AI-enhanced path
+  } else {
+    // plain-script fallback path
+  }
+}
+
+bd.us.commit();</pre>
+
+            <ul class="space-y-1 text-[11px]">
+              <li>&middot; Queue <code class="text-bd-green">sdk.config</code> once, then keep reusing the latest cached response.</li>
+              <li>&middot; Branch on the actual player configuration instead of assuming modules are usable just because they exist in heartbeat.</li>
+              <li>&middot; Keep your non-Ultrascripts path first-class. The enhanced path should feel like a bonus, not a rescue mission.</li>
+            </ul>
           </div>
         </Transition>
       </section>
@@ -351,16 +484,18 @@ state.bd.sendOpRequest = function (moduleId, opName, args) {
 import { ref } from 'vue'
 import {
   ChevronDown, ChevronUp, Terminal, Search, Code, Library, Rocket,
-  CheckCircle2, RefreshCw, AlertTriangle, Zap, ArrowRight
+  CheckCircle2, RefreshCw, AlertTriangle, Zap, ArrowRight, ShieldCheck
 } from 'lucide-vue-next'
 
 const guideSections = [
   { id: 'header-intro', label: 'Introduction', isHeader: true },
   { id: 'overview', label: 'Overview' },
+  { id: 'protocol', label: 'Compatibility Protocol' },
   { id: 'header-ref', label: 'Reference', isHeader: true },
   { id: 'ops', label: 'Operations' },
   { id: 'helper', label: 'Helper Library' },
   { id: 'header-use', label: 'Usage', isHeader: true },
+  { id: 'bootstrap', label: 'Bootstrap Pattern' },
   { id: 'recipes', label: 'Recipes' },
   { id: 'pitfalls', label: 'Pitfalls' }
 ]
