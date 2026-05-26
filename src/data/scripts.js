@@ -458,7 +458,7 @@ export const SCRIPTS = [
   // 1. Enhanced with Ultrascripts: core scenario still works without the runtime.
   // 2. Requires Ultrascripts: core behavior depends on BetterDungeon being present.
   {
-    id: 'betterscripts-simple-counter',
+    id: 'ultrascripts-simple-counter',
     name: 'Simple Turn Counter',
     category: 'ultrascripts-required',
     difficulty: 'beginner',
@@ -486,7 +486,7 @@ export const SCRIPTS = [
     ultrascriptsMode: 'enhanced'
   },
   {
-    id: 'betterscripts-debug-console',
+    id: 'ultrascripts-debug-console',
     name: 'Ultrascripts Debug Console',
     category: 'ultrascripts-required',
     difficulty: 'intermediate',
@@ -494,13 +494,13 @@ export const SCRIPTS = [
     essential: true,
     tags: ['widgets', 'debug', 'testing', 'ultrascripts', 'commands', 'developer-tool', 'test-suite'],
     source: 'BetterRepository',
-    description: 'Interactive debug console for testing BetterDungeon widget flows, protocol messages, and a sequential test suite.',
-    purpose: 'Type :help for commands. Create, update, and destroy widget surfaces, then run :test to exercise the extension-powered path one step per turn.',
+    description: 'Interactive debug console for testing BetterDungeon heartbeat detection and Scripture widget rendering.',
+    purpose: 'Type :help for commands. Use :demo, :clear, and :status to exercise the extension-powered widget path with real Ultrascripts state cards.',
     requiresExtension: 'BetterDungeon',
     ultrascriptsMode: 'required'
   },
   {
-    id: 'betterscripts-widget-showcase',
+    id: 'ultrascripts-widget-showcase',
     name: 'Ultrascripts Widget Showcase',
     category: 'ultrascripts-required',
     difficulty: 'beginner',

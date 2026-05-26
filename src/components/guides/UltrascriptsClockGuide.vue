@@ -68,10 +68,18 @@
                 <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
                 <span class="text-[10px] text-bd-text-muted">1000ms</span>
               </div>
-              <p>Returns the current epoch timestamp in milliseconds.</p>
+              <p>Returns the current timestamp plus local date/time fields for the requested timezone.</p>
               <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// args: {}  (empty)
 // data:
-{ "now": 1737042131428 }</pre>
+{
+  "ts": 1737042131428,
+  "iso": "2025-01-16T18:42:11.428Z",
+  "timeZone": "America/Chicago",
+  "local": "2025-01-16 12:42:11 -06:00",
+  "date": "2025-01-16",
+  "time": "12:42:11",
+  "systemTimeZone": "America/Chicago"
+}</pre>
             </div>
 
             <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-2">
@@ -80,13 +88,16 @@
                 <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
                 <span class="text-[10px] text-bd-text-muted">1000ms</span>
               </div>
-              <p>Reports the browser's resolved timezone string and its current UTC offset in minutes.</p>
-              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// args: {}
+              <p>Formats the current or provided timestamp in a named IANA timezone and includes the resolved UTC offset.</p>
+              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// args:
+{ "timeZone": "Europe/London" }
 // data:
 {
-  "iana": "America/Chicago",
-  "offsetMinutes": -360,
-  "abbreviation": "CST"
+  "requestedTimeZone": "Europe/London",
+  "timeZone": "Europe/London",
+  "offsetMinutes": 0,
+  "offset": "+00:00",
+  "local": "2025-01-16 18:42:11 +00:00"
 }</pre>
             </div>
 
@@ -96,15 +107,15 @@
                 <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
                 <span class="text-[10px] text-bd-text-muted">1000ms</span>
               </div>
-              <p>Formats a given epoch timestamp using a locale and option set, leveraging the browser's <code>Intl.DateTimeFormat</code>.</p>
+              <p>Formats a timestamp using Clock's pattern tokens. Returns a plain string.</p>
               <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// args:
 {
-  "epoch": 1737042131428,
-  "locale": "en-US",                       // optional
-  "options": { "dateStyle": "medium", "timeStyle": "short" }
+  "ts": 1737042131428,
+  "timeZone": "America/Chicago",
+  "format": "dddd, MMMM D [at] h:mm A Z"
 }
 // data:
-{ "formatted": "Jan 16, 2025, 12:42 PM" }</pre>
+"Thursday, January 16 at 12:42 PM -06:00"</pre>
             </div>
           </div>
         </Transition>
@@ -128,7 +139,7 @@
     var p = JSON.parse(card.value || '{}');
     var r = p.responses &amp;&amp; p.responses['clock-now-t' + (lc - 1)];
     if (r &amp;&amp; r.status === 'ok' &amp;&amp; r.completedLiveCount === (lc - 1)) {
-      var h = new Date(r.data.now).getHours();
+      var h = Number(String(r.data.time || '00').slice(0, 2));
       if (h >= 20 || h < 5)      text += '\n[Ambient: pitch-black night. Shadows crowd the edges of vision.]';
       else if (h >= 5 &amp;&amp; h < 9)  text += '\n[Ambient: thin dawn light. Air still cool.]';
       else if (h >= 17 &amp;&amp; h < 20) text += '\n[Ambient: amber dusk. Long shadows stretching.]';
@@ -151,8 +162,8 @@
             <div class="grid md:grid-cols-2 gap-3 text-[11px]">
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Confusing UTC and local time</h4>
-                <p class="text-bd-text-secondary"><strong>Issue:</strong> Querying <code>now</code> and treating the epoch as the player's local hour.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> JavaScript's <code>Date.prototype.getHours()</code> already converts to local. Don't add the <code>tz.offsetMinutes</code> manually.</p>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> Reading <code>data.ts</code> and manually guessing the local hour.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Use <code>data.time</code> for the resolved timezone, or call <code>clock.tz</code> / <code>clock.format</code> with an explicit <code>timeZone</code>.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Hammering the op on every modifier</h4>

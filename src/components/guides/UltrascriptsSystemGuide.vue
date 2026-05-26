@@ -69,11 +69,12 @@
               <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// args: {}
 // data:
 {
-  "platformType": "desktop" | "mobile" | "tablet",
-  "userAgentFamily": "Chrome" | "Firefox" | "Safari" | "Edge" | "Other",
-  "preferredLocale": "en-US",
-  "preferredColorScheme": "light" | "dark",
-  "viewport": { "widthPx": 1440, "heightPx": 900, "dpr": 2 }
+  "deviceClass": "desktop" | "mobile" | "tablet" | "unknown",
+  "platform": { "family": "windows", "mobile": false },
+  "browser": { "name": "chromium", "version": "124.0.0.0" },
+  "locale": { "language": "en-US", "timeZone": "America/Chicago" },
+  "screen": { "viewportWidth": 1440, "viewportHeight": 900, "devicePixelRatio": 2 },
+  "preferences": { "colorScheme": "dark", "reducedMotion": false }
 }</pre>
             </div>
 
@@ -87,11 +88,13 @@
               <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// args: {}
 // data (on ok):
 {
-  "supported": true,
-  "charging": false,
-  "level": 0.62,                  // 0..1
-  "chargingTimeSec": null,
-  "dischargingTimeSec": 14400
+      "supported": true,
+      "charging": false,
+      "state": "discharging",
+      "level": 0.62,                  // 0..1
+      "levelPercent": 62,
+      "chargingTimeSec": null,
+      "dischargingTimeSec": 14400
 }
 // or:
 { "supported": false }</pre>
@@ -119,12 +122,12 @@
     var p = JSON.parse(card.value || '{}');
     var r = p.responses &amp;&amp; p.responses['sys-info-t' + (lc - 1)];
     if (r &amp;&amp; r.status === 'ok' &amp;&amp; r.completedLiveCount === (lc - 1)) {
-      var widgets = (r.data.platformType === 'mobile')
-        ? [{ type: 'stat-bar', label: 'HP', max: 100 }]
+      var widgets = (r.data.deviceClass === 'mobile')
+        ? [{ id: 'hp', type: 'bar', label: 'HP', max: 100 }]
         : [
-            { type: 'stat-bar', label: 'Health', max: 100 },
-            { type: 'stat-bar', label: 'Mana',   max: 50  },
-            { type: 'text',     label: 'Weapon' }
+            { id: 'hp',     type: 'bar',  label: 'Health', max: 100 },
+            { id: 'mana',   type: 'bar',  label: 'Mana',   max: 50  },
+            { id: 'weapon', type: 'text', label: 'Weapon' }
           ];
       var scripture = { v: 1, manifest: { widgets: widgets }, history: {} };
       scripture.history[lc] = { hp: state.hp || 100, mana: state.mana || 50, weapon: state.weapon || 'Iron Sword' };
@@ -155,7 +158,7 @@
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">User-agent sniffing</h4>
                 <p class="text-bd-text-secondary"><strong>Issue:</strong> Branching on every browser name leads to fragile code.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Prefer <code>platformType</code> + <code>viewport</code> + feature checks (via SDK config) over UA branching.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Prefer <code>deviceClass</code> + <code>screen.viewportWidth</code> + feature checks (via SDK config) over UA branching.</p>
               </div>
             </div>
           </div>

@@ -72,8 +72,8 @@ bd.us.commit();               // send the out card</pre>
               <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">Library Script (after the SDK paste)</div>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">bd.us.defineScripture({
   widgets: [
-    { id: 'hp',    type: 'stat-bar', label: 'Health', max: 100, color: '#22c55e' },
-    { id: 'mana',  type: 'stat-bar', label: 'Mana',   max: 50,  color: '#3b82f6' },
+    { id: 'hp',    type: 'bar', label: 'Health', max: 100, color: '#22c55e' },
+    { id: 'mana',  type: 'bar', label: 'Mana',   max: 50,  color: '#3b82f6' },
     { id: 'where', type: 'text',     label: 'Region' }
   ]
 });</pre>
@@ -104,44 +104,34 @@ bd.us.commit();</pre>
         </button>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('r2')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
-            <p>Player can tick objectives in the sidebar; events flow back through <code>ultrascripts:in:scripture</code>.</p>
+            <p>Player can flip an objective toggle in the sidebar; events flow back through <code>ultrascripts:in:scripture</code>.</p>
 
             <div>
               <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">Library Script</div>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">bd.us.defineScripture({
-  widgets: [{ id: 'quests', type: 'checklist', label: 'Objectives' }]
+  widgets: [{ id: 'questComplete', type: 'toggle', label: 'Amber Relic Retrieved', value: false }]
 });
 
 // Helper: consume widget interaction events
 bd.us.consumeScriptureEvents = function () {
-  var card = bd.us._parseCard('ultrascripts:in:scripture');
-  if (!card || !card.events) return;
-  for (var i = 0; i < card.events.length; i++) {
-    var e = card.events[i];
-    if (e.widgetId === 'quests' &amp;&amp; e.action === 'toggle') {
-      for (var j = 0; j < state.quests.length; j++) {
-        if (state.quests[j].id === e.payload.itemId) {
-          state.quests[j].checked = !!e.payload.checked;
-          break;
-        }
-      }
+  var events = bd.us.scriptureEvents();
+  for (var i = 0; i < events.length; i++) {
+    var e = events[i];
+    if (e.widgetId === 'questComplete' &amp;&amp; e.action === 'change') {
+      state.questComplete = !!e.value;
+      bd.us.ackScripture(e.seq);
     }
-    if (bd.us._pendingAcks.indexOf(e.id) === -1) bd.us._pendingAcks.push(e.id);
   }
 };</pre>
             </div>
 
             <div>
               <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">Context Modifier</div>
-              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">state.quests = state.quests || [
-  { id: 'q1', label: 'Retrieve the Amber Relic', checked: false },
-  { id: 'q2', label: 'Locate the hidden trapdoor', checked: true  },
-  { id: 'q3', label: 'Survive the goblin ambush',  checked: false }
-];
+              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">state.questComplete = state.questComplete || false;
 
 bd.us.tick();
 bd.us.consumeScriptureEvents();              // applies any sidebar clicks
-bd.us.publishScripture({ quests: state.quests });
+bd.us.publishScripture({ questComplete: state.questComplete });
 bd.us.commit();</pre>
             </div>
           </div>
@@ -165,7 +155,7 @@ bd.us.tick();
 
 var clock = bd.us.latest('clock', 'now');
 if (clock &amp;&amp; clock.status === 'ok') {
-  var h = new Date(clock.data.now).getHours();
+  var h = Number(String(clock.data.time || '00').slice(0, 2));
   if      (h >= 20 || h < 5) text += '\n[Ambient: deep night. Shadows crowd the edges.]';
   else if (h >= 17)          text += '\n[Ambient: amber dusk. Long shadows.]';
   else if (h < 9)            text += '\n[Ambient: thin dawn light. Air cool.]';
@@ -194,7 +184,7 @@ bd.us.tick();
 
 var wx = bd.us.latest('weather', 'current');
 if (wx &amp;&amp; wx.status === 'ok') {
-  var c = wx.data.weatherCode;
+  var c = wx.data.current &amp;&amp; wx.data.current.weatherCode;
   if (c >= 61 &amp;&amp; c <= 65) {
     state.combatPenalty = -2;
     text += '\n[Combat: rain dampens the ground. Ranged attacks -2.]';
@@ -209,7 +199,7 @@ if (wx &amp;&amp; wx.status === 'ok') {
 // Re-query every ~10 turns so the weather doesn't go stale
 var lc = bd.us.liveCount();
 if (bd.us.has('weather', 'current') &amp;&amp; lc % 10 === 0) {
-  bd.us.call('weather', 'current');
+  bd.us.call('weather', 'current', { place: state.weatherPlace || 'Chicago', units: 'metric' });
 }
 bd.us.commit();</pre>
           </div>
@@ -247,7 +237,7 @@ if (aiReady) {
   bd.us.call('ai', 'chat', {
     model: 'google/gemini-2.0-flash-exp:free',
     temperature: 0.7,
-    max_tokens: 60,
+    maxTokens: 60,
     messages: [
       { role: 'system', content: 'Output ONE atmospheric sentence describing ambient sensory detail. No dialogue. No new plot.' },
       { role: 'user',   content: 'Current scene:\n' + text }
@@ -283,8 +273,8 @@ bd.us.commit();</pre>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">bd.us.defineScripture({
   widgets: [
     { id: 'location', type: 'text',       label: 'Location' },
-    { id: 'mood',     type: 'badge-list', label: 'Mood' },
-    { id: 'npcs',     type: 'badge-list', label: 'Present NPCs' }
+    { id: 'mood',     type: 'taggroup', label: 'Mood' },
+    { id: 'npcs',     type: 'taggroup', label: 'Present NPCs' }
   ]
 });</pre>
             </div>
@@ -312,8 +302,8 @@ if (bd.us.has('ai', 'chat')) {
   bd.us.call('ai', 'chat', {
     model: 'google/gemini-2.0-flash-exp:free',
     temperature: 0.1,
-    max_tokens: 200,
-    response_format: { type: 'json_object' },
+    maxTokens: 200,
+    responseFormat: { type: 'json_object' },
     messages: [
       { role: 'system', content: 'Extract scene JSON: { "location": string, "mood": "tense"|"calm"|"hopeful"|"grim", "presentNpcs": string[] }. JSON only.' },
       { role: 'user',   content: text }
@@ -345,7 +335,7 @@ bd.us.tick();
 // Cache the result the first time it arrives
 if (!state.loreCache) {
   var fetched = bd.us.latest('webfetch', 'fetch');
-  if (fetched &amp;&amp; fetched.status === 'ok' &amp;&amp; fetched.data.ok) {
+  if (fetched &amp;&amp; fetched.status === 'ok' &amp;&amp; fetched.data.status >= 200 &amp;&amp; fetched.data.status < 300) {
     state.loreCache = fetched.data.body;
   }
 }
@@ -354,7 +344,9 @@ if (!state.loreCache) {
 if (!state.loreCache &amp;&amp; !state.loreRequested &amp;&amp; bd.us.has('webfetch', 'fetch')) {
   bd.us.call('webfetch', 'fetch', {
     url: 'https://api.example.com/adventure/lore',
-    options: { method: 'GET', responseType: 'json' }
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+    maxBodyBytes: 50000
   });
   state.loreRequested = true;
 }
@@ -383,15 +375,15 @@ bd.us.tick();
 if (!state.scriptureReady) {
   var sys = bd.us.latest('system', 'info');
   if (sys &amp;&amp; sys.status === 'ok') {
-    var mobile = sys.data.platformType === 'mobile';
+    var mobile = sys.data.deviceClass === 'mobile';
     bd.us.defineScripture({
       widgets: mobile
-        ? [{ id: 'hp', type: 'stat-bar', label: 'HP', max: 100 }]
+        ? [{ id: 'hp', type: 'bar', label: 'HP', max: 100 }]
         : [
-            { id: 'hp',     type: 'stat-bar',  label: 'Health', max: 100 },
-            { id: 'mana',   type: 'stat-bar',  label: 'Mana',   max: 50  },
+            { id: 'hp',     type: 'bar',  label: 'Health', max: 100 },
+            { id: 'mana',   type: 'bar',  label: 'Mana',   max: 50  },
             { id: 'weapon', type: 'text',      label: 'Weapon' },
-            { id: 'tags',   type: 'badge-list', label: 'Status' }
+            { id: 'tags',   type: 'taggroup', label: 'Status' }
           ]
     });
     state.scriptureReady = true;

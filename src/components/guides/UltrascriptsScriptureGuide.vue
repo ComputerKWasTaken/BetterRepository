@@ -48,7 +48,7 @@
           <div v-if="isGuideSectionExpanded('overview')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
             <p>
               <strong>Scripture</strong> is Ultrascripts' canonical <em>state module</em>. It renders live, responsive UI widgets &mdash; HP bars, stat grids,
-              quest checklists, badge rows, journal pages, inventory grids &mdash; inside the BetterDungeon sidebar. Scenarios <em>publish</em> structured JSON to a
+              quest lists, badge rows, journal panels, inventory lists &mdash; inside the BetterDungeon sidebar. Scenarios <em>publish</em> structured JSON to a
               single reserved Story Card; the extension does all the rendering.
             </p>
 
@@ -57,7 +57,7 @@
                 <h3 class="font-semibold text-bd-text-primary flex items-center gap-2 text-[12px]">
                   <Layers class="w-4 h-4 text-bd-green" /> What it renders
                 </h3>
-                <p class="text-[11px]">Stat bars, progress meters, text rows, badge lists, checklists, key/value grids, inventory slots, journal text, and custom HTML blocks.</p>
+                <p class="text-[11px]">Stats, bars, progress meters, text rows, tag groups, lists, panels, counters, inputs, buttons, toggles, and custom HTML blocks.</p>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
                 <h3 class="font-semibold text-bd-text-primary flex items-center gap-2 text-[12px]">
@@ -106,10 +106,10 @@
   "v": 1,
   "manifest": {
     "widgets": [
-      { "id": "hp",    "type": "stat-bar",  "label": "Health", "max": 100, "color": "#22c55e" },
-      { "id": "mana",  "type": "stat-bar",  "label": "Mana",   "max": 50,  "color": "#3b82f6" },
+      { "id": "hp",    "type": "bar",       "label": "Health", "max": 100, "color": "#22c55e" },
+      { "id": "mana",  "type": "bar",       "label": "Mana",   "max": 50,  "color": "#3b82f6" },
       { "id": "where", "type": "text",      "label": "Region" },
-      { "id": "tags",  "type": "badge-list", "label": "Status" }
+      { "id": "tags",  "type": "taggroup",  "label": "Status" }
     ]
   },
   "history": {
@@ -156,15 +156,15 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('catalog')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
 
-            <!-- stat-bar -->
+            <!-- bar -->
             <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-2">
               <div class="flex items-center gap-2">
-                <h4 class="font-semibold text-bd-green text-[13px]"><code>stat-bar</code></h4>
+                <h4 class="font-semibold text-bd-green text-[13px]"><code>bar</code></h4>
                 <span class="text-[10px] text-bd-text-muted">Progress meter</span>
               </div>
               <p>A labeled progress bar with optional accent color. Best for HP, mana, XP, stamina, hunger.</p>
               <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// manifest entry
-{ "id": "hp", "type": "stat-bar", "label": "Health", "max": 100, "color": "#22c55e" }
+{ "id": "hp", "type": "bar", "label": "Health", "max": 100, "color": "#22c55e" }
 // history value
 80    // a single number; "value" is shorthand for the current fill</pre>
             </div>
@@ -180,79 +180,79 @@
 // history value:  "Echoing Caverns"</pre>
             </div>
 
-            <!-- badge-list -->
+            <!-- taggroup -->
             <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-2">
               <div class="flex items-center gap-2">
-                <h4 class="font-semibold text-bd-purple text-[13px]"><code>badge-list</code></h4>
+                <h4 class="font-semibold text-bd-purple text-[13px]"><code>taggroup</code></h4>
                 <span class="text-[10px] text-bd-text-muted">Pill row</span>
               </div>
               <p>A row of small colored pills. Best for status effects, party traits, faction reputation.</p>
-              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{ "id": "tags", "type": "badge-list", "label": "Status" }
+              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{ "id": "tags", "type": "taggroup", "label": "Status" }
 // history value:
 [{ "text": "Wounded", "color": "#ef4444" }, { "text": "Cursed", "color": "#a855f7" }]</pre>
             </div>
 
-            <!-- checklist -->
+            <!-- list -->
             <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-2">
               <div class="flex items-center gap-2">
-                <h4 class="font-semibold text-bd-amber text-[13px]"><code>checklist</code></h4>
+                <h4 class="font-semibold text-bd-amber text-[13px]"><code>list</code></h4>
                 <span class="text-[10px] text-bd-text-muted">Quest tracker</span>
               </div>
-              <p>Tickable objectives. Best for quest tracking, scene goals, achievements.</p>
-              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{ "id": "quests", "type": "checklist", "label": "Objectives" }
+              <p>Objective rows. Best for quest tracking, scene goals, achievements.</p>
+              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{ "id": "quests", "type": "list", "label": "Objectives" }
 // history value:
 [
-  { "id": "q1", "label": "Retrieve the Amber Relic", "checked": false },
-  { "id": "q2", "label": "Find the hidden trapdoor",  "checked": true }
+  { "text": "[ ] Retrieve the Amber Relic" },
+  { "text": "[x] Find the hidden trapdoor" }
 ]</pre>
             </div>
 
-            <!-- key-value -->
+            <!-- panel -->
             <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-cyan/30 space-y-2">
               <div class="flex items-center gap-2">
-                <h4 class="font-semibold text-bd-cyan text-[13px]"><code>key-value</code></h4>
+                <h4 class="font-semibold text-bd-cyan text-[13px]"><code>panel</code></h4>
                 <span class="text-[10px] text-bd-text-muted">Stat grid</span>
               </div>
-              <p>A compact two-column grid of label/value pairs. Best for character sheets and equipment summaries.</p>
-              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{ "id": "stats", "type": "key-value", "label": "Stats" }
+              <p>A compact group of label/value pairs. Best for character sheets and equipment summaries.</p>
+              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{ "id": "stats", "type": "panel", "title": "Stats" }
 // history value:
 [
-  { "key": "STR", "value": 14 },
-  { "key": "DEX", "value": 12 },
-  { "key": "INT", "value": 16 }
+  { "label": "STR", "value": 14 },
+  { "label": "DEX", "value": 12 },
+  { "label": "INT", "value": 16 }
 ]</pre>
             </div>
 
-            <!-- inventory -->
+            <!-- inventory list -->
             <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/30 space-y-2">
               <div class="flex items-center gap-2">
-                <h4 class="font-semibold text-bd-pink text-[13px]"><code>inventory</code></h4>
+                <h4 class="font-semibold text-bd-pink text-[13px]"><code>list</code></h4>
                 <span class="text-[10px] text-bd-text-muted">Item grid</span>
               </div>
-              <p>A small grid of inventory slots with item name and optional quantity. Best for RPG-style item lists.</p>
-              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{ "id": "bag", "type": "inventory", "label": "Bag", "cols": 4 }
+              <p>A compact inventory list. Best for RPG-style item summaries.</p>
+              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{ "id": "bag", "type": "list", "label": "Bag" }
 // history value:
 [
-  { "name": "Healing Potion", "qty": 3 },
-  { "name": "Iron Key" },
-  { "name": "Torch", "qty": 5 }
+  { "text": "Healing Potion x3" },
+  { "text": "Iron Key" },
+  { "text": "Torch x5" }
 ]</pre>
             </div>
 
             <!-- journal -->
             <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-2">
               <div class="flex items-center gap-2">
-                <h4 class="font-semibold text-bd-green text-[13px]"><code>journal</code></h4>
+                <h4 class="font-semibold text-bd-green text-[13px]"><code>custom</code></h4>
                 <span class="text-[10px] text-bd-text-muted">Long-form notes</span>
               </div>
-              <p>A scrollable text block for in-character notes, lore entries, or session recaps.</p>
-              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{ "id": "log", "type": "journal", "label": "Adventure Log" }
-// history value:  multi-line string (markdown lite supported: ** _ ` -)</pre>
+              <p>A controlled HTML block for in-character notes, lore entries, or session recaps.</p>
+              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{ "id": "log", "type": "custom", "label": "Adventure Log" }
+// history value: { "html": "&lt;p&gt;Recovered the amber map.&lt;/p&gt;" }</pre>
             </div>
 
             <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30 text-[11px]">
               <strong class="text-bd-amber">Design tip:</strong> The first widget in the manifest renders first. Lead with the most-glanced data (HP / location)
-              and tuck deep details (full stat grid, inventory) further down.
+              and tuck deep details (stat panels, inventory lists) further down.
             </div>
           </div>
         </Transition>
@@ -272,7 +272,7 @@
             <p>
               Scripture is the reference module for the <strong>live count</strong> pattern. It declares <code>tracksLiveCount: true</code>,
               which tells Core to re-render Scripture whenever the player's live action count changes &mdash; even if the state card itself was not rewritten.
-              That single property is why undo and redo "just work" for HP bars and quest checklists.
+              That single property is why undo and redo "just work" for HP bars and quest lists.
             </p>
 
             <div class="grid md:grid-cols-3 gap-3">
@@ -322,10 +322,10 @@ bd.scripture = bd.scripture || {
   v: 1,
   manifest: {
     widgets: [
-      { id: 'hp',    type: 'stat-bar',  label: 'Health', max: 100, color: '#22c55e' },
-      { id: 'mana',  type: 'stat-bar',  label: 'Mana',   max: 50,  color: '#3b82f6' },
+      { id: 'hp',    type: 'bar',       label: 'Health', max: 100, color: '#22c55e' },
+      { id: 'mana',  type: 'bar',       label: 'Mana',   max: 50,  color: '#3b82f6' },
       { id: 'where', type: 'text',      label: 'Region' },
-      { id: 'tags',  type: 'badge-list', label: 'Status' }
+      { id: 'tags',  type: 'taggroup',  label: 'Status' }
     ]
   },
   history: {}
@@ -393,15 +393,15 @@ bd.publishScripture = function (values) {
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Library Script (manifest override)
 state.bd.scripture = {
   v: 1,
-  manifest: { widgets: [{ id: 'quests', type: 'checklist', label: 'Objectives' }] },
+  manifest: { widgets: [{ id: 'quests', type: 'list', label: 'Objectives' }] },
   history: {}
 };
 
 // Context Modifier
 state.quests = state.quests || [
-  { id: 'q1', label: 'Retrieve the Amber Relic', checked: false },
-  { id: 'q2', label: 'Locate the hidden trapdoor', checked: true  },
-  { id: 'q3', label: 'Survive the goblin ambush',  checked: false }
+  { text: '[ ] Retrieve the Amber Relic' },
+  { text: '[x] Locate the hidden trapdoor' },
+  { text: '[ ] Escape the ambush' }
 ];
 state.bd.publishScripture({ quests: state.quests });</pre>
             </div>
@@ -411,15 +411,15 @@ state.bd.publishScripture({ quests: state.quests });</pre>
               <h4 class="font-semibold text-bd-purple flex items-center gap-1.5 text-[12px]">
                 <Palette class="w-4 h-4" /> Recipe 3: Character Sheet Dashboard
               </h4>
-              <p>Combines badge-list, stat-bar, key-value grid, and text into one rich sheet.</p>
+              <p>Combines tag groups, bars, panels, and text into one rich sheet.</p>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Library Script (manifest override)
 state.bd.scripture = {
   v: 1,
   manifest: {
     widgets: [
-      { id: 'titles',   type: 'badge-list', label: 'Titles' },
-      { id: 'xp',       type: 'stat-bar',   label: 'Experience', max: 1000, color: '#eab308' },
-      { id: 'attrs',    type: 'key-value',  label: 'Attributes' },
+      { id: 'titles',   type: 'taggroup', label: 'Titles' },
+      { id: 'xp',       type: 'bar',      label: 'Experience', max: 1000, color: '#eab308' },
+      { id: 'attrs',    type: 'panel',    title: 'Attributes' },
       { id: 'weapon',   type: 'text',       label: 'Weapon' },
       { id: 'shield',   type: 'text',       label: 'Shield' }
     ]
@@ -438,10 +438,10 @@ state.bd.publishScripture({
   ],
   xp: state.xp,
   attrs: [
-    { key: 'STR', value: 14 },
-    { key: 'DEX', value: 12 },
-    { key: 'INT', value: 16 },
-    { key: 'CON', value: 13 }
+    { label: 'STR', value: 14 },
+    { label: 'DEX', value: 12 },
+    { label: 'INT', value: 16 },
+    { label: 'CON', value: 13 }
   ],
   weapon: state.weapon || 'Steel Broadsword',
   shield: state.shield || 'Iron Buckler'
@@ -459,8 +459,8 @@ state.bd.scripture = {
   v: 1,
   manifest: {
     widgets: [
-      { id: 'bag', type: 'inventory', label: 'Bag', cols: 4 },
-      { id: 'log', type: 'journal',   label: 'Adventure Log' }
+      { id: 'bag', type: 'list',   label: 'Bag' },
+      { id: 'log', type: 'custom', label: 'Adventure Log' }
     ]
   },
   history: {}
@@ -468,15 +468,15 @@ state.bd.scripture = {
 
 // Context Modifier
 state.inventory = state.inventory || [
-  { name: 'Healing Potion', qty: 3 },
-  { name: 'Iron Key' },
-  { name: 'Torch', qty: 5 }
+  { text: 'Healing Potion x3' },
+  { text: 'Iron Key' },
+  { text: 'Torch x5' }
 ];
-state.journal = state.journal || '';
+state.journal = state.journal || '<p>No journal entries yet.</p>';
 
 state.bd.publishScripture({
   bag: state.inventory,
-  log: state.journal
+  log: { html: state.journal }
 });</pre>
             </div>
           </div>
@@ -495,29 +495,38 @@ state.bd.publishScripture({
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('interactions')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              Some Scripture widgets are interactive in the sidebar &mdash; the player can tick a checklist box, click a badge, or activate a button. When that
+              Some Scripture widgets are interactive in the sidebar &mdash; the player can flip a toggle, click a button, or edit an input. When that
               happens, BetterDungeon writes the event into <code class="text-bd-green">ultrascripts:in:scripture</code> for the script to read on its next turn.
             </p>
 
             <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">// ultrascripts:in:scripture  (extension writes when a widget is interacted with)
 {
   "v": 1,
-  "events": [
-    {
-      "id": "evt-1737042199100",
-      "widgetId": "quests",
-      "action": "toggle",
-      "payload": { "itemId": "q1", "checked": true },
-      "atLiveCount": 13
-    }
-  ]
+  "widgetEvents": {
+    "v": 1,
+    "module": "scripture",
+    "latestSeq": 4,
+    "ackSeq": 3,
+    "liveCount": 13,
+    "events": [
+      {
+        "id": "scripture-4",
+        "seq": 4,
+        "widgetId": "questComplete",
+        "widgetType": "toggle",
+        "action": "change",
+        "value": true,
+        "liveCount": 13
+      }
+    ]
+  }
 }</pre>
 
             <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
               <h4 class="font-semibold text-bd-text-primary text-[12px] mb-1">Consuming the events</h4>
               <p class="text-[11px]">
-                On the next modifier pass, parse <code>ultrascripts:in:scripture</code>, apply events to <code>state</code>, and write back an
-                <code>acks</code> entry (in <code>ultrascripts:out</code>) listing the event ids you've handled. The extension prunes acked events so the
+                On the next modifier pass, parse <code>ultrascripts:in:scripture</code>, apply events to <code>state</code>, and write the highest handled
+                <code>seq</code> to <code>ultrascripts:state:scripture.interactions.ackSeq</code>. The extension prunes acked events so the
                 card stays lean.
               </p>
             </div>
@@ -528,24 +537,21 @@ state.bd.publishScripture({
   if (!card) return;
   try {
     var p = JSON.parse(card.value || '{}');
-    var events = (p &amp;&amp; p.events) || [];
-    var handled = [];
+    var events = (p &amp;&amp; p.widgetEvents &amp;&amp; p.widgetEvents.events) || [];
+    var handledSeq = 0;
     for (var i = 0; i < events.length; i++) {
       var e = events[i];
-      if (e.widgetId === 'quests' &amp;&amp; e.action === 'toggle') {
-        // Apply to state
-        for (var j = 0; j < state.quests.length; j++) {
-          if (state.quests[j].id === e.payload.itemId) {
-            state.quests[j].checked = !!e.payload.checked;
-            break;
-          }
-        }
-        handled.push(e.id);
+      if (e.widgetId === 'questComplete' &amp;&amp; e.action === 'change') {
+        state.questComplete = !!e.value;
+        handledSeq = Math.max(handledSeq, Number(e.seq || 0));
       }
     }
-    // Send acks via the regular ultrascripts:out envelope
-    state.bd = state.bd || {};
-    state.bd.ackQueue = (state.bd.ackQueue || []).concat(handled);
+    if (handledSeq &gt; 0) {
+      state.bd = state.bd || {};
+      state.bd.scripture = state.bd.scripture || { v: 1, manifest: { widgets: [] }, history: {} };
+      state.bd.scripture.interactions = state.bd.scripture.interactions || {};
+      state.bd.scripture.interactions.ackSeq = handledSeq;
+    }
   } catch (e) {}
 })();</pre>
           </div>
@@ -588,7 +594,7 @@ state.bd.publishScripture({
               <ul class="space-y-0.5 text-[11px]">
                 <li>&middot; Keep each turn's payload <strong>6 widgets or fewer</strong>. More than that crowds even the tall maxHeight.</li>
                 <li>&middot; Use short labels. Long strings truncate on <code>compact</code>.</li>
-                <li>&middot; If you publish heavy widgets (<code>inventory</code>, <code>journal</code>), trim the rest of the manifest accordingly.</li>
+                <li>&middot; If you publish heavy widgets (<code>list</code>, <code>custom</code>), trim the rest of the manifest accordingly.</li>
                 <li>&middot; Test your scenario in both <code>compact</code> and <code>large</code> sizes before shipping.</li>
               </ul>
             </div>
@@ -672,7 +678,7 @@ state.bd.publishScripture({
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Interaction not acked</h4>
                 <p class="text-bd-text-secondary"><strong>Issue:</strong> The same widget event keeps appearing each turn.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Include the event id in the next <code>ultrascripts:out</code> envelope's <code>acks</code> array.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Write the highest handled event <code>seq</code> to <code>ultrascripts:state:scripture.interactions.ackSeq</code>.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">History grows forever</h4>

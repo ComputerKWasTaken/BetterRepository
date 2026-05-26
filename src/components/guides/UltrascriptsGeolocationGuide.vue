@@ -76,17 +76,16 @@
               <p>Reports the current browser permission state without prompting the player.</p>
               <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// args: {}
 // data:
-{ "state": "granted" | "prompt" | "denied" }</pre>
+{ "supported": true, "permissionState": "granted" | "prompt" | "denied" | "unknown" }</pre>
             </div>
 
             <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-2">
               <div class="flex items-center gap-2 flex-wrap">
                 <h4 class="font-semibold text-bd-blue text-[13px]"><code>geolocation.getCurrent</code></h4>
-                <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-pink/20 text-bd-pink">unsafe</span>
-                <span class="text-[10px] text-bd-text-muted">8000ms</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
+                <span class="text-[10px] text-bd-text-muted">30000ms max</span>
               </div>
-              <p>Resolves the player's current coordinates. If permission is <code>prompt</code>, this op may trigger the browser dialog &mdash; mark it <em>unsafe</em>
-                so a replay after undo does not re-prompt the player.</p>
+              <p>Resolves the player's current coordinates. If permission is <code>prompt</code>, the browser may show its native permission dialog.</p>
               <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// args:
 {
   "highAccuracy": false,         // optional
@@ -96,8 +95,10 @@
 {
   "latitude": 41.881832,
   "longitude": -87.623177,
-  "accuracyMeters": 35,
-  "timestamp": 1737042131428
+  "accuracy": 35,
+  "timestamp": 1737042131428,
+  "iso": "2025-01-16T18:42:11.428Z",
+  "permissionState": "granted"
 }</pre>
             </div>
           </div>
@@ -127,7 +128,7 @@ state.bd.geo = state.bd.geo || null;  // cached once
     var p = JSON.parse(card.value || '{}');
     var r = p.responses &amp;&amp; p.responses['geo-cur-t' + (lc - 1)];
     if (r &amp;&amp; r.status === 'ok' &amp;&amp; r.completedLiveCount === (lc - 1)) {
-      state.bd.geo = { lat: r.data.latitude, lon: r.data.longitude };
+      state.bd.geo = { latitude: r.data.latitude, longitude: r.data.longitude };
     }
   } catch (e) {}
 })();</pre>
@@ -147,7 +148,7 @@ state.bd.geo = state.bd.geo || null;  // cached once
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Permission denied</h4>
                 <p class="text-bd-text-secondary"><strong>Issue:</strong> <code>getCurrent</code> returns <code>err</code>.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Check <code>geolocation.permission</code> first; degrade narration when state is <code>denied</code>.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Check <code>geolocation.permission</code> first; degrade narration when <code>permissionState</code> is <code>denied</code>.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Re-prompting on every turn</h4>

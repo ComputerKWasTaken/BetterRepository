@@ -368,7 +368,7 @@ bd.us.commit();</pre>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">// Declare your widgets ONCE
 bd.us.defineScripture({
   widgets: [
-    { id: 'hp', type: 'stat-bar', label: 'Health', max: 100, color: '#22c55e' }
+    { id: 'hp', type: 'bar', label: 'Health', max: 100, color: '#22c55e' }
   ]
 });</pre>
             </div>
@@ -410,10 +410,10 @@ bd.us.commit();</pre>
               <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">Context Modifier</div>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">bd.us.tick();
 
-// Use last turn's result (it's stale-filtered for you)
+// Use last turn's result. For undo-sensitive logic, also compare completedLiveCount.
 var last = bd.us.latest('clock', 'now');
 if (last &amp;&amp; last.status === 'ok') {
-  var hour = new Date(last.data.now).getHours();
+  var hour = Number(String(last.data.time || '00').slice(0, 2));
   if (hour >= 20 || hour < 5) {
     text += '\n[Ambient: deep night. Shadows crowd the edges.]';
   } else if (hour >= 17) {
@@ -469,18 +469,23 @@ if (prev &amp;&amp; prev.status === 'ok' &amp;&amp; prev.data.content) {
 
 // Queue this turn's Co-GM request (only if AI is configured)
 var cfg = bd.us.latest('sdk', 'config');
-var aiReady = cfg &amp;&amp; cfg.status === 'ok' &amp;&amp; cfg.data.ultrascripts.ai.configured;
+var aiReady = cfg &amp;&amp; cfg.status === 'ok'
+  &amp;&amp; cfg.data
+  &amp;&amp; cfg.data.ultrascripts
+  &amp;&amp; cfg.data.ultrascripts.ai
+  &amp;&amp; cfg.data.ultrascripts.ai.configured;
 if (bd.us.has('ai', 'chat') &amp;&amp; aiReady) {
   bd.us.call('ai', 'chat', {
     model: 'google/gemini-2.0-flash-exp:free',
     temperature: 0.7,
-    max_tokens: 60,
+    maxTokens: 60,
     messages: [
       { role: 'system', content: 'Output ONE atmospheric sentence describing ambient sensory detail. No dialogue. No plot events.' },
       { role: 'user',   content: 'Current scene:\n' + text }
     ]
   });
 }
+if (bd.us.has('sdk', 'config') &amp;&amp; !cfg) bd.us.call('sdk', 'config');
 
 bd.us.commit();</pre>
             </div>
@@ -513,7 +518,7 @@ bd.us.commit();</pre>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">// Declare widgets once
 bd.us.defineScripture({
   widgets: [
-    { id: 'hp',    type: 'stat-bar', label: 'Health', max: 100, color: '#22c55e' },
+    { id: 'hp',    type: 'bar',      label: 'Health', max: 100, color: '#22c55e' },
     { id: 'where', type: 'text',     label: 'Region' }
   ]
 });</pre>
@@ -527,7 +532,7 @@ bd.us.tick();
 // 2. Use the previous turn's results.
 var clockResult = bd.us.latest('clock', 'now');
 if (clockResult &amp;&amp; clockResult.status === 'ok') {
-  var hour = new Date(clockResult.data.now).getHours();
+  var hour = Number(String(clockResult.data.time || '00').slice(0, 2));
   if (hour >= 20 || hour < 5) text += '\n[Ambient: deep night.]';
 }
 
@@ -549,7 +554,7 @@ if (bd.us.has('ai', 'chat')) {
   bd.us.call('ai', 'chat', {
     model: 'google/gemini-2.0-flash-exp:free',
     temperature: 0.7,
-    max_tokens: 60,
+    maxTokens: 60,
     messages: [
       { role: 'system', content: 'Output ONE atmospheric sentence. No dialogue.' },
       { role: 'user',   content: text }
@@ -776,7 +781,12 @@ bd.us.result = function (reqId) {
 // --- Scripture: declare your manifest once ---
 bd.us.defineScripture = function (manifest) {
   var existing = bd.us._parseCard('ultrascripts:state:scripture');
-  bd.us.scripture = { v: 1, manifest: manifest, history: (existing &amp;&amp; existing.history) || {} };
+  bd.us.scripture = {
+    v: 1,
+    manifest: manifest,
+    history: (existing &amp;&amp; existing.history) || {},
+    interactions: (existing &amp;&amp; existing.interactions) || { ackSeq: 0 }
+  };
 };
 
 // --- Scripture: push a turn snapshot ---
@@ -784,6 +794,19 @@ bd.us.publishScripture = function (values) {
   if (!bd.us.scripture) return;
   bd.us.scripture.history[bd.us.liveCount()] = values;
   bd.us._upsertCard('ultrascripts:state:scripture', JSON.stringify(bd.us.scripture));
+};
+
+// --- Scripture: read sidebar widget events and ack by sequence ---
+bd.us.scriptureEvents = function () {
+  var card = bd.us._parseCard('ultrascripts:in:scripture');
+  var events = (card &amp;&amp; card.widgetEvents &amp;&amp; card.widgetEvents.events) || [];
+  var ackSeq = (bd.us.scripture &amp;&amp; bd.us.scripture.interactions &amp;&amp; bd.us.scripture.interactions.ackSeq) || 0;
+  return events.filter(function (e) { return e &amp;&amp; Number(e.seq || 0) > ackSeq; });
+};
+bd.us.ackScripture = function (seq) {
+  if (!bd.us.scripture) return;
+  bd.us.scripture.interactions = bd.us.scripture.interactions || {};
+  bd.us.scripture.interactions.ackSeq = Math.max(Number(bd.us.scripture.interactions.ackSeq || 0), Number(seq || 0));
 };
 
 // --- write the queued requests + acks to ultrascripts:out ---

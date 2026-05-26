@@ -72,17 +72,23 @@
                 <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-pink/20 text-bd-pink">unsafe</span>
                 <span class="text-[10px] text-bd-text-muted">3000ms</span>
               </div>
-              <p>Current temperature, wind, humidity, and WMO weather code at the given coordinates (or the player's cached geolocation).</p>
+              <p>Current temperature, wind, humidity, and WMO weather code for coordinates or a place name.</p>
               <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// args:
-{ "lat": 41.88, "lon": -87.62 }     // both optional if geolocation is cached
+{ "latitude": 41.88, "longitude": -87.62, "units": "metric" }
 // data (on ok):
 {
-  "temperatureC": 4.2,
-  "windSpeedKph": 18,
-  "windDirectionDeg": 270,
-  "relativeHumidity": 62,
-  "weatherCode": 63,                // WMO code
-  "isDay": true
+  "location": { "latitude": 41.88, "longitude": -87.62, "timezone": "America/Chicago" },
+  "units": "metric",
+  "source": "open-meteo",
+  "current": {
+    "temperature": 4.2,
+    "windSpeed": 18,
+    "windDirection": 270,
+    "relativeHumidity": 62,
+    "weatherCode": 63,
+    "weather": "Moderate rain",
+    "isDay": true
+  }
 }</pre>
             </div>
 
@@ -94,12 +100,13 @@
               </div>
               <p>Daily forecast for the next few days. Useful for travel arcs that span in-story time.</p>
               <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// args:
-{ "lat": 41.88, "lon": -87.62, "days": 3 }
+{ "place": "Chicago", "days": 3, "units": "metric" }
 // data:
 {
-  "daily": [
-    { "date": "2025-01-16", "tempMinC": -1, "tempMaxC": 6, "weatherCode": 71 },
-    { "date": "2025-01-17", "tempMinC":  0, "tempMaxC": 5, "weatherCode": 61 }
+  "location": { "name": "Chicago", "country": "United States" },
+  "days": [
+    { "date": "2025-01-16", "temperatureMin": -1, "temperatureMax": 6, "weatherCode": 71, "weather": "Slight snow" },
+    { "date": "2025-01-17", "temperatureMin":  0, "temperatureMax": 5, "weatherCode": 61, "weather": "Slight rain" }
   ]
 }</pre>
             </div>
@@ -140,7 +147,7 @@
     var p = JSON.parse(card.value || '{}');
     var r = p.responses &amp;&amp; p.responses['weather-cur-t' + (lc - 1)];
     if (r &amp;&amp; r.status === 'ok' &amp;&amp; r.completedLiveCount === (lc - 1)) {
-      var wc = r.data.weatherCode;
+      var wc = r.data.current &amp;&amp; r.data.current.weatherCode;
       if (wc >= 61 &amp;&amp; wc <= 65) {
         state.combatPenalty = -2;
         text += '\n[Combat Mod: Rain dampens the ground. Ranged attacks suffer -2.]';
@@ -169,7 +176,7 @@
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Geolocation missing</h4>
                 <p class="text-bd-text-secondary"><strong>Issue:</strong> Weather call fails because no coordinates are available.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Pass <code>lat</code>/<code>lon</code> explicitly, or check Geolocation permission first.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Pass <code>latitude</code>/<code>longitude</code> explicitly, or pass a <code>place</code> string.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Caching for too long</h4>

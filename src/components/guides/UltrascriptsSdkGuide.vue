@@ -397,7 +397,7 @@ bd.us.commit();</pre>
   var bd = state.bd || {};
   if (bd.sdk &amp;&amp; bd.sdk.hasModule('scripture')) {
     // Publish a widget instead of plain text
-    var s = { v: 1, manifest: { widgets: [{ type: 'stat-bar', label: 'HP', max: 100 }] }, history: {} };
+    var s = { v: 1, manifest: { widgets: [{ id: 'hp', type: 'bar', label: 'HP', max: 100 }] }, history: {} };
     s.history[(info &amp;&amp; info.actionCount) || 1] = { hp: state.hp || 100 };
     var card = storyCards.find(function (c) { return c.title === 'ultrascripts:state:scripture'; });
     if (card) card.value = JSON.stringify(s);

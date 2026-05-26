@@ -16,7 +16,7 @@ globalThis.Chronos = function Chronos(hook) {
 // - Season-aware weather with Markov-chain transitions
 // - Temperature simulation with smooth drift
 // - Story card-based settings (Chronos Settings card)
-// - BetterScripts widget integration
+// - Optional Ultrascripts Scripture widget integration
 //
 // Commands (by category):
 //   Status: :time, :date, :weather, :chronos
@@ -50,7 +50,7 @@ state.chronos = state.chronos ?? {
   config: {
     minutesPerTurn: 2,
     use12HourFormat: true,
-    useBetterScripts: false,
+    useUltrascripts: false,
     showTimeInOutput: true,
     weatherEnabled: true,
     enabled: true,
@@ -70,21 +70,50 @@ state.chronos = state.chronos ?? {
 };
 
 // ============================================
-// BETTERSCRIPTS PROTOCOL HELPERS
+// ULTRASCRIPTS SCRIPTURE HELPERS
 // ============================================
-// These helpers encode messages in the [[BD:...:BD]] protocol format
-// so the BetterDungeon browser extension can parse them from story output.
+// These helpers publish Chronos display state to ultrascripts:state:scripture.
+// The core time system still works without BetterDungeon.
 
-// Serializes an arbitrary message object into the BetterScripts protocol wrapper.
-// @param {Object} msg - The message payload to encode.
-// @returns {string} The protocol-wrapped JSON string.
-function bdMessage(msg) { return `[[BD:${JSON.stringify(msg)}:BD]]`; }
+function usFindCard(title) {
+  var cards = Array.isArray(storyCards) ? storyCards : [];
+  for (var i = 0; i < cards.length; i++) {
+    if (cards[i] && cards[i].title === title) return cards[i];
+  }
+  return null;
+}
 
-// Creates (or updates) a BetterScripts widget by ID.
-// @param {string} id  - Unique widget identifier (re-using an ID updates the existing widget).
-// @param {Object} cfg - Widget configuration (type, label, value, color, align, order, etc.).
-// @returns {string} The protocol-wrapped widget creation message.
-function bdWidget(id, cfg) { return bdMessage({ type: 'widget', widgetId: id, action: 'create', config: cfg }); }
+function usUpsertCard(title, value) {
+  var card = usFindCard(title);
+  if (card) card.value = value;
+  else addStoryCard(title, value);
+}
+
+function usLiveCount() {
+  return (info && info.actionCount) || 0;
+}
+
+function publishChronosScripture(values) {
+  var title = 'ultrascripts:state:scripture';
+  var existing = usFindCard(title);
+  var previous = null;
+  try { previous = existing ? JSON.parse(existing.value || '{}') : null; } catch (e) {}
+
+  var payload = {
+    v: 1,
+    manifest: {
+      widgets: [
+        { id: 'timeClock', type: 'stat', label: 'Time' },
+        { id: 'timeDate', type: 'text', label: 'Date' },
+        { id: 'timeWeather', type: 'stat', label: 'Weather' }
+      ]
+    },
+    history: previous && previous.history ? previous.history : {}
+  };
+
+  payload.history[usLiveCount()] = values;
+  usUpsertCard(title, JSON.stringify(payload));
+}
 
 // ============================================
 // CONSTANTS
@@ -238,7 +267,7 @@ const SEASON_TEMPS = {
 
 // Default entry text for the "Chronos Settings" story card.
 // Players edit the values after each colon to configure the system.
-const SETTINGS_CARD_ENTRY = '--- General ---\n> Enabled: true\n> Minutes Per Turn: 2\n\n--- Display ---\n> 12-Hour Format: true\n> Show Time In Output: true\n> Use BetterScripts: false\n\n--- Weather ---\n> Weather Enabled: true\n> Weather Change Cooldown: 15\n> Temperature Unit: F\n\n--- Clock ---\n> Wake Hour: 7\n> Current Time: 7:00 AM\n> Current Date: June 1, 2026';
+const SETTINGS_CARD_ENTRY = '--- General ---\n> Enabled: true\n> Minutes Per Turn: 2\n\n--- Display ---\n> 12-Hour Format: true\n> Show Time In Output: true\n> Use Ultrascripts: false\n\n--- Weather ---\n> Weather Enabled: true\n> Weather Change Cooldown: 15\n> Temperature Unit: F\n\n--- Clock ---\n> Wake Hour: 7\n> Current Time: 7:00 AM\n> Current Date: June 1, 2026';
 
 // Description shown on the Chronos Settings story card.
 const SETTINGS_CARD_DESCRIPTION = 'Chronos time system settings. Organized by category. Edit the values after each colon to configure. Time and date update automatically.';
@@ -308,7 +337,7 @@ function syncSettingsFromCard(card) {
   c.minutesPerTurn = readSetting(card, 'Minutes Per Turn', c.minutesPerTurn);
   c.use12HourFormat = readSetting(card, '12-Hour Format', c.use12HourFormat);
   c.showTimeInOutput = readSetting(card, 'Show Time In Output', c.showTimeInOutput);
-  c.useBetterScripts = readSetting(card, 'Use BetterScripts', c.useBetterScripts);
+  c.useUltrascripts = readSetting(card, 'Use Ultrascripts', c.useUltrascripts);
   c.weatherEnabled = readSetting(card, 'Weather Enabled', c.weatherEnabled);
   c.weatherChangeCooldown = readSetting(card, 'Weather Change Cooldown', c.weatherChangeCooldown);
   c.temperatureUnit = readSetting(card, 'Temperature Unit', c.temperatureUnit);
@@ -875,7 +904,7 @@ const CHRONOS_COMMANDS = {
       } else {
         out += '\nWeather: Disabled';
       }
-      out += `\nDisplay: ${s.config.useBetterScripts ? 'Widgets' : s.config.showTimeInOutput ? 'Text' : 'Context only'}`;
+      out += `\nDisplay: ${s.config.useUltrascripts ? 'Widgets' : s.config.showTimeInOutput ? 'Text' : 'Context only'}`;
       out += '\n---';
       return { output: out, isCommand: true };
     }
@@ -967,10 +996,8 @@ if (hook === "context") {
 
   syncTimeToCard(settingsCard);
 
-  // Strip BetterScripts protocol messages from the text before injecting into AI context.
+  // Strip Ultrascripts protocol messages from the text before injecting into AI context.
   let text = globalThis.text;
-  text = text.replace(/\[\[BD:[\s\S]*?:BD\]\]/g, '');
-
   const contextMemory = info.memoryLength ? text.slice(0, info.memoryLength) : '';
   let context = info.memoryLength ? text.slice(info.memoryLength) : text;
 
@@ -1007,7 +1034,7 @@ if (hook === "output") {
     isCommandOutput = true;
   }
 
-  if (!state.chronos.config.useBetterScripts) {
+  if (!state.chronos.config.useUltrascripts) {
     if (!isCommandOutput && state.chronos.config.showTimeInOutput) {
       const s = state.chronos;
       const period = getTimePeriod(s.hour);
@@ -1035,25 +1062,17 @@ if (hook === "output") {
   const period = getTimePeriod(s.hour);
   const isNight = period.name === 'Night' || period.name === 'Midnight';
 
-  let widgets = '';
-
-  widgets += bdWidget('time-clock', {
-    type: 'stat',
-    label: period.icon,
-    value: getTimeString(),
-    color: isNight ? '#94a3b8' : '#fbbf24',
-    align: 'center',
-    order: 1
-  });
-
-  widgets += bdWidget('time-date', {
-    type: 'stat',
-    label: '\u{1F4C5}',
-    value: getWeekday() + ', ' + getMonthName() + ' ' + s.day,
-    color: '#60a5fa',
-    align: 'center',
-    order: 2
-  });
+  const scriptureValues = {
+    timeClock: {
+      value: getTimeString(),
+      color: isNight ? '#94a3b8' : '#fbbf24'
+    },
+    timeDate: getWeekday() + ', ' + getMonthName() + ' ' + s.day,
+    timeWeather: {
+      value: 'Weather disabled',
+      color: '#94a3b8'
+    }
+  };
 
   if (s.config.weatherEnabled) {
     const cond = WEATHER_CONDITIONS[s.weather.current];
@@ -1064,18 +1083,15 @@ if (hook === "output") {
       } else {
         tempStr = s.weather.temperature + '\u{00B0}F';
       }
-      widgets += bdWidget('time-weather', {
-        type: 'stat',
-        label: cond.icon,
+      scriptureValues.timeWeather = {
         value: cond.label + ', ' + tempStr,
-        color: '#34d399',
-        align: 'center',
-        order: 3
-      });
+        color: '#34d399'
+      };
     }
   }
 
-  globalThis.text = output + widgets;
+  publishChronosScripture(scriptureValues);
+  globalThis.text = output;
   return;
 
 }

@@ -112,8 +112,8 @@
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-2">
               <div class="flex items-center gap-2 flex-wrap">
                 <h4 class="font-semibold text-bd-blue text-[13px]"><code>webfetch.fetch</code></h4>
-                <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-pink/20 text-bd-pink">unsafe</span>
-                <span class="text-[10px] text-bd-text-muted">3000ms</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
+                <span class="text-[10px] text-bd-text-muted">30000ms max</span>
               </div>
               <p>Performs a single HTTP(S) request to an origin the player has approved.</p>
               <div class="grid md:grid-cols-2 gap-3 mt-2">
@@ -121,21 +121,26 @@
                   <div class="font-mono text-[10px] text-bd-green font-bold mb-1">args</div>
                   <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
   "url": "https://api.example.com/data",
-  "options": {
-    "method": "GET" | "POST",
-    "headers": { "Accept": "application/json" },
-    "body": "...",        // optional string
-    "responseType": "json" | "text"
-  }
+  "method": "GET",
+  "headers": { "Accept": "application/json" },
+  "timeoutMs": 15000,
+  "maxBodyBytes": 50000
 }</pre>
                 </div>
                 <div>
                   <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">data (on ok)</div>
                   <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
   "status": 200,
-  "ok": true,
   "headers": { ... },
-  "body": { ... } | "raw text"
+  "bodyEncoding": "text",
+  "body": "raw response text",
+  "truncated": false,
+  "request": {
+    "url": "https://api.example.com/data",
+    "origin": "https://api.example.com",
+    "method": "GET",
+    "strippedHeaders": []
+  }
 }</pre>
                 </div>
               </div>
@@ -145,8 +150,8 @@
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-2">
               <div class="flex items-center gap-2 flex-wrap">
                 <h4 class="font-semibold text-bd-blue text-[13px]"><code>webfetch.search</code></h4>
-                <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-pink/20 text-bd-pink">unsafe</span>
-                <span class="text-[10px] text-bd-text-muted">3000ms</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
+                <span class="text-[10px] text-bd-text-muted">30000ms max</span>
               </div>
               <p>Web search lookup. Returns ranked result snippets for use in narrative grounding or trivia lookups.</p>
               <div class="grid md:grid-cols-2 gap-3 mt-2">
@@ -154,16 +159,23 @@
                   <div class="font-mono text-[10px] text-bd-green font-bold mb-1">args</div>
                   <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
   "query": "string",
-  "limit": 5            // optional, 1-10
+  "maxResults": 5       // optional, 1-10
 }</pre>
                 </div>
                 <div>
                   <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">data (on ok)</div>
                   <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
   "query": "...",
-  "results": [
-    { "title": "...", "url": "...", "snippet": "..." }
-  ]
+  "provider": "duckduckgo",
+  "status": 200,
+  "heading": "...",
+  "answer": "...",
+  "abstractText": "...",
+  "abstractUrl": "...",
+  "related": [
+    { "text": "...", "url": "..." }
+  ],
+  "truncated": false
 }</pre>
                 </div>
               </div>
@@ -193,7 +205,9 @@
     "op": "fetch",
     "args": {
       "url": "https://api.example.com/adventure/stats",
-      "options": { "method": "GET", "responseType": "json" }
+      "method": "GET",
+      "headers": { "Accept": "application/json" },
+      "maxBodyBytes": 50000
     }
   }],
   "acks": []
@@ -207,8 +221,8 @@
       "status": "ok",
       "data": {
         "status": 200,
-        "ok": true,
-        "body": { "worldName": "Aethelgard", "monstersSlain": 124 }
+        "bodyEncoding": "text",
+        "body": "{ \"worldName\": \"Aethelgard\", \"monstersSlain\": 124 }"
       },
       "completedLiveCount": 12
     }
@@ -249,7 +263,9 @@
       op: 'fetch',
       args: {
         url: 'https://api.example.com/adventure/lore',
-        options: { method: 'GET', responseType: 'json' }
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+        maxBodyBytes: 50000
       }
     }],
     acks: []
@@ -276,7 +292,7 @@
     var p = JSON.parse(card.value || '{}');
     var r = p.responses && p.responses['fetch-lore-t' + lc];
     if (r && r.status === 'ok' && r.completedLiveCount === lc) {
-      state.lore = r.data.body;  // body parsed as JSON
+      state.lore = JSON.parse(r.data.body || '{}');
     }
   } catch (e) {}
 })();</pre>

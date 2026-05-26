@@ -177,9 +177,8 @@
   ],
   "model": "google/gemini-2.0-flash-exp:free",
   "temperature": 0.7,
-  "max_tokens": 256,
-  "top_p": 1.0,                  // optional
-  "response_format": { "type": "json_object" }  // optional
+  "maxTokens": 256,
+  "responseFormat": { "type": "json_object" }  // optional
 }</pre>
                 </div>
                 <div>
@@ -286,7 +285,7 @@
                   </tr>
                   <tr class="border-b border-bd-border-subtle/50">
                     <td class="py-2 px-2"><code class="text-bd-green">perCallEstimateCap</code></td>
-                    <td class="py-2 px-2">Estimates the cost of a single call from <code>max_tokens</code> + model price; rejects if it exceeds this dollar cap.</td>
+                    <td class="py-2 px-2">Estimates the cost of a single call from <code>maxTokens</code> + model price; rejects if it exceeds this dollar cap.</td>
                   </tr>
                   <tr class="border-b border-bd-border-subtle/50">
                     <td class="py-2 px-2"><code class="text-bd-green">dailySpendCap</code></td>
@@ -333,7 +332,7 @@
     "args": {
       "model": "google/gemini-2.0-flash-exp:free",
       "temperature": 0.7,
-      "max_tokens": 120,
+      "maxTokens": 120,
       "messages": [
         { "role": "system", "content": "You are a Co-GM. Output ONE sentence describing the mystical ambient noise of the current scene." },
         { "role": "user",   "content": "Scene: A crumbling watchtower at dusk. Damp moss. Distant thunder." }
@@ -396,7 +395,7 @@
       args: {
         model: 'google/gemini-2.0-flash-exp:free',
         temperature: 0.7,
-        max_tokens: 60,
+        maxTokens: 60,
         messages: [
           { role: 'system', content: sys },
           { role: 'user',   content: 'Current scene context:\n' + text }
@@ -448,8 +447,8 @@
       args: {
         model: 'google/gemini-2.0-flash-exp:free',
         temperature: 0.1,
-        max_tokens: 200,
-        response_format: { type: 'json_object' },
+        maxTokens: 200,
+        responseFormat: { type: 'json_object' },
         messages: [
           { role: 'system', content: sys },
           { role: 'user',   content: text }
@@ -477,7 +476,8 @@
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Library helper
 state.bd = state.bd || {};
 state.bd.pickAiModel = function (cfg) {
-  var freeOnly = cfg &amp;&amp; cfg.ai &amp;&amp; cfg.ai.costControls &amp;&amp; cfg.ai.costControls.freeModelsOnly;
+  var ai = cfg &amp;&amp; cfg.ultrascripts &amp;&amp; cfg.ultrascripts.ai;
+  var freeOnly = ai &amp;&amp; ai.costControls &amp;&amp; ai.costControls.freeModelsOnly;
   return freeOnly
     ? 'google/gemini-2.0-flash-exp:free'
     : 'anthropic/claude-3.5-sonnet';
@@ -509,7 +509,7 @@ state.bd.pickAiModel = function (cfg) {
                   <li>&middot; Pick a default <strong>free-tier</strong> model so free-only players can use the scenario unchanged.</li>
                   <li>&middot; Always check <code>sdk.config.ultrascripts.ai.configured</code> before the first call.</li>
                   <li>&middot; Filter responses by <code>completedLiveCount</code> on every read.</li>
-                  <li>&middot; Cap <code>max_tokens</code> tightly. The smallest useful number wins on both latency and cost.</li>
+                  <li>&middot; Cap <code>maxTokens</code> tightly. The smallest useful number wins on both latency and cost.</li>
                 </ul>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/30 space-y-1.5">
@@ -549,7 +549,7 @@ state.bd.pickAiModel = function (cfg) {
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Cost cap blocked the call</h4>
                 <p class="text-bd-text-secondary"><strong>Issue:</strong> <code>err</code> with <code>error.code === "cost_cap_exceeded"</code>.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Switch to a cheaper or free model; reduce <code>max_tokens</code>; or instruct the player to raise their daily/monthly cap.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Switch to a cheaper or free model; reduce <code>maxTokens</code>; or instruct the player to raise their daily/monthly cap.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Stale response after undo</h4>
@@ -558,7 +558,7 @@ state.bd.pickAiModel = function (cfg) {
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">JSON output isn't pure JSON</h4>
-                <p class="text-bd-text-secondary"><strong>Issue:</strong> Even with <code>response_format: json_object</code>, models occasionally wrap output in code fences.</p>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> Even with <code>responseFormat: json_object</code>, models occasionally wrap output in code fences.</p>
                 <p class="text-bd-text-muted"><strong>Fix:</strong> Strip leading/trailing non-JSON before <code>JSON.parse</code>; or use a stricter system prompt asking for JSON only.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
@@ -569,7 +569,7 @@ state.bd.pickAiModel = function (cfg) {
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Timeout on a long context</h4>
                 <p class="text-bd-text-secondary"><strong>Issue:</strong> Response comes back <code>timeout</code> on huge prompts.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Shrink prompt with a summarization pass, lower <code>max_tokens</code>, or pick a faster model.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Shrink prompt with a summarization pass, lower <code>maxTokens</code>, or pick a faster model.</p>
               </div>
             </div>
           </div>
