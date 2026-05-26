@@ -122,7 +122,7 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { 
-  LayoutGrid, ScrollText, Bookmark, Drama, Code, BookOpen,
+  LayoutGrid, ScrollText, Bookmark, Drama, Code, BookOpen, Rocket,
   Link2, GitPullRequest, MessageCircle, ExternalLink, Heart, Sparkles, X
 } from 'lucide-vue-next'
 
@@ -188,6 +188,7 @@ const mainNavItems = [
   { path: '/plot-components', label: 'Plot Components', icon: Bookmark, count: null },
   { path: '/story-cards', label: 'Story Cards', icon: Drama, count: null },
   { path: '/scripts', label: 'Scripts', icon: Code, count: null },
+  { path: '/ultrascripts', label: 'Ultrascripts', icon: Rocket, count: null },
   { path: '/guides', label: 'Guides', icon: BookOpen, count: null },
 ]
 

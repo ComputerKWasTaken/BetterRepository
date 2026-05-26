@@ -7,6 +7,7 @@ import AIInstructionsPage from '@/pages/AIInstructionsPage.vue'
 import PlotComponentsPage from '@/pages/PlotComponentsPage.vue'
 import StoryCardsPage from '@/pages/StoryCardsPage.vue'
 import ScriptsPage from '@/pages/ScriptsPage.vue'
+import UltrascriptsPage from '@/pages/UltrascriptsPage.vue'
 import ContributePage from '@/pages/ContributePage.vue'
 import EcosystemPage from '@/pages/EcosystemPage.vue'
 import CreditsPage from '@/pages/CreditsPage.vue'
@@ -75,14 +76,26 @@ const routes = [
     }
   },
   {
+    path: '/ultrascripts',
+    name: 'Ultrascripts',
+    component: UltrascriptsPage,
+    meta: {
+      title: 'Ultrascripts - BetterRepository',
+      description: 'BetterDungeon\'s cards-based scripting platform for AI Dungeon. Two-way communication, dynamic widgets, external data, and platform-aware modules over the Story Card transport.',
+      ogTitle: 'Ultrascripts - BetterRepository',
+      ogDescription: 'BetterDungeon\'s shipped scripting platform: Scripture widgets, WebFetch, Provider AI, Clock, Geolocation, Weather, Network, System, and SDK modules over a unified Story Card runtime.',
+      path: '/ultrascripts'
+    }
+  },
+  {
     path: '/guides',
     name: 'Guides',
     component: GuidesPage,
     meta: {
       title: 'Guides - BetterRepository',
-      description: 'Comprehensive guides for AI Dungeon covering AI Instructions, Plot Components, Story Cards, Scripts, Symbols & Commands, Ultrascripts, and Advanced Settings.',
+      description: 'Comprehensive guides for AI Dungeon covering AI Instructions, Plot Components, Story Cards, Scripts, Symbols & Commands, and Advanced Settings.',
       ogTitle: 'Guides - BetterRepository',
-      ogDescription: 'Everything you need to master AI Dungeon. In-depth guides on AI Instructions, Plot Components, Story Cards, Scripting, Ultrascripts, Symbols & Commands, and Advanced Settings.',
+      ogDescription: 'Everything you need to master AI Dungeon. In-depth guides on AI Instructions, Plot Components, Story Cards, Scripting, Symbols & Commands, and Advanced Settings.',
       path: '/guides'
     }
   },

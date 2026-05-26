@@ -398,7 +398,7 @@ modifier(text);</pre>
                 Ultrascripts establishes a high-performance, bidirectional event-driven bridge between browser variables and AI Dungeon client instances, bypassing formatting limitations entirely.
               </p>
               <div class="flex items-center gap-2">
-                <router-link to="/guides?tab=ultrascripts" class="text-bd-accent-primary hover:underline font-semibold">Learn more in the Ultrascripts Guide &rarr;</router-link>
+                <router-link to="/ultrascripts" class="text-bd-accent-primary hover:underline font-semibold">Learn more in the Ultrascripts section &rarr;</router-link>
               </div>
             </div>
           </div>

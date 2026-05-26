@@ -914,9 +914,9 @@ modifier(text);</pre>
             and a real path forward for web access, clocks, local AI, and more.
           </p>
           <div class="flex items-center gap-3 flex-wrap">
-            <router-link to="/guides?tab=ultrascripts" class="btn btn-primary text-sm">
+            <router-link to="/ultrascripts" class="btn btn-primary text-sm">
               <Terminal class="w-4 h-4" />
-              Read the Ultrascripts Preview
+              Explore Ultrascripts
             </router-link>
             <span class="text-xs text-bd-text-muted">Teaser for what's coming in BD V2</span>
           </div>

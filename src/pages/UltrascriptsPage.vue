@@ -1,0 +1,307 @@
+<template>
+  <div class="space-y-8">
+    <!-- Page Header with animated hero -->
+    <header class="ultrascripts-hero relative overflow-hidden rounded-2xl py-12 px-6">
+      <!-- Animated background orbs -->
+      <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none" aria-hidden="true">
+        <div class="hero-orb hero-orb--purple" />
+        <div class="hero-orb hero-orb--cyan" />
+        <div class="hero-orb hero-orb--green" />
+      </div>
+
+      <div class="relative z-10 flex items-start gap-4 flex-wrap">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-bd-purple/25 to-bd-cyan/20 flex items-center justify-center animate-float flex-shrink-0 shadow-lg shadow-bd-purple/10">
+          <Rocket class="w-7 h-7 text-bd-purple" />
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap mb-1">
+            <h1 class="text-2xl md:text-3xl font-bold text-bd-text-primary tracking-tight">
+              <span class="text-gradient">Ultrascripts</span>
+            </h1>
+            <span class="text-[10px] px-2 py-0.5 rounded-full font-semibold bg-bd-purple/20 text-bd-purple border border-bd-purple/30">Platform</span>
+          </div>
+          <p class="text-bd-text-secondary leading-relaxed max-w-2xl">
+            BetterDungeon's cards-based runtime for AI Dungeon scripting. Two-way communication, dynamic widgets,
+            external data, and platform-aware modules &mdash; all over the Story Card transport.
+          </p>
+          <!-- Quick Stats -->
+          <div class="mt-3 flex items-center gap-3 flex-wrap text-[11px] text-bd-text-muted">
+            <span class="inline-flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-bd-green" />
+              <strong class="text-bd-green">Shipped</strong>
+            </span>
+            <span class="text-bd-border-default">|</span>
+            <span><strong class="text-bd-text-primary">9</strong> first-party modules</span>
+            <span class="text-bd-border-default">|</span>
+            <span>Protocol <strong class="text-bd-text-primary">v1</strong></span>
+            <span class="text-bd-border-default">|</span>
+            <span>Chromium, Firefox, Android</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <div class="ultrascripts-tab-bar rounded-xl bg-bd-bg-secondary border border-bd-border-subtle p-2">
+      <div class="flex flex-wrap gap-1.5">
+        <!-- Foundation tabs -->
+        <button
+          v-for="tab in foundationTabs"
+          :key="tab.id"
+          @click="switchTab(tab.id)"
+          class="us-tab us-tab--foundation"
+          :class="[
+            activeTab === tab.id ? 'us-tab--active' : 'us-tab--inactive',
+            activeTab === tab.id ? tab.activeClass : ''
+          ]"
+        >
+          <component :is="tab.icon" class="w-4 h-4" />
+          <span>{{ tab.label }}</span>
+          <span class="us-tab__dot" :class="tab.dotClass" />
+        </button>
+
+        <!-- Separator -->
+        <div class="hidden sm:flex items-center px-1">
+          <div class="w-px h-5 bg-bd-border-subtle" />
+        </div>
+
+        <!-- Module tabs -->
+        <button
+          v-for="tab in moduleTabs"
+          :key="tab.id"
+          @click="switchTab(tab.id)"
+          class="us-tab us-tab--module"
+          :class="activeTab === tab.id ? 'us-tab--active-module' : 'us-tab--inactive'"
+        >
+          <component :is="tab.icon" class="w-3.5 h-3.5" />
+          <span>{{ tab.label }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Tab Content -->
+    <UltrascriptsGuide v-if="activeTab === 'overview'" />
+    <UltrascriptsArchitectureGuide v-if="activeTab === 'architecture'" />
+    <UltrascriptsScriptureGuide v-if="activeTab === 'scripture'" />
+    <UltrascriptsFetchAiGuide v-if="activeTab === 'fetch-ai'" />
+    <UltrascriptsSdkLifecycleGuide v-if="activeTab === 'sdk'" />
+    <UltrascriptsUtilitiesGuide v-if="activeTab === 'utilities'" />
+    <UltrascriptsAuthoringGuide v-if="activeTab === 'authoring'" />
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import UltrascriptsGuide from '@/components/guides/UltrascriptsGuide.vue'
+import UltrascriptsArchitectureGuide from '@/components/guides/UltrascriptsArchitectureGuide.vue'
+import UltrascriptsScriptureGuide from '@/components/guides/UltrascriptsScriptureGuide.vue'
+import UltrascriptsFetchAiGuide from '@/components/guides/UltrascriptsFetchAiGuide.vue'
+import UltrascriptsSdkLifecycleGuide from '@/components/guides/UltrascriptsSdkLifecycleGuide.vue'
+import UltrascriptsUtilitiesGuide from '@/components/guides/UltrascriptsUtilitiesGuide.vue'
+import UltrascriptsAuthoringGuide from '@/components/guides/UltrascriptsAuthoringGuide.vue'
+import {
+  Compass, Network, LayoutDashboard, Globe, Terminal, Wrench, Wand2, Rocket
+} from 'lucide-vue-next'
+
+const route = useRoute()
+const router = useRouter()
+
+// Foundation tabs cover orientation and platform-level concepts shared across modules.
+const foundationTabs = [
+  { id: 'overview', label: 'Overview', icon: Compass, dotClass: 'dot--purple', activeClass: 'us-tab--active-purple' },
+  { id: 'architecture', label: 'Architecture', icon: Network, dotClass: 'dot--cyan', activeClass: 'us-tab--active-cyan' },
+  { id: 'authoring', label: 'Building Modules', icon: Wand2, dotClass: 'dot--amber', activeClass: 'us-tab--active-amber' },
+]
+
+// Module tabs cover deep-dive guides per shipped module family.
+const moduleTabs = [
+  { id: 'scripture', label: 'Scripture: Widgets', icon: LayoutDashboard },
+  { id: 'fetch-ai', label: 'WebFetch & AI', icon: Globe },
+  { id: 'sdk', label: 'SDK & Lifecycle', icon: Terminal },
+  { id: 'utilities', label: 'System & Utilities', icon: Wrench },
+]
+
+const allTabs = [...foundationTabs, ...moduleTabs]
+const validTabIds = allTabs.map(t => t.id)
+const activeTab = ref('overview')
+
+// Switch active tab and persist selection in the URL for shareable deep links.
+const switchTab = (tabId) => {
+  activeTab.value = tabId
+  router.replace({ query: { ...route.query, tab: tabId } })
+}
+
+// Initialize from URL query (?tab=...) so direct links land on the right section.
+onMounted(() => {
+  if (route.query.tab && validTabIds.includes(route.query.tab)) {
+    activeTab.value = route.query.tab
+  }
+})
+
+// Sync with browser back/forward and external link changes.
+watch(() => route.query.tab, (newTab) => {
+  if (newTab && validTabIds.includes(newTab)) {
+    activeTab.value = newTab
+  } else if (!newTab) {
+    activeTab.value = 'overview'
+  }
+})
+</script>
+
+<style scoped>
+/* === Hero background === */
+.ultrascripts-hero {
+  background: var(--bd-bg-secondary);
+  border: 1px solid var(--bd-border-subtle);
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.hero-orb--purple {
+  width: 240px;
+  height: 240px;
+  background: var(--bd-purple);
+  top: -50px;
+  right: -30px;
+  animation: float 9s ease-in-out infinite;
+}
+
+.hero-orb--cyan {
+  width: 180px;
+  height: 180px;
+  background: var(--bd-cyan);
+  bottom: -40px;
+  left: 8%;
+  animation: float 11s ease-in-out infinite reverse;
+}
+
+.hero-orb--green {
+  width: 140px;
+  height: 140px;
+  background: var(--bd-green);
+  top: 15%;
+  left: 45%;
+  animation: float 13s ease-in-out infinite 2s;
+  opacity: 0.18;
+}
+
+/* === Tab Bar === */
+.ultrascripts-tab-bar {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.ultrascripts-tab-bar::-webkit-scrollbar {
+  display: none;
+}
+
+/* === Tab base === */
+.us-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  position: relative;
+}
+
+/* === Inactive state (shared) === */
+.us-tab--inactive {
+  color: var(--bd-text-muted);
+  background: transparent;
+}
+
+.us-tab--inactive:hover {
+  color: var(--bd-text-primary);
+  background: var(--bd-bg-tertiary);
+}
+
+/* === Foundation tab dot indicators === */
+.us-tab__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.dot--purple { background: var(--bd-purple); }
+.dot--cyan { background: var(--bd-cyan); }
+.dot--amber { background: var(--bd-amber); }
+
+.us-tab--inactive .us-tab__dot {
+  opacity: 0.4;
+}
+
+.us-tab--inactive:hover .us-tab__dot {
+  opacity: 0.7;
+}
+
+/* === Active foundation tabs with color-coded backgrounds === */
+.us-tab--active {
+  color: var(--bd-text-primary);
+  font-weight: 600;
+}
+
+.us-tab--active .us-tab__dot {
+  opacity: 1;
+  box-shadow: 0 0 6px currentColor;
+}
+
+.us-tab--active-purple {
+  background: rgba(168, 85, 247, 0.12);
+  border-color: rgba(168, 85, 247, 0.25);
+  color: var(--bd-purple);
+}
+
+.us-tab--active-purple .us-tab__dot {
+  box-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
+}
+
+.us-tab--active-cyan {
+  background: rgba(6, 182, 212, 0.12);
+  border-color: rgba(6, 182, 212, 0.25);
+  color: var(--bd-cyan);
+}
+
+.us-tab--active-cyan .us-tab__dot {
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
+}
+
+.us-tab--active-amber {
+  background: rgba(251, 191, 36, 0.12);
+  border-color: rgba(251, 191, 36, 0.25);
+  color: var(--bd-amber);
+}
+
+.us-tab--active-amber .us-tab__dot {
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+}
+
+/* === Active module tab with neutral accent === */
+.us-tab--active-module {
+  background: var(--bd-bg-tertiary);
+  border-color: var(--bd-border-default);
+  color: var(--bd-text-primary);
+  font-weight: 600;
+}
+
+/* === Module tab styling that's slightly smaller and subtler === */
+.us-tab--module {
+  font-size: 0.8125rem;
+  padding: 0.4375rem 0.75rem;
+}
+</style>

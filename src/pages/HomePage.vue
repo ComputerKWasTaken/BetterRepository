@@ -253,7 +253,7 @@
               <ArrowRight class="w-3.5 h-3.5" />
             </router-link>
             <router-link
-              to="/guides?tab=ultrascripts"
+              to="/ultrascripts"
               class="inline-flex items-center gap-2 text-sm font-medium text-bd-purple hover:text-bd-purple/80 transition-colors"
             >
               Learn About Ultrascripts

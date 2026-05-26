@@ -356,7 +356,7 @@
             </p>
 
             <div class="grid md:grid-cols-2 gap-3">
-              <router-link to="/guides?tab=ultrascripts-scripture" class="block p-4 rounded-lg bg-gradient-to-br from-bd-green/10 to-transparent border border-bd-green/30 hover:border-bd-green/50 transition-colors group">
+              <router-link to="/ultrascripts?tab=scripture" class="block p-4 rounded-lg bg-gradient-to-br from-bd-green/10 to-transparent border border-bd-green/30 hover:border-bd-green/50 transition-colors group">
                 <div class="flex items-center gap-2 mb-2">
                   <LayoutDashboard class="w-5 h-5 text-bd-green" />
                   <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-green transition-colors">Scripture: Widgets &amp; UI</h4>
@@ -364,7 +364,7 @@
                 <p class="text-bd-text-muted">Dynamic health bars, stat grids, quest trackers, and dashboards. JSON schemas, state binding, and rendering recipes.</p>
               </router-link>
 
-              <router-link to="/guides?tab=ultrascripts-fetch-ai" class="block p-4 rounded-lg bg-gradient-to-br from-bd-blue/10 to-transparent border border-bd-blue/30 hover:border-bd-blue/50 transition-colors group">
+              <router-link to="/ultrascripts?tab=fetch-ai" class="block p-4 rounded-lg bg-gradient-to-br from-bd-blue/10 to-transparent border border-bd-blue/30 hover:border-bd-blue/50 transition-colors group">
                 <div class="flex items-center gap-2 mb-2">
                   <Globe class="w-5 h-5 text-bd-blue" />
                   <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-blue transition-colors">WebFetch &amp; Provider AI</h4>
@@ -372,7 +372,7 @@
                 <p class="text-bd-text-muted">Consent-gated HTTP requests, OpenRouter LLM pipelines, API data fetching, and Co-GM assistant recipes.</p>
               </router-link>
 
-              <router-link to="/guides?tab=ultrascripts-sdk" class="block p-4 rounded-lg bg-gradient-to-br from-bd-cyan/10 to-transparent border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">
+              <router-link to="/ultrascripts?tab=sdk" class="block p-4 rounded-lg bg-gradient-to-br from-bd-cyan/10 to-transparent border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">
                 <div class="flex items-center gap-2 mb-2">
                   <Terminal class="w-5 h-5 text-bd-cyan" />
                   <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-cyan transition-colors">SDK &amp; Lifecycle</h4>
@@ -380,7 +380,7 @@
                 <p class="text-bd-text-muted">Heartbeat detection, version queries, config introspection, wire protocol details, and undo-aware state patterns.</p>
               </router-link>
 
-              <router-link to="/guides?tab=ultrascripts-utilities" class="block p-4 rounded-lg bg-gradient-to-br from-bd-amber/10 to-transparent border border-bd-amber/30 hover:border-bd-amber/50 transition-colors group">
+              <router-link to="/ultrascripts?tab=utilities" class="block p-4 rounded-lg bg-gradient-to-br from-bd-amber/10 to-transparent border border-bd-amber/30 hover:border-bd-amber/50 transition-colors group">
                 <div class="flex items-center gap-2 mb-2">
                   <Wrench class="w-5 h-5 text-bd-amber" />
                   <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-amber transition-colors">System &amp; Utilities</h4>
