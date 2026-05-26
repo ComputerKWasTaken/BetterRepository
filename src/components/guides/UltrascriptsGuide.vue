@@ -1,359 +1,453 @@
 <template>
-  <div class="space-y-6 animate-fade-in">
-    <section class="relative overflow-hidden rounded-2xl border border-bd-border-subtle">
-      <div class="absolute inset-0 bg-gradient-to-br from-bd-accent-primary/15 via-bd-cyan/10 to-bd-green/15" aria-hidden="true" />
-      <div class="absolute inset-0 pointer-events-none opacity-40" aria-hidden="true">
-        <div class="absolute -top-20 -right-16 w-80 h-80 rounded-full bg-bd-accent-primary/30 blur-3xl animate-float" />
-        <div class="absolute -bottom-24 -left-12 w-80 h-80 rounded-full bg-bd-cyan/25 blur-3xl animate-float" style="animation-delay: 2s" />
-      </div>
-
-      <div class="relative p-8 md:p-12 space-y-5">
-        <div class="flex flex-wrap items-center gap-2">
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-bd-accent-primary/20 text-bd-accent-light">
-            <Sparkles class="w-3 h-3" />
-            The new scripting foundation
-          </span>
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-bd-green/20 text-bd-green">
-            <CheckCircle2 class="w-3 h-3" />
-            Built for real scenarios
-          </span>
+  <!-- Table of Contents - Sticky Sidebar -->
+  <div class="flex gap-6 animate-fade-in">
+    <!-- TOC Sidebar -->
+    <aside class="hidden lg:block w-56 flex-shrink-0">
+      <div class="sticky top-4 space-y-2">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider">Contents</h3>
+          <div class="flex gap-1">
+            <button @click="expandAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Expand all">
+              <ChevronDown class="w-3 h-3" />
+            </button>
+            <button @click="collapseAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Collapse all">
+              <ChevronUp class="w-3 h-3" />
+            </button>
+          </div>
         </div>
-
-        <div class="space-y-4 max-w-3xl">
-          <h1 class="text-4xl md:text-5xl font-bold text-bd-text-primary tracking-tight leading-[1.1]">
-            Ultrascripts makes scenarios feel <span class="text-gradient">alive</span>, not just clever.
-          </h1>
-          <p class="text-lg text-bd-text-secondary leading-relaxed">
-            Ultrascripts replaces BetterScripts, but the real upgrade is bigger than widgets. It lets a scenario track
-            itself better, react better, and present itself better, so the whole experience feels more intentional
-            instead of more improvised.
-          </p>
-          <p class="text-sm text-bd-text-muted leading-relaxed">
-            If BetterScripts made scenarios feel decorated, Ultrascripts makes them feel designed.
-          </p>
-        </div>
+        <template v-for="section in guideSections" :key="section.id">
+          <div v-if="section.isHeader" class="pt-3 pb-1 px-3 text-[10px] font-bold uppercase tracking-widest text-bd-text-muted">
+            {{ section.label }}
+          </div>
+          <button
+            v-else
+            @click="scrollToGuideSection(section.id)"
+            class="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors hover:bg-bd-bg-tertiary"
+            :class="[
+              isGuideSectionExpanded(section.id) ? 'text-bd-text-primary' : 'text-bd-text-muted'
+            ]"
+          >
+            {{ section.label }}
+          </button>
+        </template>
       </div>
-    </section>
+    </aside>
 
-    <section class="card space-y-5">
-      <div class="flex items-center gap-2">
-        <HeartHandshake class="w-5 h-5 text-bd-accent-primary" />
-        <h2 class="text-lg font-semibold text-bd-text-primary">Why people should care</h2>
-      </div>
-      <p class="text-bd-text-secondary">
-        Ultrascripts matters because it changes what a scenario can feel like in play.
-      </p>
+    <!-- Main Content -->
+    <div class="flex-1 space-y-4 min-w-0">
 
-      <div class="grid md:grid-cols-2 gap-3">
-        <div class="p-5 rounded-xl bg-gradient-to-br from-bd-green/10 to-transparent border border-bd-green/30">
-          <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-bd-green/20 flex items-center justify-center flex-shrink-0">
-              <LayoutDashboard class="w-5 h-5 text-bd-green" />
+      <!-- ===================== WHAT IS ULTRASCRIPTS ===================== -->
+      <section id="guide-what-is" class="card">
+        <button
+          @click="toggleGuideSection('what-is')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Sparkles class="w-5 h-5 text-bd-accent-primary" />
+            What Is Ultrascripts
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('what-is') }"
+          />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('what-is')" class="mt-4 space-y-6">
+            <p class="text-bd-text-secondary">
+              Ultrascripts is BetterDungeon's second-generation scripting bridge for AI Dungeon. It replaces BetterScripts with a unified runtime that lets scenario scripts publish dynamic UI, call external APIs, query real-world data, and communicate bidirectionally with the BetterDungeon extension — all through AI Dungeon's existing Story Card system.
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-3 text-xs">
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
+                <h3 class="font-semibold text-bd-text-primary mb-1.5 flex items-center gap-2">
+                  <LayoutDashboard class="w-4 h-4 text-bd-green" />
+                  Dynamic UI Widgets
+                </h3>
+                <p class="text-bd-text-secondary">
+                  Scripture renders live health bars, stat grids, quest trackers, and dashboards directly in the player's browser, powered by JSON state cards.
+                </p>
+              </div>
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
+                <h3 class="font-semibold text-bd-text-primary mb-1.5 flex items-center gap-2">
+                  <Globe class="w-4 h-4 text-bd-blue" />
+                  External Integrations
+                </h3>
+                <p class="text-bd-text-secondary">
+                  WebFetch and Provider AI let scenarios reach outside the sandbox to fetch data, query APIs, and pipe context through secondary LLMs with player consent.
+                </p>
+              </div>
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
+                <h3 class="font-semibold text-bd-text-primary mb-1.5 flex items-center gap-2">
+                  <Cpu class="w-4 h-4 text-bd-purple" />
+                  Environmental Awareness
+                </h3>
+                <p class="text-bd-text-secondary">
+                  Clock, Weather, Geolocation, and System modules ground scenarios in real-world context — time of day, local weather, geographic coordinates, and platform capabilities.
+                </p>
+              </div>
             </div>
-            <div class="space-y-1.5">
-              <h3 class="font-semibold text-bd-text-primary">Your UI can finally be trustworthy</h3>
-              <p class="text-sm text-bd-text-secondary leading-relaxed">
-                Health bars, trackers, badges, dashboards, toggles, and control panels can stop feeling like fragile
-                ornaments. Players can actually rely on them, which means authors can build mechanics around them
-                with confidence.
+
+            <!-- Module Inventory -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-3">
+              <h3 class="font-semibold text-bd-text-primary flex items-center gap-2 text-xs">
+                <Layers class="w-4 h-4 text-bd-accent-primary" />
+                First-Party Module Inventory
+              </h3>
+              <div class="grid md:grid-cols-3 gap-2 text-[11px]">
+                <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
+                  <strong class="text-bd-green block">Scripture</strong>
+                  <span class="text-bd-text-muted">State module — dynamic widget rendering</span>
+                </div>
+                <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
+                  <strong class="text-bd-blue block">WebFetch</strong>
+                  <span class="text-bd-text-muted">Ops: <code class="text-bd-green">fetch</code>, <code class="text-bd-green">search</code></span>
+                </div>
+                <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
+                  <strong class="text-bd-purple block">Provider AI</strong>
+                  <span class="text-bd-text-muted">Ops: <code class="text-bd-green">chat</code>, <code class="text-bd-green">models</code>, <code class="text-bd-green">testConnection</code></span>
+                </div>
+                <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
+                  <strong class="text-bd-amber block">Clock</strong>
+                  <span class="text-bd-text-muted">Ops: <code class="text-bd-green">now</code>, <code class="text-bd-green">tz</code>, <code class="text-bd-green">format</code></span>
+                </div>
+                <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
+                  <strong class="text-bd-cyan block">SDK</strong>
+                  <span class="text-bd-text-muted">Ops: <code class="text-bd-green">version</code>, <code class="text-bd-green">config</code></span>
+                </div>
+                <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
+                  <strong class="text-bd-teal block">Geolocation</strong>
+                  <span class="text-bd-text-muted">Ops: <code class="text-bd-green">permission</code>, <code class="text-bd-green">getCurrent</code></span>
+                </div>
+                <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
+                  <strong class="text-bd-blue block">Weather</strong>
+                  <span class="text-bd-text-muted">Ops: <code class="text-bd-green">current</code>, <code class="text-bd-green">forecast</code></span>
+                </div>
+                <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
+                  <strong class="text-bd-green block">Network</strong>
+                  <span class="text-bd-text-muted">Ops: <code class="text-bd-green">status</code></span>
+                </div>
+                <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
+                  <strong class="text-bd-pink block">System</strong>
+                  <span class="text-bd-text-muted">Ops: <code class="text-bd-green">info</code>, <code class="text-bd-green">power</code></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
+      <!-- ===================== TRANSPORT ARCHITECTURE ===================== -->
+      <section id="guide-transport" class="card">
+        <button
+          @click="toggleGuideSection('transport')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <GitMerge class="w-5 h-5 text-bd-blue" />
+            Story Card Transport
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('transport') }"
+          />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('transport')" class="mt-4 space-y-6 text-xs text-bd-text-secondary">
+            <p class="text-bd-text-secondary">
+              Ultrascripts communicates through AI Dungeon's Story Card system. Scripts publish data by writing specially-typed Story Cards. BetterDungeon reads them, processes them, and writes responses back through the same channel. No custom server, no separate API — just cards.
+            </p>
+
+            <!-- Transport Flow Diagram -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-3">
+              <h3 class="font-semibold text-bd-text-primary flex items-center gap-2 text-xs">
+                <GitMerge class="w-4 h-4 text-bd-blue" />
+                Data Flow Pipeline
+              </h3>
+              <div class="space-y-2">
+                <div class="flex flex-wrap items-center gap-2 text-[11px] font-mono">
+                  <div class="px-2 py-1 rounded bg-bd-green/20 border border-bd-green/30 text-bd-green font-bold">Script writes card</div>
+                  <span class="text-bd-text-muted">&rarr;</span>
+                  <div class="px-2 py-1 rounded bg-bd-bg-primary border border-bd-border-subtle">AI Dungeon broadcasts</div>
+                  <span class="text-bd-text-muted">&rarr;</span>
+                  <div class="px-2 py-1 rounded bg-bd-blue/20 border border-bd-blue/30 text-bd-blue font-bold">Transport captures</div>
+                  <span class="text-bd-text-muted">&rarr;</span>
+                  <div class="px-2 py-1 rounded bg-bd-purple/20 border border-bd-purple/30 text-bd-purple font-bold">Core dispatches</div>
+                  <span class="text-bd-text-muted">&rarr;</span>
+                  <div class="px-2 py-1 rounded bg-bd-amber/20 border border-bd-amber/30 text-bd-amber font-bold">Module handles</div>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 text-[11px] font-mono">
+                  <div class="px-2 py-1 rounded bg-bd-amber/20 border border-bd-amber/30 text-bd-amber font-bold">Module responds</div>
+                  <span class="text-bd-text-muted">&rarr;</span>
+                  <div class="px-2 py-1 rounded bg-bd-purple/20 border border-bd-purple/30 text-bd-purple font-bold">Write queue</div>
+                  <span class="text-bd-text-muted">&rarr;</span>
+                  <div class="px-2 py-1 rounded bg-bd-bg-primary border border-bd-border-subtle">GraphQL mutation</div>
+                  <span class="text-bd-text-muted">&rarr;</span>
+                  <div class="px-2 py-1 rounded bg-bd-green/20 border border-bd-green/30 text-bd-green font-bold">Script reads response</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Types -->
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="p-4 rounded bg-bd-bg-primary border border-bd-green/20 space-y-2">
+                <h4 class="font-semibold text-bd-green flex items-center gap-1.5">
+                  <ArrowUpFromLine class="w-4 h-4 text-bd-green" /> State Publishing
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Scripts write JSON into <code class="text-bd-green">ultrascripts:state:&lt;name&gt;</code> cards. BetterDungeon watches these cards and dispatches updates to the matching module (e.g. Scripture reads <code class="text-bd-green">ultrascripts:state:scripture</code>).
+                </p>
+              </div>
+
+              <div class="p-4 rounded bg-bd-bg-primary border border-bd-blue/20 space-y-2">
+                <h4 class="font-semibold text-bd-blue flex items-center gap-1.5">
+                  <ArrowDownToLine class="w-4 h-4 text-bd-blue" /> Request/Response Ops
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Scripts write requests into <code class="text-bd-green">ultrascripts:out</code>. Modules process the request and write responses back into <code class="text-bd-green">ultrascripts:in:&lt;module&gt;</code>. Scripts then acknowledge receipt.
+                </p>
+              </div>
+            </div>
+
+            <!-- Heartbeat -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-accent-primary/30 space-y-2">
+              <h4 class="font-semibold text-bd-text-primary flex items-center gap-1.5">
+                <HeartPulse class="w-4 h-4 text-bd-accent-primary" />
+                Heartbeat Discovery
+              </h4>
+              <p class="text-bd-text-secondary">
+                BetterDungeon writes a <code class="text-bd-green">ultrascripts:heartbeat</code> card on every adventure load. This card advertises the runtime version, which modules are mounted, and what ops each module exposes. Scripts inspect this card to detect Ultrascripts availability.
               </p>
+              <p class="text-[10px] text-bd-text-muted">The heartbeat fires at turn-0 with no dependency on prior user card edits. It is the sole discovery surface — if the heartbeat is present, the runtime is live.</p>
             </div>
           </div>
-        </div>
+        </Transition>
+      </section>
 
-        <div class="p-5 rounded-xl bg-gradient-to-br from-bd-blue/10 to-transparent border border-bd-blue/30">
-          <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-bd-blue/20 flex items-center justify-center flex-shrink-0">
-              <MessageSquareMore class="w-5 h-5 text-bd-blue" />
-            </div>
-            <div class="space-y-1.5">
-              <h3 class="font-semibold text-bd-text-primary">Scripts can ask for help and get answers back</h3>
-              <p class="text-sm text-bd-text-secondary leading-relaxed">
-                A scenario can do more than show information. It can check, react, adapt, and use outside help when
-                it makes the experience better. That is the difference between a static script gimmick and a living system.
-              </p>
-            </div>
-          </div>
-        </div>
+      <!-- ===================== SECURITY & CONSENT ===================== -->
+      <section id="guide-security" class="card">
+        <button
+          @click="toggleGuideSection('security')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <ShieldCheck class="w-5 h-5 text-bd-green" />
+            Security &amp; Player Consent
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('security') }"
+          />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('security')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
+            <p class="text-bd-text-secondary">
+              Ultrascripts is designed to be ambitious without being invasive. Players control every capability through explicit toggles and consent flows. Scenarios cannot silently claim permissions the player has not granted.
+            </p>
 
-        <div class="p-5 rounded-xl bg-gradient-to-br from-bd-amber/10 to-transparent border border-bd-amber/30">
-          <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-bd-amber/20 flex items-center justify-center flex-shrink-0">
-              <Feather class="w-5 h-5 text-bd-amber" />
-            </div>
-            <div class="space-y-1.5">
-              <h3 class="font-semibold text-bd-text-primary">Your story stays clean</h3>
-              <p class="text-sm text-bd-text-secondary leading-relaxed">
-                Ultrascripts does not ask authors to smear transport junk into the narrative. The writing stays clean,
-                the AI sees the story instead of a carrier signal, and the whole scenario feels less hacked together.
-              </p>
-            </div>
-          </div>
-        </div>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle space-y-2">
+                <h4 class="font-semibold text-bd-text-primary flex items-center gap-1.5">
+                  <Settings class="w-4 h-4 text-bd-purple" /> Extension Popup Controls
+                </h4>
+                <ul class="space-y-1 text-bd-text-muted">
+                  <li>• Master Ultrascripts on/off switch</li>
+                  <li>• Per-module enable/disable toggles for all 9 modules</li>
+                  <li>• WebFetch domain consent management</li>
+                  <li>• Provider AI key configuration and cost limits</li>
+                  <li>• Debug mode for development logging</li>
+                </ul>
+              </div>
 
-        <div class="p-5 rounded-xl bg-gradient-to-br from-bd-purple/10 to-transparent border border-bd-purple/30">
-          <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-bd-purple/20 flex items-center justify-center flex-shrink-0">
-              <ShieldCheck class="w-5 h-5 text-bd-purple" />
-            </div>
-            <div class="space-y-1.5">
-              <h3 class="font-semibold text-bd-text-primary">Players keep control</h3>
-              <p class="text-sm text-bd-text-secondary leading-relaxed">
-                Ultrascripts is ambitious without being invasive. Players decide what they enable, which means authors
-                can build bold ideas without crossing the line into “this scenario is doing too much behind my back.”
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="card space-y-5">
-      <div class="flex items-center gap-2">
-        <ArrowLeftRight class="w-5 h-5 text-bd-accent-primary" />
-        <h2 class="text-lg font-semibold text-bd-text-primary">What changed from BetterScripts</h2>
-      </div>
-
-      <div class="grid md:grid-cols-2 gap-3">
-        <div class="p-5 rounded-xl bg-bd-bg-tertiary border border-bd-border-subtle">
-          <div class="flex items-center gap-2 mb-4">
-            <div class="w-8 h-8 rounded-lg bg-bd-red/15 flex items-center justify-center">
-              <X class="w-4 h-4 text-bd-red" />
-            </div>
-            <h3 class="font-semibold text-bd-text-primary">With BetterScripts</h3>
-          </div>
-          <ul class="space-y-2.5 text-sm">
-            <li class="flex items-start gap-2 text-bd-text-secondary">
-              <X class="w-4 h-4 text-bd-red flex-shrink-0 mt-0.5" />
-              <span>Widgets were the main event. Everything else was out of reach.</span>
-            </li>
-            <li class="flex items-start gap-2 text-bd-text-secondary">
-              <X class="w-4 h-4 text-bd-red flex-shrink-0 mt-0.5" />
-              <span>Transport details leaked into the writing experience.</span>
-            </li>
-            <li class="flex items-start gap-2 text-bd-text-secondary">
-              <X class="w-4 h-4 text-bd-red flex-shrink-0 mt-0.5" />
-              <span>Undo and retry were the kinds of things you worried about.</span>
-            </li>
-          </ul>
-        </div>
-
-        <div class="p-5 rounded-xl bg-gradient-to-br from-bd-accent-primary/10 to-bd-cyan/10 border border-bd-accent-primary/30 shadow-glow">
-          <div class="flex items-center gap-2 mb-4">
-            <div class="w-8 h-8 rounded-lg bg-bd-accent-primary/20 flex items-center justify-center">
-              <Check class="w-4 h-4 text-bd-accent-primary" />
-            </div>
-            <h3 class="font-semibold text-bd-text-primary">With Ultrascripts</h3>
-          </div>
-          <ul class="space-y-2.5 text-sm">
-            <li class="flex items-start gap-2 text-bd-text-secondary">
-              <Check class="w-4 h-4 text-bd-green flex-shrink-0 mt-0.5" />
-              <span>Widgets are just one module in a much bigger system.</span>
-            </li>
-            <li class="flex items-start gap-2 text-bd-text-secondary">
-              <Check class="w-4 h-4 text-bd-green flex-shrink-0 mt-0.5" />
-              <span>Scenarios can display state, request outside help, and react to the results.</span>
-            </li>
-            <li class="flex items-start gap-2 text-bd-text-secondary">
-              <Check class="w-4 h-4 text-bd-green flex-shrink-0 mt-0.5" />
-              <span>The system is built around the way people actually play, including undoing, retrying, and revising.</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="card space-y-5">
-      <div class="flex items-center gap-2">
-        <Wand2 class="w-5 h-5 text-bd-purple" />
-        <h2 class="text-lg font-semibold text-bd-text-primary">The kinds of scenarios this unlocks</h2>
-      </div>
-      <p class="text-bd-text-secondary">
-        The easiest way to understand Ultrascripts is to picture the kinds of moments it makes possible.
-      </p>
-
-      <div class="space-y-3">
-        <div class="p-5 rounded-xl bg-gradient-to-r from-bd-green/10 to-transparent border border-bd-green/30">
-          <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-bd-green/20 flex items-center justify-center flex-shrink-0">
-              <LayoutDashboard class="w-5 h-5 text-bd-green" />
-            </div>
-            <div class="space-y-1.5">
-              <h3 class="font-semibold text-bd-text-primary">A proper game-like interface</h3>
-              <p class="text-sm text-bd-text-secondary leading-relaxed">
-                A survival scenario can have a real condition panel. A dungeon crawler can track cooldowns and status
-                cleanly. A kingdom sim can expose a whole dashboard. The interface stops feeling like a novelty and
-                starts feeling like part of the game.
-              </p>
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle space-y-2">
+                <h4 class="font-semibold text-bd-text-primary flex items-center gap-1.5">
+                  <Lock class="w-4 h-4 text-bd-amber" /> Security Guarantees
+                </h4>
+                <ul class="space-y-1 text-bd-text-muted">
+                  <li>• API keys are <strong>never</strong> exposed to scenario scripts</li>
+                  <li>• WebFetch requires explicit per-domain player approval</li>
+                  <li>• Geolocation requires standard browser permission</li>
+                  <li>• Cost controls cap OpenRouter spending automatically</li>
+                  <li>• SDK config returns sanitized data only</li>
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
+        </Transition>
+      </section>
 
-        <div class="p-5 rounded-xl bg-gradient-to-r from-bd-blue/10 to-transparent border border-bd-blue/30">
-          <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-bd-blue/20 flex items-center justify-center flex-shrink-0">
-              <CloudSun class="w-5 h-5 text-bd-blue" />
+      <!-- ===================== PLATFORM SUPPORT ===================== -->
+      <section id="guide-platforms" class="card">
+        <button
+          @click="toggleGuideSection('platforms')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Monitor class="w-5 h-5 text-bd-cyan" />
+            Platform Support
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('platforms') }"
+          />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('platforms')" class="mt-4 space-y-4 text-xs">
+            <p class="text-bd-text-secondary">
+              Ultrascripts runs wherever the BetterDungeon extension can load. The same unified runtime powers all supported platforms.
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-3">
+              <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30 space-y-1.5">
+                <h4 class="font-semibold text-bd-green flex items-center gap-1.5">
+                  <CheckCircle2 class="w-4 h-4" /> Chromium Browsers
+                </h4>
+                <p class="text-bd-text-secondary">Chrome, Edge, Brave, and other Chromium-based browsers. Full production support for all modules.</p>
+              </div>
+              <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30 space-y-1.5">
+                <h4 class="font-semibold text-bd-green flex items-center gap-1.5">
+                  <CheckCircle2 class="w-4 h-4" /> Firefox
+                </h4>
+                <p class="text-bd-text-secondary">Full production support via the Firefox add-on. Same runtime, same modules, same behavior.</p>
+              </div>
+              <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30 space-y-1.5">
+                <h4 class="font-semibold text-bd-green flex items-center gap-1.5">
+                  <CheckCircle2 class="w-4 h-4" /> Android WebView
+                </h4>
+                <p class="text-bd-text-secondary">Completed in Phase 12. Ultrascripts is now effectively multiplatform, running inside the BetterDungeon Android app.</p>
+              </div>
             </div>
-            <div class="space-y-1.5">
-              <h3 class="font-semibold text-bd-text-primary">A world that feels grounded</h3>
-              <p class="text-sm text-bd-text-secondary leading-relaxed">
-                A city can know what time it is. A travel story can know the weather. A quiet camp scene can feel
-                different at dawn than it does at midnight. Ultrascripts helps stories feel placed somewhere instead of nowhere.
-              </p>
+
+            <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+              <div class="flex items-start gap-2">
+                <AlertTriangle class="w-4 h-4 text-bd-pink flex-shrink-0 mt-0.5" />
+                <p class="text-xs text-bd-text-secondary">
+                  <strong class="text-bd-text-primary">iOS:</strong> Not supported. Apple does not provide an extension surface for Safari on iOS that would allow Ultrascripts to run.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        </Transition>
+      </section>
 
-        <div class="p-5 rounded-xl bg-gradient-to-r from-bd-amber/10 to-transparent border border-bd-amber/30">
-          <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-bd-amber/20 flex items-center justify-center flex-shrink-0">
-              <BookHeart class="w-5 h-5 text-bd-amber" />
-            </div>
-            <div class="space-y-1.5">
-              <h3 class="font-semibold text-bd-text-primary">A scenario that remembers what matters</h3>
-              <p class="text-sm text-bd-text-secondary leading-relaxed">
-                Progression systems, long arcs, recurring threats, and slow-burn campaign mechanics get easier to
-                trust. Authors can commit to ideas that would have felt too fragile before.
-              </p>
+      <!-- ===================== DEEP-DIVE GUIDE LINKS ===================== -->
+      <section id="guide-deep-dives" class="card">
+        <button
+          @click="toggleGuideSection('deep-dives')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <BookOpen class="w-5 h-5 text-bd-amber" />
+            Module Deep-Dive Guides
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('deep-dives') }"
+          />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('deep-dives')" class="mt-4 space-y-4 text-xs">
+            <p class="text-bd-text-secondary">
+              Each module family has a dedicated guide with complete API references, copy-paste recipes, and troubleshooting grids.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-3">
+              <router-link to="/guides?tab=ultrascripts-scripture" class="block p-4 rounded-lg bg-gradient-to-br from-bd-green/10 to-transparent border border-bd-green/30 hover:border-bd-green/50 transition-colors group">
+                <div class="flex items-center gap-2 mb-2">
+                  <LayoutDashboard class="w-5 h-5 text-bd-green" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-green transition-colors">Scripture: Widgets &amp; UI</h4>
+                </div>
+                <p class="text-bd-text-muted">Dynamic health bars, stat grids, quest trackers, and dashboards. JSON schemas, state binding, and rendering recipes.</p>
+              </router-link>
+
+              <router-link to="/guides?tab=ultrascripts-fetch-ai" class="block p-4 rounded-lg bg-gradient-to-br from-bd-blue/10 to-transparent border border-bd-blue/30 hover:border-bd-blue/50 transition-colors group">
+                <div class="flex items-center gap-2 mb-2">
+                  <Globe class="w-5 h-5 text-bd-blue" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-blue transition-colors">WebFetch &amp; Provider AI</h4>
+                </div>
+                <p class="text-bd-text-muted">Consent-gated HTTP requests, OpenRouter LLM pipelines, API data fetching, and Co-GM assistant recipes.</p>
+              </router-link>
+
+              <router-link to="/guides?tab=ultrascripts-sdk" class="block p-4 rounded-lg bg-gradient-to-br from-bd-cyan/10 to-transparent border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">
+                <div class="flex items-center gap-2 mb-2">
+                  <Terminal class="w-5 h-5 text-bd-cyan" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-cyan transition-colors">SDK &amp; Lifecycle</h4>
+                </div>
+                <p class="text-bd-text-muted">Heartbeat detection, version queries, config introspection, wire protocol details, and undo-aware state patterns.</p>
+              </router-link>
+
+              <router-link to="/guides?tab=ultrascripts-utilities" class="block p-4 rounded-lg bg-gradient-to-br from-bd-amber/10 to-transparent border border-bd-amber/30 hover:border-bd-amber/50 transition-colors group">
+                <div class="flex items-center gap-2 mb-2">
+                  <Wrench class="w-5 h-5 text-bd-amber" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-amber transition-colors">System &amp; Utilities</h4>
+                </div>
+                <p class="text-bd-text-muted">Clock, Geolocation, Weather, Network, and System modules. Time-of-day steering, weather combat modifiers, and platform detection.</p>
+              </router-link>
             </div>
           </div>
-        </div>
+        </Transition>
+      </section>
 
-        <div class="p-5 rounded-xl bg-gradient-to-r from-bd-purple/10 to-transparent border border-bd-purple/30">
-          <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-bd-purple/20 flex items-center justify-center flex-shrink-0">
-              <BrainCircuit class="w-5 h-5 text-bd-purple" />
-            </div>
-            <div class="space-y-1.5">
-              <h3 class="font-semibold text-bd-text-primary">Scripts that can think a little smarter</h3>
-              <p class="text-sm text-bd-text-secondary leading-relaxed">
-                Some work belongs in the background: classifying, organizing, summarizing, shaping, cleaning up.
-                Ultrascripts makes room for that kind of support work so the main story can stay focused on being a story.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <section class="card space-y-5">
-      <div class="flex items-center gap-2">
-        <BookOpen class="w-5 h-5 text-bd-cyan" />
-        <h2 class="text-lg font-semibold text-bd-text-primary">What it feels like to author with</h2>
-      </div>
-      <p class="text-bd-text-secondary">
-        The biggest quality-of-life win is that Ultrascripts lets authors think less about transport and more about experience.
-      </p>
-
-      <div class="grid md:grid-cols-2 gap-3">
-        <div class="p-4 rounded-xl bg-bd-bg-tertiary border border-bd-border-subtle space-y-2">
-          <h3 class="text-sm font-semibold text-bd-text-primary">You think in features</h3>
-          <p class="text-xs text-bd-text-secondary leading-relaxed">
-            “I want a timer.” “I want a ritual tracker.” “I want an NPC control panel.” “I want weather to matter.”
-            Ultrascripts keeps those as design ideas instead of turning them into plumbing problems.
-          </p>
-        </div>
-
-        <div class="p-4 rounded-xl bg-bd-bg-tertiary border border-bd-border-subtle space-y-2">
-          <h3 class="text-sm font-semibold text-bd-text-primary">You stop fighting the plumbing</h3>
-          <p class="text-xs text-bd-text-secondary leading-relaxed">
-            You do not need one architecture for simple scripts and another for ambitious ones. A small idea can stay
-            small, and a growing idea can grow naturally.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section class="card space-y-5">
-      <div class="flex items-center gap-2">
-        <ShieldCheck class="w-5 h-5 text-bd-green" />
-        <h2 class="text-lg font-semibold text-bd-text-primary">Why this is safer and cleaner</h2>
-      </div>
-
-      <div class="space-y-3">
-        <div class="flex items-start gap-3 p-4 rounded-xl bg-bd-green/10 border border-bd-green/30">
-          <CheckCircle2 class="w-5 h-5 text-bd-green flex-shrink-0 mt-0.5" />
-          <p class="text-sm text-bd-text-secondary leading-relaxed">
-            Ultrascripts keeps communication out of the visible narrative, so the story reads like a story instead of a
-            carrier signal.
-          </p>
-        </div>
-
-        <div class="flex items-start gap-3 p-4 rounded-xl bg-bd-green/10 border border-bd-green/30">
-          <CheckCircle2 class="w-5 h-5 text-bd-green flex-shrink-0 mt-0.5" />
-          <p class="text-sm text-bd-text-secondary leading-relaxed">
-            Players control the modules they allow, so a scenario cannot silently claim capabilities the player does
-            not want to grant.
-          </p>
-        </div>
-
-        <div class="flex items-start gap-3 p-4 rounded-xl bg-bd-green/10 border border-bd-green/30">
-          <CheckCircle2 class="w-5 h-5 text-bd-green flex-shrink-0 mt-0.5" />
-          <p class="text-sm text-bd-text-secondary leading-relaxed">
-            Authors can build richer systems without needing a separate exception architecture for “simple” scripts.
-            Simple and advanced scenarios live on the same foundation.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section class="card space-y-5">
-      <div class="flex items-center gap-2">
-        <HelpCircle class="w-5 h-5 text-bd-blue" />
-        <h2 class="text-lg font-semibold text-bd-text-primary">Quick answers</h2>
-      </div>
-
-      <div class="space-y-3">
-        <div class="p-4 rounded-xl bg-bd-bg-tertiary border border-bd-border-subtle space-y-1.5">
-          <h3 class="text-sm font-semibold text-bd-text-primary">Do I need to use every part of Ultrascripts?</h3>
-          <p class="text-xs text-bd-text-secondary leading-relaxed">
-            No. Some scenarios will only use Scripture. Others will branch into weather, time, AI, or utility modules.
-            The point is not that every scenario should do everything. The point is that they finally can grow when it helps.
-          </p>
-        </div>
-
-        <div class="p-4 rounded-xl bg-bd-bg-tertiary border border-bd-border-subtle space-y-1.5">
-          <h3 class="text-sm font-semibold text-bd-text-primary">Is this mostly for technical authors?</h3>
-          <p class="text-xs text-bd-text-secondary leading-relaxed">
-            Technical authors will feel the unlock first, but the long-term value is broader: better scenario formats,
-            better authoring patterns, and better player-facing experiences.
-          </p>
-        </div>
-
-        <div class="p-4 rounded-xl bg-bd-bg-tertiary border border-bd-border-subtle space-y-1.5">
-          <h3 class="text-sm font-semibold text-bd-text-primary">What is the main takeaway?</h3>
-          <p class="text-xs text-bd-text-secondary leading-relaxed">
-            Ultrascripts makes a scenario feel authored on purpose. More reliable. More expressive. More like an experience
-            someone meant to build, not just something they managed to jury-rig.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section class="relative overflow-hidden rounded-2xl border border-bd-accent-primary/30">
-      <div class="absolute inset-0 bg-gradient-to-br from-bd-accent-primary/10 via-bd-cyan/10 to-bd-green/10" aria-hidden="true" />
-      <div class="relative p-6 md:p-8 space-y-4">
-        <div class="flex items-center gap-2">
-          <Zap class="w-5 h-5 text-bd-accent-primary" />
-          <h2 class="text-lg font-semibold text-bd-text-primary">The pitch in one sentence</h2>
-        </div>
-        <p class="text-bd-text-secondary text-lg leading-relaxed max-w-3xl">
-          Ultrascripts is worth caring about because it raises the ceiling on what a scenario can be while making the whole
-          thing feel cleaner, sturdier, and more intentional.
-        </p>
-      </div>
-    </section>
-
-    <div class="text-center text-xs text-bd-text-muted italic pb-4">
-      BetterScripts proved people wanted more. Ultrascripts is what “more” looks like when it is done properly.
-    </div>
-  </div>
+    </div><!-- End main content -->
+  </div><!-- End flex container -->
 </template>
 
 <script setup>
-import {
-  Sparkles, CheckCircle2, HeartHandshake, LayoutDashboard, MessageSquareMore,
-  Feather, ShieldCheck, ArrowLeftRight, X, Check, Wand2, CloudSun, BookHeart,
-  BrainCircuit, BookOpen, HelpCircle, Zap
+import { ref } from 'vue'
+import { 
+  Sparkles, LayoutDashboard, Globe, Cpu, Layers, GitMerge, 
+  ShieldCheck, Monitor, BookOpen, Terminal, Wrench, Lock,
+  ArrowUpFromLine, ArrowDownToLine, HeartPulse, Settings,
+  CheckCircle2, AlertTriangle, ChevronDown, ChevronUp
 } from 'lucide-vue-next'
+
+// Guide table of contents sections
+const guideSections = [
+  { id: 'header-core', label: 'Platform Overview', isHeader: true },
+  { id: 'what-is', label: 'What Is Ultrascripts' },
+  { id: 'transport', label: 'Story Card Transport' },
+  { id: 'header-safety', label: 'Safety & Platforms', isHeader: true },
+  { id: 'security', label: 'Security & Consent' },
+  { id: 'platforms', label: 'Platform Support' },
+  { id: 'header-guides', label: 'Module Guides', isHeader: true },
+  { id: 'deep-dives', label: 'Deep-Dive Guides' }
+]
+
+// Track which guide sections are expanded (all expanded by default)
+const expandedGuideSections = ref(new Set(guideSections.filter(s => !s.isHeader).map(s => s.id)))
+
+const toggleGuideSection = (sectionId) => {
+  if (expandedGuideSections.value.has(sectionId)) {
+    expandedGuideSections.value.delete(sectionId)
+  } else {
+    expandedGuideSections.value.add(sectionId)
+  }
+  expandedGuideSections.value = new Set(expandedGuideSections.value)
+}
+
+const isGuideSectionExpanded = (sectionId) => expandedGuideSections.value.has(sectionId)
+
+const scrollToGuideSection = (sectionId) => {
+  const element = document.getElementById(`guide-${sectionId}`)
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (!expandedGuideSections.value.has(sectionId)) {
+      expandedGuideSections.value.add(sectionId)
+      expandedGuideSections.value = new Set(expandedGuideSections.value)
+    }
+  }
+}
+
+const expandAllGuideSections = () => {
+  expandedGuideSections.value = new Set(guideSections.filter(s => !s.isHeader).map(s => s.id))
+}
+
+const collapseAllGuideSections = () => {
+  expandedGuideSections.value = new Set()
+}
 </script>

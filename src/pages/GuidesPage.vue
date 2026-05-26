@@ -74,6 +74,10 @@
     <StoryCardsGuide v-if="activeTab === 'story-cards'" />
     <ScriptsGuide v-if="activeTab === 'scripts'" />
     <UltrascriptsGuide v-if="activeTab === 'ultrascripts'" />
+    <UltrascriptsScriptureGuide v-if="activeTab === 'ultrascripts-scripture'" />
+    <UltrascriptsFetchAiGuide v-if="activeTab === 'ultrascripts-fetch-ai'" />
+    <UltrascriptsSdkLifecycleGuide v-if="activeTab === 'ultrascripts-sdk'" />
+    <UltrascriptsUtilitiesGuide v-if="activeTab === 'ultrascripts-utilities'" />
     <SymbolsCommandsGuide v-if="activeTab === 'symbols-commands'" />
     <AdvancedSettingsGuide v-if="activeTab === 'advanced-settings'" />
   </div>
@@ -87,10 +91,15 @@ import PlotComponentsGuide from '@/components/guides/PlotComponentsGuide.vue'
 import StoryCardsGuide from '@/components/guides/StoryCardsGuide.vue'
 import ScriptsGuide from '@/components/guides/ScriptsGuide.vue'
 import UltrascriptsGuide from '@/components/guides/UltrascriptsGuide.vue'
+import UltrascriptsScriptureGuide from '@/components/guides/UltrascriptsScriptureGuide.vue'
+import UltrascriptsFetchAiGuide from '@/components/guides/UltrascriptsFetchAiGuide.vue'
+import UltrascriptsSdkLifecycleGuide from '@/components/guides/UltrascriptsSdkLifecycleGuide.vue'
+import UltrascriptsUtilitiesGuide from '@/components/guides/UltrascriptsUtilitiesGuide.vue'
 import AdvancedSettingsGuide from '@/components/guides/AdvancedSettingsGuide.vue'
 import SymbolsCommandsGuide from '@/components/guides/SymbolsCommandsGuide.vue'
 import { 
-  BookOpen, ScrollText, Bookmark, Drama, Code, Compass, Settings, Hash
+  BookOpen, ScrollText, Bookmark, Drama, Code, Compass, Settings, Hash,
+  LayoutDashboard, Globe, Terminal, Wrench
 } from 'lucide-vue-next'
 
 const route = useRoute()
@@ -107,7 +116,11 @@ const primaryTabs = [
 // Secondary tabs for supplemental guides
 const secondaryTabs = [
   { id: 'symbols-commands', label: 'Symbols & Commands', icon: Hash },
-  { id: 'ultrascripts', label: 'Ultrascripts (Preview)', icon: Compass },
+  { id: 'ultrascripts', label: 'Ultrascripts Overview', icon: Compass },
+  { id: 'ultrascripts-scripture', label: 'Scripture: Widgets', icon: LayoutDashboard },
+  { id: 'ultrascripts-fetch-ai', label: 'WebFetch & AI', icon: Globe },
+  { id: 'ultrascripts-sdk', label: 'SDK & Lifecycle', icon: Terminal },
+  { id: 'ultrascripts-utilities', label: 'System & Utilities', icon: Wrench },
   { id: 'advanced-settings', label: 'Advanced Settings', icon: Settings },
 ]
 

@@ -198,17 +198,15 @@ For quick-start walkthroughs use `bd-green/10` panels titled "Step 1", "Step 2",
 
 ## 6. Required sections (per guide)
 
-Every guide must include, in this order:
-
 1. **"What Is …?"** — definition + scope, with the 3-up concept grid.
 2. **Quick Start** *(optional but strongly preferred)* — 3 numbered steps.
 3. **Anatomy / How It Works** — structural breakdown of the thing.
 4. **Best Practices** — the short, opinionated rules.
 5. **Advanced topics** — anything power-user, niche, or rarely needed.
 6. **Tips & Common Pitfalls** — the pitfall grid pattern.
-7. **Credits & Resources** — contributor pills + linked external sources.
+7. **Credits** — contributor pills ONLY. External resource hyperlinks (e.g. Discord, external docs, FAQs) must not be included inside guide templates to maintain standard UI clarity and layout boundaries.
 
-Group 1–4 under the "Core" TOC header; 5–6 under "Advanced"; 7 stands alone.
+Group 1–4 under the "Core" TOC header; 5–6 under "Advanced"; 7 stands alone under the label "Credits" using the `Users` icon.
 
 ## 7. Tone
 
@@ -217,6 +215,7 @@ Group 1–4 under the "Core" TOC header; 5–6 under "Advanced"; 7 stands alone.
 - No marketing language. No exclamation marks except for genuine warnings.
 - Prefer concrete examples over abstract description. Always show, then explain.
 - Bold the load-bearing word in a sentence, not the whole sentence.
+- Never write raw Markdown bold styling (`**text**`) inside Vue template text nodes as Vue renders these literally. Instead, use HTML `<strong>text</strong>` tags. Keep literal double asterisks exclusively inside syntax illustrations and code segments (`<pre>` or `<code>`).
 - Code, field names, and tokens are wrapped in `<code class="text-bd-green">`.
 
 ## 8. Length targets
