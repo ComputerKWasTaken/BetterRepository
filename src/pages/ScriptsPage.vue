@@ -975,8 +975,8 @@ modifier(text);</pre>
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Info class="w-5 h-5 text-bd-amber" />
-            Credits & Resources
+            <Users class="w-5 h-5 text-bd-amber" />
+            Credits
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -986,7 +986,7 @@ modifier(text);</pre>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('credits')" class="mt-4">
             <div class="mb-4">
-              <p class="text-xs text-bd-text-muted mb-2 flex items-center gap-1.5">
+              <p class="text-xs text-bd-text-muted mb-3">
                 Contributors who wrote scripts and other tools, or created guides and resources for scripting:
               </p>
               <div class="flex flex-wrap gap-1.5">
@@ -995,14 +995,6 @@ modifier(text);</pre>
                   {{ name }}
                 </span>
               </div>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <a href="https://github.com/latitudegames/Scripting" target="_blank" class="btn btn-secondary text-xs">
-                <FileCode class="w-3 h-3" /> Official Docs
-              </a>
-              <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
-                <MessageSquare class="w-3 h-3" /> Discord
-              </a>
             </div>
           </div>
         </Transition>

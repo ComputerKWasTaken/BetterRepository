@@ -36,20 +36,6 @@
     <!-- Main Content -->
     <div class="flex-1 space-y-4 min-w-0">
 
-      <!-- Context Budget Routing Notice -->
-      <div class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
-        <div class="flex items-start gap-3">
-          <Info class="w-5 h-5 text-bd-info flex-shrink-0 mt-0.5" />
-          <div>
-            <h4 class="font-semibold text-bd-text-primary text-sm">Programmatic Context Steering</h4>
-            <p class="text-xs text-bd-text-secondary mt-1">
-              Custom scripts manipulate prompt streams by programmatically writing to dynamic context parameters. To understand how context budgets are divided, or how the compiler evaluates positional weightings, see our dedicated 
-              <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline font-semibold">Plot Components Guide</router-link>.
-            </p>
-          </div>
-        </div>
-      </div>
-
       <!-- ===================== THE SCRIPTING SANDBOX ===================== -->
       <section id="guide-what-is" class="card">
         <button
@@ -69,7 +55,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('what-is')" class="mt-4 space-y-6">
             <p class="text-bd-text-secondary">
-              Scripting in AI Dungeon executes standard **ES6 JavaScript** inside a secure, sandboxed server environment. Scripts intercept player inputs, mutate prompt context streams dynamically, and format output text programmatically.
+              Scripting in AI Dungeon executes standard <strong>ES6 JavaScript</strong> inside a secure, sandboxed server environment. Scripts intercept player inputs, mutate prompt context streams dynamically, and format output text programmatically.
             </p>
 
             <div class="grid md:grid-cols-3 gap-3 text-xs">
@@ -88,7 +74,7 @@
                   Memory Limit
                 </h3>
                 <p class="text-bd-text-secondary">
-                  Each sandbox instance has a strict limit of **16 MB** RAM. Loading large static databases will instantly crash the script.
+                  Each sandbox instance has a strict limit of <strong>16 MB</strong> RAM. Loading large static databases will instantly crash the script.
                 </p>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
@@ -97,7 +83,7 @@
                   Timeout Threshold
                 </h3>
                 <p class="text-bd-text-secondary">
-                  Scripts must finish within **2.0 seconds**. Slow loop iterations or complex string operations trigger immediate execution timeouts.
+                  Scripts must finish within <strong>2.0 seconds</strong>. Slow loop iterations or complex string operations trigger immediate execution timeouts.
                 </p>
               </div>
             </div>
@@ -121,7 +107,7 @@
                 <span class="text-bd-text-muted">&rarr;</span>
                 <div class="px-2 py-1 rounded bg-bd-amber/20 border border-bd-amber/30 text-bd-amber font-bold">onOutput</div>
               </div>
-              <p class="text-[10px] text-bd-text-muted">The shared **Library** script runs before each hook modifier file, letting you declare global persistent variables or utility routines.</p>
+              <p class="text-[10px] text-bd-text-muted">The shared <strong>Library</strong> script runs before each hook modifier file, letting you declare global persistent variables or utility routines.</p>
             </div>
           </div>
         </Transition>
@@ -340,7 +326,7 @@ modifier(text); // CRITICAL: This last wrapper execution call MUST be present!</
             <div class="space-y-3">
               <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">The Library-Centric Hook Pattern</h3>
               <p class="text-xs text-bd-text-secondary">
-                Splitting complex math and logic files across four separate Input/Context/Output files can make debugging difficult. The **Library-Centric Hook Pattern** routes all operations through a single global routing function defined inside the **Library** script:
+                Splitting complex math and logic files across four separate Input/Context/Output files can make debugging difficult. The <strong>Library-Centric Hook Pattern</strong> routes all operations through a single global routing function defined inside the <strong>Library</strong> script:
               </p>
               
               <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-2">
@@ -408,7 +394,7 @@ modifier(text);</pre>
                 BetterScripts to Ultrascripts V2 Evolution Path
               </h4>
               <p class="text-xs text-bd-text-secondary">
-                In the upcoming BetterDungeon V2 architecture, legacy synchronous modifiers will evolve into **Ultrascripts**. 
+                In the upcoming BetterDungeon V2 architecture, legacy synchronous modifiers will evolve into <strong>Ultrascripts</strong>. 
                 Ultrascripts establishes a high-performance, bidirectional event-driven bridge between browser variables and AI Dungeon client instances, bypassing formatting limitations entirely.
               </p>
               <div class="flex items-center gap-2">
@@ -449,7 +435,7 @@ modifier(text);</pre>
                   The Script Test Console
                 </h4>
                 <p class="text-bd-text-secondary">
-                  Located in the right-hand panel of the script editor. Input a mock string (e.g. `:gold`) and click **Submit**.
+                  Located in the right-hand panel of the script editor. Input a mock string (e.g. `:gold`) and click <strong>Submit</strong>.
                 </p>
                 <ul class="list-disc list-inside space-y-1 text-bd-text-muted">
                   <li>• Instantly displays compile syntax errors.</li>
@@ -470,7 +456,7 @@ modifier(text);</pre>
                 <ul class="list-disc list-inside space-y-1 text-bd-text-muted">
                   <li>• Open Chrome/Firefox DevTools (F12) &rarr; Console.</li>
                   <li>• GraphQL stringifies `undefined` values as `null` in console returns.</li>
-                  <li>• Logs persist on the server for only **15 minutes** of inactivity.</li>
+                  <li>• Logs persist on the server for only <strong>15 minutes</strong> of inactivity.</li>
                 </ul>
               </div>
             </div>
@@ -522,7 +508,7 @@ modifier(text);</pre>
                   <X class="w-4 h-4 text-bd-pink" /> "Dangerous Scripts" Security Block
                 </h4>
                 <p class="text-bd-text-secondary">Custom modifier scripts fail to execute entirely for new players because security features block arbitrary script execution by default.</p>
-                <p class="text-bd-green mt-1"><strong>Fix:</strong> Instruct players to navigate to **Account Settings &rarr; Toggle Enable Run Dangerous Scripts** on.</p>
+                <p class="text-bd-green mt-1"><strong>Fix:</strong> Instruct players to navigate to <strong>Account Settings &rarr; Toggle Enable Run Dangerous Scripts</strong> on.</p>
               </div>
 
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
@@ -544,8 +530,8 @@ modifier(text);</pre>
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Info class="w-5 h-5 text-bd-amber" />
-            Credits &amp; Resources
+            <Users class="w-5 h-5 text-bd-amber" />
+            Credits
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -556,7 +542,7 @@ modifier(text);</pre>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('credits')" class="mt-4 space-y-4">
             <div>
-              <p class="text-xs text-bd-text-muted mb-2 flex items-center gap-1.5">
+              <p class="text-xs text-bd-text-muted mb-3">
                 Contributors who researched, developed, and documented the Scripting sandboxes:
               </p>
               <div class="flex flex-wrap gap-1.5">
@@ -565,24 +551,6 @@ modifier(text);</pre>
                   {{ name }}
                 </span>
               </div>
-            </div>
-            
-            <div class="grid gap-2">
-              <a href="https://help.aidungeon.com/scripting" target="_blank" class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle hover:border-bd-accent-primary/50 transition-colors">
-                <h4 class="text-xs font-semibold text-bd-text-primary flex items-center gap-1.5">
-                  <FileCode class="w-3 h-3 text-bd-accent-primary" /> Latitude Scripting API Documentation
-                </h4>
-                <p class="text-[10px] text-bd-text-muted mt-1">Official platform references for ES6 sandboxing, method lists, and context objects.</p>
-              </a>
-            </div>
-
-            <div class="flex flex-wrap gap-2">
-              <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
-                <MessageSquare class="w-3 h-3" /> Discord Community
-              </a>
-              <a href="https://github.com/LewdLeah/Multiple-Choice-Assistant/tree/main/docs" target="_blank" class="btn btn-secondary text-xs">
-                <BookOpen class="w-3 h-3" /> LewdLeah's AI Dungeon Docs
-              </a>
             </div>
           </div>
         </Transition>
@@ -599,7 +567,7 @@ import {
   AlertTriangle, Braces, FileCode, HelpCircle, Check,
   BookOpen, Layers, Library, ArrowRightToLine, ArrowLeftToLine, Database, 
   Wrench, Plus, ExternalLink, ChevronDown, ChevronUp, Info, MessageSquare,
-  Terminal, X, GitMerge, Monitor, Play, Rocket, Award, PlayCircle
+  Terminal, X, GitMerge, Monitor, Play, Rocket, Award, PlayCircle, Users
 } from 'lucide-vue-next'
 
 // Guide table of contents sections
@@ -614,7 +582,7 @@ const guideSections = [
   { id: 'advanced-topics', label: 'Testing & Diagnostics' },
   { id: 'header-trouble', label: 'Troubleshooting', isHeader: true },
   { id: 'pitfalls', label: 'Script Troubleshooting' },
-  { id: 'credits', label: 'Credits & Resources' }
+  { id: 'credits', label: 'Credits' }
 ]
 
 // Track which guide sections are expanded (all expanded by default)

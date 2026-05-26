@@ -773,8 +773,8 @@
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Info class="w-5 h-5 text-bd-amber" />
-            Credits & Resources
+            <Users class="w-5 h-5 text-bd-amber" />
+            Credits
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -784,7 +784,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('credits')" class="mt-4">
             <div class="mb-4">
-              <p class="text-xs text-bd-text-muted mb-2 flex items-center gap-1.5">
+              <p class="text-xs text-bd-text-muted mb-3">
                 Contributors who created the resources and guides to create, write, and use Story Cards:
               </p>
               <div class="flex flex-wrap gap-1.5">
@@ -793,11 +793,6 @@
                   {{ name }}
                 </span>
               </div>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
-                <MessageSquare class="w-3 h-3" /> Discord
-              </a>
             </div>
           </div>
         </Transition>

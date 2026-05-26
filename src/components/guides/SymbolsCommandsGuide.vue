@@ -36,20 +36,6 @@
     <!-- Main Content -->
     <div class="flex-1 space-y-4 min-w-0">
 
-      <!-- Context Budget Routing Notice -->
-      <div class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
-        <div class="flex items-start gap-3">
-          <Info class="w-5 h-5 text-bd-info flex-shrink-0 mt-0.5" />
-          <div>
-            <h4 class="font-semibold text-bd-text-primary text-sm">Semantic Prompt Weighting</h4>
-            <p class="text-xs text-bd-text-secondary mt-1">
-              Markdown symbols and metadata brackets are parsed globally by LLMs. To see how these formatted characters rank inside the prompt hierarchy, or how tokenization budgets are divided between required and dynamic fields, see our dedicated 
-              <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline font-semibold">Plot Components Guide</router-link>.
-            </p>
-          </div>
-        </div>
-      </div>
-
       <!-- ===================== SPECIAL CHARACTER DIRECTIVES ===================== -->
       <section id="guide-what-is" class="card">
         <button
@@ -69,7 +55,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('what-is')" class="mt-4 space-y-6">
             <p class="text-bd-text-secondary">
-              AI Dungeon models were trained on billions of lines of internet documents, including markdown wikis, programming containers, and academic footnotes. Because of this, certain **special symbols carry high semantic weight** directly in the neural weights, letting you guide the AI without wasting verbose prose.
+              AI Dungeon models were trained on billions of lines of internet documents, including markdown wikis, programming containers, and academic footnotes. Because of this, certain <strong>special symbols carry high semantic weight</strong> directly in the neural weights, letting you guide the AI without wasting verbose prose.
             </p>
 
             <div class="grid md:grid-cols-3 gap-3 text-xs">
@@ -299,7 +285,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('advanced-topics')" class="mt-4 space-y-6">
             <p class="text-bd-text-secondary text-xs">
-              Typing these symbols repeatedly during active roleplay can disrupt immersion. The **BetterDungeon** browser extension automates these formatting frameworks directly at input level.
+              Typing these symbols repeatedly during active roleplay can disrupt immersion. The <strong>BetterDungeon</strong> browser extension automates these formatting frameworks directly at input level.
             </p>
 
             <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-accent-primary/30 space-y-3">
@@ -392,8 +378,8 @@
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Info class="w-5 h-5 text-bd-amber" />
-            Credits &amp; Resources
+            <Users class="w-5 h-5 text-bd-amber" />
+            Credits
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -404,7 +390,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('credits')" class="mt-4 space-y-4">
             <div>
-              <p class="text-xs text-bd-text-muted mb-2 flex items-center gap-1.5">
+              <p class="text-xs text-bd-text-muted mb-3">
                 Contributors who researched, cataloged, and built command utilities for AI Dungeon symbols:
               </p>
               <div class="flex flex-wrap gap-1.5">
@@ -419,15 +405,6 @@
                 </span>
               </div>
             </div>
-
-            <div class="flex flex-wrap gap-2">
-              <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
-                <MessageSquare class="w-3 h-3" /> Discord Community
-              </a>
-              <a href="https://github.com/LewdLeah/Multiple-Choice-Assistant/tree/main/docs" target="_blank" class="btn btn-secondary text-xs">
-                <BookOpen class="w-3 h-3" /> LewdLeah's AI Dungeon Docs
-              </a>
-            </div>
           </div>
         </Transition>
       </section>
@@ -439,7 +416,7 @@
 <script setup>
 import { ref } from 'vue'
 import { 
-  Info, Lightbulb, Sparkles, Zap, AlertTriangle, BookOpen, MessageSquare, Hash, Bold, Quote, FileCode, Layers, Braces, Brackets, ChevronRight, Check, Terminal, ExternalLink, ChevronDown, ChevronUp, Rocket, Award, X
+  Info, Lightbulb, Sparkles, Zap, AlertTriangle, BookOpen, MessageSquare, Hash, Bold, Quote, FileCode, Layers, Braces, Brackets, ChevronRight, Check, Terminal, ExternalLink, ChevronDown, ChevronUp, Rocket, Award, X, Users
 } from 'lucide-vue-next'
 
 // Guide table of contents sections
@@ -452,7 +429,7 @@ const guideSections = [
   { id: 'advanced-topics', label: 'BetterDungeon UI Support' },
   { id: 'header-trouble', label: 'Troubleshooting', isHeader: true },
   { id: 'pitfalls', label: 'Symbols Troubleshooting' },
-  { id: 'credits', label: 'Credits & Resources' }
+  { id: 'credits', label: 'Credits' }
 ]
 
 // Track which guide sections are expanded (all expanded by default)

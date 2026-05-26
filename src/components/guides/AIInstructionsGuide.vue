@@ -36,19 +36,7 @@
     <!-- Main Content -->
     <div class="flex-1 space-y-4 min-w-0">
 
-      <!-- Context Budget Routing Notice -->
-      <div class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
-        <div class="flex items-start gap-3">
-          <Info class="w-5 h-5 text-bd-info flex-shrink-0 mt-0.5" />
-          <div>
-            <h4 class="font-semibold text-bd-text-primary text-sm">System Prompt Architecture & Token Budgets</h4>
-            <p class="text-xs text-bd-text-secondary mt-1">
-              AI Instructions occupy the high-attention <strong>Position #1</strong> in the LLM prompt stream. For a full technical analysis of context window layouts, positional attention biases, prompt-assembly hierarchies, and the 70/30 required-to-dynamic allocation split, please consult our dedicated
-              <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline font-semibold">Plot Components Guide</router-link>.
-            </p>
-          </div>
-        </div>
-      </div>
+
 
       <!-- ===================== WHAT ARE AI INSTRUCTIONS ===================== -->
       <section id="guide-what-is" class="card">
@@ -171,7 +159,7 @@
                         You are an AI dungeon master that provides any kind of roleplaying game content.
                       </div>
                       <p class="text-bd-text-secondary">
-                        Establishes the AI's core **persona**. Everything else derives from this primary identity, allowing the AI to take creative liberties within roleplaying bounds.
+                        Establishes the AI's core <strong>persona</strong>. Everything else derives from this primary identity, allowing the AI to take creative liberties within roleplaying bounds.
                       </p>
                     </div>
                   </div>
@@ -364,7 +352,7 @@
                   </div>
                 </div>
                 <div class="text-xs text-bd-text-muted">
-                  <strong>Tip:</strong> You can test your directives on the official <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" class="text-bd-accent-primary hover:underline">Hugging Face Tokenizer Playground</a> to analyze token representations.
+                  <strong>Tip:</strong> You can test your directives on the official <a href="https://platform.openai.com/tokenizer" target="_blank" class="text-bd-accent-primary hover:underline font-semibold">OpenAI Tokenizer</a> to analyze token representations.
                 </div>
               </div>
 
@@ -658,8 +646,8 @@ Combat:
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Info class="w-5 h-5 text-bd-amber" />
-            Credits &amp; Resources
+            <Users class="w-5 h-5 text-bd-amber" />
+            Credits
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('credits') }" />
         </button>
@@ -667,7 +655,7 @@ Combat:
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('credits')" class="mt-4 space-y-4">
             <div>
-              <p class="text-xs text-bd-text-muted mb-2 flex items-center gap-1.5">
+              <p class="text-xs text-bd-text-muted mb-3">
                 Contributors who researched, developed, and documented AI Instructions configurations:
               </p>
               <div class="flex flex-wrap gap-1.5">
@@ -676,23 +664,6 @@ Combat:
                   {{ name }}
                 </span>
               </div>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <a href="https://docs.google.com/document/d/1na9MeTcx0QY6MkZdQSkFQFL91sT8BSiJ_6gxrC5sNEU" target="_blank" class="btn btn-secondary text-xs">
-                <ScrollText class="w-3 h-3" /> OffMetaGamer's Repo
-              </a>
-              <a href="https://help.aidungeon.com/faq/ai-instructions" target="_blank" class="btn btn-secondary text-xs">
-                <BookOpen class="w-3 h-3" /> Official FAQ
-              </a>
-              <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
-                <MessageSquare class="w-3 h-3" /> Discord Community
-              </a>
-              <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" class="btn btn-secondary text-xs">
-                <Coins class="w-3 h-3" /> Tokenizer Playground
-              </a>
-              <a href="https://github.com/LewdLeah/Multiple-Choice-Assistant/tree/main/docs" target="_blank" class="btn btn-secondary text-xs">
-                <BookOpen class="w-3 h-3" /> LewdLeah's AI Dungeon Docs
-              </a>
             </div>
           </div>
         </Transition>
@@ -710,7 +681,7 @@ import {
   Sparkles, Info, Zap, Target, Lightbulb, Rocket, Wrench,
   MessageSquare, Skull, ExternalLink,
   AlertTriangle, Plus, Coins, Cpu,
-  X, Heart, ChevronDown, ChevronUp, Eye, Bold, Quote
+  X, Heart, ChevronDown, ChevronUp, Eye, Bold, Quote, Users
 } from 'lucide-vue-next'
 
 // Guide table of contents sections
@@ -726,7 +697,7 @@ const guideSections = [
   { id: 'header-debugging', label: 'Diagnostics', isHeader: true },
   { id: 'debugging', label: 'Directives Diagnostics' },
   { id: 'pitfalls', label: 'Common Pitfalls' },
-  { id: 'credits', label: 'Credits & Resources' }
+  { id: 'credits', label: 'Credits' }
 ]
 
 // Track which guide sections are expanded (all expanded by default)

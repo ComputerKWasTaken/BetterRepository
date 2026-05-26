@@ -36,20 +36,6 @@
     <!-- Main Content -->
     <div class="flex-1 space-y-4 min-w-0">
 
-      <!-- Context Budget Routing Notice -->
-      <div class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
-        <div class="flex items-start gap-3">
-          <Info class="w-5 h-5 text-bd-info flex-shrink-0 mt-0.5" />
-          <div>
-            <h4 class="font-semibold text-bd-text-primary text-sm">Context Length &amp; Prompt Assembly</h4>
-            <p class="text-xs text-bd-text-secondary mt-1">
-              Advanced Settings fine-tune the AI generation pass, while **Context Length** defines the size of prompt inputs. To understand how context budgets are compiled, or how history and memories compete for token space under the 70/30 split, see our dedicated 
-              <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline font-semibold">Plot Components Guide</router-link>.
-            </p>
-          </div>
-        </div>
-      </div>
-
       <!-- ===================== SAMPLING PIPELINE ===================== -->
       <section id="guide-what-is" class="card">
         <button
@@ -106,7 +92,7 @@
                   <strong>Standard Temp:</strong> Establish your baseline Temperature between <code class="text-bd-purple">0.8</code> and <code class="text-bd-purple">1.0</code>. (Balances coherence and creativity).
                 </div>
                 <div class="p-3 rounded bg-bd-bg-tertiary">
-                  <strong>Refine Pools:</strong> Set baseline **Top-P** to <code class="text-bd-purple">0.95</code> and **Top-K** to <code class="text-bd-purple">500</code> to filter out incoherent choices.
+                  <strong>Refine Pools:</strong> Set baseline <strong>Top-P</strong> to <code class="text-bd-purple">0.95</code> and <strong>Top-K</strong> to <code class="text-bd-purple">500</code> to filter out incoherent choices.
                 </div>
               </div>
             </div>
@@ -141,7 +127,7 @@
                   Temperature (Probability Scaling)
                 </h4>
                 <p class="text-bd-text-secondary">
-                  Steers word randomness. During generation, the model predicts the likelihood of every word in its vocabulary. Temperature acts as a **probability multiplier**:
+                  Steers word randomness. During generation, the model predicts the likelihood of every word in its vocabulary. Temperature acts as a <strong>probability multiplier</strong>:
                 </p>
                 <ul class="list-disc list-inside space-y-1 text-bd-text-muted">
                   <li>• <strong>Low Temperature (&lt; 0.5):</strong> Sharpens the probability peak. The model hyper-fixates on only the highest-probability words. Safe, but stilted and repetitive.</li>
@@ -267,7 +253,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('advanced-topics')" class="mt-4 space-y-6">
             <p class="text-xs text-bd-text-secondary">
-              Community-voted configurations. Format: **Temperature / Top-K / Top-P / Presence / Frequency**.
+              Community-voted configurations. Format: <strong>Temperature / Top-K / Top-P / Presence / Frequency</strong>.
             </p>
 
             <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle overflow-x-auto">
@@ -417,8 +403,8 @@
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Info class="w-5 h-5 text-bd-amber" />
-            Credits &amp; Resources
+            <Users class="w-5 h-5 text-bd-amber" />
+            Credits
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -429,7 +415,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('credits')" class="mt-4 space-y-4">
             <div>
-              <p class="text-xs text-bd-text-muted mb-2 flex items-center gap-1.5">
+              <p class="text-xs text-bd-text-muted mb-3">
                 Contributors who researched, cataloged, and tested AI Dungeon sampling metrics:
               </p>
               <div class="flex flex-wrap gap-1.5">
@@ -444,15 +430,6 @@
                 </span>
               </div>
             </div>
-
-            <div class="flex flex-wrap gap-2">
-              <a href="https://help.aidungeon.com/faq/what-are-advanced-settings" target="_blank" class="btn btn-secondary text-xs">
-                <BookOpen class="w-3 h-3" /> Official Advanced Settings FAQ
-              </a>
-              <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
-                <MessageSquare class="w-3 h-3" /> Discord Community
-              </a>
-            </div>
           </div>
         </Transition>
       </section>
@@ -466,7 +443,7 @@ import { ref } from 'vue'
 import { 
   Settings, HelpCircle, Sparkles, Info, Lightbulb, Zap, AlertTriangle,
   BookOpen, MessageSquare, FileText, Thermometer, ListFilter, PieChart,
-  Ban, Repeat, Cpu, Layers, Target, Check, Rocket, Award, X
+  Ban, Repeat, Cpu, Layers, Target, Check, Rocket, Award, X, Users
 } from 'lucide-vue-next'
 
 // Guide table of contents sections
@@ -479,7 +456,7 @@ const guideSections = [
   { id: 'advanced-topics', label: 'Community Model Presets' },
   { id: 'header-trouble', label: 'Diagnostics', isHeader: true },
   { id: 'pitfalls', label: 'Tuning Diagnostics' },
-  { id: 'credits', label: 'Credits & Resources' }
+  { id: 'credits', label: 'Credits' }
 ]
 
 // Track which guide sections are expanded (all expanded by default)

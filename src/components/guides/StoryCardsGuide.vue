@@ -36,19 +36,7 @@
     <!-- Main Content -->
     <div class="flex-1 space-y-4 min-w-0">
 
-      <!-- Context Budget Routing Notice -->
-      <div class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
-        <div class="flex items-start gap-3">
-          <Info class="w-5 h-5 text-bd-info flex-shrink-0 mt-0.5" />
-          <div>
-            <h4 class="font-semibold text-bd-text-primary text-sm">Dynamic Context Budgets</h4>
-            <p class="text-xs text-bd-text-secondary mt-1">
-              Story Cards belong to the **Dynamic Elements Pool**, occupying a flexible segment (typically <strong>~25%</strong> of remaining space). For a complete analysis of how the compiler ranks and trims active cards when context budgets are reached, see our dedicated 
-              <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline font-semibold">Plot Components Guide</router-link>.
-            </p>
-          </div>
-        </div>
-      </div>
+
 
       <!-- ===================== DYNAMIC LORE TRIGGERING ===================== -->
       <section id="guide-what-is" class="card">
@@ -69,7 +57,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('what-is')" class="mt-4 space-y-6">
             <p class="text-bd-text-secondary">
-              Story Cards are dynamic, conditional lore folders. Unlike Plot Essentials, which are always present, Story Cards remain dormant outside of context, loading only when their specified **case-insensitive triggers** are matching in recent turn history.
+              Story Cards are dynamic, conditional lore folders. Unlike Plot Essentials, which are always present, Story Cards remain dormant outside of context, loading only when their specified <strong>case-insensitive triggers</strong> are matching in recent turn history.
             </p>
 
             <div class="grid md:grid-cols-3 gap-3 text-xs">
@@ -89,7 +77,7 @@
                   The Scan Window
                 </h3>
                 <p class="text-bd-text-secondary">
-                  The client scans a minimum of the last **4 turns** for triggers. If active cards take up minimal space, it automatically scales the scan window: `Available Tokens / 100` turns are checked.
+                  The client scans a minimum of the last <strong>4 turns</strong> for triggers. If active cards take up minimal space, it automatically scales the scan window: `Available Tokens / 100` turns are checked.
                 </p>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
@@ -423,8 +411,8 @@
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Info class="w-5 h-5 text-bd-amber" />
-            Credits &amp; Resources
+            <Users class="w-5 h-5 text-bd-purple" />
+            Credits
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -435,7 +423,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('credits')" class="mt-4 space-y-4">
             <div>
-              <p class="text-xs text-bd-text-muted mb-2 flex items-center gap-1.5">
+              <p class="text-xs text-bd-text-muted mb-3">
                 Contributors who researched, cataloged, and built command utilities for Story Cards:
               </p>
               <div class="flex flex-wrap gap-1.5">
@@ -444,14 +432,6 @@
                   {{ name }}
                 </span>
               </div>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
-                <MessageSquare class="w-3 h-3" /> Discord Community
-              </a>
-              <a href="https://github.com/LewdLeah/Multiple-Choice-Assistant/tree/main/docs" target="_blank" class="btn btn-secondary text-xs">
-                <FileText class="w-3 h-3" /> LewdLeah's AI Dungeon Docs
-              </a>
             </div>
           </div>
         </Transition>
@@ -465,7 +445,7 @@
 import { ref } from 'vue'
 import { STORY_CARDS_CONTRIBUTORS as storyCardsContributors } from '@/data/contributors'
 import { 
-  Layers, HelpCircle, Lightbulb, FileText, Zap, Cog, AlertTriangle, Award, Check, Pencil, Download, Search, Target, X, ChevronDown, ChevronUp, Info, MessageSquare, Brain, Coins, Sparkles, Rocket
+  Layers, HelpCircle, Lightbulb, FileText, Zap, Cog, AlertTriangle, Award, Check, Pencil, Download, Search, Target, X, ChevronDown, ChevronUp, Info, MessageSquare, Brain, Coins, Sparkles, Rocket, Users
 } from 'lucide-vue-next'
 
 // Guide table of contents sections
@@ -479,7 +459,7 @@ const guideSections = [
   { id: 'advanced-topics', label: 'Presets & Integrations' },
   { id: 'header-trouble', label: 'Troubleshooting', isHeader: true },
   { id: 'pitfalls', label: 'Trigger Troubleshooting' },
-  { id: 'credits', label: 'Credits & Resources' }
+  { id: 'credits', label: 'Credits' }
 ]
 
 // Track which guide sections are expanded (all expanded by default)

@@ -1593,8 +1593,8 @@
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Info class="w-5 h-5 text-bd-amber" />
-            Credits & Resources
+            <Users class="w-5 h-5 text-bd-amber" />
+            Credits
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('credits') }" />
         </button>
@@ -1602,29 +1602,15 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('credits')" class="mt-4">
             <div class="mb-4">
-          <p class="text-xs text-bd-text-muted mb-2 flex items-center gap-1.5">
-            Contributors who created AI Instructions, or created repositories, guides, or other resources:
-          </p>
-          <div class="flex flex-wrap gap-1.5">
-            <span v-for="name in aiInstructionsContributors" :key="name" 
-                  class="px-2 py-0.5 rounded-full text-xs font-medium bg-bd-amber/10 text-bd-amber border border-bd-amber/20">
-              {{ name }}
-            </span>
-          </div>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <a href="https://docs.google.com/document/d/1na9MeTcx0QY6MkZdQSkFQFL91sT8BSiJ_6gxrC5sNEU" target="_blank" class="btn btn-secondary text-xs">
-            <ScrollText class="w-3 h-3" /> OffMetaGamer's Repo
-          </a>
-          <a href="https://help.aidungeon.com/faq/ai-instructions" target="_blank" class="btn btn-secondary text-xs">
-            <BookOpen class="w-3 h-3" /> Official Guide
-          </a>
-          <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
-            <MessageSquare class="w-3 h-3" /> Discord
-          </a>
-          <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" class="btn btn-secondary text-xs">
-            <Coins class="w-3 h-3" /> Tokenizer
-          </a>
+              <p class="text-xs text-bd-text-muted mb-3">
+                Contributors who created AI Instructions, or created repositories, guides, or other resources:
+              </p>
+              <div class="flex flex-wrap gap-1.5">
+                <span v-for="name in aiInstructionsContributors" :key="name" 
+                      class="px-2 py-0.5 rounded-full text-xs font-medium bg-bd-amber/10 text-bd-amber border border-bd-amber/20">
+                  {{ name }}
+                </span>
+              </div>
             </div>
           </div>
         </Transition>
@@ -2571,7 +2557,7 @@ const guideSections = [
   { id: 'genre-guides', label: 'Genre Guides', icon: 'Drama', color: 'amber' },
   { id: 'model-settings', label: 'Model Settings', icon: 'SlidersHorizontal', color: 'cyan' },
   { id: 'tokens', label: 'Token Optimization', icon: 'Coins', color: 'amber' },
-  { id: 'credits', label: 'Credits', icon: 'Info', color: 'amber' }
+  { id: 'credits', label: 'Credits', icon: 'Users', color: 'amber' }
 ]
 
 // Track which guide sections are expanded (all expanded by default)

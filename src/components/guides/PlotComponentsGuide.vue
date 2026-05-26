@@ -52,7 +52,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('what-is')" class="mt-4 space-y-4">
             <p class="text-bd-text-secondary">
-              Plot Components are the primary structural containers in AI Dungeon. Classified under **Required Elements**, they provide the persistent framework (rules, character states, and summaries) that maintains coherence across thousands of story actions.
+              Plot Components are the primary structural containers in AI Dungeon. Classified under <strong>Required Elements</strong>, they provide the persistent framework (rules, character states, and summaries) that maintains coherence across thousands of story actions.
             </p>
 
             <div class="grid md:grid-cols-3 gap-3">
@@ -145,7 +145,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('budgets')" class="mt-4 space-y-6">
             <p class="text-bd-text-secondary text-xs">
-              Every turn, AI Dungeon compiles your story files into a single, ordered prompt stream called the **Context Window**. The model's attention is not distributed equally across this stream; positioning dictates influence.
+              Every turn, AI Dungeon compiles your story files into a single, ordered prompt stream called the <strong>Context Window</strong>. The model's attention is not distributed equally across this stream; positioning dictates influence.
             </p>
 
             <!-- Context Prompt Stream Order -->
@@ -304,7 +304,7 @@
             <div class="space-y-3">
               <h3 class="font-semibold text-bd-text-primary text-md border-b border-bd-border-subtle pb-2">1. Plot Essentials (PE)</h3>
               <p class="text-bd-text-secondary text-xs">
-                Plot Essentials house information that is **permanently relevant** to your adventure. It stays locked in context on every single turn.
+                Plot Essentials house information that is <strong>permanently relevant</strong> to your adventure. It stays locked in context on every single turn.
               </p>
               
               <div class="grid md:grid-cols-3 gap-3 text-xs">
@@ -351,7 +351,7 @@ Current Quest: Retrieve the Sunstone</div>
             <div class="space-y-3 pt-4 border-t border-bd-border-subtle">
               <h3 class="font-semibold text-bd-text-primary text-md border-b border-bd-border-subtle pb-2">2. Author's Note (AN)</h3>
               <p class="text-bd-text-secondary text-xs">
-                Author's Note is a volatile field designed for **scene-specific guidelines**. Because it resides right before player input, it has immense immediate steering power.
+                Author's Note is a volatile field designed for <strong>scene-specific guidelines</strong>. Because it resides right before player input, it has immense immediate steering power.
               </p>
               
               <div class="grid md:grid-cols-2 gap-3 text-xs">
@@ -370,7 +370,7 @@ Current Quest: Retrieve the Sunstone</div>
                 <div class="flex items-start gap-2">
                   <Info class="w-4 h-4 text-bd-pink flex-shrink-0 mt-0.5" />
                   <p class="text-bd-text-secondary">
-                    <strong>Under-the-Hood Syntax:</strong> Behind the scenes, the client automatically wraps your Author's Note text in <code class="text-bd-pink">[ square brackets ]</code> before compiling the prompt. Because LLMs were pre-trained on internet documents where bracketed lines represent editorial comments, brackets tell the model this text represents **editorial metadata directives** rather than story prose.
+                    <strong>Under-the-Hood Syntax:</strong> Behind the scenes, the client automatically wraps your Author's Note text in <code class="text-bd-pink">[ square brackets ]</code> before compiling the prompt. Because LLMs were pre-trained on internet documents where bracketed lines represent editorial comments, brackets tell the model this text represents <strong>editorial metadata directives</strong> rather than story prose.
                   </p>
                 </div>
               </div>
@@ -390,7 +390,7 @@ Current Quest: Retrieve the Sunstone</div>
                     Story Summary (SS)
                   </h4>
                   <p class="text-bd-text-secondary">
-                    A running chronological log of completed plot points. The client monitors your inputs, and every **4 actions**, compiles them into a new memory entry.
+                    A running chronological log of completed plot points. The client monitors your inputs, and every <strong>4 actions</strong>, compiles them into a new memory entry.
                   </p>
                   <p class="text-bd-text-muted">
                     <strong>Auto Summarization passing:</strong> When the summary becomes too long, AI Dungeon executes a background pass to compress older entries, keeping tokens stable.
@@ -416,7 +416,7 @@ Current Quest: Retrieve the Sunstone</div>
             <div class="space-y-3 pt-4 border-t border-bd-border-subtle">
               <h3 class="font-semibold text-bd-text-primary text-md border-b border-bd-border-subtle pb-2">4. Front Memory</h3>
               <p class="text-bd-text-secondary text-xs">
-                Front Memory is an advanced, **script-only** component. Injected at the absolute end of the prompt stream (Position #9), it has maximum immediate steering influence over the model's next word choice.
+                Front Memory is an advanced, <strong>script-only</strong> component. Injected at the absolute end of the prompt stream (Position #9), it has maximum immediate steering influence over the model's next word choice.
               </p>
               <div class="p-4 rounded-lg bg-bd-red/10 border border-bd-red/30 text-xs">
                 This field is completely hidden from the standard gameplay UI. It can only be written to programmatically by JavaScript modifiers via the `state.memory.frontMemory` property. Excellent for real-time combat status displays.
@@ -526,8 +526,8 @@ Current Quest: Retrieve the Sunstone</div>
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Info class="w-5 h-5 text-bd-amber" />
-            Credits &amp; Resources
+            <Users class="w-5 h-5 text-bd-blue" />
+            Credits
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('credits') }" />
         </button>
@@ -535,7 +535,7 @@ Current Quest: Retrieve the Sunstone</div>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('credits')" class="mt-4 space-y-4">
             <div>
-              <p class="text-xs text-bd-text-muted mb-2 flex items-center gap-1.5">
+              <p class="text-xs text-bd-text-muted mb-3">
                 Contributors who researched, analyzed, and optimized prompt assembly and Required Elements:
               </p>
               <div class="flex flex-wrap gap-1.5">
@@ -544,14 +544,6 @@ Current Quest: Retrieve the Sunstone</div>
                   {{ name }}
                 </span>
               </div>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
-                <MessageSquare class="w-3 h-3" /> Discord Community
-              </a>
-              <a href="https://github.com/LewdLeah/Multiple-Choice-Assistant/tree/main/docs" target="_blank" class="btn btn-secondary text-xs">
-                <BookOpen class="w-3 h-3" /> LewdLeah's AI Dungeon Docs
-              </a>
             </div>
           </div>
         </Transition>
@@ -567,7 +559,7 @@ import { PLOT_COMPONENTS_CONTRIBUTORS as plotComponentsContributors } from '@/da
 import { 
   Info, ScrollText, Layers, HelpCircle, User, Globe, Plus,
   RefreshCw, MessageSquare, Rocket, AlertTriangle, Database, Brain, ArrowRightLeft,
-  Sparkles, XCircle, Ruler, Cpu, ChevronDown, ChevronUp, BookOpen, Swords, Heart, Target, Skull, Eye, Wrench
+  Sparkles, XCircle, Ruler, Cpu, ChevronDown, ChevronUp, BookOpen, Swords, Heart, Target, Skull, Eye, Wrench, Users
 } from 'lucide-vue-next'
 
 // Guide table of contents sections
@@ -579,7 +571,7 @@ const guideSections = [
   { id: 'anatomy', label: 'The Four Elements' },
   { id: 'header-trouble', label: 'Troubleshooting', isHeader: true },
   { id: 'advanced-topics', label: 'Structural Pitfalls' },
-  { id: 'credits', label: 'Credits & Resources' }
+  { id: 'credits', label: 'Credits' }
 ]
 
 // Track which guide sections are expanded (all expanded by default)
