@@ -36,7 +36,21 @@
     <!-- Main Content -->
     <div class="flex-1 space-y-4 min-w-0">
 
-      <!-- ===================== 1. WHAT ARE ADVANCED SETTINGS ===================== -->
+      <!-- Context Budget Routing Notice -->
+      <div class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
+        <div class="flex items-start gap-3">
+          <Info class="w-5 h-5 text-bd-info flex-shrink-0 mt-0.5" />
+          <div>
+            <h4 class="font-semibold text-bd-text-primary text-sm">Context Length &amp; Prompt Assembly</h4>
+            <p class="text-xs text-bd-text-secondary mt-1">
+              Advanced Settings fine-tune the AI generation pass, while **Context Length** defines the size of prompt inputs. To understand how context budgets are compiled, or how history and memories compete for token space under the 70/30 split, see our dedicated 
+              <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline font-semibold">Plot Components Guide</router-link>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== SAMPLING PIPELINE ===================== -->
       <section id="guide-what-is" class="card">
         <button
           @click="toggleGuideSection('what-is')"
@@ -44,7 +58,7 @@
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <HelpCircle class="w-5 h-5 text-bd-amber" />
-            What Are Advanced Settings?
+            The Token Selection Pipeline
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -54,121 +68,45 @@
         
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('what-is')" class="mt-4 space-y-6">
-            <p class="text-bd-text-secondary">
-              Advanced Settings let you customize exactly how the AI selects vocabulary words and constructs responses. 
-              By altering sampling limits, penalties, and random temperatures, you can fine-tune creative diversity and story logic.
+            <p class="text-bd-text-secondary font-medium">
+              Advanced Settings let you customize how the AI selects vocabulary words. By adjusting random temperatures, sampling pools, and repetition penalties, you steer creative variety and logic cohesion.
             </p>
 
-            <div class="grid md:grid-cols-3 gap-3">
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
-                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-                  <Sparkles class="w-4 h-4 text-bd-amber" />
-                  Creativity Steering
-                </h3>
-                <p class="text-xs text-bd-text-secondary">
-                  Regulate response randomness and restrict choices to keep outputs logical or push them to be highly creative.
-                </p>
-              </div>
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
-                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-                  <ListFilter class="w-4 h-4 text-bd-blue" />
-                  Sampling Pools
-                </h3>
-                <p class="text-xs text-bd-text-secondary">
-                  Filter out highly unlikely or incoherent words entirely before the AI randomly selects its next token.
-                </p>
-              </div>
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
-                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-                  <Settings class="w-4 h-4 text-bd-green" />
-                  Memory Capacities
-                </h3>
-                <p class="text-xs text-bd-text-secondary">
-                  Adjust active token counts and budget splits between story instructions, lore cards, and turn histories.
-                </p>
-              </div>
-            </div>
-
-            <!-- Token selection flow map -->
+            <!-- Token Selection Pipeline Flow -->
             <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-3">
               <h3 class="font-semibold text-bd-text-primary flex items-center gap-2 text-xs">
                 <Layers class="w-4 h-4 text-bd-purple" />
-                The Token Selection Pipeline
+                The Token Generation Pipeline Flow
               </h3>
-              <div class="flex flex-wrap items-center gap-2 text-[11px]">
-                <div class="px-2 py-1 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-secondary">Word Probability Calculations</div>
-                <span class="text-bd-text-muted">→</span>
-                <div class="px-2 py-1 rounded bg-bd-purple/20 border border-bd-purple/30 text-bd-purple font-semibold">Top-K filter</div>
-                <span class="text-bd-text-muted">→</span>
-                <div class="px-2 py-1 rounded bg-bd-teal/20 border border-bd-teal/30 text-bd-teal font-semibold">Top-P filter</div>
-                <span class="text-bd-text-muted">→</span>
-                <div class="px-2 py-1 rounded bg-bd-amber/20 border border-bd-amber/30 text-bd-amber font-semibold">Temperature scale</div>
-                <span class="text-bd-text-muted">→</span>
-                <div class="px-2 py-1 rounded bg-bd-green/20 border border-bd-green/30 text-bd-green font-semibold">Random pick</div>
+              <div class="flex flex-wrap items-center gap-2 text-[11px] font-mono">
+                <div class="px-2 py-1 rounded bg-bd-bg-primary border border-bd-border-subtle text-bd-text-secondary">Word Probability Array</div>
+                <span class="text-bd-text-muted">&rarr;</span>
+                <div class="px-2 py-1 rounded bg-bd-purple/20 border border-bd-purple/30 text-bd-purple font-bold">Top-K filter</div>
+                <span class="text-bd-text-muted">&rarr;</span>
+                <div class="px-2 py-1 rounded bg-bd-teal/20 border border-bd-teal/30 text-bd-teal font-bold">Top-P filter</div>
+                <span class="text-bd-text-muted">&rarr;</span>
+                <div class="px-2 py-1 rounded bg-bd-amber/20 border border-bd-amber/30 text-bd-amber font-bold">Temperature scale</div>
+                <span class="text-bd-text-muted">&rarr;</span>
+                <div class="px-2 py-1 rounded bg-bd-green/20 border border-bd-green/30 text-bd-green font-bold">Token Output</div>
               </div>
-              <p class="text-[10px] text-bd-text-muted">First, Top-K and Top-P filter the allowable word pool. Next, Temperature shifts the relative likelihood of the remaining options. Finally, the engine selects a word and repeats the process.</p>
+              <p class="text-[10px] text-bd-text-muted leading-relaxed">The pipeline filters vocabulary systematically: Top-K cuts off the absolute bottom tier. Top-P dynamically slices the cumulative probability tail. Temperature shifts relative likelihood scales, and the engine picks a word randomly from the refined pool.</p>
             </div>
-          </div>
-        </Transition>
-      </section>
 
-      <!-- ===================== 2. QUICK START ===================== -->
-      <section id="guide-quick-start" class="card">
-        <button
-          @click="toggleGuideSection('quick-start')"
-          class="w-full flex items-center justify-between text-left"
-        >
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Rocket class="w-5 h-5 text-bd-green" />
-            Quick Start: Standard Baseline Settings
-          </h2>
-          <ChevronDown
-            class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('quick-start') }"
-          />
-        </button>
-        
-        <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('quick-start')" class="mt-4 space-y-4">
-            <p class="text-bd-text-secondary">
-              Configure these three baseline settings to establish a solid foundation for optimal generation quality.
-            </p>
-
-            <!-- Step 1 -->
-            <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
-              <div class="flex items-start gap-3">
-                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-green/20 text-bd-green font-bold flex items-center justify-center">1</span>
-                <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary mb-1">Max Out Context Length</h3>
-                  <p class="text-xs text-bd-text-secondary">
-                    Navigate to **Adventure Settings → Advanced Settings**. Set **Context Length** to the maximum tokens allowed by your membership tier. More context directly expands AI memory.
-                  </p>
+            <!-- Quick Start Baselines -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle space-y-3">
+              <h3 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
+                <Rocket class="w-4 h-4 text-bd-green" />
+                Quick Start: Stable Baselines
+              </h3>
+              <div class="grid md:grid-cols-3 gap-3 text-xs">
+                <div class="p-3 rounded bg-bd-bg-tertiary">
+                  <strong>Max Context Length:</strong> Set your Context Length slider to the absolute maximum allowed by your membership tier to maximize AI memory capacity.
                 </div>
-              </div>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="p-4 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
-              <div class="flex items-start gap-3">
-                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-blue/20 text-bd-blue font-bold flex items-center justify-center">2</span>
-                <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary mb-1">Establish Temperature Baseline</h3>
-                  <p class="text-xs text-bd-text-secondary">
-                    Set your **Temperature** slider between <code class="text-bd-purple">0.8</code> and <code class="text-bd-purple">1.0</code>. This is the sweet spot that balances factual consistency with rich story vocabulary.
-                  </p>
+                <div class="p-3 rounded bg-bd-bg-tertiary">
+                  <strong>Standard Temp:</strong> Establish your baseline Temperature between <code class="text-bd-purple">0.8</code> and <code class="text-bd-purple">1.0</code>. (Balances coherence and creativity).
                 </div>
-              </div>
-            </div>
-
-            <!-- Step 3 -->
-            <div class="p-4 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
-              <div class="flex items-start gap-3">
-                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center">3</span>
-                <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary mb-1">Configure Baseline Sampling Pools</h3>
-                  <p class="text-xs text-bd-text-secondary">
-                    Set **Top-P** to <code class="text-bd-purple">0.95</code> and **Top-K** to <code class="text-bd-purple">500</code>. This trims the most bizarre, irrelevant options, acting as a safety net against gibberish.
-                  </p>
+                <div class="p-3 rounded bg-bd-bg-tertiary">
+                  <strong>Refine Pools:</strong> Set baseline **Top-P** to <code class="text-bd-purple">0.95</code> and **Top-K** to <code class="text-bd-purple">500</code> to filter out incoherent choices.
                 </div>
               </div>
             </div>
@@ -176,15 +114,15 @@
         </Transition>
       </section>
 
-      <!-- ===================== 3. ANATOMY / HOW IT WORKS ===================== -->
+      <!-- ===================== SAMPLING MATHEMATICS ===================== -->
       <section id="guide-anatomy" class="card">
         <button
           @click="toggleGuideSection('anatomy')"
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Layers class="w-5 h-5 text-bd-blue" />
-            Anatomy &amp; How It Works
+            <Cpu class="w-5 h-5 text-bd-purple" />
+            Sampling Pool Mathematics
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -193,156 +131,68 @@
         </button>
         
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('anatomy')" class="mt-4 space-y-6">
+          <div v-if="isGuideSectionExpanded('anatomy')" class="mt-4 space-y-6 text-xs text-bd-text-secondary">
             
-            <!-- Core Generation Parameters -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Core Generation Parameters</h3>
-              
-              <div class="space-y-4 text-xs">
-                <!-- Context Length -->
-                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/20">
-                  <h4 class="font-semibold text-bd-text-primary flex items-center gap-2">
-                    <BookOpen class="w-4 h-4 text-bd-blue" /> Context Length (Tokens sent to AI)
-                  </h4>
-                  <p class="text-bd-text-secondary mt-1">
-                    Defines the total size of the AI's short-term memory pool. If this pool is too small, earlier segments of history, memory, and lore cards get cut off.
-                  </p>
-                  <p class="text-bd-text-muted mt-1">
-                    <strong>Rule:</strong> Keep this at the absolute maximum allowed limit. Note that responses from the AI take up context space on the next turn, leaving slightly less room for older history turns.
-                  </p>
-                </div>
-
-                <!-- Temperature -->
-                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/20">
-                  <h4 class="font-semibold text-bd-text-primary flex items-center gap-2">
-                    <Thermometer class="w-4 h-4 text-bd-amber" /> Temperature (Creativity &amp; Focus)
-                  </h4>
-                  <p class="text-bd-text-secondary mt-1">
-                    Controls randomness. A low temperature focuses the AI on highly probable, predictable words. A high temperature flatlines probabilities, giving eccentric words a chance.
-                  </p>
-                  <div class="overflow-x-auto mt-2">
-                    <table class="w-full text-[11px] text-bd-text-secondary">
-                      <thead>
-                        <tr class="border-b border-bd-border-subtle">
-                          <th class="text-left font-semibold text-bd-text-primary">Temperature</th>
-                          <th class="text-left font-semibold text-bd-text-primary">Character</th>
-                          <th class="text-left font-semibold text-bd-text-primary">Best For</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr class="border-b border-bd-border-subtle/50">
-                          <td class="py-1 font-mono text-bd-blue">0.3 – 0.5</td>
-                          <td>Robotic &amp; repetitive</td>
-                          <td>Code, logic puzzles, strict facts</td>
-                        </tr>
-                        <tr class="border-b border-bd-border-subtle/50">
-                          <td class="py-1 font-mono text-bd-green">0.7 – 0.9</td>
-                          <td>Balanced &amp; coherent</td>
-                          <td>Standard storytelling, general gaming</td>
-                        </tr>
-                        <tr>
-                          <td class="py-1 font-mono text-bd-amber">1.0 – 1.3</td>
-                          <td>Very creative, loose</td>
-                          <td>Quirky, surreal, experimental tales</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-
-                <!-- Response Length -->
-                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/20">
-                  <h4 class="font-semibold text-bd-text-primary flex items-center gap-2">
-                    <MessageSquare class="w-4 h-4 text-bd-green" /> Response Length (Max Output Tokens)
-                  </h4>
-                  <p class="text-bd-text-secondary mt-1">
-                    Caps the maximum response length generated on each turn. 
-                  </p>
-                  <div class="grid md:grid-cols-2 gap-3 mt-1.5 text-[11px] text-bd-text-muted">
-                    <div>
-                      <strong class="text-bd-green">Short Responses:</strong> Allows quick-paced, snappy play where you keep immediate control over the scene.
-                    </div>
-                    <div>
-                      <strong class="text-bd-purple">Long Responses:</strong> Promotes descriptive worldbuilding, atmospheric setups, and extended dialogue beats.
-                    </div>
-                  </div>
-                </div>
+            <div class="space-y-4">
+              <!-- Temperature -->
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-2">
+                <h4 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
+                  <Thermometer class="w-4 h-4 text-bd-amber" />
+                  Temperature (Probability Scaling)
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Steers word randomness. During generation, the model predicts the likelihood of every word in its vocabulary. Temperature acts as a **probability multiplier**:
+                </p>
+                <ul class="list-disc list-inside space-y-1 text-bd-text-muted">
+                  <li>• <strong>Low Temperature (&lt; 0.5):</strong> Sharpens the probability peak. The model hyper-fixates on only the highest-probability words. Safe, but stilted and repetitive.</li>
+                  <li>• <strong>High Temperature (&gt; 1.0):</strong> Flattens the probability distribution. Unlikely words get a significantly higher chance of selection. Highly creative, but risky and chaotic.</li>
+                </ul>
               </div>
-            </div>
 
-            <!-- Sampling and Penalty Selectors -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Sampling &amp; Penalty Selectors</h3>
-              
-              <div class="grid md:grid-cols-2 gap-4 text-xs">
+              <!-- Top-K & Top-P -->
+              <div class="grid md:grid-cols-2 gap-4">
                 <!-- Top-K -->
-                <div class="p-4 rounded bg-bd-bg-primary border border-bd-purple/20 space-y-1">
-                  <h4 class="font-semibold text-bd-purple flex items-center gap-1.5">
-                    <ListFilter class="w-4 h-4 text-bd-purple" /> Top-K
+                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-2">
+                  <h4 class="font-semibold text-bd-purple text-xs flex items-center gap-1.5">
+                    <ListFilter class="w-4 h-4 text-bd-purple" />
+                    Top-K (Fixed Pool Filter)
                   </h4>
                   <p class="text-bd-text-secondary">
-                    Restricts choice to the top K most likely words.
+                    Restricts the pool to a fixed number of the most likely words:
                   </p>
-                  <p class="text-bd-text-muted">
-                    Setting K = 50 eliminates the remaining 50,000+ words in the vocabulary pool, preventing extremely weird selections.
-                  </p>
+                  <div class="text-bd-text-muted leading-relaxed">
+                    Setting <code>Top-K = 100</code> wipes out the bottom 50,000+ words in the vocabulary pool entirely. This blocks extremely bizarre tokens from ever loading, even at high Temperatures.
+                  </div>
                 </div>
 
                 <!-- Top-P -->
-                <div class="p-4 rounded bg-bd-bg-primary border border-bd-teal/20 space-y-1">
-                  <h4 class="font-semibold text-bd-teal flex items-center gap-1.5">
-                    <PieChart class="w-4 h-4 text-bd-teal" /> Top-P
+                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-teal/30 space-y-2">
+                  <h4 class="font-semibold text-bd-teal text-xs flex items-center gap-1.5">
+                    <PieChart class="w-4 h-4 text-bd-teal" />
+                    Top-P (Cumulative Probability Filter)
                   </h4>
                   <p class="text-bd-text-secondary">
-                    Restricts choices to the cumulative probability threshold (e.g. 0.95 = top 95% of word probability).
+                    Dynamically filters vocabulary based on combined likelihood percentage:
                   </p>
-                  <p class="text-bd-text-muted">
-                    If K includes bizarre options, Top-P cuts them off if their combined probability is highly insignificant.
-                  </p>
-                </div>
-
-                <!-- Presence Penalty -->
-                <div class="p-4 rounded bg-bd-bg-primary border border-bd-pink/20 space-y-1">
-                  <h4 class="font-semibold text-bd-pink flex items-center gap-1.5">
-                    <Ban class="w-4 h-4 text-bd-pink" /> Presence Penalty
-                  </h4>
-                  <p class="text-bd-text-secondary">
-                    Applies a one-time penalty weight to any word that has already been chosen in the response.
-                  </p>
-                  <p class="text-bd-text-muted">
-                    Use a low positive value (e.g. 0.3) to stop the AI from repeating a word it used earlier in the same paragraph.
-                  </p>
-                </div>
-
-                <!-- Frequency Penalty -->
-                <div class="p-4 rounded bg-bd-bg-primary border border-bd-cyan/20 space-y-1">
-                  <h4 class="font-semibold text-bd-cyan flex items-center gap-1.5">
-                    <Repeat class="w-4 h-4 text-bd-cyan" /> Frequency Penalty
-                  </h4>
-                  <p class="text-bd-text-secondary">
-                    Applies a cumulative penalty that scales based on how many times a word has appeared.
-                  </p>
-                  <p class="text-bd-text-muted">
-                    Use with caution! High values penalize essential words like "the", "and", or character names, leading to chaotic syntax.
-                  </p>
+                  <div class="text-bd-text-muted leading-relaxed">
+                    Setting <code>Top-P = 0.95</code> keeps the top 95% of word probability. If the top 5 words represent 95% of cumulative probability, only those 5 are checked, trimming the rest.
+                  </div>
                 </div>
               </div>
             </div>
-
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== 4. BEST PRACTICES ===================== -->
+      <!-- ===================== REPETITION CONTROL ===================== -->
       <section id="guide-best-practices" class="card">
         <button
           @click="toggleGuideSection('best-practices')"
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Award class="w-5 h-5 text-bd-amber" />
-            Best Practices
+            <Ban class="w-5 h-5 text-bd-pink" />
+            Repetition Control &amp; Penalties
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -351,34 +201,54 @@
         </button>
         
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('best-practices')" class="mt-4 space-y-6">
-            
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-1.5 flex items-center gap-2">
-                <Check class="w-4 h-4 text-bd-green" />
-                Parameter Fine-Tuning Guidelines
-              </h3>
-              <ul class="space-y-2 text-xs text-bd-text-secondary">
-                <li class="flex items-start gap-2">
-                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                  <span><strong>Nudge One Setting at a Time:</strong> Never adjust temperature, penalties, and Top-P all on the same turn. Make tiny adjustments, observe for 3-4 turns, then adjust again.</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                  <span><strong>Start From Presets:</strong> Community model presets exist for a reason. Establish the standard baseline for your active engine first before customizing settings.</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                  <span><strong>Keep Penalties Low:</strong> Presence, Frequency, and Repetition penalties are powerful. High values cause the model to write extremely weird alternatives. Keep them under <code class="text-bd-purple">0.5</code> unless correcting severe loops.</span>
-                </li>
-              </ul>
+          <div v-if="isGuideSectionExpanded('best-practices')" class="mt-4 space-y-6 text-xs text-bd-text-secondary">
+            <p class="text-bd-text-secondary">
+              When models get stuck in loops (repeating sentences, recycling descriptors), use repetition penalties to dynamically degrade the probability of chosen words.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-4">
+              <!-- Presence Penalty -->
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-pink/20 space-y-1.5">
+                <h4 class="font-semibold text-bd-pink flex items-center gap-1.5">
+                  <Ban class="w-4 h-4 text-bd-pink" /> Presence Penalty (Word Reuse)
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Applies a flat, one-time penalty weight to any word that has already been generated in the response.
+                </p>
+                <div class="text-bd-text-muted">
+                  <strong>Best for:</strong> Forcing sentence variety within a turn. Set at <code class="text-bd-purple">0.3</code> to prevent immediate phrase echoing.
+                </div>
+              </div>
+
+              <!-- Frequency Penalty -->
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-cyan/20 space-y-1.5">
+                <h4 class="font-semibold text-bd-cyan flex items-center gap-1.5">
+                  <Repeat class="w-4 h-4 text-bd-cyan" /> Frequency Penalty (Word Density)
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Applies a cumulative penalty that scales based on how many times a word appeared in the response.
+                </p>
+                <div class="text-bd-text-muted">
+                  <strong>Caution:</strong> High values penalize mandatory structural words ("the", "and") or character names, causing chaotic syntax. Limit to <code class="text-bd-purple">0.4</code>.
+                </div>
+              </div>
             </div>
 
+            <!-- Stacking Controls -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-2">
+              <h4 class="font-semibold text-bd-text-primary text-xs flex items-center gap-1.5">
+                <Layers class="w-4 h-4 text-bd-blue" />
+                Penalty Stacking Rules
+              </h4>
+              <p>
+                Presence, Frequency, and standard Repetition penalties stack together. Over-stacking values makes the model write extremely stilted prose. Always edit your history text to manually strip repetitive sentences before resorting to penalties.
+              </p>
+            </div>
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== 5. ADVANCED TOPICS ===================== -->
+      <!-- ===================== COMMUNITY MODEL PRESETS ===================== -->
       <section id="guide-advanced-topics" class="card">
         <button
           @click="toggleGuideSection('advanced-topics')"
@@ -386,7 +256,7 @@
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Cpu class="w-5 h-5 text-bd-purple" />
-            Advanced Topics
+            Community Model Presets
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -396,123 +266,92 @@
         
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('advanced-topics')" class="mt-4 space-y-6">
-            
-            <!-- Sub-topic: Model Presets & Performance -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Suggested Model Presets</h3>
-              <p class="text-xs text-bd-text-secondary">
-                Community-tested configuration metrics for active AI Dungeon models. Format: **Temperature / Top-K / Top-P / Presence / Frequency**.
-              </p>
+            <p class="text-xs text-bd-text-secondary">
+              Community-voted configurations. Format: **Temperature / Top-K / Top-P / Presence / Frequency**.
+            </p>
 
-              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle overflow-x-auto">
-                <div class="grid gap-2.5" style="min-width: 450px;">
-                  <!-- Header -->
-                  <div class="grid grid-cols-6 gap-2 text-[10px] font-bold text-bd-text-muted uppercase tracking-wider pb-1.5 border-b border-bd-border-subtle">
-                    <div class="col-span-2">Model Name</div>
-                    <div class="text-center">Temp</div>
-                    <div class="text-center">Top-K</div>
-                    <div class="text-center">Top-P</div>
-                    <div class="text-center">Pres / Freq</div>
-                  </div>
-                  
-                  <!-- Rows -->
-                  <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
-                    <div class="col-span-2 font-semibold text-bd-text-primary">DeepSeek 3.0</div>
-                    <div class="text-center font-mono text-bd-amber">0.7</div>
-                    <div class="text-center font-mono text-bd-purple">500</div>
-                    <div class="text-center font-mono text-bd-teal">0.95</div>
-                    <div class="text-center font-mono text-bd-text-secondary">0.4 / 0.4</div>
-                  </div>
-                  <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
-                    <div class="col-span-2 font-semibold text-bd-text-primary">DeepSeek 3.1</div>
-                    <div class="text-center font-mono text-bd-amber">1.0</div>
-                    <div class="text-center font-mono text-bd-purple">500</div>
-                    <div class="text-center font-mono text-bd-teal">0.95</div>
-                    <div class="text-center font-mono text-bd-text-secondary">0.4 / 0.4</div>
-                  </div>
-                  <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
-                    <div class="col-span-2 font-semibold text-bd-text-primary">DeepSeek 3.2</div>
-                    <div class="text-center font-mono text-bd-amber">0.7</div>
-                    <div class="text-center font-mono text-bd-purple">300</div>
-                    <div class="text-center font-mono text-bd-teal">0.9</div>
-                    <div class="text-center font-mono text-bd-text-secondary">0.8 / 0.4</div>
-                  </div>
-                  <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
-                    <div class="col-span-2 font-semibold text-bd-text-primary">Dynamic Deep</div>
-                    <div class="text-center font-mono text-bd-amber">0.7</div>
-                    <div class="text-center font-mono text-bd-purple">300</div>
-                    <div class="text-center font-mono text-bd-teal">0.9</div>
-                    <div class="text-center font-mono text-bd-text-secondary">0.8 / 0.4</div>
-                  </div>
-                  <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
-                    <div class="col-span-2 font-semibold text-bd-text-primary">Atlas <span class="text-bd-text-muted">(DS3.2 Cached)</span></div>
-                    <div class="text-center font-mono text-bd-amber">0.7</div>
-                    <div class="text-center font-mono text-bd-purple">300</div>
-                    <div class="text-center font-mono text-bd-teal">0.9</div>
-                    <div class="text-center font-mono text-bd-text-secondary">0.8 / 0.4</div>
-                  </div>
-                  <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
-                    <div class="col-span-2 font-semibold text-bd-text-primary">Raven <span class="text-bd-text-muted">(GLM 4.6 Cached)</span></div>
-                    <div class="text-center font-mono text-bd-amber">0.8</div>
-                    <div class="text-center font-mono text-bd-purple">200</div>
-                    <div class="text-center font-mono text-bd-teal">0.95</div>
-                    <div class="text-center font-mono text-bd-text-secondary">0.8 / 0.6</div>
-                  </div>
-                  <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
-                    <div class="col-span-2 font-semibold text-bd-text-primary">Wayfarer Large</div>
-                    <div class="text-center font-mono text-bd-amber">1.0</div>
-                    <div class="text-center font-mono text-bd-purple">500</div>
-                    <div class="text-center font-mono text-bd-teal">0.95</div>
-                    <div class="text-center font-mono text-bd-text-secondary">0.5 / 0</div>
-                  </div>
-                  <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
-                    <div class="col-span-2 font-semibold text-bd-text-primary">Harbinger</div>
-                    <div class="text-center font-mono text-bd-amber">1.3</div>
-                    <div class="text-center font-mono text-bd-purple">450</div>
-                    <div class="text-center font-mono text-bd-teal">0.5</div>
-                    <div class="text-center font-mono text-bd-text-secondary">0.2 / 0.2</div>
-                  </div>
-                  <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
-                    <div class="col-span-2 font-semibold text-bd-text-primary">Hearthfire</div>
-                    <div class="text-center font-mono text-bd-amber">1.0</div>
-                    <div class="text-center font-mono text-bd-purple">500</div>
-                    <div class="text-center font-mono text-bd-teal">0.95</div>
-                    <div class="text-center font-mono text-bd-text-secondary">0.4 / 0.4</div>
-                  </div>
-                  <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
-                    <div class="col-span-2 font-semibold text-bd-text-primary">Muse</div>
-                    <div class="text-center font-mono text-bd-amber">1.0</div>
-                    <div class="text-center font-mono text-bd-purple">250</div>
-                    <div class="text-center font-mono text-bd-teal">1.0</div>
-                    <div class="text-center font-mono text-bd-text-secondary">0.25 / 0</div>
-                  </div>
-                  <div class="grid grid-cols-6 gap-2 text-xs items-center py-1">
-                    <div class="col-span-2 font-semibold text-bd-text-primary">Madness</div>
-                    <div class="text-center font-mono text-bd-amber">1.0</div>
-                    <div class="text-center font-mono text-bd-purple">500</div>
-                    <div class="text-center font-mono text-bd-teal">0.95</div>
-                    <div class="text-center font-mono text-bd-text-secondary">0.4 / 0.4</div>
-                  </div>
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle overflow-x-auto">
+              <div class="grid gap-2.5" style="min-width: 450px;">
+                <!-- Header -->
+                <div class="grid grid-cols-6 gap-2 text-[10px] font-bold text-bd-text-muted uppercase tracking-wider pb-1.5 border-b border-bd-border-subtle">
+                  <div class="col-span-2">Model Name</div>
+                  <div class="text-center">Temp</div>
+                  <div class="text-center">Top-K</div>
+                  <div class="text-center">Top-P</div>
+                  <div class="text-center">Pres / Freq</div>
+                </div>
+                
+                <!-- Rows -->
+                <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
+                  <div class="col-span-2 font-semibold text-bd-text-primary">DeepSeek 3.0</div>
+                  <div class="text-center font-mono text-bd-amber">0.7</div>
+                  <div class="text-center font-mono text-bd-purple">500</div>
+                  <div class="text-center font-mono text-bd-teal">0.95</div>
+                  <div class="text-center font-mono text-bd-text-secondary">0.4 / 0.4</div>
+                </div>
+                <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
+                  <div class="col-span-2 font-semibold text-bd-text-primary">DeepSeek 3.1</div>
+                  <div class="text-center font-mono text-bd-amber">1.0</div>
+                  <div class="text-center font-mono text-bd-purple">500</div>
+                  <div class="text-center font-mono text-bd-teal">0.95</div>
+                  <div class="text-center font-mono text-bd-text-secondary">0.4 / 0.4</div>
+                </div>
+                <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
+                  <div class="col-span-2 font-semibold text-bd-text-primary">DeepSeek 3.2</div>
+                  <div class="text-center font-mono text-bd-amber">0.7</div>
+                  <div class="text-center font-mono text-bd-purple">300</div>
+                  <div class="text-center font-mono text-bd-teal">0.9</div>
+                  <div class="text-center font-mono text-bd-text-secondary">0.8 / 0.4</div>
+                </div>
+                <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
+                  <div class="col-span-2 font-semibold text-bd-text-primary">Atlas <span class="text-bd-text-muted">(DS3.2 Cached)</span></div>
+                  <div class="text-center font-mono text-bd-amber">0.7</div>
+                  <div class="text-center font-mono text-bd-purple">300</div>
+                  <div class="text-center font-mono text-bd-teal">0.9</div>
+                  <div class="text-center font-mono text-bd-text-secondary">0.8 / 0.4</div>
+                </div>
+                <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
+                  <div class="col-span-2 font-semibold text-bd-text-primary">Raven <span class="text-bd-text-muted">(GLM 4.6 Cached)</span></div>
+                  <div class="text-center font-mono text-bd-amber">0.8</div>
+                  <div class="text-center font-mono text-bd-purple">200</div>
+                  <div class="text-center font-mono text-bd-teal">0.95</div>
+                  <div class="text-center font-mono text-bd-text-secondary">0.8 / 0.6</div>
+                </div>
+                <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
+                  <div class="col-span-2 font-semibold text-bd-text-primary">Wayfarer Large</div>
+                  <div class="text-center font-mono text-bd-amber">1.0</div>
+                  <div class="text-center font-mono text-bd-purple">500</div>
+                  <div class="text-center font-mono text-bd-teal">0.95</div>
+                  <div class="text-center font-mono text-bd-text-secondary">0.5 / 0</div>
+                </div>
+                <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
+                  <div class="col-span-2 font-semibold text-bd-text-primary">Harbinger</div>
+                  <div class="text-center font-mono text-bd-amber">1.3</div>
+                  <div class="text-center font-mono text-bd-purple">450</div>
+                  <div class="text-center font-mono text-bd-teal">0.5</div>
+                  <div class="text-center font-mono text-bd-text-secondary">0.2 / 0.2</div>
+                </div>
+                <div class="grid grid-cols-6 gap-2 text-xs items-center py-1 border-b border-bd-border-subtle/30">
+                  <div class="col-span-2 font-semibold text-bd-text-primary">Hearthfire</div>
+                  <div class="text-center font-mono text-bd-amber">1.0</div>
+                  <div class="text-center font-mono text-bd-purple">500</div>
+                  <div class="text-center font-mono text-bd-teal">0.95</div>
+                  <div class="text-center font-mono text-bd-text-secondary">0.4 / 0.4</div>
+                </div>
+                <div class="grid grid-cols-6 gap-2 text-xs items-center py-1">
+                  <div class="col-span-2 font-semibold text-bd-text-primary">Madness</div>
+                  <div class="text-center font-mono text-bd-amber">1.0</div>
+                  <div class="text-center font-mono text-bd-purple">500</div>
+                  <div class="text-center font-mono text-bd-teal">0.95</div>
+                  <div class="text-center font-mono text-bd-text-secondary">0.4 / 0.4</div>
                 </div>
               </div>
             </div>
-
-            <!-- Sub-topic: Repetition Penalty Stacking -->
-            <div class="space-y-3 text-xs text-bd-text-secondary">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Repetition Penalty Stacking</h3>
-              <p>
-                In advanced workflows, Presence, Frequency, and standard Repetition penalties stack together. Stacking these too high can make the AI select incoherent words because standard terms (like pronouns) become heavily penalized.
-              </p>
-              <div class="p-3 rounded bg-bd-warning/10 border border-bd-warning/20">
-                <strong>Rule of Thumb:</strong> Prioritize Temperature shifts and Context audits to solve looping issues before enabling cumulative penalties.
-              </div>
-            </div>
-
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== 6. TIPS & COMMON PITFALLS ===================== -->
+      <!-- ===================== TUNING DIAGNOSTICS ===================== -->
       <section id="guide-pitfalls" class="card">
         <button
           @click="toggleGuideSection('pitfalls')"
@@ -520,7 +359,7 @@
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <AlertTriangle class="w-5 h-5 text-bd-amber" />
-            Tips &amp; Common Pitfalls
+            Tuning Diagnostics &amp; Symptoms
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -529,74 +368,50 @@
         </button>
         
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('pitfalls')" class="mt-4 space-y-4">
+          <div v-if="isGuideSectionExpanded('pitfalls')" class="mt-4 space-y-4 text-xs">
             <p class="text-bd-text-secondary">
-              Check this diagnostic matrix to quickly adjust your settings when story coherence degrades.
+              Use this troubleshooting diagnostic matrix to resolve generation anomalies.
             </p>
 
-            <div class="grid md:grid-cols-2 gap-3 text-xs">
-              <!-- Issue 1 -->
+            <div class="grid md:grid-cols-2 gap-3">
               <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
-                <h4 class="font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  AI responses too boring or predictable
+                <h4 class="font-semibold text-bd-pink mb-1.5 flex items-center gap-1">
+                  <X class="w-4 h-4 text-bd-pink" /> AI responses stilted or boring
                 </h4>
-                <p class="text-bd-text-secondary">
-                  The AI repeats common phrases or chooses overly simplistic narration.
-                </p>
-                <p class="text-bd-green mt-1">
-                  <strong>Fix:</strong> Raise Temperature gently to 1.0, or slightly increase Top-P.
-                </p>
+                <p class="text-bd-text-secondary mb-1">The AI keeps repeating simple sentence structures or basic vocabulary.</p>
+                <p class="text-bd-green font-bold">Fix: Raise Temperature gently (e.g. to 1.0) or raise Top-P.</p>
               </div>
 
-              <!-- Issue 2 -->
               <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
-                <h4 class="font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  AI outputs gibberish or unrelated words
+                <h4 class="font-semibold text-bd-pink mb-1.5 flex items-center gap-1">
+                  <X class="w-4 h-4 text-bd-pink" /> AI outputs gibberish / incoherent words
                 </h4>
-                <p class="text-bd-text-secondary">
-                  The story gets chaotic, losing logical flow, or outputting random characters.
-                </p>
-                <p class="text-bd-green mt-1">
-                  <strong>Fix:</strong> Lower Temperature to 0.7, or decrease Top-P to 0.90.
-                </p>
+                <p class="text-bd-text-secondary mb-1">AI generates non-existent words, random symbols, or breaks logical plot flow.</p>
+                <p class="text-bd-green font-bold">Fix: Lower Temperature to 0.7 or decrease Top-P to 0.90.</p>
               </div>
 
-              <!-- Issue 3 -->
               <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
-                <h4 class="font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  Severe word looping loops
+                <h4 class="font-semibold text-bd-pink mb-1.5 flex items-center gap-1">
+                  <X class="w-4 h-4 text-bd-pink" /> Severe repetition looping loops
                 </h4>
-                <p class="text-bd-text-secondary">
-                  The AI repeats the same sentence or list of vocabulary words over and over.
-                </p>
-                <p class="text-bd-green mt-1">
-                  <strong>Fix:</strong> Edit context (clear repetitions in memory/history) and set Presence Penalty to 0.4.
-                </p>
+                <p class="text-bd-text-secondary mb-1">The model generates the same paragraph or sentence over and over on subsequent turns.</p>
+                <p class="text-bd-green font-bold">Fix: Edit history to strip repeated turns, and raise Presence Penalty to 0.4.</p>
               </div>
 
-              <!-- Issue 4 -->
               <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
-                <h4 class="font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  AI forgets character descriptions or recent turns
+                <h4 class="font-semibold text-bd-pink mb-1.5 flex items-center gap-1">
+                  <X class="w-4 h-4 text-bd-pink" /> Character forgetfulness
                 </h4>
-                <p class="text-bd-text-secondary">
-                  The model breaks consistency, misidentifying people or locations in the scene.
-                </p>
-                <p class="text-bd-green mt-1">
-                  <strong>Fix:</strong> Maximize Context Length, and shorten your active triggered Story Cards to free up space.
-                </p>
+                <p class="text-bd-text-secondary mb-1">The model forgets character bios, companions, or recent events immediately.</p>
+                <p class="text-bd-green font-bold">Fix: Max Context Length. Shorten triggered Story Card sizes to free up tokens.</p>
               </div>
             </div>
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== 7. CREDITS SECTION ===================== -->
-      <section id="guide-credits" class="card">
+      <!-- ===================== CREDITS SECTION ===================== -->
+      <section id="credits" class="card">
         <button
           @click="toggleGuideSection('credits')"
           class="w-full flex items-center justify-between text-left"
@@ -635,8 +450,8 @@
                 <BookOpen class="w-3 h-3" /> Official Advanced Settings FAQ
               </a>
               <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
-                <MessageSquare class="w-3 h-3" /> Discord
-          </a>
+                <MessageSquare class="w-3 h-3" /> Discord Community
+              </a>
             </div>
           </div>
         </Transition>
@@ -656,14 +471,14 @@ import {
 
 // Guide table of contents sections
 const guideSections = [
-  { id: 'header-core', label: 'Core', isHeader: true },
-  { id: 'what-is', label: 'What Are Advanced Settings?' },
-  { id: 'quick-start', label: 'Quick Start' },
-  { id: 'anatomy', label: 'Anatomy & How It Works' },
-  { id: 'best-practices', label: 'Best Practices' },
-  { id: 'header-advanced', label: 'Advanced', isHeader: true },
-  { id: 'advanced-topics', label: 'Advanced Topics' },
-  { id: 'pitfalls', label: 'Tips & Common Pitfalls' },
+  { id: 'header-core', label: 'Basics & Pipeline', isHeader: true },
+  { id: 'what-is', label: 'The Selection Pipeline' },
+  { id: 'anatomy', label: 'Sampling Mathematics' },
+  { id: 'header-penalties', label: 'Repetition control', isHeader: true },
+  { id: 'best-practices', label: 'Repetition Penalties' },
+  { id: 'advanced-topics', label: 'Community Model Presets' },
+  { id: 'header-trouble', label: 'Diagnostics', isHeader: true },
+  { id: 'pitfalls', label: 'Tuning Diagnostics' },
   { id: 'credits', label: 'Credits & Resources' }
 ]
 

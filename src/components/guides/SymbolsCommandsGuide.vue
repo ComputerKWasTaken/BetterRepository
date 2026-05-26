@@ -36,7 +36,21 @@
     <!-- Main Content -->
     <div class="flex-1 space-y-4 min-w-0">
 
-      <!-- ===================== 1. WHAT ARE SYMBOLS & COMMANDS ===================== -->
+      <!-- Context Budget Routing Notice -->
+      <div class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
+        <div class="flex items-start gap-3">
+          <Info class="w-5 h-5 text-bd-info flex-shrink-0 mt-0.5" />
+          <div>
+            <h4 class="font-semibold text-bd-text-primary text-sm">Semantic Prompt Weighting</h4>
+            <p class="text-xs text-bd-text-secondary mt-1">
+              Markdown symbols and metadata brackets are parsed globally by LLMs. To see how these formatted characters rank inside the prompt hierarchy, or how tokenization budgets are divided between required and dynamic fields, see our dedicated 
+              <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline font-semibold">Plot Components Guide</router-link>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== SPECIAL CHARACTER DIRECTIVES ===================== -->
       <section id="guide-what-is" class="card">
         <button
           @click="toggleGuideSection('what-is')"
@@ -44,7 +58,7 @@
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Info class="w-5 h-5 text-bd-amber" />
-            What Are Symbols &amp; Commands?
+            Special Character Directives
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -55,135 +69,64 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('what-is')" class="mt-4 space-y-6">
             <p class="text-bd-text-secondary">
-              AI Dungeon models were trained on vast amounts of internet text, including markdown formatting, code parameters, and academic containers. Because of this, certain special symbols carry structured meaning directly to the AI, allowing you to influence narrative directions, hidden contexts, and dialogue weights without bloating your story prose.
+              AI Dungeon models were trained on billions of lines of internet documents, including markdown wikis, programming containers, and academic footnotes. Because of this, certain **special symbols carry high semantic weight** directly in the neural weights, letting you guide the AI without wasting verbose prose.
             </p>
 
-            <div class="grid md:grid-cols-3 gap-3">
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
-                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+            <div class="grid md:grid-cols-3 gap-3 text-xs">
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-1">
+                <h3 class="font-semibold text-bd-text-primary mb-1.5 flex items-center gap-2">
                   <Hash class="w-4 h-4 text-bd-amber" />
                   Markdown Parsing
                 </h3>
-                <p class="text-xs text-bd-text-secondary">
-                  Symbols like <code class="text-bd-amber">##</code> mimic headers or subtitles, directing the AI's model attention.
+                <p class="text-bd-text-secondary">
+                  Symbols like `#` or `##` mimic headers, naturally signaling to the LLM's attention block that high-priority directives are following.
                 </p>
               </div>
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
-                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
+                <h3 class="font-semibold text-bd-text-primary mb-1.5 flex items-center gap-2">
                   <Brackets class="w-4 h-4 text-bd-blue" />
-                  Editorial Metadata
+                  Metadata Brackets
                 </h3>
-                <p class="text-xs text-bd-text-secondary">
-                  Containers like <code class="text-bd-blue">[ ]</code> replicate editorial comments or footnotes, hidden from the story output.
+                <p class="text-bd-text-secondary">
+                  Square brackets `[ ]` signify out-of-character guidelines or footnotes, preventing instructions from leaking directly into story text.
                 </p>
               </div>
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
-                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
+                <h3 class="font-semibold text-bd-text-primary mb-1.5 flex items-center gap-2">
                   <Braces class="w-4 h-4 text-bd-purple" />
-                  Object Isolation
+                  Data Containers
                 </h3>
-                <p class="text-xs text-bd-text-secondary">
-                  Curly braces <code class="text-bd-purple">{ }</code> organize code-like definitions to prevent fact bleeding in cards.
+                <p class="text-bd-text-secondary">
+                  Curly brackets `{ }` isolate programmatic key-value traits, stopping lore facts from bleeding across Story Cards.
                 </p>
               </div>
             </div>
 
-            <!-- Sub-topic: Action Box Modes -->
+            <!-- Action Box Modes -->
             <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-3">
-              <h3 class="font-semibold text-bd-text-primary flex items-center gap-2">
+              <h3 class="font-semibold text-bd-text-primary flex items-center gap-2 text-xs">
                 <Terminal class="w-4 h-4 text-bd-cyan" />
-                Action Box Modes (Do, Say, Story, See)
+                Action Box Modes Translation Pipeline
               </h3>
               <p class="text-xs text-bd-text-secondary">
-                AI Dungeon translates player inputs into standard interactive-fiction prefixes so the AI can distinguish players from narrator:
+                AI Dungeon's gameplay input buttons prepend standard fictional prefixes to your raw text before passing it to the AI compiler:
               </p>
               <div class="grid md:grid-cols-4 gap-3 text-xs text-bd-text-secondary">
-                <div class="p-2.5 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
                   <strong class="text-bd-green block mb-0.5">&gt; Do Mode</strong>
-                  Prepends `<code class="text-bd-green">&gt;</code> You ` to actions, telling the AI that you are performing an active step in the environment.
+                  Prepends `<code class="text-bd-green">&gt;</code> You ` to actions, signaling to the model that you are actively interacting with the environment.
                 </div>
-                <div class="p-2.5 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
                   <strong class="text-bd-blue block mb-0.5">&gt; Say Mode</strong>
-                  Prepends `<code class="text-bd-blue">&gt;</code> You say "` to inputs, signaling to the model that dialogue is being spoken out loud.
+                  Prepends `<code class="text-bd-blue">&gt;</code> You say "` to text, prompting the AI to parse spoken character dialogue.
                 </div>
-                <div class="p-2.5 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
                   <strong class="text-bd-purple block mb-0.5">Story Mode</strong>
-                  Does not prepend any symbols. Used for straight prose narration, setting descriptions, or introducing new characters.
+                  Sends straight, unformatted prose. Ideal for environmental setups, narration, or temporal shifts.
                 </div>
-                <div class="p-2.5 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
                   <strong class="text-bd-amber block mb-0.5">See Mode</strong>
-                  Sends image prompts to generation engines, creating a picture of the scene rather than adding story turns.
-                </div>
-              </div>
-            </div>
-
-            <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30 text-xs text-bd-text-secondary">
-              <strong>Community Note:</strong> None of these are official platform features. They are community-discovered best practices leveraging language model training statistics. Focus on well-tested formatting rules to ensure stability.
-            </div>
-          </div>
-        </Transition>
-      </section>
-
-      <!-- ===================== 2. QUICK START ===================== -->
-      <section id="guide-quick-start" class="card">
-        <button
-          @click="toggleGuideSection('quick-start')"
-          class="w-full flex items-center justify-between text-left"
-        >
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Rocket class="w-5 h-5 text-bd-green" />
-            Quick Start: Steering the AI
-          </h2>
-          <ChevronDown
-            class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('quick-start') }"
-          />
-        </button>
-        
-        <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('quick-start')" class="mt-4 space-y-4">
-            <p class="text-bd-text-secondary">
-              Try these three basic command styles in your next turn to instantly steer your adventure.
-            </p>
-
-            <!-- Step 1 -->
-            <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
-              <div class="flex items-start gap-3">
-                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-green/20 text-bd-green font-bold flex items-center justify-center">1</span>
-                <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary mb-1">Issue a Direct Command</h3>
-                  <p class="text-xs text-bd-text-secondary mb-2">
-                    In Story mode, start a new line with double hashes <code class="text-bd-amber">##</code> to command the AI directly (e.g. shifts in location or pacing):
-                  </p>
-                  <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">## The scene shifts to the dragon's lair</pre>
-                </div>
-              </div>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="p-4 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
-              <div class="flex items-start gap-3">
-                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-blue/20 text-bd-blue font-bold flex items-center justify-center">2</span>
-                <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary mb-1">Inject Hidden Story Annotations</h3>
-                  <p class="text-xs text-bd-text-secondary mb-2">
-                    Wrap author guidelines in square brackets <code class="text-bd-blue">[ ]</code> to set rules the AI shouldn't write down directly:
-                  </p>
-                  <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">[ Sera is secretly immune to fire magic ]</pre>
-                </div>
-              </div>
-            </div>
-
-            <!-- Step 3 -->
-            <div class="p-4 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
-              <div class="flex items-start gap-3">
-                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center">3</span>
-                <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary mb-1">Ask the AI Out-Of-Character Questions</h3>
-                  <p class="text-xs text-bd-text-secondary mb-2">
-                    Use double parentheses and OOC formatting to ask the AI questions outside of the narrative flow:
-                  </p>
-                  <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">((OOC: What does Sera see inside the chest? | User: Sera?))</pre>
+                  Bypasses LLMs entirely, sending your raw prompt directly to stable-diffusion models to generate visual scenes.
                 </div>
               </div>
             </div>
@@ -191,7 +134,7 @@
         </Transition>
       </section>
 
-      <!-- ===================== 3. ANATOMY / HOW IT WORKS ===================== -->
+      <!-- ===================== THE SYMBOL DICTIONARY ===================== -->
       <section id="guide-anatomy" class="card">
         <button
           @click="toggleGuideSection('anatomy')"
@@ -199,7 +142,7 @@
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Brackets class="w-5 h-5 text-bd-blue" />
-            Anatomy &amp; How It Works
+            The Symbol Dictionary
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -208,115 +151,87 @@
         </button>
         
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('anatomy')" class="mt-4 space-y-6">
-            
-            <!-- Core Symbols Breakdown -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Core Symbols Breakdown</h3>
-              
+          <div v-if="isGuideSectionExpanded('anatomy')" class="mt-4 space-y-6 text-xs text-bd-text-secondary">
+            <p class="text-bd-text-secondary text-xs">
+              Every special character triggers distinct statistical associations inside the model's neural layers.
+            </p>
+
+            <div class="space-y-4">
               <!-- ## Double Hash -->
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-2">
                 <h4 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
-                  <Hash class="w-4 h-4 text-bd-amber" />
-                  <code class="text-bd-amber font-mono font-bold text-sm">##</code> Double Hash (Direct Commands)
+                  <Hash class="w-4.5 h-4.5 text-bd-amber" />
+                  <code class="text-bd-amber font-mono font-bold text-sm">##</code> Double Hash (Active Steering Commands)
                 </h4>
-                <p class="text-xs text-bd-text-secondary">
-                  The most powerful single symbol for directing AI output. Place it at the start of a line to steer scenes or pacing.
+                <p class="text-bd-text-secondary">
+                  The most powerful command symbol. Used to issue direct, unavoidable active instructions at the start of a story turn.
                 </p>
-                <div class="text-xs text-bd-text-muted">
-                  <strong>Why it works:</strong> Evaluated as a second-level heading in markdown. The AI interprets heading lines as high-priority architectural commands.
+                <div class="text-bd-text-muted">
+                  <strong>Technical reason:</strong> Mimics an `H2` header tag. Headings in pre-training data define structural topics, forcing the model to align with the command immediately.
                 </div>
-                <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">## Write in a grimy, noir detective tone</pre>
+                <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">## Shift pacing. Fast action combat follows.</pre>
               </div>
 
               <!-- [] Square Brackets -->
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-2">
                 <h4 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
-                  <Brackets class="w-4 h-4 text-bd-blue" />
-                  <code class="text-bd-blue font-mono font-bold text-sm">[ ]</code> Square Brackets (Author Notes / Rules)
+                  <Brackets class="w-4.5 h-4.5 text-bd-blue" />
+                  <code class="text-bd-blue font-mono font-bold text-sm">[ ]</code> Square Brackets (Editorial Rules)
                 </h4>
-                <p class="text-xs text-bd-text-secondary">
-                  Instructs the AI to factor in background rules or constraints silently without repeating them in the story.
+                <p class="text-bd-text-secondary">
+                  Guides style, mood, or background rules silently. The model incorporates these guidelines into generation without repeating the brackets or instruction text.
                 </p>
-                <div class="text-xs text-bd-text-muted">
-                  <strong>Why it works:</strong> Associated with editorial notes, footnotes, or translator annotations in standard internet documents.
+                <div class="text-bd-text-muted">
+                  <strong>Technical reason:</strong> Associated with translator notes, editor margins, or parenthetical footnotes in web copy.
                 </div>
-                <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">[ Focus on resource survival; keep magic rare ]</pre>
+                <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">[ Focus: suspenseful silence. Minimal dialogue. ]</pre>
               </div>
 
               <!-- {} Curly Braces -->
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-2">
                 <h4 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
-                  <Braces class="w-4 h-4 text-bd-purple" />
-                  <code class="text-bd-purple font-mono font-bold text-sm">{ }</code> Curly Braces (Attributes Container)
+                  <Braces class="w-4.5 h-4.5 text-bd-purple" />
+                  <code class="text-bd-purple font-mono font-bold text-sm">{ }</code> Curly Braces (Lore Container)
                 </h4>
-                <p class="text-xs text-bd-text-secondary">
-                  Maintains distinct properties in Story Cards, preventing facts from blending into adjacent entries.
+                <p class="text-bd-text-secondary">
+                  Organizes key-value attributes inside Story Cards (e.g. character profiles or magic thresholds) to isolate facts cleanly.
                 </p>
-                <div class="text-xs text-bd-text-muted">
-                  <strong>Why it works:</strong> Associated with programming dictionaries, JSON objects, and CSS declarations.
+                <div class="text-bd-text-muted">
+                  <strong>Technical reason:</strong> Mimics coding dictionary formats (JSON, CSS). The model processes these as structured parameters rather than prose.
                 </div>
-                <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">{Character: Sera, Race: Elf, Weapon: Fire Bow}</pre>
+                <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">{Name: Marcus, Role: Guard, Strength: High}</pre>
               </div>
-            </div>
 
-            <!-- Inline & Formatting Symbols -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Inline &amp; Formatting Symbols</h3>
+              <!-- Inline markdown symbols -->
               <div class="grid md:grid-cols-2 gap-4">
-                
                 <!-- Double Asterisks -->
-                <div class="p-4 rounded bg-bd-bg-primary border border-bd-pink/20 text-xs space-y-1">
+                <div class="p-4 rounded bg-bd-bg-primary border border-bd-pink/20 space-y-1">
                   <h4 class="font-semibold text-bd-pink flex items-center gap-1.5">
-                    <Bold class="w-4 h-4 text-bd-pink" /> <code class="text-bd-pink font-mono">** **</code> Double Asterisks
+                    <Bold class="w-4 h-4 text-bd-pink" /> <code class="text-bd-pink font-mono">** **</code> Double Asterisks (Bold Directives)
                   </h4>
                   <p class="text-bd-text-secondary">
-                    Represents **bold markdown**. Amplifies instructions or attributes.
+                    Aggressively boosts directive priority. Evaluated as bold markdown, emphasizing target instructions.
                   </p>
-                  <pre class="p-1.5 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">[ Sera is **immune** to flame ]</pre>
+                  <pre class="p-1.5 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">[ Marcus is **always** weary ]</pre>
                 </div>
 
                 <!-- Single Quotes -->
-                <div class="p-4 rounded bg-bd-bg-primary border border-bd-teal/20 text-xs space-y-1">
+                <div class="p-4 rounded bg-bd-bg-primary border border-bd-teal/20 space-y-1">
                   <h4 class="font-semibold text-bd-teal flex items-center gap-1.5">
-                    <Quote class="w-4 h-4 text-bd-teal" /> <code class="text-bd-teal font-mono">' '</code> Single Quotes
+                    <Quote class="w-4 h-4 text-bd-teal" /> <code class="text-bd-teal font-mono">' '</code> Single Quotes (Vocabulary Anchoring)
                   </h4>
                   <p class="text-bd-text-secondary">
-                    Highlights specific concepts or proper nouns to anchor AI vocabulary.
+                    Anchors specific stylistic descriptors, forcing the AI's vocabulary choices to revolve around that concept.
                   </p>
                   <pre class="p-1.5 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">[ Focus on 'melancholic' atmosphere ]</pre>
                 </div>
-
-                <!-- Dash Lists -->
-                <div class="p-4 rounded bg-bd-bg-primary border border-bd-border-subtle text-xs space-y-1">
-                  <h4 class="font-semibold text-bd-text-primary flex items-center gap-1.5">
-                    <FileCode class="w-4 h-4 text-bd-cyan" /> <code class="text-bd-cyan font-mono">- item</code> Dash Lists
-                  </h4>
-                  <p class="text-bd-text-secondary">
-                    Organizes stats and traits neatly for Story Cards or AI instructions.
-                  </p>
-                  <pre class="p-1.5 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">- Class: Rogue Alchemist</pre>
-                </div>
-
-                <!-- Section Breaks -->
-                <div class="p-4 rounded bg-bd-bg-primary border border-bd-border-subtle text-xs space-y-1">
-                  <h4 class="font-semibold text-bd-text-primary flex items-center gap-1.5">
-                    <Layers class="w-4 h-4 text-bd-cyan" /> <code class="text-bd-cyan font-mono">---</code> Section Breaks
-                  </h4>
-                  <p class="text-bd-text-secondary">
-                    Creates hard narrative breaks, useful to separate context blocks.
-                  </p>
-                  <pre class="p-1.5 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">---</pre>
-                </div>
-
               </div>
             </div>
-
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== 4. BEST PRACTICES ===================== -->
+      <!-- ===================== SYMBOL STACKING & NESTING ===================== -->
       <section id="guide-best-practices" class="card">
         <button
           @click="toggleGuideSection('best-practices')"
@@ -324,7 +239,7 @@
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Award class="w-5 h-5 text-bd-amber" />
-            Best Practices
+            Symbol Stacking &amp; Nested Rules
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -333,42 +248,47 @@
         </button>
         
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('best-practices')" class="mt-4 space-y-6">
-            
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-1.5 flex items-center gap-2">
-                <Check class="w-4 h-4 text-bd-green" />
-                Universal Formatting Rules
-              </h3>
-              <ul class="space-y-2 text-xs text-bd-text-secondary">
-                <li class="flex items-start gap-2">
-                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                  <span><strong>Use Brackets Sparingly:</strong> If you wrap every single sentence in square brackets `[ ]`, the AI treats the entire input as metadata and fails to generate immersive story turns. Limit rules to 1-2 per action.</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                  <span><strong>Prefer Author's Notes:</strong> Instead of writing scene modifiers inside player input, place tone instructions (e.g. `[ Style: grim ]`) directly in the **Author's Note** field, as it stays anchored in context longer.</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                  <span><strong>Model Compatibility Check:</strong> Larger, advanced models (like WizardLM or GPT-4) respond extremely well to highly structured syntax like XML framing. Smaller mobile models are more reliable when instructed in simple plain English commands.</span>
-                </li>
-              </ul>
-            </div>
+          <div v-if="isGuideSectionExpanded('best-practices')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
+            <p class="text-bd-text-secondary">
+              Nesting symbols together allows you to compile undeniable guidelines for advanced, large parameter models.
+            </p>
 
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle space-y-2">
+                <h4 class="font-semibold text-bd-text-primary flex items-center gap-1.5">
+                  <Hash class="w-4 h-4 text-bd-amber" /> Command + Bold Stacking (`##` + `**`)
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Forces high-level active commands. Injects a header with locked-in bold conditions:
+                </p>
+                <pre class="p-2.5 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">## **Never** allow Marcus to agree with Elara.</pre>
+                <p class="text-[10px] text-bd-text-muted">Tells the compiler this is an absolute narrative block limit.</p>
+              </div>
+
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle space-y-2">
+                <h4 class="font-semibold text-bd-text-primary flex items-center gap-1.5">
+                  <Brackets class="w-4 h-4 text-bd-blue" /> Note + Quote Stacking (`[ ]` + `' '`)
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Locks down stylistic vocabulary terms inside hidden metadata guidelines:
+                </p>
+                <pre class="p-2.5 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">[ Write in a 'rough-hewn medieval' dialect. ]</pre>
+                <p class="text-[10px] text-bd-text-muted">Steers prose flavor safely without leaking rules directly into chat dialogues.</p>
+              </div>
+            </div>
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== 5. ADVANCED TOPICS ===================== -->
+      <!-- ===================== BETTERDUNGEON EXTENSION SUPPORT ===================== -->
       <section id="guide-advanced-topics" class="card">
         <button
           @click="toggleGuideSection('advanced-topics')"
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Layers class="w-5 h-5 text-bd-cyan" />
-            Advanced Topics
+            <Terminal class="w-5 h-5 text-bd-cyan" />
+            BetterDungeon Extension Support
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -378,106 +298,43 @@
         
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('advanced-topics')" class="mt-4 space-y-6">
-            
-            <!-- Sub-topic: Combining Symbols -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Combining Symbols for Maximum Control</h3>
-              <p class="text-xs text-bd-text-secondary">
-                By nesting special characters, you can stack directives to issue undeniable absolute instructions:
-              </p>
-              
-              <div class="space-y-3 text-xs">
-                <!-- Comb 1 -->
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-amber/20 space-y-1">
-                  <h4 class="font-semibold text-bd-text-primary">
-                    <code class="text-bd-amber font-mono font-bold">##</code> + <code class="text-bd-pink font-mono">**</code> (Command + Absolute Emphasis)
-                  </h4>
-                  <pre class="p-1 rounded bg-bd-bg-tertiary text-bd-green font-mono text-[10px]">## **Never** allow Lyra to trust the masked stranger.</pre>
-                  <span class="text-bd-text-muted block">Tells the AI this is a new command section and locks the narrative behavior to a strict rule.</span>
-                </div>
+            <p class="text-bd-text-secondary text-xs">
+              Typing these symbols repeatedly during active roleplay can disrupt immersion. The **BetterDungeon** browser extension automates these formatting frameworks directly at input level.
+            </p>
 
-                <!-- Comb 2 -->
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-blue/20 space-y-1">
-                  <h4 class="font-semibold text-bd-text-primary">
-                    <code class="text-bd-blue font-mono font-bold">[ ]</code> + <code class="text-bd-teal font-mono">' '</code> (Author Note + Vocabulary Anchor)
-                  </h4>
-                  <pre class="p-1 rounded bg-bd-bg-tertiary text-bd-green font-mono text-[10px]">[ Act as 'Game Master'. Write the dialogue in an 'old english' dialect. ]</pre>
-                  <span class="text-bd-text-muted block">Directs dialogue style safely as background metadata without the AI outputting the rules.</span>
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-accent-primary/30 space-y-3">
+              <h4 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
+                <Zap class="w-4 h-4 text-bd-accent-primary" />
+                Active Input Sub-Modes
+              </h4>
+              <div class="grid md:grid-cols-3 gap-3 text-xs text-bd-text-secondary">
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
+                  <strong class="text-bd-text-primary block mb-0.5">Standard Direct Command</strong>
+                  Pressing `Enter` automatically prepends double hashes <code class="text-bd-amber">##</code> to steering lines, framing it as an H2 header block.
+                </div>
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
+                  <strong class="text-bd-text-primary block mb-0.5">Subtle Command Mode</strong>
+                  Wraps input strings in bracketed headers <code class="text-bd-blue">[## ...]</code>. Evaluated as a gentle nudge to guide next token generation.
+                </div>
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
+                  <strong class="text-bd-text-primary block mb-0.5">Out-Of-Character (OOC) Mode</strong>
+                  Wraps user inputs in double parentheses: <code class="text-bd-purple">((OOC: ... | User: ))</code>. Forces the AI to respond as a GM, breaking character.
                 </div>
               </div>
             </div>
-
-            <!-- Sub-topic: XML-style framing vs JSON containers -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">XML-Style Framing vs. JSON Containers</h3>
-              <p class="text-xs text-bd-text-secondary">
-                Advanced models process code syntax with massive clarity. You can organize your Story Cards or instructions using tags or object structures:
-              </p>
-              
-              <div class="grid md:grid-cols-2 gap-4 text-xs">
-                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                  <h4 class="font-semibold text-bd-text-primary mb-2">XML-Style Tags (Highly Recommended for Advanced Models)</h4>
-                  <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto">
-&lt;character name="Marcus"&gt;
-  &lt;role&gt;Royal Knight Commander&lt;/role&gt;
-  &lt;personality&gt;Loyal, weary, stoic&lt;/personality&gt;
-&lt;/character&gt;</pre>
-                  <p class="text-bd-text-muted mt-2">Forces strict boundaries; perfect for avoiding fact bleeding on 70B+ param models.</p>
-                </div>
-                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                  <h4 class="font-semibold text-bd-text-primary mb-2">JSON-Like Containers (Best for Story Cards)</h4>
-                  <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto">
-{
-  "Character": "Marcus",
-  "Foil": "The Crimson Order",
-  "Secret": "Loves the Queen"
-}</pre>
-                  <p class="text-bd-text-muted mt-2">Extremely clean data representation. Keeps metrics isolated and easily serializable.</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- BetterDungeon Command Mode Integration -->
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-accent-primary/30 space-y-3">
-              <div class="flex items-center justify-between">
-                <h3 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
-                  <Terminal class="w-4 h-4 text-bd-accent-primary" />
-                  BetterDungeon Extension Support
-                </h3>
-                <span class="badge badge-new">Chrome/Firefox</span>
-              </div>
-              <p class="text-xs text-bd-text-secondary">
-                The **BetterDungeon** browser extension automates these formatting structures by adding active sub-modes directly to your chat input panel:
-              </p>
-              <div class="grid md:grid-cols-3 gap-3 text-xs text-bd-text-muted">
-                <div class="p-2.5 rounded bg-bd-bg-tertiary">
-                  <strong class="text-bd-text-primary block mb-0.5">Standard Mode</strong>
-                  Inserts <code class="text-bd-amber">##</code> commands seamlessly at the start of your line input.
-                </div>
-                <div class="p-2.5 rounded bg-bd-bg-tertiary">
-                  <strong class="text-bd-text-primary block mb-0.5">Subtle Mode</strong>
-                  Wraps direct inputs in <code class="text-bd-blue">[## ]</code> brackets for delicate AI steering.
-                </div>
-                <div class="p-2.5 rounded bg-bd-bg-tertiary">
-                  <strong class="text-bd-text-primary block mb-0.5">OOC mode</strong>
-                  Injects the correct <code class="text-bd-purple">((OOC ... | User: ))</code> formatting string automatically.
-                </div>
-              </div>
-            </div>
-
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== 6. TIPS & COMMON PITFALLS ===================== -->
+      <!-- ===================== SYMBOLS TROUBLESHOOTING ===================== -->
       <section id="guide-pitfalls" class="card">
         <button
           @click="toggleGuideSection('pitfalls')"
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <AlertTriangle class="w-5 h-5 text-bd-amber" />
-            Tips &amp; Common Pitfalls
+            <AlertTriangle class="w-5 h-5 text-bd-pink" />
+            Symbols Troubleshooting &amp; Pitfalls
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -486,74 +343,50 @@
         </button>
         
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('pitfalls')" class="mt-4 space-y-4">
+          <div v-if="isGuideSectionExpanded('pitfalls')" class="mt-4 space-y-4 text-xs">
             <p class="text-bd-text-secondary">
-              Avoid these common mistakes when using symbols to steer generation.
+              Avoid these common scripting errors when utilizing character symbols.
             </p>
 
             <div class="grid md:grid-cols-2 gap-3">
-              <!-- Pitfall 1 -->
-              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20 text-xs">
-                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  Visual Markdown Expectation
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
+                <h4 class="font-semibold text-bd-pink mb-1 flex items-center gap-1">
+                  <X class="w-4.5 h-4.5 text-bd-pink" /> Overwhelming Stacking
                 </h4>
-                <p class="text-bd-text-secondary">
-                  Thinking bold symbols (`**`) will physically render bold text in the AI Dungeon chat logs.
-                </p>
-                <p class="text-bd-green mt-1">
-                  <strong>Fix:</strong> Understand that the interface does not render markdown, but the AI model reads the raw symbols perfectly during generation.
-                </p>
+                <p class="text-bd-text-secondary">Writing strings like `[## **'Kira'** must die ]`. Stacking too many styles results in contradictory pre-training association matches.</p>
+                <p class="text-bd-green mt-1"><strong>Fix:</strong> Restrict stacking to a maximum of 2 nested symbols (e.g. `##` commands + `**` bold rules).</p>
               </div>
 
-              <!-- Pitfall 2 -->
-              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20 text-xs">
-                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  Completely Bracketed Inputs
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
+                <h4 class="font-semibold text-bd-pink mb-1 flex items-center gap-1">
+                  <X class="w-4.5 h-4.5 text-bd-pink" /> Entirely Bracketed Inputs
                 </h4>
-                <p class="text-bd-text-secondary">
-                  Writing your entire player action inside square brackets (`[ ]`).
-                </p>
-                <p class="text-bd-green mt-1">
-                  <strong>Fix:</strong> Keep story actions in plain text. Use brackets exclusively for background guidelines or rules.
-                </p>
+                <p class="text-bd-text-secondary">Writing your active character actions inside brackets `[ Marcus walks to tavern ]`. The AI treats your actions as background metadata and skips rendering story turns.</p>
+                <p class="text-bd-green mt-1"><strong>Fix:</strong> Keep character actions in plain text. Use brackets exclusively for background rules.</p>
               </div>
 
-              <!-- Pitfall 3 -->
-              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20 text-xs">
-                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  Stacking Unrelated Data in One Bracket
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
+                <h4 class="font-semibold text-bd-pink mb-1 flex items-center gap-1">
+                  <X class="w-4.5 h-4.5 text-bd-pink" /> Expecting Visual Rendering
                 </h4>
-                <p class="text-bd-text-secondary">
-                  Writing `[ Marcus is a knight, Sera is a rogue, the sword is magical ]` bleed facts together.
-                </p>
-                <p class="text-bd-green mt-1">
-                  <strong>Fix:</strong> Use `{ }` curly-braced attribute key-value pairs or write separate sentences.
-                </p>
+                <p class="text-bd-text-secondary">Expecting asterisks `**` or hashes `##` to physically display bold text or headers in the AI Dungeon chat feeds.</p>
+                <p class="text-bd-green mt-1"><strong>Fix:</strong> Understand that the standard UI prints symbols as raw text, but models process markdown formats perfectly.</p>
               </div>
 
-              <!-- Pitfall 4 -->
-              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20 text-xs">
-                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  Overwhelming Stacking
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
+                <h4 class="font-semibold text-bd-pink mb-1 flex items-center gap-1">
+                  <X class="w-4.5 h-4.5 text-bd-pink" /> Circular Directives
                 </h4>
-                <p class="text-bd-text-secondary">
-                  Using hashes, asterisks, brackets, and quotes all on a single line of instruction.
-                </p>
-                <p class="text-bd-green mt-1">
-                  <strong>Fix:</strong> Keep stacking clean: combine at most 2 styles (e.g. `##` commands with `**` bold rules).
-                </p>
+                <p class="text-bd-text-secondary">Writing direct commands in bracket notes: `[ ## Marcus fights ]`. Mixing H2 tags inside parenthetical annotations confuses parsers.</p>
+                <p class="text-bd-green mt-1"><strong>Fix:</strong> Keep commands and brackets on separate lines.</p>
               </div>
             </div>
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== 7. CREDITS SECTION ===================== -->
-      <section id="guide-credits" class="card">
+      <!-- ===================== CREDITS SECTION ===================== -->
+      <section id="credits" class="card">
         <button
           @click="toggleGuideSection('credits')"
           class="w-full flex items-center justify-between text-left"
@@ -589,7 +422,7 @@
 
             <div class="flex flex-wrap gap-2">
               <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
-                <MessageSquare class="w-3 h-3" /> Discord
+                <MessageSquare class="w-3 h-3" /> Discord Community
               </a>
               <a href="https://github.com/LewdLeah/Multiple-Choice-Assistant/tree/main/docs" target="_blank" class="btn btn-secondary text-xs">
                 <BookOpen class="w-3 h-3" /> LewdLeah's AI Dungeon Docs
@@ -606,22 +439,19 @@
 <script setup>
 import { ref } from 'vue'
 import { 
-  Info, Lightbulb, Sparkles, Zap, AlertTriangle,
-  BookOpen, MessageSquare, Hash, Bold, Quote, FileCode, Layers,
-  Braces, Brackets, ChevronRight, Check, Terminal, ExternalLink,
-  ChevronDown, ChevronUp, Rocket, Award, X
+  Info, Lightbulb, Sparkles, Zap, AlertTriangle, BookOpen, MessageSquare, Hash, Bold, Quote, FileCode, Layers, Braces, Brackets, ChevronRight, Check, Terminal, ExternalLink, ChevronDown, ChevronUp, Rocket, Award, X
 } from 'lucide-vue-next'
 
 // Guide table of contents sections
 const guideSections = [
-  { id: 'header-core', label: 'Core', isHeader: true },
-  { id: 'what-is', label: 'What Are Symbols & Commands?' },
-  { id: 'quick-start', label: 'Quick Start' },
-  { id: 'anatomy', label: 'Anatomy & How It Works' },
-  { id: 'best-practices', label: 'Best Practices' },
-  { id: 'header-advanced', label: 'Advanced', isHeader: true },
-  { id: 'advanced-topics', label: 'Advanced Topics' },
-  { id: 'pitfalls', label: 'Tips & Common Pitfalls' },
+  { id: 'header-core', label: 'Semantic Steerage', isHeader: true },
+  { id: 'what-is', label: 'Special Character Directives' },
+  { id: 'anatomy', label: 'The Symbol Dictionary' },
+  { id: 'header-stacking', label: 'Advanced Stacking', isHeader: true },
+  { id: 'best-practices', label: 'Symbol Stacking & Nesting' },
+  { id: 'advanced-topics', label: 'BetterDungeon UI Support' },
+  { id: 'header-trouble', label: 'Troubleshooting', isHeader: true },
+  { id: 'pitfalls', label: 'Symbols Troubleshooting' },
   { id: 'credits', label: 'Credits & Resources' }
 ]
 

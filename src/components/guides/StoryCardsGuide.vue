@@ -36,7 +36,21 @@
     <!-- Main Content -->
     <div class="flex-1 space-y-4 min-w-0">
 
-      <!-- ===================== 1. WHAT ARE STORY CARDS ===================== -->
+      <!-- Context Budget Routing Notice -->
+      <div class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
+        <div class="flex items-start gap-3">
+          <Info class="w-5 h-5 text-bd-info flex-shrink-0 mt-0.5" />
+          <div>
+            <h4 class="font-semibold text-bd-text-primary text-sm">Dynamic Context Budgets</h4>
+            <p class="text-xs text-bd-text-secondary mt-1">
+              Story Cards belong to the **Dynamic Elements Pool**, occupying a flexible segment (typically <strong>~25%</strong> of remaining space). For a complete analysis of how the compiler ranks and trims active cards when context budgets are reached, see our dedicated 
+              <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline font-semibold">Plot Components Guide</router-link>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== DYNAMIC LORE TRIGGERING ===================== -->
       <section id="guide-what-is" class="card">
         <button
           @click="toggleGuideSection('what-is')"
@@ -44,7 +58,7 @@
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <HelpCircle class="w-5 h-5 text-bd-purple" />
-            What Are Story Cards?
+            Dynamic Lore Triggering
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -55,168 +69,58 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('what-is')" class="mt-4 space-y-6">
             <p class="text-bd-text-secondary">
-              Story Cards are situational context notes for the AI about characters, locations, factions, concepts, or other custom lore. 
-              Unlike global settings or Plot Essentials, the AI only consults Story Cards when they actively become relevant.
+              Story Cards are dynamic, conditional lore folders. Unlike Plot Essentials, which are always present, Story Cards remain dormant outside of context, loading only when their specified **case-insensitive triggers** are matching in recent turn history.
             </p>
 
-            <div class="grid md:grid-cols-3 gap-3">
+            <div class="grid md:grid-cols-3 gap-3 text-xs">
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
                 <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
                   <Zap class="w-4 h-4 text-bd-purple" />
-                  Dynamic Loading
+                  Trigger Timing Pipeline
                 </h3>
-                <p class="text-xs text-bd-text-secondary">
-                  Triggered by case-insensitive keywords in recent inputs or outputs, only taking up context space when needed.
-                </p>
+                <ul class="space-y-1 text-bd-text-secondary">
+                  <li>• <strong>Player Input:</strong> Match triggers instantly. The card is loaded into context for the current turn.</li>
+                  <li>• <strong>AI Output:</strong> Match triggers for the subsequent turn. It is loaded on the next turn.</li>
+                </ul>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
                 <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-                  <Coins class="w-4 h-4 text-bd-amber" />
-                  Context Budget
+                  <Search class="w-4 h-4 text-bd-amber" />
+                  The Scan Window
                 </h3>
-                <p class="text-xs text-bd-text-secondary">
-                  Ranked by frequency and recency, automatically fitting into the ~25% dynamic token budget allocated for lore.
+                <p class="text-bd-text-secondary">
+                  The client scans a minimum of the last **4 turns** for triggers. If active cards take up minimal space, it automatically scales the scan window: `Available Tokens / 100` turns are checked.
                 </p>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
                 <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
                   <Globe class="w-4 h-4 text-bd-green" />
-                  Worldbuilding
+                  Lore Isolation
                 </h3>
-                <p class="text-xs text-bd-text-secondary">
-                  Ideal for pre-configuring complex character relationships, faction behaviors, and detailed regional details.
+                <p class="text-bd-text-secondary">
+                  Excellent for separating city maps, historical wars, and minor character metrics, freeing up tokens for core history actions.
                 </p>
               </div>
             </div>
 
-            <!-- Sub-topic: When to Use -->
+            <!-- Quick Start Steps -->
             <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-3">
-              <h3 class="font-semibold text-bd-text-primary flex items-center gap-2">
-                <Lightbulb class="w-4 h-4 text-bd-amber" />
-                When to Use Story Cards
+              <h3 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
+                <Rocket class="w-4 h-4 text-bd-green" />
+                Quick Start: Draft Your First Card
               </h3>
-              <p class="text-xs text-bd-text-secondary">
-                Story Cards are optional but highly recommended to flesh out custom scenarios. Use them to:
-              </p>
-              <div class="grid md:grid-cols-3 gap-3 text-xs text-bd-text-secondary">
+              <div class="grid md:grid-cols-3 gap-3 text-xs">
                 <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
-                  <strong class="text-bd-text-primary block mb-1">Capture Elements</strong>
-                  Save persistent facts about emerging characters or locations that appear during organic gameplay.
+                  <span class="w-5 h-5 rounded-full bg-bd-green/20 text-bd-green font-bold flex items-center justify-center mb-1">1</span>
+                  <strong>Set the Title:</strong> Navigate to Story Cards → Add Card. Enter a name (e.g. `Sir Marcus`). The AI never sees this title; it is strictly admin.
                 </div>
                 <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
-                  <strong class="text-bd-text-primary block mb-1">Flesh Out Lore</strong>
-                  Expand on offhand mentions (like organizations or mythical items) by writing custom background information.
+                  <span class="w-5 h-5 rounded-full bg-bd-blue/20 text-bd-blue font-bold flex items-center justify-center mb-1">2</span>
+                  <strong>Define Triggers:</strong> In the triggers box, type comma-separated keywords (e.g. `marcus,sir marcus`). Case-insensitive, but spaces are literal.
                 </div>
                 <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
-                  <strong class="text-bd-text-primary block mb-1">Scenario Design</strong>
-                  Pre-build extensive interactive databases of lore before starting a brand-new scenario.
-                </div>
-              </div>
-            </div>
-
-            <!-- Sub-topic: Story Cards vs Memory Bank -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary flex items-center gap-2">
-                <Scale class="w-4 h-4 text-bd-cyan" />
-                Story Cards vs. Memory Bank
-              </h3>
-              <p class="text-xs text-bd-text-secondary">
-                While both manage narrative consistency, they have fundamentally distinct use cases:
-              </p>
-              <div class="grid md:grid-cols-2 gap-4">
-                <div class="p-4 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
-                  <h4 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-                    <Layers class="w-4 h-4 text-bd-purple" />
-                    Story Cards (Manual &amp; Pre-Planned)
-                  </h4>
-                  <ul class="text-xs text-bd-text-secondary space-y-1.5 list-disc list-inside">
-                    <li>Explicit keywords define exactly when facts load.</li>
-                    <li>Highly precise, tailored description structures.</li>
-                    <li>Excellent for pre-built lore database files.</li>
-                    <li>Immune to organic hallucination or phrasal drift.</li>
-                  </ul>
-                </div>
-                <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
-                  <h4 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-                    <Brain class="w-4 h-4 text-bd-green" />
-                    Memory Bank (Automated History)
-                  </h4>
-                  <ul class="text-xs text-bd-text-secondary space-y-1.5 list-disc list-inside">
-                    <li>Zero effort; automatically compresses turns as you go.</li>
-                    <li>Uses semantic vector relevance matching (no keywords).</li>
-                    <li>Flashes out organic changes occurring in play.</li>
-                    <li>Requires occasional editing to clean up AI misphrasings.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30 text-xs text-bd-text-secondary">
-              <strong>Best Practice:</strong> Use Story Cards for pre-planned structural world elements (factions, characters, magic rules) and let the automated Memory Bank capture plot progression organically.
-            </div>
-          </div>
-        </Transition>
-      </section>
-
-      <!-- ===================== 2. QUICK START ===================== -->
-      <section id="guide-quick-start" class="card">
-        <button
-          @click="toggleGuideSection('quick-start')"
-          class="w-full flex items-center justify-between text-left"
-        >
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Rocket class="w-5 h-5 text-bd-green" />
-            Quick Start: Setting Up Your First Card
-          </h2>
-          <ChevronDown
-            class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('quick-start') }"
-          />
-        </button>
-        
-        <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('quick-start')" class="mt-4 space-y-4">
-            <p class="text-bd-text-secondary">
-              Follow these three practical steps to write a reliable, functional Story Card in minutes.
-            </p>
-
-            <!-- Step 1 -->
-            <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
-              <div class="flex items-start gap-3">
-                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-green/20 text-bd-green font-bold flex items-center justify-center">1</span>
-                <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary mb-1">Create the Card &amp; Title</h3>
-                  <p class="text-xs text-bd-text-secondary">
-                    Navigate to **Sidebar → Story Cards** and click **Add Card**. Give it a clean **Title** (e.g. `Sir Marcus`). 
-                    <em>Note: The AI never sees this title; it is strictly for your own organization.</em>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="p-4 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
-              <div class="flex items-start gap-3">
-                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-blue/20 text-bd-blue font-bold flex items-center justify-center">2</span>
-                <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary mb-1">Configure Case-Insensitive Triggers</h3>
-                  <p class="text-xs text-bd-text-secondary">
-                    In the **Triggers** field, input comma-separated trigger terms (e.g. `Marcus,sir marcus`). 
-                    Do not add spaces after commas. Aim for keywords longer than 5 characters to avoid false triggers.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Step 3 -->
-            <div class="p-4 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
-              <div class="flex items-start gap-3">
-                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center">3</span>
-                <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary mb-1">Compose the World Lore Entry</h3>
-                  <p class="text-xs text-bd-text-secondary">
-                    Write 2-4 sentences in the **Entry** field in plain English. Always repeat the name of the subject inside the entry (e.g. `Sir Marcus is a seasoned commander who wears silver plate armor. He is extremely loyal to the Queen.`).
-                  </p>
+                  <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center mb-1">3</span>
+                  <strong>Write the Entry:</strong> Write 2-4 sentences. Always explicitly write the subject name inside the entry (e.g. `Sir Marcus is a royal guard commander.`).
                 </div>
               </div>
             </div>
@@ -224,7 +128,7 @@
         </Transition>
       </section>
 
-      <!-- ===================== 3. ANATOMY / HOW IT WORKS ===================== -->
+      <!-- ===================== ANATOMY & FIELDS ===================== -->
       <section id="guide-anatomy" class="card">
         <button
           @click="toggleGuideSection('anatomy')"
@@ -232,7 +136,7 @@
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <FileText class="w-5 h-5 text-bd-blue" />
-            Anatomy &amp; How It Works
+            Anatomy &amp; Fields
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -241,131 +145,57 @@
         </button>
         
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('anatomy')" class="mt-4 space-y-6">
-            
-            <!-- Anatomy breakdown -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">The Components of a Story Card</h3>
-              <div class="grid md:grid-cols-2 gap-4">
-                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
-                  <h4 class="font-semibold text-bd-text-primary text-xs mb-1.5 flex items-center gap-2">
-                    <FileText class="w-4 h-4 text-bd-green" />
-                    Entry (The Text Block)
-                  </h4>
-                  <p class="text-xs text-bd-text-secondary">
-                    The core facts sent to the AI when active. It is automatically prefaced with <code class="text-bd-purple">World Lore:</code> in context.
-                  </p>
-                </div>
-                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
-                  <h4 class="font-semibold text-bd-text-primary text-xs mb-1.5 flex items-center gap-2">
-                    <Zap class="w-4 h-4 text-bd-purple" />
-                    Triggers (Activators)
-                  </h4>
-                  <p class="text-xs text-bd-text-secondary">
-                    Comma-separated keywords. Case-insensitive, but trailing and leading spaces are evaluated literally.
-                  </p>
-                </div>
-              </div>
+          <div v-if="isGuideSectionExpanded('anatomy')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary text-xs">
+              Every Story Card is composed of distinct properties. Understanding their individual visibility dictates prompt integrity.
+            </p>
 
-              <!-- Field Summary Table -->
-              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-                <h4 class="font-semibold text-bd-text-primary text-xs mb-2">Field Visibility &amp; Behavior Matrix</h4>
-                <div class="overflow-x-auto">
-                  <table class="w-full text-xs">
-                    <thead>
-                      <tr class="border-b border-bd-border-subtle">
-                        <th class="text-left py-2 pr-4 text-bd-text-muted font-semibold">Field Name</th>
-                        <th class="text-left py-2 pr-4 text-bd-text-primary font-semibold">Sent to AI?</th>
-                        <th class="text-left py-2 text-bd-text-primary font-semibold">Description</th>
-                      </tr>
-                    </thead>
-                    <tbody class="text-bd-text-secondary">
-                      <tr class="border-b border-bd-border-subtle/50">
-                        <td class="py-2 pr-4 font-medium">Entry</td>
-                        <td class="py-2 pr-4 text-bd-green font-semibold">Yes (when active)</td>
-                        <td class="py-2">Prefaced as "World Lore: [Entry]" in the AI's prompt stream.</td>
-                      </tr>
-                      <tr class="border-b border-bd-border-subtle/50">
-                        <td class="py-2 pr-4 font-medium">Triggers</td>
-                        <td class="py-2 pr-4 text-bd-pink font-semibold">No</td>
-                        <td class="py-2">Keywords parsed by the client engine to load the Entry dynamically.</td>
-                      </tr>
-                      <tr class="border-b border-bd-border-subtle/50">
-                        <td class="py-2 pr-4 font-medium">Title</td>
-                        <td class="py-2 pr-4 text-bd-pink font-semibold">No</td>
-                        <td class="py-2">Internal tag for scenario management and editing.</td>
-                      </tr>
-                      <tr class="border-b border-bd-border-subtle/50">
-                        <td class="py-2 pr-4 font-medium">Type</td>
-                        <td class="py-2 pr-4 text-bd-pink font-semibold">No</td>
-                        <td class="py-2">Categorization flag (e.g., Character, Location, Faction).</td>
-                      </tr>
-                      <tr>
-                        <td class="py-2 pr-4 font-medium">Notes</td>
-                        <td class="py-2 pr-4 text-bd-pink font-semibold">No*</td>
-                        <td class="py-2">Author guidelines (*Only displayed in Character Creator templates).</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <h4 class="font-semibold text-bd-text-primary text-xs mb-2">Field Visibility &amp; Compiler Matrix</h4>
+              <div class="overflow-x-auto">
+                <table class="w-full text-xs">
+                  <thead>
+                    <tr class="border-b border-bd-border-subtle">
+                      <th class="text-left py-2 pr-4 text-bd-text-muted font-semibold">Field Name</th>
+                      <th class="text-left py-2 pr-4 text-bd-text-primary font-semibold">Is Sent to AI?</th>
+                      <th class="text-left py-2 text-bd-text-primary font-semibold">Compiler Action</th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-bd-text-secondary">
+                    <tr class="border-b border-bd-border-subtle/50">
+                      <td class="py-2 pr-4 font-semibold text-bd-text-primary">Entry</td>
+                      <td class="py-2 pr-4 text-bd-green font-bold">Yes (when active)</td>
+                      <td class="py-2">Prefaced in prompt as `World Lore: [Entry Content]`.</td>
+                    </tr>
+                    <tr class="border-b border-bd-border-subtle/50">
+                      <td class="py-2 pr-4 font-semibold text-bd-text-primary">Triggers</td>
+                      <td class="py-2 pr-4 text-bd-pink font-bold">No</td>
+                      <td class="py-2">Client parses these to conditionally trigger the Entry.</td>
+                    </tr>
+                    <tr class="border-b border-bd-border-subtle/50">
+                      <td class="py-2 pr-4 font-semibold text-bd-text-primary">Title</td>
+                      <td class="py-2 pr-4 text-bd-pink font-bold">No</td>
+                      <td class="py-2">Scenario creator visual organization tag.</td>
+                    </tr>
+                    <tr class="border-b border-bd-border-subtle/50">
+                      <td class="py-2 pr-4 font-semibold text-bd-text-primary">Type</td>
+                      <td class="py-2 pr-4 text-bd-pink font-bold">No</td>
+                      <td class="py-2">Categorization metric (Character, Location, Faction, Object).</td>
+                    </tr>
+                    <tr>
+                      <td class="py-2 pr-4 font-semibold text-bd-text-primary">Notes</td>
+                      <td class="py-2 pr-4 text-bd-pink font-bold">No*</td>
+                      <td class="py-2">Private commentary (*Only displayed in Character Creator templates).</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
-
-            <!-- Sub-topic: Substring Trigger Matcher -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Trigger Mechanics &amp; Substring Evaluation</h3>
-              <p class="text-xs text-bd-text-secondary">
-                The engine evaluates triggers within the story using a substring matching framework.
-              </p>
-              
-              <div class="p-4 rounded-lg bg-bd-warning/10 border border-bd-warning/30 space-y-3">
-                <div class="flex items-start gap-3">
-                  <AlertTriangle class="w-5 h-5 text-bd-warning flex-shrink-0 mt-0.5" />
-                  <div class="space-y-2">
-                    <h4 class="font-semibold text-bd-text-primary text-xs">Trigger Timing Pipeline</h4>
-                    <ol class="text-xs text-bd-text-secondary space-y-1 list-decimal list-inside">
-                      <li><strong>Player Inputs:</strong> Trigger instantly. The AI reads the matching card's Entry in the current turn.</li>
-                      <li><strong>AI Outputs:</strong> Trigger for the <em>subsequent</em> turn. The output that prints a trigger term does not benefit from that card until the next prompt.</li>
-                    </ol>
-                  </div>
-                </div>
-
-                <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle text-xs">
-                  <h5 class="font-semibold text-bd-text-primary mb-1">Trigger Scan Window</h5>
-                  <p class="text-bd-text-secondary">
-                    The engine checks a dynamic range of recent history turns based on remaining context:
-                  </p>
-                  <ul class="list-disc list-inside mt-1 space-y-1 text-bd-text-muted">
-                    <li>At minimum, the last **4 turns** are always scanned for triggers.</li>
-                    <li>If cards have >500 tokens of budget remaining, it scans more: <code class="text-bd-purple">Available Tokens / 100</code> actions are checked (e.g. 900 tokens = last 9 turns).</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <!-- Sub-topic: Token Budget & Context -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Token Budget &amp; Prioritization</h3>
-              <p class="text-xs text-bd-text-secondary">
-                Story Cards are classed as <strong>Dynamic Elements</strong>, meaning they reside within the flexible 30% segment of the context budget along with the Memory Bank.
-              </p>
-              <div class="grid md:grid-cols-2 gap-3 text-xs">
-                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                  <h4 class="font-semibold text-bd-text-primary mb-1">Card Allocation Limits</h4>
-                  <p class="text-bd-text-secondary">Story Cards generally take up **~25%** of dynamic tokens. If active cards exceed this limit, the engine prioritizes them.</p>
-                </div>
-                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                  <h4 class="font-semibold text-bd-text-primary mb-1">Frequency &amp; Recency Ranking</h4>
-                  <p class="text-bd-text-secondary">When too many cards trigger, cards with frequent and recent matches are kept in context, while rare or older ones are pruned first.</p>
-                </div>
-              </div>
-            </div>
-
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== 4. BEST PRACTICES ===================== -->
+      <!-- ===================== TRIGGER FORMATTING MASTERY ===================== -->
       <section id="guide-best-practices" class="card">
         <button
           @click="toggleGuideSection('best-practices')"
@@ -373,7 +203,7 @@
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Award class="w-5 h-5 text-bd-amber" />
-            Best Practices
+            Trigger Formatting Mastery
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -383,81 +213,61 @@
         
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('best-practices')" class="mt-4 space-y-6">
-            
-            <!-- Composing Entries -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-1.5 flex items-center gap-2">
-                <FileText class="w-4 h-4 text-bd-green" />
-                Writing High-Quality Entries
-              </h3>
-              <ul class="space-y-2">
-                <li class="flex items-start gap-2 text-xs text-bd-text-secondary">
-                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                  <span><strong>Plain English Prose:</strong> Avoid complex bracketed formats (e.g. W++ or JSON) inside the Entry field. Simple, concise prose gives contemporary models the best semantic understanding.</span>
-                </li>
-                <li class="flex items-start gap-2 text-xs text-bd-text-secondary">
-                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                  <span><strong>Anchor the Subject:</strong> Repeat the card's subject name explicitly within the Entry. (Instead of "He is a knight," write "Sir Marcus is a knight".)</span>
-                </li>
-                <li class="flex items-start gap-2 text-xs text-bd-text-secondary">
-                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                  <span><strong>Position Bias:</strong> Place the most critical elements (names, relations, vital strengths) in the first and last sentences of the entry. Models pay highest attention to these locations.</span>
-                </li>
-              </ul>
-            </div>
+            <p class="text-bd-text-secondary text-xs">
+              Triggers use exact character substring checks. Standardizing spacing, stubs, and pluralization prevents inactive cards and false triggers.
+            </p>
 
-            <!-- Card Networks & Chained Activation -->
+            <!-- Literal Spacing Rules -->
             <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-1.5 flex items-center gap-2">
-                <GitMerge class="w-4 h-4 text-bd-purple" />
-                Card Networks &amp; Chained Activation
-              </h3>
+              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Literal Spacing Mechanics</h3>
               <p class="text-xs text-bd-text-secondary">
-                You can build responsive networks of cards that activate each other sequentially:
+                How leading and trailing spaces dictate keyword evaluation:
               </p>
-              <div class="grid md:grid-cols-3 gap-3">
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-purple/20 text-xs">
-                  <strong class="text-bd-purple block mb-1">Cross-Referencing</strong>
-                  Mention Card B's trigger in Card A's Entry. When Card A loads, the AI is prompted with Card B's keywords, increasing the likelihood that Card B triggers next turn.
+              <div class="grid md:grid-cols-4 gap-3 text-xs">
+                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle text-center">
+                  <code class="text-bd-purple font-mono font-bold block mb-1">elf</code>
+                  <p class="text-bd-text-muted">No spaces: matches "elf", "myself", "shelf", "elfish". (High risk of false triggers).</p>
                 </div>
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-green/20 text-xs">
-                  <strong class="text-bd-green block mb-1">Plot Essentials Priming</strong>
-                  List active factions or characters in **Plot Essentials** (e.g., "Allies: Marcus, Lyra"). Because PE is always active, the AI routinely outputs those names, auto-triggering their cards.
+                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle text-center">
+                  <code class="text-bd-purple font-mono font-bold block mb-1">&nbsp;elf</code>
+                  <p class="text-bd-text-muted">Left space: matches " elf", "an elf", but safely blocks nested matches like "shelf".</p>
                 </div>
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-blue/20 text-xs">
-                  <strong class="text-bd-blue block mb-1">Parent-Child Nodes</strong>
-                  For huge cities or organizations, create a parent card with basic facts. Sub-cards handle specific neighborhoods or characters, triggered only when mentioned inside the parent scope.
+                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle text-center">
+                  <code class="text-bd-purple font-mono font-bold block mb-1">elf&nbsp;</code>
+                  <p class="text-bd-text-muted">Right space: matches "elf ", "elf's", but blocks trailing nests like "self".</p>
                 </div>
-              </div>
-            </div>
-
-            <!-- Trigger Best Practices -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-1.5 flex items-center gap-2">
-                <Target class="w-4 h-4 text-bd-blue" />
-                Trigger Keyword Best Practices
-              </h3>
-              <div class="grid md:grid-cols-3 gap-3 text-xs text-bd-text-secondary">
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
-                  <strong class="text-bd-text-primary block mb-1">Minimum 5 Characters</strong>
-                  Avoid short keywords like `elf` or `orc` as they match nested syllables (e.g. `shelf`, `porch`). Use spacing to isolate them if needed.
-                </div>
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
-                  <strong class="text-bd-text-primary block mb-1">No Post-Comma Spaces</strong>
-                  Write triggers as `marcus,knight,warrior`, NOT `marcus, knight`. The space after the comma is treated as a literal trigger requirement.
-                </div>
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
-                  <strong class="text-bd-text-primary block mb-1">Singular &amp; Irregular Plurals</strong>
-                  Regular plurals (e.g., `boat` -> `boats`) match automatically. For irregular plurals (e.g., `elf` -> `elves`), add both terms as separate triggers.
+                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle text-center">
+                  <code class="text-bd-purple font-mono font-bold block mb-1">&nbsp;elf&nbsp;</code>
+                  <p class="text-bd-text-muted">Both spaces: strictly matches the isolated word " elf ". (Will fail on punctuation).</p>
                 </div>
               </div>
             </div>
 
+            <!-- Dialogue Quotes & Irregular Plurals -->
+            <div class="grid md:grid-cols-2 gap-4 text-xs">
+              <div class="p-4 rounded bg-bd-bg-primary border border-bd-border-subtle space-y-2">
+                <h4 class="font-semibold text-bd-text-primary">Dialogue Quotes &amp; Apostrophes</h4>
+                <ul class="space-y-1 list-disc list-inside text-bd-text-secondary">
+                  <li><strong>Quotes Failure:</strong> Left-spaced triggers like <code class="text-bd-purple">&nbsp;elf</code> fail inside spoken dialogue: <code class="text-bd-green">"elf</code>. Add <code class="text-bd-purple">"elf</code> as a separate trigger.</li>
+                  <li><strong>Apostrophes:</strong> Models output multiple quote curly glyphs. For `Marcus's`, add: <code class="text-bd-purple">Marcus's,Marcus's,Marcusʼs</code>.</li>
+                  <li><strong>Word Root Stubbing:</strong> Match multiple derived vocabulary words using root stubs: <code class="text-bd-purple">therap</code> will match "therapy", "therapist", and "therapeutic".</li>
+                </ul>
+              </div>
+
+              <div class="p-4 rounded bg-bd-bg-primary border border-bd-border-subtle space-y-2">
+                <h4 class="font-semibold text-bd-text-primary">Preventing False Nests &amp; Plurals</h4>
+                <ul class="space-y-1 list-disc list-inside text-bd-text-secondary">
+                  <li><strong>Short keyword risk:</strong> Keywords under 5 chars (e.g. `orc`) frequently false-trigger (e.g. `orchids`, `porch`). Always use spacing to isolate.</li>
+                  <li><strong>Standard Plurals:</strong> Standard suffixes (`boat` -> `boats`) match automatically because `boat` is a substring of `boats`.</li>
+                  <li><strong>Irregular Plurals:</strong> Root shifts (`elf` -> `elves`, `wolf` -> `wolves`) require writing both singular and plural triggers explicitly.</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== 5. ADVANCED TOPICS ===================== -->
+      <!-- ===================== PRESETS & INTEGRATIONS ===================== -->
       <section id="guide-advanced-topics" class="card">
         <button
           @click="toggleGuideSection('advanced-topics')"
@@ -465,7 +275,7 @@
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Cog class="w-5 h-5 text-bd-purple" />
-            Advanced Topics
+            Presets &amp; Integrations
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -476,144 +286,70 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('advanced-topics')" class="mt-4 space-y-6">
             
-            <!-- Sub-topic: Trigger Mastery -->
+            <!-- Details vs Command Tab -->
             <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Trigger Mastery &amp; Literal Space Rules</h3>
+              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">AI Generation Tabs</h3>
               <p class="text-xs text-bd-text-secondary">
-                Triggers are highly sensitive to white-space formatting. Here is how spaces impact activation patterns:
+                The Story Card creator includes automated generation tabs to draft content quickly:
               </p>
-              
-              <div class="grid md:grid-cols-4 gap-3 text-xs mb-3">
-                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle text-center">
-                  <code class="text-bd-purple font-mono font-bold block mb-1">elf</code>
-                  <p class="text-bd-text-muted">No spaces: matches "shelf", "myself", "elfish".</p>
+              <div class="grid md:grid-cols-2 gap-4 text-xs">
+                <div class="p-4 rounded bg-bd-bg-primary border border-bd-blue/20">
+                  <strong class="text-bd-blue block mb-1">Details Tab (Manual Creation)</strong>
+                  Write everything yourself in prose. Highly recommended to maintain exact control.
                 </div>
-                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle text-center">
-                  <code class="text-bd-purple font-mono font-bold block mb-1">&nbsp;elf</code>
-                  <p class="text-bd-text-muted">Left space: matches " elf", " an elf", but not "shelf".</p>
-                </div>
-                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle text-center">
-                  <code class="text-bd-purple font-mono font-bold block mb-1">elf&nbsp;</code>
-                  <p class="text-bd-text-muted">Right space: matches "elf ", "elf's", but not "self".</p>
-                </div>
-                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle text-center">
-                  <code class="text-bd-purple font-mono font-bold block mb-1">&nbsp;elf&nbsp;</code>
-                  <p class="text-bd-text-muted">Both spaces: only matches isolated " elf " words.</p>
-                </div>
-              </div>
-
-              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle text-xs space-y-2">
-                <h4 class="font-semibold text-bd-text-primary">Handling Dialogues &amp; Apostrophes</h4>
-                <ul class="list-disc list-inside space-y-1 text-bd-text-secondary">
-                  <li><strong>Dialogue Quotes:</strong> A left-spaced trigger like <code class="text-bd-purple">&nbsp;elf</code> will fail to match spoken dialogue such as <code class="text-bd-green">"elf</code>. Workaround: add <code class="text-bd-purple">"elf</code> as a separate trigger.</li>
-                  <li><strong>Apostrophes:</strong> Models often use different types of apostrophes. For <code class="text-bd-green">Andover's</code>, add variations: <code class="text-bd-purple">Andover's,Andover's,Andoverʼs</code>.</li>
-                  <li><strong>Word Stubbing:</strong> Catch multiple related terms by using the word root. E.g., <code class="text-bd-purple">therap</code> will trigger on "therapy", "therapist", and "therapeutic".</li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- Sub-topic: AI Card Generation -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">AI Card Generation &amp; Editor Modes</h3>
-              <p class="text-xs text-bd-text-secondary">
-                The Story Card creator includes automated generation options to help draft cards quickly.
-              </p>
-              
-              <div class="grid md:grid-cols-2 gap-4">
-                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
-                  <h4 class="font-semibold text-bd-text-primary text-xs mb-1 flex items-center gap-1.5">
-                    <Pencil class="w-4 h-4 text-bd-blue" />
-                    Details Tab (Manual Form)
-                  </h4>
-                  <p class="text-xs text-bd-text-secondary">
-                    Write everything yourself. Excellent when you have custom notes to input, or when you are importing card designs from external lists.
-                  </p>
-                </div>
-                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
-                  <h4 class="font-semibold text-bd-text-primary text-xs mb-1 flex items-center gap-1.5">
-                    <Sparkles class="w-4 h-4 text-bd-green" />
-                    Command Tab (AI Generator)
-                  </h4>
-                  <p class="text-xs text-bd-text-secondary">
-                    Provide the card title and prompt parameters, then let the selected model build the entry content automatically.
-                  </p>
-                </div>
-              </div>
-
-              <div class="grid md:grid-cols-2 gap-3 text-xs text-bd-text-secondary">
-                <div class="p-3 rounded bg-bd-bg-tertiary border border-bd-border-subtle">
-                  <strong>History Log in Notes:</strong> Toggling this on appends every generated draft, including retries, to the card's private Notes field. This ensures you never lose a great alternative generation.
-                </div>
-                <div class="p-3 rounded bg-bd-bg-tertiary border border-bd-border-subtle">
-                  <strong>Speed Create Mode:</strong> Skip the validation steps. Once generated, the card immediately commits to database, allowing you to bulk-create dozens of world cards quickly.
+                <div class="p-4 rounded bg-bd-bg-primary border border-bd-green/20">
+                  <strong class="text-bd-green block mb-1">Command Tab (AI Generation pass)</strong>
+                  Input the title and a quick prompt parameter, and allow a dedicated background model to generate card content.
                 </div>
               </div>
             </div>
 
-            <!-- Sub-topic: Command Presets -->
+            <!-- Command Presets -->
             <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Command Presets</h3>
+              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Command Presets &amp; Templates</h3>
               <p class="text-xs text-bd-text-secondary">
-                A **Command Preset** defines the model parameters, prompt templates, and format limits for AI-generated cards.
+                Custom presets shape the AI generator's prompt template. The standard template leverages the `{{title}}` token:
               </p>
+              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green whitespace-pre-wrap leading-relaxed">Generate an information card for &#123;&#123;title&#125;&#125; using clearly labeled fields which are each on their own line, beginning with a field that identifies the name of &#123;&#123;title&#125;&#125;. Limit response to 750 characters, avoid markdown, and do not leave empty lines.</pre>
               
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-3">
-                <div class="flex items-center justify-between">
-                  <h4 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
-                    <Sparkles class="w-4 h-4 text-bd-green" />
-                    Standard Preset: Basic List Prompt
-                  </h4>
-                  <span class="badge badge-popular">Default</span>
-                </div>
-                <p class="text-xs text-bd-text-secondary">
-                  Generates an attributes card starting with the subject's name, formatted as one attribute per line.
-                </p>
-                <pre class="p-3 rounded bg-bd-bg-tertiary text-[10px] font-mono text-bd-green overflow-x-auto whitespace-pre-wrap leading-relaxed">Generate an information card for &#123;&#123;title&#125;&#125; using clearly labeled fields which are each on their own line, beginning with a field that identifies the name of &#123;&#123;title&#125;&#125;. Each field should represent characteristics of &#123;&#123;title&#125;&#125;. Limit the response to 750 characters and do not use markdown or leave empty lines.</pre>
-              </div>
-
-              <div class="p-4 rounded bg-bd-bg-tertiary border border-bd-border-subtle space-y-2 text-xs">
-                <h4 class="font-semibold text-bd-text-primary">Entry Formatting Modes</h4>
-                <div class="grid md:grid-cols-3 gap-3">
-                  <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
+              <div class="p-4 rounded bg-bd-bg-primary border border-bd-border-subtle text-xs space-y-2">
+                <h4 class="font-semibold text-bd-text-primary">Card Formatting Modes</h4>
+                <div class="grid md:grid-cols-3 gap-2">
+                  <div class="p-2.5 rounded bg-bd-bg-tertiary">
                     <strong class="text-bd-text-primary block mb-0.5">None</strong>
-                    Raw text is used exactly as returned by the AI generator model.
+                    Prose is saved exactly as returned. (Best for general models).
                   </div>
-                  <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
+                  <div class="p-2.5 rounded bg-bd-bg-tertiary">
                     <strong class="text-bd-purple block mb-0.5">Curly Brackets { }</strong>
-                    Formats output into structured curly-bracket blocks for parser compatibility.
+                    Formats output into structured bracket blocks for parser compatibility.
                   </div>
-                  <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
+                  <div class="p-2.5 rounded bg-bd-bg-tertiary">
                     <strong class="text-bd-amber block mb-0.5">Square Brackets [ ]</strong>
-                    Formats output into classic square-bracket syntax favoured by some lore authors.
+                    Formats attributes as classic `[Marcus: Stoic rogue knight]` parameters.
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Sub-topic: Import/Export -->
+            <!-- JSON Import/Export -->
             <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">JSON Import &amp; Export</h3>
+              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">JSON Import &amp; Export Specifications</h3>
               <p class="text-xs text-bd-text-secondary">
-                You can export your database of cards to a JSON file or import a pre-packaged template. <strong class="text-bd-warning">Available on Web only.</strong>
+                You can import scenarios and card folders in standard JSON formats (Web only):
               </p>
-
-              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-2">
-                <h4 class="font-semibold text-bd-text-primary text-xs">JSON Schema Example</h4>
-                <pre class="p-3 rounded bg-bd-bg-primary font-mono text-[10px] text-bd-green overflow-x-auto leading-normal">
+              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-normal">
 [
   {
     "keys": "Marcus,Sir Marcus,the knight",
     "value": "Sir Marcus is a veteran commander of the Royal Guard.",
     "type": "character",
-    "title": "Sir Marcus",
-    "description": "Optional administrative notes go here"
+    "title": "Sir Marcus"
   }
 ]</pre>
-                <p class="text-[10px] text-bd-text-muted">Only <code class="text-bd-green">keys</code> (Triggers) and <code class="text-bd-green">value</code> (Entry) are strictly required for import validation.</p>
-              </div>
-
-              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20 text-xs text-bd-pink">
-                <strong>CRITICAL WARNING:</strong> Importing a JSON file replaces your **entire current Story Card list**. It is a full overwrite, not a merge. Always export and back up your current cards before importing!
+              <p class="text-[10px] text-bd-text-muted">Only `keys` (Triggers) and `value` (Entry) are strictly mandatory for compiler import validation.</p>
+              
+              <div class="p-3 rounded bg-bd-pink/10 border border-bd-pink/20 text-xs text-bd-pink">
+                <strong>CRITICAL OVERWRITE WARNING:</strong> Importing a JSON card file replaces your <strong>entire active Story Card list</strong>. It is a destructive full overwrite, not a merge. Always export a backup of your current scenario cards before importing a new file!
               </div>
             </div>
 
@@ -621,15 +357,15 @@
         </Transition>
       </section>
 
-      <!-- ===================== 6. TIPS & COMMON PITFALLS ===================== -->
+      <!-- ===================== TRIGGER TROUBLESHOOTING ===================== -->
       <section id="guide-pitfalls" class="card">
         <button
           @click="toggleGuideSection('pitfalls')"
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <AlertTriangle class="w-5 h-5 text-bd-amber" />
-            Tips &amp; Common Pitfalls
+            <AlertTriangle class="w-5 h-5 text-bd-pink" />
+            Trigger Troubleshooting &amp; Pitfalls
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -638,102 +374,50 @@
         </button>
         
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('pitfalls')" class="mt-4 space-y-4">
+          <div v-if="isGuideSectionExpanded('pitfalls')" class="mt-4 space-y-4 text-xs">
             <p class="text-bd-text-secondary">
-              Avoid these common configuration errors that degrade story coherence or exhaust your token budget.
+              Check this guide when Story Cards fail to trigger or bloat your prompts.
             </p>
 
             <div class="grid md:grid-cols-2 gap-3">
-              <!-- Pitfall 1 -->
-              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
-                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  Triggers Too Short
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
+                <h4 class="font-semibold text-bd-pink mb-1.5 flex items-center gap-1">
+                  <X class="w-4.5 h-4.5 text-bd-pink" /> Post-Comma Spacing
                 </h4>
-                <p class="text-xs text-bd-text-secondary">
-                  Using basic words like `elf` or `cat` triggers the card on accidental matches like `shelf` or `catalog`.
-                </p>
-                <p class="text-xs text-bd-green mt-1">
-                  <strong>Fix:</strong> Add spacing rules (e.g. <code class="text-bd-purple">&nbsp;elf</code>) or choose keywords of 5+ characters.
-                </p>
+                <p class="text-bd-text-secondary">Writing triggers as `marcus, knight`. The engine interprets the space literally and searches for " knight" (with a leading space).</p>
+                <p class="text-bd-green mt-1"><strong>Fix:</strong> Strip all spaces: write <code class="text-bd-purple">marcus,knight</code>.</p>
               </div>
 
-              <!-- Pitfall 2 -->
-              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
-                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  Massive Lore Bloat
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
+                <h4 class="font-semibold text-bd-pink mb-1.5 flex items-center gap-1">
+                  <X class="w-4.5 h-4.5 text-bd-pink" /> Overlapping Keywords
                 </h4>
-                <p class="text-xs text-bd-text-secondary">
-                  Dumping thousands of words of backstory into one entry causes the AI to selectively ignore details.
-                </p>
-                <p class="text-xs text-bd-green mt-1">
-                  <strong>Fix:</strong> Restrict entries to 2-4 sentences. Group critical points at the start and end of the prose.
-                </p>
+                <p class="text-bd-text-secondary">Setting triggers `castle` on Card A, and `black castle` on Card B. When "black castle" is written, both cards trigger, wasting context.</p>
+                <p class="text-bd-green mt-1"><strong>Fix:</strong> Make keywords distinct, or separate concepts.</p>
               </div>
 
-              <!-- Pitfall 3 -->
-              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
-                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  Invisible Titles
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
+                <h4 class="font-semibold text-bd-pink mb-1.5 flex items-center gap-1">
+                  <X class="w-4.5 h-4.5 text-bd-pink" /> Invisible Titles
                 </h4>
-                <p class="text-xs text-bd-text-secondary">
-                  Assuming the AI sees the Card Title. In reality, the AI only reads the content inside the Entry field.
-                </p>
-                <p class="text-xs text-bd-green mt-1">
-                  <strong>Fix:</strong> Always write the subject's name explicitly inside the Entry content block itself.
-                </p>
+                <p class="text-bd-text-secondary">Assuming the AI reads the Card Title. In reality, the AI only reads content inside the Entry field.</p>
+                <p class="text-bd-green mt-1"><strong>Fix:</strong> Always write the subject's name explicitly inside the Entry prose.</p>
               </div>
 
-              <!-- Pitfall 4 -->
-              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
-                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  Spaces After Comma Separators
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
+                <h4 class="font-semibold text-bd-pink mb-1.5 flex items-center gap-1">
+                  <X class="w-4.5 h-4.5 text-bd-pink" /> Massive Card Bloat
                 </h4>
-                <p class="text-xs text-bd-text-secondary">
-                  Writing triggers with spacing like `Marcus, knight` causes the engine to literally search for " knight".
-                </p>
-                <p class="text-xs text-bd-green mt-1">
-                  <strong>Fix:</strong> Never leave spaces after comma delimiters: write <code class="text-bd-purple">marcus,knight</code>.
-                </p>
-              </div>
-
-              <!-- Pitfall 5 -->
-              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
-                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  Duplicating Plot Essentials
-                </h4>
-                <p class="text-xs text-bd-text-secondary">
-                  Placing the exact same description in both Plot Essentials and a triggered Story Card wastes valuable tokens.
-                </p>
-                <p class="text-xs text-bd-green mt-1">
-                  <strong>Fix:</strong> Use PE for global, always-relevant facts, and Story Cards exclusively for conditional lore.
-                </p>
-              </div>
-
-              <!-- Pitfall 6 -->
-              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
-                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  Stale World Elements
-                </h4>
-                <p class="text-xs text-bd-text-secondary">
-                  Keeping old relationship data active (e.g., character is still listed as a best friend after a betrayal).
-                </p>
-                <p class="text-xs text-bd-green mt-1">
-                  <strong>Fix:</strong> Update cards dynamically as story milestones occur to prevent contradictions.
-                </p>
+                <p class="text-bd-text-secondary">Writing 500+ words in a single card entry. It eats up the entire dynamic budget, stopping other cards from triggering.</p>
+                <p class="text-bd-green mt-1"><strong>Fix:</strong> Limit entries to 2-4 sentences max.</p>
               </div>
             </div>
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== 7. CREDITS SECTION ===================== -->
-      <section id="guide-credits" class="card">
+      <!-- ===================== CREDITS SECTION ===================== -->
+      <section id="credits" class="card">
         <button
           @click="toggleGuideSection('credits')"
           class="w-full flex items-center justify-between text-left"
@@ -752,7 +436,7 @@
           <div v-if="isGuideSectionExpanded('credits')" class="mt-4 space-y-4">
             <div>
               <p class="text-xs text-bd-text-muted mb-2 flex items-center gap-1.5">
-                Contributors who created the resources, triggers, structures, and guides for Story Cards:
+                Contributors who researched, cataloged, and built command utilities for Story Cards:
               </p>
               <div class="flex flex-wrap gap-1.5">
                 <span v-for="name in storyCardsContributors" :key="name" 
@@ -763,7 +447,7 @@
             </div>
             <div class="flex flex-wrap gap-2">
               <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
-                <MessageSquare class="w-3 h-3" /> Discord
+                <MessageSquare class="w-3 h-3" /> Discord Community
               </a>
               <a href="https://github.com/LewdLeah/Multiple-Choice-Assistant/tree/main/docs" target="_blank" class="btn btn-secondary text-xs">
                 <FileText class="w-3 h-3" /> LewdLeah's AI Dungeon Docs
@@ -781,24 +465,20 @@
 import { ref } from 'vue'
 import { STORY_CARDS_CONTRIBUTORS as storyCardsContributors } from '@/data/contributors'
 import { 
-  Layers, HelpCircle, Lightbulb, Camera, Globe, FileText, Tag, Type, Zap,
-  Cog, AlertTriangle, Award, Check, Scale, Pencil,
-  Download, Search, Infinity, Space, Target,
-  CaseSensitive, Scissors, Quote, GitMerge, X,
-  ChevronDown, ChevronUp, Info, MessageSquare,
-  Brain, Coins, Sparkles, Rocket
+  Layers, HelpCircle, Lightbulb, FileText, Zap, Cog, AlertTriangle, Award, Check, Pencil, Download, Search, Target, X, ChevronDown, ChevronUp, Info, MessageSquare, Brain, Coins, Sparkles, Rocket
 } from 'lucide-vue-next'
 
 // Guide table of contents sections
 const guideSections = [
-  { id: 'header-core', label: 'Core', isHeader: true },
-  { id: 'what-is', label: 'What Are Story Cards?' },
-  { id: 'quick-start', label: 'Quick Start' },
-  { id: 'anatomy', label: 'Anatomy & How It Works' },
-  { id: 'best-practices', label: 'Best Practices' },
-  { id: 'header-advanced', label: 'Advanced', isHeader: true },
-  { id: 'advanced-topics', label: 'Advanced Topics' },
-  { id: 'pitfalls', label: 'Tips & Common Pitfalls' },
+  { id: 'header-core', label: 'Basics & Triggering', isHeader: true },
+  { id: 'what-is', label: 'Dynamic Lore Triggering' },
+  { id: 'anatomy', label: 'Anatomy & Fields' },
+  { id: 'header-formatting', label: 'Trigger Mastery', isHeader: true },
+  { id: 'best-practices', label: 'Trigger Formatting' },
+  { id: 'header-presets', label: 'Presets & Formats', isHeader: true },
+  { id: 'advanced-topics', label: 'Presets & Integrations' },
+  { id: 'header-trouble', label: 'Troubleshooting', isHeader: true },
+  { id: 'pitfalls', label: 'Trigger Troubleshooting' },
   { id: 'credits', label: 'Credits & Resources' }
 ]
 

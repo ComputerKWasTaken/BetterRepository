@@ -36,7 +36,7 @@
     <!-- Main Content -->
     <div class="flex-1 space-y-4 min-w-0">
 
-      <!-- ===================== 1. WHAT IS PLOT COMPONENTS ===================== -->
+      <!-- ===================== WHAT ARE PLOT COMPONENTS ===================== -->
       <section id="guide-what-is" class="card">
         <button
           @click="toggleGuideSection('what-is')"
@@ -52,164 +52,231 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('what-is')" class="mt-4 space-y-4">
             <p class="text-bd-text-secondary">
-              Plot components are tools that help the AI remember crucial information and follow your story's rules. 
-              <strong>Managing them is the most important thing you can do</strong> for story coherence.
+              Plot Components are the primary structural containers in AI Dungeon. Classified under **Required Elements**, they provide the persistent framework (rules, character states, and summaries) that maintains coherence across thousands of story actions.
             </p>
 
             <div class="grid md:grid-cols-3 gap-3">
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
                 <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
                   <Sparkles class="w-4 h-4 text-bd-blue" />
-                  What They Do
+                  Structural Anchor
                 </h3>
                 <p class="text-xs text-bd-text-secondary">
-                  Provide persistent, authoritative context that shapes the narrative every single turn.
+                  Plot Components shape the AI's generation baseline on every turn, preventing the model from losing the plot as history grows.
                 </p>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
                 <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
                   <Layers class="w-4 h-4 text-bd-amber" />
-                  Context Priority
+                  Required Elements
                 </h3>
                 <p class="text-xs text-bd-text-secondary">
-                  Categorized as **Required Elements**, meaning they take precedence over history and story cards.
+                  Unlike conditionally triggered Story Cards, these components are designed to stay locked in context on every turn.
                 </p>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
                 <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
                   <Info class="w-4 h-4 text-bd-green" />
-                  Coherence Boost
+                  Right Tool Matrix
                 </h3>
                 <p class="text-xs text-bd-text-secondary">
-                  Prevents "scene drift" and keeps characters, lore, and current scene details perfectly aligned.
+                  <strong>Instructions</strong> steer writing style. <strong>Plot Essentials</strong> anchor names/lore. <strong>Author's Note</strong> dictates short-term mood.
                 </p>
               </div>
             </div>
 
-            <!-- Five Plot Components Overview -->
+            <!-- List Table -->
             <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-              <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
+              <h3 class="font-semibold text-bd-text-primary mb-3 text-xs flex items-center gap-2">
                 <Layers class="w-4 h-4 text-bd-blue" />
-                The Five Plot Components
+                The Core Plot Component Array
               </h3>
               <div class="overflow-x-auto">
                 <table class="w-full text-xs">
                   <thead>
                     <tr class="border-b border-bd-border-subtle">
                       <th class="text-left py-2 pr-4 text-bd-text-muted font-semibold">Component</th>
-                      <th class="text-left py-2 pr-4 text-bd-text-primary font-semibold">Purpose</th>
-                      <th class="text-left py-2 text-bd-text-primary font-semibold">Position in Context</th>
+                      <th class="text-left py-2 pr-4 text-bd-text-primary font-semibold">Core Focus</th>
+                      <th class="text-left py-2 text-bd-text-primary font-semibold">Usability Mode</th>
                     </tr>
                   </thead>
                   <tbody class="text-bd-text-secondary">
                     <tr class="border-b border-bd-border-subtle/50">
-                      <td class="py-2 pr-4 font-medium">AI Instructions</td>
-                      <td class="py-2 pr-4">Behavioral rules for the AI</td>
-                      <td class="py-2">Very beginning (Position #1)</td>
+                      <td class="py-2 pr-4 font-semibold text-bd-text-primary">AI Instructions</td>
+                      <td class="py-2 pr-4">Global writing style, tone, and character agency limits.</td>
+                      <td class="py-2">Optional (Latitude default is applied if empty).</td>
                     </tr>
                     <tr class="border-b border-bd-border-subtle/50">
-                      <td class="py-2 pr-4 font-medium">Plot Essentials</td>
-                      <td class="py-2 pr-4">Key story facts (always present)</td>
-                      <td class="py-2">After AI Instructions</td>
+                      <td class="py-2 pr-4 font-semibold text-bd-text-primary">Plot Essentials</td>
+                      <td class="py-2 pr-4">Character profiles, current companion list, core world rules.</td>
+                      <td class="py-2">Highly Recommended (Always in context).</td>
                     </tr>
                     <tr class="border-b border-bd-border-subtle/50">
-                      <td class="py-2 pr-4 font-medium">Story Summary</td>
-                      <td class="py-2 pr-4">Running plot overview</td>
-                      <td class="py-2">After Story Cards</td>
+                      <td class="py-2 pr-4 font-semibold text-bd-text-primary">Story Summary</td>
+                      <td class="py-2 pr-4">Running chronological history log of story milestones.</td>
+                      <td class="py-2">Automated pass (Manual edits supported).</td>
                     </tr>
                     <tr class="border-b border-bd-border-subtle/50">
-                      <td class="py-2 pr-4 font-medium">Author's Note</td>
-                      <td class="py-2 pr-4">Short-term tone/style guidance</td>
-                      <td class="py-2">Near end (before last action)</td>
-                    </tr>
-                    <tr>
-                      <td class="py-2 pr-4 font-medium">Third Person</td>
-                      <td class="py-2 pr-4">Character name handling</td>
-                      <td class="py-2">N/A (affects formatting)</td>
+                      <td class="py-2 pr-4 font-semibold text-bd-text-primary">Author's Note</td>
+                      <td class="py-2 pr-4">Immediate editorial injection to guide the upcoming action scene.</td>
+                      <td class="py-2">Volatile (Updated frequently).</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
-
-            <!-- Right tool for the job -->
-            <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-              <h4 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider mb-2">Right Tool for the Job</h4>
-              <div class="grid md:grid-cols-2 gap-2 text-xs text-bd-text-secondary">
-                <div>• <strong>"Always write this way"</strong> → AI Instructions</div>
-                <div>• <strong>"Right now, do this"</strong> → Author's Note</div>
-                <div>• <strong>"Always remember this fact"</strong> → Plot Essentials</div>
-                <div>• <strong>"Remember this when relevant"</strong> → Story Cards</div>
-              </div>
-            </div>
-
-            <!-- Required Elements Note -->
-            <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30">
-              <div class="flex items-start gap-2">
-                <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
-                <p class="text-xs text-bd-text-secondary">
-                  Plot Components are <strong>Required Elements</strong>, prioritized for inclusion in context (up to 70% of available space). They are always present unless trimmed for space. Without them, the AI relies on recent history alone, which works for casual play but may lose coherence in longer adventures.
-                </p>
-              </div>
-            </div>
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== 2. QUICK START SECTION ===================== -->
-      <section id="guide-quick-start" class="card">
-        <button 
-          @click="toggleGuideSection('quick-start')"
+      <!-- ===================== THE CONTEXT WINDOW & TOKEN BUDGETS ===================== -->
+      <section id="guide-budgets" class="card">
+        <button
+          @click="toggleGuideSection('budgets')"
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Rocket class="w-5 h-5 text-bd-green" />
-            Quick Start: Setting Up Your Plot
+            <Cpu class="w-5 h-5 text-bd-purple" />
+            The Context Window &amp; Token Budgets
           </h2>
-          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('quick-start') }" />
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('budgets') }" />
         </button>
         
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('quick-start')" class="mt-4 space-y-4">
-            <p class="text-bd-text-secondary">
-              Follow these three practical steps to configure your story's foundational plot controls.
+          <div v-if="isGuideSectionExpanded('budgets')" class="mt-4 space-y-6">
+            <p class="text-bd-text-secondary text-xs">
+              Every turn, AI Dungeon compiles your story files into a single, ordered prompt stream called the **Context Window**. The model's attention is not distributed equally across this stream; positioning dictates influence.
             </p>
 
-            <!-- Step 1 -->
-            <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
-              <div class="flex items-start gap-3">
-                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-green/20 text-bd-green font-bold flex items-center justify-center">1</span>
-                <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary mb-1">Establish Your Baseline</h3>
-                  <p class="text-xs text-bd-text-secondary">
-                    Navigate to **Sidebar → Plot → Plot Essentials**. Write a concise paragraph detailing your character's core identity and your world's basic setup.
-                  </p>
+            <!-- Context Prompt Stream Order -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-3">
+              <h4 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
+                <Database class="w-4 h-4 text-bd-blue" />
+                Prompt Stream Assembled Order
+              </h4>
+              <div class="grid grid-cols-1 gap-1.5 font-mono text-[10px] text-bd-text-secondary">
+                <div class="flex items-center gap-2 p-1.5 rounded bg-bd-purple/10 border border-bd-purple/20">
+                  <span class="w-16 font-bold text-bd-purple">Pos #1</span>
+                  <span><strong>AI Instructions:</strong> Foundational steering (Highest structural attention).</span>
+                </div>
+                <div class="flex items-center gap-2 p-1.5 rounded bg-bd-purple/10 border border-bd-purple/20">
+                  <span class="w-16 font-bold text-bd-purple">Pos #2</span>
+                  <span><strong>Plot Essentials:</strong> Core character descriptions and permanent world facts.</span>
+                </div>
+                <div class="flex items-center gap-2 p-1.5 rounded bg-bd-cyan/10 border border-bd-cyan/20">
+                  <span class="w-16 font-bold text-bd-cyan">Pos #3</span>
+                  <span><strong>Story Cards:</strong> Triggered world lore entries (conditionally loaded).</span>
+                </div>
+                <div class="flex items-center gap-2 p-1.5 rounded bg-bd-cyan/10 border border-bd-cyan/20">
+                  <span class="w-16 font-bold text-bd-cyan">Pos #4</span>
+                  <span><strong>Story Summary:</strong> Compressed narrative history entries.</span>
+                </div>
+                <div class="flex items-center gap-2 p-1.5 rounded bg-bd-cyan/10 border border-bd-cyan/20">
+                  <span class="w-16 font-bold text-bd-cyan">Pos #5</span>
+                  <span><strong>Memory Bank:</strong> Vector-retrieved organic memories.</span>
+                </div>
+                <div class="flex items-center gap-2 p-1.5 rounded bg-bd-blue/10 border border-bd-blue/20">
+                  <span class="w-16 font-bold text-bd-blue">Pos #6</span>
+                  <span><strong>History:</strong> Recent conversational logs (sliding window actions).</span>
+                </div>
+                <div class="flex items-center gap-2 p-1.5 rounded bg-bd-pink/10 border border-bd-pink/20">
+                  <span class="w-16 font-bold text-bd-pink">Pos #7</span>
+                  <span><strong>Author's Note:</strong> Short-term editorial notes (injected in brackets).</span>
+                </div>
+                <div class="flex items-center gap-2 p-1.5 rounded bg-bd-pink/10 border border-bd-pink/20">
+                  <span class="w-16 font-bold text-bd-pink">Pos #8</span>
+                  <span><strong>Last Action:</strong> The player's immediate turn input.</span>
+                </div>
+                <div class="flex items-center gap-2 p-1.5 rounded bg-bd-pink/10 border border-bd-pink/20">
+                  <span class="w-16 font-bold text-bd-pink">Pos #9</span>
+                  <span><strong>Front Memory:</strong> Custom programmatic scripting injector (Maximum influence).</span>
                 </div>
               </div>
             </div>
 
-            <!-- Step 2 -->
-            <div class="p-4 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
-              <div class="flex items-start gap-3">
-                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-blue/20 text-bd-blue font-bold flex items-center justify-center">2</span>
-                <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary mb-1">Set the Active Scene</h3>
-                  <p class="text-xs text-bd-text-secondary">
-                    Open **Author's Note**. Insert a short 2-sentence description of the current location and mood (e.g. `[ Tavern scene. Relaxed atmosphere. ]`) to steer the immediate generation.
-                  </p>
+            <!-- Positional Attention Bias Grids -->
+            <div class="grid md:grid-cols-3 gap-3">
+              <div class="p-4 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
+                <h4 class="text-xs font-semibold text-bd-purple mb-2">Beginning (Pos 1–2)</h4>
+                <p class="text-[11px] text-bd-text-secondary">
+                  <strong>High Structural Attention.</strong> Sets the AI's core cognitive filter. Excellent for style definitions and rules because the model evaluates all subsequent turns through this lens.
+                </p>
+              </div>
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                <h4 class="text-xs font-semibold text-bd-text-muted mb-2">Middle (Pos 3–6)</h4>
+                <p class="text-[11px] text-bd-text-secondary">
+                  <strong>Flexible Recall Basin.</strong> Attention is statistically lowest here (known as "lost in the middle"). Ideal for conditional lore cards, raw history logs, and background memory files.
+                </p>
+              </div>
+              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+                <h4 class="text-xs font-semibold text-bd-pink mb-2">End (Pos 7–9)</h4>
+                <p class="text-[11px] text-bd-text-secondary">
+                  <strong>Maximum Recency Attention.</strong> Direct steering boundary. Text located here directly shapes the upcoming generation. Perfect for immediate mood shifting (Author's Note).
+                </p>
+              </div>
+            </div>
+
+            <!-- The 70/30 Context Allocation Split -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+              <h4 class="font-semibold text-bd-text-primary text-xs mb-3 flex items-center gap-2">
+                <Zap class="w-4 h-4 text-bd-amber" />
+                The 70/30 Context Allocation Split
+              </h4>
+              <p class="text-xs text-bd-text-secondary mb-3">
+                To guarantee that core rules and biographies never vanish, the engine divides your total token space (e.g. 8k or 32k limits) into two priority pools:
+              </p>
+              <div class="grid md:grid-cols-2 gap-3 text-xs">
+                <div class="p-3 rounded-lg bg-bd-bg-tertiary">
+                  <h5 class="text-xs font-semibold text-bd-purple mb-1">Required Elements Pool (Up to 70%)</h5>
+                  <ul class="text-bd-text-secondary space-y-1 list-disc list-inside">
+                    <li>• AI Instructions</li>
+                    <li>• Plot Essentials</li>
+                    <li>• Story Summary</li>
+                    <li>• Author's Note</li>
+                    <li>• Player's Last Action</li>
+                  </ul>
+                  <p class="text-[10px] text-bd-text-muted mt-2">These are protected. They stay in context unless they exceed 70% of the entire token budget.</p>
+                </div>
+                <div class="p-3 rounded-lg bg-bd-bg-tertiary">
+                  <h5 class="text-xs font-semibold text-bd-cyan mb-1">Dynamic Elements Pool (~30%)</h5>
+                  <ul class="text-bd-text-secondary space-y-1 list-disc list-inside">
+                    <li>• Triggered Story Cards</li>
+                    <li>• turn History Logs</li>
+                    <li>• retrieved Vector Memories</li>
+                  </ul>
+                  <p class="text-[10px] text-bd-text-muted mt-2">These take up the remaining space, competing dynamically based on relevance, frequency, and turn recency.</p>
                 </div>
               </div>
             </div>
 
-            <!-- Step 3 -->
-            <div class="p-4 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
-              <div class="flex items-start gap-3">
-                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center">3</span>
-                <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary mb-1">Enable Automated Tracking</h3>
-                  <p class="text-xs text-bd-text-secondary">
-                    Turn on **Auto Summarization** in Settings to allow the engine to periodically compress your story events into the **Story Summary** automatically.
-                  </p>
+            <!-- Trimming Priority Hierarchy -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle space-y-3">
+              <h4 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
+                <AlertTriangle class="w-4 h-4 text-bd-amber" />
+                Prompt Trimming Priority Hierarchy
+              </h4>
+              <p class="text-xs text-bd-text-secondary">
+                When your total story length exceeds the token context window cap, the engine prunes elements systematically in the following order:
+              </p>
+              <div class="space-y-2 text-xs">
+                <div class="flex items-center gap-3">
+                  <span class="flex-shrink-0 w-24 px-2 py-0.5 rounded text-[10px] font-bold bg-bd-pink/20 text-bd-pink text-center">NEVER TRIMMED</span>
+                  <span class="text-bd-text-secondary">Front Memory, Last Action.</span>
+                </div>
+                <div class="flex-1 h-px bg-bd-border-subtle/50"></div>
+                <div class="flex items-center gap-3">
+                  <span class="flex-shrink-0 w-24 px-2 py-0.5 rounded text-[10px] font-bold bg-bd-purple/20 text-bd-purple text-center">PROTECTED</span>
+                  <span class="text-bd-text-secondary">Author's Note, Plot Essentials.</span>
+                </div>
+                <div class="flex-1 h-px bg-bd-border-subtle/50"></div>
+                <div class="flex items-center gap-3">
+                  <span class="flex-shrink-0 w-24 px-2 py-0.5 rounded text-[10px] font-bold bg-bd-amber/20 text-bd-amber text-center">MEDIUM PRIORITY</span>
+                  <span class="text-bd-text-secondary">AI Instructions, Story Summary.</span>
+                </div>
+                <div class="flex-1 h-px bg-bd-border-subtle/50"></div>
+                <div class="flex items-center gap-3">
+                  <span class="flex-shrink-0 w-24 px-2 py-0.5 rounded text-[10px] font-bold bg-bd-text-muted/20 text-bd-text-muted text-center font-mono">FLEXIBLE</span>
+                  <span class="text-bd-text-secondary">Story Cards, turn History, Memory Bank (trimmed first to fit required elements).</span>
                 </div>
               </div>
             </div>
@@ -217,7 +284,7 @@
         </Transition>
       </section>
 
-      <!-- ===================== 3. ANATOMY & HOW IT WORKS ===================== -->
+      <!-- ===================== THE FOUR REQUIRED ELEMENTS ===================== -->
       <section id="guide-anatomy" class="card">
         <button
           @click="toggleGuideSection('anatomy')"
@@ -225,7 +292,7 @@
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Layers class="w-5 h-5 text-bd-cyan" />
-            Anatomy &amp; How It Works
+            The Four Required Elements
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('anatomy') }" />
         </button>
@@ -235,160 +302,124 @@
 
             <!-- Plot Essentials -->
             <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-md border-b border-bd-border-subtle pb-2">Plot Essentials (PE)</h3>
+              <h3 class="font-semibold text-bd-text-primary text-md border-b border-bd-border-subtle pb-2">1. Plot Essentials (PE)</h3>
               <p class="text-bd-text-secondary text-xs">
-                Use Plot Essentials for information that is <strong>always relevant</strong> throughout your story. It stays in context on every turn.
+                Plot Essentials house information that is **permanently relevant** to your adventure. It stays locked in context on every single turn.
               </p>
               
-              <div class="grid md:grid-cols-2 gap-4">
-                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
-                  <h4 class="font-semibold text-bd-text-primary text-xs mb-2 flex items-center gap-2">
-                    <User class="w-4 h-4 text-bd-green" />
-                    Character Description
-                  </h4>
-                  <p class="text-xs text-bd-text-secondary">
-                    Your character description belongs here. Update it whenever significant changes occur to your character.
-                  </p>
+              <div class="grid md:grid-cols-3 gap-3 text-xs">
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
+                  <strong class="text-bd-green block mb-1">Character Bios</strong>
+                  Define your character's class, vital stats, appearance, and core personality traits.
                 </div>
-                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
-                  <h4 class="font-semibold text-bd-text-primary text-xs mb-2 flex items-center gap-2">
-                    <Globe class="w-4 h-4 text-bd-green" />
-                    World Lore
-                  </h4>
-                  <p class="text-xs text-bd-text-secondary">
-                    Add a concise paragraph for world lore. Keep it updated as the environment changes or evolves.
-                  </p>
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
+                  <strong class="text-bd-green block mb-1">Traveling Companions</strong>
+                  Always list active sidekicks here (` Marcus is traveling companion `) to prevent them from vanishing.
+                </div>
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
+                  <strong class="text-bd-green block mb-1">World Framework</strong>
+                  List the foundational global rules of your world (e.g. ` Realm: high fantasy, low tech `).
                 </div>
               </div>
 
-              <!-- Formatting Examples -->
-              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-                <h4 class="font-semibold text-bd-text-primary text-xs mb-3 flex items-center gap-2">
+              <!-- Structured vs Narrative PE Examples -->
+              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-3">
+                <h4 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
                   <Ruler class="w-4 h-4 text-bd-green" />
-                  PE Format Examples
+                  PE Format Comparison
                 </h4>
-                <div class="grid md:grid-cols-2 gap-3">
+                <div class="grid md:grid-cols-2 gap-3 text-xs">
                   <div>
-                    <h5 class="text-xs font-semibold text-bd-text-primary mb-2">Structured Format</h5>
-                    <div class="p-2 rounded bg-bd-bg-primary font-mono text-xs text-bd-green">
-                      <div>SETTING: Medieval fantasy kingdom</div>
-                      <div>PROTAGONIST: Elara, elven ranger</div>
-                      <div>COMPANION: Marcus, human mage</div>
-                      <div>CURRENT: Traveling through marshes</div>
-                    </div>
+                    <h5 class="font-semibold text-bd-text-primary mb-1">Structured Format (Highly Readable)</h5>
+                    <div class="p-3 rounded bg-bd-bg-primary font-mono text-bd-green whitespace-pre-wrap leading-relaxed">Protagonist: Elara, elven ranger
+Stats: HP 100, MP 50
+Companions: Sir Marcus (weary knight)
+Current Quest: Retrieve the Sunstone</div>
                   </div>
                   <div>
-                    <h5 class="text-xs font-semibold text-bd-text-primary mb-2">Narrative Format</h5>
-                    <div class="p-2 rounded bg-bd-bg-primary font-mono text-xs text-bd-green">
-                      Elara is an elven ranger on a quest for the Sunstone. She travels with Marcus, a human mage. Lord Varen hunts them. Currently crossing the Misty Marshes.
-                    </div>
+                    <h5 class="font-semibold text-bd-text-primary mb-1">Narrative Format (Natural Prompt Flow)</h5>
+                    <div class="p-3 rounded bg-bd-bg-primary font-mono text-bd-green whitespace-pre-wrap leading-relaxed">Elara is an elven ranger searching for the mythical Sunstone. She travels with Sir Marcus, a stoic and weary knight commander who protects her path.</div>
                   </div>
                 </div>
-                <p class="text-xs text-bd-text-muted mt-2">Both formats work. Structured is easier to edit; narrative flows more naturally into model contexts.</p>
+                <p class="text-[11px] text-bd-text-muted">
+                  <strong>Recommendation:</strong> Use structured format for active game metrics (stats, items) as it's easier to edit; use narrative format for complex character backgrounds.
+                </p>
               </div>
             </div>
 
             <!-- Author's Note -->
             <div class="space-y-3 pt-4 border-t border-bd-border-subtle">
-              <h3 class="font-semibold text-bd-text-primary text-md border-b border-bd-border-subtle pb-2">Author's Note (AN)</h3>
+              <h3 class="font-semibold text-bd-text-primary text-md border-b border-bd-border-subtle pb-2">2. Author's Note (AN)</h3>
               <p class="text-bd-text-secondary text-xs">
-                Author's Note sets up the <strong>current scene</strong>. Use it when the scene temporarily differs from your main theme or to guide tone.
+                Author's Note is a volatile field designed for **scene-specific guidelines**. Because it resides right before player input, it has immense immediate steering power.
               </p>
-
-              <div class="grid md:grid-cols-2 gap-4">
-                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-pink/30">
-                  <h4 class="font-semibold text-bd-text-primary text-xs mb-2 flex items-center gap-2">
-                    <Rocket class="w-4 h-4 text-bd-pink" />
-                    Setting Change
-                  </h4>
-                  <p class="text-xs text-bd-text-secondary">
-                    Story was in a city, now you're in a damp cave? Write a quick setting note in AN to anchor the AI instantly.
-                  </p>
+              
+              <div class="grid md:grid-cols-2 gap-3 text-xs">
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/20">
+                  <strong class="text-bd-pink block mb-1">Local Environment Shift</strong>
+                  Story moves from city streets to damp dungeons? Update AN immediately: `[ Setting: damp dungeon, echoey cavern ]`.
                 </div>
-                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-pink/30">
-                  <h4 class="font-semibold text-bd-text-primary text-xs mb-2 flex items-center gap-2">
-                    <Focus class="w-4 h-4 text-bd-pink" />
-                    Theme Shift
-                  </h4>
-                  <p class="text-xs text-bd-text-secondary">
-                    Want to focus on psychological tension or high speed combat for this specific scene? Update AN theme tags.
-                  </p>
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/20">
+                  <strong class="text-bd-pink block mb-1">Immediate Scene Pacing</strong>
+                  Want the upcoming fight scene to feel brutal and rapid? Insert: `[ Pacing: rapid. Style: visceral combat description ]`.
                 </div>
               </div>
 
-              <!-- How AN Works Internally -->
-              <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-pink/30">
+              <!-- Bracket Training Metadata -->
+              <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-pink/30 text-xs">
                 <div class="flex items-start gap-2">
                   <Info class="w-4 h-4 text-bd-pink flex-shrink-0 mt-0.5" />
-                  <p class="text-xs text-bd-text-secondary">
-                    <strong class="text-bd-text-primary">Under the hood:</strong> AN text is wrapped in <code class="text-bd-pink">[ brackets ]</code> before being sent to the AI. Brackets signify meta-information in training data, causing the AI to treat AN as <strong>direct editorial directives</strong> rather than narrative text.
+                  <p class="text-bd-text-secondary">
+                    <strong>Under-the-Hood Syntax:</strong> Behind the scenes, the client automatically wraps your Author's Note text in <code class="text-bd-pink">[ square brackets ]</code> before compiling the prompt. Because LLMs were pre-trained on internet documents where bracketed lines represent editorial comments, brackets tell the model this text represents **editorial metadata directives** rather than story prose.
                   </p>
                 </div>
               </div>
             </div>
 
-            <!-- Memory Bank & Story Summary -->
+            <!-- Story Summary -->
             <div class="space-y-3 pt-4 border-t border-bd-border-subtle">
-              <h3 class="font-semibold text-bd-text-primary text-md border-b border-bd-border-subtle pb-2">Memory Bank &amp; Story Summary</h3>
+              <h3 class="font-semibold text-bd-text-primary text-md border-b border-bd-border-subtle pb-2">3. Story Summary &amp; Vector Memories</h3>
               <p class="text-bd-text-secondary text-xs">
-                The Memory System combines automated big-picture tracking with conditional detail retrieval.
+                The memory pipeline handles long-term narrative consistency through automated batch tracking and semantic recall.
               </p>
-
+              
               <div class="grid md:grid-cols-2 gap-4">
-                <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
-                  <h4 class="font-semibold text-bd-text-primary text-xs mb-2 flex items-center gap-2">
-                    <Brain class="w-4 h-4 text-bd-green" />
-                    Memory Bank
-                  </h4>
-                  <p class="text-xs text-bd-text-secondary">
-                    Stores semantic facts as your story progresses. Retried dynamically via vector embeddings when related words appear in recent actions, injecting relevant details conditionally.
-                  </p>
-                </div>
-                <div class="p-4 rounded-lg bg-bd-cyan/10 border border-bd-cyan/30">
-                  <h4 class="font-semibold text-bd-text-primary text-xs mb-2 flex items-center gap-2">
+                <div class="p-4 rounded-lg bg-bd-cyan/10 border border-bd-cyan/30 text-xs space-y-2">
+                  <h4 class="font-semibold text-bd-cyan flex items-center gap-1.5">
                     <ScrollText class="w-4 h-4 text-bd-cyan" />
-                    Story Summary
+                    Story Summary (SS)
                   </h4>
-                  <p class="text-xs text-bd-text-secondary">
-                    A running overview of plot history. When Auto Summarization is active, the engine appends batch events and periodically re-summarizes them using a dedicated AI pass.
+                  <p class="text-bd-text-secondary">
+                    A running chronological log of completed plot points. The client monitors your inputs, and every **4 actions**, compiles them into a new memory entry.
+                  </p>
+                  <p class="text-bd-text-muted">
+                    <strong>Auto Summarization passing:</strong> When the summary becomes too long, AI Dungeon executes a background pass to compress older entries, keeping tokens stable.
                   </p>
                 </div>
-              </div>
 
-              <!-- How the Memory Cycle Works -->
-              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-                <h4 class="font-semibold text-bd-text-primary text-xs mb-3 flex items-center gap-2">
-                  <RefreshCw class="w-4 h-4 text-bd-blue" />
-                  How the Memory Cycle Works
-                </h4>
-                <ol class="text-xs text-bd-text-secondary space-y-1.5 list-decimal list-inside">
-                  <li>Every <strong>4 actions</strong>, the engine compiles that batch into a new memory entry.</li>
-                  <li>New entries are appended to the <strong>Story Summary</strong> plot component.</li>
-                  <li>When the summary becomes too long, a dedicated AI model compresses it.</li>
-                  <li>The Memory Bank retrievably injects relevant facts based on semantic similarity.</li>
-                </ol>
-              </div>
-
-              <!-- 8-Action Buffer -->
-              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-                <h4 class="font-semibold text-bd-text-primary text-xs mb-3 flex items-center gap-2">
-                  <Database class="w-4 h-4 text-bd-cyan" />
-                  The 4-Action Buffer
-                </h4>
-                <p class="text-xs text-bd-text-secondary mb-2">
-                  Your most recent 4 actions are <strong>never summarized</strong>, creating a safety buffer that allows editing or undoing recent actions without corrupting your memory history.
-                </p>
+                <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30 text-xs space-y-2">
+                  <h4 class="font-semibold text-bd-green flex items-center gap-1.5">
+                    <Brain class="w-4 h-4 text-bd-green" />
+                    Vector Memory Bank
+                  </h4>
+                  <p class="text-bd-text-secondary">
+                    Stores semantic facts generated in play. When matching words appear in recent history, the engine retrieves matching memory blocks and injects them conditionally.
+                  </p>
+                  <p class="text-bd-text-muted">
+                    <strong>The 4-Action Buffer:</strong> The most recent 4 turns are never summarized. This buffer lets you edit or undo recent turns without corrupting summary files.
+                  </p>
+                </div>
               </div>
             </div>
 
             <!-- Front Memory -->
             <div class="space-y-3 pt-4 border-t border-bd-border-subtle">
-              <h3 class="font-semibold text-bd-text-primary text-md border-b border-bd-border-subtle pb-2">Front Memory</h3>
+              <h3 class="font-semibold text-bd-text-primary text-md border-b border-bd-border-subtle pb-2">4. Front Memory</h3>
               <p class="text-bd-text-secondary text-xs">
-                Front Memory is a specialized, script-only component. It is injected at the <strong>very end</strong> of the context window, giving it unparalleled influence on the model's immediate next token generation.
+                Front Memory is an advanced, **script-only** component. Injected at the absolute end of the prompt stream (Position #9), it has maximum immediate steering influence over the model's next word choice.
               </p>
-              <div class="p-3 rounded-lg bg-bd-red/10 border border-bd-red/30 text-xs text-bd-text-secondary">
-                This field is not accessible via the standard gameplay UI. It can only be programmatically written to by custom JavaScript scripts via the `state.memory.frontMemory` property.
+              <div class="p-4 rounded-lg bg-bd-red/10 border border-bd-red/30 text-xs">
+                This field is completely hidden from the standard gameplay UI. It can only be written to programmatically by JavaScript modifiers via the `state.memory.frontMemory` property. Excellent for real-time combat status displays.
               </div>
             </div>
 
@@ -396,66 +427,7 @@
         </Transition>
       </section>
 
-      <!-- ===================== 4. BEST PRACTICES ===================== -->
-      <section id="guide-best-practices" class="card">
-        <button
-          @click="toggleGuideSection('best-practices')"
-          class="w-full flex items-center justify-between text-left"
-        >
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <ScrollText class="w-5 h-5 text-bd-amber" />
-            Best Practices
-          </h2>
-          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('best-practices') }" />
-        </button>
-        
-        <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('best-practices')" class="mt-4 space-y-4">
-            <p class="text-bd-text-secondary">
-              Follow these opinionated formatting rules to maximize the utility and token efficiency of your Plot Components.
-            </p>
-
-            <div class="grid md:grid-cols-2 gap-4">
-              <!-- Plot Essentials rules -->
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle space-y-2">
-                <h3 class="font-semibold text-bd-text-primary text-sm flex items-center gap-2">
-                  <User class="w-4 h-4 text-bd-green" />
-                  Plot Essentials Rules
-                </h3>
-                <ul class="text-xs text-bd-text-secondary space-y-2 list-disc list-inside">
-                  <li><strong>Traveling Companions</strong>: If a companion travels with you, mention them in PE (`Bob is a grumpy wizard companion`) so they don't vanish from scenes.</li>
-                  <li><strong>Current Scene Note</strong>: In high context settings (16k+), models can fixate on past actions. Explicitly add: `Current scene: You are talking to Kira in the tavern.`</li>
-                  <li><strong>Avoid Negations</strong>: Models tend to drop negatives like "is not." Say `Bob is honest` instead of `Bob is not a liar`.</li>
-                  <li><strong>One Subject Per Line</strong>: Repeat the subject's name on each line to establish strong word association.</li>
-                </ul>
-              </div>
-
-              <!-- Author's Note rules -->
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle space-y-2">
-                <h3 class="font-semibold text-bd-text-primary text-sm flex items-center gap-2">
-                  <Feather class="w-4 h-4 text-bd-pink" />
-                  Author's Note Rules
-                </h3>
-                <ul class="text-xs text-bd-text-secondary space-y-2 list-disc list-inside">
-                  <li><strong>Keep It Short</strong>: Strictly limit AN to <strong>3-4 sentences max</strong>. Long notes cause the model to ignore the main story context.</li>
-                  <li><strong>Be Expressive</strong>: Avoid flat descriptions. Use descriptive genre cues: `Dark fantasy, gothic atmosphere, tense pacing` rather than just `fantasy`.</li>
-                  <li><strong>Use Tag Syntax</strong>: Labeled tags like `Theme: mystery`, `Mood: Melancholic` are compact, easily parsed by samplers, and token-friendly.</li>
-                  <li><strong>No Long-term Planning</strong>: If you write future event plans in AN, the model will try to resolve them immediately on the very next turn.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </Transition>
-      </section>
-
-      <!-- ===================== ADVANCED SECTION DIVIDER ===================== -->
-      <div class="flex items-center gap-3 pt-4">
-        <div class="h-px flex-1 bg-bd-border-subtle"></div>
-        <span class="text-xs font-bold uppercase tracking-widest text-bd-text-muted">Advanced</span>
-        <div class="h-px flex-1 bg-bd-border-subtle"></div>
-      </div>
-
-      <!-- ===================== 5. ADVANCED TOPICS ===================== -->
+      <!-- ===================== STRUCTURAL TROUBLESHOOTING ===================== -->
       <section id="guide-advanced-topics" class="card">
         <button
           @click="toggleGuideSection('advanced-topics')"
@@ -463,154 +435,92 @@
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Cpu class="w-5 h-5 text-bd-purple" />
-            Advanced Topics
+            Structural Troubleshooting &amp; Pitfalls
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('advanced-topics') }" />
         </button>
         
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('advanced-topics')" class="mt-4 space-y-6">
-
-            <!-- Scene Transitions -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-md border-b border-bd-border-subtle pb-2">Scene Transitions &amp; Break Markers</h3>
-              <p class="text-bd-text-secondary text-xs">
-                When transitioning to a new scene, write a <strong>longer input than usual</strong> describing the new setting or mood. This tells the AI what to focus on and forces it to stop repeating elements from the previous location.
-              </p>
-              
-              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-                <h4 class="font-semibold text-bd-text-primary text-xs mb-2">Scene Break Markers</h4>
-                <p class="text-xs text-bd-text-secondary mb-3">
-                  Most modern models recognize <code class="text-bd-green">---</code> or <code class="text-bd-green">***</code> on a line by itself as an explicit scene break:
-                </p>
-                <div class="p-3 rounded bg-bd-bg-primary font-mono text-xs text-bd-text-secondary">
-                  <div>Elara collapsed from exhaustion in the cave.</div>
-                  <div class="my-2 text-bd-amber">---</div>
-                  <div>The next morning, sunlight filtered through the cracks...</div>
-                </div>
-              </div>
-              
-              <div class="p-4 rounded-lg bg-bd-accent-primary/10 border border-bd-accent-primary/30">
-                <div class="flex items-start gap-3">
-                  <Sparkles class="w-5 h-5 text-bd-accent-primary mt-0.5 flex-shrink-0" />
-                  <div>
-                    <h4 class="font-semibold text-bd-text-primary text-xs">BetterDungeon Horizonal Divider Styling</h4>
-                    <p class="text-xs text-bd-text-secondary mt-1">
-                      BetterDungeon's <strong>Markdown feature</strong> automatically renders these scene break lines (`---`) as styled horizontal dividers in the gameplay window, making readability seamless while keeping the raw tokens intact for the model.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Scripting Integration -->
-            <div class="space-y-3 pt-4 border-t border-bd-border-subtle">
-              <h3 class="font-semibold text-bd-text-primary text-md border-b border-bd-border-subtle pb-2">Scripting Integration</h3>
-              <p class="text-bd-text-secondary text-xs">
-                Custom JavaScript modifiers can programmatically mutate components in real-time, enabling highly dynamic adventures.
-              </p>
-              <div class="grid md:grid-cols-3 gap-3 text-xs">
-                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30">
-                  <h4 class="font-semibold text-bd-green mb-1">Plot Essentials</h4>
-                  <code class="text-[10px] text-bd-green block font-mono">state.memory.context</code>
-                  <p class="text-[11px] text-bd-text-muted mt-1">Sets PE content. Values set by scripts completely override any UI-configured content.</p>
-                </div>
-                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/30">
-                  <h4 class="font-semibold text-bd-pink mb-1">Author's Note</h4>
-                  <code class="text-[10px] text-bd-green block font-mono">state.memory.authorsNote</code>
-                  <p class="text-[11px] text-bd-text-muted mt-1">Modifies AN content. These script edits take effect on the very next generation turn.</p>
-                </div>
-                <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
-                  <h4 class="font-semibold text-bd-amber mb-1">Front Memory</h4>
-                  <code class="text-[10px] text-bd-green block font-mono">state.memory.frontMemory</code>
-                  <p class="text-[11px] text-bd-text-muted mt-1">Injects text at the absolute tail of the context. Highly reactive, useful for immediate rules.</p>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </Transition>
-      </section>
-
-      <!-- ===================== 6. TIPS & COMMON PITFALLS ===================== -->
-      <section id="guide-pitfalls" class="card">
-        <button
-          @click="toggleGuideSection('pitfalls')"
-          class="w-full flex items-center justify-between text-left"
-        >
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <AlertTriangle class="w-5 h-5 text-bd-pink" />
-            Tips &amp; Common Pitfalls
-          </h2>
-          <ChevronDown
-            class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('pitfalls') }"
-          />
-        </button>
-        
-        <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('pitfalls')" class="mt-4 space-y-4">
+          <div v-if="isGuideSectionExpanded('advanced-topics')" class="mt-4 space-y-6 text-xs">
             
-            <!-- Quick Tips -->
-            <div class="grid md:grid-cols-3 gap-3">
-              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <h4 class="text-xs font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
-                  <Scissors class="w-3 h-3 text-bd-green" /> Be Terse
+            <div class="grid md:grid-cols-2 gap-4">
+              <!-- Pitfall 1 -->
+              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20 space-y-1">
+                <h4 class="font-semibold text-bd-pink flex items-center gap-1.5">
+                  <XCircle class="w-4 h-4 text-bd-pink" /> Author's Note Prose Bloat
                 </h4>
-                <p class="text-xs text-bd-text-secondary">Too much info in context dilutes AI focus. <strong>Keep entries short.</strong></p>
+                <p class="text-bd-text-secondary">
+                  Writing Author's Notes like a novel: `[ The rain starts to fall softly as Marcus looks out over the silent marshland. ]` 
+                </p>
+                <p class="text-bd-green">
+                  <strong>Fix:</strong> Keep AN strictly behavioral and direct: `[ Mood: somber. Focus: soft rain description. ]` Keep it under 2-3 sentences max.
+                </p>
               </div>
-              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <h4 class="text-xs font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
-                  <Edit class="w-3 h-3 text-bd-amber" /> Edit AI Outputs
+
+              <!-- Pitfall 2 -->
+              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20 space-y-1">
+                <h4 class="font-semibold text-bd-pink flex items-center gap-1.5">
+                  <XCircle class="w-4 h-4 text-bd-pink" /> Stale Plot Essentials
                 </h4>
-                <p class="text-xs text-bd-text-secondary">Directly alter character slips or wrong details. The AI quickly learns from inline corrections.</p>
+                <p class="text-bd-text-secondary">
+                  Leaving outdated metrics or relationship facts in PE (e.g. still listing Marcus as a healthy companion after he dies).
+                </p>
+                <p class="text-bd-green">
+                  <strong>Fix:</strong> Perform an audit of your PE after every major plot milestone. Strip out resolved quest lines.
+                </p>
               </div>
-              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <h4 class="text-xs font-semibold text-bd-text-primary mb-1 flex items-center gap-1">
-                  <XCircle class="w-3 h-3 text-bd-pink" /> Avoid Flashbacks
+
+              <!-- Pitfall 3 -->
+              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20 space-y-1">
+                <h4 class="font-semibold text-bd-pink flex items-center gap-1.5">
+                  <XCircle class="w-4 h-4 text-bd-pink" /> Fact Duplication Bleed
                 </h4>
-                <p class="text-xs text-bd-text-secondary">Flashbacks confuse story logic. Models often fail to separate imagined timelines from reality.</p>
+                <p class="text-bd-text-secondary">
+                  Repeating the exact same character bio in Plot Essentials, Author's Note, and a triggered Story Card. This heavily dilutes attention.
+                </p>
+                <p class="text-bd-green">
+                  <strong>Fix:</strong> Consolidate facts. Keep global profiles exclusively in PE; keep conditional lore exclusively in Story Cards.
+                </p>
+              </div>
+
+              <!-- Pitfall 4 -->
+              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20 space-y-1">
+                <h4 class="font-semibold text-bd-pink flex items-center gap-1.5">
+                  <XCircle class="w-4 h-4 text-bd-pink" /> Flashback Timelines
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Writing past memories inside active Author's Notes. The AI model has no concept of timeline progression; it will try to make the past happen immediately on the next turn.
+                </p>
+                <p class="text-bd-green">
+                  <strong>Fix:</strong> Write flashback cues in Story Cards or PE labeled as historical lore, keeping AN strictly present.
+                </p>
               </div>
             </div>
 
-            <!-- Common Pitfalls Grid -->
-            <div class="grid md:grid-cols-2 gap-3">
-              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
-                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
-                  <XCircle class="w-3 h-3 text-bd-pink" /> Overloading Plot Essentials
-                </h4>
-                <p class="text-xs text-bd-text-secondary">Stuffing PE with every detail overwhelms the AI and wastes valuable tokens.</p>
-                <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> Keep PE to universal facts. Move situational details to Story Cards.</p>
+            <!-- Horizontal break markers -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-2">
+              <h4 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
+                <ArrowRightLeft class="w-4 h-4 text-bd-blue" />
+                Scene Transitions &amp; Break Markers
+              </h4>
+              <p class="text-bd-text-secondary">
+                To clean context during heavy shifts, use three dashes <code class="text-bd-green">---</code> on a line by itself. This tells modern models that the previous spatial timeline is closed.
+              </p>
+              <div class="p-3 rounded bg-bd-bg-primary font-mono text-[11px] text-bd-text-muted">
+                Elara collapsed in exhaustion inside the cave.
+                <div class="text-bd-amber my-1 font-bold">---</div>
+                The next morning, sunlight filtered through the cracks...
               </div>
-              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
-                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
-                  <XCircle class="w-3 h-3 text-bd-pink" /> Never Updating Components
-                </h4>
-                <p class="text-xs text-bd-text-secondary">Stale, outdated info actively misleads the AI as the story progresses.</p>
-                <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> Review PE after major story events. Remove resolved threads and update character statuses.</p>
-              </div>
-              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
-                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
-                  <XCircle class="w-3 h-3 text-bd-pink" /> Duplicating Info Across Components
-                </h4>
-                <p class="text-xs text-bd-text-secondary">Repeating details across PE, AN, and Story Cards causes heavy repetition and wastes tokens.</p>
-                <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> Keep information in ONE correct place. Rely on the "Right Tool for the Job" matrix.</p>
-              </div>
-              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
-                <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
-                  <XCircle class="w-3 h-3 text-bd-pink" /> Writing AN Like a Novel
-                </h4>
-                <p class="text-xs text-bd-text-secondary">Long, flowery Author's Notes cause the model to hyper-fixate and lose track of historical narrative.</p>
-                <p class="text-xs text-bd-green mt-1"><strong>Fix:</strong> Limit to 3-4 sentences. Use tag and list structures instead of flowery prose.</p>
-              </div>
+              <p class="text-[11px] text-bd-text-muted mt-2">
+                <strong>BetterDungeon Integration:</strong> Our extension automatically detects markdown dividers (`---`) and displays them as a stylized horizontal line in the chat feed.
+              </p>
             </div>
-
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== 7. CREDITS SECTION ===================== -->
-      <section id="guide-credits" class="card">
+      <!-- ===================== CREDITS SECTION ===================== -->
+      <section id="credits" class="card">
         <button
           @click="toggleGuideSection('credits')"
           class="w-full flex items-center justify-between text-left"
@@ -619,17 +529,14 @@
             <Info class="w-5 h-5 text-bd-amber" />
             Credits &amp; Resources
           </h2>
-          <ChevronDown
-            class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('credits') }"
-          />
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('credits') }" />
         </button>
         
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('credits')" class="mt-4 space-y-4">
             <div>
               <p class="text-xs text-bd-text-muted mb-2 flex items-center gap-1.5">
-                Contributors who created PEs, SSs, and ANs, or created guides for them:
+                Contributors who researched, analyzed, and optimized prompt assembly and Required Elements:
               </p>
               <div class="flex flex-wrap gap-1.5">
                 <span v-for="name in plotComponentsContributors" :key="name" 
@@ -640,7 +547,7 @@
             </div>
             <div class="flex flex-wrap gap-2">
               <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
-                <MessageSquare class="w-3 h-3" /> Discord
+                <MessageSquare class="w-3 h-3" /> Discord Community
               </a>
               <a href="https://github.com/LewdLeah/Multiple-Choice-Assistant/tree/main/docs" target="_blank" class="btn btn-secondary text-xs">
                 <BookOpen class="w-3 h-3" /> LewdLeah's AI Dungeon Docs
@@ -658,24 +565,20 @@
 import { ref } from 'vue'
 import { PLOT_COMPONENTS_CONTRIBUTORS as plotComponentsContributors } from '@/data/contributors'
 import { 
-  Info, MapPin, Feather, BookMarked, ScrollText, 
-  Lightbulb, Layers, HelpCircle, User, Globe, Plus,
-  Users, Sword, Star, RefreshCw, MessageSquare,
-  Rocket, Focus, AlertTriangle, Database, Brain, ArrowRightLeft,
-  Sparkles, Scissors, MessageCircle, XCircle, Edit, Ruler, Cpu,
-  ChevronDown, ChevronUp, BookOpen
+  Info, ScrollText, Layers, HelpCircle, User, Globe, Plus,
+  RefreshCw, MessageSquare, Rocket, AlertTriangle, Database, Brain, ArrowRightLeft,
+  Sparkles, XCircle, Ruler, Cpu, ChevronDown, ChevronUp, BookOpen, Swords, Heart, Target, Skull, Eye, Wrench
 } from 'lucide-vue-next'
 
 // Guide table of contents sections
 const guideSections = [
-  { id: 'header-core', label: 'Core', isHeader: true },
+  { id: 'header-core', label: 'Prompt Architecture', isHeader: true },
   { id: 'what-is', label: 'What Are Plot Components?' },
-  { id: 'quick-start', label: 'Quick Start' },
-  { id: 'anatomy', label: 'Anatomy & How It Works' },
-  { id: 'best-practices', label: 'Best Practices' },
-  { id: 'header-advanced', label: 'Advanced', isHeader: true },
-  { id: 'advanced-topics', label: 'Advanced Topics' },
-  { id: 'pitfalls', label: 'Tips & Common Pitfalls' },
+  { id: 'budgets', label: 'Context Windows & Budgets' },
+  { id: 'header-elements', label: 'Required Elements', isHeader: true },
+  { id: 'anatomy', label: 'The Four Elements' },
+  { id: 'header-trouble', label: 'Troubleshooting', isHeader: true },
+  { id: 'advanced-topics', label: 'Structural Pitfalls' },
   { id: 'credits', label: 'Credits & Resources' }
 ]
 

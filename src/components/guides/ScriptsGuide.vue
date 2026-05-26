@@ -36,7 +36,21 @@
     <!-- Main Content -->
     <div class="flex-1 space-y-4 min-w-0">
 
-      <!-- ===================== 1. WHAT IS SCRIPTING ===================== -->
+      <!-- Context Budget Routing Notice -->
+      <div class="p-4 rounded-lg bg-bd-info/10 border border-bd-info/30">
+        <div class="flex items-start gap-3">
+          <Info class="w-5 h-5 text-bd-info flex-shrink-0 mt-0.5" />
+          <div>
+            <h4 class="font-semibold text-bd-text-primary text-sm">Programmatic Context Steering</h4>
+            <p class="text-xs text-bd-text-secondary mt-1">
+              Custom scripts manipulate prompt streams by programmatically writing to dynamic context parameters. To understand how context budgets are divided, or how the compiler evaluates positional weightings, see our dedicated 
+              <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline font-semibold">Plot Components Guide</router-link>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== THE SCRIPTING SANDBOX ===================== -->
       <section id="guide-what-is" class="card">
         <button
           @click="toggleGuideSection('what-is')"
@@ -44,7 +58,7 @@
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <HelpCircle class="w-5 h-5 text-bd-blue" />
-            What Is Scripting?
+            The Scripting Sandbox
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -55,97 +69,65 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('what-is')" class="mt-4 space-y-6">
             <p class="text-bd-text-secondary">
-              Scripting allows creators to modify the player's inputs, the context sent to the AI model, and the AI's outputs dynamically. 
-              Using sandboxed JavaScript, you can implement custom stats, command consoles, stateful lore modifiers, and other interactive mechanics.
+              Scripting in AI Dungeon executes standard **ES6 JavaScript** inside a secure, sandboxed server environment. Scripts intercept player inputs, mutate prompt context streams dynamically, and format output text programmatically.
             </p>
 
-            <div class="grid md:grid-cols-3 gap-3">
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
-                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+            <div class="grid md:grid-cols-3 gap-3 text-xs">
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
+                <h3 class="font-semibold text-bd-text-primary mb-1.5 flex items-center gap-2">
                   <Terminal class="w-4 h-4 text-bd-blue" />
-                  Hook Pipeline
+                  Execution Pipeline
                 </h3>
-                <p class="text-xs text-bd-text-secondary">
-                  Intercept player inputs, inject model-context parameters, or filter raw outputs before display.
+                <p class="text-bd-text-secondary">
+                  Scripts execute synchronously during the generation pipeline. Asynchronous calls (`async/await`, `setTimeout`) are blocked.
                 </p>
               </div>
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
-                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-1">
+                <h3 class="font-semibold text-bd-text-primary mb-1.5 flex items-center gap-2">
                   <Database class="w-4 h-4 text-bd-amber" />
-                  Stateful Memory
+                  Memory Limit
                 </h3>
-                <p class="text-xs text-bd-text-secondary">
-                  Store custom JSON properties that persist between turns, such as player health, inventory, or event counters.
+                <p class="text-bd-text-secondary">
+                  Each sandbox instance has a strict limit of **16 MB** RAM. Loading large static databases will instantly crash the script.
                 </p>
               </div>
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30">
-                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
+                <h3 class="font-semibold text-bd-text-primary mb-1.5 flex items-center gap-2">
                   <Monitor class="w-4 h-4 text-bd-green" />
-                  Dynamic Interfaces
+                  Timeout Threshold
                 </h3>
-                <p class="text-xs text-bd-text-secondary">
-                  Create fully customized text logs, prompt-driven events, or show dynamic status headers at the top of the chat.
+                <p class="text-bd-text-secondary">
+                  Scripts must finish within **2.0 seconds**. Slow loop iterations or complex string operations trigger immediate execution timeouts.
                 </p>
               </div>
             </div>
 
-            <!-- Sub-topic: Where Scripts Live -->
+            <!-- Pipeline Flow Diagram -->
             <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-3">
-              <h3 class="font-semibold text-bd-text-primary flex items-center gap-2">
-                <Monitor class="w-4 h-4 text-bd-purple" />
-                Scenario Compatibility &amp; Sandbox Limits
-              </h3>
-              <p class="text-xs text-bd-text-secondary">
-                To keep the platform stable and secure, scripting has structural scope constraints:
-              </p>
-              <div class="grid md:grid-cols-2 gap-4 text-xs text-bd-text-secondary">
-                <div>
-                  <h4 class="font-semibold text-bd-text-primary mb-1">Scenario Availability</h4>
-                  <ul class="list-disc list-inside space-y-1 text-bd-text-muted">
-                    <li>Attached exclusively to **Scenarios** (not individual Adventures).</li>
-                    <li>Supported in **Simple Start** and **Character Creator** scenarios.</li>
-                    <li>**Multiple Choice** scenarios can't have global scripts, but their child option branches can.</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 class="font-semibold text-bd-text-primary mb-1">Sandbox Constraints</h4>
-                  <ul class="list-disc list-inside space-y-1 text-bd-text-muted">
-                    <li>Runs standard **ES6 Javascript** synchronously (no async/await).</li>
-                    <li>Strict memory limit of **16 MB** per execution instance.</li>
-                    <li>Timeout threshold of **2 seconds** per hook call.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <!-- Execution Pipeline Map -->
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle/50 space-y-3">
               <h3 class="font-semibold text-bd-text-primary flex items-center gap-2 text-xs">
-                <GitMerge class="w-4 h-4 text-bd-blue" />
-                Script Execution Pipeline Flow
+                <GitMerge class="w-4 h-4 text-bd-purple" />
+                Script Execution Cycle
               </h3>
-              <div class="flex flex-wrap items-center gap-2 text-[11px]">
-                <div class="px-2 py-1 rounded bg-bd-bg-tertiary border border-bd-border-subtle text-bd-text-secondary">Player Input</div>
-                <span class="text-bd-text-muted">→</span>
-                <div class="px-2 py-1 rounded bg-bd-green/20 border border-bd-green/30 text-bd-green font-semibold">onInput</div>
-                <span class="text-bd-text-muted">→</span>
-                <div class="px-2 py-1 rounded bg-bd-bg-tertiary border border-bd-border-subtle text-bd-text-secondary">Context Assembly</div>
-                <span class="text-bd-text-muted">→</span>
-                <div class="px-2 py-1 rounded bg-bd-blue/20 border border-bd-blue/30 text-bd-blue font-semibold">onModelContext</div>
-                <span class="text-bd-text-muted">→</span>
-                <div class="px-2 py-1 rounded bg-bd-bg-tertiary border border-bd-border-subtle text-bd-text-secondary">AI Generation</div>
-                <span class="text-bd-text-muted">→</span>
-                <div class="px-2 py-1 rounded bg-bd-amber/20 border border-bd-amber/30 text-bd-amber font-semibold">onOutput</div>
-                <span class="text-bd-text-muted">→</span>
-                <div class="px-2 py-1 rounded bg-bd-bg-tertiary border border-bd-border-subtle text-bd-text-secondary">Display Response</div>
+              <div class="flex flex-wrap items-center gap-2 text-[11px] font-mono">
+                <div class="px-2 py-1 rounded bg-bd-bg-primary border border-bd-border-subtle">Player Input</div>
+                <span class="text-bd-text-muted">&rarr;</span>
+                <div class="px-2 py-1 rounded bg-bd-green/20 border border-bd-green/30 text-bd-green font-bold">onInput</div>
+                <span class="text-bd-text-muted">&rarr;</span>
+                <div class="px-2 py-1 rounded bg-bd-bg-primary border border-bd-border-subtle">Prompt Assembled</div>
+                <span class="text-bd-text-muted">&rarr;</span>
+                <div class="px-2 py-1 rounded bg-bd-blue/20 border border-bd-blue/30 text-bd-blue font-bold">onModelContext</div>
+                <span class="text-bd-text-muted">&rarr;</span>
+                <div class="px-2 py-1 rounded bg-bd-bg-primary border border-bd-border-subtle">AI Model Pass</div>
+                <span class="text-bd-text-muted">&rarr;</span>
+                <div class="px-2 py-1 rounded bg-bd-amber/20 border border-bd-amber/30 text-bd-amber font-bold">onOutput</div>
               </div>
-              <p class="text-[10px] text-bd-text-muted">The shared **Library** script runs before each hook file. Variables in the Library are persistent in the script context, but temporary local scopes apply inside modifiers.</p>
+              <p class="text-[10px] text-bd-text-muted">The shared **Library** script runs before each hook modifier file, letting you declare global persistent variables or utility routines.</p>
             </div>
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== 2. QUICK START ===================== -->
+      <!-- ===================== THE LIFECYCLE HOOKS ===================== -->
       <section id="guide-quick-start" class="card">
         <button
           @click="toggleGuideSection('quick-start')"
@@ -153,7 +135,7 @@
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Rocket class="w-5 h-5 text-bd-green" />
-            Quick Start: Your First Custom Command
+            The Lifecycle Hooks
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -162,55 +144,76 @@
         </button>
         
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('quick-start')" class="mt-4 space-y-4">
+          <div v-if="isGuideSectionExpanded('quick-start')" class="mt-4 space-y-4 text-xs">
             <p class="text-bd-text-secondary">
-              Follow this 3-step Quick Start to script a custom command (`:gold`) that intercepts player input and displays stats.
+              AI Dungeon divides modifier operations across four distinct files. All hooks (except the Library) must follow the standard wrapper convention.
             </p>
 
-            <!-- Step 1 -->
-            <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
-              <div class="flex items-start gap-3">
-                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-green/20 text-bd-green font-bold flex items-center justify-center">1</span>
-                <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary mb-1">Initialize State in Library</h3>
-                  <p class="text-xs text-bd-text-secondary mb-2">
-                    Open the **Library** script editor. Initialize a custom gold stat using the nullish coalescing operator so it doesn't get cleared on each turn:
-                  </p>
-                  <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">state.gold = state.gold ?? 100;</pre>
-                </div>
-              </div>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="p-4 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
-              <div class="flex items-start gap-3">
-                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-blue/20 text-bd-blue font-bold flex items-center justify-center">2</span>
-                <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary mb-1">Intercept the Input Modifier</h3>
-                  <p class="text-xs text-bd-text-secondary mb-2">
-                    Open the **Input Modifier** script. Catch the command, assign the display text to `state.message`, and set `stop: true` to prevent the AI model from responding:
-                  </p>
-                  <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">const modifier = (text) => {
-  if (text.trim() === ":gold") {
-    state.message = `Gold inventory: ${state.gold} coins`;
-    return { text, stop: true };
-  }
+            <!-- Modifier Wrapper Code Block -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-2">
+              <h4 class="font-semibold text-bd-text-primary">Standard Modifier Wrapper Contract</h4>
+              <pre class="p-3 rounded bg-bd-bg-primary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">const modifier = (text) => {
+  // 1. Modify raw string 'text' here...
+  // 2. Perform custom state mutations here...
   return { text };
 };
-modifier(text);</pre>
-                </div>
-              </div>
+modifier(text); // CRITICAL: This last wrapper execution call MUST be present!</pre>
             </div>
 
-            <!-- Step 3 -->
-            <div class="p-4 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
-              <div class="flex items-start gap-3">
-                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center">3</span>
-                <div class="flex-1">
-                  <h3 class="font-semibold text-bd-text-primary mb-1">Verify in the Script Test Console</h3>
-                  <p class="text-xs text-bd-text-secondary">
-                    In the **Script Test** panel on the right, input `:gold`, click **Submit**, and verify that the output indicates `stop: true` and the `state.message` displays your gold count.
-                  </p>
+            <!-- Hook Breakdown Grid -->
+            <div class="grid md:grid-cols-2 gap-4">
+              <!-- Input Modifier -->
+              <div class="p-4 rounded bg-bd-bg-primary border border-bd-green/20 space-y-2">
+                <h4 class="font-semibold text-bd-green flex items-center gap-1.5">
+                  <ArrowRightToLine class="w-4 h-4 text-bd-green" /> Input Modifier (onInput)
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Triggers before context assembly. Ideal for command console line parsers, blocking specific words, or setting custom gold commands.
+                </p>
+                <div class="text-bd-text-muted font-mono text-[10px]">
+                  Input 'text': Raw text submitted by player.
+                  Return: { text, stop: true } (stops AI generation).
+                </div>
+              </div>
+
+              <!-- Context Modifier -->
+              <div class="p-4 rounded bg-bd-bg-primary border border-bd-blue/20 space-y-2">
+                <h4 class="font-semibold text-bd-blue flex items-center gap-1.5">
+                  <Layers class="w-4 h-4 text-bd-blue" /> Context Modifier (onModelContext)
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Triggers after prompt assembly. Ideal for injecting dynamic stat bars, system instructions, or local scene modifiers.
+                </p>
+                <div class="text-bd-text-muted font-mono text-[10px]">
+                  Input 'text': Assembled prompt context string.
+                  Return: { text } (modified prompt stream).
+                </div>
+              </div>
+
+              <!-- Output Modifier -->
+              <div class="p-4 rounded bg-bd-bg-primary border border-bd-amber/20 space-y-2">
+                <h4 class="font-semibold text-bd-amber flex items-center gap-1.5">
+                  <ArrowLeftToLine class="w-4 h-4 text-bd-amber" /> Output Modifier (onOutput)
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Triggers after AI generates text, but before it renders. Perfect for cleaning up markdown tokens, parsing hidden rolls, or styling chat text.
+                </p>
+                <div class="text-bd-text-muted font-mono text-[10px]">
+                  Input 'text': Raw generated string from model.
+                  Return: { text } (final displayed string).
+                </div>
+              </div>
+
+              <!-- Shared Library -->
+              <div class="p-4 rounded bg-bd-bg-primary border border-bd-purple/20 space-y-2">
+                <h4 class="font-semibold text-bd-purple flex items-center gap-1.5">
+                  <Library class="w-4 h-4 text-bd-purple" /> Shared Library (Runs First)
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Not a modifier wrapper itself. Executed globally before any hook modifier is evaluated. Declares global objects, methods, and base functions.
+                </p>
+                <div class="text-bd-text-muted font-mono text-[10px]">
+                  Scope: Persists globally across all hook executions in a turn.
                 </div>
               </div>
             </div>
@@ -218,7 +221,7 @@ modifier(text);</pre>
         </Transition>
       </section>
 
-      <!-- ===================== 3. ANATOMY / HOW IT WORKS ===================== -->
+      <!-- ===================== API PARAMETERS & FUNCTIONS ===================== -->
       <section id="guide-anatomy" class="card">
         <button
           @click="toggleGuideSection('anatomy')"
@@ -226,7 +229,7 @@ modifier(text);</pre>
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Braces class="w-5 h-5 text-bd-purple" />
-            Anatomy &amp; How It Works
+            API Parameters &amp; Functions
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -235,140 +238,91 @@ modifier(text);</pre>
         </button>
         
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('anatomy')" class="mt-4 space-y-6">
-            
-            <!-- Modifier Structure -->
+          <div v-if="isGuideSectionExpanded('anatomy')" class="mt-4 space-y-6 text-xs text-bd-text-secondary">
+            <p class="text-bd-text-secondary">
+              The sandboxed container injects core parameters and helper functions globally into all modifier scopes.
+            </p>
+
             <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">The Modifier Function Structure</h3>
-              <p class="text-xs text-bd-text-secondary">
-                All lifecycle scripts (except the Library) must follow the standard wrapper convention. The modifier intercepts the current string in the argument <code class="text-bd-green">text</code> and must return a modified object.
-              </p>
-              
-              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-                <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto"><span class="text-bd-purple">const</span> <span class="text-bd-cyan">modifier</span> = (<span class="text-bd-amber">text</span>) => {
-  <span class="text-bd-text-muted">// Modify or check the text here...</span>
-  <span class="text-bd-purple">return</span> { <span class="text-bd-amber">text</span> };
-};
-<span class="text-bd-cyan">modifier</span>(<span class="text-bd-amber">text</span>); <span class="text-bd-text-muted">// CRITICAL: This last call MUST be present!</span></pre>
+              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-1">1. Sandbox Global Parameters</h3>
+              <div class="grid md:grid-cols-4 gap-3">
+                <div class="p-3 rounded bg-bd-bg-tertiary">
+                  <strong class="text-bd-text-primary block font-mono">text</strong>
+                  The active string variable (raw input, assembled context, or raw output).
+                </div>
+                <div class="p-3 rounded bg-bd-bg-tertiary">
+                  <strong class="text-bd-text-primary block font-mono">state</strong>
+                  Shared JSON object. Persists custom metrics between turn cycles.
+                </div>
+                <div class="p-3 rounded bg-bd-bg-tertiary">
+                  <strong class="text-bd-text-primary block font-mono">history</strong>
+                  Chronological array of all past actions, labeled by actor types.
+                </div>
+                <div class="p-3 rounded bg-bd-bg-tertiary">
+                  <strong class="text-bd-text-primary block font-mono">storyCards</strong>
+                  Array of all world lore cards associated with the active scenario.
+                </div>
               </div>
             </div>
 
-            <!-- Lifecycle hooks -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Lifecycle Hooks Comparison</h3>
+            <!-- state.message and state.memory bridges -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle space-y-3">
+              <h4 class="font-semibold text-bd-text-primary">The UI State Bridges</h4>
               <div class="grid md:grid-cols-2 gap-4">
-                <div class="p-4 rounded bg-bd-bg-primary border border-bd-green/20 text-xs">
-                  <h4 class="font-semibold text-bd-green mb-1.5 flex items-center gap-1.5">
-                    <ArrowRightToLine class="w-4 h-4 text-bd-green" /> Input Modifier (onInput)
-                  </h4>
-                  <p class="text-bd-text-secondary mb-1">
-                    Triggers before context assembly. Perfect for chat command syntax parsing or blocking bad input words.
+                <div class="space-y-1">
+                  <h5 class="font-semibold text-bd-green font-mono">state.message</h5>
+                  <p class="text-[11px] text-bd-text-muted">
+                    Assigning a string to `state.message` renders a custom notice box in the player's log window. Perfect for chat consoles, cooldown notifications, or stat displays.
                   </p>
-                  <strong>Text contains:</strong> The exact raw text typed by the player.
+                  <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">state.message = `HP: ${state.hp} / 100`;</pre>
                 </div>
-                <div class="p-4 rounded bg-bd-bg-primary border border-bd-blue/20 text-xs">
-                  <h4 class="font-semibold text-bd-blue mb-1.5 flex items-center gap-1.5">
-                    <Layers class="w-4 h-4 text-bd-blue" /> Context Modifier (onModelContext)
-                  </h4>
-                  <p class="text-bd-text-secondary mb-1">
-                    Triggers after context generation. Excellent for injecting stats blocks, dynamic system notes, or formatting rules.
+                <div class="space-y-1">
+                  <h5 class="font-semibold text-bd-blue font-mono">state.memory</h5>
+                  <p class="text-[11px] text-bd-text-muted">
+                    Mutates active Required Elements. You can programmatically alter the active Plot Essentials (`state.memory.context`) or Author's Note (`state.memory.authorsNote`).
                   </p>
-                  <strong>Text contains:</strong> The entire assembled raw context text (AI instructions, memories, history).
-                </div>
-                <div class="p-4 rounded bg-bd-bg-primary border border-bd-amber/20 text-xs">
-                  <h4 class="font-semibold text-bd-amber mb-1.5 flex items-center gap-1.5">
-                    <ArrowLeftToLine class="w-4 h-4 text-bd-amber" /> Output Modifier (onOutput)
-                  </h4>
-                  <p class="text-bd-text-secondary mb-1">
-                    Triggers after AI generates text, but before it renders. Useful for cleanup, stripping markdown, or game log additions.
-                  </p>
-                  <strong>Text contains:</strong> The raw text generated by the AI model.
-                </div>
-                <div class="p-4 rounded bg-bd-bg-primary border border-bd-purple/20 text-xs">
-                  <h4 class="font-semibold text-bd-purple mb-1.5 flex items-center gap-1.5">
-                    <Library class="w-4 h-4 text-bd-purple" /> Shared Library (Runs First)
-                  </h4>
-                  <p class="text-bd-text-secondary mb-1">
-                    Not a modifier itself. Executes before any hook file is parsed, allowing you to register global objects or functions.
-                  </p>
-                  <strong>Scope:</strong> Declares shared functions and persistence variables.
+                  <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">state.memory.authorsNote = "Tense scene.";</pre>
                 </div>
               </div>
             </div>
 
-            <!-- API Parameters -->
+            <!-- API Helpers -->
             <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Available API Parameters</h3>
-              <p class="text-xs text-bd-text-secondary">
-                The sandbox makes these core parameters globally accessible in all modifier hook scopes:
-              </p>
-              <div class="grid md:grid-cols-4 gap-3 text-xs">
-                <div class="p-3 rounded bg-bd-bg-tertiary">
-                  <strong class="text-bd-text-primary block mb-0.5">text</strong>
-                  The target string for the current hook lifecycle phase.
+              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-1">2. Sandbox Helper Functions</h3>
+              <div class="grid md:grid-cols-3 gap-3">
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle space-y-1">
+                  <code class="text-bd-green block font-mono font-bold">log(message)</code>
+                  <p class="text-[11px] text-bd-text-muted">
+                    Prints custom messages to the scenario editor console. `console.log` is supported. GraphQL stringifies `undefined` values as `null`.
+                  </p>
                 </div>
-                <div class="p-3 rounded bg-bd-bg-tertiary">
-                  <strong class="text-bd-text-primary block mb-0.5">state</strong>
-                  Persistent object. Keeps custom metrics between round turns.
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle space-y-1">
+                  <code class="text-bd-green block font-mono font-bold">addStoryCard(keys, val, typ)</code>
+                  <p class="text-[11px] text-bd-text-muted">
+                    Programmatically spawns a new Story Card during gameplay. Note: Fails if the player turned the Memory Bank setting off.
+                  </p>
                 </div>
-                <div class="p-3 rounded bg-bd-bg-tertiary">
-                  <strong class="text-bd-text-primary block mb-0.5">history</strong>
-                  Array of recent inputs/outputs including action type.
-                </div>
-                <div class="p-3 rounded bg-bd-bg-tertiary">
-                  <strong class="text-bd-text-primary block mb-0.5">storyCards</strong>
-                  Array of active/inactive world lore cards.
-                </div>
-              </div>
-
-              <!-- state.memory and state.message info -->
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle text-xs space-y-2">
-                <h4 class="font-semibold text-bd-text-primary">Understanding UI Bridges</h4>
-                <div class="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <h5 class="font-semibold text-bd-green mb-1">state.message</h5>
-                    <p class="text-bd-text-secondary">Assigning a string to `state.message` displays a notice box in the player's chat log (useful for status commands).</p>
-                  </div>
-                  <div>
-                    <h5 class="font-semibold text-bd-blue mb-1">state.memory</h5>
-                    <p class="text-bd-text-secondary">Supports programmatically altering dynamic fields like UI memory (`state.memory.context`) or (`state.memory.authorsNote`).</p>
-                  </div>
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle space-y-1">
+                  <code class="text-bd-green block font-mono font-bold">updateStoryCard(idx, keys, val)</code>
+                  <p class="text-[11px] text-bd-text-muted">
+                    Mutates an existing card's properties dynamically (e.g. updating character relationships as milestones are met).
+                  </p>
                 </div>
               </div>
             </div>
-
-            <!-- API Functions Reference -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">API Helper Functions</h3>
-              <div class="grid md:grid-cols-3 gap-3 text-xs text-bd-text-secondary">
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
-                  <code class="text-bd-green block font-mono font-bold mb-1">log(message)</code>
-                  Prints custom messages to the scenario editor console. `console.log` is also supported. GraphQL will stringify `undefined` as `null`.
-                </div>
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
-                  <code class="text-bd-green block font-mono font-bold mb-1">addStoryCard(keys, entry, type)</code>
-                  Programmatically spawns a new Story Card during gameplay. Note: Buggy if the player has turned their Memory Bank feature off.
-                </div>
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
-                  <code class="text-bd-green block font-mono font-bold mb-1">updateStoryCard(idx, keys, entry, type)</code>
-                  Updates an existing card's properties dynamically (e.g., updating relations or character stats as milestones are met).
-                </div>
-              </div>
-            </div>
-
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== 4. BEST PRACTICES ===================== -->
-      <section id="guide-best-practices" class="card">
+      <!-- ===================== ARCHITECTURE & PATTERNS ===================== -->
+      <section id="best-practices" class="card">
         <button
           @click="toggleGuideSection('best-practices')"
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Award class="w-5 h-5 text-bd-amber" />
-            Best Practices
+            Architecture &amp; Design Patterns
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -377,136 +331,68 @@ modifier(text);</pre>
         </button>
         
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('best-practices')" class="mt-4 space-y-6">
-            
-            <!-- Keeping hooks fast -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-1.5 flex items-center gap-2">
-                <Wrench class="w-4 h-4 text-bd-cyan" />
-                Performance &amp; Execution Speed
-              </h3>
-              <ul class="space-y-2 text-xs">
-                <li class="flex items-start gap-2 text-bd-text-secondary">
-                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                  <span><strong>Sandbox Boundaries:</strong> Keep your loops fast. Heavy processes (like iterating through thousands of array entries) will hit the 2-second timeout, crashing the adventure.</span>
-                </li>
-                <li class="flex items-start gap-2 text-bd-text-secondary">
-                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                  <span><strong>Safe State mutations:</strong> Always validate the type of data you assign to `state`. Stick strictly to serializable values (primitives, plain objects, basic arrays). Never store classes or circular objects.</span>
-                </li>
-                <li class="flex items-start gap-2 text-bd-text-secondary">
-                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
-                  <span><strong>Memory Footprint:</strong> Avoid loading humongous JSON configurations inside variables. The sandbox caps memory usage at 16MB; exceeding this instantly halts execution.</span>
-                </li>
-              </ul>
-            </div>
+          <div v-if="isGuideSectionExpanded('best-practices')" class="mt-4 space-y-6 text-xs text-bd-text-secondary">
+            <p class="text-bd-text-secondary">
+              Writing scalable scripts requires clean structural patterns to prevent timing timeouts and syntax crashes.
+            </p>
 
-            <!-- Testing workflow -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-1.5 flex items-center gap-2">
-                <Monitor class="w-4 h-4 text-bd-purple" />
-                Effective Testing &amp; Debugging
-              </h3>
-              <div class="grid md:grid-cols-3 gap-3 text-xs text-bd-text-secondary">
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
-                  <strong class="text-bd-text-primary block mb-0.5">Use Script Test Often</strong>
-                  Before starting a live playtest, run mock inputs inside the built-in Editor Test panel. This catches simple syntax errors immediately.
-                </div>
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
-                  <strong class="text-bd-text-primary block mb-0.5">Keep Play Tab Open</strong>
-                  Console logs persist on the server for only 15 minutes. Run playtests side-by-side with the editor so you can review real-time log outputs.
-                </div>
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
-                  <strong class="text-bd-text-primary block mb-0.5">Use Debug Logs strategic</strong>
-                  Log status variables at the entry and exit points of custom math functions, e.g. <code class="text-bd-purple">log(`HP updated: ${state.hp}`);</code>.
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </Transition>
-      </section>
-
-      <!-- ===================== 5. ADVANCED TOPICS ===================== -->
-      <section id="guide-advanced-topics" class="card">
-        <button
-          @click="toggleGuideSection('advanced-topics')"
-          class="w-full flex items-center justify-between text-left"
-        >
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Layers class="w-5 h-5 text-bd-cyan" />
-            Advanced Topics
-          </h2>
-          <ChevronDown
-            class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('advanced-topics') }"
-          />
-        </button>
-        
-        <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('advanced-topics')" class="mt-4 space-y-6">
-            
-            <!-- Sub-topic: Common Scripting Recipes -->
-            <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Common Scripting Recipes</h3>
-              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/20 space-y-2">
-                <h4 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
-                  <Play class="w-4 h-4 text-bd-blue" />
-                  Dynamic UI Status Header (onModelContext)
-                </h4>
-                <p class="text-xs text-bd-text-secondary">
-                  Injects dynamic stats or a location description directly into the top of the AI's generation context:
-                </p>
-                <pre class="p-3 rounded bg-bd-bg-tertiary text-[10px] font-mono text-bd-green overflow-x-auto whitespace-pre-wrap">const modifier = (text) => {
-  const contextString = `[Scene: ${state.location} | Active Effects: ${state.poisoned ? 'Poisoned' : 'None'}]\n`;
-  return { text: contextString + text };
-};
-modifier(text);</pre>
-              </div>
-            </div>
-
-            <!-- Sub-topic: Consolidated Hook Pattern -->
+            <!-- Library-Centric Hook Pattern -->
             <div class="space-y-3">
               <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">The Library-Centric Hook Pattern</h3>
               <p class="text-xs text-bd-text-secondary">
-                For complex scenarios, splitting logic across separate Input/Context/Output files can make debugging difficult. The **Library-Centric Hook Pattern** routes all logic through a single global function inside the Library.
+                Splitting complex math and logic files across four separate Input/Context/Output files can make debugging difficult. The **Library-Centric Hook Pattern** routes all operations through a single global routing function defined inside the **Library** script:
               </p>
               
-              <div class="p-4 rounded bg-bd-bg-tertiary border border-bd-border-subtle space-y-2 text-xs">
+              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-2">
                 <h4 class="font-semibold text-bd-text-primary">1. Library File Setup</h4>
-                <pre class="p-2 rounded bg-bd-bg-primary font-mono text-[10px] text-bd-green overflow-x-auto">globalThis.MyScript = function MyScript(hook) {
+                <pre class="p-3 rounded bg-bd-bg-primary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">globalThis.MyScript = function MyScript(hook) {
   "use strict";
+  // Safely initialize state
   const S = (state.myScript ||= { hp: 100 });
 
   if (hook === "input") {
-    if (globalThis.text === ":heal") { S.hp = 100; globalThis.stop = true; }
+    // Intercept gold command
+    if (globalThis.text.trim() === ":heal") {
+      S.hp = 100;
+      globalThis.text = ""; // clear input
+      globalThis.stop = true; // halt AI model pass
+      state.message = "HP fully restored!";
+    }
   }
   if (hook === "context") {
-    globalThis.text = `[HP: ${S.hp}]\n` + globalThis.text;
+    // Inject dynamic HUD at the beginning of prompt context
+    globalThis.text = `[HP: ${S.hp} / 100]\n` + globalThis.text;
   }
 };</pre>
               </div>
 
+              <!-- Labeled hook wrappers -->
               <div class="grid md:grid-cols-3 gap-3 text-[10px] font-mono text-bd-text-secondary">
-                <div class="p-3 rounded bg-bd-bg-tertiary">
-                  <strong>Input File Modifier</strong>
-                  <pre class="mt-1 font-bold text-bd-green">const modifier = (text) => {
+                <div class="p-3 rounded bg-bd-bg-tertiary border border-bd-border-subtle/50 space-y-1">
+                  <strong>Input Modifier File</strong>
+                  <pre class="font-bold text-bd-green">const modifier = (text) => {
+  globalThis.text = text;
   MyScript("input");
-  return { text: globalThis.text };
+  return { 
+    text: globalThis.text,
+    stop: globalThis.stop 
+  };
 };
 modifier(text);</pre>
                 </div>
-                <div class="p-3 rounded bg-bd-bg-tertiary">
-                  <strong>Context File Modifier</strong>
-                  <pre class="mt-1 font-bold text-bd-green">const modifier = (text) => {
+                <div class="p-3 rounded bg-bd-bg-tertiary border border-bd-border-subtle/50 space-y-1">
+                  <strong>Context Modifier File</strong>
+                  <pre class="font-bold text-bd-green">const modifier = (text) => {
+  globalThis.text = text;
   MyScript("context");
   return { text: globalThis.text };
 };
 modifier(text);</pre>
                 </div>
-                <div class="p-3 rounded bg-bd-bg-tertiary">
-                  <strong>Output File Modifier</strong>
-                  <pre class="mt-1 font-bold text-bd-green">const modifier = (text) => {
+                <div class="p-3 rounded bg-bd-bg-tertiary border border-bd-border-subtle/50 space-y-1">
+                  <strong>Output Modifier File</strong>
+                  <pre class="font-bold text-bd-green">const modifier = (text) => {
+  globalThis.text = text;
   MyScript("output");
   return { text: globalThis.text };
 };
@@ -515,34 +401,92 @@ modifier(text);</pre>
               </div>
             </div>
 
-            <!-- Sub-topic: BetterScripts to Ultrascripts transition -->
-            <div class="p-4 rounded bg-gradient-to-r from-bd-accent-primary/10 to-bd-purple/10 border border-bd-accent-primary/30 space-y-2 text-xs">
-              <h4 class="font-semibold text-bd-text-primary flex items-center gap-2">
+            <!-- BetterScripts to V2 Ultrascripts Evolution -->
+            <div class="p-4 rounded-lg bg-gradient-to-r from-bd-accent-primary/10 to-bd-purple/10 border border-bd-accent-primary/30 space-y-2">
+              <h4 class="font-semibold text-bd-text-primary flex items-center gap-1.5">
                 <Terminal class="w-4 h-4 text-bd-accent-primary" />
-                BetterScripts to Ultrascripts V2 Evolution
+                BetterScripts to Ultrascripts V2 Evolution Path
               </h4>
-              <p class="text-bd-text-secondary">
-                In the upcoming BetterDungeon V2 release, the legacy scripting sandboxes will be superseded by **Ultrascripts**. 
+              <p class="text-xs text-bd-text-secondary">
+                In the upcoming BetterDungeon V2 architecture, legacy synchronous modifiers will evolve into **Ultrascripts**. 
                 Ultrascripts establishes a high-performance, bidirectional event-driven bridge between browser variables and AI Dungeon client instances, bypassing formatting limitations entirely.
               </p>
               <div class="flex items-center gap-2">
                 <router-link to="/guides?tab=ultrascripts" class="text-bd-accent-primary hover:underline font-semibold">Learn more in the Ultrascripts Guide &rarr;</router-link>
               </div>
             </div>
-
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== 6. TIPS & COMMON PITFALLS ===================== -->
+      <!-- ===================== EDITOR TESTING & DEBUGGING ===================== -->
+      <section id="guide-advanced-topics" class="card">
+        <button
+          @click="toggleGuideSection('advanced-topics')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Monitor class="w-5 h-5 text-bd-cyan" />
+            Editor Testing &amp; Debugging
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('advanced-topics') }"
+          />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('advanced-topics')" class="mt-4 space-y-6 text-xs text-bd-text-secondary">
+            <p class="text-bd-text-secondary">
+              Direct live playtests in game logs can make parsing script errors tedious. Leverage the dedicated editor utilities.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-4">
+              <!-- Script Test Panel -->
+              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-2">
+                <h4 class="font-semibold text-bd-text-primary flex items-center gap-1.5">
+                  <PlayCircle class="w-4 h-4 text-bd-green" />
+                  The Script Test Console
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Located in the right-hand panel of the script editor. Input a mock string (e.g. `:gold`) and click **Submit**.
+                </p>
+                <ul class="list-disc list-inside space-y-1 text-bd-text-muted">
+                  <li>• Instantly displays compile syntax errors.</li>
+                  <li>• Outputs returned strings and `state.message` modifications.</li>
+                  <li>• Displays `stop: true` action block statuses.</li>
+                </ul>
+              </div>
+
+              <!-- GraphQL logs -->
+              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-2">
+                <h4 class="font-semibold text-bd-text-primary flex items-center gap-1.5">
+                  <Terminal class="w-4 h-4 text-bd-purple" />
+                  GraphQL Console Logger
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Active `log(...)` statements are written directly to your browser's Developer Tools Console via network GraphQL pipes.
+                </p>
+                <ul class="list-disc list-inside space-y-1 text-bd-text-muted">
+                  <li>• Open Chrome/Firefox DevTools (F12) &rarr; Console.</li>
+                  <li>• GraphQL stringifies `undefined` values as `null` in console returns.</li>
+                  <li>• Logs persist on the server for only **15 minutes** of inactivity.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
+      <!-- ===================== TROUBLESHOOTING & PITFALLS ===================== -->
       <section id="guide-pitfalls" class="card">
         <button
           @click="toggleGuideSection('pitfalls')"
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <AlertTriangle class="w-5 h-5 text-bd-amber" />
-            Tips &amp; Common Pitfalls
+            <AlertTriangle class="w-5 h-5 text-bd-pink" />
+            Scripting Troubleshooting &amp; Pitfalls
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -551,74 +495,50 @@ modifier(text);</pre>
         </button>
         
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('pitfalls')" class="mt-4 space-y-4">
+          <div v-if="isGuideSectionExpanded('pitfalls')" class="mt-4 space-y-4 text-xs">
             <p class="text-bd-text-secondary">
-              Avoid these scripting pitfalls to prevent execution crashes, performance sluggishness, and state resets.
+              Avoid these common configuration errors that cause sandboxed script crashes.
             </p>
 
             <div class="grid md:grid-cols-2 gap-3">
-              <!-- Pitfall 1 -->
-              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20 text-xs">
-                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  "Run Dangerous Scripts" Blocked
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
+                <h4 class="font-semibold text-bd-pink mb-1 flex items-center gap-1">
+                  <X class="w-4 h-4 text-bd-pink" /> State Resets on Turn Cycles
                 </h4>
-                <p class="text-bd-text-secondary">
-                  Custom scripts fail to run for new players because security features disable arbitrary sandboxing by default.
-                </p>
-                <p class="text-bd-green mt-1">
-                  <strong>Fix:</strong> Direct players to toggle **Account Settings → Enable Run Dangerous Scripts** on.
-                </p>
+                <p class="text-bd-text-secondary">Writing absolute variables assignments like `state.hp = 100` inside your modifiers causes the variable to reset back to 100 on every turn.</p>
+                <p class="text-bd-green mt-1"><strong>Fix:</strong> Wrap variables in nullish coalescing checks: <code class="text-bd-purple">state.hp = state.hp ?? 100;</code>.</p>
               </div>
 
-              <!-- Pitfall 2 -->
-              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20 text-xs">
-                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  Resetting State Every Turn
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
+                <h4 class="font-semibold text-bd-pink mb-1 flex items-center gap-1">
+                  <X class="w-4 h-4 text-bd-pink" /> Omission of Wrapper Return
                 </h4>
-                <p class="text-bd-text-secondary">
-                  Writing absolute assignments like `state.hp = 100` resets your custom variables back to defaults every single action.
-                </p>
-                <p class="text-bd-green mt-1">
-                  <strong>Fix:</strong> Wrap variables in nullish coalescing checks: <code class="text-bd-purple">state.hp = state.hp ?? 100;</code>.
-                </p>
+                <p class="text-bd-text-secondary">Forgetting to add `return { text }` or failing to execute the final wrapper call `modifier(text);` at the end of files.</p>
+                <p class="text-bd-green mt-1"><strong>Fix:</strong> Ensure the absolute final line of all modifier files is exactly: <code class="text-bd-purple">modifier(text);</code>.</p>
               </div>
 
-              <!-- Pitfall 3 -->
-              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20 text-xs">
-                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  Writing Async Commands
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
+                <h4 class="font-semibold text-bd-pink mb-1 flex items-center gap-1">
+                  <X class="w-4 h-4 text-bd-pink" /> "Dangerous Scripts" Security Block
                 </h4>
-                <p class="text-bd-text-secondary">
-                  Using `async/await`, `setTimeout`, or `Promises` inside modifiers will crash. The sandbox runs entirely synchronously.
-                </p>
-                <p class="text-bd-green mt-1">
-                  <strong>Fix:</strong> Keep all script logic synchronous and persist calculations using `state`.
-                </p>
+                <p class="text-bd-text-secondary">Custom modifier scripts fail to execute entirely for new players because security features block arbitrary script execution by default.</p>
+                <p class="text-bd-green mt-1"><strong>Fix:</strong> Instruct players to navigate to **Account Settings &rarr; Toggle Enable Run Dangerous Scripts** on.</p>
               </div>
 
-              <!-- Pitfall 4 -->
-              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20 text-xs">
-                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
-                  <X class="w-4 h-4 text-bd-pink" />
-                  Forgetting the Modifier Return
+              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
+                <h4 class="font-semibold text-bd-pink mb-1 flex items-center gap-1">
+                  <X class="w-4 h-4 text-bd-pink" /> Asynchronous Sandbox Crashing
                 </h4>
-                <p class="text-bd-text-secondary">
-                  Failing to include `return { text }` at the end of your modifier block causes the engine to throw silent errors.
-                </p>
-                <p class="text-bd-green mt-1">
-                  <strong>Fix:</strong> Ensure the final line of modifier files is always exactly: <code class="text-bd-purple">modifier(text);</code>.
-                </p>
+                <p class="text-bd-text-secondary">Using `setTimeout`, `async/await`, or `Promises` inside hooks. The sandboxed V8 execution thread halts immediately on async loops.</p>
+                <p class="text-bd-green mt-1"><strong>Fix:</strong> keep all loops synchronous and store values inside `state` variables.</p>
               </div>
             </div>
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== 7. CREDITS SECTION ===================== -->
-      <section id="guide-credits" class="card">
+      <!-- ===================== CREDITS SECTION ===================== -->
+      <section id="credits" class="card">
         <button
           @click="toggleGuideSection('credits')"
           class="w-full flex items-center justify-between text-left"
@@ -658,7 +578,7 @@ modifier(text);</pre>
 
             <div class="flex flex-wrap gap-2">
               <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
-                <MessageSquare class="w-3 h-3" /> Discord
+                <MessageSquare class="w-3 h-3" /> Discord Community
               </a>
               <a href="https://github.com/LewdLeah/Multiple-Choice-Assistant/tree/main/docs" target="_blank" class="btn btn-secondary text-xs">
                 <BookOpen class="w-3 h-3" /> LewdLeah's AI Dungeon Docs
@@ -678,21 +598,22 @@ import { SCRIPTING_CONTRIBUTORS as scriptingContributors } from '@/data/contribu
 import { 
   AlertTriangle, Braces, FileCode, HelpCircle, Check,
   BookOpen, Layers, Library, ArrowRightToLine, ArrowLeftToLine, Database, 
-  Lightbulb, Wrench, Plus, Search, ShieldAlert, RefreshCw, 
-  ExternalLink, ChevronDown, ChevronUp, Info, MessageSquare,
-  Terminal, X, GitMerge, Monitor, Play, Rocket, Award
+  Wrench, Plus, ExternalLink, ChevronDown, ChevronUp, Info, MessageSquare,
+  Terminal, X, GitMerge, Monitor, Play, Rocket, Award, PlayCircle
 } from 'lucide-vue-next'
 
 // Guide table of contents sections
 const guideSections = [
-  { id: 'header-core', label: 'Core', isHeader: true },
-  { id: 'what-is', label: 'What Is Scripting?' },
-  { id: 'quick-start', label: 'Quick Start' },
-  { id: 'anatomy', label: 'Anatomy & How It Works' },
-  { id: 'best-practices', label: 'Best Practices' },
-  { id: 'header-advanced', label: 'Advanced', isHeader: true },
-  { id: 'advanced-topics', label: 'Advanced Topics' },
-  { id: 'pitfalls', label: 'Tips & Common Pitfalls' },
+  { id: 'header-core', label: 'V8 Sandbox Basics', isHeader: true },
+  { id: 'what-is', label: 'The Scripting Sandbox' },
+  { id: 'quick-start', label: 'The Lifecycle Hooks' },
+  { id: 'header-apis', label: 'API Ref', isHeader: true },
+  { id: 'anatomy', label: 'API Parameters & Methods' },
+  { id: 'header-patterns', label: 'Design Patterns', isHeader: true },
+  { id: 'best-practices', label: 'Architecture & Design' },
+  { id: 'advanced-topics', label: 'Testing & Diagnostics' },
+  { id: 'header-trouble', label: 'Troubleshooting', isHeader: true },
+  { id: 'pitfalls', label: 'Script Troubleshooting' },
   { id: 'credits', label: 'Credits & Resources' }
 ]
 
