@@ -36,667 +36,568 @@
     <!-- Main Content -->
     <div class="flex-1 space-y-4 min-w-0">
 
-  <!-- ===================== OVERVIEW ===================== -->
-  <section id="guide-overview" class="card">
-    <button 
-      @click="toggleGuideSection('overview')"
-      class="w-full flex items-center justify-between text-left"
-    >
-      <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-        <Info class="w-5 h-5 text-bd-amber" />
-        Overview
-      </h2>
-      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('overview') }" />
-    </button>
-    
-    <Transition name="slide">
-      <div v-if="isGuideSectionExpanded('overview')" class="mt-4 space-y-4">
-        <p class="text-bd-text-secondary">
-          AI Dungeon's AI models were trained on vast amounts of text including <strong>markdown, code, and structured formatting</strong>. Because of this, certain symbols carry meaning to the AI even inside a plain-text adventure, giving you more precise control over the narrative.
-        </p>
-
-        <div class="grid md:grid-cols-2 gap-3">
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
-            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-              <Lightbulb class="w-4 h-4 text-bd-amber" />
-              Why They Work
-            </h3>
-            <p class="text-xs text-bd-text-secondary">
-              Symbols like <code class="text-bd-amber">##</code>, <code class="text-bd-amber">[]</code>, and <code class="text-bd-amber">**</code> trigger learned associations from the AI's training data — headings, annotations, emphasis — giving you influence over how it interprets your input.
+      <!-- ===================== 1. WHAT ARE SYMBOLS & COMMANDS ===================== -->
+      <section id="guide-what-is" class="card">
+        <button
+          @click="toggleGuideSection('what-is')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Info class="w-5 h-5 text-bd-amber" />
+            What Are Symbols &amp; Commands?
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('what-is') }"
+          />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('what-is')" class="mt-4 space-y-6">
+            <p class="text-bd-text-secondary">
+              AI Dungeon models were trained on vast amounts of internet text, including markdown formatting, code parameters, and academic containers. Because of this, certain special symbols carry structured meaning directly to the AI, allowing you to influence narrative directions, hidden contexts, and dialogue weights without bloating your story prose.
             </p>
-          </div>
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
-            <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
-              <BookOpen class="w-4 h-4 text-bd-blue" />
-              How to Use This Guide
-            </h3>
-            <p class="text-xs text-bd-text-secondary">
-              Each section covers a symbol: what it does, why it works, and practical examples you can use in AI Dungeon. Experiment and combine them to find what suits your play style.
-            </p>
-          </div>
-        </div>
 
-        <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30">
-          <div class="flex items-start gap-2">
-            <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
-            <p class="text-xs text-bd-text-secondary">
-              <strong>Community knowledge:</strong> None of these are official AI Dungeon features — they're community-discovered tricks that leverage how language models process text. This info isn't widely documented, and different players may give different answers. There are hundreds of approaches to the same problems with AI (both a blessing and a curse), so this guide focuses on the most reliable, well-tested techniques.
-            </p>
-          </div>
-        </div>
-      </div>
-    </Transition>
-  </section>
+            <div class="grid md:grid-cols-3 gap-3">
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <Hash class="w-4 h-4 text-bd-amber" />
+                  Markdown Parsing
+                </h3>
+                <p class="text-xs text-bd-text-secondary">
+                  Symbols like <code class="text-bd-amber">##</code> mimic headers or subtitles, directing the AI's model attention.
+                </p>
+              </div>
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <Brackets class="w-4 h-4 text-bd-blue" />
+                  Editorial Metadata
+                </h3>
+                <p class="text-xs text-bd-text-secondary">
+                  Containers like <code class="text-bd-blue">[ ]</code> replicate editorial comments or footnotes, hidden from the story output.
+                </p>
+              </div>
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
+                <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
+                  <Braces class="w-4 h-4 text-bd-purple" />
+                  Object Isolation
+                </h3>
+                <p class="text-xs text-bd-text-secondary">
+                  Curly braces <code class="text-bd-purple">{ }</code> organize code-like definitions to prevent fact bleeding in cards.
+                </p>
+              </div>
+            </div>
 
-  <!-- ===================== ## DOUBLE HASH ===================== -->
-  <section id="guide-double-hash" class="card">
-    <button 
-      @click="toggleGuideSection('double-hash')"
-      class="w-full flex items-center justify-between text-left"
-    >
-      <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-        <Hash class="w-5 h-5 text-bd-amber" />
-        <code class="text-bd-amber text-lg">##</code> Double Hash (Direct Command)
-        <span class="tag bg-bd-amber/20 text-bd-amber text-xs">Most Effective</span>
-      </h2>
-      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('double-hash') }" />
-    </button>
-    
-    <Transition name="slide">
-      <div v-if="isGuideSectionExpanded('double-hash')" class="mt-4 space-y-4">
-        <p class="text-bd-text-secondary">
-          The double hash <code class="text-bd-amber">##</code> is a <strong>direct command to the AI</strong> and the most effective single symbol for steering its behavior. Place it at the start of a line followed by your instruction.
-        </p>
+            <!-- Sub-topic: Action Box Modes -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-3">
+              <h3 class="font-semibold text-bd-text-primary flex items-center gap-2">
+                <Terminal class="w-4 h-4 text-bd-cyan" />
+                Action Box Modes (Do, Say, Story, See)
+              </h3>
+              <p class="text-xs text-bd-text-secondary">
+                AI Dungeon translates player inputs into standard interactive-fiction prefixes so the AI can distinguish players from narrator:
+              </p>
+              <div class="grid md:grid-cols-4 gap-3 text-xs text-bd-text-secondary">
+                <div class="p-2.5 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
+                  <strong class="text-bd-green block mb-0.5">&gt; Do Mode</strong>
+                  Prepends `<code class="text-bd-green">&gt;</code> You ` to actions, telling the AI that you are performing an active step in the environment.
+                </div>
+                <div class="p-2.5 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
+                  <strong class="text-bd-blue block mb-0.5">&gt; Say Mode</strong>
+                  Prepends `<code class="text-bd-blue">&gt;</code> You say "` to inputs, signaling to the model that dialogue is being spoken out loud.
+                </div>
+                <div class="p-2.5 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
+                  <strong class="text-bd-purple block mb-0.5">Story Mode</strong>
+                  Does not prepend any symbols. Used for straight prose narration, setting descriptions, or introducing new characters.
+                </div>
+                <div class="p-2.5 rounded bg-bd-bg-primary border border-bd-border-subtle/50">
+                  <strong class="text-bd-amber block mb-0.5">See Mode</strong>
+                  Sends image prompts to generation engines, creating a picture of the scene rather than adding story turns.
+                </div>
+              </div>
+            </div>
 
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-            <Sparkles class="w-4 h-4 text-bd-amber" />
-            Why It Works
-          </h3>
-          <p class="text-xs text-bd-text-secondary">
-            In markdown, <code>##</code> is a <strong>second-level heading</strong> — the AI interprets it as a new story section or high-level directive. Think of it as saying: "this is a major instruction." It works better than <code>#</code> (too broad) or <code>###</code> (too specific) for commands.
-          </p>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-3">
-          <div class="p-3 rounded-lg bg-bd-green/10 border border-bd-green/30">
-            <h4 class="text-xs font-semibold text-bd-green mb-2 flex items-center gap-1">
-              <Check class="w-3 h-3" /> Good Examples
-            </h4>
-            <div class="space-y-2">
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>## The scene shifts to a dark forest</code></pre>
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>## Write in a noir detective style</code></pre>
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>## A new character enters the tavern</code></pre>
+            <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30 text-xs text-bd-text-secondary">
+              <strong>Community Note:</strong> None of these are official platform features. They are community-discovered best practices leveraging language model training statistics. Focus on well-tested formatting rules to ensure stability.
             </div>
           </div>
-          <div class="p-3 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
-            <h4 class="text-xs font-semibold text-bd-blue mb-2 flex items-center gap-1">
-              <Lightbulb class="w-3 h-3" /> Best Used For
-            </h4>
-            <ul class="text-xs text-bd-text-secondary space-y-1">
-              <li>&#8226; Scene transitions and setting changes</li>
-              <li>&#8226; Changing the AI's writing style mid-adventure</li>
-              <li>&#8226; Introducing new plot elements or characters</li>
-              <li>&#8226; Giving the AI strong narrative direction</li>
-            </ul>
-          </div>
-        </div>
+        </Transition>
+      </section>
 
-        <!-- BetterDungeon Command Mode -->
-        <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-accent-primary/30">
-          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-            <Terminal class="w-4 h-4 text-bd-accent-primary" />
-            BetterDungeon's Command Mode
-          </h3>
-          <p class="text-xs text-bd-text-secondary mb-3">
-            The <a href="https://github.com/ComputerKWasTaken/BetterDungeon" target="_blank" class="text-bd-accent-primary hover:underline font-medium">BetterDungeon</a> extension's <strong>Command Mode</strong> puts this into practice — it adds a Command button to AI Dungeon's input menu that automatically formats your text with <code class="text-bd-amber">##</code> and other symbols.
-          </p>
-          <div class="flex flex-col md:flex-row gap-4 items-start">
-            <div class="flex-shrink-0 rounded-lg overflow-hidden border border-bd-border-subtle">
-              <img src="/command-mode-preview.png" alt="BetterDungeon Command Mode showing Standard, Subtle, and OOC sub-modes" class="w-full md:w-56 h-auto" />
+      <!-- ===================== 2. QUICK START ===================== -->
+      <section id="guide-quick-start" class="card">
+        <button
+          @click="toggleGuideSection('quick-start')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Rocket class="w-5 h-5 text-bd-green" />
+            Quick Start: Steering the AI
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('quick-start') }"
+          />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('quick-start')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              Try these three basic command styles in your next turn to instantly steer your adventure.
+            </p>
+
+            <!-- Step 1 -->
+            <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
+              <div class="flex items-start gap-3">
+                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-green/20 text-bd-green font-bold flex items-center justify-center">1</span>
+                <div class="flex-1">
+                  <h3 class="font-semibold text-bd-text-primary mb-1">Issue a Direct Command</h3>
+                  <p class="text-xs text-bd-text-secondary mb-2">
+                    In Story mode, start a new line with double hashes <code class="text-bd-amber">##</code> to command the AI directly (e.g. shifts in location or pacing):
+                  </p>
+                  <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">## The scene shifts to the dragon's lair</pre>
+                </div>
+              </div>
             </div>
-            <div class="flex-1 space-y-2">
-              <div class="text-xs text-bd-text-secondary space-y-2">
-                <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-border-subtle">
-                  <span class="font-semibold text-bd-amber">Standard</span>
-                  <code class="ml-2 text-bd-text-muted">## Your Command:</code>
-                  <p class="mt-1 text-bd-text-muted">Direct story instructions using the double hash command.</p>
+
+            <!-- Step 2 -->
+            <div class="p-4 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
+              <div class="flex items-start gap-3">
+                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-blue/20 text-bd-blue font-bold flex items-center justify-center">2</span>
+                <div class="flex-1">
+                  <h3 class="font-semibold text-bd-text-primary mb-1">Inject Hidden Story Annotations</h3>
+                  <p class="text-xs text-bd-text-secondary mb-2">
+                    Wrap author guidelines in square brackets <code class="text-bd-blue">[ ]</code> to set rules the AI shouldn't write down directly:
+                  </p>
+                  <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">[ Sera is secretly immune to fire magic ]</pre>
                 </div>
-                <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-border-subtle">
-                  <span class="font-semibold text-bd-blue">Subtle</span>
-                  <code class="ml-2 text-bd-text-muted">[## Your Command:]</code>
-                  <p class="mt-1 text-bd-text-muted">Indirect guidance wrapped in brackets, combining <code>##</code> with <code>[]</code> for softer direction.</p>
-                </div>
-                <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-border-subtle">
-                  <span class="font-semibold text-bd-purple">OOC</span>
-                  <code class="ml-2 text-bd-text-muted">((OOC ... | User: Your Question?))</code>
-                  <p class="mt-1 text-bd-text-muted">Ask the AI a direct question outside of the story context.</p>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="p-4 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
+              <div class="flex items-start gap-3">
+                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center">3</span>
+                <div class="flex-1">
+                  <h3 class="font-semibold text-bd-text-primary mb-1">Ask the AI Out-Of-Character Questions</h3>
+                  <p class="text-xs text-bd-text-secondary mb-2">
+                    Use double parentheses and OOC formatting to ask the AI questions outside of the narrative flow:
+                  </p>
+                  <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">((OOC: What does Sera see inside the chest? | User: Sera?))</pre>
                 </div>
               </div>
             </div>
           </div>
-          <div class="mt-3 flex items-center gap-2">
-            <a href="https://github.com/ComputerKWasTaken/BetterDungeon" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-bd-accent-primary hover:underline">
-              <ExternalLink class="w-3 h-3" />
-              Get BetterDungeon (Chrome, Edge, Firefox)
-            </a>
-          </div>
-        </div>
-      </div>
-    </Transition>
-  </section>
+        </Transition>
+      </section>
 
-  <!-- ===================== [] SQUARE BRACKETS ===================== -->
-  <section id="guide-square-brackets" class="card">
-    <button 
-      @click="toggleGuideSection('square-brackets')"
-      class="w-full flex items-center justify-between text-left"
-    >
-      <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-        <Brackets class="w-5 h-5 text-bd-blue" />
-        <code class="text-bd-blue text-lg">[ ]</code> Square Brackets (Author's Note)
-      </h2>
-      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('square-brackets') }" />
-    </button>
-    
-    <Transition name="slide">
-      <div v-if="isGuideSectionExpanded('square-brackets')" class="mt-4 space-y-4">
-        <p class="text-bd-text-secondary">
-          Square brackets <code class="text-bd-blue">[ ]</code> tell the AI to <strong>keep something in mind</strong> without mentioning it in the story output — like a note from the author to the AI.
-        </p>
+      <!-- ===================== 3. ANATOMY / HOW IT WORKS ===================== -->
+      <section id="guide-anatomy" class="card">
+        <button
+          @click="toggleGuideSection('anatomy')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Brackets class="w-5 h-5 text-bd-blue" />
+            Anatomy &amp; How It Works
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('anatomy') }"
+          />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('anatomy')" class="mt-4 space-y-6">
+            
+            <!-- Core Symbols Breakdown -->
+            <div class="space-y-3">
+              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Core Symbols Breakdown</h3>
+              
+              <!-- ## Double Hash -->
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-2">
+                <h4 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
+                  <Hash class="w-4 h-4 text-bd-amber" />
+                  <code class="text-bd-amber font-mono font-bold text-sm">##</code> Double Hash (Direct Commands)
+                </h4>
+                <p class="text-xs text-bd-text-secondary">
+                  The most powerful single symbol for directing AI output. Place it at the start of a line to steer scenes or pacing.
+                </p>
+                <div class="text-xs text-bd-text-muted">
+                  <strong>Why it works:</strong> Evaluated as a second-level heading in markdown. The AI interprets heading lines as high-priority architectural commands.
+                </div>
+                <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">## Write in a grimy, noir detective tone</pre>
+              </div>
 
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-            <Sparkles class="w-4 h-4 text-bd-blue" />
-            Why It Works
-          </h3>
-          <p class="text-xs text-bd-text-secondary">
-            In the AI's training data, square brackets appear as <strong>editorial annotations</strong> — <code>[Editor's note: ...]</code>, <code>[Translation: ...]</code>, etc. The AI treats bracketed text as metadata: something to consider but not echo in the narrative.
-          </p>
-        </div>
+              <!-- [] Square Brackets -->
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-2">
+                <h4 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
+                  <Brackets class="w-4 h-4 text-bd-blue" />
+                  <code class="text-bd-blue font-mono font-bold text-sm">[ ]</code> Square Brackets (Author Notes / Rules)
+                </h4>
+                <p class="text-xs text-bd-text-secondary">
+                  Instructs the AI to factor in background rules or constraints silently without repeating them in the story.
+                </p>
+                <div class="text-xs text-bd-text-muted">
+                  <strong>Why it works:</strong> Associated with editorial notes, footnotes, or translator annotations in standard internet documents.
+                </div>
+                <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">[ Focus on resource survival; keep magic rare ]</pre>
+              </div>
 
-        <div class="grid md:grid-cols-2 gap-3">
-          <div class="p-3 rounded-lg bg-bd-green/10 border border-bd-green/30">
-            <h4 class="text-xs font-semibold text-bd-green mb-2 flex items-center gap-1">
-              <Check class="w-3 h-3" /> Good Examples
-            </h4>
-            <div class="space-y-2">
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>[The villain is secretly the hero's father]</code></pre>
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>[This world has no magic; keep it realistic]</code></pre>
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>[The tone should be melancholic and slow]</code></pre>
+              <!-- {} Curly Braces -->
+              <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-2">
+                <h4 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
+                  <Braces class="w-4 h-4 text-bd-purple" />
+                  <code class="text-bd-purple font-mono font-bold text-sm">{ }</code> Curly Braces (Attributes Container)
+                </h4>
+                <p class="text-xs text-bd-text-secondary">
+                  Maintains distinct properties in Story Cards, preventing facts from blending into adjacent entries.
+                </p>
+                <div class="text-xs text-bd-text-muted">
+                  <strong>Why it works:</strong> Associated with programming dictionaries, JSON objects, and CSS declarations.
+                </div>
+                <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">{Character: Sera, Race: Elf, Weapon: Fire Bow}</pre>
+              </div>
             </div>
-          </div>
-          <div class="p-3 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
-            <h4 class="text-xs font-semibold text-bd-blue mb-2 flex items-center gap-1">
-              <Lightbulb class="w-3 h-3" /> Best Used For
-            </h4>
-            <ul class="text-xs text-bd-text-secondary space-y-1">
-              <li>&#8226; Hidden story context the AI should remember</li>
-              <li>&#8226; Setting genre or tone without narrating it</li>
-              <li>&#8226; Keeping secrets from the visible story text</li>
-              <li>&#8226; Background info the AI should factor in</li>
-            </ul>
-          </div>
-        </div>
 
-        <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
-          <div class="flex items-start gap-2">
-            <AlertTriangle class="w-4 h-4 text-bd-amber flex-shrink-0 mt-0.5" />
-            <p class="text-xs text-bd-text-secondary">
-              <strong>Don't combine multiple unrelated facts in a single set of brackets.</strong> Use <code class="text-bd-purple">{ }</code> curly braces instead when you need to group separate pieces of information, as the AI can mix things up inside a single bracket pair.
+            <!-- Inline & Formatting Symbols -->
+            <div class="space-y-3">
+              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Inline &amp; Formatting Symbols</h3>
+              <div class="grid md:grid-cols-2 gap-4">
+                
+                <!-- Double Asterisks -->
+                <div class="p-4 rounded bg-bd-bg-primary border border-bd-pink/20 text-xs space-y-1">
+                  <h4 class="font-semibold text-bd-pink flex items-center gap-1.5">
+                    <Bold class="w-4 h-4 text-bd-pink" /> <code class="text-bd-pink font-mono">** **</code> Double Asterisks
+                  </h4>
+                  <p class="text-bd-text-secondary">
+                    Represents **bold markdown**. Amplifies instructions or attributes.
+                  </p>
+                  <pre class="p-1.5 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">[ Sera is **immune** to flame ]</pre>
+                </div>
+
+                <!-- Single Quotes -->
+                <div class="p-4 rounded bg-bd-bg-primary border border-bd-teal/20 text-xs space-y-1">
+                  <h4 class="font-semibold text-bd-teal flex items-center gap-1.5">
+                    <Quote class="w-4 h-4 text-bd-teal" /> <code class="text-bd-teal font-mono">' '</code> Single Quotes
+                  </h4>
+                  <p class="text-bd-text-secondary">
+                    Highlights specific concepts or proper nouns to anchor AI vocabulary.
+                  </p>
+                  <pre class="p-1.5 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">[ Focus on 'melancholic' atmosphere ]</pre>
+                </div>
+
+                <!-- Dash Lists -->
+                <div class="p-4 rounded bg-bd-bg-primary border border-bd-border-subtle text-xs space-y-1">
+                  <h4 class="font-semibold text-bd-text-primary flex items-center gap-1.5">
+                    <FileCode class="w-4 h-4 text-bd-cyan" /> <code class="text-bd-cyan font-mono">- item</code> Dash Lists
+                  </h4>
+                  <p class="text-bd-text-secondary">
+                    Organizes stats and traits neatly for Story Cards or AI instructions.
+                  </p>
+                  <pre class="p-1.5 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">- Class: Rogue Alchemist</pre>
+                </div>
+
+                <!-- Section Breaks -->
+                <div class="p-4 rounded bg-bd-bg-primary border border-bd-border-subtle text-xs space-y-1">
+                  <h4 class="font-semibold text-bd-text-primary flex items-center gap-1.5">
+                    <Layers class="w-4 h-4 text-bd-cyan" /> <code class="text-bd-cyan font-mono">---</code> Section Breaks
+                  </h4>
+                  <p class="text-bd-text-secondary">
+                    Creates hard narrative breaks, useful to separate context blocks.
+                  </p>
+                  <pre class="p-1.5 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">---</pre>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </Transition>
+      </section>
+
+      <!-- ===================== 4. BEST PRACTICES ===================== -->
+      <section id="guide-best-practices" class="card">
+        <button
+          @click="toggleGuideSection('best-practices')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Award class="w-5 h-5 text-bd-amber" />
+            Best Practices
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('best-practices') }"
+          />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('best-practices')" class="mt-4 space-y-6">
+            
+            <div class="space-y-3">
+              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-1.5 flex items-center gap-2">
+                <Check class="w-4 h-4 text-bd-green" />
+                Universal Formatting Rules
+              </h3>
+              <ul class="space-y-2 text-xs text-bd-text-secondary">
+                <li class="flex items-start gap-2">
+                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+                  <span><strong>Use Brackets Sparingly:</strong> If you wrap every single sentence in square brackets `[ ]`, the AI treats the entire input as metadata and fails to generate immersive story turns. Limit rules to 1-2 per action.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+                  <span><strong>Prefer Author's Notes:</strong> Instead of writing scene modifiers inside player input, place tone instructions (e.g. `[ Style: grim ]`) directly in the **Author's Note** field, as it stays anchored in context longer.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <Check class="w-4 h-4 text-bd-success flex-shrink-0 mt-0.5" />
+                  <span><strong>Model Compatibility Check:</strong> Larger, advanced models (like WizardLM or GPT-4) respond extremely well to highly structured syntax like XML framing. Smaller mobile models are more reliable when instructed in simple plain English commands.</span>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </Transition>
+      </section>
+
+      <!-- ===================== 5. ADVANCED TOPICS ===================== -->
+      <section id="guide-advanced-topics" class="card">
+        <button
+          @click="toggleGuideSection('advanced-topics')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Layers class="w-5 h-5 text-bd-cyan" />
+            Advanced Topics
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('advanced-topics') }"
+          />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('advanced-topics')" class="mt-4 space-y-6">
+            
+            <!-- Sub-topic: Combining Symbols -->
+            <div class="space-y-3">
+              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Combining Symbols for Maximum Control</h3>
+              <p class="text-xs text-bd-text-secondary">
+                By nesting special characters, you can stack directives to issue undeniable absolute instructions:
+              </p>
+              
+              <div class="space-y-3 text-xs">
+                <!-- Comb 1 -->
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-amber/20 space-y-1">
+                  <h4 class="font-semibold text-bd-text-primary">
+                    <code class="text-bd-amber font-mono font-bold">##</code> + <code class="text-bd-pink font-mono">**</code> (Command + Absolute Emphasis)
+                  </h4>
+                  <pre class="p-1 rounded bg-bd-bg-tertiary text-bd-green font-mono text-[10px]">## **Never** allow Lyra to trust the masked stranger.</pre>
+                  <span class="text-bd-text-muted block">Tells the AI this is a new command section and locks the narrative behavior to a strict rule.</span>
+                </div>
+
+                <!-- Comb 2 -->
+                <div class="p-3 rounded bg-bd-bg-primary border border-bd-blue/20 space-y-1">
+                  <h4 class="font-semibold text-bd-text-primary">
+                    <code class="text-bd-blue font-mono font-bold">[ ]</code> + <code class="text-bd-teal font-mono">' '</code> (Author Note + Vocabulary Anchor)
+                  </h4>
+                  <pre class="p-1 rounded bg-bd-bg-tertiary text-bd-green font-mono text-[10px]">[ Act as 'Game Master'. Write the dialogue in an 'old english' dialect. ]</pre>
+                  <span class="text-bd-text-muted block">Directs dialogue style safely as background metadata without the AI outputting the rules.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sub-topic: XML-style framing vs JSON containers -->
+            <div class="space-y-3">
+              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">XML-Style Framing vs. JSON Containers</h3>
+              <p class="text-xs text-bd-text-secondary">
+                Advanced models process code syntax with massive clarity. You can organize your Story Cards or instructions using tags or object structures:
+              </p>
+              
+              <div class="grid md:grid-cols-2 gap-4 text-xs">
+                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                  <h4 class="font-semibold text-bd-text-primary mb-2">XML-Style Tags (Highly Recommended for Advanced Models)</h4>
+                  <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto">
+&lt;character name="Marcus"&gt;
+  &lt;role&gt;Royal Knight Commander&lt;/role&gt;
+  &lt;personality&gt;Loyal, weary, stoic&lt;/personality&gt;
+&lt;/character&gt;</pre>
+                  <p class="text-bd-text-muted mt-2">Forces strict boundaries; perfect for avoiding fact bleeding on 70B+ param models.</p>
+                </div>
+                <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+                  <h4 class="font-semibold text-bd-text-primary mb-2">JSON-Like Containers (Best for Story Cards)</h4>
+                  <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto">
+{
+  "Character": "Marcus",
+  "Foil": "The Crimson Order",
+  "Secret": "Loves the Queen"
+}</pre>
+                  <p class="text-bd-text-muted mt-2">Extremely clean data representation. Keeps metrics isolated and easily serializable.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- BetterDungeon Command Mode Integration -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-accent-primary/30 space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="font-semibold text-bd-text-primary text-xs flex items-center gap-2">
+                  <Terminal class="w-4 h-4 text-bd-accent-primary" />
+                  BetterDungeon Extension Support
+                </h3>
+                <span class="badge badge-new">Chrome/Firefox</span>
+              </div>
+              <p class="text-xs text-bd-text-secondary">
+                The **BetterDungeon** browser extension automates these formatting structures by adding active sub-modes directly to your chat input panel:
+              </p>
+              <div class="grid md:grid-cols-3 gap-3 text-xs text-bd-text-muted">
+                <div class="p-2.5 rounded bg-bd-bg-tertiary">
+                  <strong class="text-bd-text-primary block mb-0.5">Standard Mode</strong>
+                  Inserts <code class="text-bd-amber">##</code> commands seamlessly at the start of your line input.
+                </div>
+                <div class="p-2.5 rounded bg-bd-bg-tertiary">
+                  <strong class="text-bd-text-primary block mb-0.5">Subtle Mode</strong>
+                  Wraps direct inputs in <code class="text-bd-blue">[## ]</code> brackets for delicate AI steering.
+                </div>
+                <div class="p-2.5 rounded bg-bd-bg-tertiary">
+                  <strong class="text-bd-text-primary block mb-0.5">OOC mode</strong>
+                  Injects the correct <code class="text-bd-purple">((OOC ... | User: ))</code> formatting string automatically.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </Transition>
+      </section>
+
+      <!-- ===================== 6. TIPS & COMMON PITFALLS ===================== -->
+      <section id="guide-pitfalls" class="card">
+        <button
+          @click="toggleGuideSection('pitfalls')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <AlertTriangle class="w-5 h-5 text-bd-amber" />
+            Tips &amp; Common Pitfalls
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('pitfalls') }"
+          />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('pitfalls')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary">
+              Avoid these common mistakes when using symbols to steer generation.
             </p>
-          </div>
-        </div>
-      </div>
-    </Transition>
-  </section>
 
-  <!-- ===================== {} CURLY BRACES ===================== -->
-  <section id="guide-curly-braces" class="card">
-    <button 
-      @click="toggleGuideSection('curly-braces')"
-      class="w-full flex items-center justify-between text-left"
-    >
-      <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-        <Braces class="w-5 h-5 text-bd-purple" />
-        <code class="text-bd-purple text-lg">{ }</code> Curly Braces (Information Container)
-      </h2>
-      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('curly-braces') }" />
-    </button>
-    
-    <Transition name="slide">
-      <div v-if="isGuideSectionExpanded('curly-braces')" class="mt-4 space-y-4">
-        <p class="text-bd-text-secondary">
-          Curly braces <code class="text-bd-purple">{ }</code> act as a <strong>container for structured information</strong>, similar to square brackets but better at keeping the AI from mixing up separate data blocks — especially useful in Story Cards.
-        </p>
+            <div class="grid md:grid-cols-2 gap-3">
+              <!-- Pitfall 1 -->
+              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20 text-xs">
+                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
+                  <X class="w-4 h-4 text-bd-pink" />
+                  Visual Markdown Expectation
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Thinking bold symbols (`**`) will physically render bold text in the AI Dungeon chat logs.
+                </p>
+                <p class="text-bd-green mt-1">
+                  <strong>Fix:</strong> Understand that the interface does not render markdown, but the AI model reads the raw symbols perfectly during generation.
+                </p>
+              </div>
 
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-            <Sparkles class="w-4 h-4 text-bd-purple" />
-            Why It Works
-          </h3>
-          <p class="text-xs text-bd-text-secondary">
-            In programming and data formats (JSON, JavaScript, CSS), curly braces define <strong>distinct blocks or objects</strong>. The AI recognizes this and treats content inside curly braces as a self-contained unit, preventing information from bleeding between entries.
-          </p>
-        </div>
+              <!-- Pitfall 2 -->
+              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20 text-xs">
+                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
+                  <X class="w-4 h-4 text-bd-pink" />
+                  Completely Bracketed Inputs
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Writing your entire player action inside square brackets (`[ ]`).
+                </p>
+                <p class="text-bd-green mt-1">
+                  <strong>Fix:</strong> Keep story actions in plain text. Use brackets exclusively for background guidelines or rules.
+                </p>
+              </div>
 
-        <div class="grid md:grid-cols-2 gap-3">
-          <div class="p-3 rounded-lg bg-bd-green/10 border border-bd-green/30">
-            <h4 class="text-xs font-semibold text-bd-green mb-2 flex items-center gap-1">
-              <Check class="w-3 h-3" /> Good Examples
-            </h4>
-            <div class="space-y-2">
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>{Character: Elara, Role: Healer, Trait: Cautious}</code></pre>
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>{Location: Iron Keep, Type: Fortress, Mood: Grim}</code></pre>
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>{Faction: Night Watch, Goal: Protect the wall}</code></pre>
+              <!-- Pitfall 3 -->
+              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20 text-xs">
+                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
+                  <X class="w-4 h-4 text-bd-pink" />
+                  Stacking Unrelated Data in One Bracket
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Writing `[ Marcus is a knight, Sera is a rogue, the sword is magical ]` bleed facts together.
+                </p>
+                <p class="text-bd-green mt-1">
+                  <strong>Fix:</strong> Use `{ }` curly-braced attribute key-value pairs or write separate sentences.
+                </p>
+              </div>
+
+              <!-- Pitfall 4 -->
+              <div class="p-4 rounded-lg bg-bd-pink/10 border border-bd-pink/20 text-xs">
+                <h4 class="text-xs font-semibold text-bd-pink mb-1.5 flex items-center gap-1.5">
+                  <X class="w-4 h-4 text-bd-pink" />
+                  Overwhelming Stacking
+                </h4>
+                <p class="text-bd-text-secondary">
+                  Using hashes, asterisks, brackets, and quotes all on a single line of instruction.
+                </p>
+                <p class="text-bd-green mt-1">
+                  <strong>Fix:</strong> Keep stacking clean: combine at most 2 styles (e.g. `##` commands with `**` bold rules).
+                </p>
+              </div>
             </div>
           </div>
-          <div class="p-3 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
-            <h4 class="text-xs font-semibold text-bd-purple mb-2 flex items-center gap-1">
-              <Lightbulb class="w-3 h-3" /> Best Used For
-            </h4>
-            <ul class="text-xs text-bd-text-secondary space-y-1">
-              <li>&#8226; Grouping related attributes in Story Cards</li>
-              <li>&#8226; Preventing data from bleeding between entries</li>
-              <li>&#8226; Organizing complex world-building info</li>
-              <li>&#8226; Keeping character stats separate from lore</li>
-            </ul>
-          </div>
-        </div>
+        </Transition>
+      </section>
 
-        <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30">
-          <div class="flex items-start gap-2">
-            <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
-            <p class="text-xs text-bd-text-secondary">
-              Curly braces aren't perfect — the AI may still occasionally mix up information. But they outperform square brackets when keeping multiple data blocks distinct within Story Cards.
-            </p>
-          </div>
-        </div>
-      </div>
-    </Transition>
-  </section>
+      <!-- ===================== 7. CREDITS SECTION ===================== -->
+      <section id="guide-credits" class="card">
+        <button
+          @click="toggleGuideSection('credits')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Info class="w-5 h-5 text-bd-amber" />
+            Credits &amp; Resources
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('credits') }"
+          />
+        </button>
+        
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('credits')" class="mt-4 space-y-4">
+            <div>
+              <p class="text-xs text-bd-text-muted mb-2 flex items-center gap-1.5">
+                Contributors who researched, cataloged, and built command utilities for AI Dungeon symbols:
+              </p>
+              <div class="flex flex-wrap gap-1.5">
+                <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-bd-amber/10 text-bd-amber border border-bd-amber/20">
+                  GremmieGremlin
+                </span>
+                <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-bd-amber/10 text-bd-amber border border-bd-amber/20">
+                  LewdLeah
+                </span>
+                <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-bd-amber/10 text-bd-amber border border-bd-amber/20">
+                  BetterDungeon Dev Team
+                </span>
+              </div>
+            </div>
 
-  <!-- ===================== > GREATER THAN ===================== -->
-  <section id="guide-greater-than" class="card">
-    <button 
-      @click="toggleGuideSection('greater-than')"
-      class="w-full flex items-center justify-between text-left"
-    >
-      <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-        <ChevronRight class="w-5 h-5 text-bd-green" />
-        <code class="text-bd-green text-lg">&gt;</code> Greater Than (Player Action)
-      </h2>
-      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('greater-than') }" />
-    </button>
-    
-    <Transition name="slide">
-      <div v-if="isGuideSectionExpanded('greater-than')" class="mt-4 space-y-4">
-        <p class="text-bd-text-secondary">
-          The greater-than symbol <code class="text-bd-green">&gt;</code> is a <strong>player action marker</strong>. AI Dungeon automatically prepends it to your Do and Say inputs.
-        </p>
-
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-            <Sparkles class="w-4 h-4 text-bd-green" />
-            Why It Works
-          </h3>
-          <p class="text-xs text-bd-text-secondary">
-            In markdown, <code>&gt;</code> creates a <strong>blockquote</strong>. In interactive fiction, it traditionally indicates player input. The AI associates <code>&gt;</code> with a player taking an action, helping it distinguish narration from player input.
-          </p>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-3">
-          <div class="p-3 rounded-lg bg-bd-green/10 border border-bd-green/30">
-            <h4 class="text-xs font-semibold text-bd-green mb-2 flex items-center gap-1">
-              <Check class="w-3 h-3" /> Example Usage
-            </h4>
-            <div class="space-y-2">
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>&gt; You draw your sword and face the dragon</code></pre>
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>&gt; You say "I'm not afraid of you!"</code></pre>
+            <div class="flex flex-wrap gap-2">
+              <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
+                <MessageSquare class="w-3 h-3" /> Discord
+              </a>
+              <a href="https://github.com/LewdLeah/Multiple-Choice-Assistant/tree/main/docs" target="_blank" class="btn btn-secondary text-xs">
+                <BookOpen class="w-3 h-3" /> LewdLeah's AI Dungeon Docs
+              </a>
             </div>
           </div>
-          <div class="p-3 rounded-lg bg-bd-blue/10 border border-bd-blue/30">
-            <h4 class="text-xs font-semibold text-bd-blue mb-2 flex items-center gap-1">
-              <Info class="w-3 h-3" /> How It's Used
-            </h4>
-            <p class="text-xs text-bd-text-secondary">
-              By itself <code>&gt;</code> doesn't steer the AI, but combined with AI Dungeon's input system it instructs the model on how to handle the text that follows. You generally don't need to type it manually.
-            </p>
-          </div>
-        </div>
-      </div>
-    </Transition>
-  </section>
-
-  <!-- ===================== '' SINGLE QUOTES ===================== -->
-  <section id="guide-single-quotes" class="card">
-    <button 
-      @click="toggleGuideSection('single-quotes')"
-      class="w-full flex items-center justify-between text-left"
-    >
-      <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-        <Quote class="w-5 h-5 text-bd-teal" />
-        <code class="text-bd-teal text-lg">' '</code> Single Quotes (Emphasis)
-      </h2>
-      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('single-quotes') }" />
-    </button>
-    
-    <Transition name="slide">
-      <div v-if="isGuideSectionExpanded('single-quotes')" class="mt-4 space-y-4">
-        <p class="text-bd-text-secondary">
-          Single quotes <code class="text-bd-teal">' '</code> add <strong>emphasis</strong>, signaling that the wrapped words are particularly important or should be treated as a distinct term.
-        </p>
-
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-            <Sparkles class="w-4 h-4 text-bd-teal" />
-            Why It Works
-          </h3>
-          <p class="text-xs text-bd-text-secondary">
-            In written text, single quotes highlight <strong>specific terms, titles, or concepts</strong>. The AI gives extra weight to quoted terms when generating its response.
-          </p>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-3">
-          <div class="p-3 rounded-lg bg-bd-green/10 border border-bd-green/30">
-            <h4 class="text-xs font-semibold text-bd-green mb-2 flex items-center gap-1">
-              <Check class="w-3 h-3" /> Good Examples
-            </h4>
-            <div class="space-y-2">
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>[The 'Crimson Order' are the antagonists]</code></pre>
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>[Keep the tone 'dark' and 'mysterious']</code></pre>
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>## Focus on 'survival' elements</code></pre>
-            </div>
-          </div>
-          <div class="p-3 rounded-lg bg-bd-teal/10 border border-bd-teal/30">
-            <h4 class="text-xs font-semibold text-bd-teal mb-2 flex items-center gap-1">
-              <Lightbulb class="w-3 h-3" /> Best Used For
-            </h4>
-            <ul class="text-xs text-bd-text-secondary space-y-1">
-              <li>&#8226; Highlighting important names or terms</li>
-              <li>&#8226; Emphasizing key concepts or themes</li>
-              <li>&#8226; Drawing the AI's attention to specific words</li>
-              <li>&#8226; Combining with other symbols for extra effect</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </Transition>
-  </section>
-
-  <!-- ===================== ** BOLD/ASTERISKS ===================== -->
-  <section id="guide-bold-asterisks" class="card">
-    <button 
-      @click="toggleGuideSection('bold-asterisks')"
-      class="w-full flex items-center justify-between text-left"
-    >
-      <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-        <Bold class="w-5 h-5 text-bd-pink" />
-        <code class="text-bd-pink text-lg">** **</code> Double Asterisks (Strong Emphasis)
-      </h2>
-      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('bold-asterisks') }" />
-    </button>
-    
-    <Transition name="slide">
-      <div v-if="isGuideSectionExpanded('bold-asterisks')" class="mt-4 space-y-4">
-        <p class="text-bd-text-secondary">
-          Double asterisks <code class="text-bd-pink">**</code> around words create <strong>strong emphasis</strong> (bold in markdown). The AI treats wrapped text as especially important.
-        </p>
-
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-          <h3 class="font-semibold text-bd-text-primary mb-3 flex items-center gap-2">
-            <Sparkles class="w-4 h-4 text-bd-pink" />
-            Why It Works
-          </h3>
-          <p class="text-xs text-bd-text-secondary">
-            <code>**text**</code> is markdown for <strong>bold text</strong>. The AI was extensively trained on markdown content and recognizes this as strong emphasis. AI Dungeon's interface won't render the bold visually, but the AI still respects it during generation.
-          </p>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-3">
-          <div class="p-3 rounded-lg bg-bd-green/10 border border-bd-green/30">
-            <h4 class="text-xs font-semibold text-bd-green mb-2 flex items-center gap-1">
-              <Check class="w-3 h-3" /> Good Examples
-            </h4>
-            <div class="space-y-2">
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>[**Never** break character as the narrator]</code></pre>
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>[The dragon is **immune** to fire attacks]</code></pre>
-              <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>## Write in **first person** perspective</code></pre>
-            </div>
-          </div>
-          <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
-            <h4 class="text-xs font-semibold text-bd-pink mb-2 flex items-center gap-1">
-              <Lightbulb class="w-3 h-3" /> Best Used For
-            </h4>
-            <ul class="text-xs text-bd-text-secondary space-y-1">
-              <li>&#8226; Emphasizing absolute rules or constraints</li>
-              <li>&#8226; Highlighting critical character traits</li>
-              <li>&#8226; Making key instructions stand out</li>
-              <li>&#8226; Combining with <code>[]</code> or <code>##</code> for maximum impact</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30">
-          <div class="flex items-start gap-2">
-            <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
-            <p class="text-xs text-bd-text-secondary">
-              <strong>Markdown in AI Dungeon:</strong> The interface can't render markdown visually, but the AI model fully understands it. The emphasis is interpreted during generation, not display — so it works even though you can't see it.
-            </p>
-          </div>
-        </div>
-      </div>
-    </Transition>
-  </section>
-
-  <!-- ===================== OTHER MARKDOWN ===================== -->
-  <section id="guide-other-markdown" class="card">
-    <button 
-      @click="toggleGuideSection('other-markdown')"
-      class="w-full flex items-center justify-between text-left"
-    >
-      <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-        <FileCode class="w-5 h-5 text-bd-cyan" />
-        Other Markdown Elements
-      </h2>
-      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('other-markdown') }" />
-    </button>
-    
-    <Transition name="slide">
-      <div v-if="isGuideSectionExpanded('other-markdown')" class="mt-4 space-y-4">
-        <p class="text-bd-text-secondary">
-          The AI recognizes <strong>other markdown elements</strong> from its training data. Here are a few additional patterns worth experimenting with.
-        </p>
-
-        <div class="space-y-3">
-          <!-- Single asterisk / italic -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <div class="flex items-center gap-2 mb-2">
-              <code class="text-bd-cyan font-bold text-sm">*text*</code>
-              <span class="text-xs text-bd-text-muted">-</span>
-              <h3 class="font-semibold text-bd-text-primary text-sm">Italic / Light Emphasis</h3>
-            </div>
-            <p class="text-xs text-bd-text-secondary">
-              Single asterisks give lighter emphasis than double — like whispering a suggestion to the AI rather than commanding it.
-            </p>
-            <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary mt-2"><code>[The mood is *unsettling* but not outright horror]</code></pre>
-          </div>
-
-          <!-- Dash lists -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <div class="flex items-center gap-2 mb-2">
-              <code class="text-bd-cyan font-bold text-sm">- item</code>
-              <span class="text-xs text-bd-text-muted">-</span>
-              <h3 class="font-semibold text-bd-text-primary text-sm">Dash Lists</h3>
-            </div>
-            <p class="text-xs text-bd-text-secondary">
-              Markdown lists organize information clearly for the AI. Great in Story Cards or AI Instructions for structured data.
-            </p>
-            <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary mt-2"><code>- Name: Kael
-- Race: Elf
-- Class: Ranger
-- Personality: Stoic, loyal</code></pre>
-          </div>
-
-          <!-- Horizontal rule -->
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <div class="flex items-center gap-2 mb-2">
-              <code class="text-bd-cyan font-bold text-sm">---</code>
-              <span class="text-xs text-bd-text-muted">-</span>
-              <h3 class="font-semibold text-bd-text-primary text-sm">Horizontal Rule (Section Break)</h3>
-            </div>
-            <p class="text-xs text-bd-text-secondary">
-              Three dashes create a horizontal rule — the AI interprets this as a hard section break, useful for separating distinct blocks in Story Cards or instructions.
-            </p>
-            <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary mt-2"><code>[Setting: Medieval Fantasy]
----
-[Tone: Dark and gritty]</code></pre>
-          </div>
-        </div>
-      </div>
-    </Transition>
-  </section>
-
-  <!-- ===================== COMBINING SYMBOLS ===================== -->
-  <section id="guide-combining" class="card">
-    <button 
-      @click="toggleGuideSection('combining')"
-      class="w-full flex items-center justify-between text-left"
-    >
-      <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-        <Layers class="w-5 h-5 text-bd-amber" />
-        Combining Symbols
-      </h2>
-      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('combining') }" />
-    </button>
-    
-    <Transition name="slide">
-      <div v-if="isGuideSectionExpanded('combining')" class="mt-4 space-y-4">
-        <p class="text-bd-text-secondary">
-          The real power comes from <strong>combining symbols</strong>. Each has a different function, and stacking them creates stronger, more precise instructions.
-        </p>
-
-        <!-- Combination Examples -->
-        <div class="space-y-3">
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-amber/30">
-            <h3 class="font-semibold text-bd-text-primary mb-2 text-sm flex items-center gap-2">
-              <code class="text-bd-amber">##</code> + <code class="text-bd-pink">**</code>
-              <span class="text-xs text-bd-text-muted font-normal">Command + Strong Emphasis</span>
-            </h3>
-            <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>## **Never** reveal the identity of the masked stranger</code></pre>
-            <p class="text-xs text-bd-text-muted mt-2">A strong command with an emphasized absolute. The <code>##</code> makes it a directive, <code>**</code> reinforces the "never."</p>
-          </div>
-
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
-            <h3 class="font-semibold text-bd-text-primary mb-2 text-sm flex items-center gap-2">
-              <code class="text-bd-blue">[]</code> + <code class="text-bd-teal">' '</code>
-              <span class="text-xs text-bd-text-muted font-normal">Author's Note + Emphasis</span>
-            </h3>
-            <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>[The 'Shadow Court' controls the kingdom from behind the scenes]</code></pre>
-            <p class="text-xs text-bd-text-muted mt-2">A hidden note with an emphasized term. The AI will remember the Shadow Court's role without mentioning it directly.</p>
-          </div>
-
-          <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
-            <h3 class="font-semibold text-bd-text-primary mb-2 text-sm flex items-center gap-2">
-              <code class="text-bd-purple">{}</code> + <code class="text-bd-pink">**</code> + <code class="text-bd-cyan">-</code>
-              <span class="text-xs text-bd-text-muted font-normal">Container + Emphasis + Lists</span>
-            </h3>
-            <pre class="text-xs text-bd-text-secondary font-mono overflow-x-auto p-2 rounded bg-bd-bg-tertiary"><code>{
-Character: **Sera**
-- Role: Rogue Alchemist
-- Trait: Paranoid, brilliant
-- Secret: Knows the **true cause** of the plague
-}</code></pre>
-            <p class="text-xs text-bd-text-muted mt-2">A self-contained character block with emphasized key details. Great for Story Cards.</p>
-          </div>
-        </div>
-
-        <!-- Quick Reference Table -->
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-          <h3 class="font-semibold text-bd-text-primary mb-3">Quick Reference</h3>
-          <div class="overflow-x-auto">
-            <table class="w-full text-xs text-bd-text-secondary">
-              <thead>
-                <tr class="border-b border-bd-border-subtle">
-                  <th class="text-left py-2 font-medium text-bd-text-primary">Symbol</th>
-                  <th class="text-left py-2 font-medium text-bd-text-primary">Function</th>
-                  <th class="text-left py-2 font-medium text-bd-text-primary">AI Interprets As</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-bd-border-subtle">
-                <tr><td class="py-1.5 font-mono text-bd-amber">##</td><td>Direct command</td><td>Section heading / major directive</td></tr>
-                <tr><td class="py-1.5 font-mono text-bd-blue">[ ]</td><td>Keep in mind</td><td>Author's note / editorial annotation</td></tr>
-                <tr><td class="py-1.5 font-mono text-bd-purple">{ }</td><td>Info container</td><td>Structured data block / object</td></tr>
-                <tr><td class="py-1.5 font-mono text-bd-green">&gt;</td><td>Player action</td><td>Blockquote / player input marker</td></tr>
-                <tr><td class="py-1.5 font-mono text-bd-teal">' '</td><td>Emphasis</td><td>Notable term or concept</td></tr>
-                <tr><td class="py-1.5 font-mono text-bd-pink">** **</td><td>Strong emphasis</td><td>Bold / high importance</td></tr>
-                <tr><td class="py-1.5 font-mono text-bd-cyan">*text*</td><td>Light emphasis</td><td>Italic / subtle suggestion</td></tr>
-                <tr><td class="py-1.5 font-mono text-bd-cyan">- item</td><td>List item</td><td>Structured list entry</td></tr>
-                <tr><td class="py-1.5 font-mono text-bd-cyan">---</td><td>Section break</td><td>Hard content separator</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </Transition>
-  </section>
-
-  <!-- ===================== TIPS ===================== -->
-  <section id="guide-tips" class="card">
-    <button 
-      @click="toggleGuideSection('tips')"
-      class="w-full flex items-center justify-between text-left"
-    >
-      <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-        <Lightbulb class="w-5 h-5 text-bd-green" />
-        Tips &amp; Best Practices
-      </h2>
-      <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('tips') }" />
-    </button>
-    
-    <Transition name="slide">
-      <div v-if="isGuideSectionExpanded('tips')" class="mt-4 space-y-4">
-        <div class="grid md:grid-cols-2 gap-3">
-          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <h4 class="text-xs font-semibold text-bd-text-primary mb-2 flex items-center gap-1">
-              <Zap class="w-3 h-3 text-bd-amber" /> Start With <code class="text-bd-amber">##</code>
-            </h4>
-            <p class="text-xs text-bd-text-secondary">If you only learn one symbol, make it the double hash. It's the most powerful single tool for directing the AI's behavior.</p>
-          </div>
-          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <h4 class="text-xs font-semibold text-bd-text-primary mb-2 flex items-center gap-1">
-              <Layers class="w-3 h-3 text-bd-purple" /> Don't Overdo It
-            </h4>
-            <p class="text-xs text-bd-text-secondary">Using too many symbols at once can confuse the AI. Keep it clean and purposeful. One or two combined symbols per instruction is ideal.</p>
-          </div>
-          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <h4 class="text-xs font-semibold text-bd-text-primary mb-2 flex items-center gap-1">
-              <Braces class="w-3 h-3 text-bd-purple" /> Use <code class="text-bd-purple">{}</code> for Story Cards
-            </h4>
-            <p class="text-xs text-bd-text-secondary">When writing Story Cards with multiple entries, wrap each block in curly braces to keep the AI from mixing up different characters, locations, or factions.</p>
-          </div>
-          <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-            <h4 class="text-xs font-semibold text-bd-text-primary mb-2 flex items-center gap-1">
-              <AlertTriangle class="w-3 h-3 text-bd-amber" /> Results May Vary
-            </h4>
-            <p class="text-xs text-bd-text-secondary">Different AI models respond differently to these symbols. What works great on one model might be less effective on another. Experiment and adapt.</p>
-          </div>
-        </div>
-
-        <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-          <p class="text-xs text-bd-text-secondary">
-            These are <strong>community-discovered</strong> techniques — not magic, just patterns the AI learned to recognize. The more you experiment, the better you'll get at steering your adventures exactly where you want them.
-          </p>
-        </div>
-
-        <div class="flex flex-wrap gap-2">
-          <a href="https://discord.com/invite/HB2YBZYjyf" target="_blank" class="btn btn-secondary text-xs">
-            <MessageSquare class="w-3 h-3" /> AI Dungeon Discord
-          </a>
-        </div>
-      </div>
-    </Transition>
-  </section>
+        </Transition>
+      </section>
 
     </div><!-- End main content -->
   </div><!-- End flex container -->
@@ -708,24 +609,20 @@ import {
   Info, Lightbulb, Sparkles, Zap, AlertTriangle,
   BookOpen, MessageSquare, Hash, Bold, Quote, FileCode, Layers,
   Braces, Brackets, ChevronRight, Check, Terminal, ExternalLink,
-  ChevronDown, ChevronUp
+  ChevronDown, ChevronUp, Rocket, Award, X
 } from 'lucide-vue-next'
 
 // Guide table of contents sections
 const guideSections = [
-  { id: 'header-basics', label: 'Basics', isHeader: true },
-  { id: 'overview', label: 'Overview' },
-  { id: 'double-hash', label: '## Double Hash' },
-  { id: 'square-brackets', label: '[ ] Square Brackets' },
-  { id: 'curly-braces', label: '{ } Curly Braces' },
-  { id: 'header-more', label: 'More Symbols', isHeader: true },
-  { id: 'greater-than', label: '> Greater Than' },
-  { id: 'single-quotes', label: "' ' Single Quotes" },
-  { id: 'bold-asterisks', label: '** Double Asterisks' },
-  { id: 'other-markdown', label: 'Other Markdown' },
+  { id: 'header-core', label: 'Core', isHeader: true },
+  { id: 'what-is', label: 'What Are Symbols & Commands?' },
+  { id: 'quick-start', label: 'Quick Start' },
+  { id: 'anatomy', label: 'Anatomy & How It Works' },
+  { id: 'best-practices', label: 'Best Practices' },
   { id: 'header-advanced', label: 'Advanced', isHeader: true },
-  { id: 'combining', label: 'Combining Symbols' },
-  { id: 'tips', label: 'Tips & Best Practices' }
+  { id: 'advanced-topics', label: 'Advanced Topics' },
+  { id: 'pitfalls', label: 'Tips & Common Pitfalls' },
+  { id: 'credits', label: 'Credits & Resources' }
 ]
 
 // Track which guide sections are expanded (all expanded by default)
@@ -740,9 +637,7 @@ const toggleGuideSection = (sectionId) => {
   expandedGuideSections.value = new Set(expandedGuideSections.value)
 }
 
-const isGuideSectionExpanded = (sectionId) => {
-  return expandedGuideSections.value.has(sectionId)
-}
+const isGuideSectionExpanded = (sectionId) => expandedGuideSections.value.has(sectionId)
 
 const scrollToGuideSection = (sectionId) => {
   const element = document.getElementById(`guide-${sectionId}`)
