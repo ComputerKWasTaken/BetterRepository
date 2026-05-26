@@ -11,6 +11,7 @@
   "dependencies": {
     "js-cookie": "^3.0.5",
     "lucide-vue-next": "^0.344.0",
+    "prismjs": "^1.30.0",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
