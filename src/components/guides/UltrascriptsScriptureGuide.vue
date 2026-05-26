@@ -1,5 +1,4 @@
 <template>
-  <!-- Table of Contents - Sticky Sidebar -->
   <div class="flex gap-6 animate-fade-in">
     <!-- TOC Sidebar -->
     <aside class="hidden lg:block w-56 flex-shrink-0">
@@ -7,28 +6,13 @@
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-xs font-semibold text-bd-text-muted uppercase tracking-wider">Contents</h3>
           <div class="flex gap-1">
-            <button @click="expandAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Expand all">
-              <ChevronDown class="w-3 h-3" />
-            </button>
-            <button @click="collapseAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Collapse all">
-              <ChevronUp class="w-3 h-3" />
-            </button>
+            <button @click="expandAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Expand all"><ChevronDown class="w-3 h-3" /></button>
+            <button @click="collapseAllGuideSections" class="p-1 rounded hover:bg-bd-bg-tertiary text-bd-text-muted" title="Collapse all"><ChevronUp class="w-3 h-3" /></button>
           </div>
         </div>
         <template v-for="section in guideSections" :key="section.id">
-          <div v-if="section.isHeader" class="pt-3 pb-1 px-3 text-[10px] font-bold uppercase tracking-widest text-bd-text-muted">
-            {{ section.label }}
-          </div>
-          <button
-            v-else
-            @click="scrollToGuideSection(section.id)"
-            class="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors hover:bg-bd-bg-tertiary"
-            :class="[
-              isGuideSectionExpanded(section.id) ? 'text-bd-text-primary' : 'text-bd-text-muted'
-            ]"
-          >
-            {{ section.label }}
-          </button>
+          <div v-if="section.isHeader" class="pt-3 pb-1 px-3 text-[10px] font-bold uppercase tracking-widest text-bd-text-muted">{{ section.label }}</div>
+          <button v-else @click="scrollToGuideSection(section.id)" class="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors hover:bg-bd-bg-tertiary" :class="[isGuideSectionExpanded(section.id) ? 'text-bd-text-primary' : 'text-bd-text-muted']">{{ section.label }}</button>
         </template>
       </div>
     </aside>
@@ -36,496 +20,705 @@
     <!-- Main Content -->
     <div class="flex-1 space-y-4 min-w-0">
 
-      <!-- ===================== THE SCRIPTURE WIDGET ENGINE ===================== -->
-      <section id="guide-what-is" class="card">
-        <button
-          @click="toggleGuideSection('what-is')"
-          class="w-full flex items-center justify-between text-left"
-        >
+      <!-- ===================== WHAT IT IS ===================== -->
+      <section id="guide-overview" class="card">
+        <button @click="toggleGuideSection('overview')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <LayoutDashboard class="w-5 h-5 text-bd-green" />
             The Scripture Widget Engine
           </h2>
-          <ChevronDown
-            class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('what-is') }"
-          />
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('overview') }" />
         </button>
-        
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('what-is')" class="mt-4 space-y-6">
-            <p class="text-bd-text-secondary text-xs">
-              Scripture is Ultrascripts' core <strong>state module</strong> designed to render dynamic, responsive, and beautiful widget user interfaces directly inside the BetterDungeon sidebar. Instead of hacking custom HTML into prompt fields or outputs, scenario scripts publish raw JSON definitions into a dedicated state card, which the extension compiles into a professional and responsive layout.
+          <div v-if="isGuideSectionExpanded('overview')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
+            <p>
+              <strong>Scripture</strong> is Ultrascripts' canonical <em>state module</em>. It renders live, responsive UI widgets &mdash; HP bars, stat grids,
+              quest checklists, badge rows, journal pages, inventory grids &mdash; inside the BetterDungeon sidebar. Scenarios <em>publish</em> structured JSON to a
+              single reserved Story Card; the extension does all the rendering.
             </p>
 
-            <div class="grid md:grid-cols-3 gap-3 text-xs">
+            <div class="grid md:grid-cols-3 gap-3">
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
-                <h3 class="font-semibold text-bd-text-primary mb-1.5 flex items-center gap-2">
-                  <Layers class="w-4 h-4 text-bd-green" />
-                  What It Renders
+                <h3 class="font-semibold text-bd-text-primary flex items-center gap-2 text-[12px]">
+                  <Layers class="w-4 h-4 text-bd-green" /> What it renders
                 </h3>
-                <p class="text-bd-text-secondary">
-                  Stat bars, progress grids, checkable lists, badges, toggles, text fields, and custom HTML sections arranged dynamically.
-                </p>
+                <p class="text-[11px]">Stat bars, progress meters, text rows, badge lists, checklists, key/value grids, inventory slots, journal text, and custom HTML blocks.</p>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
-                <h3 class="font-semibold text-bd-text-primary mb-1.5 flex items-center gap-2">
-                  <Code class="w-4 h-4 text-bd-blue" />
-                  How It Binds
+                <h3 class="font-semibold text-bd-text-primary flex items-center gap-2 text-[12px]">
+                  <Code class="w-4 h-4 text-bd-blue" /> How it binds
                 </h3>
-                <p class="text-bd-text-secondary">
-                  Variables bind directly to sandbox <strong>state</strong> updates, writing structure changes on turn boundaries for seamless UI refresh.
-                </p>
+                <p class="text-[11px]">Variables bind to sandbox <code>state</code> on turn boundaries. Scripture refreshes every time the live count changes &mdash; including on undo/redo/retry.</p>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
-                <h3 class="font-semibold text-bd-text-primary mb-1.5 flex items-center gap-2">
-                  <Monitor class="w-4 h-4 text-bd-purple" />
-                  Where It Displays
+                <h3 class="font-semibold text-bd-text-primary flex items-center gap-2 text-[12px]">
+                  <Monitor class="w-4 h-4 text-bd-purple" /> Where it displays
                 </h3>
-                <p class="text-bd-text-secondary">
-                  Directly inside the BetterDungeon UI overlay sidebar. Free from AI Dungeon's DOM overrides and safe from page styling updates.
-                </p>
+                <p class="text-[11px]">In the BetterDungeon sidebar &mdash; not in the prompt or output. Free from AI Dungeon's DOM and immune to model-side formatting drift.</p>
               </div>
             </div>
 
-            <!-- Pattern Explanation -->
-            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-2 text-xs">
-              <h3 class="font-semibold text-bd-text-primary flex items-center gap-2">
-                <Palette class="w-4 h-4 text-bd-green" />
-                The State-Card Architecture Pattern
-              </h3>
-              <p class="text-bd-text-secondary">
-                To trigger the widget engine, scripts write structured JSON data into a Story Card titled <strong>ultrascripts:state:scripture</strong>. BetterDungeon watches for changes to this card's contents. Because it declares <code class="text-bd-green">tracksLiveCount: true</code>, the extension selectively displays the widgets associated with the player's current action (the active turn counter), reconciling UI updates instantly on undo, redo, and generation retries.
+            <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <h4 class="font-semibold text-bd-text-primary text-[12px] mb-1">The contract in one sentence</h4>
+              <p class="text-[11px]">
+                Write a JSON object to <code class="text-bd-green">ultrascripts:state:scripture</code> that contains
+                a <strong>manifest</strong> describing your widgets once, and a <strong>history</strong> map giving the values for each turn keyed by live count.
+                Scripture handles the rest.
               </p>
             </div>
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== WRITING WIDGET DEFINITIONS ===================== -->
-      <section id="guide-definitions" class="card">
-        <button
-          @click="toggleGuideSection('definitions')"
-          class="w-full flex items-center justify-between text-left"
-        >
+      <!-- ===================== PAYLOAD SHAPE ===================== -->
+      <section id="guide-shape" class="card">
+        <button @click="toggleGuideSection('shape')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Code class="w-5 h-5 text-bd-blue" />
-            Writing Widget Definitions
+            <FileCode class="w-5 h-5 text-bd-blue" />
+            Payload Shape: Manifest &amp; History
           </h2>
-          <ChevronDown
-            class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('definitions') }"
-          />
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('shape') }" />
         </button>
-        
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('definitions')" class="mt-4 space-y-6 text-xs text-bd-text-secondary">
+          <div v-if="isGuideSectionExpanded('shape')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              To declare widgets, assemble a JSON object detailing the widget layout and properties. The root envelope maps turns or live actions to individual lists of widgets.
+              The Scripture payload uses a <strong>manifest + history</strong> split. The manifest declares widget definitions <em>once</em>; the history
+              holds turn-bound values keyed by live count. This separation is what makes Scripture undo-aware.
             </p>
 
-            <div class="space-y-4">
-              <h3 class="font-semibold text-bd-text-primary">First-Party Widget Types &amp; Attributes</h3>
-              <div class="grid md:grid-cols-2 gap-3 text-[11px]">
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle space-y-1">
-                  <strong class="text-bd-green">stat-bar</strong>
-                  <p class="text-bd-text-muted">A beautiful progress bar. Configured with <code>label</code>, <code>value</code>, <code>max</code>, and CSS <code>color</code>.</p>
-                </div>
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle space-y-1">
-                  <strong class="text-bd-blue">text</strong>
-                  <p class="text-bd-text-muted">Descriptive labels or status readouts. Takes <code>label</code> and <code>value</code> properties.</p>
-                </div>
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-purple">
-                  <strong class="text-bd-purple">badge-list</strong>
-                  <p class="text-bd-text-muted">A row of colored pill badges. Takes an array of <code>badges</code> with text and colors.</p>
-                </div>
-                <div class="p-3 rounded bg-bd-bg-primary border border-bd-amber">
-                  <strong class="text-bd-amber">checklist</strong>
-                  <p class="text-bd-text-muted">Checkable quest objectives or achievements. Takes an array of items with <code>id</code>, <code>label</code>, and <code>checked</code>.</p>
-                </div>
+            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">// ultrascripts:state:scripture
+{
+  "v": 1,
+  "manifest": {
+    "widgets": [
+      { "id": "hp",    "type": "stat-bar",  "label": "Health", "max": 100, "color": "#22c55e" },
+      { "id": "mana",  "type": "stat-bar",  "label": "Mana",   "max": 50,  "color": "#3b82f6" },
+      { "id": "where", "type": "text",      "label": "Region" },
+      { "id": "tags",  "type": "badge-list", "label": "Status" }
+    ]
+  },
+  "history": {
+    "12": { "hp": 80, "mana": 35, "where": "Echoing Caverns", "tags": [{ "text": "Wounded", "color": "#ef4444" }] },
+    "13": { "hp": 72, "mana": 22, "where": "Echoing Caverns", "tags": [{ "text": "Wounded", "color": "#ef4444" }, { "text": "Cursed", "color": "#a855f7" }] }
+  }
+}</pre>
+
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
+                <h4 class="font-semibold text-bd-blue text-[12px]">manifest.widgets[]</h4>
+                <p class="text-[11px]">Declared <strong>once</strong>. Each entry has a stable <code>id</code> (referenced by history), a <code>type</code>, and any type-specific
+                  configuration (label, color, max, etc.). Adding a widget is just appending one entry.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
+                <h4 class="font-semibold text-bd-purple text-[12px]">history[liveCount]</h4>
+                <p class="text-[11px]">A turn snapshot. Keys match the manifest widget ids; values are the data to render this turn (numbers, strings, badge arrays, checked items).</p>
               </div>
             </div>
 
-            <!-- Complete Library Script Code Block -->
-            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-2">
-              <h4 class="font-semibold text-bd-text-primary">Library Script - Core State Card Publisher</h4>
-              <p class="text-[11px] text-bd-text-secondary mb-2">
-                Use the following template in your <strong>Library script</strong> to instantiate the payload envelope and easily write or update Scripture widgets during turn progression.
+            <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+              <h4 class="font-semibold text-bd-amber text-[12px] mb-1 flex items-center gap-1.5">
+                <GitMerge class="w-4 h-4" /> Live-count fallback rule
+              </h4>
+              <p class="text-[11px]">
+                Scripture looks up <code>history[liveCount]</code> first. If that exact key is missing, it falls back to the nearest <em>earlier</em>
+                numeric entry, then to the newest available entry. This means: you don't have to write a fresh snapshot every turn if nothing changed.
+                Write only when state actually changes.
               </p>
-              <pre class="p-3 rounded bg-bd-bg-primary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">// Library Script
-state.bd = state.bd || {};
-var bd = state.bd;
+            </div>
+          </div>
+        </Transition>
+      </section>
 
-// Initialize Scripture payload
-bd.scripturePayload = bd.scripturePayload || {
+      <!-- ===================== WIDGET CATALOG ===================== -->
+      <section id="guide-catalog" class="card">
+        <button @click="toggleGuideSection('catalog')" class="w-full flex items-center justify-between text-left">
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Layers class="w-5 h-5 text-bd-amber" />
+            Widget Catalog
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('catalog') }" />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('catalog')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
+
+            <!-- stat-bar -->
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-2">
+              <div class="flex items-center gap-2">
+                <h4 class="font-semibold text-bd-green text-[13px]"><code>stat-bar</code></h4>
+                <span class="text-[10px] text-bd-text-muted">Progress meter</span>
+              </div>
+              <p>A labeled progress bar with optional accent color. Best for HP, mana, XP, stamina, hunger.</p>
+              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// manifest entry
+{ "id": "hp", "type": "stat-bar", "label": "Health", "max": 100, "color": "#22c55e" }
+// history value
+80    // a single number; "value" is shorthand for the current fill</pre>
+            </div>
+
+            <!-- text -->
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-2">
+              <div class="flex items-center gap-2">
+                <h4 class="font-semibold text-bd-blue text-[13px]"><code>text</code></h4>
+                <span class="text-[10px] text-bd-text-muted">Label/value row</span>
+              </div>
+              <p>A single labeled string. Best for location, weapon name, status, time-of-day.</p>
+              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{ "id": "where", "type": "text", "label": "Region" }
+// history value:  "Echoing Caverns"</pre>
+            </div>
+
+            <!-- badge-list -->
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-2">
+              <div class="flex items-center gap-2">
+                <h4 class="font-semibold text-bd-purple text-[13px]"><code>badge-list</code></h4>
+                <span class="text-[10px] text-bd-text-muted">Pill row</span>
+              </div>
+              <p>A row of small colored pills. Best for status effects, party traits, faction reputation.</p>
+              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{ "id": "tags", "type": "badge-list", "label": "Status" }
+// history value:
+[{ "text": "Wounded", "color": "#ef4444" }, { "text": "Cursed", "color": "#a855f7" }]</pre>
+            </div>
+
+            <!-- checklist -->
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-2">
+              <div class="flex items-center gap-2">
+                <h4 class="font-semibold text-bd-amber text-[13px]"><code>checklist</code></h4>
+                <span class="text-[10px] text-bd-text-muted">Quest tracker</span>
+              </div>
+              <p>Tickable objectives. Best for quest tracking, scene goals, achievements.</p>
+              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{ "id": "quests", "type": "checklist", "label": "Objectives" }
+// history value:
+[
+  { "id": "q1", "label": "Retrieve the Amber Relic", "checked": false },
+  { "id": "q2", "label": "Find the hidden trapdoor",  "checked": true }
+]</pre>
+            </div>
+
+            <!-- key-value -->
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-cyan/30 space-y-2">
+              <div class="flex items-center gap-2">
+                <h4 class="font-semibold text-bd-cyan text-[13px]"><code>key-value</code></h4>
+                <span class="text-[10px] text-bd-text-muted">Stat grid</span>
+              </div>
+              <p>A compact two-column grid of label/value pairs. Best for character sheets and equipment summaries.</p>
+              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{ "id": "stats", "type": "key-value", "label": "Stats" }
+// history value:
+[
+  { "key": "STR", "value": 14 },
+  { "key": "DEX", "value": 12 },
+  { "key": "INT", "value": 16 }
+]</pre>
+            </div>
+
+            <!-- inventory -->
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/30 space-y-2">
+              <div class="flex items-center gap-2">
+                <h4 class="font-semibold text-bd-pink text-[13px]"><code>inventory</code></h4>
+                <span class="text-[10px] text-bd-text-muted">Item grid</span>
+              </div>
+              <p>A small grid of inventory slots with item name and optional quantity. Best for RPG-style item lists.</p>
+              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{ "id": "bag", "type": "inventory", "label": "Bag", "cols": 4 }
+// history value:
+[
+  { "name": "Healing Potion", "qty": 3 },
+  { "name": "Iron Key" },
+  { "name": "Torch", "qty": 5 }
+]</pre>
+            </div>
+
+            <!-- journal -->
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-2">
+              <div class="flex items-center gap-2">
+                <h4 class="font-semibold text-bd-green text-[13px]"><code>journal</code></h4>
+                <span class="text-[10px] text-bd-text-muted">Long-form notes</span>
+              </div>
+              <p>A scrollable text block for in-character notes, lore entries, or session recaps.</p>
+              <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{ "id": "log", "type": "journal", "label": "Adventure Log" }
+// history value:  multi-line string (markdown lite supported: ** _ ` -)</pre>
+            </div>
+
+            <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30 text-[11px]">
+              <strong class="text-bd-amber">Design tip:</strong> The first widget in the manifest renders first. Lead with the most-glanced data (HP / location)
+              and tuck deep details (full stat grid, inventory) further down.
+            </div>
+          </div>
+        </Transition>
+      </section>
+
+      <!-- ===================== LIVE COUNT MODEL ===================== -->
+      <section id="guide-livecount" class="card">
+        <button @click="toggleGuideSection('livecount')" class="w-full flex items-center justify-between text-left">
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Undo2 class="w-5 h-5 text-bd-blue" />
+            Live Count &amp; Undo-Awareness
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('livecount') }" />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('livecount')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
+            <p>
+              Scripture is the reference module for the <strong>live count</strong> pattern. It declares <code>tracksLiveCount: true</code>,
+              which tells Core to re-render Scripture whenever the player's live action count changes &mdash; even if the state card itself was not rewritten.
+              That single property is why undo and redo "just work" for HP bars and quest checklists.
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
+                <h4 class="font-semibold text-bd-green text-[12px]">Undo</h4>
+                <p class="text-[11px]">Live count drops. Scripture looks up the new (lower) key in <code>history</code> and renders the older snapshot. The bar moves back.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
+                <h4 class="font-semibold text-bd-blue text-[12px]">Redo</h4>
+                <p class="text-[11px]">Live count climbs. The newer snapshot key matches; the bar reanimates forward.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-1">
+                <h4 class="font-semibold text-bd-amber text-[12px]">Retry</h4>
+                <p class="text-[11px]">Tail changes but live count holds. Scripture stays put &mdash; the current snapshot is still the right one to show.</p>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <h4 class="font-semibold text-bd-text-primary text-[12px] mb-1">Rule of thumb for scripts</h4>
+              <p class="text-[11px]">
+                Always write the <em>current turn's</em> snapshot under the current <code>info.actionCount</code>. Never overwrite
+                older history entries &mdash; they are the player's path through undo. The history map is append-only from the script's perspective.
+              </p>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
+      <!-- ===================== LIBRARY HELPERS ===================== -->
+      <section id="guide-helpers" class="card">
+        <button @click="toggleGuideSection('helpers')" class="w-full flex items-center justify-between text-left">
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Wrench class="w-5 h-5 text-bd-amber" />
+            Library Helpers
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('helpers') }" />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('helpers')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
+            <p>Drop this into your <strong>Library</strong> script. It maintains the payload across turns, appends each new snapshot, and writes the card safely.</p>
+            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">// Library Script
+state.bd = state.bd || {};
+var bd  = state.bd;
+
+// Declare your widget manifest ONCE
+bd.scripture = bd.scripture || {
+  v: 1,
+  manifest: {
+    widgets: [
+      { id: 'hp',    type: 'stat-bar',  label: 'Health', max: 100, color: '#22c55e' },
+      { id: 'mana',  type: 'stat-bar',  label: 'Mana',   max: 50,  color: '#3b82f6' },
+      { id: 'where', type: 'text',      label: 'Region' },
+      { id: 'tags',  type: 'badge-list', label: 'Status' }
+    ]
+  },
   history: {}
 };
 
-// Main utility to publish dynamic widgets
-bd.publishWidgets = function(widgetsList) {
-  var lc = (info && info.actionCount) || 1;
-  
-  // Bind widgets list to current action count
-  bd.scripturePayload.history[lc] = {
-    widgets: widgetsList
-  };
+// Push the current turn's snapshot
+bd.publishScripture = function (values) {
+  var lc = (info &amp;&amp; info.actionCount) || 1;
+  bd.scripture.history[lc] = values;
 
-  // Find or create state card and update its content
-  var cardTitle = 'ultrascripts:state:scripture';
-  var updated = false;
-  var cards = Array.isArray(storyCards) ? storyCards : [];
-  
-  for (var i = 0; i < cards.length; i++) {
-    if (cards[i] && cards[i].title === cardTitle) {
-      cards[i].value = JSON.stringify(bd.scripturePayload);
-      updated = true;
-      break;
-    }
-  }
-
-  if (!updated) {
-    addStoryCard(cardTitle, JSON.stringify(bd.scripturePayload));
-  }
+  var title = 'ultrascripts:state:scripture';
+  var card  = (Array.isArray(storyCards) ? storyCards : []).find(function (c) { return c &amp;&amp; c.title === title; });
+  var json  = JSON.stringify(bd.scripture);
+  if (card) card.value = json;
+  else      addStoryCard(title, json);
 };</pre>
-            </div>
+            <p class="text-[11px] text-bd-text-muted">
+              Call <code>bd.publishScripture({ hp: state.hp, mana: state.mana, where: state.location, tags: [&hellip;] })</code> from any modifier
+              when your state actually changes. Scripture handles re-rendering on undo/redo automatically.
+            </p>
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== LIVE RECIPES & BOILERPLATE ===================== -->
+      <!-- ===================== RECIPES ===================== -->
       <section id="guide-recipes" class="card">
-        <button
-          @click="toggleGuideSection('recipes')"
-          class="w-full flex items-center justify-between text-left"
-        >
+        <button @click="toggleGuideSection('recipes')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Rocket class="w-5 h-5 text-bd-green" />
-            Live Recipes &amp; Boilerplate
+            Recipes
           </h2>
-          <ChevronDown
-            class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('recipes') }"
-          />
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('recipes') }" />
         </button>
-        
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('recipes')" class="mt-4 space-y-6 text-xs text-bd-text-secondary">
-            <p>
-              Import these complete, copy-paste-ready recipes to inject highly polished displays into your scenarios immediately.
-            </p>
+          <div v-if="isGuideSectionExpanded('recipes')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
 
-            <!-- Recipe 1 -->
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-3">
-              <h4 class="font-semibold text-bd-green flex items-center gap-1.5 text-xs">
-                <Sparkles class="w-4 h-4" /> Recipe 1: Dynamic HP &amp; Mana Stats HUD
+            <!-- Recipe 1: HP/Mana HUD -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-2">
+              <h4 class="font-semibold text-bd-green flex items-center gap-1.5 text-[12px]">
+                <Sparkles class="w-4 h-4" /> Recipe 1: HP / Mana / Region HUD
               </h4>
-              <p>
-                Perfect for RPGs. Triggers during the <strong>Context Modifier</strong>, mapping the player's core attributes directly to reactive bars in the sidebar.
-              </p>
-              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Context Modifier File
-(function() {
-  state.hp = state.hp !== undefined ? state.hp : 80;
-  state.mana = state.mana !== undefined ? state.mana : 35;
+              <p>The classic RPG sidebar. Combined with the library helper above, this is two lines of code per turn.</p>
+              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Context Modifier
+(function () {
+  state.hp       = state.hp       !== undefined ? state.hp       : 80;
+  state.mana     = state.mana     !== undefined ? state.mana     : 35;
   state.location = state.location || 'Echoing Caverns';
+  state.statusTags = state.statusTags || [];
 
-  // Build HUD widgets
-  var statsWidgets = [
-    {
-      type: 'stat-bar',
-      label: 'Health Points',
-      value: state.hp,
-      max: 100,
-      color: '#22c55e' // Vibrant green
-    },
-    {
-      type: 'stat-bar',
-      label: 'Mana Points',
-      value: state.mana,
-      max: 50,
-      color: '#3b82f6' // Sleek blue
-    },
-    {
-      type: 'text',
-      label: 'Current Region',
-      value: state.location
-    }
-  ];
-
-  // Publish using our library helper
-  if (state.bd && typeof state.bd.publishWidgets === 'function') {
-    state.bd.publishWidgets(statsWidgets);
-  }
+  state.bd.publishScripture({
+    hp:    state.hp,
+    mana:  state.mana,
+    where: state.location,
+    tags:  state.statusTags
+  });
 })();</pre>
             </div>
 
-            <!-- Recipe 2 -->
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-3">
-              <h4 class="font-semibold text-bd-blue flex items-center gap-1.5 text-xs">
+            <!-- Recipe 2: Quest Tracker -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-2">
+              <h4 class="font-semibold text-bd-blue flex items-center gap-1.5 text-[12px]">
                 <Layers class="w-4 h-4" /> Recipe 2: Quest Tracker Checklist
               </h4>
-              <p>
-                Keep track of main scenario goals and optional tasks. Checkboxes update dynamically as goals are met.
-              </p>
-              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Context Modifier File
-(function() {
-  state.quests = state.quests || [
-    { id: 'q1', label: 'Retrieve the Amber Relic', checked: false },
-    { id: 'q2', label: 'Locate the hidden trapdoor', checked: true },
-    { id: 'q3', label: 'Survive the goblin ambush', checked: false }
-  ];
+              <p>Replace the manifest above with a focused quest-tracker manifest.</p>
+              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Library Script (manifest override)
+state.bd.scripture = {
+  v: 1,
+  manifest: { widgets: [{ id: 'quests', type: 'checklist', label: 'Objectives' }] },
+  history: {}
+};
 
-  var questWidgets = [
-    {
-      type: 'text',
-      label: 'Active Objectives',
-      value: 'Complete tasks to progress'
-    },
-    {
-      type: 'checklist',
-      id: 'active-objectives',
-      items: state.quests
-    }
-  ];
-
-  if (state.bd && typeof state.bd.publishWidgets === 'function') {
-    state.bd.publishWidgets(questWidgets);
-  }
-})();</pre>
+// Context Modifier
+state.quests = state.quests || [
+  { id: 'q1', label: 'Retrieve the Amber Relic', checked: false },
+  { id: 'q2', label: 'Locate the hidden trapdoor', checked: true  },
+  { id: 'q3', label: 'Survive the goblin ambush',  checked: false }
+];
+state.bd.publishScripture({ quests: state.quests });</pre>
             </div>
 
-            <!-- Recipe 3 -->
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-3">
-              <h4 class="font-semibold text-bd-purple flex items-center gap-1.5 text-xs">
-                <Palette class="w-4 h-4" /> Recipe 3: Character Status &amp; Equipment Dashboard
+            <!-- Recipe 3: Character Dashboard -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-2">
+              <h4 class="font-semibold text-bd-purple flex items-center gap-1.5 text-[12px]">
+                <Palette class="w-4 h-4" /> Recipe 3: Character Sheet Dashboard
               </h4>
-              <p>
-                Displays comprehensive statistics, character class status, level progress, and active equipment slots.
-              </p>
-              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Context Modifier File
-(function() {
-  state.level = state.level || 4;
-  state.xp = state.xp || 420;
-  state.xpMax = 1000;
-  state.weapon = state.weapon || 'Steel Broadsword';
-  state.shield = state.shield || 'Iron Buckler';
+              <p>Combines badge-list, stat-bar, key-value grid, and text into one rich sheet.</p>
+              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Library Script (manifest override)
+state.bd.scripture = {
+  v: 1,
+  manifest: {
+    widgets: [
+      { id: 'titles',   type: 'badge-list', label: 'Titles' },
+      { id: 'xp',       type: 'stat-bar',   label: 'Experience', max: 1000, color: '#eab308' },
+      { id: 'attrs',    type: 'key-value',  label: 'Attributes' },
+      { id: 'weapon',   type: 'text',       label: 'Weapon' },
+      { id: 'shield',   type: 'text',       label: 'Shield' }
+    ]
+  },
+  history: {}
+};
 
-  var dashboardWidgets = [
-    {
-      type: 'badge-list',
-      badges: [
-        { text: 'Level ' + state.level, color: '#f59e0b' },
-        { text: 'Fighter', color: '#a855f7' }
-      ]
-    },
-    {
-      type: 'stat-bar',
-      label: 'Experience Progress',
-      value: state.xp,
-      max: state.xpMax,
-      color: '#eab308' // Gold
-    },
-    {
-      type: 'text',
-      label: 'Active Weapon',
-      value: state.weapon
-    },
-    {
-      type: 'text',
-      label: 'Active Shield',
-      value: state.shield
-    }
-  ];
+// Context Modifier
+state.level = state.level || 4;
+state.xp    = state.xp    || 420;
 
-  if (state.bd && typeof state.bd.publishWidgets === 'function') {
-    state.bd.publishWidgets(dashboardWidgets);
-  }
-})();</pre>
+state.bd.publishScripture({
+  titles: [
+    { text: 'Level ' + state.level, color: '#f59e0b' },
+    { text: 'Fighter',              color: '#a855f7' }
+  ],
+  xp: state.xp,
+  attrs: [
+    { key: 'STR', value: 14 },
+    { key: 'DEX', value: 12 },
+    { key: 'INT', value: 16 },
+    { key: 'CON', value: 13 }
+  ],
+  weapon: state.weapon || 'Steel Broadsword',
+  shield: state.shield || 'Iron Buckler'
+});</pre>
+            </div>
+
+            <!-- Recipe 4: Inventory + Journal -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-pink/30 space-y-2">
+              <h4 class="font-semibold text-bd-pink flex items-center gap-1.5 text-[12px]">
+                <BookOpen class="w-4 h-4" /> Recipe 4: Inventory + Adventure Log
+              </h4>
+              <p>Two heavier widgets together. Use sparingly &mdash; this is the upper bound of what fits comfortably in the sidebar.</p>
+              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Library Script (manifest)
+state.bd.scripture = {
+  v: 1,
+  manifest: {
+    widgets: [
+      { id: 'bag', type: 'inventory', label: 'Bag', cols: 4 },
+      { id: 'log', type: 'journal',   label: 'Adventure Log' }
+    ]
+  },
+  history: {}
+};
+
+// Context Modifier
+state.inventory = state.inventory || [
+  { name: 'Healing Potion', qty: 3 },
+  { name: 'Iron Key' },
+  { name: 'Torch', qty: 5 }
+];
+state.journal = state.journal || '';
+
+state.bd.publishScripture({
+  bag: state.inventory,
+  log: state.journal
+});</pre>
             </div>
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== DISPLAY CONFIGURATION ===================== -->
-      <section id="guide-display-config" class="card">
-        <button
-          @click="toggleGuideSection('display-config')"
-          class="w-full flex items-center justify-between text-left"
-        >
+      <!-- ===================== INTERACTION EVENTS ===================== -->
+      <section id="guide-interactions" class="card">
+        <button @click="toggleGuideSection('interactions')" class="w-full flex items-center justify-between text-left">
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <ArrowDownToLine class="w-5 h-5 text-bd-cyan" />
+            Widget Interaction Events
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('interactions') }" />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('interactions')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
+            <p>
+              Some Scripture widgets are interactive in the sidebar &mdash; the player can tick a checklist box, click a badge, or activate a button. When that
+              happens, BetterDungeon writes the event into <code class="text-bd-green">ultrascripts:in:scripture</code> for the script to read on its next turn.
+            </p>
+
+            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">// ultrascripts:in:scripture  (extension writes when a widget is interacted with)
+{
+  "v": 1,
+  "events": [
+    {
+      "id": "evt-1737042199100",
+      "widgetId": "quests",
+      "action": "toggle",
+      "payload": { "itemId": "q1", "checked": true },
+      "atLiveCount": 13
+    }
+  ]
+}</pre>
+
+            <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <h4 class="font-semibold text-bd-text-primary text-[12px] mb-1">Consuming the events</h4>
+              <p class="text-[11px]">
+                On the next modifier pass, parse <code>ultrascripts:in:scripture</code>, apply events to <code>state</code>, and write back an
+                <code>acks</code> entry (in <code>ultrascripts:out</code>) listing the event ids you've handled. The extension prunes acked events so the
+                card stays lean.
+              </p>
+            </div>
+
+            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">// Input Modifier
+(function () {
+  var card = storyCards.find(function (c) { return c.title === 'ultrascripts:in:scripture'; });
+  if (!card) return;
+  try {
+    var p = JSON.parse(card.value || '{}');
+    var events = (p &amp;&amp; p.events) || [];
+    var handled = [];
+    for (var i = 0; i < events.length; i++) {
+      var e = events[i];
+      if (e.widgetId === 'quests' &amp;&amp; e.action === 'toggle') {
+        // Apply to state
+        for (var j = 0; j < state.quests.length; j++) {
+          if (state.quests[j].id === e.payload.itemId) {
+            state.quests[j].checked = !!e.payload.checked;
+            break;
+          }
+        }
+        handled.push(e.id);
+      }
+    }
+    // Send acks via the regular ultrascripts:out envelope
+    state.bd = state.bd || {};
+    state.bd.ackQueue = (state.bd.ackQueue || []).concat(handled);
+  } catch (e) {}
+})();</pre>
+          </div>
+        </Transition>
+      </section>
+
+      <!-- ===================== DISPLAY CONFIG ===================== -->
+      <section id="guide-display" class="card">
+        <button @click="toggleGuideSection('display')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Settings class="w-5 h-5 text-bd-purple" />
-            Display Configuration &amp; Styling
+            Player Display Configuration
           </h2>
-          <ChevronDown
-            class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('display-config') }"
-          />
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('display') }" />
         </button>
-        
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('display-config')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
+          <div v-if="isGuideSectionExpanded('display')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              BetterDungeon allows players to fine-tune how the Scripture pane looks, adapting the widget deck to their monitor and preferred visual layout. Authors should design their widget structures with these configuration parameters in mind.
+              Players control how Scripture renders through the BetterDungeon popup. The currently active settings are surfaced through
+              <code>sdk.config.ultrascripts.scriptureDisplay</code>. Authors can read them and adapt manifest density when needed.
             </p>
 
             <div class="grid md:grid-cols-3 gap-3 text-[11px]">
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
-                <strong class="text-bd-text-primary block mb-1">Display Size</strong>
-                <p class="text-bd-text-muted">Compact, Normal, Comfortable, or Large. Adjusts font sizing, paddings, and layout spacing globally.</p>
+                <strong class="text-bd-text-primary block mb-1">size</strong>
+                <p class="text-bd-text-muted"><code>compact</code> | <code>normal</code> | <code>comfortable</code> | <code>large</code></p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
-                <strong class="text-bd-text-primary block mb-1">Max Height Caps</strong>
-                <p class="text-bd-text-muted">Short, Medium, or Tall. Restricts vertical space with scrollbars to prevent UI creep over story content.</p>
+                <strong class="text-bd-text-primary block mb-1">maxHeight</strong>
+                <p class="text-bd-text-muted"><code>short</code> | <code>medium</code> | <code>tall</code> &mdash; vertical cap with scrolling.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
-                <strong class="text-bd-text-primary block mb-1">Grid Layouts</strong>
-                <p class="text-bd-text-muted">Balanced or Stacked. Balanced splits fields side-by-side, while Stacked lists items in a unified column.</p>
+                <strong class="text-bd-text-primary block mb-1">layout</strong>
+                <p class="text-bd-text-muted"><code>balanced</code> | <code>stacked</code> &mdash; side-by-side vs. vertical column.</p>
               </div>
             </div>
 
-            <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30 text-bd-text-secondary text-[11px]">
-              <strong>Design Advice for Scenario Authors:</strong>
-              <ul class="list-disc pl-4 mt-1.5 space-y-1">
-                <li>Keep lists clean. Avoid rendering more than 6 total widgets at any given turn.</li>
-                <li>Write short widget labels. Long labels can truncate or force awkward line-breaks on small screens.</li>
-                <li>Design with responsive layouts in mind. Test your widget definitions on both desktop and mobile modes to ensure perfect visibility.</li>
+            <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+              <h4 class="font-semibold text-bd-amber text-[12px] mb-1">Design advice</h4>
+              <ul class="space-y-0.5 text-[11px]">
+                <li>&middot; Keep each turn's payload <strong>6 widgets or fewer</strong>. More than that crowds even the tall maxHeight.</li>
+                <li>&middot; Use short labels. Long strings truncate on <code>compact</code>.</li>
+                <li>&middot; If you publish heavy widgets (<code>inventory</code>, <code>journal</code>), trim the rest of the manifest accordingly.</li>
+                <li>&middot; Test your scenario in both <code>compact</code> and <code>large</code> sizes before shipping.</li>
               </ul>
             </div>
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== SCRIPTURE TROUBLESHOOTING ===================== -->
-      <section id="guide-pitfalls" class="card">
-        <button
-          @click="toggleGuideSection('pitfalls')"
-          class="w-full flex items-center justify-between text-left"
-        >
+      <!-- ===================== AUTHORING TIPS ===================== -->
+      <section id="guide-tips" class="card">
+        <button @click="toggleGuideSection('tips')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <AlertTriangle class="w-5 h-5 text-bd-pink" />
-            Scripture Troubleshooting
+            <Lightbulb class="w-5 h-5 text-bd-amber" />
+            Authoring Tips
           </h2>
-          <ChevronDown
-            class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('pitfalls') }"
-          />
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('tips') }" />
         </button>
-        
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('pitfalls')" class="mt-4 space-y-4">
-            <p class="text-xs text-bd-text-secondary">
-              Avoid these common implementation gotchas when developing with the Scripture widget system.
-            </p>
-
-            <div class="grid md:grid-cols-2 gap-3 text-[11px]">
-              <!-- Pitfall 1 -->
-              <div class="p-4 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-2">
-                <h4 class="font-semibold text-bd-pink flex items-center gap-1.5">
-                  <AlertTriangle class="w-4 h-4" /> Invalid JSON Crashes
+          <div v-if="isGuideSectionExpanded('tips')" class="mt-4 space-y-3 text-xs">
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1.5">
+                <h4 class="font-semibold text-bd-green text-[12px] flex items-center gap-1.5">
+                  <Check class="w-4 h-4" /> Do
                 </h4>
-                <p class="text-bd-text-secondary leading-relaxed">
-                  <strong>Issue:</strong> Stringifying circular references or inserting raw strings into card values causes card deserialization to fail.
-                </p>
-                <p class="text-bd-text-muted leading-relaxed">
-                  <strong>Remedy:</strong> Wrap your payload assignments inside standard try/catch blocks and always use <code>JSON.stringify()</code> before pushing to Story Cards.
-                </p>
+                <ul class="space-y-1 text-[11px] text-bd-text-secondary">
+                  <li>&middot; Declare the manifest <strong>once</strong> in your Library script.</li>
+                  <li>&middot; Key history entries by <code>info.actionCount</code> every turn.</li>
+                  <li>&middot; Skip writes when state hasn't changed &mdash; the fallback rule will keep the bar steady.</li>
+                  <li>&middot; Acknowledge widget interaction events promptly so the response card stays small.</li>
+                  <li>&middot; Use semantic <code>id</code>s in the manifest (<code>hp</code>, not <code>w1</code>) for readable debugging.</li>
+                </ul>
               </div>
-
-              <!-- Pitfall 2 -->
-              <div class="p-4 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-2">
-                <h4 class="font-semibold text-bd-pink flex items-center gap-1.5">
-                  <AlertTriangle class="w-4 h-4" /> Widgets Fail to Rerender
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/30 space-y-1.5">
+                <h4 class="font-semibold text-bd-pink text-[12px] flex items-center gap-1.5">
+                  <X class="w-4 h-4" /> Avoid
                 </h4>
-                <p class="text-bd-text-secondary leading-relaxed">
-                  <strong>Issue:</strong> Writing widgets inside <code>onModelContext</code> but forgetting to link the updates to the active turn action count.
-                </p>
-                <p class="text-bd-text-muted leading-relaxed">
-                  <strong>Remedy:</strong> Always keys the widgets history list by <code>info.actionCount</code>. Scripture uses this key to check and render the current turn.
-                </p>
-              </div>
-
-              <!-- Pitfall 3 -->
-              <div class="p-4 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-2">
-                <h4 class="font-semibold text-bd-pink flex items-center gap-1.5">
-                  <AlertTriangle class="w-4 h-4" /> Overflow &amp; Styling Creep
-                </h4>
-                <p class="text-bd-text-secondary leading-relaxed">
-                  <strong>Issue:</strong> Adding vast amounts of data or countless progress bars causes the sidebar panel to overflow awkwardly.
-                </p>
-                <p class="text-bd-text-muted leading-relaxed">
-                  <strong>Remedy:</strong> Group secondary stats under sub-sections and utilize badge-lists to keep secondary stats compact and scannable.
-                </p>
-              </div>
-
-              <!-- Pitfall 4 -->
-              <div class="p-4 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-2">
-                <h4 class="font-semibold text-bd-pink flex items-center gap-1.5">
-                  <AlertTriangle class="w-4 h-4" /> State Rewind Breaks Display
-                </h4>
-                <p class="text-bd-text-secondary leading-relaxed">
-                  <strong>Issue:</strong> Performing an Undo doesn't rewind custom global variables, causing mismatching UI state readouts.
-                </p>
-                <p class="text-bd-text-muted leading-relaxed">
-                  <strong>Remedy:</strong> Use the <code>tracksLiveCount</code> pattern. By saving UI state inside the historical turn array, BetterDungeon automatically restores the correct layout on Undo/Redo.
-                </p>
+                <ul class="space-y-1 text-[11px] text-bd-text-secondary">
+                  <li>&middot; Putting widget definitions in every <code>history</code> entry &mdash; that's what the manifest is for.</li>
+                  <li>&middot; Overwriting <em>older</em> history entries; that breaks undo replay.</li>
+                  <li>&middot; Rendering more than ~6 widgets per turn &mdash; the sidebar overflows.</li>
+                  <li>&middot; Skipping the <code>v: 1</code> protocol marker.</li>
+                  <li>&middot; Reading the scripture card from another module &mdash; it's owned by Scripture.</li>
+                </ul>
               </div>
             </div>
           </div>
         </Transition>
       </section>
 
+      <!-- ===================== TROUBLESHOOTING ===================== -->
+      <section id="guide-pitfalls" class="card">
+        <button @click="toggleGuideSection('pitfalls')" class="w-full flex items-center justify-between text-left">
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <AlertTriangle class="w-5 h-5 text-bd-pink" />
+            Troubleshooting
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('pitfalls') }" />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('pitfalls')" class="mt-4 space-y-3">
+            <div class="grid md:grid-cols-2 gap-3 text-[11px]">
+              <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
+                <h4 class="font-semibold text-bd-pink text-[12px]">Widget never appears</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> Card is written but nothing renders.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Check that <code>v: 1</code> is set, the title is exactly <code>ultrascripts:state:scripture</code>, and the Scripture toggle is on in the popup.</p>
+              </div>
+              <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
+                <h4 class="font-semibold text-bd-pink text-[12px]">Bars don't update</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> Values change but the sidebar is frozen.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Ensure the new snapshot is written under the <em>current</em> <code>info.actionCount</code>. Older keys are static history.</p>
+              </div>
+              <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
+                <h4 class="font-semibold text-bd-pink text-[12px]">Undo shows wrong state</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> Undo restores narration but the HP bar holds the newer value.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> You probably re-wrote an old history key. Don't overwrite past entries; only add new ones for the current turn.</p>
+              </div>
+              <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
+                <h4 class="font-semibold text-bd-pink text-[12px]">Invalid JSON crash</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> The card value is not valid JSON.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Always wrap the value in <code>JSON.stringify()</code>. Avoid circular references in <code>state</code>.</p>
+              </div>
+              <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
+                <h4 class="font-semibold text-bd-pink text-[12px]">Interaction not acked</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> The same widget event keeps appearing each turn.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Include the event id in the next <code>ultrascripts:out</code> envelope's <code>acks</code> array.</p>
+              </div>
+              <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
+                <h4 class="font-semibold text-bd-pink text-[12px]">History grows forever</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> Card grows large over a long adventure.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Prune entries older than ~50 turns from <code>state.bd.scripture.history</code> on each write. Scripture only ever needs recent context for the live count fallback.</p>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </section>
 
-    </div><!-- End main content -->
-  </div><!-- End flex container -->
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { 
-  ChevronDown, ChevronUp, LayoutDashboard, Code, Rocket, Settings, 
-  AlertTriangle, Monitor, Palette, Layers, Wrench, X, Sparkles
+import {
+  ChevronDown, ChevronUp, LayoutDashboard, FileCode, Layers, Undo2,
+  Wrench, Rocket, ArrowDownToLine, Settings, Lightbulb, AlertTriangle,
+  Code, Monitor, GitMerge, Sparkles, Palette, BookOpen, Check, X
 } from 'lucide-vue-next'
 
-// Guide table of contents sections
+// Sections ordered: orient -> reference -> behavior -> usage -> debug.
 const guideSections = [
-  { id: 'header-core', label: 'Widget System', isHeader: true },
-  { id: 'what-is', label: 'The Widget Engine' },
-  { id: 'definitions', label: 'Writing Widget Definitions' },
-  { id: 'header-recipes', label: 'Recipes', isHeader: true },
-  { id: 'recipes', label: 'Live Recipes & Boilerplate' },
-  { id: 'display-config', label: 'Display Configuration' },
-  { id: 'header-trouble', label: 'Troubleshooting', isHeader: true },
-  { id: 'pitfalls', label: 'Scripture Troubleshooting' }
+  { id: 'header-intro', label: 'Introduction', isHeader: true },
+  { id: 'overview', label: 'What Scripture Is' },
+  { id: 'header-ref', label: 'Reference', isHeader: true },
+  { id: 'shape', label: 'Payload Shape' },
+  { id: 'catalog', label: 'Widget Catalog' },
+  { id: 'header-behavior', label: 'Behavior', isHeader: true },
+  { id: 'livecount', label: 'Live Count Model' },
+  { id: 'interactions', label: 'Interaction Events' },
+  { id: 'display', label: 'Display Config' },
+  { id: 'header-use', label: 'Usage', isHeader: true },
+  { id: 'helpers', label: 'Library Helpers' },
+  { id: 'recipes', label: 'Recipes' },
+  { id: 'tips', label: 'Authoring Tips' },
+  { id: 'pitfalls', label: 'Troubleshooting' }
 ]
 
-// Track which guide sections are expanded (all expanded by default)
 const expandedGuideSections = ref(new Set(guideSections.filter(s => !s.isHeader).map(s => s.id)))
-
-const toggleGuideSection = (sectionId) => {
-  if (expandedGuideSections.value.has(sectionId)) {
-    expandedGuideSections.value.delete(sectionId)
-  } else {
-    expandedGuideSections.value.add(sectionId)
-  }
+const toggleGuideSection = (id) => {
+  if (expandedGuideSections.value.has(id)) expandedGuideSections.value.delete(id)
+  else expandedGuideSections.value.add(id)
   expandedGuideSections.value = new Set(expandedGuideSections.value)
 }
-
-const isGuideSectionExpanded = (sectionId) => expandedGuideSections.value.has(sectionId)
-
-const scrollToGuideSection = (sectionId) => {
-  const element = document.getElementById(`guide-${sectionId}`)
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    if (!expandedGuideSections.value.has(sectionId)) {
-      expandedGuideSections.value.add(sectionId)
+const isGuideSectionExpanded = (id) => expandedGuideSections.value.has(id)
+const scrollToGuideSection = (id) => {
+  const el = document.getElementById(`guide-${id}`)
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (!expandedGuideSections.value.has(id)) {
+      expandedGuideSections.value.add(id)
       expandedGuideSections.value = new Set(expandedGuideSections.value)
     }
   }
 }
-
 const expandAllGuideSections = () => {
   expandedGuideSections.value = new Set(guideSections.filter(s => !s.isHeader).map(s => s.id))
 }
-
 const collapseAllGuideSections = () => {
   expandedGuideSections.value = new Set()
 }

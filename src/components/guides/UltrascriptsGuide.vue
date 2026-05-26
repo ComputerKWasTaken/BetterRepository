@@ -55,7 +55,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('what-is')" class="mt-4 space-y-6">
             <p class="text-bd-text-secondary">
-              Ultrascripts is BetterDungeon's second-generation scripting bridge for AI Dungeon. It replaces BetterScripts with a unified runtime that lets scenario scripts publish dynamic UI, call external APIs, query real-world data, and communicate bidirectionally with the BetterDungeon extension — all through AI Dungeon's existing Story Card system.
+              Ultrascripts is BetterDungeon's scripting platform for AI Dungeon. It is a unified runtime that lets scenario scripts publish dynamic UI, call external APIs, query real-world data, and communicate bidirectionally with the BetterDungeon extension &mdash; all through AI Dungeon's existing Story Card system.
             </p>
 
             <div class="grid md:grid-cols-3 gap-3 text-xs">
@@ -355,37 +355,77 @@
               Each module family has a dedicated guide with complete API references, copy-paste recipes, and troubleshooting grids.
             </p>
 
-            <div class="grid md:grid-cols-2 gap-3">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
               <router-link to="/ultrascripts?tab=scripture" class="block p-4 rounded-lg bg-gradient-to-br from-bd-green/10 to-transparent border border-bd-green/30 hover:border-bd-green/50 transition-colors group">
-                <div class="flex items-center gap-2 mb-2">
+                <div class="flex items-center gap-2 mb-1.5">
                   <LayoutDashboard class="w-5 h-5 text-bd-green" />
-                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-green transition-colors">Scripture: Widgets &amp; UI</h4>
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-green transition-colors">Scripture</h4>
                 </div>
-                <p class="text-bd-text-muted">Dynamic health bars, stat grids, quest trackers, and dashboards. JSON schemas, state binding, and rendering recipes.</p>
+                <p class="text-bd-text-muted">Dynamic UI widgets &mdash; HP bars, stat grids, quest trackers, dashboards.</p>
               </router-link>
 
-              <router-link to="/ultrascripts?tab=fetch-ai" class="block p-4 rounded-lg bg-gradient-to-br from-bd-blue/10 to-transparent border border-bd-blue/30 hover:border-bd-blue/50 transition-colors group">
-                <div class="flex items-center gap-2 mb-2">
+              <router-link to="/ultrascripts?tab=webfetch" class="block p-4 rounded-lg bg-gradient-to-br from-bd-blue/10 to-transparent border border-bd-blue/30 hover:border-bd-blue/50 transition-colors group">
+                <div class="flex items-center gap-2 mb-1.5">
                   <Globe class="w-5 h-5 text-bd-blue" />
-                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-blue transition-colors">WebFetch &amp; Provider AI</h4>
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-blue transition-colors">WebFetch</h4>
                 </div>
-                <p class="text-bd-text-muted">Consent-gated HTTP requests, OpenRouter LLM pipelines, API data fetching, and Co-GM assistant recipes.</p>
+                <p class="text-bd-text-muted">Consent-gated HTTP requests and web search lookups for live external data.</p>
+              </router-link>
+
+              <router-link to="/ultrascripts?tab=ai" class="block p-4 rounded-lg bg-gradient-to-br from-bd-purple/10 to-transparent border border-bd-purple/30 hover:border-bd-purple/50 transition-colors group">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <BrainCircuit class="w-5 h-5 text-bd-purple" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-purple transition-colors">AI</h4>
+                </div>
+                <p class="text-bd-text-muted">Hosted LLM calls via OpenRouter &mdash; Co-GM narration, structured extraction, multi-model orchestration.</p>
               </router-link>
 
               <router-link to="/ultrascripts?tab=sdk" class="block p-4 rounded-lg bg-gradient-to-br from-bd-cyan/10 to-transparent border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">
-                <div class="flex items-center gap-2 mb-2">
+                <div class="flex items-center gap-2 mb-1.5">
                   <Terminal class="w-5 h-5 text-bd-cyan" />
-                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-cyan transition-colors">SDK &amp; Lifecycle</h4>
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-cyan transition-colors">SDK</h4>
                 </div>
-                <p class="text-bd-text-muted">Heartbeat detection, version queries, config introspection, wire protocol details, and undo-aware state patterns.</p>
+                <p class="text-bd-text-muted">Version + sanitized config introspection. Adapt your scenario to the player's setup.</p>
               </router-link>
 
-              <router-link to="/ultrascripts?tab=utilities" class="block p-4 rounded-lg bg-gradient-to-br from-bd-amber/10 to-transparent border border-bd-amber/30 hover:border-bd-amber/50 transition-colors group">
-                <div class="flex items-center gap-2 mb-2">
-                  <Wrench class="w-5 h-5 text-bd-amber" />
-                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-amber transition-colors">System &amp; Utilities</h4>
+              <router-link to="/ultrascripts?tab=clock" class="block p-4 rounded-lg bg-gradient-to-br from-bd-amber/10 to-transparent border border-bd-amber/30 hover:border-bd-amber/50 transition-colors group">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <Clock class="w-5 h-5 text-bd-amber" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-amber transition-colors">Clock</h4>
                 </div>
-                <p class="text-bd-text-muted">Clock, Geolocation, Weather, Network, and System modules. Time-of-day steering, weather combat modifiers, and platform detection.</p>
+                <p class="text-bd-text-muted">Real-world time, timezone, and formatting helpers for time-of-day-aware scenes.</p>
+              </router-link>
+
+              <router-link to="/ultrascripts?tab=geolocation" class="block p-4 rounded-lg bg-gradient-to-br from-bd-blue/10 to-transparent border border-bd-blue/30 hover:border-bd-blue/50 transition-colors group">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <MapPin class="w-5 h-5 text-bd-blue" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-blue transition-colors">Geolocation</h4>
+                </div>
+                <p class="text-bd-text-muted">Player-consented browser coordinates &mdash; powers regional flavor and weather lookups.</p>
+              </router-link>
+
+              <router-link to="/ultrascripts?tab=weather" class="block p-4 rounded-lg bg-gradient-to-br from-bd-cyan/10 to-transparent border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <CloudSun class="w-5 h-5 text-bd-cyan" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-cyan transition-colors">Weather</h4>
+                </div>
+                <p class="text-bd-text-muted">Open-Meteo current conditions and forecasts for weather-reactive scenarios.</p>
+              </router-link>
+
+              <router-link to="/ultrascripts?tab=network" class="block p-4 rounded-lg bg-gradient-to-br from-bd-green/10 to-transparent border border-bd-green/30 hover:border-bd-green/50 transition-colors group">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <Wifi class="w-5 h-5 text-bd-green" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-green transition-colors">Network</h4>
+                </div>
+                <p class="text-bd-text-muted">Online state and connection hints for graceful offline fallbacks.</p>
+              </router-link>
+
+              <router-link to="/ultrascripts?tab=system" class="block p-4 rounded-lg bg-gradient-to-br from-bd-purple/10 to-transparent border border-bd-purple/30 hover:border-bd-purple/50 transition-colors group">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <Cpu class="w-5 h-5 text-bd-purple" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-purple transition-colors">System</h4>
+                </div>
+                <p class="text-bd-text-muted">Device, display, locale, and battery hints &mdash; for platform-adaptive widget layouts.</p>
               </router-link>
             </div>
           </div>
@@ -403,7 +443,8 @@ import {
   Sparkles, LayoutDashboard, Globe, Cpu, Layers, GitMerge, 
   ShieldCheck, Monitor, BookOpen, Terminal, Wrench, Lock,
   ArrowUpFromLine, ArrowDownToLine, HeartPulse, Settings,
-  CheckCircle2, AlertTriangle, ChevronDown, ChevronUp
+  CheckCircle2, AlertTriangle, ChevronDown, ChevronUp,
+  BrainCircuit, Clock, MapPin, CloudSun, Wifi
 } from 'lucide-vue-next'
 
 // Guide table of contents sections

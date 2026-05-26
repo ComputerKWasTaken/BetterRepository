@@ -901,24 +901,24 @@ modifier(text);</pre>
         </Transition>
       </section>
 
-      <!-- BetterScripts Superseded by Ultrascripts -->
+      <!-- Ultrascripts Cross-Link -->
       <section id="guide-ultrascripts" class="card">
         <div class="p-4 rounded-lg bg-gradient-to-r from-bd-accent-primary/10 to-bd-purple/10 border border-bd-accent-primary/30">
           <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
             <Terminal class="w-4 h-4 text-bd-accent-primary" />
-            BetterScripts is becoming Ultrascripts
+            Beyond vanilla scripting: Ultrascripts
           </h3>
           <p class="text-sm text-bd-text-secondary mb-3">
-            In BetterDungeon V2, BetterScripts is replaced by <strong class="text-bd-text-primary">Ultrascripts</strong> &mdash; a standardized,
-            bidirectional bridge between AI Dungeon scripts and the browser. No invisible characters, no Context Modifier,
-            and a real path forward for web access, clocks, local AI, and more.
+            BetterDungeon ships <strong class="text-bd-text-primary">Ultrascripts</strong>, a cards-based scripting platform
+            with dynamic widget rendering, web access, hosted AI, and real-world context modules &mdash; all over a bidirectional Story Card bridge.
+            Vanilla scripts and Ultrascripts coexist; reach for Ultrascripts when you need capabilities the sandbox alone cannot deliver.
           </p>
           <div class="flex items-center gap-3 flex-wrap">
             <router-link to="/ultrascripts" class="btn btn-primary text-sm">
               <Terminal class="w-4 h-4" />
               Explore Ultrascripts
             </router-link>
-            <span class="text-xs text-bd-text-muted">Teaser for what's coming in BD V2</span>
+            <span class="text-xs text-bd-text-muted">9 first-party modules &middot; shipped today</span>
           </div>
         </div>
       </section>
@@ -1366,7 +1366,7 @@ const guideSections = [
   { id: 'common-patterns', label: 'Common Patterns' },
   { id: 'troubleshooting', label: 'Troubleshooting' },
   { id: 'common-mistakes', label: 'Common Mistakes' },
-  { id: 'ultrascripts', label: 'Ultrascripts Preview' },
+  { id: 'ultrascripts', label: 'Ultrascripts' },
   { id: 'links', label: 'Useful Links' },
   { id: 'credits', label: 'Credits' }
 ]

@@ -42,9 +42,9 @@
     </header>
 
     <!-- Tab Navigation -->
-    <div class="ultrascripts-tab-bar rounded-xl bg-bd-bg-secondary border border-bd-border-subtle p-2">
+    <div class="ultrascripts-tab-bar rounded-xl bg-bd-bg-secondary border border-bd-border-subtle p-2 space-y-1.5">
+      <!-- Row 1: Foundation tabs (orientation, architecture, authoring) -->
       <div class="flex flex-wrap gap-1.5">
-        <!-- Foundation tabs -->
         <button
           v-for="tab in foundationTabs"
           :key="tab.id"
@@ -59,13 +59,11 @@
           <span>{{ tab.label }}</span>
           <span class="us-tab__dot" :class="tab.dotClass" />
         </button>
+      </div>
 
-        <!-- Separator -->
-        <div class="hidden sm:flex items-center px-1">
-          <div class="w-px h-5 bg-bd-border-subtle" />
-        </div>
-
-        <!-- Module tabs -->
+      <!-- Row 2: Module tabs (one per shipped module) -->
+      <div class="flex flex-wrap gap-1.5 pt-1.5 border-t border-bd-border-subtle">
+        <span class="self-center text-[10px] uppercase tracking-widest text-bd-text-muted px-1.5">Modules</span>
         <button
           v-for="tab in moduleTabs"
           :key="tab.id"
@@ -73,7 +71,7 @@
           class="us-tab us-tab--module"
           :class="activeTab === tab.id ? 'us-tab--active-module' : 'us-tab--inactive'"
         >
-          <component :is="tab.icon" class="w-3.5 h-3.5" />
+          <component :is="tab.icon" class="w-3.5 h-3.5" :class="activeTab === tab.id ? '' : tab.iconClass" />
           <span>{{ tab.label }}</span>
         </button>
       </div>
@@ -82,11 +80,16 @@
     <!-- Tab Content -->
     <UltrascriptsGuide v-if="activeTab === 'overview'" />
     <UltrascriptsArchitectureGuide v-if="activeTab === 'architecture'" />
-    <UltrascriptsScriptureGuide v-if="activeTab === 'scripture'" />
-    <UltrascriptsFetchAiGuide v-if="activeTab === 'fetch-ai'" />
-    <UltrascriptsSdkLifecycleGuide v-if="activeTab === 'sdk'" />
-    <UltrascriptsUtilitiesGuide v-if="activeTab === 'utilities'" />
     <UltrascriptsAuthoringGuide v-if="activeTab === 'authoring'" />
+    <UltrascriptsScriptureGuide v-if="activeTab === 'scripture'" />
+    <UltrascriptsWebFetchGuide v-if="activeTab === 'webfetch'" />
+    <UltrascriptsAiGuide v-if="activeTab === 'ai'" />
+    <UltrascriptsSdkGuide v-if="activeTab === 'sdk'" />
+    <UltrascriptsClockGuide v-if="activeTab === 'clock'" />
+    <UltrascriptsGeolocationGuide v-if="activeTab === 'geolocation'" />
+    <UltrascriptsWeatherGuide v-if="activeTab === 'weather'" />
+    <UltrascriptsNetworkGuide v-if="activeTab === 'network'" />
+    <UltrascriptsSystemGuide v-if="activeTab === 'system'" />
   </div>
 </template>
 
@@ -95,13 +98,19 @@ import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import UltrascriptsGuide from '@/components/guides/UltrascriptsGuide.vue'
 import UltrascriptsArchitectureGuide from '@/components/guides/UltrascriptsArchitectureGuide.vue'
-import UltrascriptsScriptureGuide from '@/components/guides/UltrascriptsScriptureGuide.vue'
-import UltrascriptsFetchAiGuide from '@/components/guides/UltrascriptsFetchAiGuide.vue'
-import UltrascriptsSdkLifecycleGuide from '@/components/guides/UltrascriptsSdkLifecycleGuide.vue'
-import UltrascriptsUtilitiesGuide from '@/components/guides/UltrascriptsUtilitiesGuide.vue'
 import UltrascriptsAuthoringGuide from '@/components/guides/UltrascriptsAuthoringGuide.vue'
+import UltrascriptsScriptureGuide from '@/components/guides/UltrascriptsScriptureGuide.vue'
+import UltrascriptsWebFetchGuide from '@/components/guides/UltrascriptsWebFetchGuide.vue'
+import UltrascriptsAiGuide from '@/components/guides/UltrascriptsAiGuide.vue'
+import UltrascriptsSdkGuide from '@/components/guides/UltrascriptsSdkGuide.vue'
+import UltrascriptsClockGuide from '@/components/guides/UltrascriptsClockGuide.vue'
+import UltrascriptsGeolocationGuide from '@/components/guides/UltrascriptsGeolocationGuide.vue'
+import UltrascriptsWeatherGuide from '@/components/guides/UltrascriptsWeatherGuide.vue'
+import UltrascriptsNetworkGuide from '@/components/guides/UltrascriptsNetworkGuide.vue'
+import UltrascriptsSystemGuide from '@/components/guides/UltrascriptsSystemGuide.vue'
 import {
-  Compass, Network, LayoutDashboard, Globe, Terminal, Wrench, Wand2, Rocket
+  Compass, Network, Wand2, LayoutDashboard, Globe, BrainCircuit, Terminal,
+  Clock, MapPin, CloudSun, Wifi, Cpu, Rocket
 } from 'lucide-vue-next'
 
 const route = useRoute()
@@ -109,17 +118,22 @@ const router = useRouter()
 
 // Foundation tabs cover orientation and platform-level concepts shared across modules.
 const foundationTabs = [
-  { id: 'overview', label: 'Overview', icon: Compass, dotClass: 'dot--purple', activeClass: 'us-tab--active-purple' },
-  { id: 'architecture', label: 'Architecture', icon: Network, dotClass: 'dot--cyan', activeClass: 'us-tab--active-cyan' },
-  { id: 'authoring', label: 'Building Modules', icon: Wand2, dotClass: 'dot--amber', activeClass: 'us-tab--active-amber' },
+  { id: 'overview',     label: 'Overview',         icon: Compass, dotClass: 'dot--purple', activeClass: 'us-tab--active-purple' },
+  { id: 'architecture', label: 'Architecture',     icon: Network, dotClass: 'dot--cyan',   activeClass: 'us-tab--active-cyan'   },
+  { id: 'authoring',    label: 'Building Modules', icon: Wand2,   dotClass: 'dot--amber',  activeClass: 'us-tab--active-amber'  }
 ]
 
-// Module tabs cover deep-dive guides per shipped module family.
+// One module tab per shipped first-party module.
 const moduleTabs = [
-  { id: 'scripture', label: 'Scripture: Widgets', icon: LayoutDashboard },
-  { id: 'fetch-ai', label: 'WebFetch & AI', icon: Globe },
-  { id: 'sdk', label: 'SDK & Lifecycle', icon: Terminal },
-  { id: 'utilities', label: 'System & Utilities', icon: Wrench },
+  { id: 'scripture',   label: 'Scripture',   icon: LayoutDashboard, iconClass: 'text-bd-green' },
+  { id: 'webfetch',    label: 'WebFetch',    icon: Globe,           iconClass: 'text-bd-blue' },
+  { id: 'ai',          label: 'AI',          icon: BrainCircuit,    iconClass: 'text-bd-purple' },
+  { id: 'sdk',         label: 'SDK',         icon: Terminal,        iconClass: 'text-bd-cyan' },
+  { id: 'clock',       label: 'Clock',       icon: Clock,           iconClass: 'text-bd-amber' },
+  { id: 'geolocation', label: 'Geolocation', icon: MapPin,          iconClass: 'text-bd-blue' },
+  { id: 'weather',     label: 'Weather',     icon: CloudSun,        iconClass: 'text-bd-cyan' },
+  { id: 'network',     label: 'Network',     icon: Wifi,            iconClass: 'text-bd-green' },
+  { id: 'system',      label: 'System',      icon: Cpu,             iconClass: 'text-bd-purple' }
 ]
 
 const allTabs = [...foundationTabs, ...moduleTabs]

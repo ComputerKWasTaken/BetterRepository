@@ -208,16 +208,16 @@
                   <Rocket class="w-4 h-4 text-bd-purple" />
                 </div>
                 <h3 class="font-semibold text-sm text-bd-text-primary">Ultrascripts</h3>
-                <span class="ml-auto text-[10px] px-2 py-0.5 rounded-full font-medium bg-bd-purple/20 text-bd-purple">Coming Soon</span>
+                <span class="ml-auto text-[10px] px-2 py-0.5 rounded-full font-medium bg-bd-green/20 text-bd-green">Shipped</span>
               </div>
               <ul class="space-y-1.5 text-sm text-bd-text-secondary">
                 <li class="flex items-start gap-2">
                   <ArrowLeftRight class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
-                  <span>Two-way communication between scripts and BetterDungeon replaces one-way BetterScripts</span>
+                  <span>Two-way communication between AI Dungeon scripts and BetterDungeon over Story Cards</span>
                 </li>
                 <li class="flex items-start gap-2">
                   <Sparkles class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
-                  <span>Scripts can ask the web, check time, call local models, and get real answers back</span>
+                  <span>Scripts can render widgets, hit the web, check time, call hosted AI, and get real answers back</span>
                 </li>
               </ul>
             </div>

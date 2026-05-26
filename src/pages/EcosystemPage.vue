@@ -263,15 +263,19 @@
                     </div>
                   </div>
 
-                  <!-- BetterScripts Highlight -->
-                  <div class="p-4 rounded-xl bg-gradient-to-r from-bd-cyan/10 to-bd-blue/10 border border-bd-cyan/20 hover:border-bd-cyan/40 transition-colors">
+                  <!-- Ultrascripts Highlight -->
+                  <div class="p-4 rounded-xl bg-gradient-to-r from-bd-cyan/10 to-bd-purple/10 border border-bd-purple/20 hover:border-bd-purple/40 transition-colors">
                     <div class="flex items-start gap-3">
-                      <Code class="w-5 h-5 text-bd-cyan flex-shrink-0 mt-0.5" />
+                      <Rocket class="w-5 h-5 text-bd-purple flex-shrink-0 mt-0.5" />
                       <div>
-                        <span class="text-sm text-bd-text-primary font-semibold">BetterScripts</span>
+                        <div class="flex items-center gap-2">
+                          <span class="text-sm text-bd-text-primary font-semibold">Ultrascripts</span>
+                          <span class="text-[10px] px-1.5 py-0.5 rounded-full font-medium bg-bd-purple/20 text-bd-purple">Platform</span>
+                        </div>
                         <p class="text-xs text-bd-text-secondary mt-1">
-                          Enables AI Dungeon scripts to create <strong class="text-bd-text-primary">dynamic UI widgets</strong> like 
-                          HP bars, stats, panels, and custom displays that update in real-time.
+                          BetterDungeon's scripting platform. Scenarios can render <strong class="text-bd-text-primary">dynamic UI widgets</strong>
+                          (HP bars, stat grids, dashboards), call external APIs, hit hosted AI, and query real-world context &mdash; all over a
+                          unified Story Card transport.
                         </p>
                       </div>
                     </div>

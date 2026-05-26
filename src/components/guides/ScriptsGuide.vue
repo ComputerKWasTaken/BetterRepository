@@ -387,18 +387,18 @@ modifier(text);</pre>
               </div>
             </div>
 
-            <!-- BetterScripts to V2 Ultrascripts Evolution -->
+            <!-- Ultrascripts Cross-Link -->
             <div class="p-4 rounded-lg bg-gradient-to-r from-bd-accent-primary/10 to-bd-purple/10 border border-bd-accent-primary/30 space-y-2">
               <h4 class="font-semibold text-bd-text-primary flex items-center gap-1.5">
                 <Terminal class="w-4 h-4 text-bd-accent-primary" />
-                BetterScripts to Ultrascripts V2 Evolution Path
+                Need more than vanilla scripts can do?
               </h4>
               <p class="text-xs text-bd-text-secondary">
-                In the upcoming BetterDungeon V2 architecture, legacy synchronous modifiers will evolve into <strong>Ultrascripts</strong>. 
-                Ultrascripts establishes a high-performance, bidirectional event-driven bridge between browser variables and AI Dungeon client instances, bypassing formatting limitations entirely.
+                BetterDungeon ships <strong>Ultrascripts</strong>, a cards-based scripting platform that gives scenarios dynamic UI widgets,
+                external API access, hosted AI calls, and real-world context (time, weather, geolocation) through a bidirectional Story Card bridge.
               </p>
               <div class="flex items-center gap-2">
-                <router-link to="/ultrascripts" class="text-bd-accent-primary hover:underline font-semibold">Learn more in the Ultrascripts section &rarr;</router-link>
+                <router-link to="/ultrascripts" class="text-bd-accent-primary hover:underline font-semibold">Explore the Ultrascripts platform &rarr;</router-link>
               </div>
             </div>
           </div>

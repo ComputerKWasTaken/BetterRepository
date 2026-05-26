@@ -57,7 +57,7 @@
             <p class="text-bd-text-secondary">
               Ultrascripts is a single unified runtime split into three cleanly-layered concerns: <strong>Transport</strong> watches AI Dungeon's network traffic,
               <strong>Core</strong> tracks shared runtime state and coordinates module lifecycle, and <strong>Modules</strong> deliver concrete capabilities on top
-              of that runtime. There is no Lite/Full profile split &mdash; the same system handles state publishing and request/response ops.
+              of that runtime. The same system handles both state publishing and request/response ops &mdash; there is no separate runtime for either path.
             </p>
 
             <!-- Layer diagram -->
@@ -159,7 +159,7 @@
               </h4>
               <p class="text-[11px] mb-2">
                 All Ultrascripts card writes use a single hardcoded GraphQL mutation authenticated with captured credentials.
-                No template caching, no snoop-and-replay, no dependency on prior user-initiated edits &mdash; turn-0 writes work immediately.
+                Writes work immediately on adventure load, including turn-0, without any prior user-initiated card edit.
               </p>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">mutation SaveQueueStoryCard($input: UpdateStoryCardInput!) {
   updateStoryCard(input: $input) {
@@ -514,53 +514,6 @@
         </Transition>
       </section>
 
-      <!-- ===================== INTENTIONAL EXCLUSIONS ===================== -->
-      <section id="guide-exclusions" class="card">
-        <button
-          @click="toggleGuideSection('exclusions')"
-          class="w-full flex items-center justify-between text-left"
-        >
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <ShieldOff class="w-5 h-5 text-bd-pink" />
-            What Ultrascripts Intentionally Avoids
-          </h2>
-          <ChevronDown
-            class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('exclusions') }"
-          />
-        </button>
-
-        <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('exclusions')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
-            <p>
-              These design choices are deliberate. They prevent classes of failure that earlier prototypes ran into.
-            </p>
-            <ul class="space-y-2">
-              <li class="flex items-start gap-2">
-                <X class="w-4 h-4 text-bd-pink flex-shrink-0 mt-0.5" />
-                <span><strong>No zero-width-character transport.</strong> Ultrascripts does not embed messages in invisible text. All script-to-extension traffic uses reserved story cards.</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <X class="w-4 h-4 text-bd-pink flex-shrink-0 mt-0.5" />
-                <span><strong>No mutation template caching.</strong> The legacy snoop-and-replay path that waited for a user-initiated card edit before writing has been removed. Writes use a hardcoded production query authenticated with captured credentials, so turn-0 works immediately.</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <X class="w-4 h-4 text-bd-pink flex-shrink-0 mt-0.5" />
-                <span><strong>No Lite / Full profile split.</strong> One unified runtime handles both state publishing and request/response ops.</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <X class="w-4 h-4 text-bd-pink flex-shrink-0 mt-0.5" />
-                <span><strong>No DOM scraping of the Story Card UI.</strong> Card state comes from AI Dungeon's live data stream, not from screen-side parsing.</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <X class="w-4 h-4 text-bd-pink flex-shrink-0 mt-0.5" />
-                <span><strong>No action-id-keyed history.</strong> Scripture-style modules key into <code class="text-bd-green">history[liveCount]</code>. This keeps undo, rewind, and retry consistent without per-action bookkeeping in scripts.</span>
-              </li>
-            </ul>
-          </div>
-        </Transition>
-      </section>
-
     </div><!-- End main content -->
   </div><!-- End flex container -->
 </template>
@@ -570,7 +523,7 @@ import { ref } from 'vue'
 import {
   ChevronDown, ChevronUp, Layers, Network, Cpu, Boxes, GitMerge, FileCode,
   Sparkles, HeartPulse, Mail, Inbox, ArrowUpFromLine, ArrowDownToLine,
-  ArrowLeftRight, Undo2, ShieldOff, X
+  ArrowLeftRight, Undo2
 } from 'lucide-vue-next'
 
 // Guide table of contents sections.
@@ -585,9 +538,7 @@ const guideSections = [
   { id: 'flow', label: 'Data Flow Paths' },
   { id: 'cards', label: 'Reserved Cards' },
   { id: 'heartbeat', label: 'Heartbeat Schema' },
-  { id: 'envelope', label: 'Request/Response Envelope' },
-  { id: 'header-boundaries', label: 'Boundaries', isHeader: true },
-  { id: 'exclusions', label: 'What It Avoids' }
+  { id: 'envelope', label: 'Request/Response Envelope' }
 ]
 
 // Track which guide sections are expanded (all expanded by default)
