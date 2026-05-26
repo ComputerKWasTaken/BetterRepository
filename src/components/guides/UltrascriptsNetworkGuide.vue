@@ -18,6 +18,21 @@
 
     <div class="flex-1 space-y-4 min-w-0">
 
+      <!-- SDK paved-path banner -->
+      <div class="p-3 rounded-lg border border-bd-amber/30 bg-bd-amber/5 flex items-center gap-3 flex-wrap">
+        <Zap class="w-4 h-4 text-bd-amber flex-shrink-0" />
+        <div class="flex-1 min-w-0 text-xs text-bd-text-secondary">
+          <strong class="text-bd-amber">New to Ultrascripts?</strong> The recipes below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
+        </div>
+        <router-link to="/ultrascripts?tab=quickstart" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-amber/15 hover:bg-bd-amber/25 text-bd-amber text-[11px] font-semibold transition-colors">
+          Quick Start
+          <ArrowRight class="w-3 h-3" />
+        </router-link>
+        <router-link to="/ultrascripts?tab=cookbook" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-green/10 hover:bg-bd-green/20 text-bd-green text-[11px] font-semibold transition-colors">
+          Cookbook
+        </router-link>
+      </div>
+
       <!-- OVERVIEW -->
       <section id="guide-overview" class="card">
         <button @click="toggleGuideSection('overview')" class="w-full flex items-center justify-between text-left">
@@ -125,7 +140,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { ChevronDown, ChevronUp, Wifi, Terminal, Rocket, AlertTriangle } from 'lucide-vue-next'
+import { ChevronDown, ChevronUp, Wifi, Terminal, Rocket, AlertTriangle, Zap, ArrowRight } from 'lucide-vue-next'
 
 const guideSections = [
   { id: 'header-intro', label: 'Introduction', isHeader: true },

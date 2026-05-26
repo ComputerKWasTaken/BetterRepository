@@ -79,6 +79,8 @@
 
     <!-- Tab Content -->
     <UltrascriptsGuide v-if="activeTab === 'overview'" />
+    <UltrascriptsQuickStartGuide v-if="activeTab === 'quickstart'" />
+    <UltrascriptsCookbookGuide v-if="activeTab === 'cookbook'" />
     <UltrascriptsArchitectureGuide v-if="activeTab === 'architecture'" />
     <UltrascriptsAuthoringGuide v-if="activeTab === 'authoring'" />
     <UltrascriptsScriptureGuide v-if="activeTab === 'scripture'" />
@@ -97,6 +99,8 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import UltrascriptsGuide from '@/components/guides/UltrascriptsGuide.vue'
+import UltrascriptsQuickStartGuide from '@/components/guides/UltrascriptsQuickStartGuide.vue'
+import UltrascriptsCookbookGuide from '@/components/guides/UltrascriptsCookbookGuide.vue'
 import UltrascriptsArchitectureGuide from '@/components/guides/UltrascriptsArchitectureGuide.vue'
 import UltrascriptsAuthoringGuide from '@/components/guides/UltrascriptsAuthoringGuide.vue'
 import UltrascriptsScriptureGuide from '@/components/guides/UltrascriptsScriptureGuide.vue'
@@ -109,18 +113,21 @@ import UltrascriptsWeatherGuide from '@/components/guides/UltrascriptsWeatherGui
 import UltrascriptsNetworkGuide from '@/components/guides/UltrascriptsNetworkGuide.vue'
 import UltrascriptsSystemGuide from '@/components/guides/UltrascriptsSystemGuide.vue'
 import {
-  Compass, Network, Wand2, LayoutDashboard, Globe, BrainCircuit, Terminal,
+  Compass, Zap, BookOpen, Network, Wand2, LayoutDashboard, Globe, BrainCircuit, Terminal,
   Clock, MapPin, CloudSun, Wifi, Cpu, Rocket
 } from 'lucide-vue-next'
 
 const route = useRoute()
 const router = useRouter()
 
-// Foundation tabs cover orientation and platform-level concepts shared across modules.
+// Foundation tabs cover orientation, the paved adoption path (Quick Start + Cookbook),
+// and the deeper platform-level docs (Architecture, Building Modules).
 const foundationTabs = [
-  { id: 'overview',     label: 'Overview',         icon: Compass, dotClass: 'dot--purple', activeClass: 'us-tab--active-purple' },
-  { id: 'architecture', label: 'Architecture',     icon: Network, dotClass: 'dot--cyan',   activeClass: 'us-tab--active-cyan'   },
-  { id: 'authoring',    label: 'Building Modules', icon: Wand2,   dotClass: 'dot--amber',  activeClass: 'us-tab--active-amber'  }
+  { id: 'overview',     label: 'Overview',         icon: Compass,  dotClass: 'dot--purple', activeClass: 'us-tab--active-purple' },
+  { id: 'quickstart',   label: 'Quick Start',      icon: Zap,      dotClass: 'dot--amber',  activeClass: 'us-tab--active-amber'  },
+  { id: 'cookbook',     label: 'Cookbook',         icon: BookOpen, dotClass: 'dot--green',  activeClass: 'us-tab--active-green'  },
+  { id: 'architecture', label: 'Architecture',     icon: Network,  dotClass: 'dot--cyan',   activeClass: 'us-tab--active-cyan'   },
+  { id: 'authoring',    label: 'Building Modules', icon: Wand2,    dotClass: 'dot--blue',   activeClass: 'us-tab--active-blue'   }
 ]
 
 // One module tab per shipped first-party module.
@@ -255,6 +262,8 @@ watch(() => route.query.tab, (newTab) => {
 .dot--purple { background: var(--bd-purple); }
 .dot--cyan { background: var(--bd-cyan); }
 .dot--amber { background: var(--bd-amber); }
+.dot--green { background: var(--bd-green); }
+.dot--blue { background: var(--bd-blue); }
 
 .us-tab--inactive .us-tab__dot {
   opacity: 0.4;
@@ -303,6 +312,26 @@ watch(() => route.query.tab, (newTab) => {
 
 .us-tab--active-amber .us-tab__dot {
   box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+}
+
+.us-tab--active-green {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.25);
+  color: var(--bd-green);
+}
+
+.us-tab--active-green .us-tab__dot {
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+}
+
+.us-tab--active-blue {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.25);
+  color: var(--bd-blue);
+}
+
+.us-tab--active-blue .us-tab__dot {
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
 }
 
 /* === Active module tab with neutral accent === */

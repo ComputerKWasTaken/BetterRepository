@@ -36,6 +36,40 @@
     <!-- Main Content -->
     <div class="flex-1 space-y-4 min-w-0">
 
+      <!-- ===================== GET STARTED CTA (top of overview) ===================== -->
+      <div class="rounded-xl p-5 border border-bd-amber/40 bg-gradient-to-br from-bd-amber/10 via-bd-purple/5 to-bd-green/10">
+        <div class="flex items-start gap-4 flex-wrap">
+          <div class="w-11 h-11 rounded-xl bg-bd-amber/20 flex items-center justify-center flex-shrink-0">
+            <Zap class="w-5 h-5 text-bd-amber" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <h2 class="text-base font-semibold text-bd-text-primary mb-1">New here? Start with the paved path.</h2>
+            <p class="text-xs text-bd-text-secondary leading-relaxed mb-3">
+              <strong>Quick Start</strong> walks you through pasting the Ultrascripts SDK helper into your Library script and building a working
+              HP bar + Clock + AI integration in under five minutes. After that, the <strong>Cookbook</strong> has copy-paste recipes for the eight
+              most common patterns.
+            </p>
+            <div class="flex flex-wrap items-center gap-2">
+              <router-link
+                to="/ultrascripts?tab=quickstart"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-bd-amber/20 hover:bg-bd-amber/30 border border-bd-amber/40 text-bd-amber text-xs font-semibold transition-colors"
+              >
+                <Zap class="w-3.5 h-3.5" />
+                Quick Start (5 min)
+              </router-link>
+              <router-link
+                to="/ultrascripts?tab=cookbook"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-bd-green/15 hover:bg-bd-green/25 border border-bd-green/30 text-bd-green text-xs font-semibold transition-colors"
+              >
+                <BookOpen class="w-3.5 h-3.5" />
+                Cookbook
+              </router-link>
+              <span class="text-[10px] text-bd-text-muted">&middot; or keep reading below for the platform overview</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- ===================== WHAT IS ULTRASCRIPTS ===================== -->
       <section id="guide-what-is" class="card">
         <button
@@ -444,7 +478,7 @@ import {
   ShieldCheck, Monitor, BookOpen, Terminal, Wrench, Lock,
   ArrowUpFromLine, ArrowDownToLine, HeartPulse, Settings,
   CheckCircle2, AlertTriangle, ChevronDown, ChevronUp,
-  BrainCircuit, Clock, MapPin, CloudSun, Wifi
+  BrainCircuit, Clock, MapPin, CloudSun, Wifi, Zap
 } from 'lucide-vue-next'
 
 // Guide table of contents sections
