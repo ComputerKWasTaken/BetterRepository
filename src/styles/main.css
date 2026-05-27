@@ -19,8 +19,9 @@ html {
 }
 
 body {
-  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  line-height: 1.5;
+  font-family: var(--bd-font-family-primary);
+  font-size: var(--bd-font-size-base);
+  line-height: var(--bd-line-height-normal);
   min-height: 100vh;
   background-color: var(--bd-bg-primary);
   color: var(--bd-text-primary);
@@ -55,7 +56,8 @@ body {
 @layer components {
   /* Card styles */
   .card {
-    @apply bg-bd-bg-secondary border border-bd-border-subtle rounded-xl p-4 transition-all duration-200;
+    @apply bg-bd-bg-secondary border border-bd-border-subtle rounded-xl p-4;
+    transition: background var(--bd-transition-normal), border-color var(--bd-transition-normal);
   }
 
   .card:hover {
@@ -68,11 +70,20 @@ body {
 
   /* Button styles */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
+    transition: background var(--bd-transition-fast), border-color var(--bd-transition-fast), color var(--bd-transition-fast), transform var(--bd-transition-fast);
   }
 
   .btn-primary {
-    @apply bg-bd-accent-primary text-bd-text-inverse hover:bg-bd-accent-light shadow-md hover:shadow-lg transition-all duration-150;
+    background: var(--bd-btn-primary-bg);
+    color: var(--bd-text-on-accent);
+    box-shadow: var(--bd-shadow-sm);
+  }
+
+  .btn-primary:hover {
+    background: var(--bd-btn-primary-hover);
+    box-shadow: var(--bd-btn-primary-shadow);
+    transform: translateY(-1px);
   }
 
   .btn-secondary {
@@ -85,7 +96,8 @@ body {
 
   /* Input styles */
   .input {
-    @apply w-full bg-bd-bg-elevated border border-bd-border-default rounded-lg px-4 py-2.5 text-bd-text-primary placeholder-bd-text-muted transition-all duration-200 outline-none;
+    @apply w-full bg-bd-bg-elevated border border-bd-border-default rounded-lg px-4 py-2.5 text-bd-text-primary placeholder-bd-text-muted outline-none;
+    transition: border-color var(--bd-transition-fast), box-shadow var(--bd-transition-fast), background var(--bd-transition-fast);
   }
 
   .input:focus {
@@ -95,7 +107,8 @@ body {
 
   /* Select styles */
   .select {
-    @apply bg-bd-bg-elevated border border-bd-border-default rounded-lg px-3 py-2.5 text-sm text-bd-text-primary outline-none transition-all duration-200 cursor-pointer;
+    @apply bg-bd-bg-elevated border border-bd-border-default rounded-lg px-3 py-2.5 text-sm text-bd-text-primary outline-none cursor-pointer;
+    transition: border-color var(--bd-transition-fast), box-shadow var(--bd-transition-fast), background var(--bd-transition-fast);
   }
 
   .select:focus {
@@ -114,11 +127,15 @@ body {
 
   /* Navigation link */
   .nav-link {
-    @apply flex items-center gap-3 px-4 py-3 rounded-lg text-bd-text-secondary hover:text-bd-text-primary hover:bg-bd-border-subtle transition-all duration-200;
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg text-bd-text-secondary hover:text-bd-text-primary hover:bg-bd-bg-tertiary;
+    transition: background var(--bd-transition-fast), color var(--bd-transition-fast), border-color var(--bd-transition-fast);
   }
 
   .nav-link.active {
-    @apply bg-bd-accent-primary/10 text-bd-accent-light border border-bd-accent-primary/20 font-medium;
+    background: var(--bd-accent-muted);
+    border: 1px solid var(--bd-border-accent);
+    color: var(--bd-accent-light);
+    font-weight: var(--bd-font-weight-medium);
   }
 
   /* Section header */
@@ -128,22 +145,43 @@ body {
 
   /* Content card for instructions/resources */
   .resource-card {
-    @apply bg-bd-bg-secondary border border-bd-border-subtle rounded-xl overflow-hidden transition-all duration-200 hover:border-bd-accent-primary/30 hover:shadow-glow cursor-pointer;
+    @apply bg-bd-bg-secondary border border-bd-border-subtle rounded-xl overflow-hidden cursor-pointer;
+    transition: background var(--bd-transition-normal), border-color var(--bd-transition-normal);
+  }
+
+  .resource-card:hover {
+    @apply bg-bd-bg-tertiary border-bd-border-default;
   }
 
   /* Story card item */
   .story-card-item {
-    @apply bg-bd-bg-secondary border border-bd-border-subtle rounded-xl overflow-hidden transition-all duration-200 hover:border-bd-accent-primary/30 hover:shadow-glow;
+    @apply bg-bd-bg-secondary border border-bd-border-subtle rounded-xl overflow-hidden;
+    transition: background var(--bd-transition-normal), border-color var(--bd-transition-normal);
+  }
+
+  .story-card-item:hover {
+    @apply bg-bd-bg-tertiary border-bd-border-default;
   }
 
   /* Script item */
   .script-item {
-    @apply bg-bd-bg-secondary border border-bd-border-subtle rounded-xl overflow-hidden transition-all duration-200 hover:border-bd-accent-primary/30 hover:shadow-glow;
+    @apply bg-bd-bg-secondary border border-bd-border-subtle rounded-xl overflow-hidden;
+    transition: background var(--bd-transition-normal), border-color var(--bd-transition-normal);
+  }
+
+  .script-item:hover {
+    @apply bg-bd-bg-tertiary border-bd-border-default;
   }
 
   /* Copy button */
   .copy-btn {
-    @apply flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-bd-accent-primary/20 text-bd-accent-light hover:bg-bd-accent-primary/30 transition-all duration-200;
+    @apply flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-bd-accent-light;
+    background: var(--bd-accent-muted);
+    transition: background var(--bd-transition-fast), color var(--bd-transition-fast);
+  }
+
+  .copy-btn:hover {
+    background: var(--bd-accent-strong);
   }
 
   /* Code block */
@@ -175,24 +213,112 @@ body {
 /* === Utility Classes === */
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-bd-accent-light to-bd-accent-primary bg-clip-text text-transparent;
+    background: var(--bd-gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .shadow-glow {
-    box-shadow: var(--bd-shadow-glow);
+    box-shadow: none;
   }
 
   .shadow-glow-lg {
-    box-shadow: var(--bd-shadow-glow-lg);
+    box-shadow: var(--bd-shadow-md);
   }
 
   .border-glow {
-    box-shadow: var(--bd-shadow-glow);
+    box-shadow: 0 0 0 1px var(--bd-border-accent);
   }
 
   .backdrop-blur-card {
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(8px);
   }
+}
+
+/* === BetterEcosystem Design Consolidation === */
+:is(.hero-section, .ai-hero, .plot-hero, .sc-hero, .scripts-hero, .guides-hero, .ultrascripts-hero, .credits-hero, .contribute-hero, .eco-hero) {
+  background: var(--bd-bg-secondary) !important;
+  border: 1px solid var(--bd-border-subtle) !important;
+  border-radius: var(--bd-radius-2xl) !important;
+  box-shadow: none !important;
+}
+
+:is(.hero-section, .ai-hero, .plot-hero, .sc-hero, .scripts-hero, .guides-hero, .ultrascripts-hero, .credits-hero, .contribute-hero, .eco-hero)::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 1px;
+  background: var(--bd-gradient-accent-bar);
+  pointer-events: none;
+}
+
+.hero-orb,
+.animate-float,
+.animate-pulse,
+.animate-pulse *,
+.animate-scaleIn {
+  animation: none !important;
+}
+
+.hero-orb {
+  display: none !important;
+}
+
+:is(.home-section, .credits-section, .contribute-section, .eco-section) {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+:is(.card, .card-elevated).bg-gradient-to-r,
+:is(.card, .card-elevated).bg-gradient-to-br,
+:is(.card, .card-elevated) > .bg-gradient-to-r:first-child,
+:is(.card, .card-elevated) > .bg-gradient-to-br:first-child {
+  background: var(--bd-gradient-accent-bar) !important;
+}
+
+:is(.card, .card-elevated).bg-gradient-to-r,
+:is(.card, .card-elevated).bg-gradient-to-br {
+  background: var(--bd-bg-secondary) !important;
+}
+
+:is(.guide-tab--active-amber, .guide-tab--active-blue, .guide-tab--active-purple, .guide-tab--active-cyan, .us-tab--active-amber, .us-tab--active-blue, .us-tab--active-purple, .us-tab--active-cyan, .us-tab--active-green) {
+  background: var(--bd-accent-muted) !important;
+  border-color: var(--bd-border-accent) !important;
+  color: var(--bd-accent-light) !important;
+}
+
+:is(.guide-tab--active, .us-tab--active) :is(.guide-tab__dot, .us-tab__dot) {
+  background: var(--bd-accent-primary) !important;
+  box-shadow: none !important;
+}
+
+header [class*="bg-gradient-to"] {
+  background-image: none !important;
+  background-color: var(--bd-accent-muted) !important;
+}
+
+[class*="bg-gradient-to"]:not(.text-gradient) {
+  background-image: none !important;
+}
+
+:is([class*="top-0"][class*="left-0"][class*="h-1"], [class*="top-0"][class*="left-0"][class*="w-full"][class*="h-1"])[class*="bg-gradient-to"] {
+  background: var(--bd-gradient-accent-bar) !important;
+}
+
+.absolute[class*="blur"] {
+  display: none !important;
+}
+
+:is(.category-card, .project-card, .whats-new-card, .submit-tile, .beyond-tile, .checklist-item, .alt-card, .workflow-step):hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.group:hover :is(.group-hover\:scale-110, .group-hover\:scale-150, .group-hover\:translate-x-1, .group-hover\:translate-x-0\.5) {
+  transform: none !important;
 }
 
 /* === Transitions === */
@@ -239,23 +365,23 @@ pre.syntax-highlighted .token.comment,
 pre.syntax-highlighted .token.prolog,
 pre.syntax-highlighted .token.doctype,
 pre.syntax-highlighted .token.cdata {
-  color: #6b7280;
+  color: var(--bd-gray);
 }
 
 pre.syntax-highlighted .token.punctuation,
 pre.syntax-highlighted .token.operator {
-  color: #94a3b8;
+  color: var(--bd-slate);
 }
 
 pre.syntax-highlighted .token.keyword,
 pre.syntax-highlighted .token.atrule {
-  color: #c084fc;
+  color: var(--bd-purple-light);
 }
 
 pre.syntax-highlighted .token.function,
 pre.syntax-highlighted .token.class-name,
 pre.syntax-highlighted .token.selector {
-  color: #60a5fa;
+  color: var(--bd-blue-light);
 }
 
 pre.syntax-highlighted .token.string,
@@ -263,28 +389,28 @@ pre.syntax-highlighted .token.attr-value,
 pre.syntax-highlighted .token.char,
 pre.syntax-highlighted .token.regex,
 pre.syntax-highlighted .token.inserted {
-  color: #4ade80;
+  color: var(--bd-green-light);
 }
 
 pre.syntax-highlighted .token.number,
 pre.syntax-highlighted .token.boolean,
 pre.syntax-highlighted .token.constant,
 pre.syntax-highlighted .token.symbol {
-  color: #fbbf24;
+  color: var(--bd-amber);
 }
 
 pre.syntax-highlighted .token.property,
 pre.syntax-highlighted .token.parameter,
 pre.syntax-highlighted .token.attr-name,
 pre.syntax-highlighted .token.variable {
-  color: #67e8f9;
+  color: var(--bd-cyan-light);
 }
 
 pre.syntax-highlighted .token.tag,
 pre.syntax-highlighted .token.builtin {
-  color: #f472b6;
+  color: var(--bd-pink);
 }
 
 pre.syntax-highlighted .token.important {
-  color: #fb7185;
+  color: var(--bd-rose);
 }

@@ -570,7 +570,7 @@ onUnmounted(() => {
 
 .project-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 20px rgba(255, 149, 0, 0.08);
+  box-shadow: var(--bd-shadow-sm);
 }
 
 /* === Feature tiles === */
@@ -580,14 +580,14 @@ onUnmounted(() => {
   gap: 0.75rem;
   padding: 0.75rem;
   border-radius: 0.5rem;
-  background: rgba(30, 30, 36, 0.5);
+  background: var(--bd-bg-tertiary);
   border: 1px solid var(--bd-border-default);
   transition: all 0.2s ease;
 }
 
 .feature-tile:hover {
   border-color: var(--bd-border-strong);
-  background: rgba(37, 37, 48, 0.6);
+  background: var(--bd-bg-elevated);
   transform: translateY(-1px);
 }
 
@@ -598,7 +598,7 @@ onUnmounted(() => {
   gap: 1rem;
   padding: 1rem;
   border-radius: 0.75rem;
-  background: rgba(30, 30, 36, 0.5);
+  background: var(--bd-bg-tertiary);
   border: 1px solid var(--bd-border-default);
   transition: all 0.25s ease;
 }

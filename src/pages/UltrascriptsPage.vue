@@ -281,57 +281,57 @@ watch(() => route.query.tab, (newTab) => {
 
 .us-tab--active .us-tab__dot {
   opacity: 1;
-  box-shadow: 0 0 6px currentColor;
+  box-shadow: none;
 }
 
 .us-tab--active-purple {
-  background: rgba(168, 85, 247, 0.12);
-  border-color: rgba(168, 85, 247, 0.25);
-  color: var(--bd-purple);
+  background: var(--bd-accent-muted);
+  border-color: var(--bd-border-accent);
+  color: var(--bd-accent-light);
 }
 
 .us-tab--active-purple .us-tab__dot {
-  box-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
+  box-shadow: none;
 }
 
 .us-tab--active-cyan {
-  background: rgba(6, 182, 212, 0.12);
-  border-color: rgba(6, 182, 212, 0.25);
-  color: var(--bd-cyan);
+  background: var(--bd-accent-muted);
+  border-color: var(--bd-border-accent);
+  color: var(--bd-accent-light);
 }
 
 .us-tab--active-cyan .us-tab__dot {
-  box-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
+  box-shadow: none;
 }
 
 .us-tab--active-amber {
-  background: rgba(251, 191, 36, 0.12);
-  border-color: rgba(251, 191, 36, 0.25);
-  color: var(--bd-amber);
+  background: var(--bd-accent-muted);
+  border-color: var(--bd-border-accent);
+  color: var(--bd-accent-light);
 }
 
 .us-tab--active-amber .us-tab__dot {
-  box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+  box-shadow: none;
 }
 
 .us-tab--active-green {
-  background: rgba(34, 197, 94, 0.12);
-  border-color: rgba(34, 197, 94, 0.25);
-  color: var(--bd-green);
+  background: var(--bd-accent-muted);
+  border-color: var(--bd-border-accent);
+  color: var(--bd-accent-light);
 }
 
 .us-tab--active-green .us-tab__dot {
-  box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+  box-shadow: none;
 }
 
 .us-tab--active-blue {
-  background: rgba(59, 130, 246, 0.12);
-  border-color: rgba(59, 130, 246, 0.25);
-  color: var(--bd-blue);
+  background: var(--bd-accent-muted);
+  border-color: var(--bd-border-accent);
+  color: var(--bd-accent-light);
 }
 
 .us-tab--active-blue .us-tab__dot {
-  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+  box-shadow: none;
 }
 
 /* === Active module tab with neutral accent === */

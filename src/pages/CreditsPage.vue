@@ -305,75 +305,76 @@ onUnmounted(() => {
   align-items: center;
   border-radius: 9999px;
   font-weight: 600;
-  transition: all 0.2s ease;
+  transition: background var(--bd-transition-fast), border-color var(--bd-transition-fast), color var(--bd-transition-fast);
 }
 
 .contributor-chip:hover {
-  transform: translateY(-1px);
+  background: var(--bd-tag-hover-bg);
+  border-color: var(--bd-border-default);
 }
 
 .contributor-chip--major {
   padding: 0.375rem 0.875rem;
   font-size: 0.875rem;
-  background: rgba(255, 149, 0, 0.1);
+  background: var(--bd-accent-muted);
   color: var(--bd-accent-light);
-  border: 1px solid rgba(255, 149, 0, 0.25);
+  border: 1px solid var(--bd-border-accent);
 }
 
 .contributor-chip--major:hover {
-  background: rgba(255, 149, 0, 0.2);
-  border-color: rgba(255, 149, 0, 0.4);
+  background: var(--bd-accent-strong);
+  border-color: var(--bd-border-accent);
 }
 
 .contributor-chip--amber {
   padding: 0.3rem 0.625rem;
   font-size: 0.75rem;
-  background: rgba(251, 191, 36, 0.1);
+  background: var(--bd-tag-bg);
   color: var(--bd-amber);
-  border: 1px solid rgba(251, 191, 36, 0.2);
+  border: 1px solid var(--bd-border-default);
 }
 
 .contributor-chip--amber:hover {
-  background: rgba(251, 191, 36, 0.2);
-  border-color: rgba(251, 191, 36, 0.4);
+  background: var(--bd-tag-hover-bg);
+  border-color: var(--bd-border-default);
 }
 
 .contributor-chip--blue {
   padding: 0.3rem 0.625rem;
   font-size: 0.75rem;
-  background: rgba(59, 130, 246, 0.1);
+  background: var(--bd-tag-bg);
   color: var(--bd-blue);
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  border: 1px solid var(--bd-border-default);
 }
 
 .contributor-chip--blue:hover {
-  background: rgba(59, 130, 246, 0.2);
-  border-color: rgba(59, 130, 246, 0.4);
+  background: var(--bd-tag-hover-bg);
+  border-color: var(--bd-border-default);
 }
 
 .contributor-chip--purple {
   padding: 0.3rem 0.625rem;
   font-size: 0.75rem;
-  background: rgba(168, 85, 247, 0.1);
+  background: var(--bd-tag-bg);
   color: var(--bd-purple);
-  border: 1px solid rgba(168, 85, 247, 0.2);
+  border: 1px solid var(--bd-border-default);
 }
 
 .contributor-chip--purple:hover {
-  background: rgba(168, 85, 247, 0.2);
-  border-color: rgba(168, 85, 247, 0.4);
+  background: var(--bd-tag-hover-bg);
+  border-color: var(--bd-border-default);
 }
 
 .contributor-chip--cyan {
   padding: 0.3rem 0.625rem;
   font-size: 0.75rem;
-  background: rgba(6, 182, 212, 0.1);
+  background: var(--bd-tag-bg);
   color: var(--bd-cyan);
-  border: 1px solid rgba(6, 182, 212, 0.2);
+  border: 1px solid var(--bd-border-default);
 }
 
 .contributor-chip--cyan:hover {
-  background: rgba(6, 182, 212, 0.2);
-  border-color: rgba(6, 182, 212, 0.4);
+  background: var(--bd-tag-hover-bg);
+  border-color: var(--bd-border-default);
 }
 </style>

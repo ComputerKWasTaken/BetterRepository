@@ -735,15 +735,15 @@ const handleClickOutside = (e) => {
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 600;
-  background: rgba(255, 149, 0, 0.1);
+  background: var(--bd-accent-muted);
   color: var(--bd-accent-light);
-  border: 1px solid rgba(255, 149, 0, 0.2);
+  border: 1px solid var(--bd-border-accent);
   transition: all 0.2s ease;
 }
 
 .contributor-chip:hover {
-  background: rgba(255, 149, 0, 0.2);
-  border-color: rgba(255, 149, 0, 0.4);
+  background: var(--bd-accent-strong);
+  border-color: var(--bd-border-accent);
   transform: translateY(-1px);
 }
 
