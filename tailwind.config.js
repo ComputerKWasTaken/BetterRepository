@@ -9,30 +9,30 @@ export default {
       colors: {
         // Base Dark Theme Colors
         'bd-bg': {
-          primary: '#0d0d0f',
-          secondary: '#16161a',
-          tertiary: '#1e1e24',
-          elevated: '#252530',
-          active: '#2c2c36',
+          primary: '#0f0e11',
+          secondary: '#17161b',
+          tertiary: '#1e1d23',
+          elevated: '#26252c',
+          active: '#2e2d35',
         },
         // Text Colors
         'bd-text': {
           primary: '#e8e8ec',
           secondary: '#a0a0a8',
           muted: '#6b6b75',
-          inverse: '#0d0d0f',
+          inverse: '#0f0e11',
           'on-accent': '#ffffff',
         },
         // Brand/Accent Colors
         'bd-accent': {
-          primary: '#ff9500',
-          secondary: '#e07800',
-          light: '#ffb84d',
+          primary: '#e8850a',
+          secondary: '#c06a00',
+          light: '#f29520',
         },
         // Border Colors
         'bd-border': {
-          subtle: 'rgba(255, 255, 255, 0.06)',
-          default: 'rgba(255, 255, 255, 0.1)',
+          subtle: 'rgba(255, 255, 255, 0.05)',
+          default: 'rgba(255, 255, 255, 0.09)',
           strong: 'rgba(255, 255, 255, 0.15)',
         },
         // Tag Background
@@ -76,9 +76,9 @@ export default {
         'mono': ['Roboto Mono', 'Consolas', 'Monaco', 'Courier New', 'monospace'],
       },
       boxShadow: {
-        'glow': '0 0 20px rgba(255, 149, 0, 0.12)',
-        'glow-lg': '0 0 30px rgba(255, 149, 0, 0.2)',
-        'glow-xl': '0 4px 12px rgba(255, 149, 0, 0.3)',
+        'glow': '0 0 20px rgba(232, 133, 10, 0.10)',
+        'glow-lg': '0 0 30px rgba(232, 133, 10, 0.20)',
+        'glow-xl': '0 4px 12px rgba(232, 133, 10, 0.30)',
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out',
@@ -100,8 +100,8 @@ export default {
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         pulseGlow: {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(255, 149, 0, 0.12)' },
-          '50%': { boxShadow: '0 0 30px rgba(255, 149, 0, 0.25)' },
+          '0%, 100%': { boxShadow: '0 0 20px rgba(232, 133, 10, 0.10)' },
+          '50%': { boxShadow: '0 0 30px rgba(232, 133, 10, 0.22)' },
         },
         float: {
           '0%, 100%': { transform: 'translateY(0)' },

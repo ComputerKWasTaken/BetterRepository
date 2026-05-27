@@ -6,7 +6,7 @@
 
 /* ============================================
    BetterRepository - Global Styles
-   Dark Mode Stylization
+   Ember V2 Theme Stylization
    ============================================ */
 
 /* === Base Styles === */
@@ -29,7 +29,7 @@ body {
 /* === Selection === */
 ::selection {
   background-color: var(--bd-accent-glow);
-  color: var(--bd-text-primary);
+  color: var(--bd-accent-light);
 }
 
 /* === Scrollbar Styling === */
@@ -72,7 +72,7 @@ body {
   }
 
   .btn-primary {
-    @apply bg-gradient-to-br from-bd-accent-primary to-bd-accent-secondary text-bd-text-inverse hover:from-bd-accent-light hover:to-bd-accent-primary shadow-md hover:shadow-lg;
+    @apply bg-bd-accent-primary text-bd-text-inverse hover:bg-bd-accent-light shadow-md hover:shadow-lg transition-all duration-150;
   }
 
   .btn-secondary {
@@ -109,7 +109,7 @@ body {
   }
 
   .tag-accent {
-    @apply bg-bd-accent-primary/20 text-bd-accent-light;
+    @apply bg-bd-accent-primary/20 text-bd-accent-light border border-bd-accent-primary/10;
   }
 
   /* Navigation link */
@@ -118,7 +118,7 @@ body {
   }
 
   .nav-link.active {
-    @apply bg-gradient-to-r from-bd-accent-primary to-bd-accent-secondary text-bd-text-inverse font-medium;
+    @apply bg-bd-accent-primary/10 text-bd-accent-light border border-bd-accent-primary/20 font-medium;
   }
 
   /* Section header */
