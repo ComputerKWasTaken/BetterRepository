@@ -689,8 +689,8 @@ const sdkCode = `// ============================================================
 // Then in every modifier:  bd.us.tick();  ...your code...  bd.us.commit();
 // ============================================================
 
-state.bd = state.bd || {};
-var bd = state.bd;
+globalThis.bd = globalThis.bd || {};
+var bd = globalThis.bd;
 bd.us = bd.us || {};
 
 // --- internal state (kept across turns via 'state') ---

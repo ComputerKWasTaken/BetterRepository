@@ -280,8 +280,8 @@
               Wrap heartbeat lookups behind a small helper so scenario code reads cleanly. Drop this into your <strong>Library</strong> script and reuse it across modifiers.
             </p>
             <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">// Library Script
-state.bd = state.bd || {};
-var bd = state.bd;
+globalThis.bd = globalThis.bd || {};
+var bd = globalThis.bd;
 bd.sdk = bd.sdk || {};
 
 function getHeartbeat() {
@@ -339,6 +339,7 @@ bd.sdk.hasOp = function (moduleId, opName) {
             </p>
 
             <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">state.bd = state.bd || {};
+globalThis.bd = globalThis.bd || {};
 state.bd.creator = state.bd.creator || {};
 
 bd.us.tick();
