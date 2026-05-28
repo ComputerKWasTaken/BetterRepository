@@ -1092,6 +1092,7 @@ modifier(text);</pre>
           <h3 class="text-sm font-semibold text-bd-text-primary">Ultrascripts scripts come in two flavors</h3>
           <p class="text-xs text-bd-text-secondary mt-1">
             Some scripts use BetterDungeon as an upgrade path. Others depend on Ultrascripts for their core mechanic. Browse them as different promises.
+            Start with the matching template before building a complete script.
           </p>
         </div>
         <div class="grid md:grid-cols-2 gap-3">

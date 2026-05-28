@@ -470,6 +470,20 @@ export const SCRIPTS = [
     purpose: 'Provides a standard bd.us-style helper, heartbeat checks, op calls, response polling, Scripture publishing, and safe fallback behavior. Use it as the launchpad for new Ultrascripts-powered scripts.',
     requiresExtension: 'BetterDungeon',
     ultrascriptsMode: 'enhanced'
+  },
+  {
+    id: 'ultrascripts-required-template',
+    name: 'Requires Ultrascripts Template',
+    category: 'ultrascripts-required',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: true,
+    tags: ['ultrascripts', 'template', 'sdk', 'required', 'widgets', 'heartbeat', 'starter'],
+    source: 'BetterRepository',
+    description: 'A clean multi-file starter for AI Dungeon scripts whose core behavior requires BetterDungeon and Ultrascripts.',
+    purpose: 'Provides the same bd.us-style helper as the enhanced starter, plus hard runtime/module gating, clear player-facing requirement messages, response polling, acks, and Scripture publishing for scripts that cannot run meaningfully without Ultrascripts.',
+    requiresExtension: 'BetterDungeon',
+    ultrascriptsMode: 'required'
   }
 ]
 

@@ -198,7 +198,7 @@ BetterRepository now has public Ultrascripts guides for:
 - System
 
 The next documentation track is not filling gaps in the guide set; it is
-replacing temporary examples with a standard script template and then reviewing
+keeping the Enhanced and Required script templates aligned while reviewing
 modules one at a time for conceptual polish.
 
 ## 10. Intentionally not in public docs

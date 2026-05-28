@@ -396,6 +396,7 @@ modifier(text);</pre>
               <p class="text-xs text-bd-text-secondary">
                 BetterDungeon ships <strong>Ultrascripts</strong>, a cards-based scripting platform that gives scenarios dynamic UI widgets,
                 external API access, hosted AI calls, and real-world context (time, weather, geolocation) through a bidirectional Story Card bridge.
+                Start from the Enhanced template for graceful fallback, or the Required template when BetterDungeon is part of the scenario contract.
               </p>
               <div class="grid md:grid-cols-2 gap-3 text-[11px]">
                 <div class="p-3 rounded bg-bd-bg-primary border border-bd-emerald/20">
