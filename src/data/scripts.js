@@ -458,60 +458,18 @@ export const SCRIPTS = [
   // 1. Enhanced with Ultrascripts: core scenario still works without the runtime.
   // 2. Requires Ultrascripts: core behavior depends on BetterDungeon being present.
   {
-    id: 'ultrascripts-simple-counter',
-    name: 'Simple Turn Counter',
-    category: 'ultrascripts-required',
-    difficulty: 'beginner',
-    impact: 'low',
-    essential: true,
-    tags: ['widgets', 'counter', 'turn', 'ultrascripts', 'stat-widget', 'minimal'],
-    source: 'BetterRepository',
-    description: 'Minimal example: displays turn count and a location badge using BetterDungeon sidebar widgets.',
-    purpose: 'A smallest-possible Ultrascripts-style sidebar example. Good for learning the extension-powered UI path before moving to larger systems.',
-    requiresExtension: 'BetterDungeon',
-    ultrascriptsMode: 'required'
-  },
-  {
-    id: 'chronos-time-system',
-    name: 'Chronos Time System',
+    id: 'ultrascripts-starter-template',
+    name: 'Ultrascripts Starter Template',
     category: 'ultrascripts-enhanced',
     difficulty: 'intermediate',
-    impact: 'high',
+    impact: 'medium',
     essential: true,
-    tags: ['widgets', 'time', 'clock', 'day-night', 'weather', 'ultrascripts', 'context', 'commands'],
+    tags: ['ultrascripts', 'template', 'sdk', 'widgets', 'heartbeat', 'clock', 'starter'],
     source: 'BetterRepository',
-    description: 'A direct-tracking time and weather engine for AI Dungeon with optional BetterDungeon-enhanced display.',
-    purpose: 'Keeps the AI aware of current time, date, and environment. The core simulation works as a normal script, while BetterDungeon can enhance it with sidebar-style display.',
+    description: 'A clean multi-file starter for building AI Dungeon scripts that are enhanced by BetterDungeon and Ultrascripts.',
+    purpose: 'Provides a standard bd.us-style helper, heartbeat checks, op calls, response polling, Scripture publishing, and safe fallback behavior. Use it as the launchpad for new Ultrascripts-powered scripts.',
     requiresExtension: 'BetterDungeon',
     ultrascriptsMode: 'enhanced'
-  },
-  {
-    id: 'ultrascripts-debug-console',
-    name: 'Ultrascripts Debug Console',
-    category: 'ultrascripts-required',
-    difficulty: 'intermediate',
-    impact: 'high',
-    essential: true,
-    tags: ['widgets', 'debug', 'testing', 'ultrascripts', 'commands', 'developer-tool', 'test-suite'],
-    source: 'BetterRepository',
-    description: 'Interactive debug console for testing BetterDungeon heartbeat detection and Scripture widget rendering.',
-    purpose: 'Type :help for commands. Use :demo, :clear, and :status to exercise the extension-powered widget path with real Ultrascripts state cards.',
-    requiresExtension: 'BetterDungeon',
-    ultrascriptsMode: 'required'
-  },
-  {
-    id: 'ultrascripts-widget-showcase',
-    name: 'Ultrascripts Widget Showcase',
-    category: 'ultrascripts-required',
-    difficulty: 'beginner',
-    impact: 'low',
-    essential: false,
-    tags: ['widgets', 'demo', 'showcase', 'ultrascripts', 'testing', 'all-widgets'],
-    source: 'BetterRepository',
-    description: 'Displays the full BetterDungeon widget surface for visual testing.',
-    purpose: 'Creates one of every extension-powered widget style for layout and rendering checks. Best used when BetterDungeon is the point of the script.',
-    requiresExtension: 'BetterDungeon',
-    ultrascriptsMode: 'required'
   }
 ]
 

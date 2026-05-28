@@ -55,14 +55,14 @@
         <button @click="toggleGuideSection('overview')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <BrainCircuit class="w-5 h-5 text-bd-purple" />
-            Provider AI Module Overview
+            AI Module Overview
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('overview') }" />
         </button>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('overview')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
             <p>
-              <strong>Provider AI</strong> (module id <code class="text-bd-green">ai</code>, alias <code class="text-bd-green">providerAI</code>) is Ultrascripts'
+              The <strong>AI module</strong> (module id <code class="text-bd-green">ai</code>, legacy alias <code class="text-bd-green">providerAI</code>) is Ultrascripts'
               bridge to hosted language models through the player's own <strong>OpenRouter</strong> account. Scenarios can run a "second brain"
               alongside AI Dungeon's main generation: a critic, a planner, a JSON-extractor, a Co-GM, a translator, an inventory bookkeeper &mdash;
               any model task that benefits from a dedicated prompt outside the core narrative.
@@ -90,7 +90,7 @@
             </div>
 
             <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-              <h4 class="font-semibold text-bd-text-primary text-[12px] mb-1.5">Three ways scenarios use Provider AI</h4>
+                <h4 class="font-semibold text-bd-text-primary text-[12px] mb-1.5">Three ways scenarios use the AI module</h4>
               <ul class="space-y-1 text-[11px]">
                 <li>&middot; <strong>Co-GM narration</strong> &mdash; a smaller, faster model writes ambient flavor that the main model would waste tokens on.</li>
                 <li>&middot; <strong>Structured extraction</strong> &mdash; force a JSON output describing characters, items, or scene metadata so Scripture widgets can render it.</li>
@@ -124,7 +124,7 @@
               </li>
               <li class="flex gap-2">
                 <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center flex-shrink-0">2</span>
-                <span>Open the BetterDungeon popup &rarr; <strong>Ultrascripts</strong> tab &rarr; <strong>Provider AI</strong> section.</span>
+                <span>Open the BetterDungeon popup &rarr; <strong>Ultrascripts</strong> tab &rarr; <strong>AI</strong> section.</span>
               </li>
               <li class="flex gap-2">
                 <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center flex-shrink-0">3</span>
@@ -140,7 +140,7 @@
               <p class="text-[11px]">
                 <strong class="text-bd-amber">For scenario authors:</strong> Detect configuration through the SDK module rather than guessing.
                 Call <code class="text-bd-green">sdk.config</code> and read <code class="text-bd-green">ultrascripts.ai.configured</code>.
-                If <code>false</code>, render a friendly &quot;configure Provider AI in the extension popup&quot; message instead of letting <code>ai.chat</code> fail.
+                If <code>false</code>, render a friendly &quot;configure AI in the extension popup&quot; message instead of letting <code>ai.chat</code> fail.
               </p>
             </div>
           </div>
@@ -504,7 +504,7 @@ state.bd.pickAiModel = function (cfg) {
                   <Check class="w-4 h-4" /> Do
                 </h4>
                 <ul class="space-y-1 text-[11px] text-bd-text-secondary">
-                  <li>&middot; Keep system prompts <strong>short and specific</strong>. Provider AI is best at one job at a time.</li>
+                  <li>&middot; Keep system prompts <strong>short and specific</strong>. The AI module is best at one job at a time.</li>
                   <li>&middot; Pin <code>temperature</code> low (0.0&ndash;0.2) when extracting JSON; raise it for creative narration.</li>
                   <li>&middot; Pick a default <strong>free-tier</strong> model so free-only players can use the scenario unchanged.</li>
                   <li>&middot; Always check <code>sdk.config.ultrascripts.ai.configured</code> before the first call.</li>
@@ -517,7 +517,7 @@ state.bd.pickAiModel = function (cfg) {
                   <X class="w-4 h-4" /> Avoid
                 </h4>
                 <ul class="space-y-1 text-[11px] text-bd-text-secondary">
-                  <li>&middot; Don't try to make Provider AI <strong>replace</strong> the main AI Dungeon model &mdash; orchestrate alongside it.</li>
+                  <li>&middot; Don't try to make the AI module <strong>replace</strong> the main AI Dungeon model &mdash; orchestrate alongside it.</li>
                   <li>&middot; Don't issue a chat call on every modifier; rate-limit to once per turn at most.</li>
                   <li>&middot; Don't treat <code>ai.chat</code> as idempotent. Replays on undo will burn quota.</li>
                   <li>&middot; Don't bake your own API key into a script &mdash; only the player's key in the popup is supported.</li>

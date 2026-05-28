@@ -323,6 +323,13 @@ if (!bd.us.available() || !bd.us.has('ai', 'chat')) {
 }
 
 var cfg = bd.us.latest('sdk', 'config');
+if (!cfg &amp;&amp; bd.us.has('sdk', 'config')) {
+  bd.us.call('sdk', 'config');
+  bd.us.commit();
+  text = '[Checking BetterDungeon AI configuration. Try one more action after the SDK reply arrives.]\n' + text;
+  return text;
+}
+
 var aiReady = cfg
   &amp;&amp; cfg.status === 'ok'
   &amp;&amp; cfg.data
