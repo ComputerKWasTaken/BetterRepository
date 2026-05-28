@@ -770,7 +770,7 @@ bd.us.latest = function (moduleId, opName) {
   var prefix = opName ? (moduleId + '.' + opName + '#') : null;
   var best = null;
   for (var reqId in bucket) {
-    if (prefix &amp;&amp; reqId.indexOf(prefix) !== 0) continue;
+    if (prefix && reqId.indexOf(prefix) !== 0) continue;
     var r = bucket[reqId];
     if (!best || (r.completedLiveCount || 0) > (best.completedLiveCount || 0)) best = r;
   }
@@ -791,8 +791,8 @@ bd.us.defineScripture = function (manifest) {
   bd.us.scripture = {
     v: 1,
     manifest: manifest,
-    history: (existing &amp;&amp; existing.history) || {},
-    interactions: (existing &amp;&amp; existing.interactions) || { ackSeq: 0 }
+    history: (existing && existing.history) || {},
+    interactions: (existing && existing.interactions) || { ackSeq: 0 }
   };
 };
 
@@ -806,9 +806,9 @@ bd.us.publishScripture = function (values) {
 // --- Scripture: read sidebar widget events and ack by sequence ---
 bd.us.scriptureEvents = function () {
   var card = bd.us._parseCard('ultrascripts:in:scripture');
-  var events = (card &amp;&amp; card.widgetEvents &amp;&amp; card.widgetEvents.events) || [];
-  var ackSeq = (bd.us.scripture &amp;&amp; bd.us.scripture.interactions &amp;&amp; bd.us.scripture.interactions.ackSeq) || 0;
-  return events.filter(function (e) { return e &amp;&amp; Number(e.seq || 0) > ackSeq; });
+  var events = (card && card.widgetEvents && card.widgetEvents.events) || [];
+  var ackSeq = (bd.us.scripture && bd.us.scripture.interactions && bd.us.scripture.interactions.ackSeq) || 0;
+  return events.filter(function (e) { return e && Number(e.seq || 0) > ackSeq; });
 };
 bd.us.ackScripture = function (seq) {
   if (!bd.us.scripture) return;
@@ -818,7 +818,7 @@ bd.us.ackScripture = function (seq) {
 
 // --- write the queued requests + acks to ultrascripts:out ---
 bd.us.commit = function () {
-  if (bd.us._pendingRequests.length === 0 &amp;&amp; bd.us._pendingAcks.length === 0) return;
+  if (bd.us._pendingRequests.length === 0 && bd.us._pendingAcks.length === 0) return;
   var payload = { v: 1, requests: bd.us._pendingRequests, acks: bd.us._pendingAcks };
   bd.us._upsertCard('ultrascripts:out', JSON.stringify(payload));
   bd.us._pendingRequests = [];

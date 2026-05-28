@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-8">
+  <div ref="pageRoot" class="space-y-8">
     <!-- Page Header with animated hero -->
     <header class="ultrascripts-hero relative overflow-hidden rounded-2xl py-12 px-6">
       <!-- Animated background orbs -->
@@ -96,7 +96,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import UltrascriptsGuide from '@/components/guides/UltrascriptsGuide.vue'
 import UltrascriptsQuickStartGuide from '@/components/guides/UltrascriptsQuickStartGuide.vue'
@@ -119,6 +119,7 @@ import {
 
 const route = useRoute()
 const router = useRouter()
+const pageRoot = ref(null)
 
 // Foundation tabs cover orientation, the paved adoption path (Quick Start + Cookbook),
 // and the deeper platform-level docs (Architecture, Building Modules).
@@ -147,6 +148,100 @@ const allTabs = [...foundationTabs, ...moduleTabs]
 const validTabIds = allTabs.map(t => t.id)
 const activeTab = ref('overview')
 
+const enhanceCodeBlocks = async () => {
+  await nextTick()
+
+  var root = pageRoot.value
+  if (!root) return
+
+  var blocks = root.querySelectorAll('pre')
+  blocks.forEach(function (pre) {
+    if (!(pre instanceof HTMLElement)) return
+    if (pre.dataset.codeEnhanced === 'true') return
+    if (!pre.textContent || !pre.textContent.trim()) return
+
+    pre.dataset.codeEnhanced = 'true'
+
+    var wrapper = document.createElement('div')
+    wrapper.className = 'us-code-block'
+    wrapper.style.position = 'relative'
+    wrapper.style.border = '1px solid var(--bd-border-subtle)'
+    wrapper.style.borderRadius = '0.75rem'
+    wrapper.style.background = 'var(--bd-bg-tertiary)'
+    wrapper.style.overflow = 'hidden'
+
+    var parent = pre.parentNode
+    if (!parent) return
+    parent.insertBefore(wrapper, pre)
+    wrapper.appendChild(pre)
+
+    pre.style.margin = '0'
+    pre.style.border = '0'
+    pre.style.borderRadius = '0'
+    pre.style.background = 'transparent'
+    pre.style.padding = '1rem'
+    pre.style.overflowX = 'auto'
+    pre.style.overflowY = 'auto'
+    pre.style.maxHeight = '28rem'
+    pre.style.maxWidth = '100%'
+    pre.style.whiteSpace = 'pre'
+    pre.style.scrollbarWidth = 'thin'
+
+    var button = document.createElement('button')
+    button.type = 'button'
+    button.textContent = 'Copy'
+    button.setAttribute('aria-label', 'Copy code block')
+    button.style.position = 'absolute'
+    button.style.top = '0.5rem'
+    button.style.right = '0.5rem'
+    button.style.zIndex = '1'
+    button.style.display = 'inline-flex'
+    button.style.alignItems = 'center'
+    button.style.justifyContent = 'center'
+    button.style.padding = '0.375rem 0.625rem'
+    button.style.borderRadius = '0.5rem'
+    button.style.border = '1px solid var(--bd-border-subtle)'
+    button.style.background = 'var(--bd-bg-primary)'
+    button.style.color = 'var(--bd-text-secondary)'
+    button.style.fontSize = '0.6875rem'
+    button.style.fontWeight = '600'
+    button.style.cursor = 'pointer'
+    button.style.transition = 'all 0.15s ease'
+    button.style.backdropFilter = 'blur(8px)'
+    button.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.18)'
+
+    button.addEventListener('mouseenter', function () {
+      button.style.background = 'var(--bd-bg-secondary)'
+      button.style.color = 'var(--bd-text-primary)'
+    })
+    button.addEventListener('mouseleave', function () {
+      button.style.background = 'var(--bd-bg-primary)'
+      button.style.color = 'var(--bd-text-secondary)'
+    })
+    button.addEventListener('click', async function () {
+      try {
+        await navigator.clipboard.writeText(pre.textContent || '')
+        var oldText = button.textContent
+        button.textContent = 'Copied!'
+        button.style.color = 'var(--bd-green)'
+        window.setTimeout(function () {
+          button.textContent = oldText || 'Copy'
+          button.style.color = 'var(--bd-text-secondary)'
+        }, 1800)
+      } catch (e) {
+        button.textContent = 'Copy failed'
+        button.style.color = 'var(--bd-red)'
+        window.setTimeout(function () {
+          button.textContent = 'Copy'
+          button.style.color = 'var(--bd-text-secondary)'
+        }, 1800)
+      }
+    })
+
+    wrapper.appendChild(button)
+  })
+}
+
 // Switch active tab and persist selection in the URL for shareable deep links.
 const switchTab = (tabId) => {
   activeTab.value = tabId
@@ -158,6 +253,7 @@ onMounted(() => {
   if (route.query.tab && validTabIds.includes(route.query.tab)) {
     activeTab.value = route.query.tab
   }
+  enhanceCodeBlocks()
 })
 
 // Sync with browser back/forward and external link changes.
@@ -167,6 +263,10 @@ watch(() => route.query.tab, (newTab) => {
   } else if (!newTab) {
     activeTab.value = 'overview'
   }
+})
+
+watch(activeTab, () => {
+  enhanceCodeBlocks()
 })
 </script>
 
