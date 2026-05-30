@@ -126,10 +126,29 @@ function createUltrascriptsSdk() {
   }
 
   function heartbeat() {
-    var hb = parseCard('ultrascripts:heartbeat');
-    if (!hb || !hb.ultrascripts || hb.ultrascripts.protocol !== 1) return null;
-    if (hb.ultrascripts.client !== 'BetterDungeon') return null;
-    return hb;
+    var cards = (typeof storyCards !== 'undefined' && Array.isArray(storyCards)) ? storyCards : [];
+    var best = null;
+    var bestScore = -1;
+    for (var i = 0; i < cards.length; i++) {
+      if (!cards[i] || cards[i].title !== 'ultrascripts:heartbeat') continue;
+      try {
+        var hb = JSON.parse(cards[i].value || '{}');
+        var score = heartbeatScore(hb);
+        if (score > bestScore) {
+          best = hb;
+          bestScore = score;
+        }
+      } catch (e) {}
+    }
+    return best;
+  }
+
+  function heartbeatScore(hb) {
+    if (!hb || !hb.ultrascripts || hb.ultrascripts.protocol !== 1) return -1;
+    if (hb.ultrascripts.client !== 'BetterDungeon' || hb.ultrascripts.archived) return -1;
+    var moduleCount = moduleList(hb).length;
+    var writtenAt = Date.parse(hb.writtenAt || '') || 0;
+    return moduleCount * 10000000000000 + writtenAt;
   }
 
   function moduleList(hb) {

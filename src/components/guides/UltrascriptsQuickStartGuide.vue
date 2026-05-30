@@ -717,12 +717,40 @@ bd.us._parseCard = function (title) {
   if (!c) return null;
   try { return JSON.parse(c.value || '{}'); } catch (e) { return null; }
 };
+bd.us._parseCards = function (title) {
+  var cards = Array.isArray(storyCards) ? storyCards : [];
+  var parsed = [];
+  for (var i = 0; i < cards.length; i++) {
+    if (!cards[i] || cards[i].title !== title) continue;
+    try { parsed.push(JSON.parse(cards[i].value || '{}')); } catch (e) {}
+  }
+  return parsed;
+};
 
 // --- live count (current action) ---
 bd.us.liveCount = function () { return (info && info.actionCount) || 0; };
 
 // --- heartbeat-based capability check ---
-bd.us.heartbeat = function () { return bd.us._parseCard('ultrascripts:heartbeat'); };
+bd.us._heartbeatScore = function (hb) {
+  if (!hb || !hb.ultrascripts || hb.ultrascripts.protocol !== 1) return -1;
+  if (hb.ultrascripts.client !== 'BetterDungeon' || hb.ultrascripts.archived) return -1;
+  var moduleCount = bd.us._moduleList(hb).length;
+  var writtenAt = Date.parse(hb.writtenAt || '') || 0;
+  return moduleCount * 10000000000000 + writtenAt;
+};
+bd.us.heartbeat = function () {
+  var cards = bd.us._parseCards('ultrascripts:heartbeat');
+  var best = null;
+  var bestScore = -1;
+  for (var i = 0; i < cards.length; i++) {
+    var score = bd.us._heartbeatScore(cards[i]);
+    if (score > bestScore) {
+      best = cards[i];
+      bestScore = score;
+    }
+  }
+  return best;
+};
 bd.us.available = function () { return !!bd.us.heartbeat(); };
 bd.us._moduleList = function (hb) {
   var raw = hb && hb.modules;

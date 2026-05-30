@@ -286,12 +286,29 @@ bd.sdk = bd.sdk || {};
 
 function getHeartbeat() {
   var cards = Array.isArray(storyCards) ? storyCards : [];
+  var best = null;
+  var bestScore = -1;
   for (var i = 0; i < cards.length; i++) {
     if (cards[i] &amp;&amp; cards[i].title === 'ultrascripts:heartbeat') {
-      try { return JSON.parse(cards[i].value || '{}'); } catch (e) { return null; }
+      try {
+        var hb = JSON.parse(cards[i].value || '{}');
+        var score = heartbeatScore(hb);
+        if (score > bestScore) {
+          best = hb;
+          bestScore = score;
+        }
+      } catch (e) {}
     }
   }
-  return null;
+  return best;
+}
+
+function heartbeatScore(hb) {
+  if (!hb || !hb.ultrascripts || hb.ultrascripts.protocol !== 1) return -1;
+  if (hb.ultrascripts.client !== 'BetterDungeon' || hb.ultrascripts.archived) return -1;
+  var moduleCount = normalizeModules(hb).length;
+  var writtenAt = Date.parse(hb.writtenAt || '') || 0;
+  return moduleCount * 10000000000000 + writtenAt;
 }
 
 bd.sdk.runtimePresent = function () {
