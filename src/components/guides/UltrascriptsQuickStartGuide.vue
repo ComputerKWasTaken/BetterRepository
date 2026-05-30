@@ -278,6 +278,11 @@ var hp = state.hp !== undefined ? state.hp : 100;
 var usReady = bd.us.available();
 
 if (usReady &amp;&amp; bd.us.has('scripture')) {
+  bd.us.defineScripture({
+    widgets: [
+      { id: 'hp', type: 'bar', label: 'HP', max: 100, color: '#22c55e' }
+    ]
+  });
   bd.us.publishScripture({ hp: hp });
 } else {
   text += '\n[HP: ' + hp + '/100]';
