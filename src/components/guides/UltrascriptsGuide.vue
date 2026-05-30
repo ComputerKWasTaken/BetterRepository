@@ -64,6 +64,15 @@
                 <BookOpen class="w-3.5 h-3.5" />
                 Cookbook
               </router-link>
+              <a
+                href="https://github.com/ComputerKWasTaken/BetterDungeon/tree/two-way-communication/services/ultrascripts"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-bd-cyan/15 hover:bg-bd-cyan/25 border border-bd-cyan/30 text-bd-cyan text-xs font-semibold transition-colors"
+              >
+                <GitMerge class="w-3.5 h-3.5" />
+                Core source
+              </a>
               <span class="text-[10px] text-bd-text-muted">&middot; or keep reading below for the platform overview</span>
             </div>
           </div>
@@ -117,7 +126,7 @@
                   Environmental Awareness
                 </h3>
                 <p class="text-bd-text-secondary">
-                  Clock, Weather, Geolocation, and System modules ground scenarios in real-world context — time of day, local weather, geographic coordinates, and platform capabilities.
+                  Clock, Weather, Geolocation, and System modules ground scenarios in real-world context &mdash; time of day, local weather, geographic coordinates, and platform capabilities.
                 </p>
               </div>
             </div>
@@ -131,7 +140,7 @@
               <div class="grid md:grid-cols-3 gap-2 text-[11px]">
                 <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
                   <strong class="text-bd-green block">Scripture</strong>
-                  <span class="text-bd-text-muted">State module — dynamic widget rendering</span>
+                  <span class="text-bd-text-muted">State module &mdash; dynamic widget rendering</span>
                 </div>
                 <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
                   <strong class="text-bd-blue block">WebFetch</strong>
@@ -171,6 +180,65 @@
         </Transition>
       </section>
 
+      <!-- ===================== HOW TO USE THESE DOCS ===================== -->
+      <section id="guide-how-to-read" class="card">
+        <button
+          @click="toggleGuideSection('how-to-read')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Wrench class="w-5 h-5 text-bd-amber" />
+            How To Use These Docs
+          </h2>
+          <ChevronDown
+            class="w-5 h-5 text-bd-text-muted transition-transform"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('how-to-read') }"
+          />
+        </button>
+
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('how-to-read')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
+            <p>
+              The docs are intentionally split into a small copy-paste surface and deeper module references. Start with the code that gets you moving,
+              then use each module page to understand what to ask for, what shape comes back, and how to degrade when the player does not have that
+              capability enabled.
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-1">
+                <h4 class="font-semibold text-bd-amber text-[12px]">1. Paste the helper</h4>
+                <p class="text-[11px]">
+                  Quick Start contains the SDK helper. Paste it into the AI Dungeon <strong>Library</strong> script once. That gives every hook access
+                  to <code class="text-bd-green">bd.us</code>.
+                </p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
+                <h4 class="font-semibold text-bd-blue text-[12px]">2. Pick a module</h4>
+                <p class="text-[11px]">
+                  Module pages explain the purpose, ops, arguments, result fields, and practical author flow. They are guides for what to build,
+                  not giant paste bins.
+                </p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
+                <h4 class="font-semibold text-bd-green text-[12px]">3. Use the loop</h4>
+                <p class="text-[11px]">
+                  In Context, call <code>bd.us.tick()</code>, read prior results with <code>bd.us.latest()</code>, queue new work with
+                  <code>bd.us.call()</code>, then finish with <code>bd.us.commit()</code>.
+                </p>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-lg bg-bd-cyan/10 border border-bd-cyan/30">
+              <h4 class="font-semibold text-bd-cyan text-[12px] mb-1">What module pages are for</h4>
+              <p class="text-[11px]">
+                Use the Operations Reference to know the exact contract, the Usage Pattern to know when and where to call it, and Pitfalls to avoid
+                the common broken-script cases. When you need a full runnable starting point, return to Quick Start or the starter templates.
+              </p>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
       <!-- ===================== TRANSPORT ARCHITECTURE ===================== -->
       <section id="guide-transport" class="card">
         <button
@@ -190,7 +258,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('transport')" class="mt-4 space-y-6 text-xs text-bd-text-secondary">
             <p class="text-bd-text-secondary">
-              Ultrascripts communicates through AI Dungeon's Story Card system. Scripts publish data by writing specially-typed Story Cards. BetterDungeon reads them, processes them, and writes responses back through the same channel. No custom server, no separate API — just cards.
+              Ultrascripts communicates through AI Dungeon's Story Card system. Scripts publish data by writing specially-typed Story Cards. BetterDungeon reads them, processes them, and writes responses back through the same channel. No custom server, no separate API &mdash; just cards.
             </p>
 
             <!-- Transport Flow Diagram -->
@@ -253,7 +321,7 @@
               <p class="text-bd-text-secondary">
                 BetterDungeon writes a <code class="text-bd-green">ultrascripts:heartbeat</code> card on every adventure load. This card advertises the runtime version, which modules are mounted, and what ops each module exposes. Scripts inspect this card to detect Ultrascripts availability.
               </p>
-              <p class="text-[10px] text-bd-text-muted">The heartbeat fires at turn-0 with no dependency on prior user card edits. It is the sole discovery surface — if the heartbeat is present, the runtime is live.</p>
+              <p class="text-[10px] text-bd-text-muted">The heartbeat fires at turn-0 with no dependency on prior user card edits. It is the sole discovery surface &mdash; if the heartbeat is present, the runtime is live.</p>
             </div>
           </div>
         </Transition>
@@ -485,6 +553,7 @@ import {
 const guideSections = [
   { id: 'header-core', label: 'Platform Overview', isHeader: true },
   { id: 'what-is', label: 'What Is Ultrascripts' },
+  { id: 'how-to-read', label: 'How To Use These Docs' },
   { id: 'transport', label: 'Story Card Transport' },
   { id: 'header-safety', label: 'Safety & Platforms', isHeader: true },
   { id: 'security', label: 'Security & Consent' },

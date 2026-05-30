@@ -43,6 +43,40 @@
                 publish optional Scripture state, queue new capability-checked requests, then call <code>bd.us.commit()</code>.
               </p>
             </div>
+            <p class="text-[11px] text-bd-text-muted">
+              Treat this page as a design map: decide what capability you need here, then open the linked module guide for the exact operation
+              contract or Quick Start for the reviewed SDK helper.
+            </p>
+          </div>
+        </Transition>
+      </section>
+
+      <section id="guide-flow" class="card">
+        <button @click="toggleGuideSection('flow')" class="w-full flex items-center justify-between text-left">
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <ListChecks class="w-5 h-5 text-bd-amber" />
+            Recipe Flow
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('flow') }" />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('flow')" class="mt-4 grid md:grid-cols-4 gap-3 text-xs text-bd-text-secondary">
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-1">
+              <h4 class="font-semibold text-bd-amber text-[12px]">1. Detect</h4>
+              <p class="text-[11px]">Use <code>bd.us.available()</code> and <code>bd.us.has(module, op)</code> before depending on a capability.</p>
+            </div>
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
+              <h4 class="font-semibold text-bd-blue text-[12px]">2. Read</h4>
+              <p class="text-[11px]">Read previous results first with <code>bd.us.latest()</code>. Responses are never same-turn.</p>
+            </div>
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
+              <h4 class="font-semibold text-bd-purple text-[12px]">3. Decide</h4>
+              <p class="text-[11px]">Convert raw module data into small story flags, context notes, or Scripture widget values.</p>
+            </div>
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
+              <h4 class="font-semibold text-bd-green text-[12px]">4. Queue</h4>
+              <p class="text-[11px]">Queue the next request only if useful, then call <code>bd.us.commit()</code> once at the end.</p>
+            </div>
           </div>
         </Transition>
       </section>
@@ -64,6 +98,32 @@
               </h4>
               <p>{{ pattern.summary }}</p>
               <p class="text-[11px] text-bd-text-muted" v-html="pattern.guidance"></p>
+              <router-link :to="pattern.link" class="inline-flex text-[11px] font-semibold text-bd-amber hover:underline">
+                Open {{ pattern.module }} guide
+              </router-link>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
+      <section id="guide-source" class="card">
+        <button @click="toggleGuideSection('source')" class="w-full flex items-center justify-between text-left">
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Code2 class="w-5 h-5 text-bd-cyan" />
+            Source Map
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('source') }" />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('source')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
+            <p>
+              These docs describe the public contract. When you need the hard implementation reference, use the BetterDungeon source folders below.
+            </p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-2 text-[11px]">
+              <a v-for="source in sourceLinks" :key="source.label" :href="source.href" target="_blank" rel="noopener noreferrer" class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle hover:border-bd-cyan/50 transition-colors">
+                <strong class="block text-bd-text-primary">{{ source.label }}</strong>
+                <span class="text-bd-text-muted">{{ source.summary }}</span>
+              </a>
             </div>
           </div>
         </Transition>
@@ -139,8 +199,10 @@
 import { ref } from 'vue'
 import {
   BookOpen, BrainCircuit, ChevronDown, ChevronUp, Clock, CloudSun, Cpu, Globe,
-  Heart, Search, ShieldCheck, Sparkles, Wand2, Zap
+  Code2, Heart, ListChecks, Search, ShieldCheck, Sparkles, Wand2, Zap
 } from 'lucide-vue-next'
+
+const sourceBase = 'https://github.com/ComputerKWasTaken/BetterDungeon/tree/two-way-communication'
 
 const patterns = [
   {
@@ -148,56 +210,85 @@ const patterns = [
     icon: Heart,
     iconClass: 'text-bd-green',
     summary: 'Publish compact Scripture state for HP, mana, location, and status tags.',
-    guidance: 'Use <code>bd.us.defineScripture(...)</code> once, then <code>bd.us.publishScripture(...)</code> from Context.'
+    guidance: 'Use <code>bd.us.defineScripture(...)</code> once, then <code>bd.us.publishScripture(...)</code> from Context.',
+    link: '/ultrascripts?tab=scripture',
+    module: 'Scripture'
   },
   {
     title: 'Time Of Day',
     icon: Clock,
     iconClass: 'text-bd-amber',
     summary: 'Tint narration from the player local clock without hand-editing story cards.',
-    guidance: 'Queue <code>clock.now</code>, read <code>data.time</code> next turn, then append a short context note.'
+    guidance: 'Queue <code>clock.now</code>, read <code>data.time</code> next turn, then append a short context note.',
+    link: '/ultrascripts?tab=clock',
+    module: 'Clock'
   },
   {
     title: 'Weather Gameplay',
     icon: CloudSun,
     iconClass: 'text-bd-cyan',
     summary: 'Apply light mechanical flavor from real weather data.',
-    guidance: 'Request <code>weather.current</code> sparingly and read <code>data.current.weatherCode</code>.'
+    guidance: 'Request <code>weather.current</code> sparingly and read <code>data.current.weatherCode</code>.',
+    link: '/ultrascripts?tab=weather',
+    module: 'Weather'
   },
   {
     title: 'AI Co-GM',
     icon: BrainCircuit,
     iconClass: 'text-bd-purple',
     summary: 'Ask a secondary model for short flavor, summaries, or structured extraction.',
-    guidance: 'Gate on <code>sdk.config</code>, use <code>ai.chat</code>, and consume the response on a later turn.'
+    guidance: 'Gate on <code>sdk.config</code>, use <code>ai.chat</code>, and consume the response on a later turn.',
+    link: '/ultrascripts?tab=ai',
+    module: 'AI'
   },
   {
     title: 'Structured Extraction',
     icon: Wand2,
     iconClass: 'text-bd-blue',
     summary: 'Convert prose into JSON that drives scenario state or widgets.',
-    guidance: 'Use <code>responseFormat: { type: "json_object" }</code>, low temperature, and defensive parsing.'
+    guidance: 'Use <code>responseFormat: { type: "json_object" }</code>, low temperature, and defensive parsing.',
+    link: '/ultrascripts?tab=ai',
+    module: 'AI'
   },
   {
     title: 'External Data',
     icon: Globe,
     iconClass: 'text-bd-blue',
     summary: 'Fetch approved external data once, then cache it on plain scenario state.',
-    guidance: 'Use <code>webfetch.fetch</code> or <code>webfetch.search</code> only after consent and capability checks.'
+    guidance: 'Use <code>webfetch.fetch</code> or <code>webfetch.search</code> only after consent and capability checks.',
+    link: '/ultrascripts?tab=webfetch',
+    module: 'WebFetch'
   },
   {
     title: 'Adaptive Layout',
     icon: Cpu,
     iconClass: 'text-bd-purple',
     summary: 'Choose smaller widgets on mobile and richer dashboards on desktop.',
-    guidance: 'Read <code>system.info</code> and branch on <code>data.deviceClass</code>.'
+    guidance: 'Read <code>system.info</code> and branch on <code>data.deviceClass</code>.',
+    link: '/ultrascripts?tab=system',
+    module: 'System'
   }
+]
+
+const sourceLinks = [
+  { label: 'Core runtime', summary: 'Transport, dispatcher, heartbeat, and shared Ultrascripts services.', href: `${sourceBase}/services/ultrascripts` },
+  { label: 'Scripture module', summary: 'Widget state publishing and renderer integration.', href: `${sourceBase}/modules/scripture` },
+  { label: 'WebFetch module', summary: 'Consent-gated fetch and search ops.', href: `${sourceBase}/modules/webfetch` },
+  { label: 'AI module', summary: 'OpenRouter chat, model listing, and connection checks.', href: `${sourceBase}/modules/ai` },
+  { label: 'SDK module', summary: 'Runtime version and sanitized player configuration.', href: `${sourceBase}/modules/sdk` },
+  { label: 'Clock module', summary: 'Time, timezone, and formatting ops.', href: `${sourceBase}/modules/clock` },
+  { label: 'Geolocation module', summary: 'Permission and browser coordinate ops.', href: `${sourceBase}/modules/geolocation` },
+  { label: 'Weather module', summary: 'Current conditions and forecast ops.', href: `${sourceBase}/modules/weather` },
+  { label: 'Network module', summary: 'Online state and connection quality hints.', href: `${sourceBase}/modules/network` },
+  { label: 'System module', summary: 'Device, display, locale, and power hints.', href: `${sourceBase}/modules/system` }
 ]
 
 const guideSections = [
   { id: 'header-intro', label: 'Introduction', isHeader: true },
   { id: 'about', label: 'Cookbook Policy' },
+  { id: 'flow', label: 'Recipe Flow' },
   { id: 'patterns', label: 'Pattern Matrix' },
+  { id: 'source', label: 'Source Map' },
   { id: 'review', label: 'Promotion Rules' },
   { id: 'debug', label: 'Debugging Checklist' }
 ]

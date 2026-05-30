@@ -31,6 +31,9 @@
         <router-link to="/ultrascripts?tab=cookbook" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-green/10 hover:bg-bd-green/20 text-bd-green text-[11px] font-semibold transition-colors">
           Cookbook
         </router-link>
+        <a href="https://github.com/ComputerKWasTaken/BetterDungeon/tree/two-way-communication/modules/weather" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-cyan/10 hover:bg-bd-cyan/20 text-bd-cyan text-[11px] font-semibold transition-colors">
+          Runtime source
+        </a>
       </div>
 
       <!-- OVERVIEW -->
@@ -131,20 +134,37 @@
         </Transition>
       </section>
 
-      <!-- RECIPE -->
+      <!-- USAGE PATTERN -->
       <section id="guide-recipe" class="card">
         <button @click="toggleGuideSection('recipe')" class="w-full flex items-center justify-between text-left">
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2"><Rocket class="w-5 h-5 text-bd-green" />Combat Modifier Recipe</h2>
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2"><Rocket class="w-5 h-5 text-bd-green" />Weather-Aware Usage Pattern</h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('recipe') }" />
         </button>
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('recipe')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
-            <p>Apply gameplay debuffs when the player's real-world weather is severe.</p>
-            <p class="text-[11px] text-bd-text-muted">
-              Queue <code>bd.us.call('weather', 'current', { place, units })</code> only when needed, then read
-              <code>bd.us.latest('weather', 'current').data.current.weatherCode</code> on a later turn. Store gameplay flags as plain data on
-              <code>state</code>.
+          <div v-if="isGuideSectionExpanded('recipe')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
+            <p>
+              Use Weather when outside conditions should inform the fiction: storm combat, seasonal ambience, travel hazards, survival pressure, or
+              a location-aware opening scene.
             </p>
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-cyan/30 space-y-1">
+                <h4 class="font-semibold text-bd-cyan text-[12px]">Location strategy</h4>
+                <ul class="space-y-1 text-[11px] text-bd-text-muted">
+                  <li>&middot; Use <code>{ place: 'Chicago' }</code> for a fixed scenario location.</li>
+                  <li>&middot; Use Geolocation first when the story should follow the player's real region.</li>
+                  <li>&middot; Cache weather flags on <code>state</code>; do not call the API every turn.</li>
+                </ul>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
+                <h4 class="font-semibold text-bd-green text-[12px]">Author flow</h4>
+                <ol class="space-y-1 text-[11px] text-bd-text-muted">
+                  <li>1. Queue <code>weather.current</code> or <code>weather.forecast</code> only when you need a refresh.</li>
+                  <li>2. Read <code>bd.us.latest('weather', 'current')</code> on a later turn.</li>
+                  <li>3. Branch on <code>data.current.weatherCode</code> or <code>data.current.weather</code>.</li>
+                  <li>4. Store derived story flags, not the whole response, unless you need it.</li>
+                </ol>
+              </div>
+            </div>
           </div>
         </Transition>
       </section>
@@ -187,7 +207,7 @@ const guideSections = [
   { id: 'header-ref', label: 'Reference', isHeader: true },
   { id: 'ops', label: 'Operations' },
   { id: 'header-use', label: 'Usage', isHeader: true },
-  { id: 'recipe', label: 'Recipe' },
+  { id: 'recipe', label: 'Usage Pattern' },
   { id: 'pitfalls', label: 'Pitfalls' }
 ]
 const expandedGuideSections = ref(new Set(guideSections.filter(s => !s.isHeader).map(s => s.id)))

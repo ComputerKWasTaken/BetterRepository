@@ -33,6 +33,9 @@
         <router-link to="/ultrascripts?tab=cookbook" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-green/10 hover:bg-bd-green/20 text-bd-green text-[11px] font-semibold transition-colors">
           Cookbook
         </router-link>
+        <a href="https://github.com/ComputerKWasTaken/BetterDungeon/tree/two-way-communication/modules/scripture" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-green/10 hover:bg-bd-green/20 text-bd-green text-[11px] font-semibold transition-colors">
+          Runtime source
+        </a>
       </div>
 
       <!-- ===================== WHAT IT IS ===================== -->
@@ -80,6 +83,21 @@
                 a <strong>manifest</strong> describing your widgets once, and a <strong>history</strong> map giving the values for each turn keyed by live count.
                 Scripture handles the rest.
               </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
+                <h4 class="font-semibold text-bd-green text-[12px]">1. Choose widgets</h4>
+                <p class="text-[11px] text-bd-text-muted">Pick display widgets for things players should track at a glance: bars, stats, panels, tags, lists, or counters.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
+                <h4 class="font-semibold text-bd-blue text-[12px]">2. Define the manifest</h4>
+                <p class="text-[11px] text-bd-text-muted">Put stable widget ids and configuration in Library with <code>bd.us.defineScripture(...)</code>.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
+                <h4 class="font-semibold text-bd-purple text-[12px]">3. Publish values</h4>
+                <p class="text-[11px] text-bd-text-muted">From Context, call <code>bd.us.publishScripture(...)</code> with values from plain serializable <code>state</code>.</p>
+              </div>
             </div>
           </div>
         </Transition>

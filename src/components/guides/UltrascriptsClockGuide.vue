@@ -31,6 +31,9 @@
         <router-link to="/ultrascripts?tab=cookbook" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-green/10 hover:bg-bd-green/20 text-bd-green text-[11px] font-semibold transition-colors">
           Cookbook
         </router-link>
+        <a href="https://github.com/ComputerKWasTaken/BetterDungeon/tree/two-way-communication/modules/clock" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-amber/10 hover:bg-bd-amber/20 text-bd-amber text-[11px] font-semibold transition-colors">
+          Runtime source
+        </a>
       </div>
 
       <!-- OVERVIEW -->
@@ -121,20 +124,37 @@
         </Transition>
       </section>
 
-      <!-- RECIPE -->
+      <!-- USAGE PATTERN -->
       <section id="guide-recipe" class="card">
         <button @click="toggleGuideSection('recipe')" class="w-full flex items-center justify-between text-left">
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2"><Rocket class="w-5 h-5 text-bd-green" />Time-of-Day Recipe</h2>
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2"><Rocket class="w-5 h-5 text-bd-green" />Time-of-Day Usage Pattern</h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('recipe') }" />
         </button>
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('recipe')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
-            <p>Steers ambient narration to match the player's real local hour.</p>
-            <p class="text-[11px] text-bd-text-muted">
-              Use the Quick Start clock snippet for copy-paste code. The important contract here is that <code>clock.now</code> returns
-              <code>data.time</code>, <code>data.date</code>, <code>data.iso</code>, and <code>data.local</code>; consume it on the turn after
-              queueing <code>bd.us.call('clock', 'now')</code>.
+          <div v-if="isGuideSectionExpanded('recipe')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
+            <p>
+              Use Clock when real-world time should influence context: night ambience, timed events, cooldown labels, session timestamps, or
+              timezone-aware narration.
             </p>
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
+                <h4 class="font-semibold text-bd-green text-[12px]">Author flow</h4>
+                <ol class="space-y-1 text-[11px] text-bd-text-muted">
+                  <li>1. In Context, call <code>bd.us.tick()</code>.</li>
+                  <li>2. Read last turn's <code>bd.us.latest('clock', 'now')</code>.</li>
+                  <li>3. Use <code>data.time</code>, <code>data.date</code>, <code>data.iso</code>, or <code>data.local</code>.</li>
+                  <li>4. Queue the next <code>clock.now</code>, then <code>bd.us.commit()</code>.</li>
+                </ol>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-1">
+                <h4 class="font-semibold text-bd-amber text-[12px]">Which op to pick</h4>
+                <ul class="space-y-1 text-[11px] text-bd-text-muted">
+                  <li>&middot; <code>now</code>: player's current resolved local time.</li>
+                  <li>&middot; <code>tz</code>: current time in a specific IANA timezone.</li>
+                  <li>&middot; <code>format</code>: turn a timestamp into a display string.</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </Transition>
       </section>
@@ -177,7 +197,7 @@ const guideSections = [
   { id: 'header-ref', label: 'Reference', isHeader: true },
   { id: 'ops', label: 'Operations' },
   { id: 'header-use', label: 'Usage', isHeader: true },
-  { id: 'recipe', label: 'Time-of-Day Recipe' },
+  { id: 'recipe', label: 'Usage Pattern' },
   { id: 'pitfalls', label: 'Pitfalls' }
 ]
 

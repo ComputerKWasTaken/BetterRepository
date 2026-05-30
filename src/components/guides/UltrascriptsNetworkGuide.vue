@@ -31,6 +31,9 @@
         <router-link to="/ultrascripts?tab=cookbook" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-green/10 hover:bg-bd-green/20 text-bd-green text-[11px] font-semibold transition-colors">
           Cookbook
         </router-link>
+        <a href="https://github.com/ComputerKWasTaken/BetterDungeon/tree/two-way-communication/modules/network" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-green/10 hover:bg-bd-green/20 text-bd-green text-[11px] font-semibold transition-colors">
+          Runtime source
+        </a>
       </div>
 
       <!-- OVERVIEW -->
@@ -85,19 +88,37 @@
         </Transition>
       </section>
 
-      <!-- RECIPE -->
+      <!-- USAGE PATTERN -->
       <section id="guide-recipe" class="card">
         <button @click="toggleGuideSection('recipe')" class="w-full flex items-center justify-between text-left">
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2"><Rocket class="w-5 h-5 text-bd-green" />Graceful Offline Recipe</h2>
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2"><Rocket class="w-5 h-5 text-bd-green" />Graceful Offline Usage Pattern</h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('recipe') }" />
         </button>
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('recipe')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
-            <p>Skip WebFetch and Provider AI work when the player is offline, falling back to local-only narration.</p>
-            <p class="text-[11px] text-bd-text-muted">
-              Queue <code>bd.us.call('network', 'status')</code>, read <code>bd.us.latest('network', 'status')</code> on a later turn,
-              and store a plain boolean such as <code>state.offline = true</code> when needed.
+          <div v-if="isGuideSectionExpanded('recipe')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
+            <p>
+              Use Network before optional remote work. It helps you avoid queueing WebFetch or AI tasks when the player is offline or on a constrained
+              connection.
             </p>
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
+                <h4 class="font-semibold text-bd-green text-[12px]">Author flow</h4>
+                <ol class="space-y-1 text-[11px] text-bd-text-muted">
+                  <li>1. Queue <code>network.status</code> at startup or before remote features.</li>
+                  <li>2. Read the later result with <code>bd.us.latest('network', 'status')</code>.</li>
+                  <li>3. Store a simple flag like <code>state.offline = true</code>.</li>
+                  <li>4. Skip nonessential remote calls when <code>online === false</code>.</li>
+                </ol>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-1">
+                <h4 class="font-semibold text-bd-amber text-[12px]">How to interpret quality</h4>
+                <ul class="space-y-1 text-[11px] text-bd-text-muted">
+                  <li>&middot; <code>good</code>: normal behavior is reasonable.</li>
+                  <li>&middot; <code>limited</code> or <code>constrained</code>: shorten requests and use cached data.</li>
+                  <li>&middot; <code>unknown</code>: proceed carefully; browser hints are incomplete.</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </Transition>
       </section>
@@ -140,7 +161,7 @@ const guideSections = [
   { id: 'header-ref', label: 'Reference', isHeader: true },
   { id: 'ops', label: 'Operations' },
   { id: 'header-use', label: 'Usage', isHeader: true },
-  { id: 'recipe', label: 'Recipe' },
+  { id: 'recipe', label: 'Usage Pattern' },
   { id: 'pitfalls', label: 'Pitfalls' }
 ]
 const expandedGuideSections = ref(new Set(guideSections.filter(s => !s.isHeader).map(s => s.id)))

@@ -31,6 +31,9 @@
         <router-link to="/ultrascripts?tab=cookbook" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-green/10 hover:bg-bd-green/20 text-bd-green text-[11px] font-semibold transition-colors">
           Cookbook
         </router-link>
+        <a href="https://github.com/ComputerKWasTaken/BetterDungeon/tree/two-way-communication/modules/system" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-purple/10 hover:bg-bd-purple/20 text-bd-purple text-[11px] font-semibold transition-colors">
+          Runtime source
+        </a>
       </div>
 
       <!-- OVERVIEW -->
@@ -104,20 +107,36 @@
         </Transition>
       </section>
 
-      <!-- RECIPE -->
+      <!-- USAGE PATTERN -->
       <section id="guide-recipe" class="card">
         <button @click="toggleGuideSection('recipe')" class="w-full flex items-center justify-between text-left">
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2"><Rocket class="w-5 h-5 text-bd-green" />Platform-Adaptive Layout Recipe</h2>
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2"><Rocket class="w-5 h-5 text-bd-green" />Platform-Adaptive Usage Pattern</h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('recipe') }" />
         </button>
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('recipe')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
-            <p>Publish a simplified Scripture widget set on mobile; a richer dashboard on desktop.</p>
-            <p class="text-[11px] text-bd-text-muted">
-              Queue <code>bd.us.call('system', 'info')</code>, read the next-turn result with <code>bd.us.latest('system', 'info')</code>,
-              then choose a Scripture manifest with <code>bd.us.defineScripture(...)</code>. The canonical layout signal is
-              <code>data.deviceClass</code>.
+          <div v-if="isGuideSectionExpanded('recipe')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
+            <p>
+              Use System to adapt the experience to the player's device, not to fingerprint them. The best use case is choosing widget density or
+              reducing optional work on low-power contexts.
             </p>
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
+                <h4 class="font-semibold text-bd-purple text-[12px]">Author flow</h4>
+                <ol class="space-y-1 text-[11px] text-bd-text-muted">
+                  <li>1. Queue <code>system.info</code> near scenario start.</li>
+                  <li>2. Read <code>bd.us.latest('system', 'info')</code> on a later turn.</li>
+                  <li>3. Branch on <code>data.deviceClass</code> and <code>data.screen.viewportWidth</code>.</li>
+                  <li>4. Choose a compact or full Scripture manifest.</li>
+                </ol>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-1">
+                <h4 class="font-semibold text-bd-amber text-[12px]">Power hints</h4>
+                <p class="text-[11px] text-bd-text-muted">
+                  <code>system.power</code> is optional because many browsers disable battery access. Treat <code>supported: false</code> as normal and
+                  use it only to reduce extra work, never to block the scenario.
+                </p>
+              </div>
+            </div>
           </div>
         </Transition>
       </section>
@@ -160,7 +179,7 @@ const guideSections = [
   { id: 'header-ref', label: 'Reference', isHeader: true },
   { id: 'ops', label: 'Operations' },
   { id: 'header-use', label: 'Usage', isHeader: true },
-  { id: 'recipe', label: 'Recipe' },
+  { id: 'recipe', label: 'Usage Pattern' },
   { id: 'pitfalls', label: 'Pitfalls' }
 ]
 const expandedGuideSections = ref(new Set(guideSections.filter(s => !s.isHeader).map(s => s.id)))

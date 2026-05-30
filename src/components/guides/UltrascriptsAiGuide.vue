@@ -48,6 +48,9 @@
         <router-link to="/ultrascripts?tab=cookbook" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-green/10 hover:bg-bd-green/20 text-bd-green text-[11px] font-semibold transition-colors">
           Cookbook
         </router-link>
+        <a href="https://github.com/ComputerKWasTaken/BetterDungeon/tree/two-way-communication/modules/ai" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-purple/10 hover:bg-bd-purple/20 text-bd-purple text-[11px] font-semibold transition-colors">
+          Runtime source
+        </a>
       </div>
 
       <!-- ===================== OVERVIEW ===================== -->
@@ -96,6 +99,16 @@
                 <li>&middot; <strong>Structured extraction</strong> &mdash; force a JSON output describing characters, items, or scene metadata so Scripture widgets can render it.</li>
                 <li>&middot; <strong>Cross-checks &amp; criticism</strong> &mdash; a second model evaluates the main model's output for tone, continuity, or rule compliance.</li>
               </ul>
+            </div>
+
+            <div class="p-3 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
+              <h4 class="font-semibold text-bd-purple text-[12px] mb-1">How authors should operate it</h4>
+              <ol class="space-y-1 text-[11px] text-bd-text-muted">
+                <li>1. Queue <code>sdk.config</code> and wait for <code>ultrascripts.ai.configured</code>.</li>
+                <li>2. Queue <code>ai.chat</code> only when configured and when the model result is worth the latency/quota.</li>
+                <li>3. Read the result on a later turn from <code>data.text</code> or <code>data.message.content</code>.</li>
+                <li>4. Keep prompts small, set <code>maxTokens</code>, and design a plain-script fallback for unconfigured players.</li>
+              </ol>
             </div>
           </div>
         </Transition>

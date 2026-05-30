@@ -48,6 +48,9 @@
         <router-link to="/ultrascripts?tab=cookbook" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-green/10 hover:bg-bd-green/20 text-bd-green text-[11px] font-semibold transition-colors">
           Cookbook
         </router-link>
+        <a href="https://github.com/ComputerKWasTaken/BetterDungeon/tree/two-way-communication/modules/sdk" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-cyan/10 hover:bg-bd-cyan/20 text-bd-cyan text-[11px] font-semibold transition-colors">
+          Runtime source
+        </a>
       </div>
 
       <!-- ===================== OVERVIEW ===================== -->
@@ -78,6 +81,21 @@
                 If you only need to check availability, read the heartbeat card. Reach for SDK ops when you need the deeper picture (cost controls,
                 display preferences, AI configured status, etc.).
               </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
+                <h4 class="font-semibold text-bd-green text-[12px]">Use <code>sdk.version</code> for</h4>
+                <p class="text-[11px] text-bd-text-muted">
+                  Lightweight diagnostics, bug reports, and compatibility banners. It tells you the SDK version, BetterDungeon version, protocol, and client name.
+                </p>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
+                <h4 class="font-semibold text-bd-blue text-[12px]">Use <code>sdk.config</code> for</h4>
+                <p class="text-[11px] text-bd-text-muted">
+                  Feature-aware decisions: AI configured state, module preferences, Scripture display settings, WebFetch consent counts, and cost-control posture.
+                </p>
+              </div>
             </div>
           </div>
         </Transition>

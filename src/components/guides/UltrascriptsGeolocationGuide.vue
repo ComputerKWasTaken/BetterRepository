@@ -31,6 +31,9 @@
         <router-link to="/ultrascripts?tab=cookbook" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-green/10 hover:bg-bd-green/20 text-bd-green text-[11px] font-semibold transition-colors">
           Cookbook
         </router-link>
+        <a href="https://github.com/ComputerKWasTaken/BetterDungeon/tree/two-way-communication/modules/geolocation" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-blue/10 hover:bg-bd-blue/20 text-bd-blue text-[11px] font-semibold transition-colors">
+          Runtime source
+        </a>
       </div>
 
       <!-- OVERVIEW -->
@@ -105,19 +108,37 @@
         </Transition>
       </section>
 
-      <!-- RECIPE -->
+      <!-- USAGE PATTERN -->
       <section id="guide-recipe" class="card">
         <button @click="toggleGuideSection('recipe')" class="w-full flex items-center justify-between text-left">
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2"><Rocket class="w-5 h-5 text-bd-green" />Regional Awareness Recipe</h2>
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2"><Rocket class="w-5 h-5 text-bd-green" />Permission-First Usage Pattern</h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('recipe') }" />
         </button>
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('recipe')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
-            <p>Caches the player's region once per session and reuses it; gracefully degrades when permission is denied.</p>
-            <p class="text-[11px] text-bd-text-muted">
-              Request <code>geolocation.permission</code> first, queue <code>geolocation.getCurrent</code> only when permission is granted,
-              and cache plain coordinates on <code>state.geo</code>. Do not store helper functions under <code>state</code>.
+          <div v-if="isGuideSectionExpanded('recipe')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
+            <p>
+              Use Geolocation when a player-consented real region improves the scenario: local weather, regional language, nearby folklore, or
+              travel flavor. Always design a no-location fallback.
             </p>
+            <div class="grid md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
+                <h4 class="font-semibold text-bd-blue text-[12px]">Author flow</h4>
+                <ol class="space-y-1 text-[11px] text-bd-text-muted">
+                  <li>1. Queue <code>geolocation.permission</code> first.</li>
+                  <li>2. If the later result is <code>granted</code>, queue <code>geolocation.getCurrent</code>.</li>
+                  <li>3. Cache plain coordinates on <code>state.geo</code>.</li>
+                  <li>4. If denied or unsupported, use a place string or generic narration.</li>
+                </ol>
+              </div>
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
+                <h4 class="font-semibold text-bd-green text-[12px]">Good pairings</h4>
+                <ul class="space-y-1 text-[11px] text-bd-text-muted">
+                  <li>&middot; Weather: feed <code>latitude</code> / <code>longitude</code> into <code>weather.current</code>.</li>
+                  <li>&middot; WebFetch: fetch region-specific public data after consent.</li>
+                  <li>&middot; Scripture: show a small "local conditions" panel.</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </Transition>
       </section>
@@ -160,7 +181,7 @@ const guideSections = [
   { id: 'header-ref', label: 'Reference', isHeader: true },
   { id: 'ops', label: 'Operations' },
   { id: 'header-use', label: 'Usage', isHeader: true },
-  { id: 'recipe', label: 'Recipe' },
+  { id: 'recipe', label: 'Usage Pattern' },
   { id: 'pitfalls', label: 'Pitfalls' }
 ]
 const expandedGuideSections = ref(new Set(guideSections.filter(s => !s.isHeader).map(s => s.id)))

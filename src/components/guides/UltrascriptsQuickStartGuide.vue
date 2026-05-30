@@ -180,6 +180,67 @@
         </Transition>
       </section>
 
+      <!-- ===================== WHERE TO PASTE ===================== -->
+      <section id="guide-paste-map" class="card">
+        <button @click="toggleGuideSection('paste-map')" class="w-full flex items-center justify-between text-left">
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Package class="w-5 h-5 text-bd-cyan" />
+            What Goes Where
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('paste-map') }" />
+        </button>
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('paste-map')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
+            <p>
+              AI Dungeon gives you four script tabs. Ultrascripts does not change that model; it gives those scripts a bridge to BetterDungeon. Most
+              scenarios only need Library + Context.
+            </p>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-[11px] border-collapse">
+                <thead>
+                  <tr class="border-b border-bd-border-subtle">
+                    <th class="text-left py-2 px-2 font-semibold text-bd-text-primary">AI Dungeon tab</th>
+                    <th class="text-left py-2 px-2 font-semibold text-bd-text-primary">Put this there</th>
+                    <th class="text-left py-2 px-2 font-semibold text-bd-text-primary">Why</th>
+                  </tr>
+                </thead>
+                <tbody class="text-bd-text-secondary">
+                  <tr class="border-b border-bd-border-subtle/50">
+                    <td class="py-2 px-2 font-semibold text-bd-green">Library</td>
+                    <td class="py-2 px-2">The SDK helper, shared helpers, and Scripture manifests.</td>
+                    <td class="py-2 px-2">Library is shared by the other hooks, so <code>bd.us</code> is available everywhere.</td>
+                  </tr>
+                  <tr class="border-b border-bd-border-subtle/50">
+                    <td class="py-2 px-2 font-semibold text-bd-blue">Context</td>
+                    <td class="py-2 px-2"><code>tick</code>, read prior results, publish widgets, queue module calls, <code>commit</code>.</td>
+                    <td class="py-2 px-2">Most Ultrascripts features modify the model context or sidebar state before generation.</td>
+                  </tr>
+                  <tr class="border-b border-bd-border-subtle/50">
+                    <td class="py-2 px-2 font-semibold text-bd-amber">Input</td>
+                    <td class="py-2 px-2">Optional command parsing before the model sees player input.</td>
+                    <td class="py-2 px-2">Use sparingly. Empty input or stop returns can error in AI Dungeon.</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 px-2 font-semibold text-bd-purple">Output</td>
+                    <td class="py-2 px-2">Optional post-processing after the model replies.</td>
+                    <td class="py-2 px-2">Useful for logging or state cleanup, but most module requests belong in Context.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+              <p class="text-[11px]">
+                <strong class="text-bd-amber">Modifier rule:</strong> paste Quick Start modifier snippets inside AI Dungeon's existing
+                <code class="text-bd-green">modifier(text)</code> wrapper. Keep <code>modifier(text)</code> as the final editor line and let the wrapper
+                return <code>{ text }</code>.
+              </p>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
       <!-- ===================== THE SDK ===================== -->
       <section id="guide-sdk" class="card">
         <button @click="toggleGuideSection('sdk')" class="w-full flex items-center justify-between text-left">
@@ -664,6 +725,7 @@ const guideSections = [
   { id: 'model', label: 'Mental Model' },
   { id: 'creators', label: 'Creator Reality Check' },
   { id: 'header-paste', label: 'Get the SDK', isHeader: true },
+  { id: 'paste-map', label: 'What Goes Where' },
   { id: 'sdk', label: 'The SDK Helper' },
   { id: 'fallbacks', label: 'Enhanced Fallback Pattern' },
   { id: 'required', label: 'Required Script Guard' },

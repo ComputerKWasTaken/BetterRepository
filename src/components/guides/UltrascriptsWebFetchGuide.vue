@@ -48,6 +48,9 @@
         <router-link to="/ultrascripts?tab=cookbook" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-green/10 hover:bg-bd-green/20 text-bd-green text-[11px] font-semibold transition-colors">
           Cookbook
         </router-link>
+        <a href="https://github.com/ComputerKWasTaken/BetterDungeon/tree/two-way-communication/modules/webfetch" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-blue/10 hover:bg-bd-blue/20 text-bd-blue text-[11px] font-semibold transition-colors">
+          Runtime source
+        </a>
       </div>
 
       <!-- ===================== OVERVIEW ===================== -->
@@ -243,6 +246,10 @@
         </button>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('recipes')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
+            <p>
+              WebFetch is best for public, unauthenticated data that can tolerate a one-turn delay: lore APIs, public JSON feeds, search lookups,
+              wiki-style references, and creator-hosted scenario data. It is not a replacement for arbitrary browser scripting or private API access.
+            </p>
 
             <!-- Pattern 1 -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-2">
@@ -252,7 +259,8 @@
               <p>Issues a GET on every turn to top up scenario state with live data from an external API.</p>
               <p class="text-[11px] text-bd-text-muted">
                 Use <code>bd.us.call('webfetch', 'fetch', args)</code> from a gated Context modifier, not raw story-card writes. Keep fetches
-                sparse, consent-aware, and scoped to origins the player has approved.
+                sparse, consent-aware, and scoped to origins the player has approved. Cache derived facts on <code>state</code> so a slow endpoint
+                does not stall your whole design.
               </p>
             </div>
 
@@ -266,6 +274,16 @@
                 Read cached results through <code>bd.us.latest('webfetch', 'fetch')</code>. If freshness matters, compare
                 <code>completedLiveCount</code> to the current turn before using the body.
               </p>
+            </div>
+
+            <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+              <h4 class="font-semibold text-bd-amber text-[12px] mb-1">Author flow</h4>
+              <ol class="space-y-1 text-[11px] text-bd-text-muted">
+                <li>1. Gate with <code>bd.us.has('webfetch', 'fetch')</code> or <code>bd.us.has('webfetch', 'search')</code>.</li>
+                <li>2. Queue a request only when the story actually needs fresh external data.</li>
+                <li>3. On the later turn, parse <code>data.body</code> yourself if the response is JSON text.</li>
+                <li>4. Store small normalized facts on <code>state</code>, not the entire external payload.</li>
+              </ol>
             </div>
           </div>
         </Transition>
