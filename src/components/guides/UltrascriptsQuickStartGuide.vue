@@ -324,7 +324,7 @@ bd.us.commit();</pre>
 
 if (!bd.us.available() || !bd.us.has('ai', 'chat')) {
   text = '[This scenario requires BetterDungeon with Ultrascripts AI enabled. Install BetterDungeon or switch to a non-Ultrascripts version.]\n' + text;
-  return text;
+  return { text: text };
 }
 
 var cfg = bd.us.latest('sdk', 'config');
@@ -332,7 +332,7 @@ if (!cfg &amp;&amp; bd.us.has('sdk', 'config')) {
   bd.us.call('sdk', 'config');
   bd.us.commit();
   text = '[Checking BetterDungeon AI configuration. Try one more action after the SDK reply arrives.]\n' + text;
-  return text;
+  return { text: text };
 }
 
 var aiReady = cfg
@@ -344,10 +344,11 @@ var aiReady = cfg
 
 if (!aiReady) {
   text = '[This scenario requires the BetterDungeon AI module to be configured in the popup first.]\n' + text;
-  return text;
+  return { text: text };
 }
 
 // Core Ultrascripts-dependent logic starts here.
+text = '[BetterDungeon AI module is configured. Queueing Co-GM support for the next turn.]\n' + text;
 bd.us.call('ai', 'chat', { messages: [{ role: 'user', content: text }] });
 bd.us.commit();</pre>
 
