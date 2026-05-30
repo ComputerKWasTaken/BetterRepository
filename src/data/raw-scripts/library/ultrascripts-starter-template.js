@@ -103,21 +103,44 @@ function createUltrascriptsSdk() {
   function findCard(title) {
     var cards = (typeof storyCards !== 'undefined' && Array.isArray(storyCards)) ? storyCards : [];
     for (var i = 0; i < cards.length; i++) {
-      if (cards[i] && cards[i].title === title) return cards[i];
+      var card = cards[i];
+      if (card && (card.title === title || card.keys === title || card.key === title)) return card;
     }
     return null;
   }
 
+  function findCardIndex(title) {
+    var cards = (typeof storyCards !== 'undefined' && Array.isArray(storyCards)) ? storyCards : [];
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      if (card && (card.title === title || card.keys === title || card.key === title)) return i;
+    }
+    return -1;
+  }
+
+  function cardText(card) {
+    return card ? (card.value || card.entry || card.description || '') : '';
+  }
+
   function upsertCard(title, value) {
-    var card = findCard(title);
-    if (card) card.value = value;
-    else if (typeof addStoryCard === 'function') addStoryCard(title, value);
+    var index = findCardIndex(title);
+    if (index >= 0) {
+      var card = storyCards[index];
+      if (typeof updateStoryCard === 'function') {
+        updateStoryCard(index, card.keys || card.key || card.title || title, value, card.type || 'Ultrascripts');
+      } else {
+        card.value = value;
+        card.entry = value;
+      }
+    } else if (typeof addStoryCard === 'function') {
+      addStoryCard(title, value, 'Ultrascripts');
+    }
   }
 
   function parseCard(title) {
     var card = findCard(title);
     if (!card) return null;
-    try { return JSON.parse(card.value || '{}'); } catch (e) { return null; }
+    try { return JSON.parse(cardText(card) || '{}'); } catch (e) { return null; }
   }
 
   function liveCount() {
@@ -130,9 +153,10 @@ function createUltrascriptsSdk() {
     var best = null;
     var bestScore = -1;
     for (var i = 0; i < cards.length; i++) {
-      if (!cards[i] || cards[i].title !== 'ultrascripts:heartbeat') continue;
+      var card = cards[i];
+      if (!card || (card.title !== 'ultrascripts:heartbeat' && card.keys !== 'ultrascripts:heartbeat' && card.key !== 'ultrascripts:heartbeat')) continue;
       try {
-        var hb = JSON.parse(cards[i].value || '{}');
+        var hb = JSON.parse(cardText(card) || '{}');
         var score = heartbeatScore(hb);
         if (score > bestScore) {
           best = hb;

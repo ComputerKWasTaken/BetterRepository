@@ -289,9 +289,10 @@ function getHeartbeat() {
   var best = null;
   var bestScore = -1;
   for (var i = 0; i < cards.length; i++) {
-    if (cards[i] &amp;&amp; cards[i].title === 'ultrascripts:heartbeat') {
+    var c = cards[i];
+    if (c &amp;&amp; (c.title === 'ultrascripts:heartbeat' || c.keys === 'ultrascripts:heartbeat' || c.key === 'ultrascripts:heartbeat')) {
       try {
-        var hb = JSON.parse(cards[i].value || '{}');
+        var hb = JSON.parse(c.value || c.entry || c.description || '{}');
         var score = heartbeatScore(hb);
         if (score > bestScore) {
           best = hb;
@@ -385,13 +386,13 @@ bd.sdk.hasOp = function (moduleId, opName) {
               the paved path when you are already using the <code>bd.us</code> helper from Quick Start.
             </p>
 
-            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">state.bd = state.bd || {};
-globalThis.bd = globalThis.bd || {};
-state.bd.creator = state.bd.creator || {};
+            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">globalThis.bd = globalThis.bd || {};
+var bd = globalThis.bd;
+state.usCreator = state.usCreator || {};
 
 bd.us.tick();
 
-var creator = state.bd.creator;
+var creator = state.usCreator;
 var cfg = bd.us.latest('sdk', 'config');
 
 if (bd.us.available() &amp;&amp; bd.us.has('sdk', 'config') &amp;&amp; !creator.requestedSdkConfig) {
@@ -442,14 +443,16 @@ bd.us.commit();</pre>
               <p>Use Scripture widgets when available; otherwise fall back to plain bracketed status text.</p>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Context Modifier
 (function () {
-  var bd = state.bd || {};
+  var bd = globalThis.bd || {};
   if (bd.sdk &amp;&amp; bd.sdk.hasModule('scripture')) {
     // Publish a widget instead of plain text
     var s = { v: 1, manifest: { widgets: [{ id: 'hp', type: 'bar', label: 'HP', max: 100 }] }, history: {} };
     s.history[(info &amp;&amp; info.actionCount) || 1] = { hp: state.hp || 100 };
-    var card = storyCards.find(function (c) { return c.title === 'ultrascripts:state:scripture'; });
-    if (card) card.value = JSON.stringify(s);
-    else addStoryCard('ultrascripts:state:scripture', JSON.stringify(s));
+    var index = storyCards.findIndex(function (c) {
+      return c &amp;&amp; (c.title === 'ultrascripts:state:scripture' || c.keys === 'ultrascripts:state:scripture' || c.key === 'ultrascripts:state:scripture');
+    });
+    if (index &gt;= 0) updateStoryCard(index, storyCards[index].keys || storyCards[index].key || 'ultrascripts:state:scripture', JSON.stringify(s), storyCards[index].type || 'Ultrascripts');
+    else addStoryCard('ultrascripts:state:scripture', JSON.stringify(s), 'Ultrascripts');
   } else {
     text += '\n[HP: ' + (state.hp || 100) + '/100]';
   }
@@ -462,24 +465,27 @@ bd.us.commit();</pre>
               </h4>
               <p>One reusable function that any module call can flow through, with auto-acks and live-count-suffixed request ids.</p>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Library Script
-state.bd = state.bd || {};
-state.bd.activeRequests = state.bd.activeRequests || {};
+globalThis.bd = globalThis.bd || {};
+var bd = globalThis.bd;
+bd.activeRequests = bd.activeRequests || {};
 
-state.bd.sendOpRequest = function (moduleId, opName, args) {
+bd.sendOpRequest = function (moduleId, opName, args) {
   var lc = (info &amp;&amp; info.actionCount) || 1;
   var reqId = moduleId + '-' + opName + '-t' + lc;
 
   var payload = {
     v: 1,
     requests: [{ id: reqId, module: moduleId, op: opName, args: args }],
-    acks: Object.keys(state.bd.activeRequests)
+    acks: Object.keys(bd.activeRequests)
   };
 
-  var card = storyCards.find(function (c) { return c.title === 'ultrascripts:out'; });
-  if (card) card.value = JSON.stringify(payload);
-  else addStoryCard('ultrascripts:out', JSON.stringify(payload));
+  var index = storyCards.findIndex(function (c) {
+    return c &amp;&amp; (c.title === 'ultrascripts:out' || c.keys === 'ultrascripts:out' || c.key === 'ultrascripts:out');
+  });
+  if (index &gt;= 0) updateStoryCard(index, storyCards[index].keys || storyCards[index].key || 'ultrascripts:out', JSON.stringify(payload), storyCards[index].type || 'Ultrascripts');
+  else addStoryCard('ultrascripts:out', JSON.stringify(payload), 'Ultrascripts');
 
-  state.bd.activeRequests[reqId] = true;
+  bd.activeRequests[reqId] = true;
   return reqId;
 };</pre>
             </div>

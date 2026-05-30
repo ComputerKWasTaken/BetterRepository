@@ -703,26 +703,48 @@ bd.us._reqCounter      = bd.us._reqCounter      || 0;
 bd.us._findCard = function (title) {
   var cards = Array.isArray(storyCards) ? storyCards : [];
   for (var i = 0; i < cards.length; i++) {
-    if (cards[i] && cards[i].title === title) return cards[i];
+    var c = cards[i];
+    if (c && (c.title === title || c.keys === title || c.key === title)) return c;
   }
   return null;
 };
+bd.us._findCardIndex = function (title) {
+  var cards = Array.isArray(storyCards) ? storyCards : [];
+  for (var i = 0; i < cards.length; i++) {
+    var c = cards[i];
+    if (c && (c.title === title || c.keys === title || c.key === title)) return i;
+  }
+  return -1;
+};
+bd.us._cardText = function (card) {
+  return card ? (card.value || card.entry || card.description || '') : '';
+};
 bd.us._upsertCard = function (title, value) {
-  var c = bd.us._findCard(title);
-  if (c) c.value = value;
-  else   addStoryCard(title, value);
+  var index = bd.us._findCardIndex(title);
+  if (index >= 0) {
+    var c = storyCards[index];
+    if (typeof updateStoryCard === 'function') {
+      updateStoryCard(index, c.keys || c.key || c.title || title, value, c.type || 'Ultrascripts');
+    } else {
+      c.value = value;
+      c.entry = value;
+    }
+  } else {
+    addStoryCard(title, value, 'Ultrascripts');
+  }
 };
 bd.us._parseCard = function (title) {
   var c = bd.us._findCard(title);
   if (!c) return null;
-  try { return JSON.parse(c.value || '{}'); } catch (e) { return null; }
+  try { return JSON.parse(bd.us._cardText(c) || '{}'); } catch (e) { return null; }
 };
 bd.us._parseCards = function (title) {
   var cards = Array.isArray(storyCards) ? storyCards : [];
   var parsed = [];
   for (var i = 0; i < cards.length; i++) {
-    if (!cards[i] || cards[i].title !== title) continue;
-    try { parsed.push(JSON.parse(cards[i].value || '{}')); } catch (e) {}
+    var c = cards[i];
+    if (!c || (c.title !== title && c.keys !== title && c.key !== title)) continue;
+    try { parsed.push(JSON.parse(bd.us._cardText(c) || '{}')); } catch (e) {}
   }
   return parsed;
 };
