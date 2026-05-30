@@ -39,7 +39,7 @@
       <div class="p-3 rounded-lg border border-bd-amber/30 bg-bd-amber/5 flex items-center gap-3 flex-wrap">
         <Zap class="w-4 h-4 text-bd-amber flex-shrink-0" />
         <div class="flex-1 min-w-0 text-xs text-bd-text-secondary">
-          <strong class="text-bd-amber">New to Ultrascripts?</strong> The recipes below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
+          <strong class="text-bd-amber">New to Ultrascripts?</strong> The patterns below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
         </div>
         <router-link to="/ultrascripts?tab=quickstart" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-amber/15 hover:bg-bd-amber/25 text-bd-amber text-[11px] font-semibold transition-colors">
           Quick Start
@@ -184,9 +184,15 @@
                 <div>
                   <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">data (on ok)</div>
                   <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
-  "content": "Assistant reply text",
+  "provider": "openrouter",
   "model": "google/gemini-2.0-flash-exp:free",
-  "finishReason": "stop" | "length" | "content_filter",
+  "id": "gen-...",
+  "text": "Assistant reply text",
+  "message": {
+    "role": "assistant",
+    "content": "Assistant reply text"
+  },
+  "finishReason": "stop",
   "usage": {
     "promptTokens": 245,
     "completionTokens": 87,
@@ -206,19 +212,27 @@
               <div class="flex items-center gap-2 flex-wrap">
                 <h4 class="font-semibold text-bd-purple text-[13px]"><code>ai.models</code></h4>
                 <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
-                <span class="text-[10px] text-bd-text-muted">1500ms</span>
+                <span class="text-[10px] text-bd-text-muted">60000ms max</span>
               </div>
               <p>Returns the OpenRouter models the player's key can currently access. Use it to validate a target model before issuing a chat call.</p>
               <div>
                 <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">data (on ok)</div>
                 <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
+  "provider": "openrouter",
+  "configured": true,
+  "defaultModel": "google/gemini-2.0-flash-exp:free",
+  "source": "https://openrouter.ai/api/v1/models",
+  "count": 120,
+  "totalCount": 120,
+  "returned": 1,
+  "truncated": true,
   "models": [
     {
       "id": "google/gemini-2.0-flash-exp:free",
       "name": "Gemini 2.0 Flash (free)",
-      "context": 1048576,
-      "pricing": { "prompt": 0, "completion": 0 },
-      "free": true
+      "canonicalSlug": "google/gemini-2.0-flash-exp",
+      "contextLength": 1048576,
+      "pricing": { "prompt": "0", "completion": "0", "request": null }
     }
   ]
 }</pre>
@@ -230,15 +244,19 @@
               <div class="flex items-center gap-2 flex-wrap">
                 <h4 class="font-semibold text-bd-purple text-[13px]"><code>ai.testConnection</code></h4>
                 <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
-                <span class="text-[10px] text-bd-text-muted">2000ms</span>
+                <span class="text-[10px] text-bd-text-muted">60000ms max</span>
               </div>
               <p>Verifies the configured key by issuing a tiny no-cost ping. Useful in onboarding flows before the first real <code>chat</code>.</p>
               <div>
                 <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">data (on ok)</div>
                 <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
+  "provider": "openrouter",
+  "configured": true,
   "ok": true,
-  "model": "google/gemini-2.0-flash-exp:free",
-  "latencyMs": 312
+  "defaultModel": "google/gemini-2.0-flash-exp:free",
+  "modelCount": 120,
+  "source": "https://openrouter.ai/api/v1/models",
+  "checkedAtIso": "2026-05-30T19:45:00.000Z"
 }</pre>
               </div>
             </div>
@@ -349,8 +367,13 @@
     "cogm-chat-t12": {
       "status": "ok",
       "data": {
-        "content": "Beneath the watchtower's ribs, slow drips count out the storm's heartbeat as moss whispers like distant prayers.",
+        "provider": "openrouter",
         "model": "google/gemini-2.0-flash-exp:free",
+        "text": "Beneath the watchtower's ribs, slow drips count out the storm's heartbeat as moss whispers like distant prayers.",
+        "message": {
+          "role": "assistant",
+          "content": "Beneath the watchtower's ribs, slow drips count out the storm's heartbeat as moss whispers like distant prayers."
+        },
         "finishReason": "stop",
         "usage": { "promptTokens": 84, "completionTokens": 31, "totalTokens": 115 }
       },
@@ -362,126 +385,52 @@
         </Transition>
       </section>
 
-      <!-- ===================== RECIPES ===================== -->
+        <!-- ===================== PATTERNS ===================== -->
       <section id="guide-recipes" class="card">
         <button @click="toggleGuideSection('recipes')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Rocket class="w-5 h-5 text-bd-green" />
-            Recipes
+            Usage Patterns
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('recipes') }" />
         </button>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('recipes')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
 
-            <!-- Recipe 1: Co-GM Ambient Narrator -->
+            <!-- Pattern 1: Co-GM Ambient Narrator -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-2">
               <h4 class="font-semibold text-bd-purple flex items-center gap-1.5 text-[12px]">
-                <BrainCircuit class="w-4 h-4" /> Recipe 1: Co-GM Ambient Narrator
+                <BrainCircuit class="w-4 h-4" /> Pattern 1: Co-GM Ambient Narrator
               </h4>
               <p>Each turn, ask a free model for one ambient flavor sentence and inject it as front-context for the main model.</p>
-              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Context Modifier  (request side)
-(function() {
-  var lc = (info && info.actionCount) || 1;
-  var reqId = 'cogm-chat-t' + lc;
-  var sys = 'You are a Co-GM. Output ONE atmospheric sentence describing ambient sensory detail. No dialogue. No new plot events.';
-
-  var payload = {
-    v: 1,
-    requests: [{
-      id: reqId,
-      module: 'ai',
-      op: 'chat',
-      args: {
-        model: 'google/gemini-2.0-flash-exp:free',
-        temperature: 0.7,
-        maxTokens: 60,
-        messages: [
-          { role: 'system', content: sys },
-          { role: 'user',   content: 'Current scene context:\n' + text }
-        ]
-      }
-    }],
-    acks: state.bd && state.bd.ackQueue ? state.bd.ackQueue : []
-  };
-  var out = storyCards.find(function(c) { return c.title === 'ultrascripts:out'; });
-  if (out) out.value = JSON.stringify(payload);
-  else addStoryCard('ultrascripts:out', JSON.stringify(payload));
-})();</pre>
-              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Input Modifier  (consume the previous turn's response)
-(function() {
-  var lc = (info && info.actionCount) || 1;
-  var card = storyCards.find(function(c) { return c.title === 'ultrascripts:in:ai'; });
-  if (!card) return;
-  try {
-    var p = JSON.parse(card.value || '{}');
-    var prev = lc - 1;
-    var r = p.responses && p.responses['cogm-chat-t' + prev];
-    if (r && r.status === 'ok' && r.completedLiveCount === prev) {
-      text = '[Ambient: ' + r.data.content.trim() + ']\n' + text;
-      state.bd = state.bd || {};
-      state.bd.ackQueue = ['cogm-chat-t' + prev];
-    }
-  } catch (e) {}
-})();</pre>
-            </div>
-
-            <!-- Recipe 2: Structured Extraction -->
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-2">
-              <h4 class="font-semibold text-bd-blue flex items-center gap-1.5 text-[12px]">
-                <Wand2 class="w-4 h-4" /> Recipe 2: Structured Scene Extraction
-              </h4>
-              <p>Force a JSON output describing the current scene so Scripture widgets can render structured state from prose.</p>
-              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Output Modifier (after the main model writes its reply)
-(function() {
-  var lc = (info && info.actionCount) || 1;
-  var sys = 'Extract structured JSON from the most recent narration. Reply with ONLY valid JSON matching: ' +
-            '{ "location": string, "mood": "tense"|"calm"|"hopeful"|"grim", "presentNpcs": string[] }';
-
-  var payload = {
-    v: 1,
-    requests: [{
-      id: 'extract-scene-t' + lc,
-      module: 'ai',
-      op: 'chat',
-      args: {
-        model: 'google/gemini-2.0-flash-exp:free',
-        temperature: 0.1,
-        maxTokens: 200,
-        responseFormat: { type: 'json_object' },
-        messages: [
-          { role: 'system', content: sys },
-          { role: 'user',   content: text }
-        ]
-      }
-    }],
-    acks: []
-  };
-  var out = storyCards.find(function(c) { return c.title === 'ultrascripts:out'; });
-  if (out) out.value = JSON.stringify(payload);
-  else addStoryCard('ultrascripts:out', JSON.stringify(payload));
-})();</pre>
               <p class="text-[11px] text-bd-text-muted">
-                Next turn, the script reads <code>ultrascripts:in:ai</code>, parses <code>r.data.content</code> as JSON, and writes it into
-                <code>ultrascripts:state:scripture</code>'s history so widget badges and mood indicators update.
+                Keep the live script in Quick Start, where it uses <code>bd.us.tick()</code>, <code>bd.us.latest('ai', 'chat')</code>,
+                <code>bd.us.call('ai', 'chat', ...)</code>, and <code>bd.us.commit()</code>. This module page only documents the AI operation contract.
               </p>
             </div>
 
-            <!-- Recipe 3: Cost-Aware Fallback -->
+            <!-- Pattern 2: Structured Extraction -->
+            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-2">
+              <h4 class="font-semibold text-bd-blue flex items-center gap-1.5 text-[12px]">
+                <Wand2 class="w-4 h-4" /> Pattern 2: Structured Scene Extraction
+              </h4>
+              <p>Force a JSON output describing the current scene so Scripture widgets can render structured state from prose.</p>
+              <p class="text-[11px] text-bd-text-muted">
+                Use <code>responseFormat: { type: 'json_object' }</code> for JSON extraction, keep <code>temperature</code> low, and consume
+                the response on a later turn with <code>bd.us.latest('ai', 'chat')</code>.
+              </p>
+            </div>
+
+            <!-- Pattern 3: Cost-Aware Fallback -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-2">
               <h4 class="font-semibold text-bd-green flex items-center gap-1.5 text-[12px]">
-                <CheckCircle2 class="w-4 h-4" /> Recipe 3: Cost-Aware Fallback
+                <CheckCircle2 class="w-4 h-4" /> Pattern 3: Cost-Aware Fallback
               </h4>
               <p>Try a smarter paid model when allowed; otherwise gracefully fall back to a free-tier model.</p>
-              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Library helper
-state.bd = state.bd || {};
-state.bd.pickAiModel = function (cfg) {
-  var ai = cfg &amp;&amp; cfg.ultrascripts &amp;&amp; cfg.ultrascripts.ai;
-  var freeOnly = ai &amp;&amp; ai.costControls &amp;&amp; ai.costControls.freeModelsOnly;
-  return freeOnly
-    ? 'google/gemini-2.0-flash-exp:free'
-    : 'anthropic/claude-3.5-sonnet';
-};</pre>
+              <p class="text-[11px] text-bd-text-muted">
+                Read <code>sdk.config</code> first, then branch on the player's configured cost controls before choosing a model. Keep helpers on
+                <code>globalThis.bd</code> if you need reusable functions; store only plain data on <code>state</code>.
+              </p>
             </div>
           </div>
         </Transition>
@@ -598,7 +547,7 @@ const guideSections = [
   { id: 'cost', label: 'Cost Controls' },
   { id: 'wire', label: 'Wire Example' },
   { id: 'header-use', label: 'Usage', isHeader: true },
-  { id: 'recipes', label: 'Recipes' },
+  { id: 'recipes', label: 'Usage Patterns' },
   { id: 'tips', label: 'Authoring Tips' },
   { id: 'pitfalls', label: 'Pitfalls' }
 ]

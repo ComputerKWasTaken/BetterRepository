@@ -22,7 +22,7 @@
       <div class="p-3 rounded-lg border border-bd-amber/30 bg-bd-amber/5 flex items-center gap-3 flex-wrap">
         <Zap class="w-4 h-4 text-bd-amber flex-shrink-0" />
         <div class="flex-1 min-w-0 text-xs text-bd-text-secondary">
-          <strong class="text-bd-amber">New to Ultrascripts?</strong> The recipes below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
+          <strong class="text-bd-amber">New to Ultrascripts?</strong> The patterns below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
         </div>
         <router-link to="/ultrascripts?tab=quickstart" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-amber/15 hover:bg-bd-amber/25 text-bd-amber text-[11px] font-semibold transition-colors">
           Quick Start
@@ -130,23 +130,11 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('recipe')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>Steers ambient narration to match the player's real local hour.</p>
-            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Context Modifier (consume response from previous turn)
-(function () {
-  var lc = (info &amp;&amp; info.actionCount) || 1;
-  var card = storyCards.find(function (c) { return c.title === 'ultrascripts:in:clock'; });
-  if (!card) return;
-  try {
-    var p = JSON.parse(card.value || '{}');
-    var r = p.responses &amp;&amp; p.responses['clock-now-t' + (lc - 1)];
-    if (r &amp;&amp; r.status === 'ok' &amp;&amp; r.completedLiveCount === (lc - 1)) {
-      var h = Number(String(r.data.time || '00').slice(0, 2));
-      if (h >= 20 || h < 5)      text += '\n[Ambient: pitch-black night. Shadows crowd the edges of vision.]';
-      else if (h >= 5 &amp;&amp; h < 9)  text += '\n[Ambient: thin dawn light. Air still cool.]';
-      else if (h >= 17 &amp;&amp; h < 20) text += '\n[Ambient: amber dusk. Long shadows stretching.]';
-      else                       text += '\n[Ambient: bright daylight. Vision clear.]';
-    }
-  } catch (e) {}
-})();</pre>
+            <p class="text-[11px] text-bd-text-muted">
+              Use the Quick Start clock snippet for copy-paste code. The important contract here is that <code>clock.now</code> returns
+              <code>data.time</code>, <code>data.date</code>, <code>data.iso</code>, and <code>data.local</code>; consume it on the turn after
+              queueing <code>bd.us.call('clock', 'now')</code>.
+            </p>
           </div>
         </Transition>
       </section>

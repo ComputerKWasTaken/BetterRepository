@@ -22,7 +22,7 @@
       <div class="p-3 rounded-lg border border-bd-amber/30 bg-bd-amber/5 flex items-center gap-3 flex-wrap">
         <Zap class="w-4 h-4 text-bd-amber flex-shrink-0" />
         <div class="flex-1 min-w-0 text-xs text-bd-text-secondary">
-          <strong class="text-bd-amber">New to Ultrascripts?</strong> The recipes below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
+          <strong class="text-bd-amber">New to Ultrascripts?</strong> The patterns below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
         </div>
         <router-link to="/ultrascripts?tab=quickstart" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-amber/15 hover:bg-bd-amber/25 text-bd-amber text-[11px] font-semibold transition-colors">
           Quick Start
@@ -113,30 +113,11 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('recipe')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>Publish a simplified Scripture widget set on mobile; a richer dashboard on desktop.</p>
-            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Context Modifier
-(function () {
-  var lc = (info &amp;&amp; info.actionCount) || 1;
-  var card = storyCards.find(function (c) { return c.title === 'ultrascripts:in:system'; });
-  if (!card) return;
-  try {
-    var p = JSON.parse(card.value || '{}');
-    var r = p.responses &amp;&amp; p.responses['sys-info-t' + (lc - 1)];
-    if (r &amp;&amp; r.status === 'ok' &amp;&amp; r.completedLiveCount === (lc - 1)) {
-      var widgets = (r.data.deviceClass === 'mobile')
-        ? [{ id: 'hp', type: 'bar', label: 'HP', max: 100 }]
-        : [
-            { id: 'hp',     type: 'bar',  label: 'Health', max: 100 },
-            { id: 'mana',   type: 'bar',  label: 'Mana',   max: 50  },
-            { id: 'weapon', type: 'text', label: 'Weapon' }
-          ];
-      var scripture = { v: 1, manifest: { widgets: widgets }, history: {} };
-      scripture.history[lc] = { hp: state.hp || 100, mana: state.mana || 50, weapon: state.weapon || 'Iron Sword' };
-      var s = storyCards.find(function (c) { return c.title === 'ultrascripts:state:scripture'; });
-      if (s) s.value = JSON.stringify(scripture);
-      else addStoryCard('ultrascripts:state:scripture', JSON.stringify(scripture));
-    }
-  } catch (e) {}
-})();</pre>
+            <p class="text-[11px] text-bd-text-muted">
+              Queue <code>bd.us.call('system', 'info')</code>, read the next-turn result with <code>bd.us.latest('system', 'info')</code>,
+              then choose a Scripture manifest with <code>bd.us.defineScripture(...)</code>. The canonical layout signal is
+              <code>data.deviceClass</code>.
+            </p>
           </div>
         </Transition>
       </section>

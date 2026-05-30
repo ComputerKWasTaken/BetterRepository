@@ -39,7 +39,7 @@
       <div class="p-3 rounded-lg border border-bd-amber/30 bg-bd-amber/5 flex items-center gap-3 flex-wrap">
         <Zap class="w-4 h-4 text-bd-amber flex-shrink-0" />
         <div class="flex-1 min-w-0 text-xs text-bd-text-secondary">
-          <strong class="text-bd-amber">New to Ultrascripts?</strong> The recipes below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
+          <strong class="text-bd-amber">New to Ultrascripts?</strong> The patterns below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
         </div>
         <router-link to="/ultrascripts?tab=quickstart" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-amber/15 hover:bg-bd-amber/25 text-bd-amber text-[11px] font-semibold transition-colors">
           Quick Start
@@ -71,7 +71,7 @@
                 <h4 class="font-semibold text-bd-text-primary flex items-center gap-2 text-[12px]">
                   <Wifi class="w-4 h-4 text-bd-blue" /> Capabilities
                 </h4>
-                <p class="text-[11px]">HTTP <code class="text-bd-green">GET</code>/<code class="text-bd-green">POST</code> with headers and body, plus web search lookups.</p>
+                <p class="text-[11px]">Consent-gated HTTP <code class="text-bd-green">GET</code>/<code class="text-bd-green">HEAD</code>/<code class="text-bd-green">OPTIONS</code> requests, plus web search lookups.</p>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
                 <h4 class="font-semibold text-bd-text-primary flex items-center gap-2 text-[12px]">
@@ -88,8 +88,8 @@
             </div>
             <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
               <p class="text-[11px]">
-                <strong class="text-bd-pink">Replay semantics:</strong> Both ops are marked <code class="text-bd-green">unsafe</code>.
-                On undo/restore the script must filter stale responses by comparing <code class="text-bd-green">completedLiveCount</code> against the current turn.
+                <strong class="text-bd-pink">Replay semantics:</strong> Both ops are marked <code class="text-bd-green">safe</code> in the module contract.
+                If freshness matters, still compare <code class="text-bd-green">completedLiveCount</code> against the current turn before consuming cached data.
               </p>
             </div>
           </div>
@@ -237,65 +237,35 @@
         <button @click="toggleGuideSection('recipes')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Rocket class="w-5 h-5 text-bd-green" />
-            Recipes
+            Usage Patterns
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('recipes') }" />
         </button>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('recipes')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
 
-            <!-- Recipe 1 -->
+            <!-- Pattern 1 -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-2">
               <h4 class="font-semibold text-bd-blue flex items-center gap-1.5 text-[12px]">
                 <Globe class="w-4 h-4" /> External API Data Fetcher
               </h4>
               <p>Issues a GET on every turn to top up scenario state with live data from an external API.</p>
-              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Context Modifier
-(function() {
-  var lc = (info && info.actionCount) || 1;
-  var reqId = 'fetch-lore-t' + lc;
-
-  var payload = {
-    v: 1,
-    requests: [{
-      id: reqId,
-      module: 'webfetch',
-      op: 'fetch',
-      args: {
-        url: 'https://api.example.com/adventure/lore',
-        method: 'GET',
-        headers: { Accept: 'application/json' },
-        maxBodyBytes: 50000
-      }
-    }],
-    acks: []
-  };
-
-  var out = storyCards.find(function(c) { return c.title === 'ultrascripts:out'; });
-  if (out) out.value = JSON.stringify(payload);
-  else addStoryCard('ultrascripts:out', JSON.stringify(payload));
-})();</pre>
+              <p class="text-[11px] text-bd-text-muted">
+                Use <code>bd.us.call('webfetch', 'fetch', args)</code> from a gated Context modifier, not raw story-card writes. Keep fetches
+                sparse, consent-aware, and scoped to origins the player has approved.
+              </p>
             </div>
 
-            <!-- Recipe 2 -->
+            <!-- Pattern 2 -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-2">
               <h4 class="font-semibold text-bd-green flex items-center gap-1.5 text-[12px]">
                 <CheckCircle2 class="w-4 h-4" /> Live-Count-Safe Response Reader
               </h4>
               <p>Reads <code>ultrascripts:in:webfetch</code> on the next turn, ignoring stale responses from undone turns.</p>
-              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Input Modifier
-(function() {
-  var lc = (info && info.actionCount) || 1;
-  var card = storyCards.find(function(c) { return c.title === 'ultrascripts:in:webfetch'; });
-  if (!card) return;
-  try {
-    var p = JSON.parse(card.value || '{}');
-    var r = p.responses && p.responses['fetch-lore-t' + lc];
-    if (r && r.status === 'ok' && r.completedLiveCount === lc) {
-      state.lore = JSON.parse(r.data.body || '{}');
-    }
-  } catch (e) {}
-})();</pre>
+              <p class="text-[11px] text-bd-text-muted">
+                Read cached results through <code>bd.us.latest('webfetch', 'fetch')</code>. If freshness matters, compare
+                <code>completedLiveCount</code> to the current turn before using the body.
+              </p>
             </div>
           </div>
         </Transition>
@@ -320,12 +290,12 @@
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Slow upstream API</h4>
-                <p class="text-bd-text-secondary"><strong>Issue:</strong> Responses time out at 3000ms.</p>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> Responses time out at 30000ms max.</p>
                 <p class="text-bd-text-muted"><strong>Fix:</strong> Only call fast endpoints; cache aggressively in <code>state</code>; design narrative fallbacks for missing data.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
-                <h4 class="font-semibold text-bd-pink text-[12px]">Duplicate replay charges</h4>
-                <p class="text-bd-text-secondary"><strong>Issue:</strong> Undo re-issues a fetch that already happened.</p>
+                <h4 class="font-semibold text-bd-pink text-[12px]">Stale replay data</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> Undo or retry leaves an older fetch response in the cache.</p>
                 <p class="text-bd-text-muted"><strong>Fix:</strong> Always validate <code>completedLiveCount</code> against <code>info.actionCount</code> before consuming a response.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
@@ -357,7 +327,7 @@ const guideSections = [
   { id: 'ops', label: 'Operations' },
   { id: 'wire', label: 'Wire Example' },
   { id: 'header-use', label: 'Usage', isHeader: true },
-  { id: 'recipes', label: 'Recipes' },
+  { id: 'recipes', label: 'Usage Patterns' },
   { id: 'pitfalls', label: 'Pitfalls' }
 ]
 

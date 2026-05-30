@@ -22,7 +22,7 @@
       <div class="p-3 rounded-lg border border-bd-amber/30 bg-bd-amber/5 flex items-center gap-3 flex-wrap">
         <Zap class="w-4 h-4 text-bd-amber flex-shrink-0" />
         <div class="flex-1 min-w-0 text-xs text-bd-text-secondary">
-          <strong class="text-bd-amber">New to Ultrascripts?</strong> The recipes below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
+          <strong class="text-bd-amber">New to Ultrascripts?</strong> The patterns below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
         </div>
         <router-link to="/ultrascripts?tab=quickstart" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-amber/15 hover:bg-bd-amber/25 text-bd-amber text-[11px] font-semibold transition-colors">
           Quick Start
@@ -69,8 +69,8 @@
             <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-cyan/30 space-y-2">
               <div class="flex items-center gap-2 flex-wrap">
                 <h4 class="font-semibold text-bd-cyan text-[13px]"><code>weather.current</code></h4>
-                <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-pink/20 text-bd-pink">unsafe</span>
-                <span class="text-[10px] text-bd-text-muted">3000ms</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
+                <span class="text-[10px] text-bd-text-muted">30000ms max</span>
               </div>
               <p>Current temperature, wind, humidity, and WMO weather code for coordinates or a place name.</p>
               <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// args:
@@ -95,8 +95,8 @@
             <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-2">
               <div class="flex items-center gap-2 flex-wrap">
                 <h4 class="font-semibold text-bd-blue text-[13px]"><code>weather.forecast</code></h4>
-                <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-pink/20 text-bd-pink">unsafe</span>
-                <span class="text-[10px] text-bd-text-muted">3000ms</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
+                <span class="text-[10px] text-bd-text-muted">30000ms max</span>
               </div>
               <p>Daily forecast for the next few days. Useful for travel arcs that span in-story time.</p>
               <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// args:
@@ -104,6 +104,8 @@
 // data:
 {
   "location": { "name": "Chicago", "country": "United States" },
+  "units": "metric",
+  "source": "open-meteo",
   "days": [
     { "date": "2025-01-16", "temperatureMin": -1, "temperatureMax": 6, "weatherCode": 71, "weather": "Slight snow" },
     { "date": "2025-01-17", "temperatureMin":  0, "temperatureMax": 5, "weatherCode": 61, "weather": "Slight rain" }
@@ -138,28 +140,11 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('recipe')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>Apply gameplay debuffs when the player's real-world weather is severe.</p>
-            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Context Modifier
-(function () {
-  var lc = (info &amp;&amp; info.actionCount) || 1;
-  var card = storyCards.find(function (c) { return c.title === 'ultrascripts:in:weather'; });
-  if (!card) return;
-  try {
-    var p = JSON.parse(card.value || '{}');
-    var r = p.responses &amp;&amp; p.responses['weather-cur-t' + (lc - 1)];
-    if (r &amp;&amp; r.status === 'ok' &amp;&amp; r.completedLiveCount === (lc - 1)) {
-      var wc = r.data.current &amp;&amp; r.data.current.weatherCode;
-      if (wc >= 61 &amp;&amp; wc <= 65) {
-        state.combatPenalty = -2;
-        text += '\n[Combat Mod: Rain dampens the ground. Ranged attacks suffer -2.]';
-      } else if (wc === 95 || wc >= 96) {
-        state.combatPenalty = -4;
-        text += '\n[Combat Mod: Thunderstorm overhead. Spell costs doubled.]';
-      } else {
-        state.combatPenalty = 0;
-      }
-    }
-  } catch (e) {}
-})();</pre>
+            <p class="text-[11px] text-bd-text-muted">
+              Queue <code>bd.us.call('weather', 'current', { place, units })</code> only when needed, then read
+              <code>bd.us.latest('weather', 'current').data.current.weatherCode</code> on a later turn. Store gameplay flags as plain data on
+              <code>state</code>.
+            </p>
           </div>
         </Transition>
       </section>

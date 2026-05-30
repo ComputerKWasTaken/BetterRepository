@@ -39,7 +39,7 @@
       <div class="p-3 rounded-lg border border-bd-amber/30 bg-bd-amber/5 flex items-center gap-3 flex-wrap">
         <Zap class="w-4 h-4 text-bd-amber flex-shrink-0" />
         <div class="flex-1 min-w-0 text-xs text-bd-text-secondary">
-          <strong class="text-bd-amber">New to Ultrascripts?</strong> The recipes below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
+          <strong class="text-bd-amber">New to Ultrascripts?</strong> The patterns below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
         </div>
         <router-link to="/ultrascripts?tab=quickstart" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-amber/15 hover:bg-bd-amber/25 text-bd-amber text-[11px] font-semibold transition-colors">
           Quick Start
@@ -277,95 +277,12 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('helper')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              Wrap heartbeat lookups behind a small helper so scenario code reads cleanly. Drop this into your <strong>Library</strong> script and reuse it across modifiers.
+              Use the canonical <code>bd.us</code> helper from Quick Start for script-side runtime discovery. This SDK page documents the
+              <code>sdk</code> module itself; it should not publish a second helper implementation.
             </p>
-            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">// Library Script
-globalThis.bd = globalThis.bd || {};
-var bd = globalThis.bd;
-bd.sdk = bd.sdk || {};
-
-function getHeartbeat() {
-  var cards = Array.isArray(storyCards) ? storyCards : [];
-  var best = null;
-  var bestScore = -1;
-  for (var i = 0; i < cards.length; i++) {
-    var c = cards[i];
-    if (c &amp;&amp; (c.title === 'ultrascripts:heartbeat' || c.keys === 'ultrascripts:heartbeat' || c.key === 'ultrascripts:heartbeat')) {
-      try {
-        var hb = JSON.parse(c.value || c.entry || c.description || '{}');
-        var score = heartbeatScore(hb);
-        if (score > bestScore) {
-          best = hb;
-          bestScore = score;
-        }
-      } catch (e) {}
-    }
-  }
-  return best;
-}
-
-function heartbeatScore(hb) {
-  if (!hb || !hb.ultrascripts || hb.ultrascripts.protocol !== 1) return -1;
-  if (hb.ultrascripts.client !== 'BetterDungeon' || hb.ultrascripts.archived) return -1;
-  var moduleCount = normalizeModules(hb).length;
-  var writtenAt = Date.parse(hb.writtenAt || '') || 0;
-  return moduleCount * 10000000000000 + writtenAt;
-}
-
-bd.sdk.runtimePresent = function () {
-  return !!getHeartbeat();
-};
-
-bd.sdk.hasModule = function (moduleId) {
-  var hb = getHeartbeat();
-  var mods = normalizeModules(hb);
-  for (var i = 0; i < mods.length; i++) {
-    if (mods[i] &amp;&amp; mods[i].id === moduleId) return true;
-  }
-  return false;
-};
-
-function normalizeModules(hb) {
-  var raw = hb &amp;&amp; hb.modules;
-  if (Array.isArray(raw)) return raw;
-  if (raw &amp;&amp; typeof raw === 'object') {
-    var list = [];
-    for (var id in raw) {
-      var m = raw[id];
-      if (m &amp;&amp; typeof m === 'object') {
-        if (!m.id) m.id = id;
-        list.push(m);
-      } else if (m) {
-        list.push({ id: id, ops: [] });
-      }
-    }
-    return list;
-  }
-  return [];
-}
-
-function normalizeOps(moduleInfo) {
-  var raw = moduleInfo &amp;&amp; (moduleInfo.ops || moduleInfo.operations || moduleInfo.capabilities);
-  if (Array.isArray(raw)) {
-    return raw.map(function (op) {
-      return typeof op === 'string' ? op : (op &amp;&amp; (op.id || op.name || op.op));
-    }).filter(Boolean);
-  }
-  if (raw &amp;&amp; typeof raw === 'object') return Object.keys(raw);
-  return [];
-}
-
-bd.sdk.hasOp = function (moduleId, opName) {
-  var hb = getHeartbeat();
-  var mods = normalizeModules(hb);
-  for (var i = 0; i < mods.length; i++) {
-    var m = mods[i];
-    if (!m || m.id !== moduleId) continue;
-    var ops = normalizeOps(m);
-    return ops.indexOf(opName) !== -1;
-  }
-  return false;
-};</pre>
+            <router-link to="/ultrascripts?tab=quickstart" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-bd-amber/15 hover:bg-bd-amber/25 border border-bd-amber/30 text-bd-amber text-[11px] font-medium transition-colors">
+              Open Quick Start SDK Helper
+            </router-link>
           </div>
         </Transition>
       </section>
@@ -385,36 +302,6 @@ bd.sdk.hasOp = function (moduleId, opName) {
               Most creator flows only need to ask for <code>sdk.config</code> once per adventure, cache the last response, and branch from there. This is
               the paved path when you are already using the <code>bd.us</code> helper from Quick Start.
             </p>
-
-            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">globalThis.bd = globalThis.bd || {};
-var bd = globalThis.bd;
-state.usCreator = state.usCreator || {};
-
-bd.us.tick();
-
-var creator = state.usCreator;
-var cfg = bd.us.latest('sdk', 'config');
-
-if (bd.us.available() &amp;&amp; bd.us.has('sdk', 'config') &amp;&amp; !creator.requestedSdkConfig) {
-  creator.requestedSdkConfig = true;
-  bd.us.call('sdk', 'config');
-}
-
-if (cfg &amp;&amp; cfg.status === 'ok') {
-  var aiReady = !!(cfg.data
-    &amp;&amp; cfg.data.ultrascripts
-    &amp;&amp; cfg.data.ultrascripts.ai
-    &amp;&amp; cfg.data.ultrascripts.ai.configured);
-
-  if (aiReady &amp;&amp; bd.us.has('ai', 'chat')) {
-    // safe to offer the AI-enhanced path
-  } else {
-    // plain-script fallback path
-  }
-}
-
-bd.us.commit();</pre>
-
             <ul class="space-y-1 text-[11px]">
               <li>&middot; Queue <code class="text-bd-green">sdk.config</code> once, then keep reusing the latest cached response.</li>
               <li>&middot; Branch on the actual player configuration instead of assuming modules are usable just because they exist in heartbeat.</li>
@@ -429,7 +316,7 @@ bd.us.commit();</pre>
         <button @click="toggleGuideSection('recipes')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Rocket class="w-5 h-5 text-bd-green" />
-            Recipes
+            Usage Patterns
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('recipes') }" />
         </button>
@@ -441,22 +328,10 @@ bd.us.commit();</pre>
                 <CheckCircle2 class="w-4 h-4" /> Progressive Enhancement
               </h4>
               <p>Use Scripture widgets when available; otherwise fall back to plain bracketed status text.</p>
-              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Context Modifier
-(function () {
-  var bd = globalThis.bd || {};
-  if (bd.sdk &amp;&amp; bd.sdk.hasModule('scripture')) {
-    // Publish a widget instead of plain text
-    var s = { v: 1, manifest: { widgets: [{ id: 'hp', type: 'bar', label: 'HP', max: 100 }] }, history: {} };
-    s.history[(info &amp;&amp; info.actionCount) || 1] = { hp: state.hp || 100 };
-    var index = storyCards.findIndex(function (c) {
-      return c &amp;&amp; (c.title === 'ultrascripts:state:scripture' || c.keys === 'ultrascripts:state:scripture' || c.key === 'ultrascripts:state:scripture');
-    });
-    if (index &gt;= 0) updateStoryCard(index, storyCards[index].keys || storyCards[index].key || 'ultrascripts:state:scripture', JSON.stringify(s), storyCards[index].type || 'Ultrascripts');
-    else addStoryCard('ultrascripts:state:scripture', JSON.stringify(s), 'Ultrascripts');
-  } else {
-    text += '\n[HP: ' + (state.hp || 100) + '/100]';
-  }
-})();</pre>
+              <p class="text-[11px] text-bd-text-muted">
+                Follow the Quick Start enhanced fallback snippet: check <code>bd.us.available()</code> and <code>bd.us.has('scripture')</code>,
+                then publish via <code>bd.us.defineScripture(...)</code> and <code>bd.us.publishScripture(...)</code>.
+              </p>
             </div>
 
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-2">
@@ -464,30 +339,10 @@ bd.us.commit();</pre>
                 <RefreshCw class="w-4 h-4" /> Generic Ops Helper
               </h4>
               <p>One reusable function that any module call can flow through, with auto-acks and live-count-suffixed request ids.</p>
-              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Library Script
-globalThis.bd = globalThis.bd || {};
-var bd = globalThis.bd;
-bd.activeRequests = bd.activeRequests || {};
-
-bd.sendOpRequest = function (moduleId, opName, args) {
-  var lc = (info &amp;&amp; info.actionCount) || 1;
-  var reqId = moduleId + '-' + opName + '-t' + lc;
-
-  var payload = {
-    v: 1,
-    requests: [{ id: reqId, module: moduleId, op: opName, args: args }],
-    acks: Object.keys(bd.activeRequests)
-  };
-
-  var index = storyCards.findIndex(function (c) {
-    return c &amp;&amp; (c.title === 'ultrascripts:out' || c.keys === 'ultrascripts:out' || c.key === 'ultrascripts:out');
-  });
-  if (index &gt;= 0) updateStoryCard(index, storyCards[index].keys || storyCards[index].key || 'ultrascripts:out', JSON.stringify(payload), storyCards[index].type || 'Ultrascripts');
-  else addStoryCard('ultrascripts:out', JSON.stringify(payload), 'Ultrascripts');
-
-  bd.activeRequests[reqId] = true;
-  return reqId;
-};</pre>
+              <p class="text-[11px] text-bd-text-muted">
+                Use <code>bd.us.call(module, op, args)</code>, <code>bd.us.latest(module, op)</code>, and <code>bd.us.commit()</code>.
+                Public docs should not teach raw request-envelope helpers outside the SDK helper itself.
+              </p>
             </div>
           </div>
         </Transition>
@@ -550,7 +405,7 @@ const guideSections = [
   { id: 'helper', label: 'Helper Library' },
   { id: 'header-use', label: 'Usage', isHeader: true },
   { id: 'bootstrap', label: 'Bootstrap Pattern' },
-  { id: 'recipes', label: 'Recipes' },
+  { id: 'recipes', label: 'Usage Patterns' },
   { id: 'pitfalls', label: 'Pitfalls' }
 ]
 

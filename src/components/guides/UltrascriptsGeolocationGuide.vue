@@ -22,7 +22,7 @@
       <div class="p-3 rounded-lg border border-bd-amber/30 bg-bd-amber/5 flex items-center gap-3 flex-wrap">
         <Zap class="w-4 h-4 text-bd-amber flex-shrink-0" />
         <div class="flex-1 min-w-0 text-xs text-bd-text-secondary">
-          <strong class="text-bd-amber">New to Ultrascripts?</strong> The recipes below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
+          <strong class="text-bd-amber">New to Ultrascripts?</strong> The patterns below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
         </div>
         <router-link to="/ultrascripts?tab=quickstart" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-amber/15 hover:bg-bd-amber/25 text-bd-amber text-[11px] font-semibold transition-colors">
           Quick Start
@@ -114,24 +114,10 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('recipe')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>Caches the player's region once per session and reuses it; gracefully degrades when permission is denied.</p>
-            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Library helper
-state.bd = state.bd || {};
-state.bd.geo = state.bd.geo || null;  // cached once
-
-// Input Modifier (read response written last turn)
-(function () {
-  if (state.bd.geo) return;  // already cached
-  var lc = (info &amp;&amp; info.actionCount) || 1;
-  var card = storyCards.find(function (c) { return c.title === 'ultrascripts:in:geolocation'; });
-  if (!card) return;
-  try {
-    var p = JSON.parse(card.value || '{}');
-    var r = p.responses &amp;&amp; p.responses['geo-cur-t' + (lc - 1)];
-    if (r &amp;&amp; r.status === 'ok' &amp;&amp; r.completedLiveCount === (lc - 1)) {
-      state.bd.geo = { latitude: r.data.latitude, longitude: r.data.longitude };
-    }
-  } catch (e) {}
-})();</pre>
+            <p class="text-[11px] text-bd-text-muted">
+              Request <code>geolocation.permission</code> first, queue <code>geolocation.getCurrent</code> only when permission is granted,
+              and cache plain coordinates on <code>state.geo</code>. Do not store helper functions under <code>state</code>.
+            </p>
           </div>
         </Transition>
       </section>
@@ -153,7 +139,7 @@ state.bd.geo = state.bd.geo || null;  // cached once
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Re-prompting on every turn</h4>
                 <p class="text-bd-text-secondary"><strong>Issue:</strong> Calling <code>getCurrent</code> repeatedly forces the browser to keep resolving.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Cache the resolved coordinates in <code>state.bd.geo</code> for the rest of the session.</p>
+              <p class="text-bd-text-muted"><strong>Fix:</strong> Cache the resolved coordinates in <code>state.geo</code> for the rest of the session.</p>
               </div>
             </div>
           </div>

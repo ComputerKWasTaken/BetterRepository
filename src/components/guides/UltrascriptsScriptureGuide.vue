@@ -24,7 +24,7 @@
       <div class="p-3 rounded-lg border border-bd-amber/30 bg-bd-amber/5 flex items-center gap-3 flex-wrap">
         <Zap class="w-4 h-4 text-bd-amber flex-shrink-0" />
         <div class="flex-1 min-w-0 text-xs text-bd-text-secondary">
-          <strong class="text-bd-amber">New to Ultrascripts?</strong> The recipes below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
+          <strong class="text-bd-amber">New to Ultrascripts?</strong> The patterns below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
         </div>
         <router-link to="/ultrascripts?tab=quickstart" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-amber/15 hover:bg-bd-amber/25 text-bd-amber text-[11px] font-semibold transition-colors">
           Quick Start
@@ -312,39 +312,12 @@
         </button>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('helpers')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
-            <p>Drop this into your <strong>Library</strong> script. It maintains the payload across turns, appends each new snapshot, and writes the card safely.</p>
-            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">// Library Script
-state.bd = state.bd || {};
-var bd  = state.bd;
-
-// Declare your widget manifest ONCE
-bd.scripture = bd.scripture || {
-  v: 1,
-  manifest: {
-    widgets: [
-      { id: 'hp',    type: 'bar',       label: 'Health', max: 100, color: '#22c55e' },
-      { id: 'mana',  type: 'bar',       label: 'Mana',   max: 50,  color: '#3b82f6' },
-      { id: 'where', type: 'text',      label: 'Region' },
-      { id: 'tags',  type: 'taggroup',  label: 'Status' }
-    ]
-  },
-  history: {}
-};
-
-// Push the current turn's snapshot
-bd.publishScripture = function (values) {
-  var lc = (info &amp;&amp; info.actionCount) || 1;
-  bd.scripture.history[lc] = values;
-
-  var title = 'ultrascripts:state:scripture';
-  var card  = (Array.isArray(storyCards) ? storyCards : []).find(function (c) { return c &amp;&amp; c.title === title; });
-  var json  = JSON.stringify(bd.scripture);
-  if (card) card.value = json;
-  else      addStoryCard(title, json);
-};</pre>
+            <p>
+              Use the <code>bd.us</code> helper from Quick Start instead of maintaining a second Scripture helper here. Declare the manifest with
+              <code>bd.us.defineScripture(...)</code>, then publish each turn with <code>bd.us.publishScripture(...)</code>.
+            </p>
             <p class="text-[11px] text-bd-text-muted">
-              Call <code>bd.publishScripture({ hp: state.hp, mana: state.mana, where: state.location, tags: [&hellip;] })</code> from any modifier
-              when your state actually changes. Scripture handles re-rendering on undo/redo automatically.
+              This keeps all card I/O, history keys, and interaction acks in one reviewed SDK path instead of teaching authors a second raw-card pattern.
             </p>
           </div>
         </Transition>
@@ -355,129 +328,59 @@ bd.publishScripture = function (values) {
         <button @click="toggleGuideSection('recipes')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Rocket class="w-5 h-5 text-bd-green" />
-            Recipes
+            Usage Patterns
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('recipes') }" />
         </button>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('recipes')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
 
-            <!-- Recipe 1: HP/Mana HUD -->
+            <!-- Pattern 1: HP/Mana HUD -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-2">
               <h4 class="font-semibold text-bd-green flex items-center gap-1.5 text-[12px]">
-                <Sparkles class="w-4 h-4" /> Recipe 1: HP / Mana / Region HUD
+                <Sparkles class="w-4 h-4" /> Pattern 1: HP / Mana / Region HUD
               </h4>
               <p>The classic RPG sidebar. Combined with the library helper above, this is two lines of code per turn.</p>
-              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Context Modifier
-(function () {
-  state.hp       = state.hp       !== undefined ? state.hp       : 80;
-  state.mana     = state.mana     !== undefined ? state.mana     : 35;
-  state.location = state.location || 'Echoing Caverns';
-  state.statusTags = state.statusTags || [];
-
-  state.bd.publishScripture({
-    hp:    state.hp,
-    mana:  state.mana,
-    where: state.location,
-    tags:  state.statusTags
-  });
-})();</pre>
+              <p class="text-[11px] text-bd-text-muted">
+                Keep this as a manifest plus value-shape idea: bars for health/mana, text for location, and a taggroup for status effects.
+                The Quick Start HP bar snippet is the copy-paste version.
+              </p>
             </div>
 
-            <!-- Recipe 2: Quest Tracker -->
+            <!-- Pattern 2: Quest Tracker -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-2">
               <h4 class="font-semibold text-bd-blue flex items-center gap-1.5 text-[12px]">
-                <Layers class="w-4 h-4" /> Recipe 2: Quest Tracker Checklist
+                <Layers class="w-4 h-4" /> Pattern 2: Quest Tracker Checklist
               </h4>
               <p>Replace the manifest above with a focused quest-tracker manifest.</p>
-              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Library Script (manifest override)
-state.bd.scripture = {
-  v: 1,
-  manifest: { widgets: [{ id: 'quests', type: 'list', label: 'Objectives' }] },
-  history: {}
-};
-
-// Context Modifier
-state.quests = state.quests || [
-  { text: '[ ] Retrieve the Amber Relic' },
-  { text: '[x] Locate the hidden trapdoor' },
-  { text: '[ ] Escape the ambush' }
-];
-state.bd.publishScripture({ quests: state.quests });</pre>
+              <p class="text-[11px] text-bd-text-muted">
+                Use a <code>list</code> widget for objectives. Store the quest array as plain data on <code>state.quests</code>, then publish it
+                through <code>bd.us.publishScripture({ quests: state.quests })</code>.
+              </p>
             </div>
 
-            <!-- Recipe 3: Character Dashboard -->
+            <!-- Pattern 3: Character Dashboard -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-2">
               <h4 class="font-semibold text-bd-purple flex items-center gap-1.5 text-[12px]">
-                <Palette class="w-4 h-4" /> Recipe 3: Character Sheet Dashboard
+                <Palette class="w-4 h-4" /> Pattern 3: Character Sheet Dashboard
               </h4>
               <p>Combines tag groups, bars, panels, and text into one rich sheet.</p>
-              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Library Script (manifest override)
-state.bd.scripture = {
-  v: 1,
-  manifest: {
-    widgets: [
-      { id: 'titles',   type: 'taggroup', label: 'Titles' },
-      { id: 'xp',       type: 'bar',      label: 'Experience', max: 1000, color: '#eab308' },
-      { id: 'attrs',    type: 'panel',    title: 'Attributes' },
-      { id: 'weapon',   type: 'text',       label: 'Weapon' },
-      { id: 'shield',   type: 'text',       label: 'Shield' }
-    ]
-  },
-  history: {}
-};
-
-// Context Modifier
-state.level = state.level || 4;
-state.xp    = state.xp    || 420;
-
-state.bd.publishScripture({
-  titles: [
-    { text: 'Level ' + state.level, color: '#f59e0b' },
-    { text: 'Fighter',              color: '#a855f7' }
-  ],
-  xp: state.xp,
-  attrs: [
-    { label: 'STR', value: 14 },
-    { label: 'DEX', value: 12 },
-    { label: 'INT', value: 16 },
-    { label: 'CON', value: 13 }
-  ],
-  weapon: state.weapon || 'Steel Broadsword',
-  shield: state.shield || 'Iron Buckler'
-});</pre>
+              <p class="text-[11px] text-bd-text-muted">
+                Combine <code>taggroup</code>, <code>bar</code>, <code>panel</code>, and <code>text</code> widgets, but publish through the
+                Quick Start helper so history and current live-count behavior stay consistent.
+              </p>
             </div>
 
-            <!-- Recipe 4: Inventory + Journal -->
+            <!-- Pattern 4: Inventory + Journal -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-pink/30 space-y-2">
               <h4 class="font-semibold text-bd-pink flex items-center gap-1.5 text-[12px]">
-                <BookOpen class="w-4 h-4" /> Recipe 4: Inventory + Adventure Log
+                <BookOpen class="w-4 h-4" /> Pattern 4: Inventory + Adventure Log
               </h4>
               <p>Two heavier widgets together. Use sparingly &mdash; this is the upper bound of what fits comfortably in the sidebar.</p>
-              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Library Script (manifest)
-state.bd.scripture = {
-  v: 1,
-  manifest: {
-    widgets: [
-      { id: 'bag', type: 'list',   label: 'Bag' },
-      { id: 'log', type: 'custom', label: 'Adventure Log' }
-    ]
-  },
-  history: {}
-};
-
-// Context Modifier
-state.inventory = state.inventory || [
-  { text: 'Healing Potion x3' },
-  { text: 'Iron Key' },
-  { text: 'Torch x5' }
-];
-state.journal = state.journal || '<p>No journal entries yet.</p>';
-
-state.bd.publishScripture({
-  bag: state.inventory,
-  log: { html: state.journal }
-});</pre>
+              <p class="text-[11px] text-bd-text-muted">
+                Use <code>list</code> for compact inventory data and <code>custom</code> only when you need controlled HTML. Keep large journals
+                pruned so the state card stays small.
+              </p>
             </div>
           </div>
         </Transition>
@@ -531,29 +434,10 @@ state.bd.publishScripture({
               </p>
             </div>
 
-            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">// Input Modifier
-(function () {
-  var card = storyCards.find(function (c) { return c.title === 'ultrascripts:in:scripture'; });
-  if (!card) return;
-  try {
-    var p = JSON.parse(card.value || '{}');
-    var events = (p &amp;&amp; p.widgetEvents &amp;&amp; p.widgetEvents.events) || [];
-    var handledSeq = 0;
-    for (var i = 0; i < events.length; i++) {
-      var e = events[i];
-      if (e.widgetId === 'questComplete' &amp;&amp; e.action === 'change') {
-        state.questComplete = !!e.value;
-        handledSeq = Math.max(handledSeq, Number(e.seq || 0));
-      }
-    }
-    if (handledSeq &gt; 0) {
-      state.bd = state.bd || {};
-      state.bd.scripture = state.bd.scripture || { v: 1, manifest: { widgets: [] }, history: {} };
-      state.bd.scripture.interactions = state.bd.scripture.interactions || {};
-      state.bd.scripture.interactions.ackSeq = handledSeq;
-    }
-  } catch (e) {}
-})();</pre>
+            <p class="text-[11px] text-bd-text-muted">
+              In helper-based scripts, use <code>bd.us.scriptureEvents()</code> to read unacked events and <code>bd.us.ackScripture(seq)</code>
+              after applying each event to plain scenario state.
+            </p>
           </div>
         </Transition>
       </section>
@@ -683,7 +567,7 @@ state.bd.publishScripture({
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">History grows forever</h4>
                 <p class="text-bd-text-secondary"><strong>Issue:</strong> Card grows large over a long adventure.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Prune entries older than ~50 turns from <code>state.bd.scripture.history</code> on each write. Scripture only ever needs recent context for the live count fallback.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Let <code>bd.us.publishScripture(...)</code> own the Scripture history path, and prune old history entries if a scenario publishes large snapshots.</p>
               </div>
             </div>
           </div>
@@ -716,7 +600,7 @@ const guideSections = [
   { id: 'display', label: 'Display Config' },
   { id: 'header-use', label: 'Usage', isHeader: true },
   { id: 'helpers', label: 'Library Helpers' },
-  { id: 'recipes', label: 'Recipes' },
+  { id: 'recipes', label: 'Usage Patterns' },
   { id: 'tips', label: 'Authoring Tips' },
   { id: 'pitfalls', label: 'Troubleshooting' }
 ]

@@ -22,7 +22,7 @@
       <div class="p-3 rounded-lg border border-bd-amber/30 bg-bd-amber/5 flex items-center gap-3 flex-wrap">
         <Zap class="w-4 h-4 text-bd-amber flex-shrink-0" />
         <div class="flex-1 min-w-0 text-xs text-bd-text-secondary">
-          <strong class="text-bd-amber">New to Ultrascripts?</strong> The recipes below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
+          <strong class="text-bd-amber">New to Ultrascripts?</strong> The patterns below assume the <code class="text-bd-green">bd.us</code> SDK helper from Quick Start.
         </div>
         <router-link to="/ultrascripts?tab=quickstart" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-amber/15 hover:bg-bd-amber/25 text-bd-amber text-[11px] font-semibold transition-colors">
           Quick Start
@@ -72,7 +72,9 @@
 // data:
 {
   "online": true,
-  "effectiveType": "4g" | "3g" | "2g" | "slow-2g" | "unknown",
+  "quality": "good" | "limited" | "constrained" | "offline" | "unknown",
+  "connectionSupported": true,
+  "effectiveType": "4g" | "3g" | "2g" | "slow-2g" | null,
   "downlinkMbps": 10.2,                // optional, may be absent on some browsers
   "rttMs": 50,                         // optional
   "saveData": false
@@ -92,20 +94,10 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('recipe')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>Skip WebFetch and Provider AI work when the player is offline, falling back to local-only narration.</p>
-            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">// Context Modifier
-(function () {
-  var card = storyCards.find(function (c) { return c.title === 'ultrascripts:in:network'; });
-  if (!card) return;
-  try {
-    var p = JSON.parse(card.value || '{}');
-    var lc = (info &amp;&amp; info.actionCount) || 1;
-    var r = p.responses &amp;&amp; p.responses['net-status-t' + (lc - 1)];
-    if (r &amp;&amp; r.status === 'ok' &amp;&amp; !r.data.online) {
-      state.bd = state.bd || {};
-      state.bd.offline = true;
-    }
-  } catch (e) {}
-})();</pre>
+            <p class="text-[11px] text-bd-text-muted">
+              Queue <code>bd.us.call('network', 'status')</code>, read <code>bd.us.latest('network', 'status')</code> on a later turn,
+              and store a plain boolean such as <code>state.offline = true</code> when needed.
+            </p>
           </div>
         </Transition>
       </section>

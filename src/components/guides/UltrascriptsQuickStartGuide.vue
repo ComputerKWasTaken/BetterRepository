@@ -387,7 +387,7 @@ bd.us.defineScripture({
             <div>
               <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">Context Modifier (runs every turn)</div>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">bd.us.tick();
-bd.us.publishScripture({ hp: state.hp || 100 });
+bd.us.publishScripture({ hp: state.hp !== undefined ? state.hp : 100 });
 bd.us.commit();</pre>
             </div>
 
@@ -474,8 +474,11 @@ Turn N+2 :  ...continues every turn</pre>
 
 // Inject the previous Co-GM line as front-context
 var prev = bd.us.latest('ai', 'chat');
-if (prev &amp;&amp; prev.status === 'ok' &amp;&amp; prev.data.content) {
-  text = '[Ambient: ' + prev.data.content.trim() + ']\n' + text;
+var prevText = prev &amp;&amp; prev.status === 'ok' &amp;&amp; prev.data
+  ? (prev.data.text || (prev.data.message &amp;&amp; prev.data.message.content) || '')
+  : '';
+if (prevText) {
+  text = '[Ambient: ' + String(prevText).trim() + ']\n' + text;
 }
 
 // Queue this turn's Co-GM request (only if AI is configured)
@@ -502,8 +505,8 @@ bd.us.commit();</pre>
             </div>
 
             <p>
-              You should also call <code>bd.us.call('sdk', 'config')</code> once at scenario start (in your Library or first-turn hook)
-              so <code>aiReady</code> has a real value to read. See the Cookbook tab for that one-shot setup pattern.
+              The snippet queues <code>sdk.config</code> automatically until a config response is cached, so the AI path becomes available after setup
+              without breaking the plain scenario flow.
             </p>
           </div>
         </Transition>
@@ -548,20 +551,32 @@ if (clockResult &amp;&amp; clockResult.status === 'ok') {
 }
 
 var coGm = bd.us.latest('ai', 'chat');
-if (coGm &amp;&amp; coGm.status === 'ok' &amp;&amp; coGm.data.content) {
-  text = '[Ambient: ' + coGm.data.content.trim() + ']\n' + text;
+var coGmText = coGm &amp;&amp; coGm.status === 'ok' &amp;&amp; coGm.data
+  ? (coGm.data.text || (coGm.data.message &amp;&amp; coGm.data.message.content) || '')
+  : '';
+if (coGmText) {
+  text = '[Ambient: ' + String(coGmText).trim() + ']\n' + text;
 }
 
-// 3. Publish widget snapshot (always cheap).
-bd.us.publishScripture({
-  hp:    state.hp       !== undefined ? state.hp : 100,
-  where: state.location || 'Unknown'
-});
+// 3. Publish widget snapshot when Scripture is mounted.
+if (bd.us.has('scripture')) {
+  bd.us.publishScripture({
+    hp:    state.hp       !== undefined ? state.hp : 100,
+    where: state.location || 'Unknown'
+  });
+}
 
 // 4. Queue this turn's requests.
 if (bd.us.has('clock', 'now')) bd.us.call('clock', 'now');
 
-if (bd.us.has('ai', 'chat')) {
+var cfg = bd.us.latest('sdk', 'config');
+var aiReady = cfg &amp;&amp; cfg.status === 'ok'
+  &amp;&amp; cfg.data
+  &amp;&amp; cfg.data.ultrascripts
+  &amp;&amp; cfg.data.ultrascripts.ai
+  &amp;&amp; cfg.data.ultrascripts.ai.configured;
+
+if (bd.us.has('ai', 'chat') &amp;&amp; aiReady) {
   bd.us.call('ai', 'chat', {
     model: 'google/gemini-2.0-flash-exp:free',
     temperature: 0.7,
@@ -572,6 +587,7 @@ if (bd.us.has('ai', 'chat')) {
     ]
   });
 }
+if (bd.us.has('sdk', 'config') &amp;&amp; !cfg) bd.us.call('sdk', 'config');
 
 // 5. Send everything in one envelope.
 bd.us.commit();</pre>
@@ -604,7 +620,7 @@ bd.us.commit();</pre>
                 <h4 class="font-semibold text-bd-green text-[12px] mb-1 flex items-center gap-1.5">
                   <BookOpen class="w-4 h-4" /> Cookbook
                 </h4>
-                <p class="text-[11px] text-bd-text-secondary">Copy-paste recipes for 8+ common patterns: quest tracker, weather combat, AI extraction, inventory grid, and more &mdash; all using <code>bd.us</code>.</p>
+                <p class="text-[11px] text-bd-text-secondary">Pattern guidance for common flows: quest tracker, weather combat, AI extraction, inventory grid, and more.</p>
               </router-link>
               <router-link to="/ultrascripts?tab=scripture" class="block p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 hover:border-bd-blue/50 transition-colors group">
                 <h4 class="font-semibold text-bd-blue text-[12px] mb-1 flex items-center gap-1.5">
@@ -704,24 +720,32 @@ bd.us._results         = bd.us._results         || {};   // { moduleId: { reqId:
 bd.us._reqCounter      = bd.us._reqCounter      || 0;
 
 // --- card I/O ---
+bd.us._cardMatches = function (card, title) {
+  if (!card) return false;
+  if (card.title === title || card.key === title || card.keys === title) return true;
+  if (Array.isArray(card.keys)) return card.keys.indexOf(title) !== -1;
+  return false;
+};
 bd.us._findCard = function (title) {
   var cards = Array.isArray(storyCards) ? storyCards : [];
   for (var i = 0; i < cards.length; i++) {
-    var c = cards[i];
-    if (c && (c.title === title || c.keys === title || c.key === title)) return c;
+    if (bd.us._cardMatches(cards[i], title)) return cards[i];
   }
   return null;
 };
 bd.us._findCardIndex = function (title) {
   var cards = Array.isArray(storyCards) ? storyCards : [];
   for (var i = 0; i < cards.length; i++) {
-    var c = cards[i];
-    if (c && (c.title === title || c.keys === title || c.key === title)) return i;
+    if (bd.us._cardMatches(cards[i], title)) return i;
   }
   return -1;
 };
 bd.us._cardText = function (card) {
-  return card ? (card.value || card.entry || card.description || '') : '';
+  if (!card) return '';
+  if (card.value !== undefined && card.value !== null) return card.value;
+  if (card.entry !== undefined && card.entry !== null) return card.entry;
+  if (card.description !== undefined && card.description !== null) return card.description;
+  return '';
 };
 bd.us._upsertCard = function (title, value) {
   var index = bd.us._findCardIndex(title);
@@ -730,11 +754,14 @@ bd.us._upsertCard = function (title, value) {
     if (typeof updateStoryCard === 'function') {
       updateStoryCard(index, c.keys || c.key || c.title || title, value, c.type || 'Ultrascripts');
     } else {
-      c.value = value;
-      c.entry = value;
+      log('Ultrascripts SDK: updateStoryCard is unavailable; cannot update ' + title);
     }
   } else {
-    addStoryCard(title, value, 'Ultrascripts');
+    if (typeof addStoryCard === 'function') {
+      addStoryCard(title, value, 'Ultrascripts');
+    } else {
+      log('Ultrascripts SDK: addStoryCard is unavailable; cannot create ' + title);
+    }
   }
 };
 bd.us._parseCard = function (title) {
@@ -747,7 +774,7 @@ bd.us._parseCards = function (title) {
   var parsed = [];
   for (var i = 0; i < cards.length; i++) {
     var c = cards[i];
-    if (!c || (c.title !== title && c.keys !== title && c.key !== title)) continue;
+    if (!bd.us._cardMatches(c, title)) continue;
     try { parsed.push(JSON.parse(bd.us._cardText(c) || '{}')); } catch (e) {}
   }
   return parsed;

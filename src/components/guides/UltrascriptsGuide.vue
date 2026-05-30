@@ -46,8 +46,8 @@
             <h2 class="text-base font-semibold text-bd-text-primary mb-1">New here? Start with the paved path.</h2>
             <p class="text-xs text-bd-text-secondary leading-relaxed mb-3">
               <strong>Quick Start</strong> walks you through pasting the Ultrascripts SDK helper into your Library script and building a working
-              HP bar + Clock + AI integration in under five minutes. After that, the <strong>Cookbook</strong> has copy-paste recipes for the eight
-              most common patterns.
+              HP bar + Clock + AI integration in under five minutes. After that, the <strong>Cookbook</strong> maps the eight
+              most common patterns without adding a second copy-paste surface.
             </p>
             <div class="flex flex-wrap items-center gap-2">
               <router-link
@@ -386,7 +386,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('deep-dives')" class="mt-4 space-y-4 text-xs">
             <p class="text-bd-text-secondary">
-              Each module family has a dedicated guide with complete API references, copy-paste recipes, and troubleshooting grids.
+              Each module family has a dedicated guide with complete API references, usage patterns, and troubleshooting grids.
             </p>
 
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-3">

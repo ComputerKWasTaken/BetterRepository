@@ -506,8 +506,8 @@
             <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
               <p class="text-[11px]">
                 <strong class="text-bd-pink">Idempotency matters.</strong> Each op is marked <code class="text-bd-green">safe</code> or <code class="text-bd-green">unsafe</code> for replay.
-                Hosted AI calls and external HTTP requests are <strong>unsafe</strong> &mdash; scripts must filter out responses whose <code class="text-bd-green">completedLiveCount</code> no longer
-                matches the current turn.
+                Hosted AI calls are <strong>unsafe</strong>; WebFetch is marked <strong>safe</strong> but can still return stale external data.
+                Scripts should filter responses whose <code class="text-bd-green">completedLiveCount</code> no longer matches the current turn when freshness matters.
               </p>
             </div>
           </div>
