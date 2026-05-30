@@ -724,13 +724,41 @@ bd.us.liveCount = function () { return (info && info.actionCount) || 0; };
 // --- heartbeat-based capability check ---
 bd.us.heartbeat = function () { return bd.us._parseCard('ultrascripts:heartbeat'); };
 bd.us.available = function () { return !!bd.us.heartbeat(); };
+bd.us._moduleList = function (hb) {
+  var raw = hb && hb.modules;
+  if (Array.isArray(raw)) return raw;
+  if (raw && typeof raw === 'object') {
+    var list = [];
+    for (var id in raw) {
+      var m = raw[id];
+      if (m && typeof m === 'object') {
+        if (!m.id) m.id = id;
+        list.push(m);
+      } else if (m) {
+        list.push({ id: id, ops: [] });
+      }
+    }
+    return list;
+  }
+  return [];
+};
+bd.us._opList = function (moduleInfo) {
+  var raw = moduleInfo && (moduleInfo.ops || moduleInfo.operations || moduleInfo.capabilities);
+  if (Array.isArray(raw)) {
+    return raw.map(function (op) {
+      return typeof op === 'string' ? op : (op && (op.id || op.name || op.op));
+    }).filter(Boolean);
+  }
+  if (raw && typeof raw === 'object') return Object.keys(raw);
+  return [];
+};
 bd.us.has = function (moduleId, opName) {
   var hb = bd.us.heartbeat();
-  var mods = (hb && hb.modules) || [];
+  var mods = bd.us._moduleList(hb);
   for (var i = 0; i < mods.length; i++) {
-    if (mods[i].id !== moduleId) continue;
+    if (!mods[i] || mods[i].id !== moduleId) continue;
     if (!opName) return true;
-    var ops = mods[i].ops || [];
+    var ops = bd.us._opList(mods[i]);
     return ops.indexOf(opName) !== -1;
   }
   return false;
@@ -739,7 +767,7 @@ bd.us.has = function (moduleId, opName) {
 // --- read all in:<module> cards into memory; auto-queue acks ---
 bd.us.tick = function () {
   var hb = bd.us.heartbeat();
-  var mods = (hb && hb.modules) || [];
+  var mods = bd.us._moduleList(hb);
   for (var i = 0; i < mods.length; i++) {
     var modId = mods[i].id;
     var card  = bd.us._parseCard('ultrascripts:in:' + modId);

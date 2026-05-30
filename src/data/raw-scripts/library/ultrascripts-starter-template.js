@@ -132,14 +132,44 @@ function createUltrascriptsSdk() {
     return hb;
   }
 
+  function moduleList(hb) {
+    var raw = hb && hb.modules;
+    if (Array.isArray(raw)) return raw;
+    if (raw && typeof raw === 'object') {
+      var list = [];
+      for (var id in raw) {
+        var moduleInfo = raw[id];
+        if (moduleInfo && typeof moduleInfo === 'object') {
+          if (!moduleInfo.id) moduleInfo.id = id;
+          list.push(moduleInfo);
+        } else if (moduleInfo) {
+          list.push({ id: id, ops: [] });
+        }
+      }
+      return list;
+    }
+    return [];
+  }
+
+  function opList(moduleInfo) {
+    var raw = moduleInfo && (moduleInfo.ops || moduleInfo.operations || moduleInfo.capabilities);
+    if (Array.isArray(raw)) {
+      return raw.map(function (op) {
+        return typeof op === 'string' ? op : (op && (op.id || op.name || op.op));
+      }).filter(Boolean);
+    }
+    if (raw && typeof raw === 'object') return Object.keys(raw);
+    return [];
+  }
+
   function has(moduleId, opName) {
     var hb = heartbeat();
-    var mods = (hb && Array.isArray(hb.modules)) ? hb.modules : [];
+    var mods = moduleList(hb);
     for (var i = 0; i < mods.length; i++) {
       var mod = mods[i];
       if (!mod || mod.id !== moduleId) continue;
       if (!opName) return true;
-      var ops = Array.isArray(mod.ops) ? mod.ops : [];
+      var ops = opList(mod);
       return ops.indexOf(opName) !== -1;
     }
     return false;
@@ -162,7 +192,7 @@ function createUltrascriptsSdk() {
 
   function tick() {
     var hb = heartbeat();
-    var mods = (hb && Array.isArray(hb.modules)) ? hb.modules : [];
+    var mods = moduleList(hb);
     for (var i = 0; i < mods.length; i++) {
       var moduleId = mods[i] && mods[i].id;
       if (!moduleId) continue;

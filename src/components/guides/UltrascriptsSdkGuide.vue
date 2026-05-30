@@ -300,20 +300,50 @@ bd.sdk.runtimePresent = function () {
 
 bd.sdk.hasModule = function (moduleId) {
   var hb = getHeartbeat();
-  var mods = (hb &amp;&amp; Array.isArray(hb.modules)) ? hb.modules : [];
+  var mods = normalizeModules(hb);
   for (var i = 0; i < mods.length; i++) {
     if (mods[i] &amp;&amp; mods[i].id === moduleId) return true;
   }
   return false;
 };
 
+function normalizeModules(hb) {
+  var raw = hb &amp;&amp; hb.modules;
+  if (Array.isArray(raw)) return raw;
+  if (raw &amp;&amp; typeof raw === 'object') {
+    var list = [];
+    for (var id in raw) {
+      var m = raw[id];
+      if (m &amp;&amp; typeof m === 'object') {
+        if (!m.id) m.id = id;
+        list.push(m);
+      } else if (m) {
+        list.push({ id: id, ops: [] });
+      }
+    }
+    return list;
+  }
+  return [];
+}
+
+function normalizeOps(moduleInfo) {
+  var raw = moduleInfo &amp;&amp; (moduleInfo.ops || moduleInfo.operations || moduleInfo.capabilities);
+  if (Array.isArray(raw)) {
+    return raw.map(function (op) {
+      return typeof op === 'string' ? op : (op &amp;&amp; (op.id || op.name || op.op));
+    }).filter(Boolean);
+  }
+  if (raw &amp;&amp; typeof raw === 'object') return Object.keys(raw);
+  return [];
+}
+
 bd.sdk.hasOp = function (moduleId, opName) {
   var hb = getHeartbeat();
-  var mods = (hb &amp;&amp; Array.isArray(hb.modules)) ? hb.modules : [];
+  var mods = normalizeModules(hb);
   for (var i = 0; i < mods.length; i++) {
     var m = mods[i];
     if (!m || m.id !== moduleId) continue;
-    var ops = Array.isArray(m.ops) ? m.ops : [];
+    var ops = normalizeOps(m);
     return ops.indexOf(opName) !== -1;
   }
   return false;
