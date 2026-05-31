@@ -38,7 +38,7 @@ globalThis.UltrascriptsTemplate = function UltrascriptsTemplate(hook, inputText)
       text = handled.text;
       stop = handled.stop;
       us.commit();
-      return stop ? { text: text, stop: true } : { text: text };
+      return { text: text };
     }
   }
 
@@ -89,7 +89,7 @@ globalThis.UltrascriptsTemplate = function UltrascriptsTemplate(hook, inputText)
   }
 
   us.commit();
-  return stop ? { text: text, stop: true } : { text: text };
+  return { text: text };
 };
 
 function createUltrascriptsSdk() {
@@ -104,7 +104,7 @@ function createUltrascriptsSdk() {
     var cards = (typeof storyCards !== 'undefined' && Array.isArray(storyCards)) ? storyCards : [];
     for (var i = 0; i < cards.length; i++) {
       var card = cards[i];
-      if (card && (card.title === title || card.keys === title || card.key === title)) return card;
+      if (cardMatches(card, title)) return card;
     }
     return null;
   }
@@ -113,9 +113,17 @@ function createUltrascriptsSdk() {
     var cards = (typeof storyCards !== 'undefined' && Array.isArray(storyCards)) ? storyCards : [];
     for (var i = 0; i < cards.length; i++) {
       var card = cards[i];
-      if (card && (card.title === title || card.keys === title || card.key === title)) return i;
+      if (cardMatches(card, title)) return i;
     }
     return -1;
+  }
+
+  function cardMatches(card, title) {
+    if (!card) return false;
+    if (card.title === title || card.key === title) return true;
+    if (card.keys === title) return true;
+    if (Array.isArray(card.keys) && card.keys.indexOf(title) !== -1) return true;
+    return false;
   }
 
   function cardText(card) {
@@ -154,7 +162,7 @@ function createUltrascriptsSdk() {
     var bestScore = -1;
     for (var i = 0; i < cards.length; i++) {
       var card = cards[i];
-      if (!card || (card.title !== 'ultrascripts:heartbeat' && card.keys !== 'ultrascripts:heartbeat' && card.key !== 'ultrascripts:heartbeat')) continue;
+      if (!cardMatches(card, 'ultrascripts:heartbeat')) continue;
       try {
         var hb = JSON.parse(cardText(card) || '{}');
         var score = heartbeatScore(hb);
@@ -377,16 +385,16 @@ function handleTemplateCommand(command, us, templateState) {
     state.ultrascriptsTemplate = {};
     state.__ultrascriptsSdk = {};
     state.message = 'Ultrascripts template state reset.';
-    return { text: null, stop: true };
+    return { text: 'I pause for a moment while the scenario state resets.', stop: false };
   }
 
   if (command.name === 'status') {
     state.message = buildStatusLine(us, us.latest('sdk', 'config'), us.latest('clock', 'now'));
-    return { text: null, stop: true };
+    return { text: 'I check the scenario status.', stop: false };
   }
 
   state.message = 'Unknown template command. Try :us-template status or :us-template reset.';
-  return { text: null, stop: true };
+  return { text: 'I try an unknown scenario command.', stop: false };
 }
 
 function consumeTemplateWidgetEvents(us, templateState) {
