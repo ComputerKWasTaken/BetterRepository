@@ -13,7 +13,6 @@ var bd = globalThis.bd;
 
 globalThis.UltrascriptsTemplate = function UltrascriptsTemplate(hook, inputText) {
   var text = inputText;
-  var stop = false;
 
   var CONFIG = {
     commandPrefix: ':us-template',
@@ -36,7 +35,6 @@ globalThis.UltrascriptsTemplate = function UltrascriptsTemplate(hook, inputText)
     if (command) {
       var handled = handleTemplateCommand(command, us, templateState);
       text = handled.text;
-      stop = handled.stop;
       us.commit();
       return { text: text };
     }
@@ -73,10 +71,9 @@ globalThis.UltrascriptsTemplate = function UltrascriptsTemplate(hook, inputText)
   }
 
   if (hook === 'context') {
-    consumeTemplateWidgetEvents(us, templateState);
-
     if (CONFIG.publishWidgets && runtimeOnline && us.has('scripture')) {
       publishTemplateDashboard(us, cfg, clock);
+      consumeTemplateWidgetEvents(us, templateState);
     }
 
     if (CONFIG.addContextNote) {
@@ -127,7 +124,11 @@ function createUltrascriptsSdk() {
   }
 
   function cardText(card) {
-    return card ? (card.value || card.entry || card.description || '') : '';
+    if (!card) return '';
+    if (card.value !== undefined && card.value !== null) return card.value;
+    if (card.entry !== undefined && card.entry !== null) return card.entry;
+    if (card.description !== undefined && card.description !== null) return card.description;
+    return '';
   }
 
   function upsertCard(title, value) {
@@ -136,12 +137,13 @@ function createUltrascriptsSdk() {
       var card = storyCards[index];
       if (typeof updateStoryCard === 'function') {
         updateStoryCard(index, card.keys || card.key || card.title || title, value, card.type || 'Ultrascripts');
-      } else {
-        card.value = value;
-        card.entry = value;
+      } else if (typeof log === 'function') {
+        log('Ultrascripts template could not update story card: updateStoryCard is unavailable.');
       }
     } else if (typeof addStoryCard === 'function') {
       addStoryCard(title, value, 'Ultrascripts');
+    } else if (typeof log === 'function') {
+      log('Ultrascripts template could not add story card: addStoryCard is unavailable.');
     }
   }
 
@@ -332,6 +334,7 @@ function createUltrascriptsSdk() {
       Number(store.scripture.interactions.ackSeq || 0),
       Number(seq || 0)
     );
+    upsertCard('ultrascripts:state:scripture', JSON.stringify(store.scripture));
   }
 
   function commit() {
@@ -385,16 +388,16 @@ function handleTemplateCommand(command, us, templateState) {
     state.ultrascriptsTemplate = {};
     state.__ultrascriptsSdk = {};
     state.message = 'Ultrascripts template state reset.';
-    return { text: 'I pause for a moment while the scenario state resets.', stop: false };
+    return { text: 'I pause for a moment while the scenario state resets.' };
   }
 
   if (command.name === 'status') {
     state.message = buildStatusLine(us, us.latest('sdk', 'config'), us.latest('clock', 'now'));
-    return { text: 'I check the scenario status.', stop: false };
+    return { text: 'I check the scenario status.' };
   }
 
   state.message = 'Unknown template command. Try :us-template status or :us-template reset.';
-  return { text: 'I try an unknown scenario command.', stop: false };
+  return { text: 'I try an unknown scenario command.' };
 }
 
 function consumeTemplateWidgetEvents(us, templateState) {
