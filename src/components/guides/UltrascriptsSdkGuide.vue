@@ -347,7 +347,7 @@
               </h4>
               <p>Use Scripture widgets when available; otherwise fall back to plain bracketed status text.</p>
               <p class="text-[11px] text-bd-text-muted">
-                Follow the Quick Start enhanced fallback snippet: check <code>bd.us.available()</code> and <code>bd.us.has('scripture')</code>,
+                Follow the Quick Start enhanced fallback pattern: check <code>bd.us.available()</code> and <code>bd.us.has('scripture')</code>,
                 then publish via <code>bd.us.defineScripture(...)</code> and <code>bd.us.publishScripture(...)</code>.
               </p>
             </div>

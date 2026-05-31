@@ -156,7 +156,7 @@
                 <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
                 <span class="text-[10px] text-bd-text-muted">30000ms max</span>
               </div>
-              <p>Web search lookup. Returns ranked result snippets for use in narrative grounding or trivia lookups.</p>
+              <p>Web search lookup. Returns ranked result summaries for use in narrative grounding or trivia lookups.</p>
               <div class="grid md:grid-cols-2 gap-3 mt-2">
                 <div>
                   <div class="font-mono text-[10px] text-bd-green font-bold mb-1">args</div>

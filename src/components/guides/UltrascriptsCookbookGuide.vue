@@ -22,15 +22,15 @@
         <button @click="toggleGuideSection('about')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <BookOpen class="w-5 h-5 text-bd-amber" />
-            Cookbook Policy
+            Cookbook Overview
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('about') }" />
         </button>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('about')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              The Cookbook is now a pattern guide, not a second source of copy-paste scripts. Public executable snippets live in Quick Start
-              and module-specific examples only when they are short, helper-based, and reviewed against the live runtime.
+              The Cookbook is a pattern guide for deciding which Ultrascripts capability fits your scenario. Use it to choose a flow,
+              then open Quick Start or the module guide for the exact helper calls and operation contracts.
             </p>
             <router-link to="/ultrascripts?tab=quickstart" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-bd-amber/15 hover:bg-bd-amber/25 border border-bd-amber/30 text-bd-amber text-[11px] font-medium transition-colors">
               <Zap class="w-3.5 h-3.5" />
@@ -45,7 +45,7 @@
             </div>
             <p class="text-[11px] text-bd-text-muted">
               Treat this page as a design map: decide what capability you need here, then open the linked module guide for the exact operation
-              contract or Quick Start for the reviewed SDK helper.
+              contract or Quick Start for the SDK helper.
             </p>
           </div>
         </Transition>
@@ -133,7 +133,7 @@
         <button @click="toggleGuideSection('review')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <ShieldCheck class="w-5 h-5 text-bd-blue" />
-            Before Promoting A Pattern To Code
+            Pattern Checklist
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('review') }" />
         </button>
@@ -148,8 +148,8 @@
               <p class="text-bd-text-muted">No functions on <code>state</code>, no top-level early returns, no same-turn response reads, and no <code>storyCards.find(c.title)</code>-only lookups.</p>
             </div>
             <div class="p-3 rounded bg-bd-bg-primary border border-bd-amber/30 space-y-1">
-              <h4 class="font-semibold text-bd-amber text-[12px]">Manual Test</h4>
-              <p class="text-bd-text-muted">Only promote a pattern to a snippet after testing it in AI Dungeon with the target hook and at least two turns of play.</p>
+                <h4 class="font-semibold text-bd-amber text-[12px]">Turn Rhythm</h4>
+              <p class="text-bd-text-muted">Read prior responses before queuing new work, and remember module responses arrive on a later turn.</p>
             </div>
             <div class="p-3 rounded bg-bd-bg-primary border border-bd-cyan/30 space-y-1">
               <h4 class="font-semibold text-bd-cyan text-[12px]">Fallback Posture</h4>
@@ -285,11 +285,11 @@ const sourceLinks = [
 
 const guideSections = [
   { id: 'header-intro', label: 'Introduction', isHeader: true },
-  { id: 'about', label: 'Cookbook Policy' },
+  { id: 'about', label: 'Cookbook Overview' },
   { id: 'flow', label: 'Recipe Flow' },
   { id: 'patterns', label: 'Pattern Matrix' },
   { id: 'source', label: 'Source Map' },
-  { id: 'review', label: 'Promotion Rules' },
+  { id: 'review', label: 'Pattern Checklist' },
   { id: 'debug', label: 'Debugging Checklist' }
 ]
 

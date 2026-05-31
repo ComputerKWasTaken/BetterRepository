@@ -232,7 +232,7 @@
 
             <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
               <p class="text-[11px]">
-                <strong class="text-bd-amber">Modifier rule:</strong> paste Quick Start modifier snippets inside AI Dungeon's existing
+                <strong class="text-bd-amber">Modifier rule:</strong> place Quick Start modifier code inside AI Dungeon's existing
                 <code class="text-bd-green">modifier(text)</code> wrapper. Keep <code>modifier(text)</code> as the final editor line and let the wrapper
                 return <code>{ text }</code>.
               </p>
@@ -566,7 +566,7 @@ bd.us.commit();</pre>
             </div>
 
             <p>
-              The snippet queues <code>sdk.config</code> automatically until a config response is cached, so the AI path becomes available after setup
+              This pattern queues <code>sdk.config</code> automatically until a config response is cached, so the AI path becomes available after setup
               without breaking the plain scenario flow.
             </p>
           </div>

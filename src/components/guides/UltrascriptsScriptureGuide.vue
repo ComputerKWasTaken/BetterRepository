@@ -361,7 +361,7 @@
               <p>The classic RPG sidebar. Combined with the library helper above, this is two lines of code per turn.</p>
               <p class="text-[11px] text-bd-text-muted">
                 Keep this as a manifest plus value-shape idea: bars for health/mana, text for location, and a taggroup for status effects.
-                The Quick Start HP bar snippet is the copy-paste version.
+                Quick Start shows the runnable HP bar version.
               </p>
             </div>
 

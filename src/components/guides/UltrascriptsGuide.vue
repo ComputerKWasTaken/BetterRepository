@@ -47,7 +47,7 @@
             <p class="text-xs text-bd-text-secondary leading-relaxed mb-3">
               <strong>Quick Start</strong> walks you through pasting the Ultrascripts SDK helper into your Library script and building a working
               HP bar + Clock + AI integration in under five minutes. After that, the <strong>Cookbook</strong> maps the eight
-              most common patterns without adding a second copy-paste surface.
+              most common patterns without duplicating the starter walkthrough.
             </p>
             <div class="flex flex-wrap items-center gap-2">
               <router-link
@@ -199,7 +199,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('how-to-read')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
             <p>
-              The docs are intentionally split into a small copy-paste surface and deeper module references. Start with the code that gets you moving,
+              The docs are intentionally split into a starter walkthrough and deeper module references. Start with the flow that gets you moving,
               then use each module page to understand what to ask for, what shape comes back, and how to degrade when the player does not have that
               capability enabled.
             </p>
