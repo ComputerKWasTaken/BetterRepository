@@ -526,7 +526,7 @@ Turn N+2 :  ...continues every turn</pre>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('step3')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              The system seller: a free secondary model writes one sentence of ambient flavor every turn. Same three-line pattern.
+              The system seller: the player's configured secondary model writes one sentence of ambient flavor every turn. Same three-line pattern.
             </p>
 
             <div>
@@ -551,7 +551,6 @@ var aiReady = cfg &amp;&amp; cfg.status === 'ok'
   &amp;&amp; cfg.data.ultrascripts.ai.configured;
 if (bd.us.has('ai', 'chat') &amp;&amp; aiReady) {
   bd.us.call('ai', 'chat', {
-    model: 'google/gemini-2.0-flash-exp:free',
     temperature: 0.7,
     maxTokens: 60,
     messages: [
@@ -639,7 +638,6 @@ var aiReady = cfg &amp;&amp; cfg.status === 'ok'
 
 if (bd.us.has('ai', 'chat') &amp;&amp; aiReady) {
   bd.us.call('ai', 'chat', {
-    model: 'google/gemini-2.0-flash-exp:free',
     temperature: 0.7,
     maxTokens: 60,
     messages: [

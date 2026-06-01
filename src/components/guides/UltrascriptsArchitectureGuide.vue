@@ -475,7 +475,7 @@
   "acks": ["turn-11-clock-1"]
 }</pre>
               <ul class="mt-2 space-y-0.5 text-[11px] text-bd-text-muted">
-                <li>&middot; <strong>id</strong>: unique per request. Suffix with action count or timestamp to guarantee uniqueness across replays.</li>
+                <li>&middot; <strong>id</strong>: globally unique per request. Suffix with action count plus a counter or timestamp; recently processed ids are deduped for replay safety.</li>
                 <li>&middot; <strong>module / op</strong>: must match an entry advertised by heartbeat.</li>
                 <li>&middot; <strong>acks</strong>: ids of terminal responses you have consumed. The extension can then garbage-collect them.</li>
               </ul>

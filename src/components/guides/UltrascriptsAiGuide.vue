@@ -76,7 +76,7 @@
                 <h4 class="font-semibold text-bd-text-primary flex items-center gap-2 text-[12px]">
                   <Sparkles class="w-4 h-4 text-bd-purple" /> What it does
                 </h4>
-                <p class="text-[11px]">Multi-turn chat completions against any OpenRouter-listed model. Free-tier models supported, paid models gated by cost controls.</p>
+                <p class="text-[11px]">Multi-turn chat completions against the player's configured OpenRouter model. Free-tier models supported, paid models gated by cost controls.</p>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-1">
                 <h4 class="font-semibold text-bd-text-primary flex items-center gap-2 text-[12px]">
@@ -95,9 +95,9 @@
             <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
                 <h4 class="font-semibold text-bd-text-primary text-[12px] mb-1.5">Three ways scenarios use the AI module</h4>
               <ul class="space-y-1 text-[11px]">
-                <li>&middot; <strong>Co-GM narration</strong> &mdash; a smaller, faster model writes ambient flavor that the main model would waste tokens on.</li>
+                <li>&middot; <strong>Co-GM narration</strong> &mdash; the configured side model writes ambient flavor that the main model would waste tokens on.</li>
                 <li>&middot; <strong>Structured extraction</strong> &mdash; force a JSON output describing characters, items, or scene metadata so Scripture widgets can render it.</li>
-                <li>&middot; <strong>Cross-checks &amp; criticism</strong> &mdash; a second model evaluates the main model's output for tone, continuity, or rule compliance.</li>
+                <li>&middot; <strong>Cross-checks &amp; criticism</strong> &mdash; the configured side model evaluates the main model's output for tone, continuity, or rule compliance.</li>
               </ul>
             </div>
 
@@ -105,7 +105,7 @@
               <h4 class="font-semibold text-bd-purple text-[12px] mb-1">How authors should operate it</h4>
               <ol class="space-y-1 text-[11px] text-bd-text-muted">
                 <li>1. Queue <code>sdk.config</code> and wait for <code>ultrascripts.ai.configured</code>.</li>
-                <li>2. Queue <code>ai.chat</code> only when configured and when the model result is worth the latency/quota.</li>
+                <li>2. Queue <code>ai.chat</code> only when configured and when the extra model result is worth the latency/quota.</li>
                 <li>3. Read the result on a later turn from <code>data.text</code> or <code>data.message.content</code>.</li>
                 <li>4. Keep prompts small, set <code>maxTokens</code>, and design a plain-script fallback for unconfigured players.</li>
               </ol>
@@ -133,7 +133,7 @@
             <ol class="space-y-2 text-[11px]">
               <li class="flex gap-2">
                 <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center flex-shrink-0">1</span>
-                <span>Sign up at <code class="text-bd-green">openrouter.ai</code> and create an API key. Free-tier models are available without billing.</span>
+                <span>Sign up at <code class="text-bd-green">openrouter.ai</code> and create an API key for real hosted calls. For transport tests, use <code class="text-bd-green">betterdungeon/dummy:free</code> without an API key.</span>
               </li>
               <li class="flex gap-2">
                 <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center flex-shrink-0">2</span>
@@ -141,7 +141,7 @@
               </li>
               <li class="flex gap-2">
                 <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center flex-shrink-0">3</span>
-                <span>Paste the API key. Pick a default model (e.g. <code class="text-bd-green">google/gemini-2.0-flash-exp:free</code>).</span>
+                <span>Paste the API key if using OpenRouter. Pick a default model (e.g. <code class="text-bd-green">google/gemini-2.0-flash-exp:free</code>, or <code class="text-bd-green">betterdungeon/dummy:free</code> for local tests).</span>
               </li>
               <li class="flex gap-2">
                 <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center flex-shrink-0">4</span>
@@ -188,7 +188,6 @@
     { "role": "system", "content": "..." },
     { "role": "user",   "content": "..." }
   ],
-  "model": "google/gemini-2.0-flash-exp:free",
   "temperature": 0.7,
   "maxTokens": 256,
   "responseFormat": { "type": "json_object" }  // optional
@@ -216,7 +215,7 @@
               </div>
               <div class="p-2 rounded bg-bd-amber/10 border border-bd-amber/30 text-[11px]">
                 <strong class="text-bd-amber">If a cost cap blocks the call</strong>, the response comes back as <code>err</code> with an
-                <code class="text-bd-green">error.code</code> of <code>cost_cap_exceeded</code> rather than a partial completion. Catch and surface this to the player.
+                <code class="text-bd-green">error.code</code> of <code>cost_control</code> rather than a partial completion. Catch and surface this to the player.
               </div>
             </div>
 
@@ -227,7 +226,7 @@
                 <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
                 <span class="text-[10px] text-bd-text-muted">60000ms max</span>
               </div>
-              <p>Returns the OpenRouter models the player's key can currently access. Use it to validate a target model before issuing a chat call.</p>
+              <p>Returns the OpenRouter models the player's key can currently access. Use it for setup diagnostics or to help the player choose a default in the popup; <code>ai.chat</code> does not accept a scenario-selected model.</p>
               <div>
                 <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">data (on ok)</div>
                 <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
@@ -304,11 +303,11 @@
                 <tbody class="text-bd-text-secondary">
                   <tr class="border-b border-bd-border-subtle/50">
                     <td class="py-2 px-2"><code class="text-bd-green">freeModelsOnly</code></td>
-                    <td class="py-2 px-2">Hard-rejects any <code>chat</code> call whose target model has nonzero pricing.</td>
+                    <td class="py-2 px-2">Hard-rejects any <code>chat</code> call when the configured default model has nonzero pricing.</td>
                   </tr>
                   <tr class="border-b border-bd-border-subtle/50">
                     <td class="py-2 px-2"><code class="text-bd-green">maxPromptPricePerMillion</code></td>
-                    <td class="py-2 px-2">Caps the prompt-token price ($/M) a model may charge. Higher-priced models are blocked.</td>
+                    <td class="py-2 px-2">Caps the prompt-token price ($/M) the configured model may charge. Higher-priced models are blocked.</td>
                   </tr>
                   <tr class="border-b border-bd-border-subtle/50">
                     <td class="py-2 px-2"><code class="text-bd-green">maxCompletionPricePerMillion</code></td>
@@ -332,9 +331,8 @@
 
             <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
               <p class="text-[11px]">
-                <strong class="text-bd-amber">Scenario authors should default-target a free-tier model.</strong> Listing one in the scenario notes
-                and choosing it as the <code>model</code> argument means free-tier players can run your scenario without configuring billing.
-                Detect through <code>sdk.config.ultrascripts.ai.costControls.freeModelsOnly</code> if you want to branch.
+                <strong class="text-bd-amber">Scenario authors should recommend a free-tier default model.</strong> Use <code class="text-bd-green">betterdungeon/dummy:free</code> for no-network tests. The player chooses the model in the BetterDungeon popup;
+                scripts cannot override that choice. Detect through <code>sdk.config.ultrascripts.ai.costControls.freeModelsOnly</code> if you want to branch.
               </p>
             </div>
           </div>
@@ -361,7 +359,6 @@
     "module": "ai",
     "op": "chat",
     "args": {
-      "model": "google/gemini-2.0-flash-exp:free",
       "temperature": 0.7,
       "maxTokens": 120,
       "messages": [
@@ -415,7 +412,7 @@
               <h4 class="font-semibold text-bd-purple flex items-center gap-1.5 text-[12px]">
                 <BrainCircuit class="w-4 h-4" /> Pattern 1: Co-GM Ambient Narrator
               </h4>
-              <p>Each turn, ask a free model for one ambient flavor sentence and inject it as front-context for the main model.</p>
+              <p>Each turn, ask the player's configured model for one ambient flavor sentence and inject it as front-context for the main model.</p>
               <p class="text-[11px] text-bd-text-muted">
                 Keep the live script in Quick Start, where it uses <code>bd.us.tick()</code>, <code>bd.us.latest('ai', 'chat')</code>,
                 <code>bd.us.call('ai', 'chat', ...)</code>, and <code>bd.us.commit()</code>. This module page only documents the AI operation contract.
@@ -439,9 +436,9 @@
               <h4 class="font-semibold text-bd-green flex items-center gap-1.5 text-[12px]">
                 <CheckCircle2 class="w-4 h-4" /> Pattern 3: Cost-Aware Fallback
               </h4>
-              <p>Try a smarter paid model when allowed; otherwise gracefully fall back to a free-tier model.</p>
+              <p>Respect the player's configured model and gracefully skip optional calls when their cost controls block them.</p>
               <p class="text-[11px] text-bd-text-muted">
-                Read <code>sdk.config</code> first, then branch on the player's configured cost controls before choosing a model. Keep helpers on
+                Read <code>sdk.config</code> first, then branch on the player's configured cost controls before queueing optional model work. Keep helpers on
                 <code>globalThis.bd</code> if you need reusable functions; store only plain data on <code>state</code>.
               </p>
             </div>
@@ -468,7 +465,7 @@
                 <ul class="space-y-1 text-[11px] text-bd-text-secondary">
                   <li>&middot; Keep system prompts <strong>short and specific</strong>. The AI module is best at one job at a time.</li>
                   <li>&middot; Pin <code>temperature</code> low (0.0&ndash;0.2) when extracting JSON; raise it for creative narration.</li>
-                  <li>&middot; Pick a default <strong>free-tier</strong> model so free-only players can use the scenario unchanged.</li>
+                  <li>&middot; Recommend a <strong>free-tier</strong> default model in scenario notes so free-only players can use the scenario unchanged.</li>
                   <li>&middot; Always check <code>sdk.config.ultrascripts.ai.configured</code> before the first call.</li>
                   <li>&middot; Filter responses by <code>completedLiveCount</code> on every read.</li>
                   <li>&middot; Cap <code>maxTokens</code> tightly. The smallest useful number wins on both latency and cost.</li>
@@ -483,7 +480,7 @@
                   <li>&middot; Don't issue a chat call on every modifier; rate-limit to once per turn at most.</li>
                   <li>&middot; Don't treat <code>ai.chat</code> as idempotent. Replays on undo will burn quota.</li>
                   <li>&middot; Don't bake your own API key into a script &mdash; only the player's key in the popup is supported.</li>
-                  <li>&middot; Don't ship a scenario that targets a paid-only model without a free fallback.</li>
+                  <li>&middot; Don't assume the player selected a paid model or try to override their default.</li>
                 </ul>
               </div>
             </div>
@@ -510,8 +507,8 @@
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Cost cap blocked the call</h4>
-                <p class="text-bd-text-secondary"><strong>Issue:</strong> <code>err</code> with <code>error.code === "cost_cap_exceeded"</code>.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Switch to a cheaper or free model; reduce <code>maxTokens</code>; or instruct the player to raise their daily/monthly cap.</p>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> <code>err</code> with <code>error.code === "cost_control"</code>.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Reduce <code>maxTokens</code>, skip optional calls, or ask the player to choose a cheaper default / raise their daily or monthly cap.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Stale response after undo</h4>
@@ -519,19 +516,24 @@
                 <p class="text-bd-text-muted"><strong>Fix:</strong> Compare <code>completedLiveCount</code> with <code>info.actionCount</code> on every read.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
+                <h4 class="font-semibold text-bd-pink text-[12px]">Response never appears</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> A custom script reuses a request id, or polls the wrong <code>ultrascripts:in:&lt;module&gt;</code> card.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Generate a fresh id per queued call, include the live count / counter, and poll the same module id you sent. The SDK helper handles this.</p>
+              </div>
+              <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">JSON output isn't pure JSON</h4>
                 <p class="text-bd-text-secondary"><strong>Issue:</strong> Even with <code>responseFormat: json_object</code>, models occasionally wrap output in code fences.</p>
                 <p class="text-bd-text-muted"><strong>Fix:</strong> Strip leading/trailing non-JSON before <code>JSON.parse</code>; or use a stricter system prompt asking for JSON only.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
-                <h4 class="font-semibold text-bd-pink text-[12px]">Model not available on this key</h4>
-                <p class="text-bd-text-secondary"><strong>Issue:</strong> The player's OpenRouter tier doesn't include the model you targeted.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Call <code>ai.models</code> at scenario start and pick from the returned list, or hard-code a known-available free model.</p>
+                <h4 class="font-semibold text-bd-pink text-[12px]">Default model unavailable</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> The player's OpenRouter tier doesn't include their configured default model.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Ask the player to pick an available default in the BetterDungeon popup; <code>ai.models</code> can help diagnose what their key can see.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Timeout on a long context</h4>
                 <p class="text-bd-text-secondary"><strong>Issue:</strong> Response comes back <code>timeout</code> on huge prompts.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Shrink prompt with a summarization pass, lower <code>maxTokens</code>, or pick a faster model.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Shrink prompt with a summarization pass, lower <code>maxTokens</code>, or ask the player to pick a faster default model.</p>
               </div>
             </div>
           </div>
