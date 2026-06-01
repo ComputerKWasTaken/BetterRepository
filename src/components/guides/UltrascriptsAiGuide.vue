@@ -133,7 +133,7 @@
             <ol class="space-y-2 text-[11px]">
               <li class="flex gap-2">
                 <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center flex-shrink-0">1</span>
-                <span>Sign up at <code class="text-bd-green">openrouter.ai</code> and create an API key for real hosted calls. For transport tests, use <code class="text-bd-green">betterdungeon/dummy:free</code> without an API key.</span>
+                <span>Create an API key at <code class="text-bd-green">openrouter.ai/keys</code>. For transport tests, use <code class="text-bd-green">betterdungeon/dummy:free</code> without an API key.</span>
               </li>
               <li class="flex gap-2">
                 <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center flex-shrink-0">2</span>
@@ -141,11 +141,11 @@
               </li>
               <li class="flex gap-2">
                 <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center flex-shrink-0">3</span>
-                <span>Paste the API key if using OpenRouter. Pick a default model (e.g. <code class="text-bd-green">google/gemini-2.0-flash-exp:free</code>, or <code class="text-bd-green">betterdungeon/dummy:free</code> for local tests).</span>
+                <span>Paste the API key if using OpenRouter. Keep the default <code class="text-bd-green">openrouter/free</code> router, or overwrite it with a specific model ID if you need one.</span>
               </li>
               <li class="flex gap-2">
                 <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center flex-shrink-0">4</span>
-                <span>Set cost controls if using paid models. Hit <strong>Test Connection</strong> to verify.</span>
+                <span>Leave free-only cost controls enabled unless you intentionally use paid models. Add $10 in OpenRouter credits to raise the free-model daily limit from 50 requests to 1000.</span>
               </li>
             </ol>
 
@@ -197,7 +197,7 @@
                   <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">data (on ok)</div>
                   <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
   "provider": "openrouter",
-  "model": "google/gemini-2.0-flash-exp:free",
+  "model": "openrouter/free",
   "id": "gen-...",
   "text": "Assistant reply text",
   "message": {
@@ -232,7 +232,8 @@
                 <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
   "provider": "openrouter",
   "configured": true,
-  "defaultModel": "google/gemini-2.0-flash-exp:free",
+  "defaultModel": "openrouter/free",
+  "dummyModel": false,
   "source": "https://openrouter.ai/api/v1/models",
   "count": 120,
   "totalCount": 120,
@@ -240,10 +241,10 @@
   "truncated": true,
   "models": [
     {
-      "id": "google/gemini-2.0-flash-exp:free",
-      "name": "Gemini 2.0 Flash (free)",
-      "canonicalSlug": "google/gemini-2.0-flash-exp",
-      "contextLength": 1048576,
+      "id": "openrouter/free",
+      "name": "OpenRouter Free Router",
+      "canonicalSlug": "openrouter/free",
+      "contextLength": null,
       "pricing": { "prompt": "0", "completion": "0", "request": null }
     }
   ]
@@ -258,14 +259,14 @@
                 <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
                 <span class="text-[10px] text-bd-text-muted">60000ms max</span>
               </div>
-              <p>Verifies the configured key by issuing a tiny no-cost ping. Useful in onboarding flows before the first real <code>chat</code>.</p>
+              <p>Verifies the configured key with a tiny no-cost ping, or confirms the local dummy model is active. Useful in onboarding flows before the first real <code>chat</code>.</p>
               <div>
                 <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">data (on ok)</div>
                 <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
   "provider": "openrouter",
   "configured": true,
   "ok": true,
-  "defaultModel": "google/gemini-2.0-flash-exp:free",
+  "defaultModel": "openrouter/free",
   "modelCount": 120,
   "source": "https://openrouter.ai/api/v1/models",
   "checkedAtIso": "2026-05-30T19:45:00.000Z"
@@ -331,7 +332,7 @@
 
             <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
               <p class="text-[11px]">
-                <strong class="text-bd-amber">Scenario authors should recommend a free-tier default model.</strong> Use <code class="text-bd-green">betterdungeon/dummy:free</code> for no-network tests. The player chooses the model in the BetterDungeon popup;
+                <strong class="text-bd-amber">Scenario authors should recommend <code class="text-bd-green">openrouter/free</code> by default.</strong> Use <code class="text-bd-green">betterdungeon/dummy:free</code> for no-network tests. The player chooses the model in the BetterDungeon popup;
                 scripts cannot override that choice. Detect through <code>sdk.config.ultrascripts.ai.costControls.freeModelsOnly</code> if you want to branch.
               </p>
             </div>
@@ -378,7 +379,7 @@
       "status": "ok",
       "data": {
         "provider": "openrouter",
-        "model": "google/gemini-2.0-flash-exp:free",
+        "model": "openrouter/free",
         "text": "Beneath the watchtower's ribs, slow drips count out the storm's heartbeat as moss whispers like distant prayers.",
         "message": {
           "role": "assistant",

@@ -260,7 +260,8 @@
     },
     "ai": {
       "configured": true,
-      "defaultModel": "google/gemini-2.0-flash-exp:free",
+      "defaultModel": "openrouter/free",
+      "dummyModel": false,
       "costControls": {
         "freeModelsOnly": true,
         "advancedOpen": false,
@@ -276,7 +277,7 @@
               </div>
               <div class="p-2 rounded bg-bd-amber/10 border border-bd-amber/30 text-[11px]">
                 <strong class="text-bd-amber">Security guarantee:</strong> The OpenRouter API key is <strong>never</strong> exposed.
-                The <code>ai.configured</code> boolean is the only signal that a key exists. Domain allow/deny lists for WebFetch are reported as counts, not as origin strings.
+                The <code>ai.configured</code> boolean reports whether hosted AI is ready or the local dummy model is selected. Domain allow/deny lists for WebFetch are reported as counts, not as origin strings.
               </div>
             </div>
           </div>
