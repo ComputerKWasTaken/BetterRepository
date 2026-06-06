@@ -236,7 +236,7 @@ const patterns = [
     title: 'AI Co-GM',
     icon: BrainCircuit,
     iconClass: 'text-bd-purple',
-    summary: 'Ask a secondary model for short flavor, summaries, or structured extraction.',
+    summary: 'Ask the player-configured AI model for short flavor, summaries, or structured extraction.',
     guidance: 'Gate on <code>sdk.config</code>, use <code>ai.chat</code>, and consume the response on a later turn.',
     link: '/ultrascripts?tab=ai',
     module: 'AI'

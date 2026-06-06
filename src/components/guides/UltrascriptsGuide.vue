@@ -117,7 +117,7 @@
                   External Integrations
                 </h3>
                 <p class="text-bd-text-secondary">
-                  WebFetch and the AI module let scenarios reach outside the sandbox to fetch data, query APIs, and pipe context through secondary LLMs with player consent.
+                  WebFetch and the AI module let scenarios reach outside the sandbox to fetch data, query APIs, and run optional hosted AI prompts with player consent.
                 </p>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
@@ -479,7 +479,7 @@
                   <BrainCircuit class="w-5 h-5 text-bd-purple" />
                   <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-purple transition-colors">AI</h4>
                 </div>
-                <p class="text-bd-text-muted">Hosted LLM calls via OpenRouter &mdash; Co-GM narration, structured extraction, multi-model orchestration.</p>
+                <p class="text-bd-text-muted">Hosted LLM calls via OpenRouter &mdash; Co-GM narration, structured extraction, and optional sidecar reasoning.</p>
               </router-link>
 
               <router-link to="/ultrascripts?tab=sdk" class="block p-4 rounded-lg bg-gradient-to-br from-bd-cyan/10 to-transparent border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">

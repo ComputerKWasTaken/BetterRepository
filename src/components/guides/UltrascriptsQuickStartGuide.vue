@@ -526,7 +526,7 @@ Turn N+2 :  ...continues every turn</pre>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('step3')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              The system seller: the player's configured secondary model writes one sentence of ambient flavor every turn. Same three-line pattern.
+              Same pattern again: the player's configured AI model writes one sentence of ambient flavor every turn.
             </p>
 
             <div>

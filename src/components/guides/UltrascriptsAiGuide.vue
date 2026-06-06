@@ -95,9 +95,9 @@
             <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
                 <h4 class="font-semibold text-bd-text-primary text-[12px] mb-1.5">Three ways scenarios use the AI module</h4>
               <ul class="space-y-1 text-[11px]">
-                <li>&middot; <strong>Co-GM narration</strong> &mdash; the configured side model writes ambient flavor that the main model would waste tokens on.</li>
+                <li>&middot; <strong>Co-GM narration</strong> &mdash; the player's configured AI model writes ambient flavor that the main model would waste tokens on.</li>
                 <li>&middot; <strong>Structured extraction</strong> &mdash; force a JSON output describing characters, items, or scene metadata so Scripture widgets can render it.</li>
-                <li>&middot; <strong>Cross-checks &amp; criticism</strong> &mdash; the configured side model evaluates the main model's output for tone, continuity, or rule compliance.</li>
+                <li>&middot; <strong>Cross-checks &amp; criticism</strong> &mdash; the player's configured AI model evaluates the main model's output for tone, continuity, or rule compliance.</li>
               </ul>
             </div>
 
@@ -226,14 +226,13 @@
                 <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
                 <span class="text-[10px] text-bd-text-muted">60000ms max</span>
               </div>
-              <p>Returns the OpenRouter models the player's key can currently access. Use it for setup diagnostics or to help the player choose a default in the popup; <code>ai.chat</code> does not accept a scenario-selected model.</p>
+              <p>Returns the OpenRouter models the player's key can currently access. Use it for setup diagnostics or to help the player choose a default in the popup; <code>ai.chat</code> always uses the player's saved default model and does not accept a per-request model override.</p>
               <div>
                 <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">data (on ok)</div>
                 <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
   "provider": "openrouter",
   "configured": true,
   "defaultModel": "openrouter/free",
-  "dummyModel": false,
   "source": "https://openrouter.ai/api/v1/models",
   "count": 120,
   "totalCount": 120,
