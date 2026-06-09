@@ -22,9 +22,7 @@
             v-else
             @click="scrollToGuideSection(section.id)"
             class="w-full text-left px-3 py-2 rounded-lg text-xs transition-colors hover:bg-bd-bg-tertiary"
-            :class="[
-              isGuideSectionExpanded(section.id) ? 'text-bd-text-primary' : 'text-bd-text-muted'
-            ]"
+            :class="[isGuideSectionExpanded(section.id) ? 'text-bd-text-primary' : 'text-bd-text-muted']"
           >
             {{ section.label }}
           </button>
@@ -32,10 +30,8 @@
       </div>
     </aside>
 
-    <!-- Main Content -->
     <div class="flex-1 space-y-4 min-w-0">
 
-      <!-- SDK paved-path banner -->
       <div class="p-3 rounded-lg border border-bd-amber/30 bg-bd-amber/5 flex items-center gap-3 flex-wrap">
         <Zap class="w-4 h-4 text-bd-amber flex-shrink-0" />
         <div class="flex-1 min-w-0 text-xs text-bd-text-secondary">
@@ -65,95 +61,74 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('overview')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
             <p>
-              The <strong>AI module</strong> (module id <code class="text-bd-green">ai</code>, legacy alias <code class="text-bd-green">providerAI</code>) is Ultrascripts'
-              bridge to hosted language models through the player's own <strong>OpenRouter</strong> account. Scenarios can run a "second brain"
-              alongside AI Dungeon's main generation: a critic, a planner, a JSON-extractor, a Co-GM, a translator, an inventory bookkeeper &mdash;
-              any model task that benefits from a dedicated prompt outside the core narrative.
+              The <strong>AI module</strong> (module id <code class="text-bd-green">ai</code>) gives scripts two operations:
+              <code class="text-bd-green">query</code> for generated helper text and <code class="text-bd-green">status</code> for readiness.
+              Use it when a scenario needs a short answer, summary, classification, JSON-shaped data, or Co-GM note that the script can read later.
             </p>
 
             <div class="grid md:grid-cols-3 gap-3">
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
                 <h4 class="font-semibold text-bd-text-primary flex items-center gap-2 text-[12px]">
-                  <Sparkles class="w-4 h-4 text-bd-purple" /> What it does
+                  <Sparkles class="w-4 h-4 text-bd-purple" /> Send a prompt
                 </h4>
-                <p class="text-[11px]">Multi-turn chat completions against the player's configured OpenRouter model. Free-tier models supported, paid models gated by cost controls.</p>
+                <p class="text-[11px]">Pass a required <code>prompt</code> and optional <code>context</code>. Context can be text or JSON-serializable data.</p>
               </div>
-              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-1">
+              <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
                 <h4 class="font-semibold text-bd-text-primary flex items-center gap-2 text-[12px]">
-                  <Lock class="w-4 h-4 text-bd-amber" /> Where the key lives
+                  <ShieldCheck class="w-4 h-4 text-bd-green" /> Read generated text
                 </h4>
-                <p class="text-[11px]">Player enters their OpenRouter API key in the BetterDungeon popup. <strong>Scripts never see the raw key.</strong></p>
+                <p class="text-[11px]">The response arrives on <code>ultrascripts:in:ai</code> with the answer in <code>data.text</code>.</p>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-text-primary flex items-center gap-2 text-[12px]">
-                  <AlertTriangle class="w-4 h-4 text-bd-pink" /> Replay-unsafe
+                  <AlertTriangle class="w-4 h-4 text-bd-pink" /> One at a time
                 </h4>
-                <p class="text-[11px]"><code>chat</code> calls real money / quota. Marked <code class="text-bd-green">unsafe</code> &mdash; scripts must filter responses by live count.</p>
+                <p class="text-[11px]">If a query is already running, the next one returns <code>ai_rate_limited</code>. Try again next turn.</p>
               </div>
             </div>
 
-            <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-                <h4 class="font-semibold text-bd-text-primary text-[12px] mb-1.5">Three ways scenarios use the AI module</h4>
-              <ul class="space-y-1 text-[11px]">
-                <li>&middot; <strong>Co-GM narration</strong> &mdash; the player's configured AI model writes ambient flavor that the main model would waste tokens on.</li>
-                <li>&middot; <strong>Structured extraction</strong> &mdash; force a JSON output describing characters, items, or scene metadata so Scripture widgets can render it.</li>
-                <li>&middot; <strong>Cross-checks &amp; criticism</strong> &mdash; the player's configured AI model evaluates the main model's output for tone, continuity, or rule compliance.</li>
-              </ul>
-            </div>
-
             <div class="p-3 rounded-lg bg-bd-purple/10 border border-bd-purple/30">
-              <h4 class="font-semibold text-bd-purple text-[12px] mb-1">How authors should operate it</h4>
+              <h4 class="font-semibold text-bd-purple text-[12px] mb-1">Typical flow</h4>
               <ol class="space-y-1 text-[11px] text-bd-text-muted">
-                <li>1. Queue <code>sdk.config</code> and wait for <code>ultrascripts.ai.configured</code>.</li>
-                <li>2. Queue <code>ai.chat</code> only when configured and when the extra model result is worth the latency/quota.</li>
-                <li>3. Read the result on a later turn from <code>data.text</code> or <code>data.message.content</code>.</li>
-                <li>4. Keep prompts small, set <code>maxTokens</code>, and design a plain-script fallback for unconfigured players.</li>
+                <li>1. Check heartbeat for <code>ai.query</code> and <code>ai.status</code>.</li>
+                <li>2. Call <code>ai.status</code> until <code>ready</code> is true.</li>
+                <li>3. Call <code>ai.query</code> with one clear task.</li>
+                <li>4. On a later turn, read <code>data.text</code> and apply it only if it still matches the current live count.</li>
               </ol>
             </div>
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== PLAYER SETUP ===================== -->
-      <section id="guide-setup" class="card">
-        <button @click="toggleGuideSection('setup')" class="w-full flex items-center justify-between text-left">
+      <!-- ===================== READINESS ===================== -->
+      <section id="guide-readiness" class="card">
+        <button @click="toggleGuideSection('readiness')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Settings class="w-5 h-5 text-bd-amber" />
-            Player Setup (One-Time)
+            <CheckCircle2 class="w-5 h-5 text-bd-green" />
+            Readiness
           </h2>
-          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('setup') }" />
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('readiness') }" />
         </button>
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('setup')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
+          <div v-if="isGuideSectionExpanded('readiness')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              Before any scenario can use <code class="text-bd-green">ai.chat</code>, the player completes a one-time configuration inside the BetterDungeon extension popup.
-              Scenario authors should document this in their scenario notes &mdash; the SDK config response advertises whether it has been done.
+              Use <code>ai.status</code> when your script wants to know whether <code>ai.query</code> can run right now.
+              It reports the current adventure id, whether page credentials are available, whether the helper card exists, and whether a query is active.
             </p>
 
-            <ol class="space-y-2 text-[11px]">
-              <li class="flex gap-2">
-                <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center flex-shrink-0">1</span>
-                <span>Create an API key at <code class="text-bd-green">openrouter.ai/keys</code>. For transport tests, use <code class="text-bd-green">betterdungeon/dummy:free</code> without an API key.</span>
-              </li>
-              <li class="flex gap-2">
-                <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center flex-shrink-0">2</span>
-                <span>Open the BetterDungeon popup &rarr; <strong>Ultrascripts</strong> tab &rarr; <strong>AI</strong> section.</span>
-              </li>
-              <li class="flex gap-2">
-                <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center flex-shrink-0">3</span>
-                <span>Paste the API key if using OpenRouter. Keep the default <code class="text-bd-green">openrouter/free</code> router, or overwrite it with a specific model ID if you need one.</span>
-              </li>
-              <li class="flex gap-2">
-                <span class="w-5 h-5 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center flex-shrink-0">4</span>
-                <span>Leave free-only cost controls enabled unless you intentionally use paid models. Add $10 in OpenRouter credits to raise the free-model daily limit from 50 requests to 1000.</span>
-              </li>
-            </ol>
+            <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
+              <h4 class="font-semibold text-bd-text-primary text-[12px] mb-1.5">Ready means</h4>
+              <ol class="space-y-1 text-[11px]">
+                <li>1. The player has BetterDungeon Ultrascripts enabled.</li>
+                <li>2. The player is in an AI Dungeon adventure, not only a scenario edit page.</li>
+                <li>3. The adventure page has loaded enough for BetterDungeon to make native AI Dungeon requests.</li>
+              </ol>
+            </div>
 
             <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
               <p class="text-[11px]">
-                <strong class="text-bd-amber">For scenario authors:</strong> Detect configuration through the SDK module rather than guessing.
-                Call <code class="text-bd-green">sdk.config</code> and read <code class="text-bd-green">ultrascripts.ai.configured</code>.
-                If <code>false</code>, render a friendly &quot;configure AI in the extension popup&quot; message instead of letting <code>ai.chat</code> fail.
+                <strong class="text-bd-amber">First turn tip:</strong> <code>ready</code> can be false while the page is still loading.
+                Queue another status check next turn instead of treating it as a hard failure.
               </p>
             </div>
           </div>
@@ -172,168 +147,73 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('ops')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
 
-            <!-- chat -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-2">
               <div class="flex items-center gap-2 flex-wrap">
-                <h4 class="font-semibold text-bd-purple text-[13px]"><code>ai.chat</code></h4>
+                <h4 class="font-semibold text-bd-purple text-[13px]"><code>ai.query</code></h4>
                 <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-pink/20 text-bd-pink">unsafe</span>
-                <span class="text-[10px] text-bd-text-muted">configurable timeout</span>
+                <span class="text-[10px] text-bd-text-muted">one in flight</span>
               </div>
-              <p>Sends a multi-message conversation to the configured OpenRouter model and returns the assistant's completion.</p>
+              <p>Sends a prompt with optional context and returns generated text in <code>data.text</code>.</p>
               <div class="grid md:grid-cols-2 gap-3 mt-2">
                 <div>
                   <div class="font-mono text-[10px] text-bd-green font-bold mb-1">args</div>
                   <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
-  "messages": [
-    { "role": "system", "content": "..." },
-    { "role": "user",   "content": "..." }
-  ],
-  "temperature": 0.7,
-  "maxTokens": 256,
-  "responseFormat": { "type": "json_object" }  // optional
+  "prompt": "Return exactly one sentence summarizing the current clue.",
+  "context": {
+    "clue": "The candle burns blue near the locked door."
+  },
+  "includeStorySummary": true,
+  "temperature": 0.2,
+  "timeoutMs": 60000
 }</pre>
                 </div>
                 <div>
                   <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">data (on ok)</div>
                   <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
-  "provider": "openrouter",
-  "model": "openrouter/free",
-  "id": "gen-...",
-  "text": "Assistant reply text",
-  "message": {
-    "role": "assistant",
-    "content": "Assistant reply text"
-  },
-  "finishReason": "stop",
-  "usage": {
-    "promptTokens": 245,
-    "completionTokens": 87,
-    "totalTokens": 332
-  }
+  "backend": "aid-story-card-generator",
+  "text": "The blue flame implies the locked door reacts to hidden magic.",
+  "generatedAtIso": "2026-06-09T18:45:00.000Z",
+  "shellCardId": "197522276",
+  "promptChars": 61,
+  "contextChars": 62
 }</pre>
                 </div>
               </div>
-              <div class="p-2 rounded bg-bd-amber/10 border border-bd-amber/30 text-[11px]">
-                <strong class="text-bd-amber">If a cost cap blocks the call</strong>, the response comes back as <code>err</code> with an
-                <code class="text-bd-green">error.code</code> of <code>cost_control</code> rather than a partial completion. Catch and surface this to the player.
+              <div class="grid md:grid-cols-2 gap-3 text-[11px]">
+                <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-border-subtle">
+                  <strong class="text-bd-text-primary">Limits:</strong>
+                  <code class="text-bd-green">prompt</code> max 6000 chars,
+                  <code class="text-bd-green">context</code> max 4000 chars,
+                  <code class="text-bd-green">temperature</code> 0..2,
+                  <code class="text-bd-green">timeoutMs</code> max 120000.
+                </div>
+                <div class="p-2 rounded bg-bd-amber/10 border border-bd-amber/30">
+                  <strong class="text-bd-amber">JSON:</strong>
+                  ask for one complete JSON value in the prompt, then parse and validate it in your script.
+                </div>
               </div>
             </div>
 
-            <!-- models -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-2">
               <div class="flex items-center gap-2 flex-wrap">
-                <h4 class="font-semibold text-bd-purple text-[13px]"><code>ai.models</code></h4>
+                <h4 class="font-semibold text-bd-purple text-[13px]"><code>ai.status</code></h4>
                 <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
-                <span class="text-[10px] text-bd-text-muted">60000ms max</span>
+                <span class="text-[10px] text-bd-text-muted">readiness diagnostics</span>
               </div>
-              <p>Returns the OpenRouter models the player's key can currently access. Use it for setup diagnostics or to help the player choose a default in the popup; <code>ai.chat</code> always uses the player's saved default model and does not accept a per-request model override.</p>
+              <p>Reports whether <code>ai.query</code> can run in the current adventure and whether a request is already active.</p>
               <div>
                 <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">data (on ok)</div>
                 <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
-  "provider": "openrouter",
-  "configured": true,
-  "defaultModel": "openrouter/free",
-  "source": "https://openrouter.ai/api/v1/models",
-  "count": 120,
-  "totalCount": 120,
-  "returned": 1,
-  "truncated": true,
-  "models": [
-    {
-      "id": "openrouter/free",
-      "name": "OpenRouter Free Router",
-      "canonicalSlug": "openrouter/free",
-      "contextLength": null,
-      "pricing": { "prompt": "0", "completion": "0", "request": null }
-    }
-  ]
+  "backend": "aid-story-card-generator",
+  "ready": true,
+  "adventureId": "adventure-...",
+  "adventureShortId": "abc123",
+  "hasGraphqlCredentials": true,
+  "shellCardExists": true,
+  "shellCardId": "197522276",
+  "queryActive": false
 }</pre>
               </div>
-            </div>
-
-            <!-- testConnection -->
-            <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-2">
-              <div class="flex items-center gap-2 flex-wrap">
-                <h4 class="font-semibold text-bd-purple text-[13px]"><code>ai.testConnection</code></h4>
-                <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
-                <span class="text-[10px] text-bd-text-muted">60000ms max</span>
-              </div>
-              <p>Verifies the configured key with a tiny no-cost ping, or confirms the local dummy model is active. Useful in onboarding flows before the first real <code>chat</code>.</p>
-              <div>
-                <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">data (on ok)</div>
-                <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
-  "provider": "openrouter",
-  "configured": true,
-  "ok": true,
-  "defaultModel": "openrouter/free",
-  "modelCount": 120,
-  "source": "https://openrouter.ai/api/v1/models",
-  "checkedAtIso": "2026-05-30T19:45:00.000Z"
-}</pre>
-              </div>
-            </div>
-          </div>
-        </Transition>
-      </section>
-
-      <!-- ===================== COST CONTROLS ===================== -->
-      <section id="guide-cost" class="card">
-        <button @click="toggleGuideSection('cost')" class="w-full flex items-center justify-between text-left">
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <ShieldCheck class="w-5 h-5 text-bd-green" />
-            Cost &amp; Safety Controls
-          </h2>
-          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('cost') }" />
-        </button>
-        <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('cost')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
-            <p>
-              Players configure granular spending caps inside the extension. Caps are enforced <strong>by the extension before any request reaches OpenRouter</strong>,
-              so a runaway scenario cannot bypass them. The exact knobs surfaced through <code>sdk.config</code> are:
-            </p>
-
-            <div class="overflow-x-auto">
-              <table class="w-full text-[11px] border-collapse">
-                <thead>
-                  <tr class="border-b border-bd-border-subtle">
-                    <th class="text-left py-2 px-2 font-semibold text-bd-text-primary">Control</th>
-                    <th class="text-left py-2 px-2 font-semibold text-bd-text-primary">Effect</th>
-                  </tr>
-                </thead>
-                <tbody class="text-bd-text-secondary">
-                  <tr class="border-b border-bd-border-subtle/50">
-                    <td class="py-2 px-2"><code class="text-bd-green">freeModelsOnly</code></td>
-                    <td class="py-2 px-2">Hard-rejects any <code>chat</code> call when the configured default model has nonzero pricing.</td>
-                  </tr>
-                  <tr class="border-b border-bd-border-subtle/50">
-                    <td class="py-2 px-2"><code class="text-bd-green">maxPromptPricePerMillion</code></td>
-                    <td class="py-2 px-2">Caps the prompt-token price ($/M) the configured model may charge. Higher-priced models are blocked.</td>
-                  </tr>
-                  <tr class="border-b border-bd-border-subtle/50">
-                    <td class="py-2 px-2"><code class="text-bd-green">maxCompletionPricePerMillion</code></td>
-                    <td class="py-2 px-2">Same as above, for the completion side of the price.</td>
-                  </tr>
-                  <tr class="border-b border-bd-border-subtle/50">
-                    <td class="py-2 px-2"><code class="text-bd-green">perCallEstimateCap</code></td>
-                    <td class="py-2 px-2">Estimates the cost of a single call from <code>maxTokens</code> + model price; rejects if it exceeds this dollar cap.</td>
-                  </tr>
-                  <tr class="border-b border-bd-border-subtle/50">
-                    <td class="py-2 px-2"><code class="text-bd-green">dailySpendCap</code></td>
-                    <td class="py-2 px-2">Rolling 24h spend ceiling. Tracked locally by the extension.</td>
-                  </tr>
-                  <tr>
-                    <td class="py-2 px-2"><code class="text-bd-green">monthlySpendCap</code></td>
-                    <td class="py-2 px-2">Rolling 30d spend ceiling. Same enforcement path.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
-              <p class="text-[11px]">
-                <strong class="text-bd-amber">Scenario authors should recommend <code class="text-bd-green">openrouter/free</code> by default.</strong> Use <code class="text-bd-green">betterdungeon/dummy:free</code> for no-network tests. The player chooses the model in the BetterDungeon popup;
-                scripts cannot override that choice. Detect through <code>sdk.config.ultrascripts.ai.costControls.freeModelsOnly</code> if you want to branch.
-              </p>
             </div>
           </div>
         </Transition>
@@ -350,21 +230,19 @@
         </button>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('wire')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
-            <p>Single round-trip from scenario script to model and back.</p>
+            <p>One round trip from scenario script to generated helper text and back.</p>
             <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">// ultrascripts:out
 {
   "v": 1,
   "requests": [{
-    "id": "cogm-chat-t12",
+    "id": "scene-json-t12",
     "module": "ai",
-    "op": "chat",
+    "op": "query",
     "args": {
-      "temperature": 0.7,
-      "maxTokens": 120,
-      "messages": [
-        { "role": "system", "content": "You are a Co-GM. Output ONE sentence describing the mystical ambient noise of the current scene." },
-        { "role": "user",   "content": "Scene: A crumbling watchtower at dusk. Damp moss. Distant thunder." }
-      ]
+      "temperature": 0,
+      "includeStorySummary": false,
+      "prompt": "Return exactly one JSON object: {\"mood\":\"ominous\",\"risk\":\"magic\"}.",
+      "context": "A blue candle burns beside a locked cellar door."
     }
   }],
   "acks": []
@@ -374,18 +252,14 @@
 {
   "v": 1,
   "responses": {
-    "cogm-chat-t12": {
+    "scene-json-t12": {
       "status": "ok",
       "data": {
-        "provider": "openrouter",
-        "model": "openrouter/free",
-        "text": "Beneath the watchtower's ribs, slow drips count out the storm's heartbeat as moss whispers like distant prayers.",
-        "message": {
-          "role": "assistant",
-          "content": "Beneath the watchtower's ribs, slow drips count out the storm's heartbeat as moss whispers like distant prayers."
-        },
-        "finishReason": "stop",
-        "usage": { "promptTokens": 84, "completionTokens": 31, "totalTokens": 115 }
+        "backend": "aid-story-card-generator",
+        "text": "{\"mood\":\"ominous\",\"risk\":\"magic\"}",
+        "shellCardId": "197522276",
+        "promptChars": 69,
+        "contextChars": 48
       },
       "completedLiveCount": 12
     }
@@ -395,7 +269,7 @@
         </Transition>
       </section>
 
-        <!-- ===================== PATTERNS ===================== -->
+      <!-- ===================== PATTERNS ===================== -->
       <section id="guide-recipes" class="card">
         <button @click="toggleGuideSection('recipes')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
@@ -407,39 +281,33 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('recipes')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
 
-            <!-- Pattern 1: Co-GM Ambient Narrator -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-2">
               <h4 class="font-semibold text-bd-purple flex items-center gap-1.5 text-[12px]">
-                <BrainCircuit class="w-4 h-4" /> Pattern 1: Co-GM Ambient Narrator
+                <BrainCircuit class="w-4 h-4" /> Pattern 1: Private Scene Classifier
               </h4>
-              <p>Each turn, ask the player's configured model for one ambient flavor sentence and inject it as front-context for the main model.</p>
+              <p>Ask for a small structured classification of the current scene, then use the result to update Scripture widgets or script state.</p>
               <p class="text-[11px] text-bd-text-muted">
-                Keep the live script in Quick Start, where it uses <code>bd.us.tick()</code>, <code>bd.us.latest('ai', 'chat')</code>,
-                <code>bd.us.call('ai', 'chat', ...)</code>, and <code>bd.us.commit()</code>. This module page only documents the AI operation contract.
+                Set <code>includeStorySummary: false</code> when the answer should only use the context you pass in.
               </p>
             </div>
 
-            <!-- Pattern 2: Structured Extraction -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-2">
               <h4 class="font-semibold text-bd-blue flex items-center gap-1.5 text-[12px]">
-                <Wand2 class="w-4 h-4" /> Pattern 2: Structured Scene Extraction
+                <Wand2 class="w-4 h-4" /> Pattern 2: Lightweight Memory Summarizer
               </h4>
-              <p>Force a JSON output describing the current scene so Scripture widgets can render structured state from prose.</p>
+              <p>Condense recent action snippets into a one- or two-sentence private summary for a script-owned state card.</p>
               <p class="text-[11px] text-bd-text-muted">
-                Use <code>responseFormat: { type: 'json_object' }</code> for JSON extraction, keep <code>temperature</code> low, and consume
-                the response on a later turn with <code>bd.us.latest('ai', 'chat')</code>.
+                Include only the relevant action text in <code>context</code>. Turn on <code>includeStorySummary</code> when the answer should also consider the broader adventure.
               </p>
             </div>
 
-            <!-- Pattern 3: Cost-Aware Fallback -->
             <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-2">
               <h4 class="font-semibold text-bd-green flex items-center gap-1.5 text-[12px]">
-                <CheckCircle2 class="w-4 h-4" /> Pattern 3: Cost-Aware Fallback
+                <CheckCircle2 class="w-4 h-4" /> Pattern 3: Optional Co-GM Assist
               </h4>
-              <p>Respect the player's configured model and gracefully skip optional calls when their cost controls block them.</p>
+              <p>Use one private helper answer per turn to suggest tone, stakes, or rule-state, then let your normal script decide whether to surface it.</p>
               <p class="text-[11px] text-bd-text-muted">
-                Read <code>sdk.config</code> first, then branch on the player's configured cost controls before queueing optional model work. Keep helpers on
-                <code>globalThis.bd</code> if you need reusable functions; store only plain data on <code>state</code>.
+                Do not fire multiple queries for the same turn. Queue one helper request, read it later, then decide whether to surface it.
               </p>
             </div>
           </div>
@@ -463,12 +331,11 @@
                   <Check class="w-4 h-4" /> Do
                 </h4>
                 <ul class="space-y-1 text-[11px] text-bd-text-secondary">
-                  <li>&middot; Keep system prompts <strong>short and specific</strong>. The AI module is best at one job at a time.</li>
-                  <li>&middot; Pin <code>temperature</code> low (0.0&ndash;0.2) when extracting JSON; raise it for creative narration.</li>
-                  <li>&middot; Recommend a <strong>free-tier</strong> default model in scenario notes so free-only players can use the scenario unchanged.</li>
-                  <li>&middot; Always check <code>sdk.config.ultrascripts.ai.configured</code> before the first call.</li>
-                  <li>&middot; Filter responses by <code>completedLiveCount</code> on every read.</li>
-                  <li>&middot; Cap <code>maxTokens</code> tightly. The smallest useful number wins on both latency and cost.</li>
+                  <li>&middot; Keep prompts short, concrete, and task-specific.</li>
+                  <li>&middot; Use low temperature for extraction and higher temperature only for creative helper text.</li>
+                  <li>&middot; Validate JSON or structured text inside your AI Dungeon script.</li>
+                  <li>&middot; Read responses on a later turn and filter by <code>completedLiveCount</code>.</li>
+                  <li>&middot; Treat <code>ai_rate_limited</code> as a normal "try next turn" condition.</li>
                 </ul>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/30 space-y-1.5">
@@ -476,11 +343,11 @@
                   <X class="w-4 h-4" /> Avoid
                 </h4>
                 <ul class="space-y-1 text-[11px] text-bd-text-secondary">
-                  <li>&middot; Don't try to make the AI module <strong>replace</strong> the main AI Dungeon model &mdash; orchestrate alongside it.</li>
-                  <li>&middot; Don't issue a chat call on every modifier; rate-limit to once per turn at most.</li>
-                  <li>&middot; Don't treat <code>ai.chat</code> as idempotent. Replays on undo will burn quota.</li>
-                  <li>&middot; Don't bake your own API key into a script &mdash; only the player's key in the popup is supported.</li>
-                  <li>&middot; Don't assume the player selected a paid model or try to override their default.</li>
+                  <li>&middot; Do not treat <code>ai.query</code> as idempotent. It is replay-unsafe.</li>
+                  <li>&middot; Do not queue multiple native generation requests at once.</li>
+                  <li>&middot; Do not rely on provider-specific JSON modes or model metadata.</li>
+                  <li>&middot; Do not ask the AI module to replace AI Dungeon's main story generation.</li>
+                  <li>&middot; Do not expect the helper answer to appear in the story automatically; your script decides what to do with it.</li>
                 </ul>
               </div>
             </div>
@@ -501,39 +368,34 @@
           <div v-if="isGuideSectionExpanded('pitfalls')" class="mt-4 space-y-3">
             <div class="grid md:grid-cols-2 gap-3 text-[11px]">
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
-                <h4 class="font-semibold text-bd-pink text-[12px]">Key not configured</h4>
-                <p class="text-bd-text-secondary"><strong>Issue:</strong> <code>ai.chat</code> returns <code>err</code> immediately.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Gate behind <code>sdk.config.ultrascripts.ai.configured</code>. Surface a friendly prompt to open the extension popup.</p>
+                <h4 class="font-semibold text-bd-pink text-[12px]">Not ready yet</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> <code>ai.status</code> returns <code>ready: false</code>.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Wait until the player is in an adventure and BetterDungeon has page credentials, then retry next turn.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
-                <h4 class="font-semibold text-bd-pink text-[12px]">Cost cap blocked the call</h4>
-                <p class="text-bd-text-secondary"><strong>Issue:</strong> <code>err</code> with <code>error.code === "cost_control"</code>.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Reduce <code>maxTokens</code>, skip optional calls, or ask the player to choose a cheaper default / raise their daily or monthly cap.</p>
+                <h4 class="font-semibold text-bd-pink text-[12px]">Another query is active</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> <code>err</code> with <code>error.code === "ai_rate_limited"</code>.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Keep one request in flight. Read the first response before queueing the next query.</p>
+              </div>
+              <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
+                <h4 class="font-semibold text-bd-pink text-[12px]">JSON is malformed</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> The answer returns prose, a JSON fragment, or extra text.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Prompt for one complete JSON value, extract the first balanced object if needed, then validate the shape.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Stale response after undo</h4>
-                <p class="text-bd-text-secondary"><strong>Issue:</strong> Old completion leaks into the new current turn.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Compare <code>completedLiveCount</code> with <code>info.actionCount</code> on every read.</p>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> Old generated helper text leaks into the current turn.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Compare <code>completedLiveCount</code> with your current live count before applying a response.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
-                <h4 class="font-semibold text-bd-pink text-[12px]">Response never appears</h4>
-                <p class="text-bd-text-secondary"><strong>Issue:</strong> A custom script reuses a request id, or polls the wrong <code>ultrascripts:in:&lt;module&gt;</code> card.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Generate a fresh id per queued call, include the live count / counter, and poll the same module id you sent. The SDK helper handles this.</p>
+                <h4 class="font-semibold text-bd-pink text-[12px]">Timeout on a broad prompt</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> Response returns <code>timeout</code> or no useful text.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Shrink the prompt, reduce context, or split your script logic so the AI only does one bounded task.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
-                <h4 class="font-semibold text-bd-pink text-[12px]">JSON output isn't pure JSON</h4>
-                <p class="text-bd-text-secondary"><strong>Issue:</strong> Even with <code>responseFormat: json_object</code>, models occasionally wrap output in code fences.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Strip leading/trailing non-JSON before <code>JSON.parse</code>; or use a stricter system prompt asking for JSON only.</p>
-              </div>
-              <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
-                <h4 class="font-semibold text-bd-pink text-[12px]">Default model unavailable</h4>
-                <p class="text-bd-text-secondary"><strong>Issue:</strong> The player's OpenRouter tier doesn't include their configured default model.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Ask the player to pick an available default in the BetterDungeon popup; <code>ai.models</code> can help diagnose what their key can see.</p>
-              </div>
-              <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
-                <h4 class="font-semibold text-bd-pink text-[12px]">Timeout on a long context</h4>
-                <p class="text-bd-text-secondary"><strong>Issue:</strong> Response comes back <code>timeout</code> on huge prompts.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Shrink prompt with a summarization pass, lower <code>maxTokens</code>, or ask the player to pick a faster default model.</p>
+                <h4 class="font-semibold text-bd-pink text-[12px]">Visible story expectations</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> The script expects <code>ai.query</code> to change the story output directly.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Treat the result as private data. Your script decides what, if anything, to surface later.</p>
               </div>
             </div>
           </div>
@@ -547,19 +409,16 @@
 <script setup>
 import { ref } from 'vue'
 import {
-  ChevronDown, ChevronUp, BrainCircuit, Sparkles, Lock, AlertTriangle, Settings,
-  Terminal, ShieldCheck, Zap, Rocket, Wand2, CheckCircle2, Lightbulb, Check, X,
-  ArrowRight
+  ChevronDown, ChevronUp, BrainCircuit, Sparkles, ShieldCheck, AlertTriangle,
+  Terminal, Zap, Rocket, Wand2, CheckCircle2, Lightbulb, Check, X, ArrowRight
 } from 'lucide-vue-next'
 
-// Sections ordered: orient -> player setup -> reference -> safety -> usage -> debug.
 const guideSections = [
   { id: 'header-intro', label: 'Introduction', isHeader: true },
   { id: 'overview', label: 'Overview' },
-  { id: 'setup', label: 'Player Setup' },
+  { id: 'readiness', label: 'Readiness' },
   { id: 'header-ref', label: 'Reference', isHeader: true },
   { id: 'ops', label: 'Operations' },
-  { id: 'cost', label: 'Cost Controls' },
   { id: 'wire', label: 'Wire Example' },
   { id: 'header-use', label: 'Usage', isHeader: true },
   { id: 'recipes', label: 'Usage Patterns' },

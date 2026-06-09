@@ -53,10 +53,10 @@ test suites in `BetterDungeon/tests/aid-scripts/`.
 | `weather` | Ops | Current weather and forecasts | `current`, `forecast` |
 | `network` | Ops | Browser connectivity hints | `status` |
 | `system` | Ops | Device, browser, locale, screen, power | `info`, `power` |
-| `ai` | Ops | OpenRouter-backed hosted-model calls | `chat`, `models`, `testConnection` |
+| `ai` | Ops | Native AI Dungeon helper queries | `query`, `status` |
 
-The AI module keeps `providerAI` as a legacy alias for compatibility, but public
-docs should teach `ai` as the canonical module id.
+The AI module is native-only. Public docs should teach `ai.query` for generated
+helper text and `ai.status` for readiness.
 
 ## 4. Reserved cards
 
@@ -147,7 +147,7 @@ Response card: `ultrascripts:in:<module>`
 ```
 
 Terminal statuses are `ok`, `err`, and `timeout`. Pending responses use
-`status: "pending"`. Unsafe ops such as `ai.chat` and `webfetch.fetch` should
+`status: "pending"`. Unsafe ops such as `ai.query` and `webfetch.fetch` should
 be filtered by `completedLiveCount` before applying the result to current-turn
 logic.
 
@@ -176,7 +176,8 @@ Important cross-platform notes:
   assuming every player has every module enabled.
 - WebFetch still requires per-origin consent.
 - Geolocation still depends on browser or WebView permission state.
-- Hosted AI still depends on the player configuring OpenRouter in BetterDungeon.
+- AI queries depend on the player being in a loaded AI Dungeon adventure where
+  BetterDungeon can make native GraphQL requests.
 
 ## 9. Public guide coverage
 
@@ -206,6 +207,6 @@ modules one at a time for conceptual polish.
 - Internal transport implementation details beyond what authors need.
 - Historical BetterScripts/TagCipher patterns except as deprecated migration
   context.
-- Archived Provider AI phase snippets that still use `profile: "full"` or
-  `providerAI` as the primary module id.
+- Archived Provider AI phase snippets that still use `profile: "full"`,
+  `providerAI`, or the retired hosted-model ops.
 - Speculative third-party module registry or sandboxing plans.

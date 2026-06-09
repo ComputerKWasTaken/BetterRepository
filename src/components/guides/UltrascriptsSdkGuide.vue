@@ -78,8 +78,8 @@
                 <li>&middot; <strong>SDK</strong> = <em>"what does the player's BetterDungeon look like, and how should I adapt?"</em> A real op call, slightly slower, returns rich metadata.</li>
               </ul>
               <p class="text-[11px] mt-1.5">
-                If you only need to check availability, read the heartbeat card. Reach for SDK ops when you need the deeper picture (cost controls,
-                display preferences, AI configured status, etc.).
+                If you only need to check availability, read the heartbeat card. Reach for SDK ops when you need the deeper picture (display
+                preferences, module toggles, native AI backend metadata, etc.).
               </p>
             </div>
 
@@ -215,7 +215,7 @@
                 <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
                 <span class="text-[10px] text-bd-text-muted">1500ms</span>
               </div>
-              <p>Returns the full sanitized configuration surface: feature flags, module preferences, Scripture display knobs, WebFetch consent counts, and AI status + cost controls.</p>
+              <p>Returns the full sanitized configuration surface: feature flags, module preferences, Scripture display knobs, WebFetch consent counts, and native AI backend metadata.</p>
               <div>
                 <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">data (representative)</div>
                 <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
@@ -259,25 +259,16 @@
       "denyCount": 0
     },
     "ai": {
+      "backend": "aid-story-card-generator",
       "configured": true,
-      "defaultModel": "openrouter/free",
-      "dummyModel": false,
-      "costControls": {
-        "freeModelsOnly": true,
-        "advancedOpen": false,
-        "maxPromptPricePerMillion": 0,
-        "maxCompletionPricePerMillion": 0,
-        "perCallEstimateCap": 0,
-        "dailySpendCap": 0,
-        "monthlySpendCap": 0
-      }
+      "requiresExternalKey": false
     }
   }
 }</pre>
               </div>
               <div class="p-2 rounded bg-bd-amber/10 border border-bd-amber/30 text-[11px]">
-                <strong class="text-bd-amber">Security guarantee:</strong> The OpenRouter API key is <strong>never</strong> exposed.
-                The <code>ai.configured</code> boolean reports whether hosted AI is ready or the local dummy model is selected. Domain allow/deny lists for WebFetch are reported as counts, not as origin strings.
+                <strong class="text-bd-amber">Security guarantee:</strong> No external AI key is stored or exposed.
+                For live AI Dungeon readiness, call <code>ai.status</code>. Domain allow/deny lists for WebFetch are reported as counts, not as origin strings.
               </div>
             </div>
           </div>
@@ -390,9 +381,9 @@
                 <p class="text-bd-text-muted"><strong>Fix:</strong> Suffix every request id with the live count (or a counter you increment yourself).</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
-                <h4 class="font-semibold text-bd-pink text-[12px]">Assuming a key is configured</h4>
-                <p class="text-bd-text-secondary"><strong>Issue:</strong> Code calls <code>ai.chat</code> before reading <code>sdk.config</code>.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Read <code>ultrascripts.ai.configured</code> from <code>sdk.config</code> and surface a friendly prompt if <code>false</code>.</p>
+                <h4 class="font-semibold text-bd-pink text-[12px]">Assuming native AI is ready</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> Code calls <code>ai.query</code> before the adventure page has GraphQL credentials.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Use heartbeat for op availability and <code>ai.status</code> for live readiness before queueing a query.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Hardcoding feature flag values</h4>

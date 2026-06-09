@@ -236,8 +236,8 @@ const patterns = [
     title: 'AI Co-GM',
     icon: BrainCircuit,
     iconClass: 'text-bd-purple',
-    summary: 'Ask the player-configured AI model for short flavor, summaries, or structured extraction.',
-    guidance: 'Gate on <code>sdk.config</code>, use <code>ai.chat</code>, and consume the response on a later turn.',
+    summary: 'Ask AI Dungeon\'s native generator for short flavor, summaries, or structured extraction.',
+    guidance: 'Check for <code>ai.query</code>, queue one bounded request, and consume the response on a later turn.',
     link: '/ultrascripts?tab=ai',
     module: 'AI'
   },
@@ -246,7 +246,7 @@ const patterns = [
     icon: Wand2,
     iconClass: 'text-bd-blue',
     summary: 'Convert prose into JSON that drives scenario state or widgets.',
-    guidance: 'Use <code>responseFormat: { type: "json_object" }</code>, low temperature, and defensive parsing.',
+    guidance: 'Ask for one complete JSON value in the prompt, use low temperature, and parse defensively.',
     link: '/ultrascripts?tab=ai',
     module: 'AI'
   },
@@ -274,7 +274,7 @@ const sourceLinks = [
   { label: 'Core runtime', summary: 'Transport, dispatcher, heartbeat, and shared Ultrascripts services.', href: `${sourceBase}/services/ultrascripts` },
   { label: 'Scripture module', summary: 'Widget state publishing and renderer integration.', href: `${sourceBase}/modules/scripture` },
   { label: 'WebFetch module', summary: 'Consent-gated fetch and search ops.', href: `${sourceBase}/modules/webfetch` },
-  { label: 'AI module', summary: 'OpenRouter chat, model listing, and connection checks.', href: `${sourceBase}/modules/ai` },
+  { label: 'AI module', summary: 'Native Story Card generator queries and readiness checks.', href: `${sourceBase}/modules/ai` },
   { label: 'SDK module', summary: 'Runtime version and sanitized player configuration.', href: `${sourceBase}/modules/sdk` },
   { label: 'Clock module', summary: 'Time, timezone, and formatting ops.', href: `${sourceBase}/modules/clock` },
   { label: 'Geolocation module', summary: 'Permission and browser coordinate ops.', href: `${sourceBase}/modules/geolocation` },

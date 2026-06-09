@@ -378,33 +378,35 @@ bd.us.commit();</pre>
           <div v-if="isGuideSectionExpanded('required')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
               If Ultrascripts is the engine of the scenario, say so plainly and guard the core path immediately. Do not fake a broken fallback for a
-              script whose whole point depends on modules like <code>ai.chat</code>.
+              script whose whole point depends on modules like <code>ai.query</code>.
             </p>
 
             <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">bd.us.tick();
 
-if (!bd.us.available() || !bd.us.has('ai', 'chat')) {
+if (!bd.us.available() || !bd.us.has('ai', 'query')) {
   text = '[This scenario requires BetterDungeon with Ultrascripts AI enabled. Install BetterDungeon or switch to a non-Ultrascripts version.]\n' + text;
 } else {
-  var cfg = bd.us.latest('sdk', 'config');
+  var status = bd.us.latest('ai', 'status');
 
-  if (!cfg &amp;&amp; bd.us.has('sdk', 'config')) {
-    bd.us.call('sdk', 'config');
-    text = '[Checking BetterDungeon AI configuration. Try one more action after the SDK reply arrives.]\n' + text;
+  if (!status &amp;&amp; bd.us.has('ai', 'status')) {
+    bd.us.call('ai', 'status');
+    text = '[Checking BetterDungeon AI readiness. Try one more action after the status reply arrives.]\n' + text;
   } else {
-    var aiReady = cfg
-      &amp;&amp; cfg.status === 'ok'
-      &amp;&amp; cfg.data
-      &amp;&amp; cfg.data.ultrascripts
-      &amp;&amp; cfg.data.ultrascripts.ai
-      &amp;&amp; cfg.data.ultrascripts.ai.configured;
+    var aiReady = status
+      &amp;&amp; status.status === 'ok'
+      &amp;&amp; status.data
+      &amp;&amp; status.data.ready;
 
     if (!aiReady) {
-      text = '[This scenario requires the BetterDungeon AI module to be configured in the popup first.]\n' + text;
+      text = '[This scenario requires AI Dungeon native query readiness. Try again after the adventure fully loads.]\n' + text;
     } else {
       // Core Ultrascripts-dependent logic starts here.
-      text = '[BetterDungeon AI module is configured. Queueing Co-GM support for the next turn.]\n' + text;
-      bd.us.call('ai', 'chat', { messages: [{ role: 'user', content: text }] });
+      text = '[BetterDungeon AI module is ready. Queueing Co-GM support for the next turn.]\n' + text;
+      bd.us.call('ai', 'query', {
+        prompt: 'Write one short Co-GM hint for the current scene.',
+        context: text,
+        temperature: 0.4
+      });
     }
   }
 }
@@ -519,14 +521,14 @@ Turn N+2 :  ...continues every turn</pre>
         <button @click="toggleGuideSection('step3')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <span class="w-6 h-6 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center text-[12px]">3</span>
-            Ask a second AI model
+            Ask native AI
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('step3') }" />
         </button>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('step3')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              Same pattern again: the player's configured AI model writes one sentence of ambient flavor every turn.
+              Same pattern again: AI Dungeon's native generator writes one private sentence of ambient flavor every turn.
             </p>
 
             <div>
@@ -534,39 +536,34 @@ Turn N+2 :  ...continues every turn</pre>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">bd.us.tick();
 
 // Inject the previous Co-GM line as front-context
-var prev = bd.us.latest('ai', 'chat');
+var prev = bd.us.latest('ai', 'query');
 var prevText = prev &amp;&amp; prev.status === 'ok' &amp;&amp; prev.data
-  ? (prev.data.text || (prev.data.message &amp;&amp; prev.data.message.content) || '')
+  ? (prev.data.text || '')
   : '';
 if (prevText) {
   text = '[Ambient: ' + String(prevText).trim() + ']\n' + text;
 }
 
-// Queue this turn's Co-GM request (only if AI is configured)
-var cfg = bd.us.latest('sdk', 'config');
-var aiReady = cfg &amp;&amp; cfg.status === 'ok'
-  &amp;&amp; cfg.data
-  &amp;&amp; cfg.data.ultrascripts
-  &amp;&amp; cfg.data.ultrascripts.ai
-  &amp;&amp; cfg.data.ultrascripts.ai.configured;
-if (bd.us.has('ai', 'chat') &amp;&amp; aiReady) {
-  bd.us.call('ai', 'chat', {
-    temperature: 0.7,
-    maxTokens: 60,
-    messages: [
-      { role: 'system', content: 'Output ONE atmospheric sentence describing ambient sensory detail. No dialogue. No plot events.' },
-      { role: 'user',   content: 'Current scene:\n' + text }
-    ]
+// Queue this turn's Co-GM request when native AI is ready.
+var aiStatus = bd.us.latest('ai', 'status');
+var aiReady = aiStatus &amp;&amp; aiStatus.status === 'ok'
+  &amp;&amp; aiStatus.data
+  &amp;&amp; aiStatus.data.ready;
+if (bd.us.has('ai', 'query') &amp;&amp; aiReady) {
+  bd.us.call('ai', 'query', {
+    temperature: 0.4,
+    prompt: 'Output one atmospheric sentence describing ambient sensory detail. No dialogue. No plot events.',
+    context: 'Current scene:\n' + text
   });
 }
-if (bd.us.has('sdk', 'config') &amp;&amp; !cfg) bd.us.call('sdk', 'config');
+if (bd.us.has('ai', 'status') &amp;&amp; !aiStatus) bd.us.call('ai', 'status');
 
 bd.us.commit();</pre>
             </div>
 
             <p>
-              This pattern queues <code>sdk.config</code> automatically until a config response is cached, so the AI path becomes available after setup
-              without breaking the plain scenario flow.
+              This pattern queues <code>ai.status</code> automatically until a readiness response is cached, so the AI path becomes available after the adventure
+              finishes hydrating without breaking the plain scenario flow.
             </p>
           </div>
         </Transition>
@@ -610,9 +607,9 @@ if (clockResult &amp;&amp; clockResult.status === 'ok') {
   if (hour >= 20 || hour < 5) text += '\n[Ambient: deep night.]';
 }
 
-var coGm = bd.us.latest('ai', 'chat');
+var coGm = bd.us.latest('ai', 'query');
 var coGmText = coGm &amp;&amp; coGm.status === 'ok' &amp;&amp; coGm.data
-  ? (coGm.data.text || (coGm.data.message &amp;&amp; coGm.data.message.content) || '')
+  ? (coGm.data.text || '')
   : '';
 if (coGmText) {
   text = '[Ambient: ' + String(coGmText).trim() + ']\n' + text;
@@ -629,24 +626,19 @@ if (bd.us.has('scripture')) {
 // 4. Queue this turn's requests.
 if (bd.us.has('clock', 'now')) bd.us.call('clock', 'now');
 
-var cfg = bd.us.latest('sdk', 'config');
-var aiReady = cfg &amp;&amp; cfg.status === 'ok'
-  &amp;&amp; cfg.data
-  &amp;&amp; cfg.data.ultrascripts
-  &amp;&amp; cfg.data.ultrascripts.ai
-  &amp;&amp; cfg.data.ultrascripts.ai.configured;
+var aiStatus = bd.us.latest('ai', 'status');
+var aiReady = aiStatus &amp;&amp; aiStatus.status === 'ok'
+  &amp;&amp; aiStatus.data
+  &amp;&amp; aiStatus.data.ready;
 
-if (bd.us.has('ai', 'chat') &amp;&amp; aiReady) {
-  bd.us.call('ai', 'chat', {
-    temperature: 0.7,
-    maxTokens: 60,
-    messages: [
-      { role: 'system', content: 'Output ONE atmospheric sentence. No dialogue.' },
-      { role: 'user',   content: text }
-    ]
+if (bd.us.has('ai', 'query') &amp;&amp; aiReady) {
+  bd.us.call('ai', 'query', {
+    temperature: 0.4,
+    prompt: 'Output one atmospheric sentence. No dialogue.',
+    context: text
   });
 }
-if (bd.us.has('sdk', 'config') &amp;&amp; !cfg) bd.us.call('sdk', 'config');
+if (bd.us.has('ai', 'status') &amp;&amp; !aiStatus) bd.us.call('ai', 'status');
 
 // 5. Send everything in one envelope.
 bd.us.commit();</pre>
@@ -691,7 +683,7 @@ bd.us.commit();</pre>
                 <h4 class="font-semibold text-bd-purple text-[12px] mb-1 flex items-center gap-1.5">
                   <BrainCircuit class="w-4 h-4" /> AI deep-dive
                 </h4>
-                <p class="text-[11px] text-bd-text-secondary">Player setup, cost controls, ops reference, and patterns for structured extraction and Co-GM narration.</p>
+                <p class="text-[11px] text-bd-text-secondary">Native query readiness, ops reference, and patterns for structured extraction and Co-GM narration.</p>
               </router-link>
               <router-link to="/ultrascripts?tab=architecture" class="block p-3 rounded-lg bg-bd-bg-primary border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">
                 <h4 class="font-semibold text-bd-cyan text-[12px] mb-1 flex items-center gap-1.5">

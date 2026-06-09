@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <!-- Table of Contents - Sticky Sidebar -->
   <div class="flex gap-6 animate-fade-in">
     <!-- TOC Sidebar -->
@@ -117,7 +117,7 @@
                   External Integrations
                 </h3>
                 <p class="text-bd-text-secondary">
-                  WebFetch and the AI module let scenarios reach outside the sandbox to fetch data, query APIs, and run optional hosted AI prompts with player consent.
+                  WebFetch lets scenarios reach approved external data, while the AI module runs bounded private prompts through AI Dungeon's native generator.
                 </p>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
@@ -148,7 +148,7 @@
                 </div>
                 <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
                   <strong class="text-bd-purple block">AI</strong>
-                  <span class="text-bd-text-muted">Ops: <code class="text-bd-green">chat</code>, <code class="text-bd-green">models</code>, <code class="text-bd-green">testConnection</code></span>
+                  <span class="text-bd-text-muted">Ops: <code class="text-bd-green">query</code>, <code class="text-bd-green">status</code></span>
                 </div>
                 <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
                   <strong class="text-bd-amber block">Clock</strong>
@@ -355,11 +355,11 @@
                   <Settings class="w-4 h-4 text-bd-purple" /> Extension Popup Controls
                 </h4>
                 <ul class="space-y-1 text-bd-text-muted">
-                  <li>• Master Ultrascripts on/off switch</li>
-                  <li>• Per-module enable/disable toggles for all 9 modules</li>
-                  <li>• WebFetch domain consent management</li>
-                  <li>• AI key configuration and cost limits</li>
-                  <li>• Debug mode for development logging</li>
+                  <li>â€¢ Master Ultrascripts on/off switch</li>
+                  <li>â€¢ Per-module enable/disable toggles for all 9 modules</li>
+                  <li>â€¢ WebFetch domain consent management</li>
+                  <li>â€¢ Native AI module toggle</li>
+                  <li>â€¢ Debug mode for development logging</li>
                 </ul>
               </div>
 
@@ -368,11 +368,11 @@
                   <Lock class="w-4 h-4 text-bd-amber" /> Security Guarantees
                 </h4>
                 <ul class="space-y-1 text-bd-text-muted">
-                  <li>• API keys are <strong>never</strong> exposed to scenario scripts</li>
-                  <li>• WebFetch requires explicit per-domain player approval</li>
-                  <li>• Geolocation requires standard browser permission</li>
-                  <li>• Cost controls cap OpenRouter spending automatically</li>
-                  <li>• SDK config returns sanitized data only</li>
+                  <li>â€¢ No external AI keys are required or exposed to scenario scripts</li>
+                  <li>â€¢ WebFetch requires explicit per-domain player approval</li>
+                  <li>â€¢ Geolocation requires standard browser permission</li>
+                  <li>â€¢ Native AI queries are single-flight and replay-unsafe</li>
+                  <li>â€¢ SDK config returns sanitized data only</li>
                 </ul>
               </div>
             </div>
@@ -479,7 +479,7 @@
                   <BrainCircuit class="w-5 h-5 text-bd-purple" />
                   <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-purple transition-colors">AI</h4>
                 </div>
-                <p class="text-bd-text-muted">Hosted LLM calls via OpenRouter &mdash; Co-GM narration, structured extraction, and optional sidecar reasoning.</p>
+                <p class="text-bd-text-muted">Native AI Dungeon generator queries for private summaries, structured extraction, and optional sidecar reasoning.</p>
               </router-link>
 
               <router-link to="/ultrascripts?tab=sdk" class="block p-4 rounded-lg bg-gradient-to-br from-bd-cyan/10 to-transparent border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">
@@ -595,3 +595,4 @@ const collapseAllGuideSections = () => {
   expandedGuideSections.value = new Set()
 }
 </script>
+
