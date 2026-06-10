@@ -245,8 +245,8 @@ const patterns = [
     title: 'Structured Extraction',
     icon: Wand2,
     iconClass: 'text-bd-blue',
-    summary: 'Convert prose into JSON that drives scenario state or widgets.',
-    guidance: 'Ask for one complete JSON value in the prompt, use low temperature, and parse defensively.',
+    summary: 'Convert prose into XML or YAML that drives scenario state or widgets.',
+    guidance: 'Ask for one complete structured value, use low temperature, and validate the shape before applying it.',
     link: '/ultrascripts?tab=ai',
     module: 'AI'
   },

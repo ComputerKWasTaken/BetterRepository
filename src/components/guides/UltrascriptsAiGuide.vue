@@ -345,7 +345,7 @@
                 <ul class="space-y-1 text-[11px] text-bd-text-secondary">
                   <li>&middot; Do not treat <code>ai.query</code> as idempotent. It is replay-unsafe.</li>
                   <li>&middot; Do not queue multiple native generation requests at once.</li>
-                  <li>&middot; Do not rely on provider-specific JSON modes or model metadata.</li>
+                  <li>&middot; Do not rely on raw JSON braces surviving the Story Card generator path.</li>
                   <li>&middot; Do not ask the AI module to replace AI Dungeon's main story generation.</li>
                   <li>&middot; Do not expect the helper answer to appear in the story automatically; your script decides what to do with it.</li>
                 </ul>
