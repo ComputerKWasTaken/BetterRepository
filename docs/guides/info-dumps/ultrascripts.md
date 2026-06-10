@@ -58,9 +58,11 @@ test suites in `BetterDungeon/tests/aid-scripts/`.
 The AI module is native-only. Public docs should teach `ai.query` for generated
 helper text and `ai.status` for readiness. `ai.query` accepts a required
 `prompt`, optional `context`, optional `systemPrompt`, `includeStorySummary`,
-`temperature`, and `timeoutMs`. For structured query responses, prefer XML or
-YAML over raw JSON because AI Dungeon's Story Card generator can strip outer
-JSON braces in some paths.
+`temperature`, and `timeoutMs`. AI Dungeon also injects native Story Card
+generator instructions upstream, including guidance to return only story card
+entry text and avoid JSON. For structured query responses, prefer XML or YAML
+over raw JSON because the generator path discourages JSON and can strip outer
+braces in some paths.
 
 ## 4. Reserved cards
 

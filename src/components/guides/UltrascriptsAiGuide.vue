@@ -192,7 +192,7 @@
                 </div>
                 <div class="p-2 rounded bg-bd-amber/10 border border-bd-amber/30">
                   <strong class="text-bd-amber">Structured output:</strong>
-                  prefer XML or YAML for script parsing. AI Dungeon may strip outer JSON braces in some Story Card generator paths.
+                  prefer XML or YAML for script parsing. AI Dungeon's native Story Card generator path discourages JSON and may strip outer braces.
                 </div>
               </div>
             </div>
@@ -348,7 +348,7 @@
                 <ul class="space-y-1 text-[11px] text-bd-text-secondary">
                   <li>&middot; Do not treat <code>ai.query</code> as idempotent. It is replay-unsafe.</li>
                   <li>&middot; Do not queue multiple native generation requests at once.</li>
-                  <li>&middot; Do not rely on raw JSON braces surviving the Story Card generator path.</li>
+                  <li>&middot; Do not rely on raw JSON surviving the Story Card generator path.</li>
                   <li>&middot; Do not ask the AI module to replace AI Dungeon's main story generation.</li>
                   <li>&middot; Do not expect the helper answer to appear in the story automatically; your script decides what to do with it.</li>
                 </ul>
