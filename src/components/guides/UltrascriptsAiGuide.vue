@@ -71,7 +71,7 @@
                 <h4 class="font-semibold text-bd-text-primary flex items-center gap-2 text-[12px]">
                   <Sparkles class="w-4 h-4 text-bd-purple" /> Send a prompt
                 </h4>
-                <p class="text-[11px]">Pass a required <code>prompt</code> and optional <code>context</code>. Context can be text or JSON-serializable data.</p>
+                <p class="text-[11px]">Pass a required <code>prompt</code>, optional <code>context</code>, and optional <code>systemPrompt</code>. Context can be text or JSON-serializable data.</p>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
                 <h4 class="font-semibold text-bd-text-primary flex items-center gap-2 text-[12px]">
@@ -162,6 +162,7 @@
   "context": {
     "clue": "The candle burns blue near the locked door."
   },
+  "systemPrompt": "Answer as a concise clue analyst. Return one sentence.",
   "includeStorySummary": true,
   "temperature": 0.2,
   "timeoutMs": 60000
@@ -174,6 +175,7 @@
   "text": "The blue flame implies the locked door reacts to hidden magic.",
   "generatedAtIso": "2026-06-09T18:45:00.000Z",
   "shellCardId": "197522276",
+  "systemPromptChars": 54,
   "promptChars": 61,
   "contextChars": 62
 }</pre>
@@ -182,6 +184,7 @@
               <div class="grid md:grid-cols-2 gap-3 text-[11px]">
                 <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-border-subtle">
                   <strong class="text-bd-text-primary">Limits:</strong>
+                  <code class="text-bd-green">systemPrompt</code> max 3000 chars,
                   <code class="text-bd-green">prompt</code> max 6000 chars,
                   <code class="text-bd-green">context</code> max 4000 chars,
                   <code class="text-bd-green">temperature</code> 0..2,
