@@ -56,7 +56,9 @@ test suites in `BetterDungeon/tests/aid-scripts/`.
 | `ai` | Ops | Native AI Dungeon helper queries | `query`, `status` |
 
 The AI module is native-only. Public docs should teach `ai.query` for generated
-helper text and `ai.status` for readiness.
+helper text and `ai.status` for readiness. For structured query responses,
+prefer XML or YAML over raw JSON because AI Dungeon's Story Card generator can
+strip outer JSON braces in some paths.
 
 ## 4. Reserved cards
 

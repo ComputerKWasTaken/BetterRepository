@@ -63,7 +63,7 @@
             <p>
               The <strong>AI module</strong> (module id <code class="text-bd-green">ai</code>) gives scripts two operations:
               <code class="text-bd-green">query</code> for generated helper text and <code class="text-bd-green">status</code> for readiness.
-              Use it when a scenario needs a short answer, summary, classification, JSON-shaped data, or Co-GM note that the script can read later.
+              Use it when a scenario needs a short answer, summary, classification, structured data, or Co-GM note that the script can read later.
             </p>
 
             <div class="grid md:grid-cols-3 gap-3">
@@ -188,8 +188,8 @@
                   <code class="text-bd-green">timeoutMs</code> max 120000.
                 </div>
                 <div class="p-2 rounded bg-bd-amber/10 border border-bd-amber/30">
-                  <strong class="text-bd-amber">JSON:</strong>
-                  ask for one complete JSON value in the prompt, then parse and validate it in your script.
+                  <strong class="text-bd-amber">Structured output:</strong>
+                  prefer XML or YAML for script parsing. AI Dungeon may strip outer JSON braces in some Story Card generator paths.
                 </div>
               </div>
             </div>
@@ -235,13 +235,13 @@
 {
   "v": 1,
   "requests": [{
-    "id": "scene-json-t12",
+    "id": "scene-xml-t12",
     "module": "ai",
     "op": "query",
     "args": {
       "temperature": 0,
       "includeStorySummary": false,
-      "prompt": "Return exactly one JSON object: {\"mood\":\"ominous\",\"risk\":\"magic\"}.",
+      "prompt": "Return exactly this XML shape: <scene><mood>ominous</mood><risk>magic</risk></scene>",
       "context": "A blue candle burns beside a locked cellar door."
     }
   }],
@@ -252,11 +252,11 @@
 {
   "v": 1,
   "responses": {
-    "scene-json-t12": {
+    "scene-xml-t12": {
       "status": "ok",
       "data": {
         "backend": "aid-story-card-generator",
-        "text": "{\"mood\":\"ominous\",\"risk\":\"magic\"}",
+        "text": "<scene><mood>ominous</mood><risk>magic</risk></scene>",
         "shellCardId": "197522276",
         "promptChars": 69,
         "contextChars": 48
@@ -333,7 +333,7 @@
                 <ul class="space-y-1 text-[11px] text-bd-text-secondary">
                   <li>&middot; Keep prompts short, concrete, and task-specific.</li>
                   <li>&middot; Use low temperature for extraction and higher temperature only for creative helper text.</li>
-                  <li>&middot; Validate JSON or structured text inside your AI Dungeon script.</li>
+                  <li>&middot; Validate XML, YAML, or structured text inside your AI Dungeon script.</li>
                   <li>&middot; Read responses on a later turn and filter by <code>completedLiveCount</code>.</li>
                   <li>&middot; Treat <code>ai_rate_limited</code> as a normal "try next turn" condition.</li>
                 </ul>
@@ -378,9 +378,9 @@
                 <p class="text-bd-text-muted"><strong>Fix:</strong> Keep one request in flight. Read the first response before queueing the next query.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
-                <h4 class="font-semibold text-bd-pink text-[12px]">JSON is malformed</h4>
-                <p class="text-bd-text-secondary"><strong>Issue:</strong> The answer returns prose, a JSON fragment, or extra text.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Prompt for one complete JSON value, extract the first balanced object if needed, then validate the shape.</p>
+                <h4 class="font-semibold text-bd-pink text-[12px]">Structured text is malformed</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> The answer returns prose, a fragment, or extra text.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Prefer XML or YAML, ask for one complete value, then validate the shape.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Stale response after undo</h4>
