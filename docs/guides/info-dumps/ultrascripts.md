@@ -53,16 +53,12 @@ test suites in `BetterDungeon/tests/aid-scripts/`.
 | `weather` | Ops | Current weather and forecasts | `current`, `forecast` |
 | `network` | Ops | Browser connectivity hints | `status` |
 | `system` | Ops | Device, browser, locale, screen, power | `info`, `power` |
-| `ai` | Ops | Native AI Dungeon helper queries | `query`, `status` |
+| `ai` | Ops | Status-only placeholder during rebuild | `status` |
 
-The AI module is native-only. Public docs should teach `ai.query` for generated
-helper text and `ai.status` for readiness. `ai.query` accepts a required
-`prompt`, optional `context`, optional `systemPrompt`, `includeStorySummary`,
-`temperature`, and `timeoutMs`. AI Dungeon also injects native Story Card
-generator instructions upstream, including guidance to return only story card
-entry text and avoid JSON. For structured query responses, prefer XML or YAML
-over raw JSON because the generator path discourages JSON and can strip outer
-braces in some paths.
+The AI module is intentionally inert while its generation backend is rebuilt.
+Public docs should teach only `ai.status` for detecting the rebuild state. Do
+not document generation ops, provider aliases, model settings, or native
+generation behavior until a new AI contract exists.
 
 ## 4. Reserved cards
 
@@ -153,8 +149,8 @@ Response card: `ultrascripts:in:<module>`
 ```
 
 Terminal statuses are `ok`, `err`, and `timeout`. Pending responses use
-`status: "pending"`. Unsafe ops such as `ai.query` and `webfetch.fetch` should
-be filtered by `completedLiveCount` before applying the result to current-turn
+`status: "pending"`. Side-effect ops such as `webfetch.fetch` should be
+filtered by `completedLiveCount` before applying the result to current-turn
 logic.
 
 ## 7. SDK versus heartbeat
@@ -162,8 +158,7 @@ logic.
 - Use heartbeat for availability: runtime present, modules mounted, ops exposed.
 - Use `sdk.version` for BetterDungeon/client version metadata.
 - Use `sdk.config` for sanitized player configuration such as module
-  preferences, Scripture display settings, WebFetch consent counts, and AI
-  configured/cost-control status.
+  preferences, Scripture display settings, and WebFetch consent counts.
 
 The SDK does not expose secrets. API keys are never returned to scripts.
 
@@ -182,8 +177,8 @@ Important cross-platform notes:
   assuming every player has every module enabled.
 - WebFetch still requires per-origin consent.
 - Geolocation still depends on browser or WebView permission state.
-- AI queries depend on the player being in a loaded AI Dungeon adventure where
-  BetterDungeon can make native GraphQL requests.
+- The current AI placeholder exposes status only; no generation request is
+  available.
 
 ## 9. Public guide coverage
 
@@ -213,6 +208,6 @@ modules one at a time for conceptual polish.
 - Internal transport implementation details beyond what authors need.
 - Historical BetterScripts/TagCipher patterns except as deprecated migration
   context.
-- Archived Provider AI phase snippets that still use `profile: "full"`,
-  `providerAI`, or the retired hosted-model ops.
+- Archived AI phase snippets that still use provider aliases, hosted-model ops,
+  or native generation experiments.
 - Speculative third-party module registry or sandboxing plans.

@@ -79,7 +79,7 @@
               </ul>
               <p class="text-[11px] mt-1.5">
                 If you only need to check availability, read the heartbeat card. Reach for SDK ops when you need the deeper picture (display
-                preferences, module toggles, native AI backend metadata, etc.).
+                preferences, module toggles, WebFetch consent counts, etc.).
               </p>
             </div>
 
@@ -93,7 +93,7 @@
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
                 <h4 class="font-semibold text-bd-blue text-[12px]">Use <code>sdk.config</code> for</h4>
                 <p class="text-[11px] text-bd-text-muted">
-                  Feature-aware decisions: AI configured state, module preferences, Scripture display settings, WebFetch consent counts, and cost-control posture.
+                  Feature-aware decisions: module preferences, Scripture display settings, and WebFetch consent counts.
                 </p>
               </div>
             </div>
@@ -215,7 +215,7 @@
                 <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
                 <span class="text-[10px] text-bd-text-muted">1500ms</span>
               </div>
-              <p>Returns the full sanitized configuration surface: feature flags, module preferences, Scripture display knobs, WebFetch consent counts, and native AI backend metadata.</p>
+              <p>Returns the full sanitized configuration surface: feature flags, module preferences, Scripture display knobs, and WebFetch consent counts.</p>
               <div>
                 <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">data (representative)</div>
                 <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
@@ -257,18 +257,13 @@
       "savedOriginCount": 0,
       "allowCount": 0,
       "denyCount": 0
-    },
-    "ai": {
-      "backend": "aid-story-card-generator",
-      "configured": true,
-      "requiresExternalKey": false
     }
   }
 }</pre>
               </div>
               <div class="p-2 rounded bg-bd-amber/10 border border-bd-amber/30 text-[11px]">
-                <strong class="text-bd-amber">Security guarantee:</strong> No external AI key is stored or exposed.
-                For live AI Dungeon readiness, call <code>ai.status</code>. Domain allow/deny lists for WebFetch are reported as counts, not as origin strings.
+                <strong class="text-bd-amber">Security guarantee:</strong> SDK config exposes only safe summaries.
+                Domain allow/deny lists for WebFetch are reported as counts, not as origin strings.
               </div>
             </div>
           </div>
@@ -381,9 +376,9 @@
                 <p class="text-bd-text-muted"><strong>Fix:</strong> Suffix every request id with the live count (or a counter you increment yourself).</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
-                <h4 class="font-semibold text-bd-pink text-[12px]">Assuming native AI is ready</h4>
-                <p class="text-bd-text-secondary"><strong>Issue:</strong> Code calls <code>ai.query</code> before the adventure page has GraphQL credentials.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Use heartbeat for op availability and <code>ai.status</code> for live readiness before queueing a query.</p>
+                <h4 class="font-semibold text-bd-pink text-[12px]">Assuming AI generation exists</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> Code expects SDK config to expose AI backend readiness.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Use heartbeat for op availability and <code>ai.status</code> to detect the current rebuild placeholder.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Hardcoding feature flag values</h4>
