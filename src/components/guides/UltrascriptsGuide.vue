@@ -117,7 +117,7 @@
                   External Integrations
                 </h3>
                 <p class="text-bd-text-secondary">
-                  WebFetch lets scenarios reach approved external data, while the AI module defines asynchronous text/JSON queries for future backend use.
+                  WebFetch lets scenarios reach approved external data, while the AI module sends asynchronous text and schema-backed JSON queries through Gemini.
                 </p>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
@@ -368,10 +368,10 @@
                   <Lock class="w-4 h-4 text-bd-amber" /> Security Guarantees
                 </h4>
                 <ul class="space-y-1 text-bd-text-muted">
-                  <li>â€¢ No external AI keys are required or exposed to scenario scripts</li>
+                  <li>â€¢ Gemini API keys stay in BetterDungeon local extension storage and are not exposed to scenario scripts</li>
                   <li>â€¢ WebFetch requires explicit per-domain player approval</li>
                   <li>â€¢ Geolocation requires standard browser permission</li>
-                  <li>â€¢ AI query requests return <code>not_configured</code> until a backend is connected</li>
+                  <li>â€¢ AI query requests return <code>not_configured</code> until the player saves a Gemini API key</li>
                   <li>â€¢ SDK config returns sanitized data only</li>
                 </ul>
               </div>

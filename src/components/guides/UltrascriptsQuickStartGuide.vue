@@ -398,7 +398,7 @@ if (!bd.us.available() || !bd.us.has('ai', 'status') || !bd.us.has('ai', 'query'
       &amp;&amp; status.data.reason === 'ai_backend_not_configured';
 
     if (aiUnavailable) {
-      text = '[BetterDungeon AI has no configured backend yet. This scenario path is unavailable for now.]\n' + text;
+      text = '[BetterDungeon AI needs a Gemini API key in the BetterDungeon popup before this scenario path can run.]\n' + text;
     } else {
       // Core Ultrascripts-dependent logic starts here.
       text = '[BetterDungeon AI status is present. Queue ai.query work and read the result on a later turn.]\n' + text;
@@ -523,7 +523,7 @@ Turn N+2 :  ...continues every turn</pre>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('step3')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              The AI module exposes <code>status</code> and async <code>query</code>. Until a backend is connected, valid queries return <code>not_configured</code>.
+              The AI module exposes <code>status</code> and async <code>query</code>. When the player adds a Gemini API key in BetterDungeon, scripts can request text or schema-backed JSON.
             </p>
 
             <div>
@@ -536,7 +536,7 @@ var aiBackendMissing = aiStatus &amp;&amp; aiStatus.status === 'ok'
   &amp;&amp; aiStatus.data
   &amp;&amp; aiStatus.data.reason === 'ai_backend_not_configured';
 if (aiBackendMissing) {
-  text += '\n[BetterDungeon AI has no configured backend yet.]';
+  text += '\n[BetterDungeon AI needs a Gemini API key in the BetterDungeon popup.]';
 }
 if (bd.us.has('ai', 'status') &amp;&amp; !aiStatus) bd.us.call('ai', 'status');
 
@@ -570,7 +570,7 @@ bd.us.commit();</pre>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('full')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              The working pieces stitched together &mdash; HP bar, real-world time tinting, and AI backend status polling. Query calls stay gated until a backend reports ready.
+              The working pieces stitched together &mdash; HP bar, real-world time tinting, and AI backend status polling. Query calls stay gated until Gemini reports ready.
             </p>
 
             <div>
@@ -653,7 +653,7 @@ bd.us.commit();</pre>
                 <h4 class="font-semibold text-bd-purple text-[12px] mb-1 flex items-center gap-1.5">
                   <BrainCircuit class="w-4 h-4" /> AI deep-dive
                 </h4>
-                <p class="text-[11px] text-bd-text-secondary">Async status/query contract, text/JSON modes, and backend-pending behavior.</p>
+                <p class="text-[11px] text-bd-text-secondary">Gemini-backed async status/query contract, text mode, and schema-backed JSON.</p>
               </router-link>
               <router-link to="/ultrascripts?tab=architecture" class="block p-3 rounded-lg bg-bd-bg-primary border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">
                 <h4 class="font-semibold text-bd-cyan text-[12px] mb-1 flex items-center gap-1.5">

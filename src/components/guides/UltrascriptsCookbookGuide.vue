@@ -236,8 +236,8 @@ const patterns = [
     title: 'AI Co-GM',
     icon: BrainCircuit,
     iconClass: 'text-bd-purple',
-    summary: 'Queue bounded async AI requests once a backend is configured.',
-    guidance: 'Check <code>ai.status</code>, branch on <code>reason === "ai_backend_not_configured"</code>, then use <code>ai.query</code> when ready.',
+    summary: 'Queue bounded async AI requests through the Gemini-backed AI module.',
+    guidance: 'Check <code>ai.status</code>, branch on <code>data.ready</code>, then use <code>ai.query</code> when Gemini is configured.',
     link: '/ultrascripts?tab=ai',
     module: 'AI'
   },
@@ -246,7 +246,7 @@ const patterns = [
     icon: Wand2,
     iconClass: 'text-bd-blue',
     summary: 'Ask for JSON output and validate it before applying state changes.',
-    guidance: 'Use <code>ai.query</code> with <code>output.type === "json"</code> once <code>ai.status</code> reports ready.',
+    guidance: 'Use <code>ai.query</code> with <code>output.type === "json"</code> and a JSON schema once <code>ai.status</code> reports ready.',
     link: '/ultrascripts?tab=ai',
     module: 'AI'
   },
@@ -274,7 +274,7 @@ const sourceLinks = [
   { label: 'Core runtime', summary: 'Transport, dispatcher, heartbeat, and shared Ultrascripts services.', href: `${sourceBase}/services/ultrascripts` },
   { label: 'Scripture module', summary: 'Widget state publishing and renderer integration.', href: `${sourceBase}/modules/scripture` },
   { label: 'WebFetch module', summary: 'Consent-gated fetch and search ops.', href: `${sourceBase}/modules/webfetch` },
-  { label: 'AI module', summary: 'Async status/query contract with text and JSON output modes.', href: `${sourceBase}/modules/ai` },
+  { label: 'AI module', summary: 'Gemini-backed async status/query contract with text and schema-backed JSON output modes.', href: `${sourceBase}/modules/ai` },
   { label: 'SDK module', summary: 'Runtime version and sanitized player configuration.', href: `${sourceBase}/modules/sdk` },
   { label: 'Clock module', summary: 'Time, timezone, and formatting ops.', href: `${sourceBase}/modules/clock` },
   { label: 'Geolocation module', summary: 'Permission and browser coordinate ops.', href: `${sourceBase}/modules/geolocation` },

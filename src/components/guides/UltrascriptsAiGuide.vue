@@ -23,16 +23,17 @@
         <div class="mt-4 space-y-4 text-xs text-bd-text-secondary">
           <div class="p-3 rounded-lg border border-bd-amber/30 bg-bd-amber/5">
             <p>
-              The Ultrascripts <code class="text-bd-green">ai</code> module now exposes its
-              stable Phase 1 contract: <code class="text-bd-green">status</code> and
-              <code class="text-bd-green">query</code>.
+              The Ultrascripts <code class="text-bd-green">ai</code> module exposes
+              <code class="text-bd-green">status</code> and asynchronous
+              <code class="text-bd-green">query</code>, backed by Gemini when the player
+              adds an API key in BetterDungeon.
             </p>
           </div>
           <p>
             Queries are asynchronous and return through
             <code class="text-bd-green">ultrascripts:in:ai</code> like every other ops module.
-            A real backend is not configured yet, so valid queries currently return
-            <code class="text-bd-green">not_configured</code>.
+            Scripts can request plain text or schema-backed JSON. If Gemini is not
+            configured, valid queries return <code class="text-bd-green">not_configured</code>.
           </p>
         </div>
       </section>
@@ -53,18 +54,24 @@
   "ready": false,
   "available": false,
   "phase": "executor",
-  "backend": null,
+  "backend": "gemini",
+  "backendLabel": "Gemini",
   "supports": {
-    "text": false,
-    "json": false
+    "text": true,
+    "json": true
+  },
+  "config": {
+    "provider": "gemini",
+    "keyConfigured": false,
+    "model": "gemini-3.5-flash"
   },
   "executor": {
-    "version": "0.1.0-executor",
+    "version": "0.2.0-gemini",
     "promptMaxChars": 12000,
-    "backendConfigured": false
+    "backendConfigured": true
   },
   "reason": "ai_backend_not_configured",
-  "message": "The AI execution layer is available, but no callable generation backend is configured right now."
+  "message": "Add a Gemini API key in BetterDungeon to enable AI queries."
 }</pre>
         </div>
       </section>
@@ -84,14 +91,24 @@
   "module": "ai",
   "op": "query",
   "args": {
-    "prompt": "Classify whether the player is in combat. Return { \"inCombat\": boolean }.",
-    "output": { "type": "json" }
+    "prompt": "Classify whether the player is in combat.",
+    "output": {
+      "type": "json",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "inCombat": { "type": "boolean" }
+        },
+        "required": ["inCombat"],
+        "additionalProperties": false
+      }
+    }
   }
 }</pre>
           <p>
             V1 output modes are <code class="text-bd-green">text</code> and
-            <code class="text-bd-green">json</code>. Scripts should still validate JSON before
-            applying it to state.
+            <code class="text-bd-green">json</code>. JSON mode requires a schema and scripts
+            should still validate returned values before applying them to state.
           </p>
         </div>
       </section>

@@ -53,12 +53,13 @@ test suites in `BetterDungeon/tests/aid-scripts/`.
 | `weather` | Ops | Current weather and forecasts | `current`, `forecast` |
 | `network` | Ops | Browser connectivity hints | `status` |
 | `system` | Ops | Device, browser, locale, screen, power | `info`, `power` |
-| `ai` | Ops | Async AI query contract, backend pending | `status`, `query` |
+| `ai` | Ops | Gemini-backed async AI query contract | `status`, `query` |
 
-The AI module exposes the Phase 1 public contract while its execution layer and
-backend are rebuilt. Public docs should teach `ai.status`, `ai.query`, text
-output, JSON output, and the current `not_configured` backend-pending error. Do
-not document provider aliases, model settings, or native generation behavior.
+The AI module exposes `ai.status` and asynchronous `ai.query` through Gemini.
+Public docs should teach text output, schema-backed JSON output, and the
+`not_configured` error shown when the player has not saved a Gemini API key. Do
+not document provider aliases, script-facing model settings, or native
+generation behavior.
 
 ## 4. Reserved cards
 
@@ -177,8 +178,9 @@ Important cross-platform notes:
   assuming every player has every module enabled.
 - WebFetch still requires per-origin consent.
 - Geolocation still depends on browser or WebView permission state.
-- The current AI module exposes the status/query contract, but valid query
-  requests return `not_configured` until a backend is connected.
+- The current AI module exposes the Gemini-backed status/query contract, but
+  valid query requests return `not_configured` until the player saves a Gemini
+  API key.
 
 ## 9. Public guide coverage
 
