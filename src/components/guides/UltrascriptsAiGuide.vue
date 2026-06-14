@@ -52,14 +52,19 @@
           <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-blue overflow-x-auto leading-relaxed">{
   "ready": false,
   "available": false,
-  "phase": "contract",
+  "phase": "executor",
   "backend": null,
   "supports": {
     "text": false,
     "json": false
   },
+  "executor": {
+    "version": "0.1.0-executor",
+    "promptMaxChars": 12000,
+    "backendConfigured": false
+  },
   "reason": "ai_backend_not_configured",
-  "message": "The AI module contract is available, but no callable generation backend is configured right now."
+  "message": "The AI execution layer is available, but no callable generation backend is configured right now."
 }</pre>
         </div>
       </section>
