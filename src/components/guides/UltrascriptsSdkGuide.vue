@@ -378,7 +378,7 @@
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Assuming AI generation exists</h4>
                 <p class="text-bd-text-secondary"><strong>Issue:</strong> Code expects SDK config to expose AI backend readiness.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Use heartbeat for op availability and <code>ai.status</code> to detect the current rebuild placeholder.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Use heartbeat for op availability and <code>ai.status</code> to detect whether the AI backend is configured.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Hardcoding feature flag values</h4>

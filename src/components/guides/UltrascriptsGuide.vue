@@ -117,7 +117,7 @@
                   External Integrations
                 </h3>
                 <p class="text-bd-text-secondary">
-                  WebFetch lets scenarios reach approved external data, while the AI module is reserved as a status-only placeholder during its rebuild.
+                  WebFetch lets scenarios reach approved external data, while the AI module defines asynchronous text/JSON queries for future backend use.
                 </p>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
@@ -358,7 +358,7 @@
                   <li>â€¢ Master Ultrascripts on/off switch</li>
                   <li>â€¢ Per-module enable/disable toggles for all 9 modules</li>
                   <li>â€¢ WebFetch domain consent management</li>
-                  <li>â€¢ AI module rebuild placeholder toggle</li>
+                  <li>â€¢ AI status/query contract toggle</li>
                   <li>â€¢ Debug mode for development logging</li>
                 </ul>
               </div>
@@ -371,7 +371,7 @@
                   <li>â€¢ No external AI keys are required or exposed to scenario scripts</li>
                   <li>â€¢ WebFetch requires explicit per-domain player approval</li>
                   <li>â€¢ Geolocation requires standard browser permission</li>
-                  <li>â€¢ AI exposes status only until its generation backend is rebuilt</li>
+                  <li>â€¢ AI query requests return <code>not_configured</code> until a backend is connected</li>
                   <li>â€¢ SDK config returns sanitized data only</li>
                 </ul>
               </div>
@@ -479,7 +479,7 @@
                   <BrainCircuit class="w-5 h-5 text-bd-purple" />
                   <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-purple transition-colors">AI</h4>
                 </div>
-                <p class="text-bd-text-muted">Status-only placeholder for the AI rebuild. Scripts can detect that AI generation is currently unavailable.</p>
+                <p class="text-bd-text-muted">Async status/query contract for AI requests. Text and JSON modes are defined; backend connection is pending.</p>
               </router-link>
 
               <router-link to="/ultrascripts?tab=sdk" class="block p-4 rounded-lg bg-gradient-to-br from-bd-cyan/10 to-transparent border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">

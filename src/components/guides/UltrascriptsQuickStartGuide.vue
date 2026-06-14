@@ -383,7 +383,7 @@ bd.us.commit();</pre>
 
             <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">bd.us.tick();
 
-if (!bd.us.available() || !bd.us.has('ai', 'status')) {
+if (!bd.us.available() || !bd.us.has('ai', 'status') || !bd.us.has('ai', 'query')) {
   text = '[This scenario requires BetterDungeon with Ultrascripts enabled. Install BetterDungeon or switch to a non-Ultrascripts version.]\n' + text;
 } else {
   var status = bd.us.latest('ai', 'status');
@@ -395,13 +395,13 @@ if (!bd.us.available() || !bd.us.has('ai', 'status')) {
     var aiUnavailable = status
       &amp;&amp; status.status === 'ok'
       &amp;&amp; status.data
-      &amp;&amp; status.data.reason === 'ai_module_rebuild';
+      &amp;&amp; status.data.reason === 'ai_backend_not_configured';
 
     if (aiUnavailable) {
-      text = '[BetterDungeon AI is currently being rebuilt. This scenario path is unavailable for now.]\n' + text;
+      text = '[BetterDungeon AI has no configured backend yet. This scenario path is unavailable for now.]\n' + text;
     } else {
       // Core Ultrascripts-dependent logic starts here.
-      text = '[BetterDungeon AI status is present. Continue with non-generation fallback logic.]\n' + text;
+      text = '[BetterDungeon AI status is present. Queue ai.query work and read the result on a later turn.]\n' + text;
     }
   }
 }
@@ -516,35 +516,43 @@ Turn N+2 :  ...continues every turn</pre>
         <button @click="toggleGuideSection('step3')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <span class="w-6 h-6 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center text-[12px]">3</span>
-            Check AI rebuild status
+            Check AI query status
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('step3') }" />
         </button>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('step3')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              The AI module currently exposes status only. Use it to branch cleanly while the generation backend is rebuilt.
+              The AI module exposes <code>status</code> and async <code>query</code>. Until a backend is connected, valid queries return <code>not_configured</code>.
             </p>
 
             <div>
               <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">Context Modifier</div>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">bd.us.tick();
 
-// Read the AI placeholder status when available.
+// Read the AI backend status when available.
 var aiStatus = bd.us.latest('ai', 'status');
-var aiRebuilding = aiStatus &amp;&amp; aiStatus.status === 'ok'
+var aiBackendMissing = aiStatus &amp;&amp; aiStatus.status === 'ok'
   &amp;&amp; aiStatus.data
-  &amp;&amp; aiStatus.data.reason === 'ai_module_rebuild';
-if (aiRebuilding) {
-  text += '\n[BetterDungeon AI is currently unavailable while it is rebuilt.]';
+  &amp;&amp; aiStatus.data.reason === 'ai_backend_not_configured';
+if (aiBackendMissing) {
+  text += '\n[BetterDungeon AI has no configured backend yet.]';
 }
 if (bd.us.has('ai', 'status') &amp;&amp; !aiStatus) bd.us.call('ai', 'status');
+
+// Queue a future query only when status eventually reports ready.
+if (aiStatus &amp;&amp; aiStatus.status === 'ok' &amp;&amp; aiStatus.data.ready &amp;&amp; bd.us.has('ai', 'query')) {
+  bd.us.call('ai', 'query', {
+    prompt: 'Return one short hidden world-state note about the current scene.',
+    output: { type: 'text' }
+  });
+}
 
 bd.us.commit();</pre>
             </div>
 
             <p>
-              This pattern queues <code>ai.status</code> automatically until a response is cached, then branches on the rebuild reason without calling a generation op.
+              This pattern queues <code>ai.status</code> automatically until a response is cached, then only queues <code>ai.query</code> when the module reports that a backend is ready.
             </p>
           </div>
         </Transition>
@@ -562,7 +570,7 @@ bd.us.commit();</pre>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('full')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              The working pieces stitched together &mdash; HP bar and real-world time tinting. AI generation is intentionally omitted until the rebuild lands.
+              The working pieces stitched together &mdash; HP bar, real-world time tinting, and AI backend status polling. Query calls stay gated until a backend reports ready.
             </p>
 
             <div>
@@ -645,7 +653,7 @@ bd.us.commit();</pre>
                 <h4 class="font-semibold text-bd-purple text-[12px] mb-1 flex items-center gap-1.5">
                   <BrainCircuit class="w-4 h-4" /> AI deep-dive
                 </h4>
-                <p class="text-[11px] text-bd-text-secondary">Current status-only AI placeholder and rebuild guidance.</p>
+                <p class="text-[11px] text-bd-text-secondary">Async status/query contract, text/JSON modes, and backend-pending behavior.</p>
               </router-link>
               <router-link to="/ultrascripts?tab=architecture" class="block p-3 rounded-lg bg-bd-bg-primary border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">
                 <h4 class="font-semibold text-bd-cyan text-[12px] mb-1 flex items-center gap-1.5">

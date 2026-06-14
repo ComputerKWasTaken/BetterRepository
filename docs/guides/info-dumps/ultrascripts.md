@@ -53,12 +53,12 @@ test suites in `BetterDungeon/tests/aid-scripts/`.
 | `weather` | Ops | Current weather and forecasts | `current`, `forecast` |
 | `network` | Ops | Browser connectivity hints | `status` |
 | `system` | Ops | Device, browser, locale, screen, power | `info`, `power` |
-| `ai` | Ops | Status-only placeholder during rebuild | `status` |
+| `ai` | Ops | Async AI query contract, backend pending | `status`, `query` |
 
-The AI module is intentionally inert while its generation backend is rebuilt.
-Public docs should teach only `ai.status` for detecting the rebuild state. Do
-not document generation ops, provider aliases, model settings, or native
-generation behavior until a new AI contract exists.
+The AI module exposes the Phase 1 public contract while its execution layer and
+backend are rebuilt. Public docs should teach `ai.status`, `ai.query`, text
+output, JSON output, and the current `not_configured` backend-pending error. Do
+not document provider aliases, model settings, or native generation behavior.
 
 ## 4. Reserved cards
 
@@ -177,8 +177,8 @@ Important cross-platform notes:
   assuming every player has every module enabled.
 - WebFetch still requires per-origin consent.
 - Geolocation still depends on browser or WebView permission state.
-- The current AI placeholder exposes status only; no generation request is
-  available.
+- The current AI module exposes the status/query contract, but valid query
+  requests return `not_configured` until a backend is connected.
 
 ## 9. Public guide coverage
 

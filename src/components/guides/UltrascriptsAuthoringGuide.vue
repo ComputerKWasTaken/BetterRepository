@@ -588,7 +588,7 @@ if (window.Ultrascripts?.registry) {
                 <li>&middot; <code class="text-bd-green">modules/scripture/module.js</code> &mdash; canonical state module with live-count rendering</li>
                 <li>&middot; <code class="text-bd-green">modules/webfetch/module.js</code> &mdash; safe, consent-gated HTTP(S) ops with rate and size bounds</li>
                 <li>&middot; <code class="text-bd-green">modules/sdk/module.js</code> &mdash; small, safe, metadata-only ops</li>
-                <li>&middot; <code class="text-bd-green">modules/ai/module.js</code> &mdash; status-only placeholder while AI generation is rebuilt</li>
+                <li>&middot; <code class="text-bd-green">modules/ai/module.js</code> &mdash; async status/query contract with backend-pending behavior</li>
               </ul>
             </div>
           </div>
