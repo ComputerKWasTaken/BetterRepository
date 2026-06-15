@@ -523,7 +523,7 @@ Turn N+2 :  ...continues every turn</pre>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('step3')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              The AI module exposes <code>status</code> and async <code>query</code>. When the player adds a Gemini API key in BetterDungeon, scripts can request text or schema-backed JSON.
+              The AI module exposes <code>status</code> and async <code>query</code>. When the player adds a Gemini API key in BetterDungeon, scripts can request text, schema-backed JSON, and optional thinking levels.
             </p>
 
             <div>
@@ -544,6 +544,7 @@ if (bd.us.has('ai', 'status') &amp;&amp; !aiStatus) bd.us.call('ai', 'status');
 if (aiStatus &amp;&amp; aiStatus.status === 'ok' &amp;&amp; aiStatus.data.ready &amp;&amp; bd.us.has('ai', 'query')) {
   bd.us.call('ai', 'query', {
     prompt: 'Return one short hidden world-state note about the current scene.',
+    thinking: 'minimal',
     output: { type: 'text' }
   });
 }
@@ -653,7 +654,7 @@ bd.us.commit();</pre>
                 <h4 class="font-semibold text-bd-purple text-[12px] mb-1 flex items-center gap-1.5">
                   <BrainCircuit class="w-4 h-4" /> AI deep-dive
                 </h4>
-                <p class="text-[11px] text-bd-text-secondary">Gemini-backed async status/query contract, text mode, and schema-backed JSON.</p>
+                <p class="text-[11px] text-bd-text-secondary">Gemini-backed async status/query contract, text mode, schema-backed JSON, and thinking levels.</p>
               </router-link>
               <router-link to="/ultrascripts?tab=architecture" class="block p-3 rounded-lg bg-bd-bg-primary border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">
                 <h4 class="font-semibold text-bd-cyan text-[12px] mb-1 flex items-center gap-1.5">

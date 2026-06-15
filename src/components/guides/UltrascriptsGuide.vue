@@ -117,7 +117,7 @@
                   External Integrations
                 </h3>
                 <p class="text-bd-text-secondary">
-                  WebFetch lets scenarios reach approved external data, while the AI module sends asynchronous text and schema-backed JSON queries through Gemini.
+                  WebFetch lets scenarios reach approved external data, while the AI module sends asynchronous text, schema-backed JSON, and thinking-tuned queries through Gemini.
                 </p>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">

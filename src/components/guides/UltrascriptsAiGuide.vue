@@ -62,7 +62,8 @@
   "backendLabel": "Gemini",
   "supports": {
     "text": true,
-    "json": true
+    "json": true,
+    "thinking": true
   },
   "config": {
     "provider": "gemini",
@@ -73,10 +74,19 @@
       "gemini-3.1-flash-lite",
       "gemma-4-31b-it",
       "gemma-4-26b-a4b-it"
-    ]
+    ],
+    "thinkingDefault": "minimal",
+    "thinkingLevels": ["minimal", "low", "medium", "high"]
+  },
+  "contract": {
+    "ops": ["status", "query"],
+    "outputTypes": ["text", "json"],
+    "thinkingLevels": ["minimal", "low", "medium", "high"],
+    "defaultThinking": "minimal",
+    "asyncOnly": true
   },
   "executor": {
-    "version": "0.2.0-gemini",
+    "version": "0.3.0-gemini-thinking",
     "promptMaxChars": 12000,
     "backendConfigured": true
   },
@@ -102,6 +112,7 @@
   "op": "query",
   "args": {
     "prompt": "Classify whether the player is in combat.",
+    "thinking": "low",
     "output": {
       "type": "json",
       "schema": {
@@ -119,6 +130,13 @@
             V1 output modes are <code class="text-bd-green">text</code> and
             <code class="text-bd-green">json</code>. JSON mode requires a schema and scripts
             should still validate returned values before applying them to state.
+            <code class="text-bd-green">thinking</code> is optional and defaults to
+            <code class="text-bd-green">minimal</code>; use <code class="text-bd-green">low</code>,
+            <code class="text-bd-green">medium</code>, or <code class="text-bd-green">high</code>
+            for harder classification, planning, or state-analysis tasks.
+            Gemma 4 models expose thinking as an on/off toggle, so non-minimal
+            levels map to <code class="text-bd-green">thinkingLevel: "high"</code>
+            when a request uses a Gemma fallback.
           </p>
         </div>
       </section>

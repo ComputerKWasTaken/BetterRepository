@@ -274,7 +274,7 @@ const sourceLinks = [
   { label: 'Core runtime', summary: 'Transport, dispatcher, heartbeat, and shared Ultrascripts services.', href: `${sourceBase}/services/ultrascripts` },
   { label: 'Scripture module', summary: 'Widget state publishing and renderer integration.', href: `${sourceBase}/modules/scripture` },
   { label: 'WebFetch module', summary: 'Consent-gated fetch and search ops.', href: `${sourceBase}/modules/webfetch` },
-  { label: 'AI module', summary: 'Gemini-backed async status/query contract with text and schema-backed JSON output modes.', href: `${sourceBase}/modules/ai` },
+  { label: 'AI module', summary: 'Gemini-backed async status/query contract with text, schema-backed JSON, and thinking levels.', href: `${sourceBase}/modules/ai` },
   { label: 'SDK module', summary: 'Runtime version and sanitized player configuration.', href: `${sourceBase}/modules/sdk` },
   { label: 'Clock module', summary: 'Time, timezone, and formatting ops.', href: `${sourceBase}/modules/clock` },
   { label: 'Geolocation module', summary: 'Permission and browser coordinate ops.', href: `${sourceBase}/modules/geolocation` },
