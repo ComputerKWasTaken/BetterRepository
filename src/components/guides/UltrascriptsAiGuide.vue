@@ -26,7 +26,11 @@
               The Ultrascripts <code class="text-bd-green">ai</code> module exposes
               <code class="text-bd-green">status</code> and asynchronous
               <code class="text-bd-green">query</code>, backed by Gemini when the player
-              adds an API key in BetterDungeon.
+              adds an API key in BetterDungeon. The default auto stepdown chain starts at
+              <code class="text-bd-green">gemini-3.5-flash</code>, then tries
+              <code class="text-bd-green">gemini-3.1-flash-lite</code>,
+              <code class="text-bd-green">gemma-4-31b-it</code>, and
+              <code class="text-bd-green">gemma-4-26b-a4b-it</code>.
             </p>
           </div>
           <p>
@@ -63,7 +67,13 @@
   "config": {
     "provider": "gemini",
     "keyConfigured": false,
-    "model": "gemini-3.5-flash"
+    "model": "gemini-3.5-flash",
+    "fallbackModels": [
+      "gemini-3.5-flash",
+      "gemini-3.1-flash-lite",
+      "gemma-4-31b-it",
+      "gemma-4-26b-a4b-it"
+    ]
   },
   "executor": {
     "version": "0.2.0-gemini",
