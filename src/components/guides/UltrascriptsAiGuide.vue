@@ -86,7 +86,7 @@
     "asyncOnly": true
   },
   "executor": {
-    "version": "0.3.0-gemini-thinking",
+    "version": "0.4.0-gemini-meta",
     "promptMaxChars": 12000,
     "backendConfigured": true
   },
@@ -137,6 +137,37 @@
             Gemma 4 models expose thinking as an on/off toggle, so non-minimal
             levels map to <code class="text-bd-green">thinkingLevel: "high"</code>
             when a request uses a Gemma fallback.
+          </p>
+          <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-blue overflow-x-auto leading-relaxed">{
+  "status": "ok",
+  "data": {
+    "json": { "inCombat": false },
+    "meta": {
+      "backend": "gemini",
+      "outputType": "json",
+      "model": "gemini-3.5-flash",
+      "promptChars": 43,
+      "generatedAtIso": "2026-06-15T20:00:00.000Z",
+      "thinking": {
+        "requestedLevel": "low",
+        "applied": true,
+        "family": "gemini-3",
+        "defaulted": false,
+        "appliedLevel": "low"
+      },
+      "fallback": {
+        "mode": "auto",
+        "attemptedModels": ["gemini-3.5-flash"]
+      }
+    }
+  }
+}</pre>
+          <p>
+            Scripts should treat <code class="text-bd-green">meta</code> as diagnostics.
+            Branch on <code class="text-bd-green">status</code>, then consume
+            <code class="text-bd-green">data.text</code> or
+            <code class="text-bd-green">data.json</code>; do not require a specific
+            provider model for normal gameplay logic.
           </p>
         </div>
       </section>
