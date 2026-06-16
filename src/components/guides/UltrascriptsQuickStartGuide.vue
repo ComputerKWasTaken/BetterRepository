@@ -104,7 +104,7 @@
                 <strong class="text-bd-text-primary text-[12px] block mb-1">3. Widgets are state, not commands.</strong>
                 <p class="text-[11px]">
                   For dynamic UI (HP bars, quest lists, etc.) you declare a <em>manifest</em> once and push fresh <em>values</em> each turn with
-                  <code>bd.us.publishScripture(...)</code>. Scripture handles rendering, undo, redo &mdash; all automatic.
+                  <code>bd.us.publishWidget(...)</code>. Widget handles rendering, undo, redo &mdash; all automatic.
                 </p>
               </div>
             </div>
@@ -208,7 +208,7 @@
                 <tbody class="text-bd-text-secondary">
                   <tr class="border-b border-bd-border-subtle/50">
                     <td class="py-2 px-2 font-semibold text-bd-green">Library</td>
-                    <td class="py-2 px-2">The SDK helper, shared helpers, and Scripture manifests.</td>
+                    <td class="py-2 px-2">The SDK helper, shared helpers, and Widget manifests.</td>
                     <td class="py-2 px-2">Library is shared by the other hooks, so <code>bd.us</code> is available everywhere.</td>
                   </tr>
                   <tr class="border-b border-bd-border-subtle/50">
@@ -254,7 +254,7 @@
           <div v-if="isGuideSectionExpanded('sdk')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
               Copy this block into your scenario's <strong>Library</strong> script. It handles every piece of Ultrascripts boilerplate &mdash;
-              card I/O, request envelopes, ack management, response filtering, the Scripture manifest. Then every modifier in your scenario can use
+              card I/O, request envelopes, ack management, response filtering, the Widget manifest. Then every modifier in your scenario can use
               <code>bd.us</code> cleanly.
             </p>
 
@@ -299,11 +299,11 @@
                       <td class="py-1.5 px-2">Returns the most recent completed response for that module/op, or <code>null</code>.</td>
                     </tr>
                     <tr class="border-b border-bd-border-subtle/50">
-                      <td class="py-1.5 px-2"><code class="text-bd-green">bd.us.defineScripture(manifest)</code></td>
+                      <td class="py-1.5 px-2"><code class="text-bd-green">bd.us.defineWidget(manifest)</code></td>
                       <td class="py-1.5 px-2">Declare your widget manifest once (usually at the top of the Library script).</td>
                     </tr>
                     <tr class="border-b border-bd-border-subtle/50">
-                      <td class="py-1.5 px-2"><code class="text-bd-green">bd.us.publishScripture(values)</code></td>
+                      <td class="py-1.5 px-2"><code class="text-bd-green">bd.us.publishWidget(values)</code></td>
                       <td class="py-1.5 px-2">Pushes a new history snapshot for the current turn.</td>
                     </tr>
                     <tr>
@@ -338,13 +338,13 @@
 var hp = state.hp !== undefined ? state.hp : 100;
 var usReady = bd.us.available();
 
-if (usReady &amp;&amp; bd.us.has('scripture')) {
-  bd.us.defineScripture({
+if (usReady &amp;&amp; bd.us.has('widget')) {
+  bd.us.defineWidget({
     widgets: [
       { id: 'hp', type: 'bar', label: 'HP', max: 100, color: '#22c55e' }
     ]
   });
-  bd.us.publishScripture({ hp: hp });
+  bd.us.publishWidget({ hp: hp });
 } else {
   text += '\n[HP: ' + hp + '/100]';
 }
@@ -357,7 +357,7 @@ bd.us.commit();</pre>
 
             <ul class="space-y-1 text-[11px]">
               <li>&middot; <code class="text-bd-green">bd.us.tick()</code> is always safe. No heartbeat just means no replies get synced.</li>
-              <li>&middot; Gate <code class="text-bd-green">publishScripture()</code> if you want non-BetterDungeon players to avoid reserved-card clutter.</li>
+              <li>&middot; Gate <code class="text-bd-green">publishWidget()</code> if you want non-BetterDungeon players to avoid reserved-card clutter.</li>
               <li>&middot; Gate <code class="text-bd-green">call()</code> so you only write <code class="text-bd-green">ultrascripts:out</code> when a real module is mounted.</li>
               <li>&middot; <code class="text-bd-green">commit()</code> is harmless when nothing was queued.</li>
             </ul>
@@ -435,7 +435,7 @@ bd.us.commit();</pre>
             <div>
               <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">Library Script (after pasting the SDK)</div>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">// Declare your widgets ONCE
-bd.us.defineScripture({
+bd.us.defineWidget({
   widgets: [
     { id: 'hp', type: 'bar', label: 'Health', max: 100, color: '#22c55e' }
   ]
@@ -445,7 +445,7 @@ bd.us.defineScripture({
             <div>
               <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">Context Modifier (runs every turn)</div>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">bd.us.tick();
-bd.us.publishScripture({ hp: state.hp !== undefined ? state.hp : 100 });
+bd.us.publishWidget({ hp: state.hp !== undefined ? state.hp : 100 });
 bd.us.commit();</pre>
             </div>
 
@@ -577,7 +577,7 @@ bd.us.commit();</pre>
             <div>
               <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">Library Script &mdash; PASTE THE SDK HELPER HERE, then add:</div>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">// Declare widgets once
-bd.us.defineScripture({
+bd.us.defineWidget({
   widgets: [
     { id: 'hp',    type: 'bar',      label: 'Health', max: 100, color: '#22c55e' },
     { id: 'where', type: 'text',     label: 'Region' }
@@ -597,9 +597,9 @@ if (clockResult &amp;&amp; clockResult.status === 'ok') {
   if (hour >= 20 || hour < 5) text += '\n[Ambient: deep night.]';
 }
 
-// 3. Publish widget snapshot when Scripture is mounted.
-if (bd.us.has('scripture')) {
-  bd.us.publishScripture({
+// 3. Publish widget snapshot when Widget is mounted.
+if (bd.us.has('widget')) {
+  bd.us.publishWidget({
     hp:    state.hp       !== undefined ? state.hp : 100,
     where: state.location || 'Unknown'
   });
@@ -644,11 +644,11 @@ bd.us.commit();</pre>
                 </h4>
                 <p class="text-[11px] text-bd-text-secondary">Pattern guidance for common flows: quest tracker, weather combat, AI extraction, inventory grid, and more.</p>
               </router-link>
-              <router-link to="/ultrascripts?tab=scripture" class="block p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 hover:border-bd-blue/50 transition-colors group">
+              <router-link to="/ultrascripts?tab=widget" class="block p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 hover:border-bd-blue/50 transition-colors group">
                 <h4 class="font-semibold text-bd-blue text-[12px] mb-1 flex items-center gap-1.5">
-                  <LayoutDashboard class="w-4 h-4" /> Scripture deep-dive
+                  <LayoutDashboard class="w-4 h-4" /> Widget deep-dive
                 </h4>
-                <p class="text-[11px] text-bd-text-secondary">Every widget type, the manifest+history contract, interaction events, and display config.</p>
+                <p class="text-[11px] text-bd-text-secondary">Every widget type, the manifest+history contract, interaction events, and responsive display behavior.</p>
               </router-link>
               <router-link to="/ultrascripts?tab=ai" class="block p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/30 hover:border-bd-purple/50 transition-colors group">
                 <h4 class="font-semibold text-bd-purple text-[12px] mb-1 flex items-center gap-1.5">
@@ -917,10 +917,10 @@ bd.us.result = function (reqId) {
   return null;
 };
 
-// --- Scripture: declare your manifest once ---
-bd.us.defineScripture = function (manifest) {
-  var existing = bd.us._parseCard('ultrascripts:state:scripture');
-  bd.us.scripture = {
+// --- Widget: declare your manifest once ---
+bd.us.defineWidget = function (manifest) {
+  var existing = bd.us._parseCard('ultrascripts:state:widget');
+  bd.us.widget = {
     v: 1,
     manifest: manifest,
     history: (existing && existing.history) || {},
@@ -928,24 +928,24 @@ bd.us.defineScripture = function (manifest) {
   };
 };
 
-// --- Scripture: push a turn snapshot ---
-bd.us.publishScripture = function (values) {
-  if (!bd.us.scripture) return;
-  bd.us.scripture.history[bd.us.liveCount()] = values;
-  bd.us._upsertCard('ultrascripts:state:scripture', JSON.stringify(bd.us.scripture));
+// --- Widget: push a turn snapshot ---
+bd.us.publishWidget = function (values) {
+  if (!bd.us.widget) return;
+  bd.us.widget.history[bd.us.liveCount()] = values;
+  bd.us._upsertCard('ultrascripts:state:widget', JSON.stringify(bd.us.widget));
 };
 
-// --- Scripture: read sidebar widget events and ack by sequence ---
-bd.us.scriptureEvents = function () {
-  var card = bd.us._parseCard('ultrascripts:in:scripture');
+// --- Widget: read sidebar widget events and ack by sequence ---
+bd.us.widgetEvents = function () {
+  var card = bd.us._parseCard('ultrascripts:in:widget');
   var events = (card && card.widgetEvents && card.widgetEvents.events) || [];
-  var ackSeq = (bd.us.scripture && bd.us.scripture.interactions && bd.us.scripture.interactions.ackSeq) || 0;
+  var ackSeq = (bd.us.widget && bd.us.widget.interactions && bd.us.widget.interactions.ackSeq) || 0;
   return events.filter(function (e) { return e && Number(e.seq || 0) > ackSeq; });
 };
-bd.us.ackScripture = function (seq) {
-  if (!bd.us.scripture) return;
-  bd.us.scripture.interactions = bd.us.scripture.interactions || {};
-  bd.us.scripture.interactions.ackSeq = Math.max(Number(bd.us.scripture.interactions.ackSeq || 0), Number(seq || 0));
+bd.us.ackWidget = function (seq) {
+  if (!bd.us.widget) return;
+  bd.us.widget.interactions = bd.us.widget.interactions || {};
+  bd.us.widget.interactions.ackSeq = Math.max(Number(bd.us.widget.interactions.ackSeq || 0), Number(seq || 0));
 };
 
 // --- write the queued requests + acks to ultrascripts:out ---

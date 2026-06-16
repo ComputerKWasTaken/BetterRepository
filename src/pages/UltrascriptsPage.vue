@@ -83,7 +83,7 @@
     <UltrascriptsCookbookGuide v-if="activeTab === 'cookbook'" />
     <UltrascriptsArchitectureGuide v-if="activeTab === 'architecture'" />
     <UltrascriptsAuthoringGuide v-if="activeTab === 'authoring'" />
-    <UltrascriptsScriptureGuide v-if="activeTab === 'scripture'" />
+    <UltrascriptsWidgetGuide v-if="activeTab === 'widget'" />
     <UltrascriptsWebFetchGuide v-if="activeTab === 'webfetch'" />
     <UltrascriptsAiGuide v-if="activeTab === 'ai'" />
     <UltrascriptsSdkGuide v-if="activeTab === 'sdk'" />
@@ -103,7 +103,7 @@ import UltrascriptsQuickStartGuide from '@/components/guides/UltrascriptsQuickSt
 import UltrascriptsCookbookGuide from '@/components/guides/UltrascriptsCookbookGuide.vue'
 import UltrascriptsArchitectureGuide from '@/components/guides/UltrascriptsArchitectureGuide.vue'
 import UltrascriptsAuthoringGuide from '@/components/guides/UltrascriptsAuthoringGuide.vue'
-import UltrascriptsScriptureGuide from '@/components/guides/UltrascriptsScriptureGuide.vue'
+import UltrascriptsWidgetGuide from '@/components/guides/UltrascriptsWidgetGuide.vue'
 import UltrascriptsWebFetchGuide from '@/components/guides/UltrascriptsWebFetchGuide.vue'
 import UltrascriptsAiGuide from '@/components/guides/UltrascriptsAiGuide.vue'
 import UltrascriptsSdkGuide from '@/components/guides/UltrascriptsSdkGuide.vue'
@@ -133,7 +133,7 @@ const foundationTabs = [
 
 // One module tab per shipped first-party module.
 const moduleTabs = [
-  { id: 'scripture',   label: 'Scripture',   icon: LayoutDashboard, iconClass: 'text-bd-green' },
+  { id: 'widget',   label: 'Widget',   icon: LayoutDashboard, iconClass: 'text-bd-green' },
   { id: 'webfetch',    label: 'WebFetch',    icon: Globe,           iconClass: 'text-bd-blue' },
   { id: 'ai',          label: 'AI',          icon: BrainCircuit,    iconClass: 'text-bd-purple' },
   { id: 'sdk',         label: 'SDK',         icon: Terminal,        iconClass: 'text-bd-cyan' },

@@ -93,7 +93,7 @@
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
                 <h4 class="font-semibold text-bd-blue text-[12px]">Use <code>sdk.config</code> for</h4>
                 <p class="text-[11px] text-bd-text-muted">
-                  Feature-aware decisions: module preferences, Scripture display settings, and WebFetch consent counts.
+                  Feature-aware decisions: module preferences and WebFetch consent counts.
                 </p>
               </div>
             </div>
@@ -145,7 +145,7 @@
                   <tr class="border-b border-bd-border-subtle/50">
                     <td class="py-2 px-2"><code>!bd.us.available()</code></td>
                     <td class="py-2 px-2">No heartbeat, so no live Ultrascripts runtime is available to your script.</td>
-                    <td class="py-2 px-2">Run plain AI Dungeon logic. Skip Scripture publishes and op calls.</td>
+                    <td class="py-2 px-2">Run plain AI Dungeon logic. Skip Widget publishes and op calls.</td>
                   </tr>
                   <tr class="border-b border-bd-border-subtle/50">
                     <td class="py-2 px-2"><code>bd.us.available()</code> but <code>!bd.us.has('module')</code></td>
@@ -215,7 +215,7 @@
                 <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
                 <span class="text-[10px] text-bd-text-muted">1500ms</span>
               </div>
-              <p>Returns the full sanitized configuration surface: feature flags, module preferences, Scripture display knobs, and WebFetch consent counts.</p>
+              <p>Returns the full sanitized configuration surface: feature flags, module preferences, and WebFetch consent counts.</p>
               <div>
                 <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">data (representative)</div>
                 <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-text-secondary overflow-x-auto leading-relaxed">{
@@ -244,14 +244,9 @@
     "runtimeEnabled": true,
     "debug": false,
     "modulePreferences": {
-      "scripture": true, "webfetch": true, "clock": true,
+      "widget": true, "webfetch": true, "clock": true,
       "sdk": true, "geolocation": true, "weather": true,
       "network": true, "system": true, "ai": true
-    },
-    "scriptureDisplay": {
-      "size": "normal",       // "compact" | "normal" | "comfortable" | "large"
-      "maxHeight": "medium",  // "short"   | "medium" | "tall"
-      "layout": "balanced"    // "balanced" | "stacked"
     },
     "webfetch": {
       "savedOriginCount": 0,
@@ -332,10 +327,10 @@
               <h4 class="font-semibold text-bd-cyan flex items-center gap-1.5 text-[12px]">
                 <CheckCircle2 class="w-4 h-4" /> Progressive Enhancement
               </h4>
-              <p>Use Scripture widgets when available; otherwise fall back to plain bracketed status text.</p>
+              <p>Use widgets when available; otherwise fall back to plain bracketed status text.</p>
               <p class="text-[11px] text-bd-text-muted">
-                Follow the Quick Start enhanced fallback pattern: check <code>bd.us.available()</code> and <code>bd.us.has('scripture')</code>,
-                then publish via <code>bd.us.defineScripture(...)</code> and <code>bd.us.publishScripture(...)</code>.
+                Follow the Quick Start enhanced fallback pattern: check <code>bd.us.available()</code> and <code>bd.us.has('widget')</code>,
+                then publish via <code>bd.us.defineWidget(...)</code> and <code>bd.us.publishWidget(...)</code>.
               </p>
             </div>
 

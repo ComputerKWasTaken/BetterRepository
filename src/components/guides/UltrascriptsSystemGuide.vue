@@ -126,7 +126,7 @@
                   <li>1. Queue <code>system.info</code> near scenario start.</li>
                   <li>2. Read <code>bd.us.latest('system', 'info')</code> on a later turn.</li>
                   <li>3. Branch on <code>data.deviceClass</code> and <code>data.screen.viewportWidth</code>.</li>
-                  <li>4. Choose a compact or full Scripture manifest.</li>
+                  <li>4. Choose a compact or full Widget manifest.</li>
                 </ol>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-1">

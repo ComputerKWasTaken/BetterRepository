@@ -62,7 +62,7 @@
               <AlertTriangle class="w-4 h-4 text-bd-amber flex-shrink-0 mt-0.5" />
               <p class="text-[11px]">
                 <strong class="text-bd-amber">Scenario script authors:</strong> you do not write modules &mdash; you <em>consume</em> them.
-                Use the per-module guides (Scripture, WebFetch &amp; AI, SDK &amp; Lifecycle, System &amp; Utilities) for the script-facing API.
+                Use the per-module guides (Widget, WebFetch &amp; AI, SDK &amp; Lifecycle, System &amp; Utilities) for the script-facing API.
               </p>
             </div>
           </div>
@@ -92,7 +92,7 @@
             <div class="grid md:grid-cols-3 gap-3">
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
                 <h4 class="font-semibold text-bd-green text-[12px]">State module</h4>
-                <p class="text-[11px]">Declares <code class="text-bd-green">stateNames</code> and reacts to <code class="text-bd-green">ultrascripts:state:&lt;name&gt;</code> cards. Example: <strong>Scripture</strong>.</p>
+                <p class="text-[11px]">Declares <code class="text-bd-green">stateNames</code> and reacts to <code class="text-bd-green">ultrascripts:state:&lt;name&gt;</code> cards. Example: <strong>Widget</strong>.</p>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
                 <h4 class="font-semibold text-bd-blue text-[12px]">Ops module</h4>
@@ -179,7 +179,7 @@
 
             <div class="p-3 rounded-lg bg-bd-cyan/10 border border-bd-cyan/30">
               <p class="text-[11px]">
-                <strong class="text-bd-cyan">Enablement rules:</strong> Built-in short ids (like <code class="text-bd-green">scripture</code>) default to enabled.
+                <strong class="text-bd-cyan">Enablement rules:</strong> Built-in short ids (like <code class="text-bd-green">widget</code>) default to enabled.
                 Dotted third-party-style ids (like <code class="text-bd-green">acme.tracker</code>) default to disabled unless <code class="text-bd-green">defaultEnabled: true</code> is set on the definition.
               </p>
             </div>
@@ -585,7 +585,7 @@ if (window.Ultrascripts?.registry) {
                 <BookOpen class="w-4 h-4 text-bd-amber" /> Best reference modules to read
               </h4>
               <ul class="space-y-0.5 text-[11px] text-bd-text-muted">
-                <li>&middot; <code class="text-bd-green">modules/scripture/module.js</code> &mdash; canonical state module with live-count rendering</li>
+                <li>&middot; <code class="text-bd-green">modules/widget/module.js</code> &mdash; canonical state module with live-count rendering</li>
                 <li>&middot; <code class="text-bd-green">modules/webfetch/module.js</code> &mdash; safe, consent-gated HTTP(S) ops with rate and size bounds</li>
                 <li>&middot; <code class="text-bd-green">modules/sdk/module.js</code> &mdash; small, safe, metadata-only ops</li>
                 <li>&middot; <code class="text-bd-green">modules/ai/module.js</code> &mdash; async Gemini-backed status/query contract</li>

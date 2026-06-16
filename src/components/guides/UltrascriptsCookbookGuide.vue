@@ -40,7 +40,7 @@
               <h4 class="font-semibold text-bd-text-primary text-[12px] mb-1">Paved path</h4>
               <p class="text-[11px]">
                 Every real script should follow the same turn rhythm: call <code>bd.us.tick()</code>, read previous results,
-                publish optional Scripture state, queue new capability-checked requests, then call <code>bd.us.commit()</code>.
+                publish optional Widget state, queue new capability-checked requests, then call <code>bd.us.commit()</code>.
               </p>
             </div>
             <p class="text-[11px] text-bd-text-muted">
@@ -71,7 +71,7 @@
             </div>
             <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
               <h4 class="font-semibold text-bd-purple text-[12px]">3. Decide</h4>
-              <p class="text-[11px]">Convert raw module data into small story flags, context notes, or Scripture widget values.</p>
+              <p class="text-[11px]">Convert raw module data into small story flags, context notes, or widget values.</p>
             </div>
             <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
               <h4 class="font-semibold text-bd-green text-[12px]">4. Queue</h4>
@@ -141,7 +141,7 @@
           <div v-if="isGuideSectionExpanded('review')" class="mt-4 grid md:grid-cols-2 gap-3 text-[11px]">
             <div class="p-3 rounded bg-bd-bg-primary border border-bd-green/30 space-y-1">
               <h4 class="font-semibold text-bd-green text-[12px]">Must Have</h4>
-              <p class="text-bd-text-muted">Uses <code>bd.us</code>, avoids raw card writes, declares Scripture manifests before publishing, and commits once at the end.</p>
+              <p class="text-bd-text-muted">Uses <code>bd.us</code>, avoids raw card writes, declares Widget manifests before publishing, and commits once at the end.</p>
             </div>
             <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
               <h4 class="font-semibold text-bd-pink text-[12px]">Must Avoid</h4>
@@ -185,7 +185,7 @@
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">No widget</h4>
-                <p class="text-bd-text-muted">Declare a Scripture manifest before publishing values, then confirm <code>ultrascripts:state:scripture</code> exists.</p>
+                <p class="text-bd-text-muted">Declare a Widget manifest before publishing values, then confirm <code>ultrascripts:state:widget</code> exists.</p>
               </div>
             </div>
           </div>
@@ -209,10 +209,10 @@ const patterns = [
     title: 'HUD Widgets',
     icon: Heart,
     iconClass: 'text-bd-green',
-    summary: 'Publish compact Scripture state for HP, mana, location, and status tags.',
-    guidance: 'Use <code>bd.us.defineScripture(...)</code> once, then <code>bd.us.publishScripture(...)</code> from Context.',
-    link: '/ultrascripts?tab=scripture',
-    module: 'Scripture'
+    summary: 'Publish compact Widget state for HP, mana, location, and status tags.',
+    guidance: 'Use <code>bd.us.defineWidget(...)</code> once, then <code>bd.us.publishWidget(...)</code> from Context.',
+    link: '/ultrascripts?tab=widget',
+    module: 'Widget'
   },
   {
     title: 'Time Of Day',
@@ -272,7 +272,7 @@ const patterns = [
 
 const sourceLinks = [
   { label: 'Core runtime', summary: 'Transport, dispatcher, heartbeat, and shared Ultrascripts services.', href: `${sourceBase}/services/ultrascripts` },
-  { label: 'Scripture module', summary: 'Widget state publishing and renderer integration.', href: `${sourceBase}/modules/scripture` },
+  { label: 'Widget module', summary: 'Widget state publishing and renderer integration.', href: `${sourceBase}/modules/widget` },
   { label: 'WebFetch module', summary: 'Consent-gated fetch and search ops.', href: `${sourceBase}/modules/webfetch` },
   { label: 'AI module', summary: 'Async status/query contract with text, schema-backed JSON, and thinking levels.', href: `${sourceBase}/modules/ai` },
   { label: 'SDK module', summary: 'Runtime version and sanitized player configuration.', href: `${sourceBase}/modules/sdk` },

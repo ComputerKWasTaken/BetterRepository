@@ -55,7 +55,7 @@ function looksLikeBash(source) {
     || /^pnpm\s/m.test(text)
     || /^yarn\s/m.test(text)
     || /^#\!\/bin\/(ba)?sh/.test(text)
-    || /^\/scripture\b/m.test(text)
+    || /^\/widget\b/m.test(text)
 }
 
 function looksLikeJavascript(source) {

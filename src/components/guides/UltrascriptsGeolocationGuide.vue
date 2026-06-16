@@ -135,7 +135,7 @@
                 <ul class="space-y-1 text-[11px] text-bd-text-muted">
                   <li>&middot; Weather: feed <code>latitude</code> / <code>longitude</code> into <code>weather.current</code>.</li>
                   <li>&middot; WebFetch: fetch region-specific public data after consent.</li>
-                  <li>&middot; Scripture: show a small "local conditions" panel.</li>
+                  <li>&middot; Widget: show a small "local conditions" panel.</li>
                 </ul>
               </div>
             </div>

@@ -33,7 +33,7 @@
         <router-link to="/ultrascripts?tab=cookbook" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-green/10 hover:bg-bd-green/20 text-bd-green text-[11px] font-semibold transition-colors">
           Cookbook
         </router-link>
-        <a href="https://github.com/ComputerKWasTaken/BetterDungeon/tree/two-way-communication/modules/scripture" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-green/10 hover:bg-bd-green/20 text-bd-green text-[11px] font-semibold transition-colors">
+        <a href="https://github.com/ComputerKWasTaken/BetterDungeon/tree/two-way-communication/modules/widget" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-bd-green/10 hover:bg-bd-green/20 text-bd-green text-[11px] font-semibold transition-colors">
           Runtime source
         </a>
       </div>
@@ -43,14 +43,14 @@
         <button @click="toggleGuideSection('overview')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <LayoutDashboard class="w-5 h-5 text-bd-green" />
-            The Scripture Widget Engine
+            The Widget Engine
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('overview') }" />
         </button>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('overview')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
             <p>
-              <strong>Scripture</strong> is Ultrascripts' canonical <em>state module</em>. It renders live, responsive UI widgets &mdash; HP bars, stat grids,
+              <strong>Widget</strong> is Ultrascripts' canonical <em>state module</em>. It renders live, responsive UI widgets &mdash; HP bars, stat grids,
               quest lists, badge rows, journal panels, inventory lists &mdash; inside the BetterDungeon sidebar. Scenarios <em>publish</em> structured JSON to a
               single reserved Story Card; the extension does all the rendering.
             </p>
@@ -66,7 +66,7 @@
                 <h3 class="font-semibold text-bd-text-primary flex items-center gap-2 text-[12px]">
                   <Code class="w-4 h-4 text-bd-blue" /> How it binds
                 </h3>
-                <p class="text-[11px]">Variables bind to sandbox <code>state</code> on turn boundaries. Scripture refreshes every time the live count changes &mdash; including on undo/redo/retry.</p>
+                <p class="text-[11px]">Variables bind to sandbox <code>state</code> on turn boundaries. Widget refreshes every time the live count changes &mdash; including on undo/redo/retry.</p>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
                 <h3 class="font-semibold text-bd-text-primary flex items-center gap-2 text-[12px]">
@@ -79,9 +79,9 @@
             <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
               <h4 class="font-semibold text-bd-text-primary text-[12px] mb-1">The contract in one sentence</h4>
               <p class="text-[11px]">
-                Write a JSON object to <code class="text-bd-green">ultrascripts:state:scripture</code> that contains
+                Write a JSON object to <code class="text-bd-green">ultrascripts:state:widget</code> that contains
                 a <strong>manifest</strong> describing your widgets once, and a <strong>history</strong> map giving the values for each turn keyed by live count.
-                Scripture handles the rest.
+                Widget handles the rest.
               </p>
             </div>
 
@@ -92,11 +92,11 @@
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
                 <h4 class="font-semibold text-bd-blue text-[12px]">2. Define the manifest</h4>
-                <p class="text-[11px] text-bd-text-muted">Put stable widget ids and configuration in Library with <code>bd.us.defineScripture(...)</code>.</p>
+                <p class="text-[11px] text-bd-text-muted">Put stable widget ids and configuration in Library with <code>bd.us.defineWidget(...)</code>.</p>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
                 <h4 class="font-semibold text-bd-purple text-[12px]">3. Publish values</h4>
-                <p class="text-[11px] text-bd-text-muted">From Context, call <code>bd.us.publishScripture(...)</code> with values from plain serializable <code>state</code>.</p>
+                <p class="text-[11px] text-bd-text-muted">From Context, call <code>bd.us.publishWidget(...)</code> with values from plain serializable <code>state</code>.</p>
               </div>
             </div>
           </div>
@@ -115,11 +115,11 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('shape')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              The Scripture payload uses a <strong>manifest + history</strong> split. The manifest declares widget definitions <em>once</em>; the history
-              holds turn-bound values keyed by live count. This separation is what makes Scripture undo-aware.
+              The Widget payload uses a <strong>manifest + history</strong> split. The manifest declares widget definitions <em>once</em>; the history
+              holds turn-bound values keyed by live count. This separation is what makes Widget undo-aware.
             </p>
 
-            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">// ultrascripts:state:scripture
+            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">// ultrascripts:state:widget
 {
   "v": 1,
   "manifest": {
@@ -153,7 +153,7 @@
                 <GitMerge class="w-4 h-4" /> Live-count fallback rule
               </h4>
               <p class="text-[11px]">
-                Scripture looks up <code>history[liveCount]</code> first. If that exact key is missing, it falls back to the nearest <em>earlier</em>
+                Widget looks up <code>history[liveCount]</code> first. If that exact key is missing, it falls back to the nearest <em>earlier</em>
                 numeric entry, then to the newest available entry. This means: you don't have to write a fresh snapshot every turn if nothing changed.
                 Write only when state actually changes.
               </p>
@@ -288,15 +288,15 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('livecount')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              Scripture is the reference module for the <strong>live count</strong> pattern. It declares <code>tracksLiveCount: true</code>,
-              which tells Core to re-render Scripture whenever the player's live action count changes &mdash; even if the state card itself was not rewritten.
+              Widget is the reference module for the <strong>live count</strong> pattern. It declares <code>tracksLiveCount: true</code>,
+              which tells Core to re-render Widget whenever the player's live action count changes &mdash; even if the state card itself was not rewritten.
               That single property is why undo and redo "just work" for HP bars and quest lists.
             </p>
 
             <div class="grid md:grid-cols-3 gap-3">
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
                 <h4 class="font-semibold text-bd-green text-[12px]">Undo</h4>
-                <p class="text-[11px]">Live count drops. Scripture looks up the new (lower) key in <code>history</code> and renders the older snapshot. The bar moves back.</p>
+                <p class="text-[11px]">Live count drops. Widget looks up the new (lower) key in <code>history</code> and renders the older snapshot. The bar moves back.</p>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
                 <h4 class="font-semibold text-bd-blue text-[12px]">Redo</h4>
@@ -304,7 +304,7 @@
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-amber/30 space-y-1">
                 <h4 class="font-semibold text-bd-amber text-[12px]">Retry</h4>
-                <p class="text-[11px]">Tail changes but live count holds. Scripture stays put &mdash; the current snapshot is still the right one to show.</p>
+                <p class="text-[11px]">Tail changes but live count holds. Widget stays put &mdash; the current snapshot is still the right one to show.</p>
               </div>
             </div>
 
@@ -331,8 +331,8 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('helpers')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              Use the <code>bd.us</code> helper from Quick Start instead of maintaining a second Scripture helper here. Declare the manifest with
-              <code>bd.us.defineScripture(...)</code>, then publish each turn with <code>bd.us.publishScripture(...)</code>.
+              Use the <code>bd.us</code> helper from Quick Start instead of maintaining a second Widget helper here. Declare the manifest with
+              <code>bd.us.defineWidget(...)</code>, then publish each turn with <code>bd.us.publishWidget(...)</code>.
             </p>
             <p class="text-[11px] text-bd-text-muted">
               This keeps all card I/O, history keys, and interaction acks in one reviewed SDK path instead of teaching authors a second raw-card pattern.
@@ -373,7 +373,7 @@
               <p>Replace the manifest above with a focused quest-tracker manifest.</p>
               <p class="text-[11px] text-bd-text-muted">
                 Use a <code>list</code> widget for objectives. Store the quest array as plain data on <code>state.quests</code>, then publish it
-                through <code>bd.us.publishScripture({ quests: state.quests })</code>.
+                through <code>bd.us.publishWidget({ quests: state.quests })</code>.
               </p>
             </div>
 
@@ -416,22 +416,22 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('interactions')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              Some Scripture widgets are interactive in the sidebar &mdash; the player can flip a toggle, click a button, or edit an input. When that
-              happens, BetterDungeon writes the event into <code class="text-bd-green">ultrascripts:in:scripture</code> for the script to read on its next turn.
+              Some widgets are interactive in the sidebar &mdash; the player can flip a toggle, click a button, or edit an input. When that
+              happens, BetterDungeon writes the event into <code class="text-bd-green">ultrascripts:in:widget</code> for the script to read on its next turn.
             </p>
 
-            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">// ultrascripts:in:scripture  (extension writes when a widget is interacted with)
+            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">// ultrascripts:in:widget  (extension writes when a widget is interacted with)
 {
   "v": 1,
   "widgetEvents": {
     "v": 1,
-    "module": "scripture",
+    "module": "widget",
     "latestSeq": 4,
     "ackSeq": 3,
     "liveCount": 13,
     "events": [
       {
-        "id": "scripture-4",
+        "id": "widget-4",
         "seq": 4,
         "widgetId": "questComplete",
         "widgetType": "toggle",
@@ -446,58 +446,58 @@
             <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
               <h4 class="font-semibold text-bd-text-primary text-[12px] mb-1">Consuming the events</h4>
               <p class="text-[11px]">
-                On the next modifier pass, parse <code>ultrascripts:in:scripture</code>, apply events to <code>state</code>, and write the highest handled
-                <code>seq</code> to <code>ultrascripts:state:scripture.interactions.ackSeq</code>. The extension prunes acked events so the
+                On the next modifier pass, parse <code>ultrascripts:in:widget</code>, apply events to <code>state</code>, and write the highest handled
+                <code>seq</code> to <code>ultrascripts:state:widget.interactions.ackSeq</code>. The extension prunes acked events so the
                 card stays lean.
               </p>
             </div>
 
             <p class="text-[11px] text-bd-text-muted">
-              In helper-based scripts, use <code>bd.us.scriptureEvents()</code> to read unacked events and <code>bd.us.ackScripture(seq)</code>
+              In helper-based scripts, use <code>bd.us.widgetEvents()</code> to read unacked events and <code>bd.us.ackWidget(seq)</code>
               after applying each event to plain scenario state.
             </p>
           </div>
         </Transition>
       </section>
 
-      <!-- ===================== DISPLAY CONFIG ===================== -->
+      <!-- ===================== DISPLAY BEHAVIOR ===================== -->
       <section id="guide-display" class="card">
         <button @click="toggleGuideSection('display')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Settings class="w-5 h-5 text-bd-purple" />
-            Player Display Configuration
+            Responsive Display Behavior
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('display') }" />
         </button>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('display')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              Players control how Scripture renders through the BetterDungeon popup. The currently active settings are surfaced through
-              <code>sdk.config.ultrascripts.scriptureDisplay</code>. Authors can read them and adapt manifest density when needed.
+              Widget adapts automatically to the available story area. On narrow screens it stacks zones into a single column, tightens spacing,
+              and scrolls the widget bar when the published manifest needs more vertical room.
             </p>
 
             <div class="grid md:grid-cols-3 gap-3 text-[11px]">
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
-                <strong class="text-bd-text-primary block mb-1">size</strong>
-                <p class="text-bd-text-muted"><code>compact</code> | <code>normal</code> | <code>comfortable</code> | <code>large</code></p>
+                <strong class="text-bd-text-primary block mb-1">Density</strong>
+                <p class="text-bd-text-muted">Crowded bars compact automatically based on real widget width.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
-                <strong class="text-bd-text-primary block mb-1">maxHeight</strong>
-                <p class="text-bd-text-muted"><code>short</code> | <code>medium</code> | <code>tall</code> &mdash; vertical cap with scrolling.</p>
+                <strong class="text-bd-text-primary block mb-1">Mobile</strong>
+                <p class="text-bd-text-muted">Narrow screens use a single-column layout with wrapped zones.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
-                <strong class="text-bd-text-primary block mb-1">layout</strong>
-                <p class="text-bd-text-muted"><code>balanced</code> | <code>stacked</code> &mdash; side-by-side vs. vertical column.</p>
+                <strong class="text-bd-text-primary block mb-1">Overflow</strong>
+                <p class="text-bd-text-muted">The widget area keeps a vertical cap and scrolls when needed.</p>
               </div>
             </div>
 
             <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
               <h4 class="font-semibold text-bd-amber text-[12px] mb-1">Design advice</h4>
               <ul class="space-y-0.5 text-[11px]">
-                <li>&middot; Keep each turn's payload <strong>6 widgets or fewer</strong>. More than that crowds even the tall maxHeight.</li>
-                <li>&middot; Use short labels. Long strings truncate on <code>compact</code>.</li>
+                <li>&middot; Keep each turn's payload <strong>6 widgets or fewer</strong> for the best first impression.</li>
+                <li>&middot; Use short labels and values so mobile layouts stay readable.</li>
                 <li>&middot; If you publish heavy widgets (<code>list</code>, <code>custom</code>), trim the rest of the manifest accordingly.</li>
-                <li>&middot; Test your scenario in both <code>compact</code> and <code>large</code> sizes before shipping.</li>
+                <li>&middot; Test your scenario on both desktop and a narrow/mobile viewport before shipping.</li>
               </ul>
             </div>
           </div>
@@ -537,7 +537,7 @@
                   <li>&middot; Overwriting <em>older</em> history entries; that breaks undo replay.</li>
                   <li>&middot; Rendering more than ~6 widgets per turn &mdash; the sidebar overflows.</li>
                   <li>&middot; Skipping the <code>v: 1</code> protocol marker.</li>
-                  <li>&middot; Reading the scripture card from another module &mdash; it's owned by Scripture.</li>
+                  <li>&middot; Reading the widget card from another module &mdash; it's owned by Widget.</li>
                 </ul>
               </div>
             </div>
@@ -560,7 +560,7 @@
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Widget never appears</h4>
                 <p class="text-bd-text-secondary"><strong>Issue:</strong> Card is written but nothing renders.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Check that <code>v: 1</code> is set, the title is exactly <code>ultrascripts:state:scripture</code>, and the Scripture toggle is on in the popup.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Check that <code>v: 1</code> is set, the title is exactly <code>ultrascripts:state:widget</code>, and the Widget toggle is on in the popup.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Bars don't update</h4>
@@ -580,12 +580,12 @@
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">Interaction not acked</h4>
                 <p class="text-bd-text-secondary"><strong>Issue:</strong> The same widget event keeps appearing each turn.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Write the highest handled event <code>seq</code> to <code>ultrascripts:state:scripture.interactions.ackSeq</code>.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Write the highest handled event <code>seq</code> to <code>ultrascripts:state:widget.interactions.ackSeq</code>.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">History grows forever</h4>
                 <p class="text-bd-text-secondary"><strong>Issue:</strong> Card grows large over a long adventure.</p>
-                <p class="text-bd-text-muted"><strong>Fix:</strong> Let <code>bd.us.publishScripture(...)</code> own the Scripture history path, and prune old history entries if a scenario publishes large snapshots.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Let <code>bd.us.publishWidget(...)</code> own the Widget history path, and prune old history entries if a scenario publishes large snapshots.</p>
               </div>
             </div>
           </div>
@@ -608,14 +608,14 @@ import {
 // Sections ordered: orient -> reference -> behavior -> usage -> debug.
 const guideSections = [
   { id: 'header-intro', label: 'Introduction', isHeader: true },
-  { id: 'overview', label: 'What Scripture Is' },
+  { id: 'overview', label: 'What Widget Is' },
   { id: 'header-ref', label: 'Reference', isHeader: true },
   { id: 'shape', label: 'Payload Shape' },
   { id: 'catalog', label: 'Widget Catalog' },
   { id: 'header-behavior', label: 'Behavior', isHeader: true },
   { id: 'livecount', label: 'Live Count Model' },
   { id: 'interactions', label: 'Interaction Events' },
-  { id: 'display', label: 'Display Config' },
+  { id: 'display', label: 'Display Behavior' },
   { id: 'header-use', label: 'Usage', isHeader: true },
   { id: 'helpers', label: 'Library Helpers' },
   { id: 'recipes', label: 'Usage Patterns' },

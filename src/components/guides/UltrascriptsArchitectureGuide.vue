@@ -64,7 +64,7 @@
             <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-2 font-mono text-[11px]">
               <div class="p-3 rounded border border-bd-amber/40 bg-bd-amber/5">
                 <div class="text-bd-amber font-bold mb-1">Modules</div>
-                <div class="text-bd-text-muted">scripture &middot; webfetch &middot; clock &middot; sdk &middot; geolocation &middot; weather &middot; network &middot; system &middot; ai</div>
+                <div class="text-bd-text-muted">widget &middot; webfetch &middot; clock &middot; sdk &middot; geolocation &middot; weather &middot; network &middot; system &middot; ai</div>
               </div>
               <div class="flex justify-center text-bd-text-muted">&uarr; depends on</div>
               <div class="p-3 rounded border border-bd-purple/40 bg-bd-purple/5">
@@ -411,8 +411,8 @@
   "turn": 12,
   "modules": [
     {
-      "id": "scripture",
-      "stateNames": ["scripture"],
+      "id": "widget",
+      "stateNames": ["widget"],
       "ops": []
     },
     {

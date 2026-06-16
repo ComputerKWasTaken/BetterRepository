@@ -467,7 +467,7 @@ export const SCRIPTS = [
     tags: ['ultrascripts', 'template', 'sdk', 'widgets', 'heartbeat', 'clock', 'starter'],
     source: 'BetterRepository',
     description: 'A clean multi-file starter for building AI Dungeon scripts that are enhanced by BetterDungeon and Ultrascripts.',
-    purpose: 'Provides a standard bd.us-style helper, heartbeat checks, op calls, response polling, Scripture publishing, and safe fallback behavior. Use it as the launchpad for new Ultrascripts-powered scripts.',
+    purpose: 'Provides a standard bd.us-style helper, heartbeat checks, op calls, response polling, Widget publishing, and safe fallback behavior. Use it as the launchpad for new Ultrascripts-powered scripts.',
     requiresExtension: 'BetterDungeon',
     ultrascriptsMode: 'enhanced'
   },
@@ -481,7 +481,7 @@ export const SCRIPTS = [
     tags: ['ultrascripts', 'template', 'sdk', 'required', 'widgets', 'heartbeat', 'starter'],
     source: 'BetterRepository',
     description: 'A clean multi-file starter for AI Dungeon scripts whose core behavior requires BetterDungeon and Ultrascripts.',
-    purpose: 'Provides the same bd.us-style helper as the enhanced starter, plus hard runtime/module gating, clear player-facing requirement messages, response polling, acks, and Scripture publishing for scripts that cannot run meaningfully without Ultrascripts.',
+    purpose: 'Provides the same bd.us-style helper as the enhanced starter, plus hard runtime/module gating, clear player-facing requirement messages, response polling, acks, and Widget publishing for scripts that cannot run meaningfully without Ultrascripts.',
     requiresExtension: 'BetterDungeon',
     ultrascriptsMode: 'required'
   }

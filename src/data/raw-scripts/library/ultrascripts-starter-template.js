@@ -72,7 +72,7 @@ globalThis.UltrascriptsTemplate = function UltrascriptsTemplate(hook, inputText)
   }
 
   if (hook === 'context') {
-    if (CONFIG.publishWidgets && runtimeOnline && us.has('scripture')) {
+    if (CONFIG.publishWidgets && runtimeOnline && us.has('widget')) {
       publishTemplateDashboard(us, cfg, clock);
       consumeTemplateWidgetEvents(us, templateState);
     }
@@ -304,9 +304,9 @@ function createUltrascriptsSdk() {
     return best;
   }
 
-  function defineScripture(manifest) {
-    var existing = parseCard('ultrascripts:state:scripture');
-    store.scripture = {
+  function defineWidget(manifest) {
+    var existing = parseCard('ultrascripts:state:widget');
+    store.widget = {
       v: 1,
       manifest: manifest,
       history: existing && existing.history ? existing.history : {},
@@ -314,29 +314,29 @@ function createUltrascriptsSdk() {
     };
   }
 
-  function publishScripture(values) {
-    if (!store.scripture) return;
-    store.scripture.history[liveCount()] = values;
-    upsertCard('ultrascripts:state:scripture', JSON.stringify(store.scripture));
+  function publishWidget(values) {
+    if (!store.widget) return;
+    store.widget.history[liveCount()] = values;
+    upsertCard('ultrascripts:state:widget', JSON.stringify(store.widget));
   }
 
-  function scriptureEvents() {
-    var card = parseCard('ultrascripts:in:scripture');
+  function widgetEvents() {
+    var card = parseCard('ultrascripts:in:widget');
     var events = (card && card.widgetEvents && card.widgetEvents.events) || [];
-    var ackSeq = (store.scripture && store.scripture.interactions && store.scripture.interactions.ackSeq) || 0;
+    var ackSeq = (store.widget && store.widget.interactions && store.widget.interactions.ackSeq) || 0;
     return events.filter(function (event) {
       return event && Number(event.seq || 0) > ackSeq;
     });
   }
 
-  function ackScripture(seq) {
-    if (!store.scripture) return;
-    store.scripture.interactions = store.scripture.interactions || {};
-    store.scripture.interactions.ackSeq = Math.max(
-      Number(store.scripture.interactions.ackSeq || 0),
+  function ackWidget(seq) {
+    if (!store.widget) return;
+    store.widget.interactions = store.widget.interactions || {};
+    store.widget.interactions.ackSeq = Math.max(
+      Number(store.widget.interactions.ackSeq || 0),
       Number(seq || 0)
     );
-    upsertCard('ultrascripts:state:scripture', JSON.stringify(store.scripture));
+    upsertCard('ultrascripts:state:widget', JSON.stringify(store.widget));
   }
 
   function commit() {
@@ -361,10 +361,10 @@ function createUltrascriptsSdk() {
     tick: tick,
     call: call,
     latest: latest,
-    defineScripture: defineScripture,
-    publishScripture: publishScripture,
-    scriptureEvents: scriptureEvents,
-    ackScripture: ackScripture,
+    defineWidget: defineWidget,
+    publishWidget: publishWidget,
+    widgetEvents: widgetEvents,
+    ackWidget: ackWidget,
     commit: commit
   };
 }
@@ -403,7 +403,7 @@ function handleTemplateCommand(command, us, templateState) {
 }
 
 function consumeTemplateWidgetEvents(us, templateState) {
-  var events = us.scriptureEvents();
+  var events = us.widgetEvents();
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
     if (!event) continue;
@@ -413,13 +413,13 @@ function consumeTemplateWidgetEvents(us, templateState) {
       value: event.value,
       seq: event.seq
     };
-    us.ackScripture(event.seq);
+    us.ackWidget(event.seq);
   }
 }
 
 function publishTemplateDashboard(us, cfg, clock) {
   var modules = [];
-  ['scripture', 'clock', 'sdk', 'ai', 'webfetch', 'weather', 'geolocation', 'network', 'system'].forEach(function (id) {
+  ['widget', 'clock', 'sdk', 'ai', 'webfetch', 'weather', 'geolocation', 'network', 'system'].forEach(function (id) {
     if (us.has(id)) modules.push(id);
   });
 
@@ -428,7 +428,7 @@ function publishTemplateDashboard(us, cfg, clock) {
     ? (clock.data.local || clock.data.iso || 'Clock ready')
     : (us.has('clock', 'now') ? 'Waiting for clock...' : 'Clock unavailable');
 
-  us.defineScripture({
+  us.defineWidget({
     widgets: [
       { id: 'runtime', type: 'text', label: 'Runtime' },
       { id: 'turn', type: 'stat', label: 'Live Count', color: '#60a5fa' },
@@ -438,7 +438,7 @@ function publishTemplateDashboard(us, cfg, clock) {
     ]
   });
 
-  us.publishScripture({
+  us.publishWidget({
     runtime: 'BetterDungeon Ultrascripts online',
     turn: us.liveCount(),
     clock: clockText,

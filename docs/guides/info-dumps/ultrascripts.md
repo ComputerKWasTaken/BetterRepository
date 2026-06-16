@@ -45,7 +45,7 @@ test suites in `BetterDungeon/tests/aid-scripts/`.
 
 | Module | Kind | Public role | Ops / state |
 |---|---|---|---|
-| `scripture` | State | Dynamic widgets and sidebar UI | `ultrascripts:state:scripture` |
+| `widget` | State | Dynamic widgets and sidebar UI | `ultrascripts:state:widget` |
 | `webfetch` | Ops | Consent-gated HTTP and search | `fetch`, `search` |
 | `clock` | Ops | Time, timezone, and format helpers | `now`, `tz`, `format` |
 | `sdk` | Ops | Safe BetterDungeon metadata and config | `version`, `config` |
@@ -69,7 +69,7 @@ generation behavior.
   that declare matching `stateNames`.
 - `ultrascripts:out`: written by scenario scripts. Request envelope plus acks.
 - `ultrascripts:in:<module>`: written by BetterDungeon. Response envelope for
-  that module. Scripture also stores widget interaction events here.
+  that module. Widget also stores widget interaction events here.
 
 All production Ultrascripts-owned cards use the Story Card type `Ultrascripts`.
 
@@ -159,7 +159,7 @@ logic.
 - Use heartbeat for availability: runtime present, modules mounted, ops exposed.
 - Use `sdk.version` for BetterDungeon/client version metadata.
 - Use `sdk.config` for sanitized player configuration such as module
-  preferences, Scripture display settings, and WebFetch consent counts.
+  preferences and WebFetch consent counts.
 
 The SDK does not expose secrets. API keys are never returned to scripts.
 
@@ -191,7 +191,7 @@ BetterRepository now has public Ultrascripts guides for:
 - cookbook recipes
 - architecture
 - module authoring
-- Scripture
+- Widget
 - WebFetch
 - AI
 - SDK

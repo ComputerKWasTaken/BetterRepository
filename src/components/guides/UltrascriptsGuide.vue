@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <!-- Table of Contents - Sticky Sidebar -->
   <div class="flex gap-6 animate-fade-in">
     <!-- TOC Sidebar -->
@@ -108,7 +108,7 @@
                   Dynamic UI Widgets
                 </h3>
                 <p class="text-bd-text-secondary">
-                  Scripture renders live health bars, stat grids, quest trackers, and dashboards directly in the player's browser, powered by JSON state cards.
+                  Widget renders live health bars, stat grids, quest trackers, and dashboards directly in the player's browser, powered by JSON state cards.
                 </p>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
@@ -139,7 +139,7 @@
               </h3>
               <div class="grid md:grid-cols-3 gap-2 text-[11px]">
                 <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
-                  <strong class="text-bd-green block">Scripture</strong>
+                  <strong class="text-bd-green block">Widget</strong>
                   <span class="text-bd-text-muted">State module &mdash; dynamic widget rendering</span>
                 </div>
                 <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
@@ -298,7 +298,7 @@
                   <ArrowUpFromLine class="w-4 h-4 text-bd-green" /> State Publishing
                 </h4>
                 <p class="text-bd-text-secondary">
-                  Scripts write JSON into <code class="text-bd-green">ultrascripts:state:&lt;name&gt;</code> cards. BetterDungeon watches these cards and dispatches updates to the matching module (e.g. Scripture reads <code class="text-bd-green">ultrascripts:state:scripture</code>).
+                  Scripts write JSON into <code class="text-bd-green">ultrascripts:state:&lt;name&gt;</code> cards. BetterDungeon watches these cards and dispatches updates to the matching module (e.g. Widget reads <code class="text-bd-green">ultrascripts:state:widget</code>).
                 </p>
               </div>
 
@@ -355,11 +355,11 @@
                   <Settings class="w-4 h-4 text-bd-purple" /> Extension Popup Controls
                 </h4>
                 <ul class="space-y-1 text-bd-text-muted">
-                  <li>â€¢ Master Ultrascripts on/off switch</li>
-                  <li>â€¢ Per-module enable/disable toggles for all 9 modules</li>
-                  <li>â€¢ WebFetch domain consent management</li>
-                  <li>â€¢ AI status/query contract toggle</li>
-                  <li>â€¢ Debug mode for development logging</li>
+                  <li>• Master Ultrascripts on/off switch</li>
+                  <li>• Per-module enable/disable toggles for all 9 modules</li>
+                  <li>• WebFetch domain consent management</li>
+                  <li>• AI status/query contract toggle</li>
+                  <li>• Debug mode for development logging</li>
                 </ul>
               </div>
 
@@ -368,11 +368,11 @@
                   <Lock class="w-4 h-4 text-bd-amber" /> Security Guarantees
                 </h4>
                 <ul class="space-y-1 text-bd-text-muted">
-                  <li>â€¢ Gemini API keys stay in BetterDungeon local extension storage and are not exposed to scenario scripts</li>
-                  <li>â€¢ WebFetch requires explicit per-domain player approval</li>
-                  <li>â€¢ Geolocation requires standard browser permission</li>
-                  <li>â€¢ AI query requests return <code>not_configured</code> until the player saves a Gemini API key</li>
-                  <li>â€¢ SDK config returns sanitized data only</li>
+                  <li>• Gemini API keys stay in BetterDungeon local extension storage and are not exposed to scenario scripts</li>
+                  <li>• WebFetch requires explicit per-domain player approval</li>
+                  <li>• Geolocation requires standard browser permission</li>
+                  <li>• AI query requests return <code>not_configured</code> until the player saves a Gemini API key</li>
+                  <li>• SDK config returns sanitized data only</li>
                 </ul>
               </div>
             </div>
@@ -458,10 +458,10 @@
             </p>
 
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
-              <router-link to="/ultrascripts?tab=scripture" class="block p-4 rounded-lg bg-gradient-to-br from-bd-green/10 to-transparent border border-bd-green/30 hover:border-bd-green/50 transition-colors group">
+              <router-link to="/ultrascripts?tab=widget" class="block p-4 rounded-lg bg-gradient-to-br from-bd-green/10 to-transparent border border-bd-green/30 hover:border-bd-green/50 transition-colors group">
                 <div class="flex items-center gap-2 mb-1.5">
                   <LayoutDashboard class="w-5 h-5 text-bd-green" />
-                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-green transition-colors">Scripture</h4>
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-green transition-colors">Widget</h4>
                 </div>
                 <p class="text-bd-text-muted">Dynamic UI widgets &mdash; HP bars, stat grids, quest trackers, dashboards.</p>
               </router-link>

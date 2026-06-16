@@ -83,7 +83,7 @@ const routes = [
       title: 'Ultrascripts - BetterRepository',
       description: 'BetterDungeon\'s cards-based scripting platform for AI Dungeon. Two-way communication, dynamic widgets, external data, and platform-aware modules over the Story Card transport.',
       ogTitle: 'Ultrascripts - BetterRepository',
-      ogDescription: 'BetterDungeon\'s shipped scripting platform: Scripture widgets, WebFetch, Provider AI, Clock, Geolocation, Weather, Network, System, and SDK modules over a unified Story Card runtime.',
+      ogDescription: 'BetterDungeon\'s shipped scripting platform: widgets, WebFetch, Provider AI, Clock, Geolocation, Weather, Network, System, and SDK modules over a unified Story Card runtime.',
       path: '/ultrascripts'
     }
   },
