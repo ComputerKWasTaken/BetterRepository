@@ -117,7 +117,7 @@
                   External Integrations
                 </h3>
                 <p class="text-bd-text-secondary">
-                  WebFetch lets scenarios reach approved external data, while the AI module runs bounded private prompts through AI Dungeon's native generator.
+                  WebFetch lets scenarios reach approved external data, while the AI module sends asynchronous text, schema-backed JSON, and thinking-tuned model queries.
                 </p>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
@@ -358,7 +358,7 @@
                   <li>â€¢ Master Ultrascripts on/off switch</li>
                   <li>â€¢ Per-module enable/disable toggles for all 9 modules</li>
                   <li>â€¢ WebFetch domain consent management</li>
-                  <li>â€¢ Native AI module toggle</li>
+                  <li>â€¢ AI status/query contract toggle</li>
                   <li>â€¢ Debug mode for development logging</li>
                 </ul>
               </div>
@@ -368,10 +368,10 @@
                   <Lock class="w-4 h-4 text-bd-amber" /> Security Guarantees
                 </h4>
                 <ul class="space-y-1 text-bd-text-muted">
-                  <li>â€¢ No external AI keys are required or exposed to scenario scripts</li>
+                  <li>â€¢ Gemini API keys stay in BetterDungeon local extension storage and are not exposed to scenario scripts</li>
                   <li>â€¢ WebFetch requires explicit per-domain player approval</li>
                   <li>â€¢ Geolocation requires standard browser permission</li>
-                  <li>â€¢ Native AI queries are single-flight and replay-unsafe</li>
+                  <li>â€¢ AI query requests return <code>not_configured</code> until the player saves a Gemini API key</li>
                   <li>â€¢ SDK config returns sanitized data only</li>
                 </ul>
               </div>
@@ -479,7 +479,7 @@
                   <BrainCircuit class="w-5 h-5 text-bd-purple" />
                   <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-purple transition-colors">AI</h4>
                 </div>
-                <p class="text-bd-text-muted">Native AI Dungeon generator queries for private summaries, structured extraction, and optional sidecar reasoning.</p>
+                <p class="text-bd-text-muted">Async status/query contract for AI requests. Text and JSON modes are defined; backend connection is pending.</p>
               </router-link>
 
               <router-link to="/ultrascripts?tab=sdk" class="block p-4 rounded-lg bg-gradient-to-br from-bd-cyan/10 to-transparent border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">

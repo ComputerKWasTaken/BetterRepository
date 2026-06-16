@@ -378,35 +378,30 @@ bd.us.commit();</pre>
           <div v-if="isGuideSectionExpanded('required')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
               If Ultrascripts is the engine of the scenario, say so plainly and guard the core path immediately. Do not fake a broken fallback for a
-              script whose whole point depends on modules like <code>ai.query</code>.
+              script whose whole point depends on an unavailable module.
             </p>
 
             <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">bd.us.tick();
 
-if (!bd.us.available() || !bd.us.has('ai', 'query')) {
-  text = '[This scenario requires BetterDungeon with Ultrascripts AI enabled. Install BetterDungeon or switch to a non-Ultrascripts version.]\n' + text;
+if (!bd.us.available() || !bd.us.has('ai', 'status') || !bd.us.has('ai', 'query')) {
+  text = '[This scenario requires BetterDungeon with Ultrascripts enabled. Install BetterDungeon or switch to a non-Ultrascripts version.]\n' + text;
 } else {
   var status = bd.us.latest('ai', 'status');
 
   if (!status &amp;&amp; bd.us.has('ai', 'status')) {
     bd.us.call('ai', 'status');
-    text = '[Checking BetterDungeon AI readiness. Try one more action after the status reply arrives.]\n' + text;
+    text = '[Checking BetterDungeon AI module status. Try one more action after the status reply arrives.]\n' + text;
   } else {
-    var aiReady = status
+    var aiUnavailable = status
       &amp;&amp; status.status === 'ok'
       &amp;&amp; status.data
-      &amp;&amp; status.data.ready;
+      &amp;&amp; status.data.reason === 'ai_backend_not_configured';
 
-    if (!aiReady) {
-      text = '[This scenario requires AI Dungeon native query readiness. Try again after the adventure fully loads.]\n' + text;
+    if (aiUnavailable) {
+      text = '[BetterDungeon AI needs a Gemini API key in the BetterDungeon popup before this scenario path can run.]\n' + text;
     } else {
       // Core Ultrascripts-dependent logic starts here.
-      text = '[BetterDungeon AI module is ready. Queueing Co-GM support for the next turn.]\n' + text;
-      bd.us.call('ai', 'query', {
-        prompt: 'Write one short Co-GM hint for the current scene.',
-        context: text,
-        temperature: 0.4
-      });
+      text = '[BetterDungeon AI status is present. Queue ai.query work and read the result on a later turn.]\n' + text;
     }
   }
 }
@@ -521,49 +516,44 @@ Turn N+2 :  ...continues every turn</pre>
         <button @click="toggleGuideSection('step3')" class="w-full flex items-center justify-between text-left">
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <span class="w-6 h-6 rounded-full bg-bd-purple/20 text-bd-purple font-bold flex items-center justify-center text-[12px]">3</span>
-            Ask native AI
+            Check AI query status
           </h2>
           <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('step3') }" />
         </button>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('step3')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              Same pattern again: AI Dungeon's native generator writes one private sentence of ambient flavor every turn.
+              The AI module exposes <code>status</code> and async <code>query</code>. When the player configures the AI backend in BetterDungeon, scripts can request text, schema-backed JSON, and optional thinking levels.
             </p>
 
             <div>
               <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">Context Modifier</div>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">bd.us.tick();
 
-// Inject the previous Co-GM line as front-context
-var prev = bd.us.latest('ai', 'query');
-var prevText = prev &amp;&amp; prev.status === 'ok' &amp;&amp; prev.data
-  ? (prev.data.text || '')
-  : '';
-if (prevText) {
-  text = '[Ambient: ' + String(prevText).trim() + ']\n' + text;
-}
-
-// Queue this turn's Co-GM request when native AI is ready.
+// Read the AI backend status when available.
 var aiStatus = bd.us.latest('ai', 'status');
-var aiReady = aiStatus &amp;&amp; aiStatus.status === 'ok'
+var aiBackendMissing = aiStatus &amp;&amp; aiStatus.status === 'ok'
   &amp;&amp; aiStatus.data
-  &amp;&amp; aiStatus.data.ready;
-if (bd.us.has('ai', 'query') &amp;&amp; aiReady) {
-  bd.us.call('ai', 'query', {
-    temperature: 0.4,
-    prompt: 'Output one atmospheric sentence describing ambient sensory detail. No dialogue. No plot events.',
-    context: 'Current scene:\n' + text
-  });
+  &amp;&amp; aiStatus.data.reason === 'ai_backend_not_configured';
+if (aiBackendMissing) {
+  text += '\n[BetterDungeon AI needs a Gemini API key in the BetterDungeon popup.]';
 }
 if (bd.us.has('ai', 'status') &amp;&amp; !aiStatus) bd.us.call('ai', 'status');
+
+// Queue a future query only when status eventually reports ready.
+if (aiStatus &amp;&amp; aiStatus.status === 'ok' &amp;&amp; aiStatus.data.ready &amp;&amp; bd.us.has('ai', 'query')) {
+  bd.us.call('ai', 'query', {
+    prompt: 'Return one short hidden world-state note about the current scene.',
+    thinking: 'minimal',
+    output: { type: 'text' }
+  });
+}
 
 bd.us.commit();</pre>
             </div>
 
             <p>
-              This pattern queues <code>ai.status</code> automatically until a readiness response is cached, so the AI path becomes available after the adventure
-              finishes hydrating without breaking the plain scenario flow.
+              This pattern queues <code>ai.status</code> automatically until a response is cached, then only queues <code>ai.query</code> when the module reports that a backend is ready.
             </p>
           </div>
         </Transition>
@@ -581,7 +571,7 @@ bd.us.commit();</pre>
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('full')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
-              All three steps stitched together &mdash; HP bar, real-world time tinting, Co-GM ambient line. This is a fully working scenario.
+              The working pieces stitched together &mdash; HP bar, real-world time tinting, and AI module status polling. Query calls stay gated until the backend reports ready.
             </p>
 
             <div>
@@ -607,14 +597,6 @@ if (clockResult &amp;&amp; clockResult.status === 'ok') {
   if (hour >= 20 || hour < 5) text += '\n[Ambient: deep night.]';
 }
 
-var coGm = bd.us.latest('ai', 'query');
-var coGmText = coGm &amp;&amp; coGm.status === 'ok' &amp;&amp; coGm.data
-  ? (coGm.data.text || '')
-  : '';
-if (coGmText) {
-  text = '[Ambient: ' + String(coGmText).trim() + ']\n' + text;
-}
-
 // 3. Publish widget snapshot when Scripture is mounted.
 if (bd.us.has('scripture')) {
   bd.us.publishScripture({
@@ -627,17 +609,6 @@ if (bd.us.has('scripture')) {
 if (bd.us.has('clock', 'now')) bd.us.call('clock', 'now');
 
 var aiStatus = bd.us.latest('ai', 'status');
-var aiReady = aiStatus &amp;&amp; aiStatus.status === 'ok'
-  &amp;&amp; aiStatus.data
-  &amp;&amp; aiStatus.data.ready;
-
-if (bd.us.has('ai', 'query') &amp;&amp; aiReady) {
-  bd.us.call('ai', 'query', {
-    temperature: 0.4,
-    prompt: 'Output one atmospheric sentence. No dialogue.',
-    context: text
-  });
-}
 if (bd.us.has('ai', 'status') &amp;&amp; !aiStatus) bd.us.call('ai', 'status');
 
 // 5. Send everything in one envelope.
@@ -646,7 +617,7 @@ bd.us.commit();</pre>
 
             <div class="p-3 rounded-lg bg-bd-green/10 border border-bd-green/30">
               <p class="text-[11px]">
-                <strong class="text-bd-green">That's a complete scenario.</strong> Widgets, real-world time grounding, AI Co-GM &mdash; all in
+                <strong class="text-bd-green">That's a complete scenario.</strong> Widgets and real-world time grounding &mdash; all in
                 ~25 lines of meaningful code. Every module beyond these three follows the exact same pattern: <code>has</code>, <code>call</code>,
                 <code>latest</code>, <code>commit</code>.
               </p>
@@ -683,7 +654,7 @@ bd.us.commit();</pre>
                 <h4 class="font-semibold text-bd-purple text-[12px] mb-1 flex items-center gap-1.5">
                   <BrainCircuit class="w-4 h-4" /> AI deep-dive
                 </h4>
-                <p class="text-[11px] text-bd-text-secondary">Native query readiness, ops reference, and patterns for structured extraction and Co-GM narration.</p>
+                <p class="text-[11px] text-bd-text-secondary">Async status/query contract, text mode, schema-backed JSON, and thinking levels.</p>
               </router-link>
               <router-link to="/ultrascripts?tab=architecture" class="block p-3 rounded-lg bg-bd-bg-primary border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">
                 <h4 class="font-semibold text-bd-cyan text-[12px] mb-1 flex items-center gap-1.5">
