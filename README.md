@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>AI Dungeon Resource Hub</strong><br>
-  A curated collection of AI Instructions, Plot Components, Story Cards, and Scripts.<br>
+  A curated collection of AI Instructions, Plot Components, Story Cards, Scripts, and Guides.<br>
   Everything you need to craft <span style="color: #4ade80">better adventures</span>.
 </p>
 
@@ -27,6 +27,7 @@
 | **Plot Components** | Author's Notes, Plot Essentials, and Story Summary templates. |
 | **Story Cards** | Templates for Story Cards, including characters, locations, factions, abilities, and more. |
 | **Scripts** | JavaScript examples for game systems, tracking, and automation. |
+| **Guides** | Public walkthroughs for AI Dungeon systems, BetterDungeon, and Ultrascripts. |
 
 Everything is **free**, **tested**, and **ready to copy-paste** into your adventures.
 

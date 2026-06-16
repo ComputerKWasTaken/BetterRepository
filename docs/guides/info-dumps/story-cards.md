@@ -71,11 +71,10 @@ The card editor now has two tabs: **Details** (the manual form) and
 
 ### 6.1 Command tab fields
 
-- **Story Card Command Preset** — currently one shipped preset, "Basic
-  List Prompt". Description: *"Uses the player's selected story model and
-  the same full-context prompt builder as normal story generation."*
-  Future presets will likely expose different model selection or
-  context-building strategies.
+- **Story Card Command Preset** — copy-ready prompt configurations for
+  AI Dungeon's Story Card Command tab. V1.7 ships a curated preset set
+  covering general-purpose prompts, category-specific prompts, structured
+  field formats, and common use cases such as mysteries and relationships.
 - **Story Card Command** — the prompt template. Must include the
   `{{title}}` token. 2000-character limit. Default text:
   > Generate an information card for `{{title}}` using clearly labeled
@@ -128,14 +127,21 @@ A preset record carries the full AI Dungeon command configuration plus
 the standard repository metadata (id, difficulty, impact, tags, source,
 useCase).
 
-The repository ships seven production presets:
-1. **Basic List Prompt** (`preset-basic-list-prompt`): The AI Dungeon default flat list.
-2. **Basic Prose Prompt** (`preset-basic-prose-prompt`): Standard paragraph style.
-3. **Condensed Prompt** (`preset-condensed-prompt`): telegraphic prose optimized for token-budget efficiency.
-4. **Detailed Character Profiler** (`preset-detailed-character-profiler`): Structured, deep fields for Characters.
-5. **Location Blueprint** (`preset-location-blueprint`): Atmospheric sensory profiles for Locations.
-6. **Faction Dossier** (`preset-faction-dossier`): Politically detailed, intelligence-style summaries for Factions.
-7. **Artifact Chronicle** (`preset-artifact-chronicle`): Special equipment descriptors, histories, and drawbacks for Items.
+The repository ships thirteen production presets:
+
+1. **Basic List Prompt** (`preset-basic-list-prompt`): the AI Dungeon default flat list.
+2. **Basic Prose Prompt** (`preset-basic-prose-prompt`): standard paragraph style.
+3. **Condensed Prompt** (`preset-condensed-prompt`): high-density prose optimized for token-budget efficiency.
+4. **Detailed Character Prompt** (`preset-character-detailed`): personality, motivation, relationship, and secret fields for Characters.
+5. **Atmospheric Location Prompt** (`preset-location-atmospheric`): sensory and mood-focused descriptions for Locations.
+6. **Mechanical Item Prompt** (`preset-item-mechanical`): capabilities, drawbacks, rarity, and condition for Items.
+7. **Political Faction Prompt** (`preset-faction-political`): leadership, ideology, methods, allies, enemies, and influence for Factions.
+8. **Bestiary Entry Prompt** (`preset-creature-bestiary`): habitat, diet, behavior, threat level, weaknesses, and harvest details for Creatures.
+9. **Historical Event Prompt** (`preset-event-historical`): participants, causes, aftermath, and remembered consequences for Events.
+10. **Curly Brace Fields Prompt** (`preset-curly-fields`): structured `{Field: value}` entries.
+11. **Bracket Fields Prompt** (`preset-bracket-fields`): structured `[Field: value]` entries.
+12. **Mystery Hook Prompt** (`preset-mystery-hook`): clues, suspects, red herrings, and hidden truth for mysteries.
+13. **Relationship Dynamic Prompt** (`preset-relationship-dynamic`): relationship status, history, conflict, connection, and likely evolution.
 
 ## 7. Categories
 

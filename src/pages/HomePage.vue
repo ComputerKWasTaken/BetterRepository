@@ -175,69 +175,69 @@
           <div class="flex items-center justify-between mb-5">
             <div class="flex items-center gap-2.5">
               <Megaphone class="w-5 h-5 text-bd-accent-primary" />
-              <h2 class="text-lg font-semibold text-bd-text-primary">What's New in <span class="text-gradient">V1.6</span></h2>
+              <h2 class="text-lg font-semibold text-bd-text-primary">What's New in <span class="text-gradient">V1.7</span></h2>
             </div>
             <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-bd-accent-primary/15 text-bd-accent-light">Latest</span>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <!-- NSFW Control Options -->
+            <!-- Design Refresh -->
             <div class="whats-new-card group" style="animation-delay: 0ms">
               <div class="flex items-center gap-3 mb-3">
-                <div class="w-9 h-9 rounded-lg bg-bd-red/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-red/25 transition-colors">
-                  <Flame class="w-4 h-4 text-bd-red" />
+                <div class="w-9 h-9 rounded-lg bg-bd-amber/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-amber/25 transition-colors">
+                  <LayoutDashboard class="w-4 h-4 text-bd-amber" />
                 </div>
-                <h3 class="font-semibold text-sm text-bd-text-primary">NSFW Control Options</h3>
+                <h3 class="font-semibold text-sm text-bd-text-primary">Design Refresh</h3>
               </div>
               <ul class="space-y-1.5 text-sm text-bd-text-secondary">
                 <li class="flex items-start gap-2">
-                  <Shield class="w-3 h-3 text-bd-red flex-shrink-0 mt-1" />
-                  <span>New control variants (Off, Softcore, Explicit, Maximal) for Sets tab</span>
+                  <Sparkles class="w-3 h-3 text-bd-amber flex-shrink-0 mt-1" />
+                  <span>Refined visual system, cards, navigation, and resource browsing</span>
                 </li>
                 <li class="flex items-start gap-2">
-                  <Settings class="w-3 h-3 text-bd-red flex-shrink-0 mt-1" />
-                  <span>Append NSFW instructions to any set</span>
+                  <Search class="w-3 h-3 text-bd-amber flex-shrink-0 mt-1" />
+                  <span>Polished search and layout behavior across the public resource hub</span>
                 </li>
               </ul>
             </div>
 
-            <!-- Ultrascripts -->
+            <!-- Story Card Command Presets -->
             <div class="whats-new-card group" style="animation-delay: 80ms">
               <div class="flex items-center gap-3 mb-3">
                 <div class="w-9 h-9 rounded-lg bg-bd-purple/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-purple/25 transition-colors">
-                  <Rocket class="w-4 h-4 text-bd-purple" />
+                  <Drama class="w-4 h-4 text-bd-purple" />
                 </div>
-                <h3 class="font-semibold text-sm text-bd-text-primary">Ultrascripts</h3>
-                <span class="ml-auto text-[10px] px-2 py-0.5 rounded-full font-medium bg-bd-green/20 text-bd-green">Shipped</span>
+                <h3 class="font-semibold text-sm text-bd-text-primary">Story Card Command Presets</h3>
+                <span class="ml-auto text-[10px] px-2 py-0.5 rounded-full font-medium bg-bd-green/20 text-bd-green">New</span>
               </div>
               <ul class="space-y-1.5 text-sm text-bd-text-secondary">
                 <li class="flex items-start gap-2">
-                  <ArrowLeftRight class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
-                  <span>Two-way communication between AI Dungeon scripts and BetterDungeon over Story Cards</span>
+                  <Settings class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
+                  <span>Copy-ready presets for AI Dungeon's Story Card Command tab</span>
                 </li>
                 <li class="flex items-start gap-2">
-                  <Sparkles class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
-                  <span>Scripts can render widgets, hit the web, check time, call hosted AI, and get real answers back</span>
+                  <Bookmark class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
+                  <span>Expanded preset docs for formatting, prompts, and safer card generation</span>
                 </li>
               </ul>
             </div>
 
-            <!-- Plot Component Builder -->
+            <!-- Ultrascripts Guides -->
             <div class="whats-new-card group" style="animation-delay: 160ms">
               <div class="flex items-center gap-3 mb-3">
                 <div class="w-9 h-9 rounded-lg bg-bd-green/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-green/25 transition-colors">
-                  <Hammer class="w-4 h-4 text-bd-green" />
+                  <Rocket class="w-4 h-4 text-bd-green" />
                 </div>
-                <h3 class="font-semibold text-sm text-bd-text-primary">Plot Component Builder</h3>
+                <h3 class="font-semibold text-sm text-bd-text-primary">Ultrascripts Guides</h3>
               </div>
               <ul class="space-y-1.5 text-sm text-bd-text-secondary">
                 <li class="flex items-start gap-2">
-                  <Layers class="w-3 h-3 text-bd-green flex-shrink-0 mt-1" />
-                  <span>Pick any Author's Note, Plot Essential, or Story Summary template and customize it in-place</span>
+                  <ArrowLeftRight class="w-3 h-3 text-bd-green flex-shrink-0 mt-1" />
+                  <span>Updated BetterDungeon V2 docs for Widget, SDK, modules, and templates</span>
                 </li>
                 <li class="flex items-start gap-2">
-                  <Wrench class="w-3 h-3 text-bd-green flex-shrink-0 mt-1" />
-                  <span>Quick-fill helpers auto-detect <code class="text-[11px] text-bd-accent-primary">[bracketed]</code> placeholders with live preview and placement guidance</span>
+                  <Code class="w-3 h-3 text-bd-green flex-shrink-0 mt-1" />
+                  <span>Enhanced and Required template copies now track the Widget helper contract</span>
                 </li>
               </ul>
             </div>
@@ -246,24 +246,24 @@
           <!-- CTA -->
           <div class="mt-5 pt-4 border-t border-bd-border-subtle flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <router-link
-              to="/ai-instructions?tab=sets"
-              class="inline-flex items-center gap-2 text-sm font-medium text-bd-red hover:text-bd-red/80 transition-colors"
+              to="/story-cards?tab=presets"
+              class="inline-flex items-center gap-2 text-sm font-medium text-bd-purple hover:text-bd-purple/80 transition-colors"
             >
-              Try NSFW Controls
+              Browse Command Presets
               <ArrowRight class="w-3.5 h-3.5" />
             </router-link>
             <router-link
               to="/ultrascripts"
-              class="inline-flex items-center gap-2 text-sm font-medium text-bd-purple hover:text-bd-purple/80 transition-colors"
+              class="inline-flex items-center gap-2 text-sm font-medium text-bd-green hover:text-bd-green/80 transition-colors"
             >
-              Learn About Ultrascripts
+              Read Ultrascripts Guides
               <ArrowRight class="w-3.5 h-3.5" />
             </router-link>
             <router-link
-              to="/plot-components?tab=builder"
-              class="inline-flex items-center gap-2 text-sm font-medium text-bd-green hover:text-bd-green/80 transition-colors"
+              to="/guides"
+              class="inline-flex items-center gap-2 text-sm font-medium text-bd-amber hover:text-bd-amber/80 transition-colors"
             >
-              Try the Plot Component Builder
+              View Guides
               <ArrowRight class="w-3.5 h-3.5" />
             </router-link>
           </div>
@@ -471,8 +471,7 @@ import {
   Search, LayoutGrid, Lightbulb, ScrollText, Heart, Sparkles, ArrowRight,
   GitPullRequest, MessageCircle, ExternalLink, Bookmark, Drama, Code,
   Award, Users, ChevronRight, Package, Layers, LayoutDashboard, Infinity, X,
-  Megaphone, Wrench, Hammer,
-  Flame, Shield, Settings, Rocket, ArrowLeftRight
+  Megaphone, Settings, Rocket, ArrowLeftRight
 } from 'lucide-vue-next'
 
 const router = useRouter()

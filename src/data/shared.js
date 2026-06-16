@@ -26,9 +26,9 @@ import {
 } from './tagSystem'
 
 export const REPOSITORY_META = {
-  version: '1.1.0',
-  lastUpdated: '2025-01-25',
-  description: 'A curated collection of AI Instructions, Plot Components, Story Cards, and Scripts for AI Dungeon.',
+  version: '1.7.0',
+  lastUpdated: '2026-06-16',
+  description: 'A curated collection of AI Instructions, Plot Components, Story Cards, Scripts, and Guides for AI Dungeon.',
   credits: 'Heavily inspired by OffMetaGamer\'s AI Instructions repository. Extended and refined by computerK.'
 }
 
