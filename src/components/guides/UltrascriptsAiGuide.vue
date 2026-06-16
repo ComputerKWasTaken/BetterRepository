@@ -25,9 +25,11 @@
             <p>
               The Ultrascripts <code class="text-bd-green">ai</code> module exposes exactly two
               operations: <code class="text-bd-green">status</code> and asynchronous
-              <code class="text-bd-green">query</code>. BetterDungeon currently backs those queries
-              with Gemini through the extension background worker, so the player's API key stays out
-              of AI Dungeon page code and scenario scripts.
+              <code class="text-bd-green">query</code>. It is an asynchronous LLM query system:
+              scripts send a request out, BetterDungeon routes it through the execution layers, and
+              the result comes back on a later turn. The default setup uses Gemini through the
+              extension background worker, so the player's API key stays out of AI Dungeon page
+              code and scenario scripts.
             </p>
           </div>
           <p>
@@ -55,13 +57,14 @@
         </h2>
         <div class="mt-4 space-y-3 text-xs text-bd-text-secondary">
           <p>
-            Players configure Gemini in the BetterDungeon popup. The API key is stored in extension
-            local storage, not in sync storage, story cards, or public script state.
+            Players configure the current AI backend in the BetterDungeon popup. Right now that
+            means Gemini. The API key is stored in extension local storage, not in sync storage,
+            story cards, or public script state.
           </p>
           <div class="grid md:grid-cols-2 gap-3 text-[11px]">
             <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle space-y-1">
               <h4 class="font-semibold text-bd-text-primary text-[12px]">What the player chooses</h4>
-              <p class="text-bd-text-muted">Gemini API key, automatic stepdown or manual model selection, and an optional popup connection test.</p>
+              <p class="text-bd-text-muted">An API key, automatic stepdown or manual model selection, and an optional popup connection test.</p>
             </div>
             <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle space-y-1">
               <h4 class="font-semibold text-bd-text-primary text-[12px]">What the script sees</h4>
@@ -71,7 +74,7 @@
           <p>
             Scripts should assume the backend may be unavailable. A scenario that depends on AI
             should check <code class="text-bd-green">ai.status</code> first and surface a clean
-            fallback message if the player has not configured Gemini.
+            fallback message if the player has not configured the backend yet.
           </p>
         </div>
       </section>
@@ -139,7 +142,7 @@
     "promptMaxChars": 12000,
     "backendConfigured": true
   },
-  "message": "Gemini backend is configured."
+  "message": "AI queries are configured."
 }</pre>
           <p>
             <code class="text-bd-green">config.model</code> and
@@ -147,7 +150,7 @@
             point. <code class="text-bd-green">config.activeModel</code> and
             <code class="text-bd-green">config.lastResolvedModel</code> describe the model that most
             recently served a successful request, which matters when automatic fallback has stepped
-            down.
+            down. Scripts should not rely on those model ids for ordinary gameplay logic.
           </p>
         </div>
       </section>
@@ -264,12 +267,12 @@
             </div>
             <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle space-y-1">
               <h4 class="font-semibold text-bd-text-primary text-[12px]">Invalid levels</h4>
-              <p class="text-bd-text-muted">Fail with <code>invalid_args</code>; they do not reach the backend.</p>
+              <p class="text-bd-text-muted">Fail with <code>invalid_args</code>; they do not reach the provider request layer.</p>
             </div>
           </div>
           <p>
-            BetterDungeon translates that single public knob into the Gemini-family controls each
-            model actually supports. Gemini 3 style models use
+            BetterDungeon translates that single public knob into the controls each active model
+            family actually supports. Gemini 3 style models use
             <code class="text-bd-green">thinkingLevel</code>. Gemini 2.5 style models use
             <code class="text-bd-green">thinkingBudget</code>. Gemma 4 behaves like a toggle, so
             <code class="text-bd-green">minimal</code> leaves thinking off and any non-minimal
@@ -290,20 +293,20 @@
         </h2>
         <div class="mt-4 space-y-3 text-xs text-bd-text-secondary">
           <p>
-            The AI module normalizes backend failures into stable Ultrascripts-style errors so
-            scripts can branch cleanly without reading raw Gemini payloads.
+            The AI module normalizes provider failures into stable Ultrascripts-style errors so
+            scripts can branch cleanly without reading raw transport payloads.
           </p>
           <div class="grid md:grid-cols-2 gap-3 text-[11px]">
             <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
-              <p><code class="text-bd-green">not_configured</code>: no Gemini API key is saved.</p>
+              <p><code class="text-bd-green">not_configured</code>: no API key is saved.</p>
               <p><code class="text-bd-green">invalid_args</code>: bad query args, missing JSON schema, or invalid thinking level.</p>
-              <p><code class="text-bd-green">auth_failed</code>: the Gemini key was rejected.</p>
+              <p><code class="text-bd-green">auth_failed</code>: the saved API key was rejected.</p>
               <p><code class="text-bd-green">rate_limit</code>: the current model hit a rate limit.</p>
             </div>
             <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
-              <p><code class="text-bd-green">timeout</code>: the backend exceeded the request timeout.</p>
-              <p><code class="text-bd-green">blocked</code>: Gemini refused or blocked the prompt.</p>
-              <p><code class="text-bd-green">invalid_response</code>: the backend returned malformed output.</p>
+              <p><code class="text-bd-green">timeout</code>: the provider request exceeded the timeout.</p>
+              <p><code class="text-bd-green">blocked</code>: the provider refused or blocked the prompt.</p>
+              <p><code class="text-bd-green">invalid_response</code>: the provider returned malformed output.</p>
               <p><code class="text-bd-green">backend_failed</code>: transport or provider failure outside the stable cases above.</p>
             </div>
           </div>
