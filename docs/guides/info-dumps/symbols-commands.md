@@ -23,31 +23,58 @@ do/say/story toggles, retry/alter/erase, etc.
 
 ## 3. Action-box modes
 
-- **Do** — third-person action.
-- **Say** — third-person dialog.
-- **Story** — free-form narration.
-- **See** *(when image gen is enabled)* — image prompt.
+AI Dungeon's **native** input modes (each is recorded in the scripting
+`history` array with a matching action `type`):
 
-## 4. In-prose symbols (typical conventions)
+- **Do** *(type `do`)* — an action. Placeholder: "What do you do?"
+- **Say** *(type `say`)* — dialog. Placeholder: "What do you say?"
+- **Story** *(type `story`)* — free-form narration / continuation.
+- **See** *(type `see`)* — image prompt (when image gen is enabled).
 
-- `[ ... ]` — bracketed OOC / author directive.
-- `*...*` — emphasis, often interpreted as action beat.
+> PM docs confirm this four-mode list (and the UI placeholders/icons) but
+> are **silent on the exact text transformation** each mode applies —
+> e.g. whether "Do" auto-prefixes "You ", or how "Say" wraps the input.
+> Treat the precise wrapping as unverified by canonical docs.
+
+> BetterDungeon also injects two extra modes into the picker — **Try** and
+> **Command** — which are BetterDungeon features, not native AI Dungeon
+> modes.
+
+## 4. In-prose symbols (emergent community conventions)
+
+The canonical PM docs **do not document any in-prose symbol system** — no
+brackets, asterisks, quotes, or `>` shorthand are described as official
+engine features. As far as authoritative documentation goes, these are
+**emergent community conventions**, not guaranteed engine behavior:
+
+- `[ ... ]` — bracketed OOC / author directive. (Note: the engine *does*
+  wrap the Author's Note as `[Author's Note: ...]`, and that bracket
+  signal is itself emergent/learned, not a hard control token — so heavy
+  bracket use elsewhere dilutes its effect.)
+- `*...*` — emphasis, often interpreted as an action beat.
 - `"..."` — explicit dialog.
 - `>` — player-action shorthand (legacy / Story mode).
 
-TODO: complete the full table from the existing guide and from the
-BetterEcosystem Project Management docs, including which models honor
-which conventions.
+Model-by-model fidelity for these symbols is not documented in PM sources.
 
-## 5. Retry / Alter / Erase / Continue
+## 5. Command-bar actions
 
-- **Retry** — discards last AI output, regenerates with same context.
-- **Alter** — manually edit AI output; engine treats edit as canonical.
-- **Erase** — strikes the last turn entirely.
-- **Continue** — empty input that asks the AI for more on the current beat.
+Per PM `adventure-page-commands.md`, the native command bar is:
 
-TODO: write down model differences (some models behave noticeably
-differently under repeated Retry).
+- **Take a Turn** — the primary action button; opens the text input for
+  the player to type their action.
+- **Continue** — tells the AI to continue the narrative without player
+  input.
+- **Retry** — regenerates the last AI response.
+- **Erase** — removes the last turn. (PM docs list the button but give no
+  detailed behavioral definition.)
+
+**Alter / Edit** (manually editing AI output so the engine treats the edit
+as canonical) is a real feature but is **not** part of the command bar in
+the PM DOM reference — it's the inline edit affordance on a story block.
+
+PM docs document no Undo/Redo command and do not describe per-model
+differences under repeated Retry.
 
 ## 6. Best practices
 
@@ -60,13 +87,22 @@ differently under repeated Retry).
 
 ## 7. Edge cases
 
-- TODO: model-by-model symbol fidelity.
-- TODO: which symbols Ultrascripts / scripts can detect vs strip.
+- Model-by-model symbol fidelity is undocumented in canonical PM sources;
+  treat it as empirical/per-model.
+- Scripts see the player's input in `onInput` and can detect or strip
+  symbols there; the stored `history` entry carries the mode as its
+  `type` (`do`/`say`/`story`/`see`), but PM docs don't specify whether the
+  text is stored verbatim or transformed by mode.
 
 ## 8. Open questions
 
-- Are there documented "official" symbols, or is this entirely emergent
-  community convention?
+- **Are there documented "official" symbols?** Answer per canonical docs:
+  **no** — the PM docs document none, so the in-prose symbol set is
+  treated as emergent community convention rather than guaranteed engine
+  behavior. The one engine-side bracket usage is the auto-wrapped
+  Author's Note, whose effect is also emergent.
+- Exact text transformation each input mode applies before storage (PM
+  silent — see §3).
 
 ## 9. Intentionally not in the guide
 

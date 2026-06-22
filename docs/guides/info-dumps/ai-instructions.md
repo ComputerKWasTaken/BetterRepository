@@ -26,15 +26,32 @@ AI reads on every turn — which gives them outsized influence.
 ## 3. Mechanics
 
 - Custom AI Instructions **replace** the model defaults entirely; they
-  do not stack. Writing a single instruction removes every built-in rule.
+  do not stack (confirmed canonical). Writing a single instruction removes
+  every built-in rule, so missing or vague rules can introduce new
+  problems the defaults previously handled.
+- AI Instructions sit at **position #1** — the very beginning of the
+  context, before all other content. This establishes foundational rules
+  before the AI sees any story content.
 - Every model ships its own default system instructions tuned to that
-  model's behavior. Switching models with custom instructions can break
-  behavior because the instructions were tuned to a different model.
+  model's behavior. Custom instructions persist across model changes even
+  though different models interpret them differently, so switching models
+  may require revising instructions for model-specific quirks.
 - Components are atomic instruction snippets (`COMPONENTS`). Sets
   (`SETS`) are curated bundles. The repository site exposes both.
 - Instructions interact with author's note, plot essentials, and story
   cards via the context-assembly order documented in the Plot
   Components guide.
+- **No direct `state.memory` field.** Unlike Plot Essentials
+  (`state.memory.context`) and Author's Note (`state.memory.authorsNote`),
+  AI Instructions cannot be set through `state.memory`. Scripts must
+  rewrite them by editing the assembled context in the `onModelContext`
+  hook.
+- **Trimming priority is *medium*.** Per `allocation-rules.md`, when the
+  Required Elements budget (~70% of context) is tight, the order is:
+  Front Memory and Last Action are always kept full; then Author's Note,
+  then Plot Essentials, then **AI Instructions**, and Story Summary is
+  dropped last. So very long instructions can be trimmed from the end
+  before higher-priority elements.
 
 ## 4. "Right tool for the job"
 
@@ -57,16 +74,27 @@ AI reads on every turn — which gives them outsized influence.
 
 ## 6. Edge cases and known weirdness
 
-- TODO: model-by-model interpretation differences (compile from Discord).
-- TODO: how Instructions interact with scripted context modification
-  via Ultrascripts / `onModelContext` (see Scripts info dump).
-- TODO: token budget behavior when Instructions are near the context cap.
+- Model-by-model interpretation differences are real and acknowledged by
+  the canonical docs, but PM docs do **not** publish a per-model table or
+  require any special syntax (no XML/role-tag framing is documented).
+  Treat instructions as natural-English imperatives and re-test per model.
+- Instructions cannot be set via `state.memory`; scripted modification
+  happens by rewriting the context in `onModelContext` (see Scripts info
+  dump). Plain Story-Card-based runtimes (Ultrascripts) do not edit
+  Instructions directly.
+- Token budget near the cap: Instructions are Required Elements (medium
+  trim priority — see §3). They are trimmed from the end before
+  Author's Note and Plot Essentials, but after Story Summary survives or
+  is dropped. Put the most important directives first *and* last so a
+  tail-trim is less likely to remove something critical.
 
 ## 7. Open questions
 
-- Do all current AI Dungeon models honor the same instruction syntax,
-  or do some require XML-style framing, role tags, etc.?
-- Is there a hard char-count limit on the Instructions field?
+- Do all current AI Dungeon models honor the same instruction syntax?
+  Canonical docs say interpretation differs per model but document no
+  required XML/role-tag framing — so this stays partly unverified.
+- Is there a hard char-count limit on the Instructions field? PM docs
+  specify none; only "keep focused" guidance.
 
 ## 8. Intentionally not in the guide
 

@@ -42,28 +42,51 @@ made from that scenario. Adventures can also have their own ad-hoc cards.
 
 ## 4. Trigger mechanics
 
-- Match is a **substring**, case-insensitive, anywhere in the active context window.
-- Card activation pulls the entry into context **next turn**; cards do not
-  retro-affect the same turn that mentioned them.
-- A space inside a trigger is part of the trigger. `Amanda, daughter`
-  searches for the literal string `, daughter` (with leading space) as a
-  separate trigger because of the space after the comma.
+- Match is a **substring**, case-insensitive, anywhere in the active context
+  window. `dragon` matches `dragons`, `dragonfire`, `pendragon`; `elf`
+  matches `elf`, `elfish`, `shelf`, `self`.
+- Regular plurals are caught by substring matching (`boat` → `boats`,
+  `attack` → `attacking`/`attacked`), but **irregular plurals are not**
+  (`elf` will NOT match `elves`; `knife` will NOT match `knives`). Add them
+  as explicit triggers: `elf,elves,elven`.
+- Punctuation is part of the match (except commas, which separate
+  triggers). `elf.` matches only `elf.`, not `elf` or `elfish`.
+- Card activation pulls the entry into context **on the next generation**;
+  the AI cannot use a card's information in the same generation where the
+  trigger first appears — only in subsequent outputs.
+- A space inside a trigger is part of the trigger. Leading/trailing spaces
+  are significant: `cat ` (trailing space) matches `cat ` but not `cats` or
+  `cat.`; `Amanda, daughter` becomes two triggers, the second being
+  ` daughter` (with a leading space) because of the space after the comma.
 - Trailing space tricks (`orc `) prevent matches inside words like `porch`.
-- Cards can cascade: card A's entry mentions card B's trigger → next turn
-  card B activates. Useful for layered worldbuilding but doubles token cost.
+- Cards can cascade: card A's entry mentions card B's name → when the AI
+  outputs that name, card B activates for the next generation. Useful for
+  layered worldbuilding (and priming via Plot Essentials), but doubles
+  token cost.
 - The AI does **not** see card titles, only the entry text. If the entry
   never says "Amanda", the AI may not know whose information this is.
 
 ## 5. Context and token budget
 
-- Story Cards collectively receive roughly **25%** of the dynamic-token
-  budget after required elements (instructions, plot essentials, summary,
-  author's note, recent story).
-- Cards are among the **first** elements removed when context overflows.
+- Story Cards compete for the **Dynamic Elements** pool. With Memory Bank
+  enabled the default split is roughly Story Cards ~25% / History ~50% /
+  Memory Bank ~25%; without Memory Bank it's Story Cards ~25% / History
+  ~75%. (These are flexible guidelines, not hard caps.)
+- Trigger evaluation window is token-dependent: a minimum of **4 recent
+  actions** are always checked, and if more than 500 tokens are available
+  for Story Cards the engine checks `tokens / 100` recent actions
+  (e.g. 900 tokens → ~9 actions).
+- When the Story Card pool is constrained, removal is by **frequency and
+  relevance** — frequently referenced cards are prioritized and kept,
+  older/less-relevant cards are dropped. (This corrects the older claim
+  that cards are simply "first removed"; cards do sit in the flexible tier,
+  but within that tier relevance/recency decide what survives.)
 - Long entries get partial inclusion; the AI picks and chooses sentences,
   often dropping middle content. Keep important facts at the start and end.
 - A card whose entry never gets activated still costs zero tokens — it's
   purely conditional.
+- Under Frontier "Optimized Context," Story Cards move into the *dynamic*
+  (later) section of the context so the stable prefix stays cacheable.
 
 ## 6. AI Card Generation (current state, 2025-Q4)
 
@@ -96,9 +119,13 @@ The card editor now has two tabs: **Details** (the manual form) and
 - **Log generations in notes** — toggle. When on, every generation
   (including retries) is appended to the card's `notes` field. Lossless
   history; great for picking-and-mixing parts of multiple gens.
-- **Speed Create mode** — toggle. Skips the preview step so the
-  generator immediately commits a card and opens the next one. Pairs
-  well with batch worldbuilding.
+- **Speed Create mode** — toggle. The "Finish" button becomes "Next," so
+  the generator saves the current card and immediately opens another of
+  the same type. Pairs well with batch worldbuilding.
+- **Use Beta Model** — toggle. Generate using the latest fine-tuned
+  card-generation model (per PM `card-generation.md`).
+- **Include Story Summary** — toggle. When on, the generator also
+  considers the adventure's Story Summary as context for the card.
 
 ### 6.2 Required token
 
@@ -144,12 +171,18 @@ The repository ships thirteen production presets:
 12. **Mystery Hook Prompt** (`preset-mystery-hook`): clues, suspects, red herrings, and hidden truth for mysteries.
 13. **Relationship Dynamic Prompt** (`preset-relationship-dynamic`): relationship status, history, conflict, connection, and likely evolution.
 
-## 7. Categories
+## 7. Categories / types
 
-Twelve canonical categories live in `STORY_CARD_CATEGORIES`. They are UI
-organization only — the AI sees only the entry text. Categories double
-as filter/sort buckets in the repo UI and as recommended grouping for
-template/preset families.
+AI Dungeon's **native** card types are: **Character**, **Class**,
+**Race**, **Location**, **Faction**, and **Custom** (you name your own).
+Class and Race are primarily for Character Creator scenarios. The type is
+UI organization only — the AI sees only the entry text.
+
+The repository defines its own broader set of twelve canonical categories
+in `STORY_CARD_CATEGORIES` (a superset used for filter/sort buckets and
+template/preset grouping in the repo UI). When exporting/importing to AI
+Dungeon, only the native types above are meaningful; custom repo
+categories map to AID's `Custom` type.
 
 ## 8. Best practices (full list — guide ships a shorter subset)
 
@@ -171,7 +204,17 @@ template/preset families.
 
 - **Spaces after commas** in the triggers list silently become part of
   the trigger string and almost always break activation.
-- **Import replaces all existing cards** — it is not a merge.
+- **Import replaces all existing cards** — it is not a merge or append.
+  Previous cards are deleted and the imported set is created. To "add"
+  cards, export first, edit the JSON, then re-import the combined file.
+- **Import duplicate handling:** if the file contains multiple cards with
+  identical `keys` *and* `type`, only the first is kept and later
+  duplicates are ignored. Cards may share a keyword if the full `keys`
+  string differs (`dragon,red` and `dragon,blue` both import; two bare
+  `dragon` cards → second ignored).
+- Export is a **JSON array**; the only strictly required fields per card
+  are `keys` (triggers) and `value` (entry). Optional: `type`, `title`,
+  `description`, `useForCharacterCreation`.
 - Card import/export is **web-only**. iOS and Android native apps do
   not currently expose this.
 - Card title is not visible to the AI but is visible to the player in
@@ -208,5 +251,6 @@ template/preset families.
   don't belong in cards.
 - Plot Components guide — for context-assembly order, including where
   Story Cards sit relative to other components.
-- Scripts guide — for programmatic card creation via the `worldEntries`
-  state.
+- Scripts guide — for programmatic card creation via the `storyCards`
+  array and `addStoryCard`/`updateStoryCard`/`removeStoryCard` (the old
+  `worldEntries`/`addWorldEntry` names are deprecated aliases).

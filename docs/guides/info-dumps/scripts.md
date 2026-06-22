@@ -24,13 +24,21 @@ adventures, and only certain scenario types support them.
 
 ## 3. Mechanics
 
-- Hooks: `onInput(text)`, `onModelContext(text)`, `onOutput(text)`.
-- Each hook runs in an isolated sandbox: **16 MB** memory limit, **2-second**
-  timeout. Exceeding either kills the hook silently for that turn.
-- No `async`/`await`. Pure synchronous JS.
+- Hooks: `onInput`, `onModelContext`, `onOutput`. Each receives the
+  relevant `text` (player input / assembled context / AI output) and
+  **returns an object**: `return { text }` at minimum, optionally
+  `return { text, stop: true }` to halt the pipeline. The `text` global
+  and `stop` global mirror these.
+- Library code runs **fresh each turn** — there is no persistent function
+  scope between turns. Use `state` for anything that must persist.
+- No `async`/`await`. Pure synchronous JS. *(Sandbox resource limits —
+  commonly cited as a ~16 MB memory cap and ~2-second timeout — are not
+  published in the canonical PM docs; treat the exact numbers as
+  community/testing lore, not confirmed spec.)*
 - `state` is persisted between hooks and turns.
-- `state.memory.*` is the only mutable bridge to the engine's
-  context-assembly system.
+- `state.memory.*` is the mutable bridge to the engine's context-assembly
+  system (`context`, `authorsNote`, `frontMemory`); Story Cards are
+  mutated through `addStoryCard`/`updateStoryCard`/`removeStoryCard`.
 - Only **Simple Start** and **Character Creator** scenarios may have
   scripts. **Multiple Choice** scenarios cannot — but their individual
   **options** can each carry independent scripts.
@@ -51,14 +59,57 @@ Player input
    → display
 ```
 
-## 5. State exposure (selected)
+## 5. Script-visible globals (full inventory)
 
+### 5.1 `state` (read/write, persisted)
+
+- `state.memory.context` — overrides **Plot Essentials** (UI "Memory").
+  Takes priority over the UI-configured value and over the lower-priority
+  `memory.context`.
+- `state.memory.authorsNote` — overrides **Author's Note**. Changes apply
+  to the *next* generation.
 - `state.memory.frontMemory` — hidden injection at the very end of the
-  context. Most powerful, often used by scripts for "right now" nudges.
-- `state.memory.authorsNote` — overridable Author's Note.
-- `worldEntries` — the scripting representation of Story Cards.
-- TODO: complete inventory of script-visible state. Pull from
-  raw-scripts examples.
+  context. Most powerful, often used for "right now" nudges.
+- `state.message` — string shown to the player as a toast (implemented
+  Phoenix, 2026-03-02 update). Use for command confirmations, stats, and
+  surfacing diagnostics.
+- Custom properties — store strings, numbers, booleans, arrays, nested
+  objects. Avoid circular references and methods (serialized between
+  turns).
+
+### 5.2 `info` (read-only metadata)
+
+- `info.actionCount` — total actions in the adventure.
+- `info.characters` — array of characters/players (strings or objects
+  with a `name`).
+- `info.maxChars` — estimated max characters for context (**onModelContext
+  only**).
+- `info.memoryLength` — characters used by memory/Plot Essentials
+  (**onModelContext only**).
+- `info.contextTokens` — total tokens in the current context.
+- Writes to `info` have no effect.
+
+### 5.3 `history` (read-only)
+
+Array of past actions, chronological (oldest first). Each entry:
+`{ text, type, rawText }` where `rawText` is a deprecated alias of `text`.
+`type` is one of `start`, `continue`, `do`, `say`, `story`, `see`,
+`repeat`, `unknown`. During a hook, `history` excludes the current
+in-flight action (input/context/output is added after the hook).
+
+### 5.4 `storyCards` (mutate via functions)
+
+Array of card objects:
+`{ id, title, keys, type, entry, description, createdAt, updatedAt, useForCharacterCreation }`.
+Mutated only through `addStoryCard(keys, entry, type?)` (returns new
+length, or `false` on duplicate keys), `updateStoryCard(index, keys, entry, type)`,
+and `removeStoryCard(index)` (both throw if the index doesn't exist).
+See the Story Cards info dump §7.
+
+### 5.5 `memory` (lower-priority Plot Essentials)
+
+`memory.context` is the UI Plot Essentials value; `state.memory.context`
+takes priority over it.
 
 ## 6. Best practices
 
@@ -79,26 +130,58 @@ visible to readers.
 
 ## 8. Edge cases
 
-- Sandbox sometimes survives the timeout but with a half-applied state
-  mutation. Always write `state` mutations atomically.
-- Errors thrown inside hooks are swallowed silently — log via
-  `state.message` for visibility.
-- Memory limit is total across all hooks for the turn, not per-hook.
+- Errors thrown inside a hook are **not** silently swallowed: the error
+  is logged, the player sees an "Unable to run scenario scripts" message,
+  and generation may proceed with the unmodified text (behavior may vary).
+  Still write `state` mutations atomically and surface your own
+  diagnostics via `state.message`.
+- `removeStoryCard` shifts the indexes of all later cards. When removing
+  multiple cards, iterate from the highest index down to the lowest.
+- `addStoryCard` sets both `keys` and `title` to the `keys` argument and
+  returns `false` if a card with identical keys already exists.
 
-## 9. Open questions
+## 9. Legacy / deprecated aliases
 
-- Exact JS engine version and which ES features are supported.
-- Whether `state` serialization has size caps (separate from sandbox memory).
+Old names still work but should not be used in new scripts (PM
+`legacy-compatibility.md`):
 
-## 10. Intentionally not in the guide
+| Deprecated | Current |
+|------------|---------|
+| `addWorldEntry(keys, entry)` | `addStoryCard(keys, entry, type?)` |
+| `updateWorldEntry(index, keys, entry)` | `updateStoryCard(index, keys, entry, type)` |
+| `removeWorldEntry(index)` | `removeStoryCard(index)` |
+| `worldEntries` (global) | `storyCards` |
+| `rawText` (history property) | `text` |
+| `sandboxConsole.log()` | `log()` / `console.log()` |
+
+Terminology renames: "World Info" → "Story Cards", "World Entry" → "Story
+Card", UI "Memory" → "Plot Essentials" (the API still uses
+`memory`/`context`).
+
+## 10. Open questions
+
+- Exact JS engine version and which ES features are supported (PM docs
+  silent).
+- Whether `state` serialization has size caps (PM docs silent).
+- Which scenario types support scripts: this dump states Simple Start and
+  Character Creator (and per-option scripts on Multiple Choice); PM docs
+  do not document scenario-type restrictions, so the specifics are
+  unverified by canonical sources.
+- Sandbox memory/timeout numbers (PM docs silent — see §3).
+- Whether Frontier's "Optimized Context" blocks `onModelContext` edits to
+  the stable/cached prefix on supported models (the Frontier release
+  notes say Optimized Context prevents scripts from modifying the stable
+  parts of the context; PM API docs do not yet describe the mechanism).
+
+## 11. Intentionally not in the guide
 
 - Deep BetterScripts internals (deprecated).
 - Ultrascripts-specific protocol details — those live in the
   Ultrascripts info dump and in BetterDungeon's `ultrascripts/` planning
   folder.
 
-## 11. Cross-references
+## 12. Cross-references
 
 - Ultrascripts info dump.
 - Plot Components info dump — for what `state.memory.*` writes to.
-- Story Cards info dump — for `worldEntries`.
+- Story Cards info dump — for the `storyCards` array and card APIs.
