@@ -16,7 +16,9 @@ AI reads on every turn — which gives them outsized influence.
 ## 2. Source-of-truth references
 
 - Official AI Dungeon documentation — AI Instructions section.
-- LewdLeah's AI Dungeon docs (linked from credits).
+- BetterEcosystem Project Management docs (maintained, current through
+  Frontier):
+  https://github.com/ComputerKWasTaken/BetterEcosystemProjectManagement/blob/main/docs/05-plot-components/ai-instructions.md
 - AI Dungeon Discord — Instructions and prompt-engineering channels.
 - Repo data: `src/data/aiInstructions.js` (CATEGORIES, INSTRUCTIONS,
   COMPONENTS, SETS).

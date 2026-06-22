@@ -16,7 +16,9 @@ adventures, and only certain scenario types support them.
 ## 2. Source-of-truth references
 
 - Official AI Dungeon scripting documentation.
-- LewdLeah's docs — extensive hook references and patterns.
+- BetterEcosystem Project Management docs (maintained, current through
+  Frontier):
+  https://github.com/ComputerKWasTaken/BetterEcosystemProjectManagement/tree/main/docs/01-scripting
 - Repo data: `src/data/scripts.js`, `src/data/raw-scripts/*`.
 - AI Dungeon Discord — Scripts channel.
 

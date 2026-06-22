@@ -16,7 +16,9 @@ do/say/story toggles, retry/alter/erase, etc.
 ## 2. Source-of-truth references
 
 - Official AI Dungeon documentation — Player Commands.
-- LewdLeah's docs — exhaustive symbol reference.
+- BetterEcosystem Project Management docs (maintained, current through
+  Frontier):
+  https://github.com/ComputerKWasTaken/BetterEcosystemProjectManagement/tree/main/docs
 - AI Dungeon Discord — community-driven prompt-symbol cheatsheets.
 
 ## 3. Action-box modes
@@ -33,8 +35,9 @@ do/say/story toggles, retry/alter/erase, etc.
 - `"..."` — explicit dialog.
 - `>` — player-action shorthand (legacy / Story mode).
 
-TODO: complete the full table from the existing guide and from LewdLeah's
-reference, including which models honor which conventions.
+TODO: complete the full table from the existing guide and from the
+BetterEcosystem Project Management docs, including which models honor
+which conventions.
 
 ## 5. Retry / Alter / Erase / Continue
 

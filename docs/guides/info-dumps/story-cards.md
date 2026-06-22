@@ -21,8 +21,9 @@ made from that scenario. Adventures can also have their own ad-hoc cards.
 ## 2. Source-of-truth references
 
 - Official AI Dungeon documentation — Story Cards section.
-- LewdLeah's AI Dungeon docs:
-  https://github.com/LewdLeah/Multiple-Choice-Assistant/tree/main/docs
+- BetterEcosystem Project Management docs (maintained, current through
+  Frontier):
+  https://github.com/ComputerKWasTaken/BetterEcosystemProjectManagement/tree/main/docs/04-story-cards
 - AI Dungeon Discord — Story Cards channel (long-running thread; many
   facts only exist there).
 - In-app card editor (Details + Command tabs, screenshotted into our
