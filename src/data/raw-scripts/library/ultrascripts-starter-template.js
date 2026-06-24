@@ -72,9 +72,10 @@ globalThis.UltrascriptsTemplate = function UltrascriptsTemplate(hook, inputText)
   }
 
   if (hook === 'context') {
+    consumeTemplateWidgetEvents(us, templateState);
+
     if (CONFIG.publishWidgets && runtimeOnline && us.has('widget')) {
       publishTemplateDashboard(us, cfg, clock);
-      consumeTemplateWidgetEvents(us, templateState);
     }
 
     if (CONFIG.addContextNote) {
@@ -306,11 +307,14 @@ function createUltrascriptsSdk() {
 
   function defineWidget(manifest) {
     var existing = parseCard('ultrascripts:state:widget');
+    var interactions = store.widget && store.widget.interactions
+      ? store.widget.interactions
+      : (existing && existing.interactions ? existing.interactions : { ackSeq: 0 });
     store.widget = {
       v: 1,
       manifest: manifest,
       history: existing && existing.history ? existing.history : {},
-      interactions: existing && existing.interactions ? existing.interactions : { ackSeq: 0 }
+      interactions: interactions
     };
   }
 

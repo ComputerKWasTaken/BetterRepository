@@ -473,7 +473,8 @@
           <div v-if="isGuideSectionExpanded('display')" class="mt-4 space-y-3 text-xs text-bd-text-secondary">
             <p>
               Widget adapts automatically to the available story area. On narrow screens it stacks zones into a single column, tightens spacing,
-              and scrolls the widget bar when the published manifest needs more vertical room.
+              and scrolls the widget bar when the published manifest needs more vertical room. Players can collapse the tray locally when they
+              need more space.
             </p>
 
             <div class="grid md:grid-cols-3 gap-3 text-[11px]">
@@ -483,7 +484,7 @@
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
                 <strong class="text-bd-text-primary block mb-1">Mobile</strong>
-                <p class="text-bd-text-muted">Narrow screens use a single-column layout with wrapped zones.</p>
+                <p class="text-bd-text-muted">Narrow screens use a single-column layout, wrapped zones, and a local collapse control.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">
                 <strong class="text-bd-text-primary block mb-1">Overflow</strong>
@@ -526,6 +527,7 @@
                   <li>&middot; Skip writes when state hasn't changed &mdash; the fallback rule will keep the bar steady.</li>
                   <li>&middot; Acknowledge widget interaction events promptly so the response card stays small.</li>
                   <li>&middot; Use semantic <code>id</code>s in the manifest (<code>hp</code>, not <code>w1</code>) for readable debugging.</li>
+                  <li>&middot; Keep widget <code>id</code>s unique; duplicate IDs are skipped after the first valid widget.</li>
                 </ul>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-pink/30 space-y-1.5">
@@ -536,6 +538,7 @@
                   <li>&middot; Putting widget definitions in every <code>history</code> entry &mdash; that's what the manifest is for.</li>
                   <li>&middot; Overwriting <em>older</em> history entries; that breaks undo replay.</li>
                   <li>&middot; Rendering more than ~6 widgets per turn &mdash; the sidebar overflows.</li>
+                  <li>&middot; Reusing the same widget <code>id</code> for multiple manifest entries.</li>
                   <li>&middot; Skipping the <code>v: 1</code> protocol marker.</li>
                   <li>&middot; Reading the widget card from another module &mdash; it's owned by Widget.</li>
                 </ul>
@@ -581,6 +584,16 @@
                 <h4 class="font-semibold text-bd-pink text-[12px]">Interaction not acked</h4>
                 <p class="text-bd-text-secondary"><strong>Issue:</strong> The same widget event keeps appearing each turn.</p>
                 <p class="text-bd-text-muted"><strong>Fix:</strong> Write the highest handled event <code>seq</code> to <code>ultrascripts:state:widget.interactions.ackSeq</code>.</p>
+              </div>
+              <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
+                <h4 class="font-semibold text-bd-pink text-[12px]">Interactive value snaps back</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> The UI accepts a choice, then returns to the old value on the next turn.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Apply each stateful event's <code>value</code> to plain scenario <code>state</code> before calling <code>bd.us.ackWidget(seq)</code>, then publish that state through <code>bd.us.publishWidget(...)</code>.</p>
+              </div>
+              <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
+                <h4 class="font-semibold text-bd-pink text-[12px]">Some widgets are missing</h4>
+                <p class="text-bd-text-secondary"><strong>Issue:</strong> The state card renders only part of the manifest.</p>
+                <p class="text-bd-text-muted"><strong>Fix:</strong> Check the console for Widget warnings. Invalid entries, malformed <code>items</code> / <code>options</code>, oversized fields, and duplicate IDs are skipped while valid siblings still render.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">History grows forever</h4>
