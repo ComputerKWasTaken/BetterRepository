@@ -36,7 +36,43 @@
     <!-- Main Content -->
     <div class="flex-1 space-y-4 min-w-0">
 
-
+      <!-- ===================== GUIDE OVERVIEW BANNER ===================== -->
+      <div class="card p-4 mb-4 space-y-3">
+        <div class="flex items-start gap-3">
+          <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-bd-amber/10 border border-bd-amber/20 flex items-center justify-center">
+            <ScrollText class="w-5 h-5 text-bd-amber" />
+          </div>
+          <div class="flex-1 space-y-2">
+            <p class="text-sm text-bd-text-secondary leading-relaxed">
+              AI Instructions are author-written rules that control <strong>how the AI behaves</strong> — writing style, pacing, character agency, and world rules. They sit at the very beginning of the context window, giving them outsized influence over every turn.
+            </p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-bd-bg-tertiary text-bd-text-muted border border-bd-border-subtle">
+                Position #1
+              </span>
+              <span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-bd-bg-tertiary text-bd-text-muted border border-bd-border-subtle">
+                Replaces defaults
+              </span>
+              <span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-bd-bg-tertiary text-bd-text-muted border border-bd-border-subtle">
+                Medium trim priority
+              </span>
+              <span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-bd-bg-tertiary text-bd-text-muted border border-bd-border-subtle">
+                Global, permanent
+              </span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 text-[11px] text-bd-text-muted">
+              <span>Related:</span>
+              <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline font-medium">
+                Plot Components
+              </router-link>
+              <span>&middot;</span>
+              <router-link to="/guides?tab=scripts" class="text-bd-accent-primary hover:underline font-medium">
+                Scripts
+              </router-link>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- ===================== WHAT ARE AI INSTRUCTIONS ===================== -->
       <section id="guide-what-is" class="card">
@@ -89,6 +125,125 @@
                   If left empty, AI Dungeon applies Latitude's finely-tuned model defaults. Only introduce custom directives to solve recurring prose or behavioral issues.
                 </p>
               </div>
+            </div>
+
+            <!-- Context Stack Diagram (§14.1) -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-1.5 font-mono text-[11px]">
+              <div class="text-[10px] font-bold uppercase tracking-widest text-bd-text-muted mb-2">Context Assembly Order</div>
+              <div class="p-2.5 rounded border-2 border-bd-amber/60 bg-bd-amber/10 flex items-center justify-between">
+                <span class="text-bd-amber font-bold">AI Instructions</span>
+                <span class="text-bd-text-muted text-[10px]">Position #1</span>
+              </div>
+              <div class="p-2 rounded border border-bd-border-subtle bg-bd-bg-primary flex items-center justify-between">
+                <span class="text-bd-text-secondary">Plot Essentials</span>
+                <span class="text-bd-text-muted text-[10px]">#2</span>
+              </div>
+              <div class="p-2 rounded border border-bd-border-subtle bg-bd-bg-primary flex items-center justify-between">
+                <span class="text-bd-text-secondary">Story Summary</span>
+                <span class="text-bd-text-muted text-[10px]">#3</span>
+              </div>
+              <div class="p-2 rounded border border-bd-border-subtle bg-bd-bg-primary flex items-center justify-between">
+                <span class="text-bd-text-secondary">Story Cards (active)</span>
+                <span class="text-bd-text-muted text-[10px]">#4–5</span>
+              </div>
+              <div class="p-2 rounded border border-bd-border-subtle bg-bd-bg-primary flex items-center justify-between">
+                <span class="text-bd-text-secondary">Action History</span>
+                <span class="text-bd-text-muted text-[10px]">#6</span>
+              </div>
+              <div class="p-2 rounded border border-bd-border-subtle bg-bd-bg-primary flex items-center justify-between">
+                <span class="text-bd-text-secondary">Author's Note</span>
+                <span class="text-bd-text-muted text-[10px]">#7</span>
+              </div>
+              <div class="p-2 rounded border border-bd-border-subtle bg-bd-bg-primary flex items-center justify-between">
+                <span class="text-bd-text-secondary">Front Memory + Last Action</span>
+                <span class="text-bd-text-muted text-[10px]">#8</span>
+              </div>
+            </div>
+
+            <!-- Decision Tree SVG (§14.4) -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
+              <h4 class="font-semibold text-bd-text-primary flex items-center gap-2 text-xs mb-3">
+                <GitBranch class="w-4 h-4 text-bd-purple" />
+                Which Tool Should I Use?
+              </h4>
+              <svg viewBox="0 0 600 320" class="w-full h-auto" role="img" aria-label="Decision tree: which AI Dungeon tool to use for different needs">
+                <!-- Root question node -->
+                <rect x="200" y="10" width="200" height="36" rx="8"
+                      fill="var(--bd-bg-primary)" stroke="var(--bd-amber)" stroke-width="2" />
+                <text x="300" y="33" text-anchor="middle" class="fill-bd-text-primary"
+                      style="font: 600 12px monospace">What do you need?</text>
+
+                <!-- Level 1 branch lines -->
+                <line x1="300" y1="46" x2="300" y2="70" stroke="var(--bd-border-default)" />
+                <line x1="300" y1="70" x2="100" y2="70" stroke="var(--bd-border-default)" />
+                <line x1="300" y1="70" x2="500" y2="70" stroke="var(--bd-border-default)" />
+                <line x1="100" y1="70" x2="100" y2="90" stroke="var(--bd-border-default)" />
+                <line x1="500" y1="70" x2="500" y2="90" stroke="var(--bd-border-default)" />
+
+                <!-- Level 1 condition labels -->
+                <text x="180" y="66" text-anchor="middle" class="fill-bd-text-muted"
+                      style="font: 10px monospace">"Always"</text>
+                <text x="420" y="66" text-anchor="middle" class="fill-bd-text-muted"
+                      style="font: 10px monospace">"Right now"</text>
+
+                <!-- Level 1 leaf nodes -->
+                <rect x="20" y="90" width="160" height="36" rx="8"
+                      fill="var(--bd-bg-primary)" stroke="var(--bd-amber)" stroke-width="1.5" />
+                <text x="100" y="113" text-anchor="middle" class="fill-bd-amber"
+                      style="font: 600 11px monospace">AI Instructions</text>
+
+                <rect x="420" y="90" width="160" height="36" rx="8"
+                      fill="var(--bd-bg-primary)" stroke="var(--bd-blue)" stroke-width="1.5" />
+                <text x="500" y="113" text-anchor="middle" class="fill-bd-blue"
+                      style="font: 600 11px monospace">Author's Note</text>
+
+                <!-- Level 2: "Always" branch splits further -->
+                <line x1="100" y1="126" x2="100" y2="150" stroke="var(--bd-border-default)" />
+                <line x1="100" y1="150" x2="40" y2="150" stroke="var(--bd-border-default)" />
+                <line x1="100" y1="150" x2="160" y2="150" stroke="var(--bd-border-default)" />
+                <line x1="40" y1="150" x2="40" y2="170" stroke="var(--bd-border-default)" />
+                <line x1="160" y1="150" x2="160" y2="170" stroke="var(--bd-border-default)" />
+
+                <text x="60" y="146" text-anchor="middle" class="fill-bd-text-muted"
+                      style="font: 10px monospace">"Write this way"</text>
+                <text x="140" y="146" text-anchor="middle" class="fill-bd-text-muted"
+                      style="font: 10px monospace">"Remember this"</text>
+
+                <rect x="0" y="170" width="80" height="32" rx="8"
+                      fill="var(--bd-bg-primary)" stroke="var(--bd-amber)" stroke-width="1.5" />
+                <text x="40" y="191" text-anchor="middle" class="fill-bd-amber"
+                      style="font: 600 10px monospace">Instructions</text>
+
+                <rect x="120" y="170" width="80" height="32" rx="8"
+                      fill="var(--bd-bg-primary)" stroke="var(--bd-purple)" stroke-width="1.5" />
+                <text x="160" y="191" text-anchor="middle" class="fill-bd-purple"
+                      style="font: 600 10px monospace">Plot Essentials</text>
+
+                <!-- Level 2: "Right now" branch splits further -->
+                <line x1="500" y1="126" x2="500" y2="150" stroke="var(--bd-border-default)" />
+                <line x1="500" y1="150" x2="440" y2="150" stroke="var(--bd-border-default)" />
+                <line x1="500" y1="150" x2="560" y2="150" stroke="var(--bd-border-default)" />
+                <line x1="440" y1="150" x2="440" y2="170" stroke="var(--bd-border-default)" />
+                <line x1="560" y1="150" x2="560" y2="170" stroke="var(--bd-border-default)" />
+
+                <text x="460" y="146" text-anchor="middle" class="fill-bd-text-muted"
+                      style="font: 10px monospace">"Do this"</text>
+                <text x="540" y="146" text-anchor="middle" class="fill-bd-text-muted"
+                      style="font: 10px monospace">"When relevant"</text>
+
+                <rect x="400" y="170" width="80" height="32" rx="8"
+                      fill="var(--bd-bg-primary)" stroke="var(--bd-blue)" stroke-width="1.5" />
+                <text x="440" y="191" text-anchor="middle" class="fill-bd-blue"
+                      style="font: 600 10px monospace">Author's Note</text>
+
+                <rect x="520" y="170" width="80" height="32" rx="8"
+                      fill="var(--bd-bg-primary)" stroke="var(--bd-purple)" stroke-width="1.5" />
+                <text x="560" y="191" text-anchor="middle" class="fill-bd-purple"
+                      style="font: 600 10px monospace">Story Cards</text>
+              </svg>
+              <p class="text-[10px] text-bd-text-muted mt-2">
+                AI Instructions handle permanent style rules. Author's Note handles immediate scene directives. Plot Essentials store facts the AI must always remember. Story Cards surface context only when triggered.
+              </p>
             </div>
 
             <!-- Builder CTA -->
@@ -513,6 +668,78 @@ Combat:
         </Transition>
       </section>
 
+      <!-- ===================== CONTEXT BUDGET & TRIMMING ===================== -->
+      <section id="guide-context-budget" class="card">
+        <button
+          @click="toggleGuideSection('context-budget')"
+          class="w-full flex items-center justify-between text-left"
+        >
+          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
+            <Coins class="w-5 h-5 text-bd-amber" />
+            Context Budget &amp; Trimming
+          </h2>
+          <ChevronDown class="w-5 h-5 text-bd-text-muted transition-transform" :class="{ 'rotate-180': !isGuideSectionExpanded('context-budget') }" />
+        </button>
+
+        <Transition name="slide">
+          <div v-if="isGuideSectionExpanded('context-budget')" class="mt-4 space-y-4">
+            <p class="text-bd-text-secondary text-xs">
+              The context window has a fixed token budget. When that budget is tight, AI Dungeon trims elements in a priority order. AI Instructions sit at <strong>medium trim priority</strong> — they survive longer than Story Summary, but are trimmed before Author's Note and Plot Essentials.
+            </p>
+
+            <!-- Trimming Priority Stack (§14.7) -->
+            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-1.5 font-mono text-[11px]">
+              <div class="text-[10px] font-bold uppercase tracking-widest text-bd-text-muted mb-2">Trim Order (first dropped &rarr; last kept)</div>
+              <div class="p-2 rounded border border-bd-pink/30 bg-bd-pink/5 flex items-center justify-between">
+                <span class="text-bd-pink font-semibold">Story Summary</span>
+                <span class="text-bd-text-muted text-[10px]">dropped first</span>
+              </div>
+              <div class="flex justify-center text-bd-text-muted text-[9px]">&darr; trimmed next</div>
+              <div class="p-2.5 rounded border-2 border-bd-amber/60 bg-bd-amber/10 flex items-center justify-between">
+                <span class="text-bd-amber font-bold">AI Instructions</span>
+                <span class="text-bd-text-muted text-[10px]">medium priority</span>
+              </div>
+              <div class="flex justify-center text-bd-text-muted text-[9px]">&darr; trimmed next</div>
+              <div class="p-2 rounded border border-bd-border-subtle bg-bd-bg-primary flex items-center justify-between">
+                <span class="text-bd-text-secondary">Plot Essentials</span>
+                <span class="text-bd-text-muted text-[10px]">higher priority</span>
+              </div>
+              <div class="flex justify-center text-bd-text-muted text-[9px]">&darr; trimmed next</div>
+              <div class="p-2 rounded border border-bd-border-subtle bg-bd-bg-primary flex items-center justify-between">
+                <span class="text-bd-text-secondary">Author's Note</span>
+                <span class="text-bd-text-muted text-[10px]">higher priority</span>
+              </div>
+              <div class="flex justify-center text-bd-text-muted text-[9px]">&darr; never trimmed</div>
+              <div class="p-2 rounded border border-bd-green/30 bg-bd-green/5 flex items-center justify-between">
+                <span class="text-bd-green font-semibold">Front Memory + Last Action</span>
+                <span class="text-bd-text-muted text-[10px]">always kept full</span>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-lg bg-bd-info/10 border border-bd-info/30">
+              <div class="flex items-start gap-2">
+                <Info class="w-4 h-4 text-bd-info flex-shrink-0 mt-0.5" />
+                <p class="text-xs text-bd-text-secondary">
+                  Put your most important directives <strong>first and last</strong> in the instruction set. If the tail is trimmed, the opening rules still anchor the AI's behavior. For the full context assembly order, see the
+                  <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline font-medium">
+                    Plot Components Guide
+                  </router-link>.
+                </p>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
+              <div class="flex items-start gap-3">
+                <AlertTriangle class="w-5 h-5 text-bd-pink mt-0.5 flex-shrink-0" />
+                <p class="text-sm text-bd-text-secondary">
+                  <strong class="text-bd-text-primary">Warning:</strong> There is no hard character limit on the Instructions field, but excessively long instructions will be trimmed from the end during context assembly. Keep your set to 5–10 core directives to avoid losing critical rules.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </section>
+
       <!-- ===================== DIRECTIVES TROUBLESHOOTING & DEBBUGING ===================== -->
       <section id="debugging" class="card">
         <button 
@@ -571,6 +798,33 @@ Combat:
                 <Wrench class="w-4 h-4 text-bd-purple" />
                 Iterative Directive Debugging Workflow
               </h4>
+
+              <!-- Flow Pipeline (§14.2) -->
+              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-3 mb-4">
+                <div class="flex flex-wrap items-center gap-2 text-[11px] font-mono">
+                  <div class="px-2.5 py-1.5 rounded bg-bd-pink/20 border border-bd-pink/30 text-bd-pink font-bold">
+                    Isolate Defect
+                  </div>
+                  <span class="text-bd-text-muted">&rarr;</span>
+                  <div class="px-2.5 py-1.5 rounded bg-bd-teal/20 border border-bd-teal/30 text-bd-teal font-bold">
+                    Context Audit
+                  </div>
+                  <span class="text-bd-text-muted">&rarr;</span>
+                  <div class="px-2.5 py-1.5 rounded bg-bd-green/20 border border-bd-green/30 text-bd-green font-bold">
+                    Deploy Single Rule
+                  </div>
+                  <span class="text-bd-text-muted">&rarr;</span>
+                  <div class="px-2.5 py-1.5 rounded bg-bd-amber/20 border border-bd-amber/30 text-bd-amber font-bold">
+                    Validate 3-5 Turns
+                  </div>
+                  <span class="text-bd-text-muted">&rarr;</span>
+                  <div class="px-2.5 py-1.5 rounded bg-bd-purple/20 border border-bd-purple/30 text-bd-purple font-bold">
+                    Refine or Keep
+                  </div>
+                </div>
+                <p class="text-[10px] text-bd-text-muted">If the rule causes contradictions or prose stiltedness, loop back to <strong>Deploy</strong> with a revised directive.</p>
+              </div>
+
               <ol class="text-xs text-bd-text-secondary space-y-2 list-decimal list-inside">
                 <li><strong>Isolate the Defect:</strong> Define exactly what the model is doing wrong (e.g. "AI repeatedly describes player facial expressions").</li>
                 <li><strong>Perform Context Audit:</strong> Run <em>View Context</em>. Are the directives fully present, or did history take up the budget?</li>
@@ -681,21 +935,22 @@ import {
   Sparkles, Info, Zap, Target, Lightbulb, Rocket, Wrench,
   MessageSquare, Skull, ExternalLink,
   AlertTriangle, Plus, Coins, Cpu,
-  X, Heart, ChevronDown, ChevronUp, Eye, Bold, Quote, Users
+  X, Heart, ChevronDown, ChevronUp, Eye, Bold, Quote, Users,
+  GitBranch, GitMerge
 } from 'lucide-vue-next'
 
 // Guide table of contents sections
 const guideSections = [
-  { id: 'header-core', label: 'Basics & Principles', isHeader: true },
+  { id: 'header-understanding', label: 'Understanding', isHeader: true },
   { id: 'what-is', label: 'What Are AI Instructions?' },
-  { id: 'anatomy', label: 'System Instruction Principles' },
-  { id: 'header-writing', label: 'Prose steering', isHeader: true },
+  { id: 'anatomy', label: 'How It Works: Default Rules' },
+  { id: 'header-practice', label: 'Practical Use', isHeader: true },
   { id: 'writing-techniques', label: 'Writing Techniques' },
-  { id: 'best-practices', label: 'Directives vs Author\'s Note' },
-  { id: 'header-advanced', label: 'Presets & Library', isHeader: true },
+  { id: 'best-practices', label: 'Comparison & Boundaries' },
   { id: 'presets', label: 'Genre Presets & Library' },
-  { id: 'header-debugging', label: 'Diagnostics', isHeader: true },
-  { id: 'debugging', label: 'Directives Diagnostics' },
+  { id: 'header-advanced', label: 'Advanced', isHeader: true },
+  { id: 'context-budget', label: 'Context Budget & Trimming' },
+  { id: 'debugging', label: 'Troubleshooting & Diagnostics' },
   { id: 'pitfalls', label: 'Common Pitfalls' },
   { id: 'credits', label: 'Credits' }
 ]
