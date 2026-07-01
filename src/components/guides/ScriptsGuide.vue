@@ -36,61 +36,15 @@
     <!-- Main Content -->
     <div class="flex-1 space-y-4 min-w-0">
 
-      <!-- ===================== GUIDE OVERVIEW BANNER ===================== -->
-      <div class="card p-4 mb-4 space-y-3">
-        <div class="flex items-start gap-3">
-          <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-bd-cyan/10 border border-bd-cyan/20 flex items-center justify-center">
-            <Bookmark class="w-5 h-5 text-bd-cyan" />
-          </div>
-          <div class="flex-1 space-y-2">
-            <p class="text-sm text-bd-text-secondary leading-relaxed">
-              Scripts are author-written ES6 JavaScript that runs in a secure sandbox inside AI Dungeon's generation pipeline. They intercept player input, mutate prompt context, and format AI output — enabling dynamic HUDs, command systems, stat tracking, and programmatic Story Card management.
-            </p>
-            <div class="flex flex-wrap gap-1.5">
-              <span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-bd-bg-tertiary text-bd-text-muted border border-bd-border-subtle">
-                3 Lifecycle Hooks
-              </span>
-              <span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-bd-bg-tertiary text-bd-text-muted border border-bd-border-subtle">
-                Synchronous ES6 Sandbox
-              </span>
-              <span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-bd-bg-tertiary text-bd-text-muted border border-bd-border-subtle">
-                state.memory bridge
-              </span>
-              <span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-bd-bg-tertiary text-bd-text-muted border border-bd-border-subtle">
-                16 MB / 2s limits
-              </span>
-            </div>
-            <div class="flex flex-wrap items-center gap-2 text-[11px] text-bd-text-muted">
-              <span>Related:</span>
-              <router-link to="/guides?tab=ai-instructions" class="text-bd-accent-primary hover:underline font-medium">
-                AI Instructions
-              </router-link>
-              <span>&middot;</span>
-              <router-link to="/guides?tab=plot-components" class="text-bd-accent-primary hover:underline font-medium">
-                Plot Components
-              </router-link>
-              <span>&middot;</span>
-              <router-link to="/guides?tab=story-cards" class="text-bd-accent-primary hover:underline font-medium">
-                Story Cards
-              </router-link>
-              <span>&middot;</span>
-              <router-link to="/ultrascripts" class="text-bd-accent-primary hover:underline font-medium">
-                Ultrascripts
-              </router-link>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ===================== WHAT ARE SCRIPTS? ===================== -->
+      <!-- ===================== THE SCRIPTING SANDBOX ===================== -->
       <section id="guide-what-is" class="card">
         <button
           @click="toggleGuideSection('what-is')"
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <HelpCircle class="w-5 h-5 text-bd-cyan" />
-            What Are Scripts?
+            <HelpCircle class="w-5 h-5 text-bd-blue" />
+            The Scripting Sandbox
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -137,7 +91,7 @@
             <!-- Pipeline Flow Diagram -->
             <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-3">
               <h3 class="font-semibold text-bd-text-primary flex items-center gap-2 text-xs">
-                <GitMerge class="w-4 h-4 text-bd-cyan" />
+                <GitMerge class="w-4 h-4 text-bd-purple" />
                 Script Execution Cycle
               </h3>
               <div class="flex flex-wrap items-center gap-2 text-[11px] font-mono">
@@ -147,55 +101,13 @@
                 <span class="text-bd-text-muted">&rarr;</span>
                 <div class="px-2 py-1 rounded bg-bd-bg-primary border border-bd-border-subtle">Prompt Assembled</div>
                 <span class="text-bd-text-muted">&rarr;</span>
-                <div class="px-2 py-1 rounded bg-bd-cyan/20 border border-bd-cyan/30 text-bd-cyan font-bold">onModelContext</div>
+                <div class="px-2 py-1 rounded bg-bd-blue/20 border border-bd-blue/30 text-bd-blue font-bold">onModelContext</div>
                 <span class="text-bd-text-muted">&rarr;</span>
                 <div class="px-2 py-1 rounded bg-bd-bg-primary border border-bd-border-subtle">AI Model Pass</div>
                 <span class="text-bd-text-muted">&rarr;</span>
                 <div class="px-2 py-1 rounded bg-bd-amber/20 border border-bd-amber/30 text-bd-amber font-bold">onOutput</div>
               </div>
               <p class="text-[10px] text-bd-text-muted">The shared <strong>Library</strong> script runs before each hook modifier file, letting you declare global persistent variables or utility routines.</p>
-            </div>
-
-            <!-- Context Stack Diagram (§14.1) -->
-            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-1.5 font-mono text-[11px]">
-              <div class="text-[10px] font-bold uppercase tracking-widest text-bd-text-muted mb-2">Context Assembly — Script-Modifiable Elements</div>
-              <div class="p-2 rounded border border-bd-border-subtle bg-bd-bg-primary flex items-center justify-between">
-                <span class="text-bd-text-secondary">AI Instructions</span>
-                <span class="text-bd-text-muted text-[10px]">#1</span>
-              </div>
-              <div class="p-2 rounded border-2 border-bd-cyan/60 bg-bd-cyan/10 flex items-center justify-between">
-                <span class="text-bd-cyan font-bold">Plot Essentials ← state.memory.context</span>
-                <span class="text-bd-text-muted text-[10px]">#2</span>
-              </div>
-              <div class="p-2 rounded border border-bd-border-subtle bg-bd-bg-primary flex items-center justify-between">
-                <span class="text-bd-text-secondary">Story Cards (triggered)</span>
-                <span class="text-bd-text-muted text-[10px]">#3</span>
-              </div>
-              <div class="p-2 rounded border border-bd-border-subtle bg-bd-bg-primary flex items-center justify-between">
-                <span class="text-bd-text-secondary">Story Summary</span>
-                <span class="text-bd-text-muted text-[10px]">#4</span>
-              </div>
-              <div class="p-2 rounded border border-bd-border-subtle bg-bd-bg-primary flex items-center justify-between">
-                <span class="text-bd-text-secondary">Memory Bank (vector)</span>
-                <span class="text-bd-text-muted text-[10px]">#5</span>
-              </div>
-              <div class="p-2 rounded border border-bd-border-subtle bg-bd-bg-primary flex items-center justify-between">
-                <span class="text-bd-text-secondary">Action History</span>
-                <span class="text-bd-text-muted text-[10px]">#6</span>
-              </div>
-              <div class="p-2 rounded border-2 border-bd-cyan/60 bg-bd-cyan/10 flex items-center justify-between">
-                <span class="text-bd-cyan font-bold">Author's Note ← state.memory.authorsNote</span>
-                <span class="text-bd-text-muted text-[10px]">#7</span>
-              </div>
-              <div class="p-2 rounded border border-bd-border-subtle bg-bd-bg-primary flex items-center justify-between">
-                <span class="text-bd-text-secondary">Last Action</span>
-                <span class="text-bd-text-muted text-[10px]">#8</span>
-              </div>
-              <div class="p-2 rounded border-2 border-bd-cyan/60 bg-bd-cyan/10 flex items-center justify-between">
-                <span class="text-bd-cyan font-bold">Front Memory ← state.memory.frontMemory</span>
-                <span class="text-bd-text-muted text-[10px]">#9</span>
-              </div>
-              <p class="text-[10px] text-bd-text-muted pt-1">Scripts can programmatically override <strong>three</strong> context positions via the <code class="text-bd-cyan">state.memory</code> bridge. All other positions are read-only or engine-managed.</p>
             </div>
           </div>
         </Transition>
@@ -209,7 +121,7 @@
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <Rocket class="w-5 h-5 text-bd-green" />
-            How It Works: Lifecycle Hooks
+            The Lifecycle Hooks
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
@@ -504,153 +416,6 @@ modifier(text);</pre>
         </Transition>
       </section>
 
-      <!-- ===================== COMPARISON & BOUNDARIES ===================== -->
-      <section id="guide-comparison" class="card">
-        <button
-          @click="toggleGuideSection('comparison')"
-          class="w-full flex items-center justify-between text-left"
-        >
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <ArrowRightLeft class="w-5 h-5 text-bd-cyan" />
-            Comparison &amp; Boundaries
-          </h2>
-          <ChevronDown
-            class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('comparison') }"
-          />
-        </button>
-
-        <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('comparison')" class="mt-4 space-y-4">
-            <p class="text-bd-text-secondary text-xs">
-              Scripts, Ultrascripts, and no-code Plot Components each serve different needs. Knowing which tool to reach for prevents over-engineering simple scenarios and under-powering complex ones.
-            </p>
-
-            <!-- Decision Tree SVG (§14.4) -->
-            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-              <h4 class="font-semibold text-bd-text-primary flex items-center gap-2 text-xs mb-3">
-                <GitBranch class="w-4 h-4 text-bd-cyan" />
-                Which Tool Should I Use?
-              </h4>
-              <svg viewBox="0 0 580 260" class="w-full h-auto" role="img" aria-label="Decision tree: whether to use Scripts, Ultrascripts, or Plot Components for a given scenario feature">
-                <!-- Root -->
-                <rect x="170" y="10" width="240" height="36" rx="8"
-                      fill="var(--bd-bg-primary)" stroke="var(--bd-cyan)" stroke-width="2" />
-                <text x="290" y="33" text-anchor="middle" class="fill-bd-text-primary"
-                      style="font: 600 12px monospace">What does your scenario need?</text>
-
-                <!-- Level 1 lines -->
-                <line x1="290" y1="46" x2="290" y2="70" stroke="var(--bd-border-default)" />
-                <line x1="290" y1="70" x2="100" y2="70" stroke="var(--bd-border-default)" />
-                <line x1="290" y1="70" x2="480" y2="70" stroke="var(--bd-border-default)" />
-                <line x1="100" y1="70" x2="100" y2="90" stroke="var(--bd-border-default)" />
-                <line x1="480" y1="70" x2="480" y2="90" stroke="var(--bd-border-default)" />
-
-                <!-- Level 1 labels -->
-                <text x="170" y="66" text-anchor="middle" class="fill-bd-text-muted"
-                      style="font: 10px monospace">"Static lore / style"</text>
-                <text x="400" y="66" text-anchor="middle" class="fill-bd-text-muted"
-                      style="font: 10px monospace">"Dynamic behavior"</text>
-
-                <!-- Level 1 leaves -->
-                <rect x="20" y="90" width="160" height="36" rx="8"
-                      fill="var(--bd-bg-primary)" stroke="var(--bd-blue)" stroke-width="1.5" />
-                <text x="100" y="113" text-anchor="middle" class="fill-bd-blue"
-                      style="font: 600 11px monospace">Plot Components</text>
-
-                <rect x="400" y="90" width="160" height="36" rx="8"
-                      fill="var(--bd-bg-primary)" stroke="var(--bd-cyan)" stroke-width="1.5" />
-                <text x="480" y="113" text-anchor="middle" class="fill-bd-cyan"
-                      style="font: 600 11px monospace">Scripts or Ultrascripts</text>
-
-                <!-- Level 2: "Dynamic behavior" splits -->
-                <line x1="480" y1="126" x2="480" y2="150" stroke="var(--bd-border-default)" />
-                <line x1="480" y1="150" x2="380" y2="150" stroke="var(--bd-border-default)" />
-                <line x1="480" y1="150" x2="560" y2="150" stroke="var(--bd-border-default)" />
-                <line x1="380" y1="150" x2="380" y2="170" stroke="var(--bd-border-default)" />
-                <line x1="560" y1="150" x2="560" y2="170" stroke="var(--bd-border-default)" />
-
-                <text x="410" y="146" text-anchor="middle" class="fill-bd-text-muted"
-                      style="font: 10px monospace">"In-engine only"</text>
-                <text x="530" y="146" text-anchor="middle" class="fill-bd-text-muted"
-                      style="font: 10px monospace">"External / UI"</text>
-
-                <rect x="320" y="170" width="120" height="36" rx="8"
-                      fill="var(--bd-bg-primary)" stroke="var(--bd-cyan)" stroke-width="1.5" />
-                <text x="380" y="193" text-anchor="middle" class="fill-bd-cyan"
-                      style="font: 600 11px monospace">Vanilla Scripts</text>
-
-                <rect x="500" y="170" width="120" height="36" rx="8"
-                      fill="var(--bd-bg-primary)" stroke="var(--bd-purple)" stroke-width="1.5" />
-                <text x="560" y="193" text-anchor="middle" class="fill-bd-purple"
-                      style="font: 600 11px monospace">Ultrascripts</text>
-              </svg>
-              <p class="text-[10px] text-bd-text-muted mt-2">
-                If the feature is static lore or writing style, use Plot Components (no code needed). If you need dynamic behavior that stays within the AI Dungeon engine (stat tracking, command parsers, context injection), use vanilla Scripts. If you need external API access, UI widgets, or real-world data (time, weather, geolocation), use Ultrascripts.
-              </p>
-            </div>
-
-            <!-- Comparison Matrix (§14.5) -->
-            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
-              <h4 class="font-semibold text-bd-text-primary text-xs mb-3 flex items-center gap-2">
-                <Layers class="w-4 h-4 text-bd-cyan" />
-                Vanilla Scripts vs Ultrascripts vs Plot Components
-              </h4>
-              <div class="overflow-x-auto">
-                <table class="w-full text-xs">
-                  <thead>
-                    <tr class="border-b border-bd-border-subtle">
-                      <th class="text-left py-2 pr-4 text-bd-text-muted font-semibold">Attribute</th>
-                      <th class="text-left py-2 pr-4 text-bd-blue font-semibold">Plot Components</th>
-                      <th class="text-left py-2 pr-4 text-bd-cyan font-semibold">Vanilla Scripts</th>
-                      <th class="text-left py-2 text-bd-purple font-semibold">Ultrascripts</th>
-                    </tr>
-                  </thead>
-                  <tbody class="text-bd-text-secondary">
-                    <tr class="border-b border-bd-border-subtle/50">
-                      <td class="py-2 pr-4 font-semibold text-bd-text-primary">Code required</td>
-                      <td class="py-2 pr-4">No</td>
-                      <td class="py-2 pr-4">ES6 JavaScript</td>
-                      <td class="py-2">ES6 + Ultrascripts API</td>
-                    </tr>
-                    <tr class="border-b border-bd-border-subtle/50">
-                      <td class="py-2 pr-4 font-semibold text-bd-text-primary">External APIs</td>
-                      <td class="py-2 pr-4">No</td>
-                      <td class="py-2 pr-4">No (sandboxed)</td>
-                      <td class="py-2">Yes (webfetch module)</td>
-                    </tr>
-                    <tr class="border-b border-bd-border-subtle/50">
-                      <td class="py-2 pr-4 font-semibold text-bd-text-primary">UI widgets</td>
-                      <td class="py-2 pr-4">No</td>
-                      <td class="py-2 pr-4">No</td>
-                      <td class="py-2">Yes (widget module)</td>
-                    </tr>
-                    <tr class="border-b border-bd-border-subtle/50">
-                      <td class="py-2 pr-4 font-semibold text-bd-text-primary">Context mutation</td>
-                      <td class="py-2 pr-4">Manual (UI fields)</td>
-                      <td class="py-2 pr-4">state.memory bridge</td>
-                      <td class="py-2">Bidirectional card bridge</td>
-                    </tr>
-                    <tr class="border-b border-bd-border-subtle/50">
-                      <td class="py-2 pr-4 font-semibold text-bd-text-primary">Sandbox limits</td>
-                      <td class="py-2 pr-4">N/A</td>
-                      <td class="py-2 pr-4">16 MB / 2s / sync only</td>
-                      <td class="py-2">Same sandbox + transport</td>
-                    </tr>
-                    <tr>
-                      <td class="py-2 pr-4 font-semibold text-bd-text-primary">Best for</td>
-                      <td class="py-2 pr-4">Lore, style, world rules</td>
-                      <td class="py-2 pr-4">Stats, commands, HUDs</td>
-                      <td class="py-2">External data, UI, sensors</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </Transition>
-      </section>
-
       <!-- ===================== EDITOR TESTING & DEBUGGING ===================== -->
       <section id="guide-advanced-topics" class="card">
         <button
@@ -710,120 +475,42 @@ modifier(text);</pre>
         </Transition>
       </section>
 
-      <!-- ===================== TROUBLESHOOTING & DIAGNOSTICS ===================== -->
-      <section id="guide-troubleshooting" class="card">
+      <!-- ===================== TROUBLESHOOTING & PITFALLS ===================== -->
+      <section id="guide-pitfalls" class="card">
         <button
-          @click="toggleGuideSection('troubleshooting')"
-          class="w-full flex items-center justify-between text-left"
-        >
-          <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Wrench class="w-5 h-5 text-bd-cyan" />
-            Troubleshooting &amp; Diagnostics
-          </h2>
-          <ChevronDown
-            class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('troubleshooting') }"
-          />
-        </button>
-
-        <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('troubleshooting')" class="mt-4 space-y-4 text-xs">
-            <p class="text-bd-text-secondary">
-              When scripts fail silently or crash the sandbox, the issue is almost always one of four things: missing wrapper return, state reset on every turn, async code in a synchronous sandbox, or the "Dangerous Scripts" security block. Use this diagnostic flow to isolate the root cause.
-            </p>
-
-            <!-- Flow Pipeline (§14.2) -->
-            <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-3">
-              <h4 class="font-semibold text-bd-text-primary flex items-center gap-2 text-xs">
-                <GitMerge class="w-4 h-4 text-bd-cyan" />
-                Diagnostic Workflow
-              </h4>
-              <div class="flex flex-wrap items-center gap-2 text-[11px] font-mono">
-                <div class="px-2.5 py-1.5 rounded bg-bd-pink/20 border border-bd-pink/30 text-bd-pink font-bold">
-                  Script Not Working
-                </div>
-                <span class="text-bd-text-muted">&rarr;</span>
-                <div class="px-2.5 py-1.5 rounded bg-bd-teal/20 border border-bd-teal/30 text-bd-teal font-bold">
-                  Check Settings
-                </div>
-                <span class="text-bd-text-muted">&rarr;</span>
-                <div class="px-2.5 py-1.5 rounded bg-bd-amber/20 border border-bd-amber/30 text-bd-amber font-bold">
-                  Test Console
-                </div>
-                <span class="text-bd-text-muted">&rarr;</span>
-                <div class="px-2.5 py-1.5 rounded bg-bd-green/20 border border-bd-green/30 text-bd-green font-bold">
-                  Fix Wrapper / State
-                </div>
-                <span class="text-bd-text-muted">&rarr;</span>
-                <div class="px-2.5 py-1.5 rounded bg-bd-cyan/20 border border-bd-cyan/30 text-bd-cyan font-bold">
-                  Validate 3-5 Turns
-                </div>
-              </div>
-              <p class="text-[10px] text-bd-text-muted">If the script still fails, check DevTools Console for GraphQL error logs — the sandbox reports crashes there with line numbers.</p>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-3">
-              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-teal/30">
-                <h4 class="font-semibold text-bd-text-primary text-xs mb-2 flex items-center gap-2">
-                  <Eye class="w-4 h-4 text-bd-teal" />
-                  Diagnostic Tools
-                </h4>
-                <ul class="text-[11px] text-bd-text-muted list-disc list-inside space-y-1">
-                  <li><strong>Script Test Console:</strong> Right panel in editor. Submit mock input to see compile errors and output.</li>
-                  <li><strong>DevTools Console (F12):</strong> <code class="text-bd-cyan">log()</code> statements pipe through GraphQL to browser console.</li>
-                  <li><strong>state.message:</strong> Surface diagnostics in-game with toast notifications.</li>
-                  <li><strong>Account Settings:</strong> Verify "Enable Run Dangerous Scripts" is toggled on.</li>
-                </ul>
-              </div>
-              <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-amber/30">
-                <h4 class="font-semibold text-bd-text-primary text-xs mb-2 flex items-center gap-2">
-                  <AlertTriangle class="w-4 h-4 text-bd-amber" />
-                  Common Diagnostic Findings
-                </h4>
-                <ul class="text-[11px] text-bd-text-muted list-disc list-inside space-y-1">
-                  <li><strong>No wrapper call:</strong> Last line must be <code class="text-bd-cyan">modifier(text);</code></li>
-                  <li><strong>State resets:</strong> Use <code class="text-bd-cyan">state.x ??= default</code> not <code class="text-bd-cyan">state.x = default</code></li>
-                  <li><strong>Async crash:</strong> <code class="text-bd-cyan">setTimeout</code> / <code class="text-bd-cyan">async</code> halts sandbox immediately</li>
-                  <li><strong>Security block:</strong> New players must enable Dangerous Scripts manually</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </Transition>
-      </section>
-
-      <!-- ===================== COMMON PITFALLS ===================== -->
-      <section id="guide-common-pitfalls" class="card">
-        <button
-          @click="toggleGuideSection('common-pitfalls')"
+          @click="toggleGuideSection('pitfalls')"
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
             <AlertTriangle class="w-5 h-5 text-bd-pink" />
-            Common Pitfalls
+            Scripting Troubleshooting &amp; Pitfalls
           </h2>
           <ChevronDown
             class="w-5 h-5 text-bd-text-muted transition-transform"
-            :class="{ 'rotate-180': !isGuideSectionExpanded('common-pitfalls') }"
+            :class="{ 'rotate-180': !isGuideSectionExpanded('pitfalls') }"
           />
         </button>
-
+        
         <Transition name="slide">
-          <div v-if="isGuideSectionExpanded('common-pitfalls')" class="mt-4 space-y-4 text-xs">
+          <div v-if="isGuideSectionExpanded('pitfalls')" class="mt-4 space-y-4 text-xs">
+            <p class="text-bd-text-secondary">
+              Avoid these common configuration errors that cause sandboxed script crashes.
+            </p>
+
             <div class="grid md:grid-cols-2 gap-3">
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
                 <h4 class="font-semibold text-bd-pink mb-1 flex items-center gap-1">
                   <X class="w-4 h-4 text-bd-pink" /> State Resets on Turn Cycles
                 </h4>
-                <p class="text-bd-text-secondary">Writing absolute variable assignments like <code class="text-bd-pink">state.hp = 100</code> inside your modifiers causes the variable to reset back to 100 on every turn.</p>
-                <p class="text-bd-green mt-1"><strong>Fix:</strong> Wrap variables in nullish coalescing checks: <code class="text-bd-purple">state.hp ??= 100;</code>.</p>
+                <p class="text-bd-text-secondary">Writing absolute variables assignments like `state.hp = 100` inside your modifiers causes the variable to reset back to 100 on every turn.</p>
+                <p class="text-bd-green mt-1"><strong>Fix:</strong> Wrap variables in nullish coalescing checks: <code class="text-bd-purple">state.hp = state.hp ?? 100;</code>.</p>
               </div>
 
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
                 <h4 class="font-semibold text-bd-pink mb-1 flex items-center gap-1">
                   <X class="w-4 h-4 text-bd-pink" /> Omission of Wrapper Return
                 </h4>
-                <p class="text-bd-text-secondary">Forgetting to add <code class="text-bd-pink">return &#123; text &#125;</code> or failing to execute the final wrapper call <code class="text-bd-pink">modifier(text);</code> at the end of files.</p>
+                <p class="text-bd-text-secondary">Forgetting to add `return { text }` or failing to execute the final wrapper call `modifier(text);` at the end of files.</p>
                 <p class="text-bd-green mt-1"><strong>Fix:</strong> Ensure the absolute final line of all modifier files is exactly: <code class="text-bd-purple">modifier(text);</code>.</p>
               </div>
 
@@ -839,24 +526,8 @@ modifier(text);</pre>
                 <h4 class="font-semibold text-bd-pink mb-1 flex items-center gap-1">
                   <X class="w-4 h-4 text-bd-pink" /> Asynchronous Sandbox Crashing
                 </h4>
-                <p class="text-bd-text-secondary">Using <code class="text-bd-pink">setTimeout</code>, <code class="text-bd-pink">async/await</code>, or <code class="text-bd-pink">Promises</code> inside hooks. The sandboxed V8 execution thread halts immediately on async loops.</p>
-                <p class="text-bd-green mt-1"><strong>Fix:</strong> Keep all loops synchronous and store values inside <code class="text-bd-purple">state</code> variables.</p>
-              </div>
-
-              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
-                <h4 class="font-semibold text-bd-pink mb-1 flex items-center gap-1">
-                  <X class="w-4 h-4 text-bd-pink" /> Large Static Data Crashes
-                </h4>
-                <p class="text-bd-text-secondary">Loading large JSON databases or arrays into the Library script. The 16 MB memory cap is shared across all hooks — static data eats into it fast.</p>
-                <p class="text-bd-green mt-1"><strong>Fix:</strong> Store large datasets in Story Cards (conditional loading) or use Ultrascripts' external fetch for on-demand data.</p>
-              </div>
-
-              <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
-                <h4 class="font-semibold text-bd-pink mb-1 flex items-center gap-1">
-                  <X class="w-4 h-4 text-bd-pink" /> removeStoryCard Index Shifting
-                </h4>
-                <p class="text-bd-text-secondary">Removing multiple cards in a loop from lowest to highest index. Each removal shifts all later indexes, causing skips or out-of-bounds errors.</p>
-                <p class="text-bd-green mt-1"><strong>Fix:</strong> Always iterate from the <strong>highest</strong> index down to the lowest when removing multiple cards.</p>
+                <p class="text-bd-text-secondary">Using `setTimeout`, `async/await`, or `Promises` inside hooks. The sandboxed V8 execution thread halts immediately on async loops.</p>
+                <p class="text-bd-green mt-1"><strong>Fix:</strong> keep all loops synchronous and store values inside `state` variables.</p>
               </div>
             </div>
           </div>
@@ -907,23 +578,21 @@ import {
   AlertTriangle, Braces, FileCode, HelpCircle, Check,
   BookOpen, Layers, Library, ArrowRightToLine, ArrowLeftToLine, Database, 
   Wrench, Plus, ExternalLink, ChevronDown, ChevronUp, Info, MessageSquare,
-  Terminal, X, GitMerge, GitBranch, Bookmark, ArrowRightLeft, Eye, Coins,
-  Monitor, Play, Rocket, Award, PlayCircle, Users
+  Terminal, X, GitMerge, Monitor, Play, Rocket, Award, PlayCircle, Users
 } from 'lucide-vue-next'
 
 // Guide table of contents sections
 const guideSections = [
-  { id: 'header-understanding', label: 'Understanding', isHeader: true },
-  { id: 'what-is', label: 'What Are Scripts?' },
-  { id: 'quick-start', label: 'How It Works: Lifecycle Hooks' },
-  { id: 'anatomy', label: 'API Parameters & Functions' },
-  { id: 'header-practice', label: 'Practical Use', isHeader: true },
-  { id: 'best-practices', label: 'Architecture & Design Patterns' },
-  { id: 'comparison', label: 'Comparison & Boundaries' },
-  { id: 'header-advanced', label: 'Advanced', isHeader: true },
+  { id: 'header-core', label: 'V8 Sandbox Basics', isHeader: true },
+  { id: 'what-is', label: 'The Scripting Sandbox' },
+  { id: 'quick-start', label: 'The Lifecycle Hooks' },
+  { id: 'header-apis', label: 'API Ref', isHeader: true },
+  { id: 'anatomy', label: 'API Parameters & Methods' },
+  { id: 'header-patterns', label: 'Design Patterns', isHeader: true },
+  { id: 'best-practices', label: 'Architecture & Design' },
   { id: 'advanced-topics', label: 'Testing & Diagnostics' },
-  { id: 'troubleshooting', label: 'Troubleshooting & Diagnostics' },
-  { id: 'common-pitfalls', label: 'Common Pitfalls' },
+  { id: 'header-trouble', label: 'Troubleshooting', isHeader: true },
+  { id: 'pitfalls', label: 'Script Troubleshooting' },
   { id: 'credits', label: 'Credits' }
 ]
 
