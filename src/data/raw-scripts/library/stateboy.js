@@ -35,7 +35,7 @@ globalThis.Stateboy = function Stateboy(hook, inputText) {
   var observation = observeStateboyCardEntry(sb, stateCardText, serializedSheet);
   if (observation.userEdited) {
     if (sb.settings.changelogEnabled && sb.settings.userModificationChangelogEnabled) {
-      var manualChanges = detectStateboyManualStructuralChanges(observation.previousSheet, serializedSheet);
+      var manualChanges = detectStateboyManualChanges(observation.previousSheet, serializedSheet);
       if (manualChanges.length > 0) {
         logStateboyManualChanges(sb, manualChanges);
         syncStateboyChangelogToNotes(stateCard, sb);
@@ -123,8 +123,8 @@ var DEFAULT_STATEBOY_SETTINGS_CARD = [
   'Changelog Enabled: On',
   '# When On, accepted AI updates are written to Notes and shown to the AI updater.',
   '',
-  'User Modification Changelog Enabled: Off',
-  '# When On, manual Stateboy card add/remove edits are written to Notes and shown to the AI updater.',
+  'User Modification Changelog Enabled: On',
+  '# When On, manual Stateboy card value/add/remove edits are written to Notes and shown to the AI updater.',
   '',
   'AI Changelog Entries: 6',
   '# How many recent changes the AI updater sees.',
@@ -139,7 +139,7 @@ var STATEBOY_DEFAULT_SETTINGS = {
   widgetsEnabled: true,
   minimumConfidence: 0.65,
   changelogEnabled: true,
-  userModificationChangelogEnabled: false,
+  userModificationChangelogEnabled: true,
   aiChangelogEntries: 6,
   notesChangelogEntries: 20
 };
@@ -942,7 +942,7 @@ function rememberStateboyScriptWrite(sb, entry, sheet) {
   sb.sheet = serializeStateboySheetForState(sheet);
 }
 
-function detectStateboyManualStructuralChanges(previousSheet, currentSheet) {
+function detectStateboyManualChanges(previousSheet, currentSheet) {
   var changes = [];
   if (!previousSheet || !Array.isArray(previousSheet.categories)) return changes;
   if (!currentSheet || !Array.isArray(currentSheet.categories)) return changes;
@@ -956,6 +956,11 @@ function detectStateboyManualStructuralChanges(previousSheet, currentSheet) {
     var previousEntry = previous.map[currentId];
     if (!previousEntry) {
       changes.push(makeStateboyManualChange('add', null, currentEntry));
+      continue;
+    }
+    if (previousEntry.type !== currentEntry.type || !sameStateboyValue(previousEntry.value, currentEntry.value)) {
+      var valueChange = makeStateboyManualChange('set', previousEntry, currentEntry);
+      if (!isNoopStateboyChangeRecord(valueChange)) changes.push(valueChange);
     }
   }
 
@@ -991,6 +996,7 @@ function makeStateboyManualChange(operation, previousEntry, currentEntry) {
 
   if (operation === 'add') reason = 'User added this state to the Stateboy card.';
   else if (operation === 'remove') reason = 'User removed this state from the Stateboy card.';
+  else if (operation === 'set') reason = 'User corrected this state in the Stateboy card.';
   else if (operation === 'describe') {
     oldDisplay = 'description: ' + (previousEntry && previousEntry.description ? previousEntry.description : '(none)');
     newDisplay = 'description: ' + (currentEntry && currentEntry.description ? currentEntry.description : '(none)');
@@ -1010,6 +1016,11 @@ function makeStateboyManualChange(operation, previousEntry, currentEntry) {
     confidence: null,
     reason: reason
   };
+}
+
+function isNoopStateboyChangeRecord(record) {
+  if (!record) return true;
+  return String(record.oldDisplay || '') === String(record.display || '');
 }
 
 function logStateboyManualChanges(sb, changes) {
@@ -1045,6 +1056,7 @@ function pushStateboyChange(sb, entry, change, oldValue, newValue) {
 }
 
 function pushStateboyChangeRecord(sb, record) {
+  if (record && record.operation === 'set' && isNoopStateboyChangeRecord(record)) return;
   var entry = {
     at: Date.now ? Date.now() : new Date().getTime(),
     liveCount: getStateboyLiveCount(),
