@@ -25,6 +25,7 @@ globalThis.Stateboy = function Stateboy(hook, inputText) {
 
   var stateCard = ensureStateboyCard('Stateboy', DEFAULT_STATEBOY_STATE_CARD, 'Stateboy');
   var settingsCard = ensureStateboyCard('Stateboy Settings', DEFAULT_STATEBOY_SETTINGS_CARD, 'Stateboy');
+  ensureStateboyCard('Stateboy Guide', DEFAULT_STATEBOY_GUIDE_CARD, 'Stateboy');
   var stateCardText = getStateboyCardText(stateCard);
   var settingsResult = parseStateboySettings(getStateboyCardText(settingsCard));
   var sheet = parseStateboySheet(stateCardText);
@@ -90,19 +91,7 @@ var DEFAULT_STATEBOY_STATE_CARD = [
   'Level: 1',
   '',
   '## Inventory',
-  'Inventory: empty',
-  '',
-  '# How to use Stateboy',
-  '# Add a category with ## Category Name',
-  '# Add a state with Name: value',
-  '# Stateboy guesses the type from how you write the value:',
-  '# number: a plain number like 5 or -3.5',
-  '# ratio: current/max like 20/100',
-  '# percent: a number followed by % like 85%',
-  '# boolean: On/Off, True/False, or Yes/No',
-  '# list: comma-separated values like Sword, Shield, Potion',
-  '# string: anything else',
-  '# hide a state from widgets with: Name: value [widget: off]'
+  'Inventory: empty'
 ].join('\n');
 
 var DEFAULT_STATEBOY_SETTINGS_CARD = [
@@ -135,6 +124,71 @@ var DEFAULT_STATEBOY_SETTINGS_CARD = [
   '',
   'Notes Changelog Entries: 20',
   '# How many recent changes are mirrored into the Stateboy card Notes.'
+].join('\n');
+
+var DEFAULT_STATEBOY_GUIDE_CARD = [
+  '# Stateboy Guide',
+  '',
+  'Stateboy uses three Story Cards:',
+  '- Stateboy: the live state sheet and source of truth.',
+  '- Stateboy Settings: runtime configuration.',
+  '- Stateboy Guide: this help card. It is informational only.',
+  '',
+  '## State Sheet Format',
+  'Add categories with Markdown-style headers:',
+  '## Player Stats',
+  '',
+  'Add states as simple lines:',
+  'XP: 500/1000 (The current XP of the player)',
+  'Level: 4 (The current level of the player)',
+  'Stamina: 88% (How much stamina remains)',
+  'Mood: Tense (Current emotional tone)',
+  'Inventory: Sword, Shield, Potion (Items currently carried)',
+  '',
+  'The Stateboy card is the only source of truth. Add, edit, or remove states directly in that card.',
+  '',
+  '## Value Types',
+  'Stateboy guesses each type from how the value is written:',
+  '- JSON: true, false, null, numbers, strings, arrays, and objects.',
+  '- Ratio: current/max, such as 20/100.',
+  '- Percent: a number followed by %, such as 85%.',
+  '- Boolean: On/Off, True/False, or Yes/No.',
+  '- Number: any finite number, such as 5 or -3.5.',
+  '- List: comma-separated values, such as Sword, Shield, Potion.',
+  '- String: anything else.',
+  '',
+  'Use JSON arrays when you want an explicit list with one item:',
+  'Inventory: ["Sword"]',
+  '',
+  '## Descriptions',
+  'Put a description in parentheses after the value:',
+  'Reputation: Neutral (How the city currently views the player)',
+  '',
+  'Descriptions are shown to the story model and the AI updater. They can include interpretation bands:',
+  'Stamina: 88% (0-20 exhausted | 21-60 tired | 61-100 steady)',
+  '',
+  '## Settings',
+  'Stateboy Enabled: On means Stateboy reads the sheet and injects current state into story context.',
+  'AI Enabled: On means the AI updater may propose changes after generated turns.',
+  'Widgets Enabled: On means the Widget dashboard may be published.',
+  'Debug Mode: On shows runtime and AI status widgets.',
+  'Minimum Confidence controls how confident an AI proposal must be before Stateboy applies it.',
+  'Changelog Enabled controls accepted update logging.',
+  'User Modification Changelog Enabled controls whether manual card edits are logged.',
+  '',
+  '## Widget Directives',
+  'Hide a specific state from widgets with a trailing directive:',
+  'Secret: Known [widget: off]',
+  'Secret: Known [hiddenWidget: true]',
+  '',
+  'Widget directives affect only the Widget dashboard. The state still exists, still syncs, and still appears in model context.',
+  '',
+  '## Safety Model',
+  'AI suggests; Stateboy enforces.',
+  '',
+  'The AI updater can only propose changes to states that already exist in the Stateboy card. Stateboy rejects unknown states, wrong types, low-confidence proposals, and unsupported operations.',
+  '',
+  'If AI is disabled or unavailable, Stateboy still parses the card and injects manually edited state into context.'
 ].join('\n');
 
 var STATEBOY_DEFAULT_SETTINGS = {
