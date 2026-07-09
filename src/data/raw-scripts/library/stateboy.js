@@ -101,7 +101,8 @@ var DEFAULT_STATEBOY_STATE_CARD = [
   '# percent: a number followed by % like 85%',
   '# boolean: On/Off, True/False, or Yes/No',
   '# list: comma-separated values like Sword, Shield, Potion',
-  '# string: anything else'
+  '# string: anything else',
+  '# hide a state from widgets with: Name: value [widget: off]'
 ].join('\n');
 
 var DEFAULT_STATEBOY_SETTINGS_CARD = [
@@ -116,6 +117,9 @@ var DEFAULT_STATEBOY_SETTINGS_CARD = [
   '',
   'Widgets Enabled: On',
   '# When On, Stateboy publishes a widget dashboard.',
+  '',
+  'Debug Mode: Off',
+  '# When On, Stateboy shows runtime, AI, and update-summary debug widgets.',
   '',
   'Minimum Confidence: 0.65',
   '# The minimum AI confidence (0.0 to 1.0) required to apply a change.',
@@ -137,6 +141,7 @@ var STATEBOY_DEFAULT_SETTINGS = {
   stateboyEnabled: true,
   aiEnabled: true,
   widgetsEnabled: true,
+  debugMode: false,
   minimumConfidence: 0.65,
   changelogEnabled: true,
   userModificationChangelogEnabled: true,
@@ -461,6 +466,7 @@ function parseStateboySettings(text) {
     stateboyEnabled: STATEBOY_DEFAULT_SETTINGS.stateboyEnabled,
     aiEnabled: STATEBOY_DEFAULT_SETTINGS.aiEnabled,
     widgetsEnabled: STATEBOY_DEFAULT_SETTINGS.widgetsEnabled,
+    debugMode: STATEBOY_DEFAULT_SETTINGS.debugMode,
     minimumConfidence: STATEBOY_DEFAULT_SETTINGS.minimumConfidence,
     changelogEnabled: STATEBOY_DEFAULT_SETTINGS.changelogEnabled,
     userModificationChangelogEnabled: STATEBOY_DEFAULT_SETTINGS.userModificationChangelogEnabled,
@@ -479,6 +485,7 @@ function parseStateboySettings(text) {
     if (key === 'stateboyenabled') settings.stateboyEnabled = parseStateboyOnOff(valueText, settings.stateboyEnabled);
     else if (key === 'aienabled') settings.aiEnabled = parseStateboyOnOff(valueText, settings.aiEnabled);
     else if (key === 'widgetsenabled') settings.widgetsEnabled = parseStateboyOnOff(valueText, settings.widgetsEnabled);
+    else if (key === 'debugmode') settings.debugMode = parseStateboyOnOff(valueText, settings.debugMode);
     else if (key === 'changelogenabled') settings.changelogEnabled = parseStateboyOnOff(valueText, settings.changelogEnabled);
     else if (key === 'usermodificationchangelogenabled') settings.userModificationChangelogEnabled = parseStateboyOnOff(valueText, settings.userModificationChangelogEnabled);
     else if (key === 'aichangelogentries') settings.aiChangelogEntries = parseStateboyInteger(valueText, settings.aiChangelogEntries, 0, 20);
@@ -534,7 +541,8 @@ function parseStateboySheet(text) {
       hasCurrent = true;
     }
     var parts = splitStateboyNameValue(line);
-    var desc = stripStateboyDescription(parts.value);
+    var directiveResult = stripStateboyDirectives(parts.value);
+    var desc = stripStateboyDescription(directiveResult.value);
     var parsedValue = parseStateboyValue(desc.value);
     var entry = {
       category: current.name,
@@ -543,6 +551,7 @@ function parseStateboySheet(text) {
       value: parsedValue.value,
       type: parsedValue.type,
       description: desc.description,
+      directives: directiveResult.directives,
       rawValue: desc.value.trim(),
       order: sheet.entries.length,
       id: makeStateboyStateId(current.name, parts.name)
@@ -579,6 +588,65 @@ function stripStateboyDescription(valueText) {
     value = value.slice(0, match.index).trim();
   }
   return { value: value, description: description };
+}
+
+function stripStateboyDirectives(valueText) {
+  var value = String(valueText || '').trim();
+  var directives = {};
+  var match = value.match(/\s+\[([^\[\]]*)\]\s*$/);
+  if (match) {
+    directives = parseStateboyDirectives(match[1]);
+    value = value.slice(0, match.index).trim();
+  }
+  return { value: value, directives: directives };
+}
+
+function parseStateboyDirectives(text) {
+  var directives = {};
+  var parts = String(text || '').split(',');
+  for (var i = 0; i < parts.length; i++) {
+    var part = parts[i].trim();
+    if (!part) continue;
+    var idx = part.indexOf(':');
+    var rawName = idx >= 0 ? part.slice(0, idx) : part;
+    var rawValue = idx >= 0 ? part.slice(idx + 1) : 'on';
+    var name = normalizeStateboyDirectiveName(rawName);
+    if (!name) continue;
+    directives[name] = parseStateboyDirectiveValue(rawValue);
+  }
+  return directives;
+}
+
+function normalizeStateboyDirectiveName(name) {
+  var key = normalizeStateboyKey(name);
+  if (key === 'widget' || key === 'widgets' || key === 'showwidget' || key === 'showwidgets') return 'widget';
+  if (key === 'hidewidget' || key === 'hidewidgets' || key === 'hiddenwidget' || key === 'hiddenwidgets') return 'hiddenWidget';
+  return key;
+}
+
+function parseStateboyDirectiveValue(value) {
+  var text = String(value || '').trim();
+  var lowered = text.toLowerCase();
+  if (lowered === 'on' || lowered === 'true' || lowered === 'yes' || lowered === 'show' || lowered === 'shown') return true;
+  if (lowered === 'off' || lowered === 'false' || lowered === 'no' || lowered === 'hide' || lowered === 'hidden') return false;
+  if (/^-?\d+(?:\.\d+)?$/.test(text) && isFinite(Number(text))) return Number(text);
+  return text;
+}
+
+function formatStateboyDirectives(directives) {
+  if (!directives || typeof directives !== 'object') return '';
+  var keys = Object.keys(directives);
+  if (keys.length === 0) return '';
+  keys.sort();
+  return '[' + keys.map(function (key) {
+    return key + ': ' + formatStateboyDirectiveValue(directives[key]);
+  }).join(', ') + ']';
+}
+
+function formatStateboyDirectiveValue(value) {
+  if (typeof value === 'boolean') return value ? 'on' : 'off';
+  if (value === null) return 'null';
+  return String(value);
 }
 
 function parseStateboyValue(raw) {
@@ -671,6 +739,7 @@ function serializeStateboySheetForState(sheet) {
             type: entry.type,
             value: entry.value,
             description: entry.description,
+            directives: entry.directives,
             rawValue: entry.rawValue,
             id: entry.id
           };
@@ -691,6 +760,8 @@ function renderStateboySheet(sheet) {
       var entry = cat.entries[j];
       var line = entry.name + ': ' + formatStateboyValue(entry.type, entry.value);
       if (entry.description) line += ' (' + entry.description + ')';
+      var directiveText = formatStateboyDirectives(entry.directives);
+      if (directiveText) line += ' ' + directiveText;
       lines.push(line);
     }
   }
@@ -1242,19 +1313,22 @@ function stateboyAiResponseSchema() {
 function publishStateboyWidget(us, sb, sheet) {
   if (!us.available() || !us.has('widget')) return;
 
-  var widgets = [
-    { id: 'stateboy_status', type: 'text', label: 'Stateboy' },
-    { id: 'stateboy_ai', type: 'badge', label: 'AI' },
-    { id: 'stateboy_summary', type: 'text', label: 'Last Update' }
-  ];
-  var values = {
-    stateboy_status: 'Running',
-    stateboy_ai: {
+  var widgets = [];
+  var values = {};
+
+  if (sb.settings.debugMode) {
+    widgets.push(
+      { id: 'stateboy_status', type: 'text', label: 'Stateboy' },
+      { id: 'stateboy_ai', type: 'badge', label: 'AI' },
+      { id: 'stateboy_summary', type: 'text', label: 'Last Update' }
+    );
+    values.stateboy_status = 'Running';
+    values.stateboy_ai = {
       text: sb.settings.aiEnabled ? (sb.pendingAnalysisRequestId ? 'thinking' : 'ready') : 'off',
       color: sb.settings.aiEnabled ? '#22c55e' : '#f59e0b'
-    },
-    stateboy_summary: sb.lastAcceptedSummary || sb.lastAiSummary || 'No accepted updates yet.'
-  };
+    };
+    values.stateboy_summary = sb.lastAcceptedSummary || sb.lastAiSummary || 'No accepted updates yet.';
+  }
 
   for (var i = 0; i < sheet.entries.length; i++) {
     var entry = sheet.entries[i];
@@ -1270,6 +1344,7 @@ function publishStateboyWidget(us, sb, sheet) {
 }
 
 function makeStateboyWidget(entry, index) {
+  if (!stateboyShouldShowWidget(entry)) return null;
   var id = ('stateboy_' + index + '_' + normalizeStateboyKey(entry.name)).slice(0, 60);
   if (entry.type === 'ratio') {
     return {
@@ -1318,6 +1393,13 @@ function makeStateboyWidget(entry, index) {
     config: { id: id, type: 'text', label: entry.name },
     value: String(entry.value === undefined || entry.value === null ? '' : entry.value).slice(0, 180)
   };
+}
+
+function stateboyShouldShowWidget(entry) {
+  var directives = entry && entry.directives ? entry.directives : {};
+  if (directives.hiddenWidget === true) return false;
+  if (directives.widget === false) return false;
+  return true;
 }
 
 function clearStateboyWidgetIfNeeded(us, sb) {
