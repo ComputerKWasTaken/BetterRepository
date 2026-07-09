@@ -27,10 +27,20 @@ globalThis.Stateboy = function Stateboy(hook, inputText) {
   var settingsCard = ensureStateboyCard('Stateboy Settings', DEFAULT_STATEBOY_SETTINGS_CARD, 'Stateboy');
   var settingsResult = parseStateboySettings(getStateboyCardText(settingsCard));
   var sheet = parseStateboySheet(getStateboyCardText(stateCard));
+  var serializedSheet = serializeStateboySheetForState(sheet);
 
   sb.settings = settingsResult.settings;
   sb.settingsErrors = settingsResult.errors;
-  sb.sheet = serializeStateboySheetForState(sheet);
+  var manualChanges = detectStateboyManualChanges(sb.sheet, serializedSheet);
+  if (manualChanges.length > 0) {
+    if (sb.settings.changelogEnabled) {
+      logStateboyManualChanges(sb, manualChanges);
+      syncStateboyChangelogToNotes(stateCard, sb);
+    }
+    sb.pendingAnalysisRequestId = '';
+    sb.pendingAnalysisLiveCount = 0;
+  }
+  sb.sheet = serializedSheet;
   sb.lastSyncLiveCount = getStateboyLiveCount();
   sb.runtimeAvailable = us.available();
   sb.widgetAvailable = us.has('widget');
@@ -107,13 +117,13 @@ var DEFAULT_STATEBOY_SETTINGS_CARD = [
   '# The minimum AI confidence (0.0 to 1.0) required to apply a change.',
   '',
   'Changelog Enabled: On',
-  '# When On, accepted AI updates are written to the Stateboy card Notes and shown to the AI updater.',
+  '# When On, AI updates and manual Stateboy card edits are written to Notes and shown to the AI updater.',
   '',
   'AI Changelog Entries: 6',
-  '# How many recent accepted changes the AI updater sees.',
+  '# How many recent changes the AI updater sees.',
   '',
   'Notes Changelog Entries: 20',
-  '# How many recent accepted changes are mirrored into the Stateboy card Notes.'
+  '# How many recent changes are mirrored into the Stateboy card Notes.'
 ].join('\n');
 
 var STATEBOY_DEFAULT_SETTINGS = {
@@ -749,6 +759,7 @@ function processStateboyAiResponse(us, sb, sheet, stateCard) {
   if (result.accepted.length > 0) {
     var rendered = renderStateboySheet(sheet);
     updateStateboyCard('Stateboy', rendered, stateCard && stateCard.type ? stateCard.type : 'Stateboy');
+    sb.sheet = serializeStateboySheetForState(sheet);
     syncStateboyChangelogToNotes(findStateboyCard('Stateboy') || stateCard, sb);
     sb.lastAcceptedSummary = payload && payload.summary ? String(payload.summary).slice(0, 240) : result.accepted.length + ' state change(s) accepted.';
     sb.lastAiSummary = sb.lastAcceptedSummary;
@@ -893,10 +904,104 @@ function cloneStateboyValue(value) {
   }
 }
 
+function detectStateboyManualChanges(previousSheet, currentSheet) {
+  var changes = [];
+  if (!previousSheet || !Array.isArray(previousSheet.categories)) return changes;
+  if (!currentSheet || !Array.isArray(currentSheet.categories)) return changes;
+
+  var previous = indexStateboySerializedEntries(previousSheet);
+  var current = indexStateboySerializedEntries(currentSheet);
+
+  for (var currentId in current.map) {
+    if (!Object.prototype.hasOwnProperty.call(current.map, currentId)) continue;
+    var currentEntry = current.map[currentId];
+    var previousEntry = previous.map[currentId];
+    if (!previousEntry) {
+      changes.push(makeStateboyManualChange('add', null, currentEntry));
+      continue;
+    }
+    if (previousEntry.type !== currentEntry.type || !sameStateboyValue(previousEntry.value, currentEntry.value)) {
+      changes.push(makeStateboyManualChange('set', previousEntry, currentEntry));
+      continue;
+    }
+    if (String(previousEntry.description || '') !== String(currentEntry.description || '')) {
+      changes.push(makeStateboyManualChange('describe', previousEntry, currentEntry));
+    }
+  }
+
+  for (var previousId in previous.map) {
+    if (!Object.prototype.hasOwnProperty.call(previous.map, previousId)) continue;
+    if (!current.map[previousId]) changes.push(makeStateboyManualChange('remove', previous.map[previousId], null));
+  }
+
+  return changes;
+}
+
+function indexStateboySerializedEntries(sheet) {
+  var map = {};
+  var list = [];
+  var categories = sheet && Array.isArray(sheet.categories) ? sheet.categories : [];
+  for (var i = 0; i < categories.length; i++) {
+    var entries = Array.isArray(categories[i].entries) ? categories[i].entries : [];
+    for (var j = 0; j < entries.length; j++) {
+      var entry = entries[j];
+      if (!entry || !entry.id) continue;
+      map[entry.id] = entry;
+      list.push(entry);
+    }
+  }
+  return { map: map, list: list };
+}
+
+function makeStateboyManualChange(operation, previousEntry, currentEntry) {
+  var entry = currentEntry || previousEntry || {};
+  var oldDisplay = previousEntry ? formatStateboyValue(previousEntry.type, previousEntry.value) : '(missing)';
+  var newDisplay = currentEntry ? formatStateboyValue(currentEntry.type, currentEntry.value) : '(removed)';
+  var reason = 'User edited the Stateboy card.';
+
+  if (operation === 'add') reason = 'User added this state to the Stateboy card.';
+  else if (operation === 'remove') reason = 'User removed this state from the Stateboy card.';
+  else if (operation === 'describe') {
+    oldDisplay = 'description: ' + (previousEntry && previousEntry.description ? previousEntry.description : '(none)');
+    newDisplay = 'description: ' + (currentEntry && currentEntry.description ? currentEntry.description : '(none)');
+    reason = 'User edited this state description in the Stateboy card.';
+  }
+
+  return {
+    source: 'manual',
+    operation: operation,
+    category: entry.category,
+    name: entry.name,
+    type: currentEntry ? currentEntry.type : (previousEntry ? previousEntry.type : 'string'),
+    oldValue: previousEntry ? cloneStateboyValue(previousEntry.value) : null,
+    value: currentEntry ? cloneStateboyValue(currentEntry.value) : null,
+    oldDisplay: oldDisplay,
+    display: newDisplay,
+    confidence: null,
+    reason: reason
+  };
+}
+
+function logStateboyManualChanges(sb, changes) {
+  for (var i = 0; i < changes.length; i++) {
+    pushStateboyChangeRecord(sb, changes[i]);
+  }
+  sb.lastAcceptedSummary = summarizeStateboyManualChanges(changes);
+}
+
+function summarizeStateboyManualChanges(changes) {
+  if (!Array.isArray(changes) || changes.length === 0) return '';
+  if (changes.length === 1) {
+    var change = changes[0];
+    return 'Manual Stateboy edit: ' + change.category + '.' + change.name + ' ' + change.operation + '.';
+  }
+  return changes.length + ' manual Stateboy edits logged.';
+}
+
 function pushStateboyChange(sb, entry, change, oldValue, newValue) {
-  sb.changeLog.push({
-    at: Date.now ? Date.now() : new Date().getTime(),
-    liveCount: getStateboyLiveCount(),
+  pushStateboyChangeRecord(sb, {
+    source: 'ai',
+    operation: 'set',
     category: entry.category,
     name: entry.name,
     type: entry.type,
@@ -905,18 +1010,28 @@ function pushStateboyChange(sb, entry, change, oldValue, newValue) {
     oldDisplay: formatStateboyValue(entry.type, oldValue),
     display: formatStateboyValue(entry.type, newValue),
     confidence: Number(change.confidence),
-    reason: change.reason || '',
-    summary: formatStateboyChangeLogLine({
-      liveCount: getStateboyLiveCount(),
-      category: entry.category,
-      name: entry.name,
-      type: entry.type,
-      oldValue: oldValue,
-      value: newValue,
-      confidence: Number(change.confidence),
-      reason: change.reason || ''
-    })
+    reason: change.reason || ''
   });
+}
+
+function pushStateboyChangeRecord(sb, record) {
+  var entry = {
+    at: Date.now ? Date.now() : new Date().getTime(),
+    liveCount: getStateboyLiveCount(),
+    source: record.source || 'ai',
+    operation: record.operation || 'set',
+    category: record.category,
+    name: record.name,
+    type: record.type,
+    oldValue: record.oldValue,
+    value: record.value,
+    oldDisplay: record.oldDisplay,
+    display: record.display,
+    confidence: record.confidence,
+    reason: record.reason || ''
+  };
+  entry.summary = formatStateboyChangeLogLine(entry);
+  sb.changeLog.push(entry);
   while (sb.changeLog.length > 40) sb.changeLog.shift();
 }
 
@@ -941,12 +1056,12 @@ function syncStateboyChangelogToNotes(card, sb) {
 function renderStateboyChangelogNotes(sb, count) {
   var lines = [
     'Stateboy Changelog',
-    'Newest first. Accepted AI updates only.',
+    'Newest first. AI updates and manual Stateboy card edits.',
     ''
   ];
   var rendered = renderStateboyRecentChanges(sb, count);
   if (rendered) lines.push(rendered);
-  else lines.push('No accepted Stateboy changes yet.');
+  else lines.push('No Stateboy changes yet.');
   return lines.join('\n').slice(0, 3000);
 }
 
@@ -964,13 +1079,18 @@ function formatStateboyChangeLogLine(entry) {
   if (!entry) return '';
   var oldText = entry.oldDisplay || formatStateboyValue(entry.type, entry.oldValue);
   var newText = entry.display || formatStateboyValue(entry.type, entry.value);
-  var confidence = isFinite(Number(entry.confidence)) ? trimStateboyNumber(Number(entry.confidence)) : '?';
+  var source = entry.source === 'manual' ? 'Manual' : 'AI';
+  var operation = entry.operation || 'set';
+  var confidence = source === 'AI' && isFinite(Number(entry.confidence))
+    ? 'confidence ' + trimStateboyNumber(Number(entry.confidence))
+    : 'manual edit';
   var reason = String(entry.reason || '').replace(/\s+/g, ' ').trim();
   if (reason.length > 160) reason = reason.slice(0, 157) + '...';
   return [
     'Turn ' + Number(entry.liveCount || 0),
+    source + ' ' + operation,
     entry.category + '.' + entry.name + ': ' + oldText + ' -> ' + newText,
-    'confidence ' + confidence,
+    confidence,
     reason || 'No reason provided.'
   ].join(' | ');
 }
@@ -1021,13 +1141,13 @@ function buildStateboyAiPrompt(sb, sheet, outputText) {
     'Only target states that already exist in the current state sheet.',
     'Do not invent, add, delete, rename, or restructure states.',
     'Use confidence from 0.00 to 1.00. Use low confidence when uncertain.',
-    'Use the recent Stateboy changelog to avoid repeating updates that were already applied.',
+    'Use the recent Stateboy changelog to avoid repeating updates that were already applied or manually corrected.',
     '',
     'Current state sheet:',
     renderStateboySheet(sheet),
     '',
-    'Recent accepted Stateboy changes:',
-    recentChanges || '(No accepted Stateboy changes yet.)',
+    'Recent Stateboy changelog:',
+    recentChanges || '(No Stateboy changes yet.)',
     '',
     'Recent history:',
     recent.join('\n') || '(No recent history available.)',
