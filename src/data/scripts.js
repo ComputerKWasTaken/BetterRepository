@@ -484,6 +484,20 @@ export const SCRIPTS = [
     purpose: 'Provides the same bd.us-style helper as the enhanced starter, plus hard runtime/module gating, clear player-facing requirement messages, response polling, acks, and Widget publishing for scripts that cannot run meaningfully without Ultrascripts.',
     requiresExtension: 'BetterDungeon',
     ultrascriptsMode: 'required'
+  },
+  {
+    id: 'stateboy',
+    name: 'Stateboy',
+    category: 'ultrascripts-required',
+    difficulty: 'advanced',
+    impact: 'high',
+    essential: false,
+    tags: ['ultrascripts', 'state', 'ai', 'widgets', 'story-cards', 'rpg', 'tracking'],
+    source: 'BetterRepository',
+    description: 'Readable, AI-assisted state management for AI Dungeon scenarios using a Stateboy card, settings card, AI module updates, and Widget dashboard.',
+    purpose: 'Lets creators define persistent scenario states in plain Story Card text, injects those states into context, validates AI-proposed updates, and displays current values through Widgets.',
+    requiresExtension: 'BetterDungeon',
+    ultrascriptsMode: 'required'
   }
 ]
 
