@@ -176,9 +176,6 @@ var DEFAULT_STATEBOY_GUIDE_CARD = [
   '## Secrets [context: off]',
   'PublicClue: Found [context: on]',
   '',
-  'Existing widget aliases still work:',
-  'Secret: Known [hiddenWidget: true]',
-  '',
   'Directive domains are independent. Hide a state broadly by setting each domain explicitly.',
   '',
   '## Custom Scenario States',
@@ -675,8 +672,9 @@ function parseStateboyDirectives(text) {
 
 function normalizeStateboyDirectiveName(name) {
   var key = normalizeStateboyKey(name);
-  if (key === 'widget' || key === 'widgets' || key === 'showwidget' || key === 'showwidgets') return 'widget';
-  if (key === 'hidewidget' || key === 'hidewidgets' || key === 'hiddenwidget' || key === 'hiddenwidgets') return 'hiddenWidget';
+  if (key === 'widget') return 'widget';
+  if (key === 'context') return 'context';
+  if (key === 'ai') return 'ai';
   return key;
 }
 
@@ -887,11 +885,7 @@ function getStateboyDirectiveDomainValue(directives, domain) {
 }
 
 function getStateboyWidgetDirectiveValue(directives) {
-  var widget = getStateboyOnOffDirectiveValue(directives.widget);
-  if (widget !== undefined) return widget;
-  var hidden = getStateboyOnOffDirectiveValue(directives.hiddenWidget);
-  if (hidden !== undefined) return !hidden;
-  return undefined;
+  return getStateboyOnOffDirectiveValue(directives.widget);
 }
 
 function getStateboyOnOffDirectiveValue(value) {
