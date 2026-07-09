@@ -104,14 +104,26 @@ var DEFAULT_STATEBOY_SETTINGS_CARD = [
   '# When On, Stateboy publishes a widget dashboard.',
   '',
   'Minimum Confidence: 0.65',
-  '# The minimum AI confidence (0.0 to 1.0) required to apply a change.'
+  '# The minimum AI confidence (0.0 to 1.0) required to apply a change.',
+  '',
+  'Changelog Enabled: On',
+  '# When On, accepted AI updates are written to the Stateboy card Notes and shown to the AI updater.',
+  '',
+  'AI Changelog Entries: 6',
+  '# How many recent accepted changes the AI updater sees.',
+  '',
+  'Notes Changelog Entries: 20',
+  '# How many recent accepted changes are mirrored into the Stateboy card Notes.'
 ].join('\n');
 
 var STATEBOY_DEFAULT_SETTINGS = {
   stateboyEnabled: true,
   aiEnabled: true,
   widgetsEnabled: true,
-  minimumConfidence: 0.65
+  minimumConfidence: 0.65,
+  changelogEnabled: true,
+  aiChangelogEntries: 6,
+  notesChangelogEntries: 20
 };
 
 var STATEBOY_PENDING_TURN_LIMIT = 6;
@@ -428,7 +440,10 @@ function parseStateboySettings(text) {
     stateboyEnabled: STATEBOY_DEFAULT_SETTINGS.stateboyEnabled,
     aiEnabled: STATEBOY_DEFAULT_SETTINGS.aiEnabled,
     widgetsEnabled: STATEBOY_DEFAULT_SETTINGS.widgetsEnabled,
-    minimumConfidence: STATEBOY_DEFAULT_SETTINGS.minimumConfidence
+    minimumConfidence: STATEBOY_DEFAULT_SETTINGS.minimumConfidence,
+    changelogEnabled: STATEBOY_DEFAULT_SETTINGS.changelogEnabled,
+    aiChangelogEntries: STATEBOY_DEFAULT_SETTINGS.aiChangelogEntries,
+    notesChangelogEntries: STATEBOY_DEFAULT_SETTINGS.notesChangelogEntries
   };
   var errors = [];
   var lines = String(text || '').split(/\r?\n/);
@@ -442,6 +457,9 @@ function parseStateboySettings(text) {
     if (key === 'stateboyenabled') settings.stateboyEnabled = parseStateboyOnOff(valueText, settings.stateboyEnabled);
     else if (key === 'aienabled') settings.aiEnabled = parseStateboyOnOff(valueText, settings.aiEnabled);
     else if (key === 'widgetsenabled') settings.widgetsEnabled = parseStateboyOnOff(valueText, settings.widgetsEnabled);
+    else if (key === 'changelogenabled') settings.changelogEnabled = parseStateboyOnOff(valueText, settings.changelogEnabled);
+    else if (key === 'aichangelogentries') settings.aiChangelogEntries = parseStateboyInteger(valueText, settings.aiChangelogEntries, 0, 20);
+    else if (key === 'noteschangelogentries') settings.notesChangelogEntries = parseStateboyInteger(valueText, settings.notesChangelogEntries, 0, 40);
     else if (key === 'minimumconfidence') {
       var n = Number(valueText);
       if (isFinite(n)) settings.minimumConfidence = clampStateboyNumber(n, 0, 1);
@@ -456,6 +474,12 @@ function parseStateboyOnOff(value, fallback) {
   if (normalized === 'on' || normalized === 'true' || normalized === 'yes' || normalized === 'enabled') return true;
   if (normalized === 'off' || normalized === 'false' || normalized === 'no' || normalized === 'disabled') return false;
   return fallback;
+}
+
+function parseStateboyInteger(value, fallback, min, max) {
+  var n = Number(String(value || '').trim());
+  if (!isFinite(n)) return fallback;
+  return Math.round(clampStateboyNumber(n, min, max));
 }
 
 function normalizeStateboyKey(value) {
@@ -725,6 +749,7 @@ function processStateboyAiResponse(us, sb, sheet, stateCard) {
   if (result.accepted.length > 0) {
     var rendered = renderStateboySheet(sheet);
     updateStateboyCard('Stateboy', rendered, stateCard && stateCard.type ? stateCard.type : 'Stateboy');
+    syncStateboyChangelogToNotes(findStateboyCard('Stateboy') || stateCard, sb);
     sb.lastAcceptedSummary = payload && payload.summary ? String(payload.summary).slice(0, 240) : result.accepted.length + ' state change(s) accepted.';
     sb.lastAiSummary = sb.lastAcceptedSummary;
   } else if (payload && payload.summary) {
@@ -749,16 +774,18 @@ function applyStateboyAiPayload(payload, sb, sheet) {
       continue;
     }
     if (!sameStateboyValue(validation.entry.value, validation.value)) {
+      var oldValue = cloneStateboyValue(validation.entry.value);
       validation.entry.value = validation.value;
       validation.entry.rawValue = formatStateboyValue(validation.entry.type, validation.value);
       accepted.push({
         category: validation.entry.category,
         name: validation.entry.name,
+        oldValue: oldValue,
         value: validation.value,
         reason: change.reason || '',
         confidence: change.confidence
       });
-      pushStateboyChange(sb, validation.entry, change);
+      pushStateboyChange(sb, validation.entry, change, oldValue, validation.value);
     }
   }
 
@@ -857,15 +884,38 @@ function sameStateboyValue(a, b) {
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
-function pushStateboyChange(sb, entry, change) {
+function cloneStateboyValue(value) {
+  if (value === undefined) return value;
+  try {
+    return JSON.parse(JSON.stringify(value));
+  } catch (e) {
+    return value;
+  }
+}
+
+function pushStateboyChange(sb, entry, change, oldValue, newValue) {
   sb.changeLog.push({
     at: Date.now ? Date.now() : new Date().getTime(),
     liveCount: getStateboyLiveCount(),
     category: entry.category,
     name: entry.name,
-    value: entry.value,
+    type: entry.type,
+    oldValue: oldValue,
+    value: newValue,
+    oldDisplay: formatStateboyValue(entry.type, oldValue),
+    display: formatStateboyValue(entry.type, newValue),
     confidence: Number(change.confidence),
-    reason: change.reason || ''
+    reason: change.reason || '',
+    summary: formatStateboyChangeLogLine({
+      liveCount: getStateboyLiveCount(),
+      category: entry.category,
+      name: entry.name,
+      type: entry.type,
+      oldValue: oldValue,
+      value: newValue,
+      confidence: Number(change.confidence),
+      reason: change.reason || ''
+    })
   });
   while (sb.changeLog.length > 40) sb.changeLog.shift();
 }
@@ -880,6 +930,51 @@ function pushStateboyRejected(sb, name, reason) {
   while (sb.rejectedLog.length > 40) sb.rejectedLog.shift();
 }
 
+function syncStateboyChangelogToNotes(card, sb) {
+  if (!card || !sb || !sb.settings || !sb.settings.changelogEnabled) return;
+  var text = renderStateboyChangelogNotes(sb, sb.settings.notesChangelogEntries);
+  if (!text) return;
+  if (card.description !== text) card.description = text;
+  if (Object.prototype.hasOwnProperty.call(card, 'notes') && card.notes !== text) card.notes = text;
+}
+
+function renderStateboyChangelogNotes(sb, count) {
+  var lines = [
+    'Stateboy Changelog',
+    'Newest first. Accepted AI updates only.',
+    ''
+  ];
+  var rendered = renderStateboyRecentChanges(sb, count);
+  if (rendered) lines.push(rendered);
+  else lines.push('No accepted Stateboy changes yet.');
+  return lines.join('\n').slice(0, 3000);
+}
+
+function renderStateboyRecentChanges(sb, count) {
+  if (!sb || !Array.isArray(sb.changeLog) || count <= 0) return '';
+  var entries = sb.changeLog.slice(-count).reverse();
+  var lines = [];
+  for (var i = 0; i < entries.length; i++) {
+    lines.push(formatStateboyChangeLogLine(entries[i]));
+  }
+  return lines.join('\n');
+}
+
+function formatStateboyChangeLogLine(entry) {
+  if (!entry) return '';
+  var oldText = entry.oldDisplay || formatStateboyValue(entry.type, entry.oldValue);
+  var newText = entry.display || formatStateboyValue(entry.type, entry.value);
+  var confidence = isFinite(Number(entry.confidence)) ? trimStateboyNumber(Number(entry.confidence)) : '?';
+  var reason = String(entry.reason || '').replace(/\s+/g, ' ').trim();
+  if (reason.length > 160) reason = reason.slice(0, 157) + '...';
+  return [
+    'Turn ' + Number(entry.liveCount || 0),
+    entry.category + '.' + entry.name + ': ' + oldText + ' -> ' + newText,
+    'confidence ' + confidence,
+    reason || 'No reason provided.'
+  ].join(' | ');
+}
+
 function queueStateboyAiAnalysisIfNeeded(us, sb, sheet, outputText) {
   var liveCount = getStateboyLiveCount();
   if (!sb.settings.aiEnabled || sheet.entries.length === 0) return;
@@ -892,7 +987,7 @@ function queueStateboyAiAnalysisIfNeeded(us, sb, sheet, outputText) {
     return;
   }
 
-  var prompt = buildStateboyAiPrompt(sheet, outputText);
+  var prompt = buildStateboyAiPrompt(sb, sheet, outputText);
   var requestId = us.call('ai', 'query', {
     prompt: prompt,
     thinking: 'low',
@@ -907,13 +1002,16 @@ function queueStateboyAiAnalysisIfNeeded(us, sb, sheet, outputText) {
   sb.lastAiError = '';
 }
 
-function buildStateboyAiPrompt(sheet, outputText) {
+function buildStateboyAiPrompt(sb, sheet, outputText) {
   var recent = [];
   var actions = Array.isArray(history) ? history.slice(-8) : [];
   for (var i = 0; i < actions.length; i++) {
     var action = actions[i] || {};
     recent.push((action.type || 'action') + ': ' + String(action.text || action.rawText || '').slice(0, 900));
   }
+  var recentChanges = sb && sb.settings && sb.settings.changelogEnabled
+    ? renderStateboyRecentChanges(sb, sb.settings.aiChangelogEntries)
+    : '';
 
   var prompt = [
     'You are Stateboy, an AI Dungeon state update assistant.',
@@ -923,9 +1021,13 @@ function buildStateboyAiPrompt(sheet, outputText) {
     'Only target states that already exist in the current state sheet.',
     'Do not invent, add, delete, rename, or restructure states.',
     'Use confidence from 0.00 to 1.00. Use low confidence when uncertain.',
+    'Use the recent Stateboy changelog to avoid repeating updates that were already applied.',
     '',
     'Current state sheet:',
     renderStateboySheet(sheet),
+    '',
+    'Recent accepted Stateboy changes:',
+    recentChanges || '(No accepted Stateboy changes yet.)',
     '',
     'Recent history:',
     recent.join('\n') || '(No recent history available.)',
