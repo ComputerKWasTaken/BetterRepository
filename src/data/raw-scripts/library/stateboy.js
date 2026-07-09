@@ -67,7 +67,7 @@ globalThis.Stateboy = function Stateboy(hook, inputText) {
   }
 
   if (hook === 'context') {
-    var contextBlock = renderStateboySheet(sheet);
+    var contextBlock = renderStateboyContextSheet(sheet);
     if (contextBlock) text += '\n\n' + contextBlock;
 
     if (sb.settings.widgetsEnabled) {
@@ -176,12 +176,24 @@ var DEFAULT_STATEBOY_GUIDE_CARD = [
   'Changelog Enabled controls accepted update logging.',
   'User Modification Changelog Enabled controls whether manual card edits are logged.',
   '',
-  '## Widget Directives',
-  'Hide a specific state from widgets with a trailing directive:',
-  'Secret: Known [widget: off]',
+  '## State Directives',
+  'Directives are bracket metadata at the end of a category header or state line:',
+  '## Secrets [widget: off, context: off, ai: readonly]',
+  'Secret: Known [widget: off, context: off, ai: readonly]',
+  '',
+  'Supported directive keys:',
+  '- widget: on/off controls Widget visibility only.',
+  '- context: on/off controls normal story context visibility only.',
+  '- ai: on/readonly/off controls whether the AI updater may modify a state.',
+  '',
+  'Category directives act as defaults. State directives override the category:',
+  '## Secrets [context: off]',
+  'PublicClue: Found [context: on]',
+  '',
+  'Existing widget aliases still work:',
   'Secret: Known [hiddenWidget: true]',
   '',
-  'Widget directives affect only the Widget dashboard. The state still exists, still syncs, and still appears in model context.',
+  'Directive domains are independent. Hide a state broadly by setting each domain explicitly.',
   '',
   '## Safety Model',
   'AI suggests; Stateboy enforces.',
@@ -580,7 +592,8 @@ function parseStateboySheet(text) {
     var line = rawLine.trim();
     if (!line) continue;
     if (/^#{2,6}\s+/.test(line)) {
-      current = createStateboyCategory(line.replace(/^#{2,6}\s+/, '').trim() || 'General', sheet.categories.length);
+      var header = stripStateboyDirectives(line.replace(/^#{2,6}\s+/, '').trim());
+      current = createStateboyCategory(header.value.trim() || 'General', sheet.categories.length, header.directives);
       sheet.categories.push(current);
       hasCurrent = true;
       continue;
@@ -606,6 +619,7 @@ function parseStateboySheet(text) {
       type: parsedValue.type,
       description: desc.description,
       directives: directiveResult.directives,
+      categoryDirectives: current.directives,
       rawValue: desc.value.trim(),
       order: sheet.entries.length,
       id: makeStateboyStateId(current.name, parts.name)
@@ -621,8 +635,8 @@ function parseStateboySheet(text) {
   return sheet;
 }
 
-function createStateboyCategory(name, index) {
-  return { name: name, index: index, entries: [] };
+function createStateboyCategory(name, index, directives) {
+  return { name: name, index: index, directives: directives || {}, entries: [] };
 }
 
 function splitStateboyNameValue(line) {
@@ -786,6 +800,7 @@ function serializeStateboySheetForState(sheet) {
     categories: sheet.categories.map(function (cat) {
       return {
         name: cat.name,
+        directives: cat.directives || {},
         entries: cat.entries.map(function (entry) {
           return {
             category: entry.category,
@@ -794,6 +809,7 @@ function serializeStateboySheetForState(sheet) {
             value: entry.value,
             description: entry.description,
             directives: entry.directives,
+            categoryDirectives: entry.categoryDirectives || {},
             rawValue: entry.rawValue,
             id: entry.id
           };
@@ -805,21 +821,116 @@ function serializeStateboySheetForState(sheet) {
 }
 
 function renderStateboySheet(sheet) {
+  return renderStateboySheetWithOptions(sheet, {
+    includeDirectives: true,
+    filterEntry: null,
+    markAiReadonly: false
+  });
+}
+
+function renderStateboyContextSheet(sheet) {
+  return renderStateboySheetWithOptions(sheet, {
+    includeDirectives: false,
+    filterEntry: function (entry) { return stateboyShouldShowInContext(entry); },
+    markAiReadonly: false
+  });
+}
+
+function renderStateboyAiSheet(sheet) {
+  return renderStateboySheetWithOptions(sheet, {
+    includeDirectives: false,
+    filterEntry: null,
+    markAiReadonly: true
+  });
+}
+
+function renderStateboySheetWithOptions(sheet, options) {
+  options = options || {};
   var lines = [];
   for (var i = 0; i < sheet.categories.length; i++) {
     var cat = sheet.categories[i];
-    if (i > 0) lines.push('');
-    lines.push('## ' + cat.name);
+    var categoryLines = [];
+    var header = '## ' + cat.name;
+    if (options.includeDirectives) {
+      var categoryDirectiveText = formatStateboyDirectives(cat.directives);
+      if (categoryDirectiveText) header += ' ' + categoryDirectiveText;
+    }
+    categoryLines.push(header);
     for (var j = 0; j < cat.entries.length; j++) {
       var entry = cat.entries[j];
-      var line = entry.name + ': ' + formatStateboyValue(entry.type, entry.value);
-      if (entry.description) line += ' (' + entry.description + ')';
-      var directiveText = formatStateboyDirectives(entry.directives);
-      if (directiveText) line += ' ' + directiveText;
-      lines.push(line);
+      if (typeof options.filterEntry === 'function' && !options.filterEntry(entry)) continue;
+      categoryLines.push(formatStateboyEntryLine(entry, options));
     }
+    if (categoryLines.length <= 1) continue;
+    if (lines.length > 0) lines.push('');
+    for (var k = 0; k < categoryLines.length; k++) lines.push(categoryLines[k]);
   }
   return lines.join('\n');
+}
+
+function formatStateboyEntryLine(entry, options) {
+  options = options || {};
+  var line = entry.name + ': ' + formatStateboyValue(entry.type, entry.value);
+  var notes = [];
+  if (entry.description) notes.push(entry.description);
+  if (options.markAiReadonly && !stateboyCanAiModify(entry)) notes.push('AI readonly: do not modify');
+  if (notes.length) line += ' (' + notes.join('; ') + ')';
+  if (options.includeDirectives) {
+    var directiveText = formatStateboyDirectives(entry.directives);
+    if (directiveText) line += ' ' + directiveText;
+  }
+  return line;
+}
+
+function getStateboyEffectiveDirective(entry, domain) {
+  var categoryDirectives = entry && entry.categoryDirectives ? entry.categoryDirectives : {};
+  var stateDirectives = entry && entry.directives ? entry.directives : {};
+  var categoryValue = getStateboyDirectiveDomainValue(categoryDirectives, domain);
+  var stateValue = getStateboyDirectiveDomainValue(stateDirectives, domain);
+  return stateValue !== undefined ? stateValue : categoryValue;
+}
+
+function getStateboyDirectiveDomainValue(directives, domain) {
+  if (!directives || typeof directives !== 'object') return undefined;
+  if (domain === 'widget') return getStateboyWidgetDirectiveValue(directives);
+  if (domain === 'context') return getStateboyOnOffDirectiveValue(directives.context);
+  if (domain === 'ai') return getStateboyAiDirectiveValue(directives.ai);
+  return undefined;
+}
+
+function getStateboyWidgetDirectiveValue(directives) {
+  var widget = getStateboyOnOffDirectiveValue(directives.widget);
+  if (widget !== undefined) return widget;
+  var hidden = getStateboyOnOffDirectiveValue(directives.hiddenWidget);
+  if (hidden !== undefined) return !hidden;
+  return undefined;
+}
+
+function getStateboyOnOffDirectiveValue(value) {
+  if (value === undefined) return undefined;
+  if (value === true || value === false) return value;
+  var text = String(value || '').trim().toLowerCase();
+  if (text === 'on' || text === 'true' || text === 'yes' || text === 'show' || text === 'shown' || text === 'visible') return true;
+  if (text === 'off' || text === 'false' || text === 'no' || text === 'hide' || text === 'hidden' || text === 'invisible') return false;
+  return undefined;
+}
+
+function getStateboyAiDirectiveValue(value) {
+  if (value === undefined) return undefined;
+  if (value === true) return 'on';
+  if (value === false) return 'readonly';
+  var text = String(value || '').trim().toLowerCase().replace(/\s+/g, '');
+  if (text === 'on' || text === 'true' || text === 'yes' || text === 'update' || text === 'editable') return 'on';
+  if (text === 'off' || text === 'false' || text === 'no' || text === 'readonly' || text === 'read-only' || text === 'locked' || text === 'lock') return 'readonly';
+  return undefined;
+}
+
+function stateboyShouldShowInContext(entry) {
+  return getStateboyEffectiveDirective(entry, 'context') !== false;
+}
+
+function stateboyCanAiModify(entry) {
+  return getStateboyEffectiveDirective(entry, 'ai') !== 'readonly';
 }
 
 function formatStateboyValue(type, value) {
@@ -948,6 +1059,7 @@ function validateStateboyChange(change, settings, sheet) {
   if (!isFinite(confidence) || confidence < settings.minimumConfidence) return { ok: false, reason: 'low confidence' };
   var entry = findStateboyEntry(sheet, change.category, change.name);
   if (!entry) return { ok: false, reason: 'unknown state' };
+  if (!stateboyCanAiModify(entry)) return { ok: false, reason: 'state is AI readonly' };
   var coerced = coerceStateboyValueForEntry(entry, change.value);
   if (!coerced.ok) return { ok: false, reason: coerced.reason };
   return { ok: true, entry: entry, value: coerced.value };
@@ -1307,11 +1419,12 @@ function buildStateboyAiPrompt(sb, sheet, outputText) {
     'Only use operation "set".',
     'Only target states that already exist in the current state sheet.',
     'Do not invent, add, delete, rename, or restructure states.',
+    'Do not propose changes for states marked "AI readonly: do not modify".',
     'Use confidence from 0.00 to 1.00. Use low confidence when uncertain.',
     'Use the recent Stateboy changelog to avoid repeating updates that were already applied or manually corrected.',
     '',
     'Current state sheet:',
-    renderStateboySheet(sheet),
+    renderStateboyAiSheet(sheet),
     '',
     'Recent Stateboy changelog:',
     recentChanges || '(No Stateboy changes yet.)',
@@ -1450,10 +1563,7 @@ function makeStateboyWidget(entry, index) {
 }
 
 function stateboyShouldShowWidget(entry) {
-  var directives = entry && entry.directives ? entry.directives : {};
-  if (directives.hiddenWidget === true) return false;
-  if (directives.widget === false) return false;
-  return true;
+  return getStateboyEffectiveDirective(entry, 'widget') !== false;
 }
 
 function clearStateboyWidgetIfNeeded(us, sb) {
@@ -1467,5 +1577,9 @@ globalThis.StateboyInternals = {
   parseSettings: parseStateboySettings,
   parseSheet: parseStateboySheet,
   renderSheet: renderStateboySheet,
+  renderContextSheet: renderStateboyContextSheet,
+  renderAiSheet: renderStateboyAiSheet,
+  canAiModify: stateboyCanAiModify,
+  validateChange: validateStateboyChange,
   parseValue: parseStateboyValue
 };
