@@ -357,27 +357,13 @@ function createStateboyUltrascriptsSdk() {
 
 function ensureStateboyCard(title, defaultEntry, type) {
   var index = findStateboyCardIndex(title);
-  var card = index >= 0 ? storyCards[index] : null;
-  if (index >= 0) {
-    if (card && String(card.keys || '') !== '') {
-      if (typeof updateStoryCard === 'function') {
-        updateStoryCard(index, '', getStateboyCardText(card), card.type || type || 'Stateboy', title, card.description || '');
-      }
-      card = storyCards[index];
-    }
-    return card;
-  }
+  if (index >= 0) return storyCards[index];
   if (typeof addStoryCard === 'function') {
-    addStoryCard(title, defaultEntry, type || 'Stateboy', title, '');
+    addStoryCard(title, defaultEntry, type || 'Stateboy');
     index = findStateboyCardIndex(title);
-    if (index >= 0) {
-      if (typeof updateStoryCard === 'function') {
-        updateStoryCard(index, '', defaultEntry, type || 'Stateboy', title, '');
-      }
-      return storyCards[index];
-    }
+    if (index >= 0) return storyCards[index];
   }
-  return { title: title, keys: '', entry: defaultEntry, type: type || 'Stateboy' };
+  return { title: title, keys: title, entry: defaultEntry, type: type || 'Stateboy' };
 }
 
 function findStateboyCard(title) {
@@ -400,16 +386,13 @@ function updateStateboyCard(title, entry, type) {
   var index = findStateboyCardIndex(title);
   if (index >= 0) {
     if (typeof updateStoryCard === 'function') {
-      updateStoryCard(index, '', entry, type || 'Stateboy', title);
+      var card = storyCards[index] || {};
+      updateStoryCard(index, card.keys || card.key || card.title || title, entry, card.type || type || 'Stateboy');
     }
     return;
   }
   if (typeof addStoryCard === 'function') {
-    addStoryCard(title, entry, type || 'Stateboy', title, '');
-    index = findStateboyCardIndex(title);
-    if (index >= 0 && typeof updateStoryCard === 'function') {
-      updateStoryCard(index, '', entry, type || 'Stateboy', title);
-    }
+    addStoryCard(title, entry, type || 'Stateboy');
   }
 }
 
@@ -847,7 +830,12 @@ function coerceStateboyValueForEntry(entry, value) {
 
   if (entry.type === 'list') {
     if (Array.isArray(value)) return { ok: true, value: value };
-    if (typeof value === 'string') return { ok: true, value: parseStateboyValue(value).type === 'list' ? parseStateboyValue(value).value : [value] };
+    if (typeof value === 'string') {
+      var parsedList = parseStateboyValue(value);
+      if (parsedList.type === 'list') return { ok: true, value: parsedList.value };
+      if (parsedList.type === 'string') return { ok: true, value: [parsedList.value] };
+      return { ok: true, value: [parsedList.value] };
+    }
     return { ok: false, reason: 'list value must be an array or comma-list string' };
   }
 
