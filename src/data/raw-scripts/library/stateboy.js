@@ -25,17 +25,21 @@ globalThis.Stateboy = function Stateboy(hook, inputText) {
 
   var stateCard = ensureStateboyCard('Stateboy', DEFAULT_STATEBOY_STATE_CARD, 'Stateboy');
   var settingsCard = ensureStateboyCard('Stateboy Settings', DEFAULT_STATEBOY_SETTINGS_CARD, 'Stateboy');
+  var stateCardText = getStateboyCardText(stateCard);
   var settingsResult = parseStateboySettings(getStateboyCardText(settingsCard));
-  var sheet = parseStateboySheet(getStateboyCardText(stateCard));
+  var sheet = parseStateboySheet(stateCardText);
   var serializedSheet = serializeStateboySheetForState(sheet);
 
   sb.settings = settingsResult.settings;
   sb.settingsErrors = settingsResult.errors;
-  var manualChanges = detectStateboyManualChanges(sb.sheet, serializedSheet);
-  if (manualChanges.length > 0) {
-    if (sb.settings.changelogEnabled) {
-      logStateboyManualChanges(sb, manualChanges);
-      syncStateboyChangelogToNotes(stateCard, sb);
+  var observation = observeStateboyCardEntry(sb, stateCardText, serializedSheet);
+  if (observation.userEdited) {
+    if (sb.settings.changelogEnabled && sb.settings.userModificationChangelogEnabled) {
+      var manualChanges = detectStateboyManualStructuralChanges(observation.previousSheet, serializedSheet);
+      if (manualChanges.length > 0) {
+        logStateboyManualChanges(sb, manualChanges);
+        syncStateboyChangelogToNotes(stateCard, sb);
+      }
     }
     sb.pendingAnalysisRequestId = '';
     sb.pendingAnalysisLiveCount = 0;
@@ -117,7 +121,10 @@ var DEFAULT_STATEBOY_SETTINGS_CARD = [
   '# The minimum AI confidence (0.0 to 1.0) required to apply a change.',
   '',
   'Changelog Enabled: On',
-  '# When On, AI updates and manual Stateboy card edits are written to Notes and shown to the AI updater.',
+  '# When On, accepted AI updates are written to Notes and shown to the AI updater.',
+  '',
+  'User Modification Changelog Enabled: Off',
+  '# When On, manual Stateboy card add/remove edits are written to Notes and shown to the AI updater.',
   '',
   'AI Changelog Entries: 6',
   '# How many recent changes the AI updater sees.',
@@ -132,6 +139,7 @@ var STATEBOY_DEFAULT_SETTINGS = {
   widgetsEnabled: true,
   minimumConfidence: 0.65,
   changelogEnabled: true,
+  userModificationChangelogEnabled: false,
   aiChangelogEntries: 6,
   notesChangelogEntries: 20
 };
@@ -149,6 +157,9 @@ function initializeStateboyStore(sb) {
   sb.pendingAnalysisLiveCount = Number(sb.pendingAnalysisLiveCount || 0);
   sb.lastQueuedAnalysisLiveCount = Number(sb.lastQueuedAnalysisLiveCount || -1);
   sb.lastAiStatusRequestLiveCount = Number(sb.lastAiStatusRequestLiveCount || -1);
+  sb.lastObservedStateCardEntry = typeof sb.lastObservedStateCardEntry === 'string' ? sb.lastObservedStateCardEntry : '';
+  sb.lastScriptWrittenStateCardEntry = typeof sb.lastScriptWrittenStateCardEntry === 'string' ? sb.lastScriptWrittenStateCardEntry : '';
+  sb.hasObservedStateCardEntry = sb.hasObservedStateCardEntry === true;
   sb.widgetWasPublished = sb.widgetWasPublished === true;
 }
 
@@ -452,6 +463,7 @@ function parseStateboySettings(text) {
     widgetsEnabled: STATEBOY_DEFAULT_SETTINGS.widgetsEnabled,
     minimumConfidence: STATEBOY_DEFAULT_SETTINGS.minimumConfidence,
     changelogEnabled: STATEBOY_DEFAULT_SETTINGS.changelogEnabled,
+    userModificationChangelogEnabled: STATEBOY_DEFAULT_SETTINGS.userModificationChangelogEnabled,
     aiChangelogEntries: STATEBOY_DEFAULT_SETTINGS.aiChangelogEntries,
     notesChangelogEntries: STATEBOY_DEFAULT_SETTINGS.notesChangelogEntries
   };
@@ -468,6 +480,7 @@ function parseStateboySettings(text) {
     else if (key === 'aienabled') settings.aiEnabled = parseStateboyOnOff(valueText, settings.aiEnabled);
     else if (key === 'widgetsenabled') settings.widgetsEnabled = parseStateboyOnOff(valueText, settings.widgetsEnabled);
     else if (key === 'changelogenabled') settings.changelogEnabled = parseStateboyOnOff(valueText, settings.changelogEnabled);
+    else if (key === 'usermodificationchangelogenabled') settings.userModificationChangelogEnabled = parseStateboyOnOff(valueText, settings.userModificationChangelogEnabled);
     else if (key === 'aichangelogentries') settings.aiChangelogEntries = parseStateboyInteger(valueText, settings.aiChangelogEntries, 0, 20);
     else if (key === 'noteschangelogentries') settings.notesChangelogEntries = parseStateboyInteger(valueText, settings.notesChangelogEntries, 0, 40);
     else if (key === 'minimumconfidence') {
@@ -759,7 +772,7 @@ function processStateboyAiResponse(us, sb, sheet, stateCard) {
   if (result.accepted.length > 0) {
     var rendered = renderStateboySheet(sheet);
     updateStateboyCard('Stateboy', rendered, stateCard && stateCard.type ? stateCard.type : 'Stateboy');
-    sb.sheet = serializeStateboySheetForState(sheet);
+    rememberStateboyScriptWrite(sb, rendered, sheet);
     syncStateboyChangelogToNotes(findStateboyCard('Stateboy') || stateCard, sb);
     sb.lastAcceptedSummary = payload && payload.summary ? String(payload.summary).slice(0, 240) : result.accepted.length + ' state change(s) accepted.';
     sb.lastAiSummary = sb.lastAcceptedSummary;
@@ -904,7 +917,32 @@ function cloneStateboyValue(value) {
   }
 }
 
-function detectStateboyManualChanges(previousSheet, currentSheet) {
+function observeStateboyCardEntry(sb, currentEntry, currentSheet) {
+  var previousSheet = sb.sheet;
+  var userEdited = false;
+
+  if (!sb.hasObservedStateCardEntry) {
+    sb.hasObservedStateCardEntry = true;
+  } else if (currentEntry !== sb.lastObservedStateCardEntry && currentEntry !== sb.lastScriptWrittenStateCardEntry) {
+    userEdited = true;
+  }
+
+  sb.lastObservedStateCardEntry = currentEntry;
+  return {
+    userEdited: userEdited,
+    previousSheet: previousSheet,
+    currentSheet: currentSheet
+  };
+}
+
+function rememberStateboyScriptWrite(sb, entry, sheet) {
+  sb.lastScriptWrittenStateCardEntry = entry;
+  sb.lastObservedStateCardEntry = entry;
+  sb.hasObservedStateCardEntry = true;
+  sb.sheet = serializeStateboySheetForState(sheet);
+}
+
+function detectStateboyManualStructuralChanges(previousSheet, currentSheet) {
   var changes = [];
   if (!previousSheet || !Array.isArray(previousSheet.categories)) return changes;
   if (!currentSheet || !Array.isArray(currentSheet.categories)) return changes;
@@ -918,14 +956,6 @@ function detectStateboyManualChanges(previousSheet, currentSheet) {
     var previousEntry = previous.map[currentId];
     if (!previousEntry) {
       changes.push(makeStateboyManualChange('add', null, currentEntry));
-      continue;
-    }
-    if (previousEntry.type !== currentEntry.type || !sameStateboyValue(previousEntry.value, currentEntry.value)) {
-      changes.push(makeStateboyManualChange('set', previousEntry, currentEntry));
-      continue;
-    }
-    if (String(previousEntry.description || '') !== String(currentEntry.description || '')) {
-      changes.push(makeStateboyManualChange('describe', previousEntry, currentEntry));
     }
   }
 
