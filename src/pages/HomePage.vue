@@ -237,7 +237,7 @@
                 </li>
                 <li class="flex items-start gap-2">
                   <Code class="w-3 h-3 text-bd-green flex-shrink-0 mt-1" />
-                  <span>Enhanced and Required template copies now track the Widget helper contract</span>
+                  <span>Stateboy debuts as a Required Ultrascripts showcase using AI updates and Widgets</span>
                 </li>
               </ul>
             </div>

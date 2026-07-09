@@ -494,8 +494,8 @@ export const SCRIPTS = [
     essential: false,
     tags: ['ultrascripts', 'state', 'ai', 'widgets', 'story-cards', 'rpg', 'tracking'],
     source: 'BetterRepository',
-    description: 'Readable, AI-assisted state management for AI Dungeon scenarios using a Stateboy card, settings card, AI module updates, and Widget dashboard.',
-    purpose: 'Lets creators define persistent scenario states in plain Story Card text, injects those states into context, validates AI-proposed updates, and displays current values through Widgets.',
+    description: 'Readable, AI-assisted state management for AI Dungeon scenarios using Stateboy cards, guarded AI updates, State Directives, and a Widget dashboard.',
+    purpose: 'Lets creators define persistent scenario states in plain Story Card text, injects those states into context, validates AI-proposed updates, respects widget/context/AI directives, and displays current values through Widgets.',
     requiresExtension: 'BetterDungeon',
     ultrascriptsMode: 'required'
   }

@@ -202,7 +202,8 @@ BetterRepository now has public Ultrascripts guides for:
 - System
 
 The next documentation track is not filling gaps in the guide set; it is
-keeping the Enhanced and Required script templates aligned while reviewing
+keeping the Enhanced and Required script templates aligned, keeping Stateboy
+current as the first Required Ultrascripts showcase script, and reviewing
 modules one at a time for conceptual polish.
 
 ## 10. Intentionally not in public docs
