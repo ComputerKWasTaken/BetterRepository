@@ -97,6 +97,10 @@ src/
 
 Open source under the [MIT License](LICENSE).
 
+## Support
+
+BetterRepository is free and open source. If it has helped you build better adventures and you would like to support BetterRepository, BetterDungeon, and my other projects, visit my [Ko-fi page](https://ko-fi.com/computerk).
+
 <p align="center">
   Made with ❤️ by <strong>computerK</strong> for the AI Dungeon community
 </p>

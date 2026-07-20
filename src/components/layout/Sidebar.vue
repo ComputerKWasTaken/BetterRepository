@@ -105,6 +105,17 @@
             <span>Discord</span>
             <ExternalLink class="w-3 h-3 ml-auto opacity-50" />
           </a>
+
+          <a
+            href="https://ko-fi.com/computerk"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="nav-link"
+          >
+            <Coffee class="w-4 h-4" />
+            <span>Support on Ko-fi</span>
+            <ExternalLink class="w-3 h-3 ml-auto opacity-50" />
+          </a>
         </div>
       </nav>
 
@@ -123,7 +134,7 @@ import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { 
   LayoutGrid, ScrollText, Bookmark, Drama, Code, BookOpen, Rocket,
-  Link2, GitPullRequest, MessageCircle, ExternalLink, Heart, Sparkles, X
+  Link2, GitPullRequest, MessageCircle, ExternalLink, Heart, Coffee, Sparkles, X
 } from 'lucide-vue-next'
 
 const props = defineProps({
