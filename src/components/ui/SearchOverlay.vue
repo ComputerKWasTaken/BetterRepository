@@ -13,10 +13,14 @@
         />
 
         <!-- Search panel -->
-        <div 
+        <div
           ref="panelRef"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="global-search-title"
           class="relative w-full max-w-lg bg-bd-bg-secondary border border-bd-border-default rounded-xl shadow-xl overflow-hidden animate-scaleIn"
         >
+          <h2 id="global-search-title" class="sr-only">Search BetterRepository</h2>
           <!-- Search input -->
           <div class="relative border-b border-bd-border-subtle">
             <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-bd-text-muted pointer-events-none" />
@@ -24,7 +28,8 @@
               ref="inputRef"
               v-model="searchState.query.value"
               type="text"
-              placeholder="Search all resources..."
+              placeholder="Search resources, presets, and guides..."
+              aria-label="Search all BetterRepository resources and guides"
               class="w-full bg-transparent pl-12 pr-20 py-4 text-bd-text-primary placeholder-bd-text-muted focus:outline-none text-base"
               @keydown.escape="close"
               @keydown.down.prevent="navigateList(1)"
@@ -82,6 +87,9 @@
                         <span v-if="result.difficulty" class="text-[10px] px-1.5 py-0.5 rounded-full" :class="difficultyClass(result.difficulty)">
                           {{ result.difficulty }}
                         </span>
+                        <span v-if="result.releaseStatus === 'unpublished'" class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-amber/15 text-bd-amber">
+                          Unpublished
+                        </span>
                       </div>
                       <p v-if="result.description" class="text-xs text-bd-text-muted mt-0.5 line-clamp-1">
                         {{ result.description }}
@@ -111,7 +119,7 @@
 
             <!-- Initial state (no query) -->
             <div v-else-if="!searchState.hasQuery.value" class="px-6 py-8 text-center">
-              <p class="text-sm text-bd-text-muted">Search across AI Instructions, Plot Components, Story Cards, and Scripts</p>
+              <p class="text-sm text-bd-text-muted">Search resources, Story Card presets, and every guide</p>
             </div>
           </div>
 
@@ -136,7 +144,7 @@
 import { ref, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useGlobalSearch } from '@/composables/useGlobalSearch'
-import { Search, ChevronRight, ScrollText, Layers, Bookmark, Drama, Code } from 'lucide-vue-next'
+import { Search, ChevronRight, ScrollText, Layers, Bookmark, Drama, Code, Cog, BookOpen, Rocket } from 'lucide-vue-next'
 
 const props = defineProps({
   isOpen: { type: Boolean, default: false }
@@ -223,7 +231,7 @@ watch(() => searchState.results.value, () => {
 })
 
 // --- Icon map ---
-const iconMap = { ScrollText, Layers, Bookmark, Drama, Code }
+const iconMap = { ScrollText, Layers, Bookmark, Drama, Code, Cog, BookOpen, Rocket }
 const getGroupIcon = (name) => iconMap[name] || Search
 
 // --- Difficulty badges ---
@@ -239,9 +247,9 @@ const difficultyClass = (diff) => {
 // --- Navigation ---
 const navigateToResult = (group, result) => {
   close()
-  router.push({ 
-    path: group.route, 
-    query: { q: searchState.query.value, tab: group.tabHint } 
+  router.push({
+    path: result.route || group.route,
+    query: { q: searchState.query.value, tab: result.tabHint || group.tabHint }
   })
 }
 

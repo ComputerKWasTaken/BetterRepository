@@ -22,11 +22,13 @@
     </header>
 
     <!-- Tab Navigation -->
-    <div class="flex gap-2 border-b border-bd-border-subtle pb-2 overflow-x-auto">
+    <div class="flex gap-2 border-b border-bd-border-subtle pb-2 overflow-x-auto" role="tablist" aria-label="Story Card sections">
       <button 
         v-for="tab in tabs" 
         :key="tab.id"
-        @click="activeTab = tab.id"
+        role="tab"
+        :aria-selected="activeTab === tab.id"
+        @click="switchTab(tab.id)"
         class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap"
         :class="activeTab === tab.id 
           ? 'bg-bd-accent-primary/20 text-bd-accent-light' 
@@ -1257,8 +1259,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import StoryCardItem from '@/components/ui/StoryCardItem.vue'
 import StoryCardPresetItem from '@/components/ui/StoryCardPresetItem.vue'
 import StoryCardBuilder from '@/components/ui/StoryCardBuilder.vue'
@@ -1289,6 +1291,7 @@ import {
 } from 'lucide-vue-next'
 
 const route = useRoute()
+const router = useRouter()
 const activeTab = ref('examples')
 
 const tabs = [
@@ -1297,6 +1300,12 @@ const tabs = [
   { id: 'builder', label: 'Builder', icon: Hammer },
 ]
 
+const validTabIds = tabs.map(tab => tab.id)
+
+const switchTab = (tabId) => {
+  if (!validTabIds.includes(tabId)) return
+  router.replace({ query: { ...route.query, tab: tabId } })
+}
 
 const examples = ref(STORY_CARDS)
 const templates = ref(STORY_CARD_TEMPLATES)
@@ -1514,7 +1523,7 @@ const collapseAllGuideSections = () => {
 
 // Handle initial search query and tab from URL (e.g. from global search)
 onMounted(() => {
-  if (route.query.tab && ['examples', 'presets', 'builder'].includes(route.query.tab)) {
+  if (route.query.tab && validTabIds.includes(route.query.tab)) {
     activeTab.value = route.query.tab
   }
   if (route.query.q) {
@@ -1525,6 +1534,19 @@ onMounted(() => {
       // Ensure we're on the examples tab so filtered results are visible
       if (!route.query.tab) activeTab.value = 'examples'
     }
+  }
+})
+
+watch(() => route.query.tab, (newTab) => {
+  activeTab.value = validTabIds.includes(newTab) ? newTab : 'examples'
+})
+
+watch(() => route.query.q, (newQuery) => {
+  const query = typeof newQuery === 'string' ? newQuery : ''
+  if (activeTab.value === 'presets') {
+    presetsSearchQuery.value = query
+  } else {
+    searchQuery.value = query
   }
 })
 

@@ -18,8 +18,8 @@ const SITE_URL = 'https://better-repository.netlify.app'
  */
 const PAGE_META = {
   '/': {
-    title: 'BetterRepository',
-    description: 'The ultimate AI Dungeon resource hub. Browse curated AI Instructions, Plot Components, Story Cards, Scripts, and Guides to craft better adventures.',
+    title: 'BetterRepository V1.7',
+    description: 'BetterRepository V1.7 brings a polished AI Dungeon resource library, Story Card command presets, and refreshed BetterDungeon V2 Ultrascripts documentation.',
   },
   '/ai-instructions': {
     title: 'AI Instructions - BetterRepository',
@@ -31,15 +31,19 @@ const PAGE_META = {
   },
   '/story-cards': {
     title: 'Story Cards - BetterRepository',
-    description: 'Story Card templates, a visual card builder, and a complete writing guide for characters, locations, factions, and more in AI Dungeon.',
+    description: 'Story Card templates, thirteen command presets, a visual card builder, and a complete writing guide for AI Dungeon.',
   },
   '/scripts': {
     title: 'Scripts - BetterRepository',
     description: 'Custom JavaScript scripts and a Multiscript Builder for AI Dungeon. Ready-to-use scripts, game mechanics, and a complete API reference with lifecycle hooks.',
   },
+  '/ultrascripts': {
+    title: 'Ultrascripts - BetterRepository',
+    description: 'BetterDungeon V2\'s shipped eight-module platform: Widget, WebFetch, AI, SDK, Clock, Weather, Network, and System over one Story Card runtime.',
+  },
   '/guides': {
     title: 'Guides - BetterRepository',
-    description: 'Everything you need to master AI Dungeon. In-depth guides on AI Instructions, Plot Components, Story Cards, Scripting, BetterScripts, Symbols & Commands, and Advanced Settings.',
+    description: 'Everything you need to master AI Dungeon. In-depth guides on AI Instructions, Plot Components, Story Cards, Scripting, Symbols & Commands, and Advanced Settings.',
   },
   '/contribute': {
     title: 'Contribute to BetterRepository',

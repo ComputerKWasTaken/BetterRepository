@@ -25,13 +25,12 @@ separate heartbeat subsystem, and no zero-width or TagCipher transport.
 ## 2. Source-of-truth references
 
 - `Project Management/ultrascripts/README.md`
-- `Project Management/ultrascripts/00-overview.md`
-- `Project Management/ultrascripts/01-architecture.md`
-- `Project Management/ultrascripts/02-modules.md`
-- `Project Management/ultrascripts/03-implementation-status.md`
-- `Project Management/ultrascripts/04-test-suites.md`
-- `Project Management/ultrascripts/05-betterdungeon-sdk-spec.md`
-- `Project Management/ultrascripts/07-example-contract-reference.md`
+- `Project Management/ultrascripts/reference/runtime.md`
+- `Project Management/ultrascripts/reference/modules.md`
+- `Project Management/ultrascripts/reference/script-contract.md`
+- `Project Management/ultrascripts/reference/sdk.md`
+- `Project Management/ultrascripts/reference/verification.md`
+- `Project Management/ultrascripts/planning/docs-sync.md`
 - `BetterDungeon/services/ultrascripts/core.js`
 - `BetterDungeon/services/ultrascripts/envelope.js`
 - `BetterDungeon/services/ultrascripts/ops-dispatcher.js`
@@ -40,7 +39,7 @@ separate heartbeat subsystem, and no zero-width or TagCipher transport.
 
 ## 3. Module inventory
 
-All nine first-party modules are shipped and covered by dedicated regression
+All eight first-party modules are shipped and covered by dedicated regression
 test suites in `BetterDungeon/tests/aid-scripts/`.
 
 | Module | Kind | Public role | Ops / state |
@@ -198,10 +197,10 @@ BetterRepository now has public Ultrascripts guides for:
 - Network
 - System
 
-The next documentation track is not filling gaps in the guide set; it is
-keeping the Enhanced and Required script templates aligned, keeping Stateboy
-current as the first Required Ultrascripts showcase script, and reviewing
-modules one at a time for conceptual polish.
+The V1.7 documentation track keeps the Enhanced and Required templates aligned
+with BetterDungeon V2 and keeps Stateboy current as the first planned Required
+Ultrascripts showcase. Stateboy is explicitly unpublished in V1.7 and is not
+part of the shipped resource set.
 
 ## 10. Intentionally not in public docs
 

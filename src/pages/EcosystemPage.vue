@@ -274,7 +274,7 @@
                         </div>
                         <p class="text-xs text-bd-text-secondary mt-1">
                           BetterDungeon's scripting platform. Scenarios can render <strong class="text-bd-text-primary">dynamic UI widgets</strong>
-                          (HP bars, stat grids, dashboards), call external APIs, hit hosted AI, and query real-world context &mdash; all over a
+                          (HP bars, stat grids, dashboards), call external APIs, use asynchronous AI queries, and query real-world context &mdash; all over a
                           unified Story Card transport.
                         </p>
                       </div>

@@ -906,9 +906,9 @@ function writeRequiredTemplateTestTrace(tState, us) {
       if (cards[i] === card) { idx = i; break; }
     }
     if (idx >= 0 && typeof updateStoryCard === 'function') {
-      updateStoryCard(idx, card.keys || card.key || 'ultrascripts:test:required-template', cardText, card.type || 'Ultrascripts Test');
+      updateStoryCard(idx, card.keys || card.key || 'ultrascripts:test:required-template', cardText, card.type || 'Ultrascripts');
     }
   } else if (typeof addStoryCard === 'function') {
-    addStoryCard('ultrascripts:test:required-template', cardText, 'Ultrascripts Test');
+    addStoryCard('ultrascripts:test:required-template', cardText, 'Ultrascripts');
   }
 }

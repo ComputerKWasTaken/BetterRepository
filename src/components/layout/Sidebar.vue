@@ -14,24 +14,27 @@
     <aside 
       v-if="sidebarVisible"
       ref="sidebarRef"
+      aria-label="Primary navigation"
       class="fixed left-0 top-0 h-full w-64 bg-bd-bg-secondary border-r border-bd-border-subtle flex flex-col"
       :style="{ zIndex: isMobile ? 'var(--bd-z-modal)' : 'var(--bd-z-fixed)' }"
     >
       <!-- Logo Header -->
-      <div class="p-6 border-b border-bd-border-subtle flex items-center justify-between">
-        <router-link to="/" class="flex items-center gap-3 group" @click="closeMobile">
-          <div class="w-10 h-10 rounded-lg overflow-hidden shadow-glow">
-            <img src="/betterrepository_logo.png" alt="BetterRepository" class="w-full h-full object-cover" />
-          </div>
+      <div class="p-6 border-b border-bd-border-subtle flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+          <router-link to="/" class="flex-shrink-0 group" @click="closeMobile" aria-label="BetterRepository home">
+            <div class="w-10 h-10 rounded-lg overflow-hidden shadow-glow">
+              <img src="/betterrepository_logo.png" alt="BetterRepository" class="w-full h-full object-cover" />
+            </div>
+          </router-link>
           <div>
-            <h1 class="text-lg font-semibold text-bd-text-primary group-hover:text-gradient transition-all">
+            <router-link to="/" class="text-lg font-semibold text-bd-text-primary hover:text-bd-accent-light transition-colors" @click="closeMobile">
               BetterRepository
-            </h1>
+            </router-link>
             <div class="flex items-center gap-2">
-              <router-link to="/?section=whats-new" class="text-xs text-bd-text-muted hover:text-bd-accent-primary transition-colors">v1.6</router-link>
+              <router-link to="/?section=whats-new" class="text-xs text-bd-text-muted hover:text-bd-accent-primary transition-colors" @click="closeMobile">v1.7</router-link>
             </div>
           </div>
-        </router-link>
+        </div>
         <!-- Close button (mobile only) -->
         <button 
           v-if="isMobile"
@@ -43,8 +46,20 @@
         </button>
       </div>
 
+      <div class="px-4 pt-4">
+        <button
+          type="button"
+          class="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-bd-bg-primary border border-bd-border-subtle text-sm text-bd-text-secondary hover:text-bd-text-primary hover:border-bd-border-default transition-colors"
+          @click="openSearch"
+        >
+          <Search class="w-4 h-4" />
+          <span>Search everything</span>
+          <kbd class="ml-auto text-[10px] text-bd-text-muted">Ctrl K</kbd>
+        </button>
+      </div>
+
       <!-- Navigation -->
-      <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+      <nav class="flex-1 p-4 space-y-1 overflow-y-auto" aria-label="Resource sections">
         <!-- Main Navigation -->
         <div class="mb-6">
           <div class="section-header">
@@ -58,6 +73,7 @@
             :to="item.path"
             class="nav-link"
             :class="{ 'active': isActive(item.path) }"
+            :aria-current="isActive(item.path) ? 'page' : undefined"
             @click="closeMobile"
           >
             <component :is="item.icon" class="w-4 h-4" />
@@ -134,14 +150,14 @@ import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { 
   LayoutGrid, ScrollText, Bookmark, Drama, Code, BookOpen, Rocket,
-  Link2, GitPullRequest, MessageCircle, ExternalLink, Heart, Coffee, Sparkles, X
+  Link2, GitPullRequest, MessageCircle, ExternalLink, Heart, Coffee, Sparkles, X, Search
 } from 'lucide-vue-next'
 
 const props = defineProps({
   isOpen: { type: Boolean, default: false }
 })
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'search'])
 
 const route = useRoute()
 const sidebarRef = ref(null)
@@ -173,6 +189,11 @@ const closeMobile = () => {
   if (isMobile.value) {
     emit('close')
   }
+}
+
+const openSearch = () => {
+  closeMobile()
+  emit('search')
 }
 
 // Lock body scroll when mobile sidebar is open

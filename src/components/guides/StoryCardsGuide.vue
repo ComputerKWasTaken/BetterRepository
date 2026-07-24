@@ -296,9 +296,33 @@
             <div class="space-y-3">
               <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Command Presets &amp; Templates</h3>
               <p class="text-xs text-bd-text-secondary">
-                Custom presets shape the AI generator's prompt template. The standard template leverages the `{{title}}` token:
+                BetterRepository V1.7 ships <strong>{{ STORY_CARD_COMMAND_PRESETS.length }} copy-ready presets</strong>. Every preset is rendered from the same
+                <code class="text-bd-green">STORY_CARD_COMMAND_PRESETS</code> seed records used by the public preset library, so the guide and the copyable settings cannot drift.
+                Each record includes the command, entry formatting mode, additional context, logging toggle, and Speed Create toggle.
               </p>
-              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green whitespace-pre-wrap leading-relaxed">Generate an information card for &#123;&#123;title&#125;&#125; using clearly labeled fields which are each on their own line, beginning with a field that identifies the name of &#123;&#123;title&#125;&#125;. Limit response to 750 characters, avoid markdown, and do not leave empty lines.</pre>
+              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green whitespace-pre-wrap leading-relaxed">{{ defaultCommandPreset.command }}</pre>
+
+              <div class="grid md:grid-cols-2 gap-2">
+                <div
+                  v-for="preset in STORY_CARD_COMMAND_PRESETS"
+                  :key="preset.id"
+                  class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle"
+                >
+                  <div class="flex items-start justify-between gap-2">
+                    <strong class="text-xs text-bd-text-primary">{{ preset.name }}</strong>
+                    <code class="text-[10px] text-bd-purple">{{ preset.entryFormatting }}</code>
+                  </div>
+                  <p class="text-[11px] text-bd-text-muted mt-1">{{ preset.useCase }}</p>
+                </div>
+              </div>
+
+              <router-link
+                to="/story-cards?tab=presets"
+                class="inline-flex items-center gap-2 text-xs font-semibold text-bd-accent-primary hover:underline"
+              >
+                Browse all preset seed records and copy their complete settings
+                <Rocket class="w-3.5 h-3.5" />
+              </router-link>
               
               <div class="p-4 rounded bg-bd-bg-primary border border-bd-border-subtle text-xs space-y-2">
                 <h4 class="font-semibold text-bd-text-primary">Card Formatting Modes</h4>
@@ -444,9 +468,12 @@
 <script setup>
 import { ref } from 'vue'
 import { STORY_CARDS_CONTRIBUTORS as storyCardsContributors } from '@/data/contributors'
+import { STORY_CARD_COMMAND_PRESETS } from '@/data/storyCards'
 import { 
   Layers, HelpCircle, Lightbulb, FileText, Zap, Cog, AlertTriangle, Award, Check, Pencil, Download, Search, Target, X, ChevronDown, ChevronUp, Info, MessageSquare, Brain, Coins, Sparkles, Rocket, Users
 } from 'lucide-vue-next'
+
+const defaultCommandPreset = STORY_CARD_COMMAND_PRESETS.find(preset => preset.id === 'preset-basic-list-prompt')
 
 // Guide table of contents sections
 const guideSections = [

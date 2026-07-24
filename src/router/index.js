@@ -21,9 +21,9 @@ const routes = [
     component: HomePage,
     meta: {
       title: 'BetterRepository - AI Dungeon Resource Hub',
-      description: 'A curated collection of AI Instructions, Plot Components, Story Cards, Scripts, and Guides. Everything you need to craft better AI Dungeon adventures.',
+      description: 'BetterRepository V1.7: curated AI Dungeon resources, Story Card command presets, and BetterDungeon V2 Ultrascripts guides.',
       ogTitle: 'BetterRepository',
-      ogDescription: 'The ultimate AI Dungeon resource hub. Browse curated AI Instructions, Plot Components, Story Cards, Scripts, and Guides to craft better adventures.',
+      ogDescription: 'BetterRepository V1.7 brings a polished resource library, Story Card command presets, and refreshed BetterDungeon V2 Ultrascripts documentation.',
       path: '/'
     }
   },
@@ -83,7 +83,7 @@ const routes = [
       title: 'Ultrascripts - BetterRepository',
       description: 'BetterDungeon\'s cards-based scripting platform for AI Dungeon. Two-way communication, dynamic widgets, external data, and platform-aware modules over the Story Card transport.',
       ogTitle: 'Ultrascripts - BetterRepository',
-      ogDescription: 'BetterDungeon\'s shipped scripting platform: widgets, WebFetch, Provider AI, Clock, Weather, Network, System, and SDK modules over a unified Story Card runtime.',
+      ogDescription: 'BetterDungeon V2\'s shipped eight-module platform: Widget, WebFetch, AI, SDK, Clock, Weather, Network, and System over one Story Card runtime.',
       path: '/ultrascripts'
     }
   },

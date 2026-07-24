@@ -492,27 +492,37 @@ export const SCRIPTS = [
     difficulty: 'advanced',
     impact: 'high',
     essential: false,
-    tags: ['ultrascripts', 'state', 'ai', 'widgets', 'story-cards', 'rpg', 'tracking'],
+    tags: ['ultrascripts', 'state', 'ai', 'widgets', 'story-cards', 'rpg', 'tracking', 'unpublished'],
     source: 'BetterRepository',
-    description: 'Readable, AI-assisted state management for AI Dungeon scenarios using Stateboy cards, guarded AI updates, State Directives, and a Widget dashboard.',
-    purpose: 'Lets creators define persistent scenario states in plain Story Card text, injects those states into context, validates AI-proposed updates, respects widget/context/AI directives, and displays current values through Widgets.',
+    description: 'Unpublished preview of readable, AI-assisted state management using Stateboy cards, guarded AI updates, State Directives, and a Widget dashboard.',
+    purpose: 'Tracks the current Stateboy source for alignment and review. Copy and download actions remain withheld until the dedicated Stateboy release stage.',
     requiresExtension: 'BetterDungeon',
-    ultrascriptsMode: 'required'
+    ultrascriptsMode: 'required',
+    releaseStatus: 'unpublished',
+    releaseNote: 'Stateboy is not part of BetterRepository V1.7. It will be published in its own release stage after V1.7.'
   }
 ]
 
 // ============================================
 // DYNAMIC SCRIPT LOADING
 // ============================================
-// Automatically load script contents from the raw-scripts folder using Vite
-const rawScripts = import.meta.glob('./raw-scripts/**/*.js', { query: '?raw', import: 'default', eager: true })
+// Register script contents as lazy raw-text imports. Large community scripts
+// are fetched only when a visitor expands, copies, or downloads that entry.
+const rawScripts = import.meta.glob(
+  ['./raw-scripts/**/*.js', '!./raw-scripts/**/stateboy.js'],
+  { query: '?raw', import: 'default' }
+)
 
 SCRIPTS.forEach(script => {
+  // Keep unpublished source in the repository for alignment checks without
+  // including it in the public build or exposing copy/download controls.
+  if (script.releaseStatus === 'unpublished') return
+
   // Single file scripts
   if (script.fileType) {
     const contentPath = `./raw-scripts/${script.fileType}/${script.id}.js`
     if (rawScripts[contentPath]) {
-      script.content = rawScripts[contentPath]
+      script.contentLoader = rawScripts[contentPath]
     }
   } else {
     // Multi-file scripts
@@ -520,8 +530,8 @@ SCRIPTS.forEach(script => {
     types.forEach(type => {
       const path = `./raw-scripts/${type}/${script.id}.js`
       if (rawScripts[path]) {
-        if (!script.files) script.files = {}
-        script.files[type] = rawScripts[path]
+        if (!script.fileLoaders) script.fileLoaders = {}
+        script.fileLoaders[type] = rawScripts[path]
       }
     })
   }
@@ -568,7 +578,7 @@ export const searchScripts = (query) => {
 
 // Check if script has copyable code content
 export const hasCodeContent = (script) => {
-  return !!(script.content || script.files)
+  return !!(script.content || script.contentLoader || script.files || script.fileLoaders)
 }
 
 // Get category by ID

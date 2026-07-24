@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "vite build && node scripts/prepare-sites-build.mjs",
+    "preview": "vite preview",
+    "check:release": "node scripts/release-check.mjs",
+    "check:release:dist": "node scripts/release-check.mjs --dist"
   },
   "dependencies": {
     "js-cookie": "^3.0.5",

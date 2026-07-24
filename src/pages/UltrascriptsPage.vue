@@ -31,7 +31,7 @@
               <strong class="text-bd-green">Shipped</strong>
             </span>
             <span class="text-bd-border-default">|</span>
-            <span><strong class="text-bd-text-primary">9</strong> first-party modules</span>
+            <span><strong class="text-bd-text-primary">8</strong> first-party modules</span>
             <span class="text-bd-border-default">|</span>
             <span>Protocol <strong class="text-bd-text-primary">v1</strong></span>
             <span class="text-bd-border-default">|</span>
@@ -42,12 +42,14 @@
     </header>
 
     <!-- Tab Navigation -->
-    <div class="ultrascripts-tab-bar rounded-xl bg-bd-bg-secondary border border-bd-border-subtle p-2 space-y-1.5">
+    <div class="ultrascripts-tab-bar rounded-xl bg-bd-bg-secondary border border-bd-border-subtle p-2 space-y-1.5" role="tablist" aria-label="Ultrascripts guides">
       <!-- Row 1: Foundation tabs (orientation, architecture, authoring) -->
       <div class="flex flex-wrap gap-1.5">
         <button
           v-for="tab in foundationTabs"
           :key="tab.id"
+          role="tab"
+          :aria-selected="activeTab === tab.id"
           @click="switchTab(tab.id)"
           class="us-tab us-tab--foundation"
           :class="[
@@ -67,6 +69,8 @@
         <button
           v-for="tab in moduleTabs"
           :key="tab.id"
+          role="tab"
+          :aria-selected="activeTab === tab.id"
           @click="switchTab(tab.id)"
           class="us-tab us-tab--module"
           :class="activeTab === tab.id ? 'us-tab--active-module' : 'us-tab--inactive'"

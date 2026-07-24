@@ -43,7 +43,8 @@
                 ref="searchInputRef"
                 v-model="searchState.query.value"
                 type="text"
-                placeholder="Search instructions, templates, scripts..."
+                placeholder="Search resources, presets, and guides..."
+                aria-label="Search all BetterRepository resources and guides"
                 class="input pl-12 pr-12 py-3.5 bg-bd-bg-secondary/80 backdrop-blur-card"
                 @focus="showResults = true"
                 @keydown.escape="showResults = false"
@@ -132,6 +133,9 @@
                           </span>
                           <span v-if="result.difficulty" class="text-[10px] px-1.5 py-0.5 rounded-full" :class="difficultyClass(result.difficulty)">
                             {{ result.difficulty }}
+                          </span>
+                          <span v-if="result.releaseStatus === 'unpublished'" class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-amber/15 text-bd-amber">
+                            Unpublished
                           </span>
                         </div>
                         <p v-if="result.description" class="text-xs text-bd-text-muted mt-0.5 line-clamp-1">
@@ -237,7 +241,7 @@
                 </li>
                 <li class="flex items-start gap-2">
                   <Code class="w-3 h-3 text-bd-green flex-shrink-0 mt-1" />
-                  <span>Stateboy debuts as a Required Ultrascripts showcase using AI updates and Widgets</span>
+                  <span>Enhanced and Required templates now match BetterDungeon V2; Stateboy remains clearly marked unpublished</span>
                 </li>
               </ul>
             </div>
@@ -471,7 +475,7 @@ import {
   Search, LayoutGrid, Lightbulb, ScrollText, Heart, Sparkles, ArrowRight,
   GitPullRequest, MessageCircle, ExternalLink, Bookmark, Drama, Code,
   Award, Users, ChevronRight, Package, Layers, LayoutDashboard, Infinity, X,
-  Megaphone, Settings, Rocket, ArrowLeftRight
+  Megaphone, Settings, Rocket, ArrowLeftRight, Cog, BookOpen
 } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -601,7 +605,7 @@ const stats = [
 
 
 // Icon lookup for search result group headers
-const iconMap = { ScrollText, Layers, Bookmark, Drama, Code }
+const iconMap = { ScrollText, Layers, Bookmark, Drama, Code, Cog, BookOpen, Rocket }
 const getGroupIcon = (name) => iconMap[name] || Search
 
 // Difficulty badge styles
@@ -617,9 +621,9 @@ const difficultyClass = (diff) => {
 // Navigate to a specific result item's page with search + tab context
 const navigateToResult = (group, result) => {
   showResults.value = false
-  router.push({ 
-    path: group.route, 
-    query: { q: searchState.query.value, tab: group.tabHint } 
+  router.push({
+    path: result.route || group.route,
+    query: { q: searchState.query.value, tab: result.tabHint || group.tabHint }
   })
 }
 

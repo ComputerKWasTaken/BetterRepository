@@ -22,11 +22,13 @@
     </header>
 
     <!-- Tab Navigation -->
-    <div class="flex gap-2 border-b border-bd-border-subtle pb-2 overflow-x-auto">
+    <div class="flex gap-2 border-b border-bd-border-subtle pb-2 overflow-x-auto" role="tablist" aria-label="Plot Component sections">
       <button
         v-for="tab in tabs"
         :key="tab.id"
-        @click="activeTab = tab.id"
+        role="tab"
+        :aria-selected="activeTab === tab.id"
+        @click="switchTab(tab.id)"
         class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap"
         :class="activeTab === tab.id 
           ? 'bg-bd-accent-primary/20 text-bd-accent-light' 
@@ -1116,7 +1118,7 @@
 </template>
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import ResourceCard from '@/components/ui/ResourceCard.vue'
 import SearchBar from '@/components/ui/SearchBar.vue'
 import PlotComponentBuilder from '@/components/ui/PlotComponentBuilder.vue'
@@ -1140,6 +1142,7 @@ import {
   Hammer
 } from 'lucide-vue-next'
 const route = useRoute()
+const router = useRouter()
 const { preferences, verifyAge, addToSearchHistory } = usePreferences()
 const activeTab = ref('templates')
 // Get unique tags for search suggestions
@@ -1156,6 +1159,12 @@ const tabs = [
   { id: 'templates', label: 'Templates', icon: Layers },
   { id: 'builder', label: 'Builder', icon: Hammer },
 ]
+const validTabIds = tabs.map(tab => tab.id)
+
+const switchTab = (tabId) => {
+  if (!validTabIds.includes(tabId)) return
+  router.replace({ query: { ...route.query, tab: tabId } })
+}
 const templates = ref(TEMPLATES)
 const categories = ref(TEMPLATE_CATEGORIES)
 const searchQuery = ref('')
@@ -1224,7 +1233,7 @@ const collapseAllGuideSections = () => {
 }
 onMounted(() => {
   // Handle initial search query and tab from URL (e.g. from global search)
-  if (route.query.tab && ['templates', 'builder'].includes(route.query.tab)) {
+  if (route.query.tab && validTabIds.includes(route.query.tab)) {
     activeTab.value = route.query.tab
   }
   if (route.query.q) {
@@ -1257,6 +1266,14 @@ onMounted(() => {
       setupPlotCategoryObserver()
     })
   }
+})
+
+watch(() => route.query.tab, (newTab) => {
+  activeTab.value = validTabIds.includes(newTab) ? newTab : 'templates'
+})
+
+watch(() => route.query.q, (newQuery) => {
+  searchQuery.value = typeof newQuery === 'string' ? newQuery : ''
 })
 onBeforeUnmount(() => {
   if (guideObserver) {

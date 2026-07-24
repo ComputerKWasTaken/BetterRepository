@@ -8,8 +8,9 @@
 import { ref, computed, watch } from 'vue'
 import { INSTRUCTIONS, SETS } from '@/data/aiInstructions'
 import { TEMPLATES } from '@/data/plotComponents'
-import { STORY_CARDS, STORY_CARD_TEMPLATES } from '@/data/storyCards'
+import { STORY_CARDS, STORY_CARD_TEMPLATES, STORY_CARD_COMMAND_PRESETS } from '@/data/storyCards'
 import { SCRIPTS } from '@/data/scripts'
+import { GUIDE_SEARCH_ITEMS, ULTRASCRIPTS_GUIDE_SEARCH_ITEMS } from '@/data/guideSearch'
 import { searchCollectionWithScores } from '@/data/shared'
 import { usePreferences } from '@/composables/usePreferences'
 
@@ -76,6 +77,16 @@ const RESOURCE_TYPES = [
     tabHint: 'examples',
   },
   {
+    id: 'story-card-presets',
+    label: 'Story Cards',
+    sublabel: 'Command Presets',
+    icon: 'Cog',
+    color: 'bd-purple',
+    route: '/story-cards',
+    queryParam: 'q',
+    tabHint: 'presets',
+  },
+  {
     id: 'scripts',
     label: 'Scripts',
     sublabel: 'Collection',
@@ -84,6 +95,26 @@ const RESOURCE_TYPES = [
     route: '/scripts',
     queryParam: 'q',
     tabHint: 'collection',
+  },
+  {
+    id: 'guides',
+    label: 'Guides',
+    sublabel: 'Core',
+    icon: 'BookOpen',
+    color: 'bd-blue',
+    route: '/guides',
+    queryParam: 'q',
+    tabHint: 'ai-instructions',
+  },
+  {
+    id: 'ultrascripts-guides',
+    label: 'Ultrascripts',
+    sublabel: 'Guides',
+    icon: 'Rocket',
+    color: 'bd-green',
+    route: '/ultrascripts',
+    queryParam: 'q',
+    tabHint: 'overview',
   },
 ]
 
@@ -94,7 +125,10 @@ const SEARCH_FIELDS = {
   'plot-components': ['name', 'description', 'tags', 'purpose', 'useCase'],
   'story-cards': ['name', 'description', 'tags', 'useCase', 'triggers'],
   'story-card-templates': ['name', 'description', 'tags', 'useCase'],
+  'story-card-presets': ['name', 'description', 'tags', 'useCase', 'command'],
   'scripts': ['name', 'description', 'tags', 'purpose'],
+  'guides': ['name', 'description', 'tags'],
+  'ultrascripts-guides': ['name', 'description', 'tags'],
 }
 
 /**
@@ -124,7 +158,10 @@ export const globalSearch = (query, options = {}) => {
     { typeId: 'plot-components', data: TEMPLATES },
     { typeId: 'story-cards', data: STORY_CARDS },
     { typeId: 'story-card-templates', data: STORY_CARD_TEMPLATES },
+    { typeId: 'story-card-presets', data: STORY_CARD_COMMAND_PRESETS },
     { typeId: 'scripts', data: SCRIPTS },
+    { typeId: 'guides', data: GUIDE_SEARCH_ITEMS },
+    { typeId: 'ultrascripts-guides', data: ULTRASCRIPTS_GUIDE_SEARCH_ITEMS },
   ]
 
   const groups = []
@@ -156,6 +193,9 @@ export const globalSearch = (query, options = {}) => {
         category: r.item.category,
         tags: r.item.tags || [],
         difficulty: r.item.difficulty,
+        releaseStatus: r.item.releaseStatus,
+        route: r.item.route || typeMeta.route,
+        tabHint: r.item.tabHint || typeMeta.tabHint,
         item: r.item,
       })),
       totalMatches: matched.length,
@@ -171,7 +211,16 @@ export const globalSearch = (query, options = {}) => {
     return bTop - aTop
   })
 
-  return { groups, totalCount, query: trimmed }
+  let remaining = maxTotal
+  const limitedGroups = groups
+    .map(group => {
+      const results = group.results.slice(0, Math.max(remaining, 0))
+      remaining -= results.length
+      return { ...group, results }
+    })
+    .filter(group => group.results.length > 0)
+
+  return { groups: limitedGroups, totalCount, query: trimmed }
 }
 
 /**

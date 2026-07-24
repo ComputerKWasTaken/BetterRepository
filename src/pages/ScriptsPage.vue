@@ -22,11 +22,13 @@
     </header>
 
     <!-- Tab Navigation -->
-    <div class="flex gap-2 border-b border-bd-border-subtle pb-2 overflow-x-auto">
+    <div class="flex gap-2 border-b border-bd-border-subtle pb-2 overflow-x-auto" role="tablist" aria-label="Script sections">
       <button
         v-for="tab in tabs"
         :key="tab.id"
-        @click="activeTab = tab.id"
+        role="tab"
+        :aria-selected="activeTab === tab.id"
+        @click="switchTab(tab.id)"
         class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap"
         :class="activeTab === tab.id 
           ? 'bg-bd-accent-primary/20 text-bd-accent-light' 
@@ -910,7 +912,7 @@ modifier(text);</pre>
           </h3>
           <p class="text-sm text-bd-text-secondary mb-3">
             BetterDungeon ships <strong class="text-bd-text-primary">Ultrascripts</strong>, a cards-based scripting platform
-            with dynamic widget rendering, web access, hosted AI, and real-world context modules &mdash; all over a bidirectional Story Card bridge.
+            with dynamic widget rendering, web access, asynchronous AI queries, and real-world context modules &mdash; all over a bidirectional Story Card bridge.
             Vanilla scripts and Ultrascripts coexist; reach for Ultrascripts when you need capabilities the sandbox alone cannot deliver.
           </p>
           <div class="flex items-center gap-3 flex-wrap">
@@ -918,7 +920,7 @@ modifier(text);</pre>
               <Terminal class="w-4 h-4" />
               Explore Ultrascripts
             </router-link>
-            <span class="text-xs text-bd-text-muted">9 first-party modules &middot; shipped today</span>
+            <span class="text-xs text-bd-text-muted">8 first-party modules &middot; shipped with BetterDungeon V2</span>
           </div>
         </div>
       </section>
@@ -1317,7 +1319,7 @@ modifier(text);</pre>
 
 <script setup>
 import { ref, computed, onMounted, nextTick, onUnmounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import ScriptItem from '@/components/ui/ScriptItem.vue'
 import MultiscriptBuilder from '@/components/ui/MultiscriptBuilder.vue'
 import SearchBar from '@/components/ui/SearchBar.vue'
@@ -1340,12 +1342,20 @@ import {
 } from 'lucide-vue-next'
 
 const route = useRoute()
+const router = useRouter()
 const activeTab = ref('collection')
 
 const tabs = [
   { id: 'collection', label: 'Examples', icon: Layers },
   { id: 'builder', label: 'Multiscript Builder', icon: Blocks },
 ]
+
+const validTabIds = tabs.map(tab => tab.id)
+
+const switchTab = (tabId) => {
+  if (!validTabIds.includes(tabId)) return
+  router.replace({ query: { ...route.query, tab: tabId } })
+}
 
 
 const scripts = ref(SCRIPTS)
@@ -1437,7 +1447,7 @@ const collapseAllGuideSections = () => {
 
 // Handle initial search query and tab from URL (e.g. from global search)
 onMounted(() => {
-  if (route.query.tab && ['collection', 'builder'].includes(route.query.tab)) {
+  if (route.query.tab && validTabIds.includes(route.query.tab)) {
     activeTab.value = route.query.tab
   }
   if (route.query.q) {
@@ -1451,6 +1461,14 @@ onMounted(() => {
       setupCategoryObserver()
     })
   }
+})
+
+watch(() => route.query.tab, (newTab) => {
+  activeTab.value = validTabIds.includes(newTab) ? newTab : 'collection'
+})
+
+watch(() => route.query.q, (newQuery) => {
+  searchQuery.value = typeof newQuery === 'string' ? newQuery : ''
 })
 
 onUnmounted(() => {

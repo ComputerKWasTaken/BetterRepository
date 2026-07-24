@@ -1,10 +1,13 @@
 <template>
   <div 
     class="script-item"
-    :class="{ 'ring-2 ring-bd-accent-primary': isExpanded }"
+    :class="{
+      'ring-2 ring-bd-accent-primary': isExpanded && !isUnpublished,
+      'ring-2 ring-bd-amber/50': isExpanded && isUnpublished
+    }"
   >
     <!-- Card Header -->
-    <div class="p-4 cursor-pointer" @click="toggleExpand">
+    <div class="p-4 cursor-pointer" @click="toggleExpand" @keydown.enter.self="toggleExpand" @keydown.space.self.prevent="toggleExpand" tabindex="0">
       <div class="flex items-start justify-between gap-3">
         <div class="flex-1 min-w-0">
           <div class="flex items-center gap-2 mb-1 flex-wrap">
@@ -25,6 +28,12 @@
             >
               Requires Ultrascripts
             </span>
+            <span
+              v-if="isUnpublished"
+              class="tag text-[9px] bg-bd-amber/20 text-bd-amber border border-bd-amber/30"
+            >
+              Unpublished Preview
+            </span>
             <!-- Source Badge -->
             <span 
               v-if="script.source === 'Official Guidebook'"
@@ -41,14 +50,24 @@
           </div>
           <p class="text-sm text-bd-text-secondary line-clamp-2">{{ script.description }}</p>
         </div>
-        <button 
-          v-if="hasCode"
-          @click.stop="copyMainContent"
-          class="p-2 rounded-lg hover:bg-bd-bg-tertiary transition-colors flex-shrink-0 text-bd-text-muted hover:text-bd-text-primary"
-          title="Copy script"
-        >
-          <span class="text-sm">{{ copied ? '✓' : '📋' }}</span>
-        </button>
+        <div v-if="hasCode && !isUnpublished" class="flex items-center gap-1 flex-shrink-0">
+          <button
+            @click.stop="copyMainContent"
+            class="p-2 rounded-lg hover:bg-bd-bg-tertiary transition-colors text-bd-text-muted hover:text-bd-text-primary"
+            :aria-label="`Copy ${script.name}`"
+            title="Copy script"
+          >
+            <span class="text-sm">{{ copied ? '✓' : '📋' }}</span>
+          </button>
+          <button
+            @click.stop="downloadMainContent"
+            class="p-2 rounded-lg hover:bg-bd-bg-tertiary transition-colors text-bd-text-muted hover:text-bd-text-primary"
+            :aria-label="`Download ${script.name}`"
+            title="Download script"
+          >
+            <Download class="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       <!-- Metadata Badges -->
@@ -61,7 +80,7 @@
         <span v-if="script.fileType" class="tag text-[10px]" :class="fileTypeClass">
           {{ script.fileType }}
         </span>
-        <span v-if="script.files" class="tag text-[10px] bg-bd-amber/20 text-bd-amber">
+        <span v-if="script.files || script.fileLoaders" class="tag text-[10px] bg-bd-amber/20 text-bd-amber">
           Multi-file
         </span>
         <span v-if="script.requiresExtension" class="tag text-[10px] bg-bd-cyan/20 text-bd-cyan">
@@ -81,6 +100,23 @@
     <!-- Expanded Content -->
     <Transition name="slide">
       <div v-if="isExpanded" class="border-t border-bd-border-subtle">
+        <div v-if="isUnpublished" class="p-4 border-b border-bd-amber/20 bg-bd-amber/10">
+          <div class="flex items-start gap-3">
+            <AlertTriangle class="w-5 h-5 text-bd-amber flex-shrink-0 mt-0.5" />
+            <div>
+              <p class="text-sm font-semibold text-bd-amber">Not published in V1.7</p>
+              <p class="text-xs text-bd-text-secondary mt-1">
+                {{ script.releaseNote }} The current source remains tracked internally, but public copy and download controls are disabled.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="isLoading" class="p-4 border-b border-bd-border-subtle text-sm text-bd-text-muted flex items-center gap-2">
+          <span class="w-4 h-4 border-2 border-bd-accent-primary/30 border-t-bd-accent-primary rounded-full animate-spin" />
+          Loading script files…
+        </div>
+
         <!-- Purpose -->
         <div v-if="script.purpose" class="p-4 border-b border-bd-border-subtle">
           <div class="flex items-center gap-2 text-xs text-bd-text-muted mb-2">
@@ -96,6 +132,7 @@
             v-if="script.githubUrl"
             :href="script.githubUrl" 
             target="_blank"
+            rel="noopener noreferrer"
             class="text-sm text-bd-accent-primary hover:underline flex items-center gap-2"
           >
             <Github class="w-4 h-4" />
@@ -106,6 +143,7 @@
             v-if="script.externalUrl"
             :href="script.externalUrl" 
             target="_blank"
+            rel="noopener noreferrer"
             class="text-sm text-bd-accent-primary hover:underline flex items-center gap-2"
           >
             <span>🔗</span>
@@ -119,6 +157,7 @@
           <a 
             :href="script.scenarioLink" 
             target="_blank"
+            rel="noopener noreferrer"
             class="text-sm text-bd-accent-primary hover:underline flex items-center gap-2"
           >
             <span>🎮</span>
@@ -128,7 +167,7 @@
         </div>
 
         <!-- Single File Content -->
-        <div v-if="script.content" class="p-4">
+        <div v-if="script.content && !isUnpublished" class="p-4">
           <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-2 text-xs text-bd-text-muted">
               <span class="text-xs">📝</span>
@@ -136,32 +175,50 @@
                 {{ script.fileType || 'Script' }}
               </span>
             </div>
-            <button 
-              @click.stop="copyContent(script.content)"
-              class="copy-btn"
-            >
-              <span class="text-xs">{{ copied ? '✓' : '📋' }}</span>
-              {{ copied ? 'Copied!' : 'Copy' }}
-            </button>
+            <div class="flex items-center gap-2">
+              <button
+                @click.stop="copyContent(script.content)"
+                class="copy-btn"
+              >
+                <span class="text-xs">{{ copied ? '✓' : '📋' }}</span>
+                {{ copied ? 'Copied!' : 'Copy' }}
+              </button>
+              <button
+                @click.stop="downloadContent(script.content, `${script.id}.js`)"
+                class="copy-btn"
+              >
+                <Download class="w-3 h-3" />
+                Download
+              </button>
+            </div>
           </div>
           <pre class="code-block-scrollable whitespace-pre-wrap">{{ script.content }}</pre>
         </div>
 
         <!-- Multi-File Content -->
-        <div v-if="script.files" class="divide-y divide-bd-border-subtle">
+        <div v-if="script.files && !isUnpublished" class="divide-y divide-bd-border-subtle">
           <div v-for="(content, fileType) in script.files" :key="fileType" class="p-4">
             <div class="flex items-center justify-between mb-2">
               <div class="flex items-center gap-2 text-xs text-bd-text-muted">
                 <span class="text-xs">{{ getFileIcon(fileType) }}</span>
                 <span class="uppercase tracking-wider font-medium">{{ fileType }}</span>
               </div>
-              <button 
-                @click.stop="copyContent(content)"
-                class="copy-btn"
-              >
-                <span class="text-xs">📋</span>
-                Copy
-              </button>
+              <div class="flex items-center gap-2">
+                <button
+                  @click.stop="copyContent(content)"
+                  class="copy-btn"
+                >
+                  <span class="text-xs">📋</span>
+                  Copy
+                </button>
+                <button
+                  @click.stop="downloadContent(content, `${script.id}-${fileType}.js`)"
+                  class="copy-btn"
+                >
+                  <Download class="w-3 h-3" />
+                  Download
+                </button>
+              </div>
             </div>
             <pre class="code-block-scrollable whitespace-pre-wrap">{{ content }}</pre>
           </div>
@@ -217,7 +274,7 @@
 <script setup>
 import { ref, computed, inject } from 'vue'
 import SmartTagList from '@/components/ui/SmartTagList.vue'
-import { ExternalLink, Github, ChevronDown } from 'lucide-vue-next'
+import { ExternalLink, Github, ChevronDown, Download, AlertTriangle } from 'lucide-vue-next'
 
 const props = defineProps({
   script: {
@@ -230,9 +287,16 @@ const toast = inject('toast', () => {})
 
 const isExpanded = ref(false)
 const copied = ref(false)
+const isLoading = ref(false)
+const isUnpublished = computed(() => props.script.releaseStatus === 'unpublished')
 
 // Check if script has copyable code content
-const hasCode = computed(() => !!(props.script.content || props.script.files))
+const hasCode = computed(() => !!(
+  props.script.content ||
+  props.script.contentLoader ||
+  props.script.files ||
+  props.script.fileLoaders
+))
 
 // Check if script is external-only (links but no code)
 const isExternalOnly = computed(() => 
@@ -277,14 +341,74 @@ const getFileIcon = (fileType) => {
   return icons[fileType] || '📝'
 }
 
-const toggleExpand = () => {
+const loadCode = async () => {
+  if (isUnpublished.value || isLoading.value) return
+  if (props.script.content || props.script.files) return
+
+  isLoading.value = true
+  try {
+    if (!props.script.content && props.script.contentLoader) {
+      props.script.content = await props.script.contentLoader()
+    }
+
+    if (props.script.fileLoaders) {
+      const entries = await Promise.all(
+        Object.entries(props.script.fileLoaders).map(async ([fileType, loader]) => [fileType, await loader()])
+      )
+      props.script.files = Object.fromEntries(entries)
+    }
+  } catch (err) {
+    toast('Failed to load script files', 'error')
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const toggleExpand = async () => {
   isExpanded.value = !isExpanded.value
+  if (isExpanded.value && hasCode.value) {
+    await loadCode()
+  }
 }
 
 const copyMainContent = async () => {
+  await loadCode()
   const content = props.script.content || 
     (props.script.files ? Object.values(props.script.files).join('\n\n// ===\n\n') : '')
+  if (!content) return
   await copyContent(content)
+}
+
+const downloadMainContent = async () => {
+  await loadCode()
+  if (props.script.content) {
+    downloadContent(props.script.content, `${props.script.id}.js`)
+    return
+  }
+
+  if (props.script.files) {
+    const bundle = Object.entries(props.script.files)
+      .map(([fileType, content]) => `// ===== ${fileType.toUpperCase()} =====\n\n${content}`)
+      .join('\n\n')
+    downloadContent(bundle, `${props.script.id}-bundle.txt`)
+  }
+}
+
+const downloadContent = (content, filename) => {
+  try {
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = filename
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    URL.revokeObjectURL(url)
+    toast(`${filename} downloaded`, 'success')
+  } catch (err) {
+    toast('Failed to download script', 'error')
+  }
 }
 
 const copyContent = async (content) => {

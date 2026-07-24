@@ -29,7 +29,19 @@
 | **Scripts** | JavaScript examples for game systems, tracking, and automation. |
 | **Guides** | Public walkthroughs for AI Dungeon systems, BetterDungeon, and Ultrascripts. |
 
-Everything is **free**, **tested**, and **ready to copy-paste** into your adventures.
+Published resources are **free**, **tested**, and **ready to copy-paste** into your adventures.
+
+## V1.7
+
+V1.7 refreshes the site around the released BetterDungeon V2 baseline:
+
+- polished navigation, global search, and responsive layouts;
+- thirteen documented Story Card command presets backed by the public seed data;
+- refreshed guides for all eight shipped Ultrascripts modules;
+- byte-aligned Enhanced and Required templates with working copy and download controls.
+
+Stateboy appears only as an **unpublished preview**. Its public copy and download
+controls remain disabled until the dedicated Stateboy release stage.
 
 ---
 

@@ -25,12 +25,14 @@
     </header>
 
     <!-- Tab Navigation grouped into Primary and Secondary -->
-    <div class="guides-tab-bar rounded-xl bg-bd-bg-secondary border border-bd-border-subtle p-2">
+    <div class="guides-tab-bar rounded-xl bg-bd-bg-secondary border border-bd-border-subtle p-2" role="tablist" aria-label="BetterRepository guides">
       <!-- Primary Guides for core resource guides -->
       <div class="flex flex-wrap gap-1.5">
         <button
           v-for="tab in primaryTabs"
           :key="tab.id"
+          role="tab"
+          :aria-selected="activeTab === tab.id"
           @click="switchTab(tab.id)"
           class="guide-tab guide-tab--primary"
           :class="[
@@ -54,6 +56,8 @@
         <button
           v-for="tab in secondaryTabs"
           :key="tab.id"
+          role="tab"
+          :aria-selected="activeTab === tab.id"
           @click="switchTab(tab.id)"
           class="guide-tab guide-tab--secondary"
           :class="[

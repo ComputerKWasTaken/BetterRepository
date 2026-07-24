@@ -7,7 +7,7 @@
 
 const SITE_NAME = 'BetterRepository'
 const SITE_URL = 'https://better-repository.netlify.app'
-const DEFAULT_IMAGE = `${SITE_URL}/betterrepository_logo.png`
+const DEFAULT_IMAGE = `${SITE_URL}/og.png`
 const THEME_COLOR = '#0d0d0f'
 
 /**
@@ -35,7 +35,7 @@ function setMetaTag(attr, key, content) {
  */
 export function updateMeta(meta) {
   const title = meta.title || SITE_NAME
-  const description = meta.description || 'A curated collection of AI Instructions, Plot Components, Story Cards, and Scripts for AI Dungeon'
+  const description = meta.description || 'BetterRepository V1.7: curated AI Dungeon resources, Story Card command presets, and BetterDungeon V2 Ultrascripts guides.'
   const ogTitle = meta.ogTitle || title
   const ogDescription = meta.ogDescription || description
   const ogImage = meta.ogImage || DEFAULT_IMAGE
@@ -57,7 +57,7 @@ export function updateMeta(meta) {
   setMetaTag('property', 'og:type', 'website')
 
   // Twitter Card
-  setMetaTag('name', 'twitter:card', 'summary')
+  setMetaTag('name', 'twitter:card', 'summary_large_image')
   setMetaTag('name', 'twitter:title', ogTitle)
   setMetaTag('name', 'twitter:description', ogDescription)
   setMetaTag('name', 'twitter:image', ogImage)

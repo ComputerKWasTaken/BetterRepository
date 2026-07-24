@@ -514,7 +514,7 @@ function buildStatusLine(us, cfg, clock, aiStatus) {
 var TEMPLATE_TEST_STEPS = [
   {
     label: 'api-surface',
-    desc: 'All 14 SDK helper functions exist and are callable',
+    desc: 'All 15 SDK helper functions exist and are callable',
     run: function (us) {
       var expected = ['findCard', 'upsertCard', 'parseCard', 'liveCount', 'heartbeat',
         'available', 'has', 'tick', 'call', 'latest',
@@ -827,9 +827,9 @@ function writeTemplateTestTrace(tState, us) {
       if (cards[i] === card) { idx = i; break; }
     }
     if (idx >= 0 && typeof updateStoryCard === 'function') {
-      updateStoryCard(idx, card.keys || card.key || 'ultrascripts:test:template', cardText, card.type || 'Ultrascripts Test');
+      updateStoryCard(idx, card.keys || card.key || 'ultrascripts:test:template', cardText, card.type || 'Ultrascripts');
     }
   } else if (typeof addStoryCard === 'function') {
-    addStoryCard('ultrascripts:test:template', cardText, 'Ultrascripts Test');
+    addStoryCard('ultrascripts:test:template', cardText, 'Ultrascripts');
   }
 }

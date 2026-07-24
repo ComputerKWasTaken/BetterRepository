@@ -22,11 +22,13 @@
     </header>
 
     <!-- Tab Navigation -->
-    <div class="flex gap-2 border-b border-bd-border-subtle pb-2 overflow-x-auto">
+    <div class="flex gap-2 border-b border-bd-border-subtle pb-2 overflow-x-auto" role="tablist" aria-label="AI Instruction sections">
       <button
         v-for="tab in tabs"
         :key="tab.id"
-        @click="activeTab = tab.id"
+        role="tab"
+        :aria-selected="activeTab === tab.id"
+        @click="switchTab(tab.id)"
         class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap"
         :class="activeTab === tab.id 
           ? 'bg-bd-accent-primary/20 text-bd-accent-light' 
@@ -2016,7 +2018,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import SearchBar from '@/components/ui/SearchBar.vue'
 import ResourceCard from '@/components/ui/ResourceCard.vue'
 import InstructionBuilder from '@/components/ui/InstructionBuilder.vue'
@@ -2054,6 +2056,7 @@ const tabs = [
   { id: 'collection', label: 'Collection', icon: FileText },
   { id: 'builder', label: 'Builder', icon: Wrench },
 ]
+const validTabIds = tabs.map(tab => tab.id)
 
 const sets = ref(SETS)
 const setCategories = ref(SET_CATEGORIES)
@@ -2130,7 +2133,13 @@ const setCategoryColorMap = {
 }
 
 const route = useRoute()
+const router = useRouter()
 const { addToSearchHistory, preferences, verifyAge } = usePreferences()
+
+const switchTab = (tabId) => {
+  if (!validTabIds.includes(tabId)) return
+  router.replace({ query: { ...route.query, tab: tabId } })
+}
 
 const instructions = ref(INSTRUCTIONS)
 const categories = ref(CATEGORIES)
@@ -2623,7 +2632,7 @@ const handleSearch = (query) => {
 
 // Handle initial search query and tab from URL (e.g. from global search)
 onMounted(() => {
-  if (route.query.tab && ['sets', 'collection', 'builder'].includes(route.query.tab)) {
+  if (route.query.tab && validTabIds.includes(route.query.tab)) {
     activeTab.value = route.query.tab
   }
   if (route.query.q) {
@@ -2637,6 +2646,14 @@ onMounted(() => {
       setupCategoryObserver()
     })
   }
+})
+
+watch(() => route.query.tab, (newTab) => {
+  activeTab.value = validTabIds.includes(newTab) ? newTab : 'collection'
+})
+
+watch(() => route.query.q, (newQuery) => {
+  searchQuery.value = typeof newQuery === 'string' ? newQuery : ''
 })
 
 onUnmounted(() => {
