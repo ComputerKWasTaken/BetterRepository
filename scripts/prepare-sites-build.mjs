@@ -3,6 +3,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const distIndex = path.join(repoRoot, 'dist', 'index.html')
 const serverDirectory = path.join(repoRoot, 'dist', 'server')
 const serverEntry = path.join(serverDirectory, 'index.js')
 
@@ -22,6 +23,12 @@ const workerSource = `const worker = {
 export default worker
 `
 
+const indexSource = await fs.readFile(distIndex, 'utf8')
+await fs.writeFile(
+  distIndex,
+  indexSource.replace(/\r\n/g, '\n').replace(/[ \t]+$/gm, ''),
+  'utf8'
+)
 await fs.mkdir(serverDirectory, { recursive: true })
 await fs.writeFile(serverEntry, workerSource, 'utf8')
 

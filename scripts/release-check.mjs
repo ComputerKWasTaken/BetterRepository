@@ -17,7 +17,7 @@ const check = (condition, message) => condition ? pass(message) : fail(message)
 
 const sha256 = filePath => crypto
   .createHash('sha256')
-  .update(fs.readFileSync(filePath))
+  .update(fs.readFileSync(filePath, 'utf8').replace(/\r\n/g, '\n'))
   .digest('hex')
 
 const walk = directory => fs.readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
@@ -241,13 +241,13 @@ if (verifyDist) {
   check(exists('dist/index.html'), 'production build emitted dist/index.html')
   check(exists('dist/server/index.js'), 'production build emitted the Sites worker entry')
   check(exists('dist/betterrepository_logo.png'), 'production build emitted the logo')
-  check(exists('dist/og.png'), 'production build emitted the social preview')
+  check(!exists('dist/og.png'), 'production build omits the retired social preview')
   const distIndex = exists('dist/index.html') ? read('dist/index.html') : ''
   const distAssets = exists('dist/assets') ? walk(path.join(repoRoot, 'dist/assets')) : []
   const stateboyArtifacts = distAssets.filter(filePath => /stateboy/i.test(path.basename(filePath)))
   check(/\/assets\/index-[^"']+\.js/.test(distIndex), 'production build references a hashed JavaScript asset')
   check(/\/assets\/index-[^"']+\.css/.test(distIndex), 'production build references a hashed stylesheet')
-  check(distIndex.includes('/og.png'), 'production build metadata references the V1.7 social preview')
+  check(!/og:image|twitter:image|\/og\.png/.test(distIndex), 'production build omits social image metadata')
   check(stateboyArtifacts.length === 0, 'production build does not publish Stateboy source artifacts')
 }
 
