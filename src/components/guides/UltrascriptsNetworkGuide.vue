@@ -65,7 +65,7 @@
                 <ul class="text-bd-text-secondary space-y-1">
                   <li>&middot; Skip nonessential remote calls when offline</li>
                   <li>&middot; Shorten requests on constrained connections</li>
-                  <li>&middot; Gate heavy WebFetch or AI work behind a quality check</li>
+                  <li>&middot; Reduce or defer nonessential WebFetch or AI work on constrained connections</li>
                   <li>&middot; Fall back to cached data on slow links</li>
                 </ul>
               </div>

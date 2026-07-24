@@ -62,7 +62,7 @@
 
             <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
               <p class="text-[11px]">
-                <strong class="text-bd-amber">Heads-up:</strong> Ultrascripts requires the BetterDungeon browser extension. Players who don't have it
+                <strong class="text-bd-amber">Heads-up:</strong> Ultrascripts requires BetterDungeon on a supported browser or in the Android app. Players who don't have it
                 won't see widgets or get module responses &mdash; but your script will still run normally. Always check capability with
                 <code class="text-bd-green">bd.us.has()</code> before relying on a feature.
               </p>
@@ -93,9 +93,9 @@
                 </p>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <strong class="text-bd-text-primary text-[12px] block mb-1">2. Requests take one turn to complete.</strong>
+                <strong class="text-bd-text-primary text-[12px] block mb-1">2. Responses arrive on a later turn.</strong>
                 <p class="text-[11px]">
-                  You <em>queue</em> a request this turn with <code>bd.us.call(...)</code> and <em>read</em> the result on the next turn with
+                  You <em>queue</em> a request this turn with <code>bd.us.call(...)</code> and <em>read</em> the result on a later turn with
                   <code>bd.us.latest(...)</code>. The SDK handles request IDs and acks for you; for history-sensitive logic, still sanity-check
                   <code>completedLiveCount</code> before you apply an older response to a newer turn.
                 </p>
@@ -163,8 +163,8 @@
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
                 <h4 class="font-semibold text-bd-green text-[12px]">Module present, setup incomplete</h4>
                 <p class="text-[11px]">
-                  The player still controls permissions and configuration. Read <code>sdk.config</code>, permission ops, or module-specific status before
-                  assuming AI or WebFetch is ready.
+                  The player still controls permissions and configuration. Read <code>sdk.config</code> or module-specific status, and handle
+                  consent or configuration errors instead of assuming AI or WebFetch is ready.
                 </p>
               </div>
             </div>
@@ -266,7 +266,7 @@
                 <Copy class="w-3.5 h-3.5" />
                 {{ copyState === 'copied' ? 'Copied!' : 'Copy SDK helper' }}
               </button>
-              <span class="text-[10px] text-bd-text-muted">~120 lines &middot; zero dependencies &middot; v1 protocol</span>
+              <span class="text-[10px] text-bd-text-muted">Zero dependencies &middot; v1 protocol</span>
             </div>
 
             <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">{{ sdkCode }}</pre>
@@ -284,7 +284,7 @@
                   <tbody class="text-bd-text-secondary">
                     <tr class="border-b border-bd-border-subtle/50">
                       <td class="py-1.5 px-2"><code class="text-bd-green">bd.us.tick()</code></td>
-                      <td class="py-1.5 px-2">Reads all pending response cards into memory. Auto-queues acks. Call once at the top of each modifier.</td>
+                      <td class="py-1.5 px-2">Reads terminal responses into memory and auto-queues their acks. Call once at the top of each modifier.</td>
                     </tr>
                     <tr class="border-b border-bd-border-subtle/50">
                       <td class="py-1.5 px-2"><code class="text-bd-green">bd.us.has(mod, op?)</code></td>
@@ -395,10 +395,11 @@ if (!bd.us.available() || !bd.us.has('ai', 'status') || !bd.us.has('ai', 'query'
     var aiUnavailable = status
       &amp;&amp; status.status === 'ok'
       &amp;&amp; status.data
-      &amp;&amp; status.data.reason === 'ai_backend_not_configured';
+      &amp;&amp; status.data.ready !== true;
 
     if (aiUnavailable) {
-      text = '[BetterDungeon AI needs a Gemini API key in the BetterDungeon popup before this scenario path can run.]\n' + text;
+      var aiMessage = status.data.message || status.data.reason || 'AI is not ready.';
+      text = '[BetterDungeon AI is unavailable: ' + aiMessage + ']\n' + text;
     } else {
       // Core Ultrascripts-dependent logic starts here.
       text = '[BetterDungeon AI status is present. Queue ai.query work and read the result on a later turn.]\n' + text;
@@ -532,11 +533,11 @@ Turn N+2 :  ...continues every turn</pre>
 
 // Read the AI backend status when available.
 var aiStatus = bd.us.latest('ai', 'status');
-var aiBackendMissing = aiStatus &amp;&amp; aiStatus.status === 'ok'
+var aiUnavailable = aiStatus &amp;&amp; aiStatus.status === 'ok'
   &amp;&amp; aiStatus.data
-  &amp;&amp; aiStatus.data.reason === 'ai_backend_not_configured';
-if (aiBackendMissing) {
-  text += '\n[BetterDungeon AI needs a Gemini API key in the BetterDungeon popup.]';
+  &amp;&amp; aiStatus.data.ready !== true;
+if (aiUnavailable) {
+  text += '\n[BetterDungeon AI is unavailable: ' + (aiStatus.data.message || aiStatus.data.reason || 'not ready') + ']';
 }
 if (bd.us.has('ai', 'status') &amp;&amp; !aiStatus) bd.us.call('ai', 'status');
 

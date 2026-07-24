@@ -75,7 +75,7 @@
                 <ul class="text-bd-text-secondary space-y-1">
                   <li>&middot; Two ops: <code class="text-bd-green">current</code> and <code class="text-bd-green">forecast</code></li>
                   <li>&middot; Async &mdash; responses arrive on a later turn</li>
-                  <li>&middot; Accepts lat/lon or a place name string</li>
+                  <li>&middot; Accepts latitude/longitude coordinates or a place name</li>
                   <li>&middot; No player setup required</li>
                 </ul>
               </div>
@@ -123,7 +123,7 @@
             <p class="text-bd-text-secondary">
               The Weather module exposes two ops. Both accept either <code class="text-bd-green">latitude</code> +
               <code class="text-bd-green">longitude</code> or a <code class="text-bd-green">place</code> string for location.
-              All numeric fields may be <code class="text-bd-green">null</code> when upstream data is missing.
+              Upstream measurements may be <code class="text-bd-green">null</code> when data is missing.
             </p>
 
             <!-- weather.current -->
@@ -140,11 +140,11 @@
                 <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">{
   "latitude": 41.88,              // number, -90 to 90 (must pair with longitude)
   "longitude": -87.62,            // number, -180 to 180 (must pair with latitude)
-  "place": "Chicago",             // string, alternative to lat/lon (geocoded)
+  "place": "Chicago",             // string, alternative to coordinates
   "units": "metric",              // "metric" | "imperial", default "metric"
   "timeoutMs": 15000              // optional, clamped 1000-30000, default 15000
 }</pre>
-                <p class="text-[11px] text-bd-text-muted">Provide either <code>latitude</code> + <code>longitude</code> <strong>or</strong> <code>place</code>. Providing neither, or only one of lat/lon, throws <code class="text-bd-pink">invalid_args</code>.</p>
+                <p class="text-[11px] text-bd-text-muted">Provide either <code>latitude</code> + <code>longitude</code> <strong>or</strong> <code>place</code>. Providing neither, or only one coordinate, throws <code class="text-bd-pink">invalid_args</code>.</p>
               </div>
 
               <div class="space-y-1">
@@ -162,7 +162,7 @@
   "units": "metric",              // "metric" | "imperial"
   "source": "open-meteo",
   "current": {
-    "observedAt": "2025-01-16T18:00:00.000Z",
+    "observedAt": "2025-01-16T12:00",
     "temperature": 4.2,           // number | null (C or F depending on units)
     "apparentTemperature": 1.5,   // number | null
     "relativeHumidity": 62,       // number | null
@@ -213,8 +213,8 @@
       "precipitationSum": 2.5,                // number | null (mm or inch)
       "precipitationProbabilityMax": 80,      // number | null (0-100)
       "windSpeedMax": 25,                     // number | null (km/h or mph)
-      "sunrise": "2025-01-16T07:15:00.000Z",  // string (ISO timestamp)
-      "sunset": "2025-01-16T16:45:00.000Z"    // string (ISO timestamp)
+      "sunrise": "2025-01-16T07:15",           // string (local ISO date-time)
+      "sunset": "2025-01-16T16:45"             // string (local ISO date-time)
     }
   ]
 }</pre>
@@ -224,7 +224,7 @@
             <div class="space-y-1">
               <h5 class="font-semibold text-bd-text-primary text-[11px]">Error modes</h5>
               <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-pink/20 text-[11px] space-y-0.5">
-                <p><code class="text-bd-pink">invalid_args</code> &mdash; args not object, lat/lon out of range, units not metric/imperial, missing location, or partial lat/lon</p>
+                <p><code class="text-bd-pink">invalid_args</code> &mdash; args not object, coordinates out of range, units not metric/imperial, missing location, or a partial coordinate pair</p>
                 <p><code class="text-bd-pink">not_found</code> &mdash; place name geocoding returned no results</p>
                 <p><code class="text-bd-pink">weather_unavailable</code> &mdash; extension runtime unavailable or background fetch failed</p>
                 <p><code class="text-bd-pink">upstream_error</code> &mdash; Open-Meteo API returned non-2xx status. Shape: <code>{ code, message, status }</code></p>
@@ -340,7 +340,7 @@
                 <p class="text-bd-green mt-1"><strong>Fix:</strong> Re-query every ~30 in-game turns, or expose a "refresh weather" command.</p>
               </div>
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
-                <h4 class="font-semibold text-bd-pink mb-1 flex items-center gap-1"><X class="w-4 h-4 text-bd-pink" /> Partial lat/lon</h4>
+                <h4 class="font-semibold text-bd-pink mb-1 flex items-center gap-1"><X class="w-4 h-4 text-bd-pink" /> Partial coordinates</h4>
                 <p class="text-bd-text-secondary">Passing only <code>latitude</code> without <code>longitude</code> (or vice versa).</p>
                 <p class="text-bd-green mt-1"><strong>Fix:</strong> Always provide both <code>latitude</code> and <code>longitude</code> together, or use <code>place</code> instead.</p>
               </div>

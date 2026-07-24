@@ -160,16 +160,16 @@
 
             <div class="grid md:grid-cols-2 gap-3">
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <h4 class="font-semibold text-bd-text-primary text-[12px] mb-1">Required</h4>
+                <h4 class="font-semibold text-bd-text-primary text-[12px] mb-1">Registry-enforced</h4>
                 <ul class="space-y-1 text-[11px] text-bd-text-muted">
                   <li>&middot; <code class="text-bd-green">id</code></li>
                   <li>&middot; <code class="text-bd-green">mount(ctx)</code></li>
-                  <li>&middot; <code class="text-bd-green">stateNames</code> <em>or</em> <code class="text-bd-green">ops</code> (at least one)</li>
                 </ul>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle">
-                <h4 class="font-semibold text-bd-text-primary text-[12px] mb-1">Strongly recommended</h4>
+                <h4 class="font-semibold text-bd-text-primary text-[12px] mb-1">Capability and lifecycle</h4>
                 <ul class="space-y-1 text-[11px] text-bd-text-muted">
+                  <li>&middot; <code class="text-bd-green">stateNames</code>, <code class="text-bd-green">ops</code>, or both for a useful capability surface</li>
                   <li>&middot; <code class="text-bd-green">unmount</code> for any module that holds DOM, timers, or listeners</li>
                   <li>&middot; <code class="text-bd-green">onAdventureChange</code> for modules with per-adventure state</li>
                   <li>&middot; explicit <code class="text-bd-green">idempotent</code> per op</li>
@@ -422,9 +422,9 @@ if (window.Ultrascripts?.registry) {
               A minimal ops module. Each op is a descriptor object &mdash; not a raw function &mdash; so the runtime knows how to handle replay safety and timeouts.
             </p>
 
-            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">async function pingOp(args, ctx) {
-  if (args !== null &amp;&amp; typeof args !== 'object') {
-    throw new Error('ping: args must be an object');
+            <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">async function pingOp(args = {}, ctx) {
+  if (!args || typeof args !== 'object' || Array.isArray(args)) {
+    throw { code: 'invalid_args', message: 'ping: args must be an object' };
   }
   return {
     ok: true,

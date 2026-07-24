@@ -65,7 +65,7 @@
                 Cookbook
               </router-link>
               <a
-                href="https://github.com/ComputerKWasTaken/BetterDungeon/tree/two-way-communication/services/ultrascripts"
+                href="https://github.com/ComputerKWasTaken/BetterDungeon/tree/main/services/ultrascripts"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-bd-cyan/15 hover:bg-bd-cyan/25 border border-bd-cyan/30 text-bd-cyan text-xs font-semibold transition-colors"
@@ -148,7 +148,7 @@
                 </div>
                 <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
                   <strong class="text-bd-purple block">AI</strong>
-                  <span class="text-bd-text-muted">Ops: <code class="text-bd-green">query</code>, <code class="text-bd-green">status</code></span>
+                  <span class="text-bd-text-muted">Ops: <code class="text-bd-green">status</code>, <code class="text-bd-green">query</code></span>
                 </div>
                 <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
                   <strong class="text-bd-amber block">Clock</strong>
@@ -352,7 +352,7 @@
                 </h4>
                 <ul class="space-y-1 text-bd-text-muted">
                   <li>• Master Ultrascripts on/off switch</li>
-                  <li>• Per-module enable/disable toggles for all 9 modules</li>
+                  <li>• Per-module enable/disable toggles for all eight modules</li>
                   <li>• WebFetch domain consent management</li>
                   <li>• AI status/query contract toggle</li>
                   <li>• Debug mode for development logging</li>
@@ -408,13 +408,13 @@
                 <h4 class="font-semibold text-bd-green flex items-center gap-1.5">
                   <CheckCircle2 class="w-4 h-4" /> Firefox
                 </h4>
-                <p class="text-bd-text-secondary">Full production support via the Firefox add-on. Same runtime, same modules, same behavior.</p>
+                <p class="text-bd-text-secondary">Full production support via the Firefox add-on. The same runtime and module contracts apply, with browser-specific APIs degrading cleanly when unavailable.</p>
               </div>
               <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30 space-y-1.5">
                 <h4 class="font-semibold text-bd-green flex items-center gap-1.5">
                   <CheckCircle2 class="w-4 h-4" /> Android WebView
                 </h4>
-                <p class="text-bd-text-secondary">Completed in Phase 12. Ultrascripts is now effectively multiplatform, running inside the BetterDungeon Android app.</p>
+                <p class="text-bd-text-secondary">Supported inside the released BetterDungeon Android app through its embedded WebView runtime.</p>
               </div>
             </div>
 
@@ -422,7 +422,7 @@
               <div class="flex items-start gap-2">
                 <AlertTriangle class="w-4 h-4 text-bd-pink flex-shrink-0 mt-0.5" />
                 <p class="text-xs text-bd-text-secondary">
-                  <strong class="text-bd-text-primary">iOS:</strong> Not supported. Apple does not provide an extension surface for Safari on iOS that would allow Ultrascripts to run.
+                  <strong class="text-bd-text-primary">iOS:</strong> Not supported. BetterDungeon does not currently ship an iOS app or extension.
                 </p>
               </div>
             </div>
@@ -474,7 +474,7 @@
                   <BrainCircuit class="w-5 h-5 text-bd-purple" />
                   <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-purple transition-colors">AI</h4>
                 </div>
-                <p class="text-bd-text-muted">Async status/query contract for AI requests. Text and JSON modes are defined; backend connection is pending.</p>
+                <p class="text-bd-text-muted">Gemini-backed async status/query contract with text, schema-backed JSON, thinking levels, and automatic rate-limit fallback.</p>
               </router-link>
 
               <router-link to="/ultrascripts?tab=sdk" class="block p-4 rounded-lg bg-gradient-to-br from-bd-cyan/10 to-transparent border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">

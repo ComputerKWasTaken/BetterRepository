@@ -219,7 +219,7 @@
             <div class="space-y-1">
               <h5 class="font-semibold text-bd-text-primary text-[11px]">Error modes</h5>
               <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-pink/20 text-[11px]">
-                <p><code class="text-bd-pink">invalid_args</code> &mdash; args is not an object (e.g. null, array, primitive). Shape: <code>{ code, message }</code></p>
+                <p><code class="text-bd-pink">invalid_args</code> &mdash; args is an array or primitive instead of an object. Omitted or <code>null</code> args are treated as <code>{}</code>. Shape: <code>{ code, message }</code></p>
               </div>
             </div>
 

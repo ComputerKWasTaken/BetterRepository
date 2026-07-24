@@ -56,7 +56,7 @@
                   <li>&middot; HTTP GET, HEAD, OPTIONS requests</li>
                   <li>&middot; Web search lookups (DuckDuckGo)</li>
                   <li>&middot; Custom request headers</li>
-                  <li>&middot; Response body as text</li>
+                  <li>&middot; Response body as text or base64</li>
                   <li>&middot; Per-origin player consent</li>
                 </ul>
               </div>
@@ -115,7 +115,7 @@
               </div>
               <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30">
                 <h4 class="font-semibold text-bd-green text-[12px] mb-1">Step 3 &mdash; Parse and cache</h4>
-                <p class="text-xs text-bd-text-secondary">The body is always returned as a text string. If the response is JSON, call <code class="text-bd-green">JSON.parse(data.body)</code> yourself. Store small normalized facts on <code class="text-bd-green">state</code>, not the entire payload.</p>
+                <p class="text-xs text-bd-text-secondary">Check <code class="text-bd-green">data.bodyEncoding</code>. For text JSON responses, call <code class="text-bd-green">JSON.parse(data.body)</code> yourself. Binary responses are base64 strings. Store small normalized facts on <code class="text-bd-green">state</code>, not the entire payload.</p>
               </div>
             </div>
           </div>
@@ -160,11 +160,17 @@
                 <h5 class="font-semibold text-bd-text-primary text-[11px]">Response shape (on ok)</h5>
                 <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-blue overflow-x-auto leading-relaxed">{
   "status": 200,                          // HTTP status code
+  "statusText": "OK",
+  "ok": true,
   "headers": { "content-type": "..." },   // response headers (lowercased keys)
-  "bodyEncoding": "text",                 // always "text" &mdash; no JSON auto-parse
-  "body": "raw response text as string",
+  "contentType": "application/json",
+  "bodyEncoding": "text",                 // "text" | "base64"
+  "body": "raw text or base64 string",
+  "bytes": 1234,                          // total response bytes
+  "returnedBytes": 1234,                  // bytes retained in body
   "truncated": false,                     // true if response exceeded maxBodyBytes
   "url": "https://api.example.com/data",  // final URL after redirects
+  "redirected": false,
   "request": {
     "url": "https://api.example.com/data",
     "origin": "https://api.example.com",
@@ -172,7 +178,7 @@
     "strippedHeaders": []                 // headers that were silently removed
   }
 }</pre>
-                <p class="text-[11px] text-bd-text-muted">The body is always a text string. Call <code>JSON.parse(data.body)</code> yourself if the response is JSON.</p>
+                <p class="text-[11px] text-bd-text-muted">When <code>bodyEncoding</code> is <code>"text"</code>, the body is raw text and is never auto-parsed. When it is <code>"base64"</code>, decode it only if your scenario genuinely needs binary data.</p>
               </div>
             </div>
 
@@ -224,6 +230,7 @@
                 <p><code class="text-bd-pink">consent_denied</code> &mdash; user denied origin in consent prompt, or origin in persistent deny list</p>
                 <p><code class="text-bd-pink">rate_limit</code> &mdash; exceeded 20 requests/minute per origin. Shape: <code>{ code, message, retryAfterMs, limit }</code></p>
                 <p><code class="text-bd-pink">webfetch_unavailable</code> &mdash; extension runtime unavailable or background fetch failed</p>
+                <p><code class="text-bd-pink">timeout</code> &mdash; the background request exceeded its configured timeout</p>
                 <p><code class="text-bd-pink">webfetch_failed</code> &mdash; generic background fetch failure</p>
               </div>
             </div>
@@ -257,7 +264,7 @@
                 <ul class="space-y-1 text-[11px] text-bd-text-muted">
                   <li>&middot; Gate with <code>bd.us.has('webfetch')</code> before calling.</li>
                   <li>&middot; Queue requests only when fresh data is needed.</li>
-                  <li>&middot; Parse <code>data.body</code> yourself if JSON.</li>
+                  <li>&middot; Check <code>bodyEncoding</code>, then parse text JSON yourself.</li>
                   <li>&middot; Cache derived facts on <code>state</code>, not the whole payload.</li>
                   <li>&middot; Handle <code>consent_denied</code> gracefully.</li>
                 </ul>
@@ -368,7 +375,7 @@
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20">
                 <h4 class="font-semibold text-bd-pink mb-1 flex items-center gap-1"><X class="w-4 h-4 text-bd-pink" /> Expecting JSON auto-parse</h4>
                 <p class="text-bd-text-secondary">Treating <code>data.body</code> as a parsed object.</p>
-                <p class="text-bd-green mt-1"><strong>Fix:</strong> The body is always a text string. Call <code>JSON.parse(data.body)</code> yourself.</p>
+                <p class="text-bd-green mt-1"><strong>Fix:</strong> Check for <code>bodyEncoding === "text"</code>, then call <code>JSON.parse(data.body)</code>. Binary bodies use base64.</p>
               </div>
             </div>
           </div>

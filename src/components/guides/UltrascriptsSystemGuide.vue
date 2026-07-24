@@ -75,7 +75,7 @@
                 <h3 class="font-semibold text-bd-text-primary mb-1.5 flex items-center gap-2"><Rocket class="w-4 h-4 text-bd-green" />How It Works</h3>
                 <ul class="text-bd-text-secondary space-y-1">
                   <li>&middot; Two ops: <code class="text-bd-green">system.info</code> and <code class="text-bd-green">system.power</code></li>
-                  <li>&middot; Synchronous, returns on the next turn</li>
+                  <li>&middot; Read-only ops; responses arrive on a later turn</li>
                   <li>&middot; No player setup or permissions required</li>
                   <li>&middot; Read-only &mdash; no side effects</li>
                 </ul>
@@ -243,11 +243,9 @@
                 <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-blue overflow-x-auto leading-relaxed">{
   "checkedAt": 1736992200000,
   "checkedAtIso": "2025-01-15T20:30:00.000Z",
-  "supported": false,
-  "reason": "battery_unavailable",
-  "message": "Battery status is unavailable"
+  "supported": false
 }</pre>
-                <p class="text-[11px] text-bd-text-muted">Modern Firefox and Safari disable the Battery Status API for privacy &mdash; treat <code>supported: false</code> as the common case.</p>
+                <p class="text-[11px] text-bd-text-muted">If the API exists but the battery request fails, the response also includes <code>reason: "battery_unavailable"</code> and a <code>message</code>. Treat <code>supported: false</code> as a normal outcome.</p>
               </div>
 
               <div class="space-y-1">

@@ -158,7 +158,8 @@
                 <FileCode class="w-4 h-4" /> Production Write Mutation
               </h4>
               <p class="text-[11px] mb-2">
-                All Ultrascripts card writes use a single hardcoded GraphQL mutation authenticated with captured credentials.
+                All Ultrascripts card writes use a fixed <code class="text-bd-green">updateStoryCard</code> mutation shape authenticated with captured credentials.
+                Creates use the <code class="text-bd-green">SaveQueueStoryCard</code> operation name; updates use <code class="text-bd-green">UseAutoSaveStoryCard</code>.
                 Writes work immediately on adventure load, including turn-0, without any prior user-initiated card edit.
               </p>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[11px] text-bd-green overflow-x-auto leading-relaxed">mutation SaveQueueStoryCard($input: UpdateStoryCardInput!) {
@@ -491,7 +492,8 @@
   "responses": {
     "turn-12-clock-1": {
       "status": "ok",
-      "data": { "iso": "2025-01-15T18:42:11Z", "tz": "America/Chicago" },
+      "data": { "iso": "2025-01-15T18:42:11.000Z", "timeZone": "America/Chicago" },
+      "completedAt": 1736966531000,
       "completedLiveCount": 12
     }
   }

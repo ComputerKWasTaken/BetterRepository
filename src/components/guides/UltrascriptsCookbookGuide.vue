@@ -202,7 +202,7 @@ import {
   Code2, Heart, ListChecks, Search, ShieldCheck, Sparkles, Wand2, Zap
 } from 'lucide-vue-next'
 
-const sourceBase = 'https://github.com/ComputerKWasTaken/BetterDungeon/tree/two-way-communication'
+const sourceBase = 'https://github.com/ComputerKWasTaken/BetterDungeon/tree/main'
 
 const patterns = [
   {
@@ -219,7 +219,7 @@ const patterns = [
     icon: Clock,
     iconClass: 'text-bd-amber',
     summary: 'Tint narration from the player local clock without hand-editing story cards.',
-    guidance: 'Queue <code>clock.now</code>, read <code>data.time</code> next turn, then append a short context note.',
+    guidance: 'Queue <code>clock.now</code>, read <code>data.time</code> on a later turn, then append a short context note.',
     link: '/ultrascripts?tab=clock',
     module: 'Clock'
   },
@@ -255,7 +255,7 @@ const patterns = [
     icon: Globe,
     iconClass: 'text-bd-blue',
     summary: 'Fetch approved external data once, then cache it on plain scenario state.',
-    guidance: 'Use <code>webfetch.fetch</code> or <code>webfetch.search</code> only after consent and capability checks.',
+    guidance: 'Check capability before calling <code>webfetch.fetch</code> or <code>webfetch.search</code>, then handle the player consent result.',
     link: '/ultrascripts?tab=webfetch',
     module: 'WebFetch'
   },

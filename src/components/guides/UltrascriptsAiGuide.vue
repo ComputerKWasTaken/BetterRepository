@@ -164,10 +164,18 @@
     "json": true,                    // boolean
     "thinking": true                 // boolean
   },
-  "config": {                        // object | null (null when not configured)
+  "config": {
     "provider": "gemini",
     "keyConfigured": true,           // boolean
-    "model": "gemini-3.5-flash",     // string
+    "modelMode": "auto",             // "auto" | "manual"
+    "model": "gemini-3.1-flash-lite",
+    "selectedModel": "gemini-3.1-flash-lite",
+    "activeModel": null,             // last successful model, or null
+    "fallbackModels": [
+      "gemini-3.1-flash-lite",
+      "gemma-4-31b-it",
+      "gemma-4-26b-a4b-it"
+    ],
     "thinkingDefault": "minimal",
     "thinkingLevels": ["minimal", "low", "medium", "high"]
   },
@@ -183,9 +191,10 @@
     "promptMaxChars": 12000,
     "backendConfigured": true        // boolean
   },
-  "message": "AI querying is available."
+  "message": "Gemini backend is configured.",
+  "checkedAtIso": "2026-06-15T20:00:00.000Z"
 }</pre>
-                <p class="text-[11px] text-bd-text-muted">The <code>config</code> object may contain additional backend-specific fields. Only the fields shown above are guaranteed by the contract and verified by the test suite.</p>
+                <p class="text-[11px] text-bd-text-muted">The <code>config</code> object remains present when no key is configured; in that state <code>keyConfigured</code> and <code>ready</code> are false. Additional diagnostic fields may be present.</p>
               </div>
             </div>
 
@@ -221,16 +230,19 @@
     "outputType": "text",
     "promptChars": 43,
     "generatedAtIso": "2026-06-15T20:00:00.000Z",
-    "model": "gemini-3.5-flash",
-    "providerModel": "gemini-3.5-flash",
+    "model": "gemini-3.1-flash-lite",
+    "providerModel": "gemini-3.1-flash-lite",
     "thinking": {
       "requestedLevel": "minimal",
       "applied": true,
       "family": "gemini-3",
       "defaulted": true
     },
-    "fallback": null,                 // object | null (only present when fallback occurred)
-    "usage": null                     // object | null
+    "fallback": {
+      "mode": "auto",
+      "attemptedModels": ["gemini-3.1-flash-lite"]
+    },
+    "usage": { ... }                  // optional provider usage metadata
   }
 }</pre>
               </div>
@@ -244,22 +256,21 @@
     "outputType": "json",
     "promptChars": 43,
     "generatedAtIso": "2026-06-15T20:00:00.000Z",
-    "model": "gemini-3.1-flash-lite",
-    "providerModel": "gemini-3.1-flash-lite",
+    "model": "gemma-4-31b-it",
+    "providerModel": "gemma-4-31b-it",
     "thinking": {
       "requestedLevel": "low",
       "applied": true,
       "family": "gemini-3",
       "defaulted": false
     },
-    "fallback": {                     // only present when fallback occurred
+    "fallback": {
       "mode": "auto",
-      "attemptedModels": ["gemini-3.5-flash", "gemini-3.1-flash-lite"]
-    },
-    "usage": null
+      "attemptedModels": ["gemini-3.1-flash-lite", "gemma-4-31b-it"]
+    }
   }
 }</pre>
-                <p class="text-[11px] text-bd-text-muted">The <code>fallback</code> object is conditional &mdash; only present when automatic fallback actually occurred. Always check for its presence before reading it.</p>
+                <p class="text-[11px] text-bd-text-muted">Successful Gemini queries include <code>fallback.mode</code> and <code>fallback.attemptedModels</code>. One attempted model means no step-down occurred; multiple models record an automatic rate-limit fallback.</p>
               </div>
             </div>
 
@@ -267,7 +278,7 @@
               <h5 class="font-semibold text-bd-text-primary text-[11px]">Error modes</h5>
               <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-pink/20 text-[11px] space-y-0.5">
                 <p><code class="text-bd-pink">unavailable</code> &mdash; executor not loaded or extension runtime unavailable. Retryable.</p>
-                <p><code class="text-bd-pink">not_configured</code> &mdash; no API key saved. Not retryable. Shape: <code>{ code, message, retryable, backend, phase, task }</code></p>
+                <p><code class="text-bd-pink">not_configured</code> &mdash; no API key saved. Not retryable. Shape: <code>{ code, message, retryable, backend }</code></p>
                 <p><code class="text-bd-pink">invalid_args</code> &mdash; bad query args, missing JSON schema, invalid thinking level, or prompt too long. Shape: <code>{ code, message, retryable, maxChars?, actualChars? }</code></p>
                 <p><code class="text-bd-pink">auth_failed</code> &mdash; the saved API key was rejected.</p>
                 <p><code class="text-bd-pink">rate_limit</code> &mdash; the current model hit a rate limit.</p>
