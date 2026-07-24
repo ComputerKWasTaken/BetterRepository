@@ -20,9 +20,9 @@ const routes = [
     name: 'Home',
     component: HomePage,
     meta: {
-      title: 'BetterRepository - AI Dungeon Resource Hub',
+      title: 'BetterRepository V1.7 - AI Dungeon Resource Hub',
       description: 'BetterRepository V1.7: curated AI Dungeon resources, Story Card command presets, and BetterDungeon V2 Ultrascripts guides.',
-      ogTitle: 'BetterRepository',
+      ogTitle: 'BetterRepository V1.7',
       ogDescription: 'BetterRepository V1.7 brings a polished resource library, Story Card command presets, and refreshed BetterDungeon V2 Ultrascripts documentation.',
       path: '/'
     }

@@ -233,6 +233,7 @@ for (const [label, pattern] of retiredGuidePatterns) {
 }
 
 check(read('index.html').includes('BetterRepository V1.7'), 'document metadata names V1.7')
+check(read('src/router/index.js').includes("title: 'BetterRepository V1.7 - AI Dungeon Resource Hub'"), 'runtime homepage title names V1.7')
 check(read('netlify/edge-functions/inject-meta.js').includes("'/ultrascripts'"), 'edge metadata covers the Ultrascripts route')
 check(read('src/pages/HomePage.vue').includes("What's New in <span class=\"text-gradient\">V1.7"), 'What’s New names V1.7')
 
