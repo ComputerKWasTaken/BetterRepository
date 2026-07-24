@@ -88,7 +88,6 @@
     <UltrascriptsAiGuide v-if="activeTab === 'ai'" />
     <UltrascriptsSdkGuide v-if="activeTab === 'sdk'" />
     <UltrascriptsClockGuide v-if="activeTab === 'clock'" />
-    <UltrascriptsGeolocationGuide v-if="activeTab === 'geolocation'" />
     <UltrascriptsWeatherGuide v-if="activeTab === 'weather'" />
     <UltrascriptsNetworkGuide v-if="activeTab === 'network'" />
     <UltrascriptsSystemGuide v-if="activeTab === 'system'" />
@@ -108,13 +107,12 @@ import UltrascriptsWebFetchGuide from '@/components/guides/UltrascriptsWebFetchG
 import UltrascriptsAiGuide from '@/components/guides/UltrascriptsAiGuide.vue'
 import UltrascriptsSdkGuide from '@/components/guides/UltrascriptsSdkGuide.vue'
 import UltrascriptsClockGuide from '@/components/guides/UltrascriptsClockGuide.vue'
-import UltrascriptsGeolocationGuide from '@/components/guides/UltrascriptsGeolocationGuide.vue'
 import UltrascriptsWeatherGuide from '@/components/guides/UltrascriptsWeatherGuide.vue'
 import UltrascriptsNetworkGuide from '@/components/guides/UltrascriptsNetworkGuide.vue'
 import UltrascriptsSystemGuide from '@/components/guides/UltrascriptsSystemGuide.vue'
 import {
   Compass, Zap, BookOpen, Network, Wand2, LayoutDashboard, Globe, BrainCircuit, Terminal,
-  Clock, MapPin, CloudSun, Wifi, Cpu, Rocket
+  Clock, CloudSun, Wifi, Cpu, Rocket
 } from 'lucide-vue-next'
 
 const route = useRoute()
@@ -138,7 +136,6 @@ const moduleTabs = [
   { id: 'ai',          label: 'AI',          icon: BrainCircuit,    iconClass: 'text-bd-purple' },
   { id: 'sdk',         label: 'SDK',         icon: Terminal,        iconClass: 'text-bd-cyan' },
   { id: 'clock',       label: 'Clock',       icon: Clock,           iconClass: 'text-bd-amber' },
-  { id: 'geolocation', label: 'Geolocation', icon: MapPin,          iconClass: 'text-bd-blue' },
   { id: 'weather',     label: 'Weather',     icon: CloudSun,        iconClass: 'text-bd-cyan' },
   { id: 'network',     label: 'Network',     icon: Wifi,            iconClass: 'text-bd-green' },
   { id: 'system',      label: 'System',      icon: Cpu,             iconClass: 'text-bd-purple' }

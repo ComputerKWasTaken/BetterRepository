@@ -45,8 +45,7 @@
           <div v-if="isGuideSectionExpanded('what-is')" class="mt-4 space-y-4">
             <p class="text-bd-text-secondary">
               The Weather module reads current conditions and short forecasts from <strong>Open-Meteo</strong>, a free public API.
-              Pair it with <router-link to="/ultrascripts?tab=geolocation" class="text-bd-accent-primary hover:underline">Geolocation</router-link>
-              to drive scene weather from the player's real region, or supply coordinates directly to anchor stories to a known location.
+              Supply a place name or coordinates directly to anchor stories to a known location.
             </p>
 
             <div class="grid md:grid-cols-3 gap-3 text-xs">
@@ -239,7 +238,6 @@
               <div class="grid md:grid-cols-2 gap-2 text-xs text-bd-text-secondary">
                 <div>&middot; <strong>"Is it raining there?"</strong> &rarr; Weather <code>current</code></div>
                 <div>&middot; <strong>"Will it snow tomorrow?"</strong> &rarr; Weather <code>forecast</code></div>
-                <div>&middot; <strong>"Where is the player?"</strong> &rarr; <router-link to="/ultrascripts?tab=geolocation" class="text-bd-accent-primary hover:underline">Geolocation</router-link></div>
                 <div>&middot; <strong>"Show weather in a widget"</strong> &rarr; <router-link to="/ultrascripts?tab=widget" class="text-bd-accent-primary hover:underline">Widget</router-link></div>
               </div>
             </div>
@@ -262,7 +260,6 @@
                 <h4 class="font-semibold text-bd-green text-[12px]">Do</h4>
                 <ul class="space-y-1 text-[11px] text-bd-text-muted">
                   <li>&middot; Use <code>{ place: 'Chicago' }</code> for a fixed scenario location.</li>
-                  <li>&middot; Pair with Geolocation for player-region weather.</li>
                   <li>&middot; Cache weather flags on <code>state</code>; re-query every ~30 turns.</li>
                   <li>&middot; Branch on <code>weatherCode</code> for precise conditions.</li>
                 </ul>

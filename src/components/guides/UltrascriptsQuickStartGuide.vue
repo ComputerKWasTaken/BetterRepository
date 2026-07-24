@@ -56,7 +56,7 @@
                   <Rocket class="w-4 h-4 text-bd-purple" />
                   <strong class="text-bd-purple text-[12px]">Real power</strong>
                 </div>
-                <p class="text-[11px]">Widgets, web, AI, time, weather, geolocation, network, device hints &mdash; all from your script.</p>
+                <p class="text-[11px]">Widgets, web, AI, time, weather, network, device hints &mdash; all from your script.</p>
               </div>
             </div>
 
@@ -164,7 +164,7 @@
                 <h4 class="font-semibold text-bd-green text-[12px]">Module present, setup incomplete</h4>
                 <p class="text-[11px]">
                   The player still controls permissions and configuration. Read <code>sdk.config</code>, permission ops, or module-specific status before
-                  assuming AI, WebFetch, or geolocation is ready.
+                  assuming AI or WebFetch is ready.
                 </p>
               </div>
             </div>

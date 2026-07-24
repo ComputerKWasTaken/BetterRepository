@@ -198,7 +198,7 @@
     "debug": false,
     "modulePreferences": {
       "widget": true, "webfetch": true, "clock": true,
-      "sdk": true, "geolocation": true, "weather": true,
+      "sdk": true, "weather": true,
       "network": true, "system": true, "ai": true
     },
     "webfetch": {

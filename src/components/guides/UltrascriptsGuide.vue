@@ -126,7 +126,7 @@
                   Environmental Awareness
                 </h3>
                 <p class="text-bd-text-secondary">
-                  Clock, Weather, Geolocation, and System modules ground scenarios in real-world context &mdash; time of day, local weather, geographic coordinates, and platform capabilities.
+                  Clock, Weather, and System modules ground scenarios in real-world context &mdash; time of day, local weather, and platform capabilities.
                 </p>
               </div>
             </div>
@@ -157,10 +157,6 @@
                 <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
                   <strong class="text-bd-cyan block">SDK</strong>
                   <span class="text-bd-text-muted">Ops: <code class="text-bd-green">version</code>, <code class="text-bd-green">config</code></span>
-                </div>
-                <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
-                  <strong class="text-bd-teal block">Geolocation</strong>
-                  <span class="text-bd-text-muted">Ops: <code class="text-bd-green">permission</code>, <code class="text-bd-green">getCurrent</code></span>
                 </div>
                 <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
                   <strong class="text-bd-blue block">Weather</strong>
@@ -370,7 +366,6 @@
                 <ul class="space-y-1 text-bd-text-muted">
                   <li>• Gemini API keys stay in BetterDungeon local extension storage and are not exposed to scenario scripts</li>
                   <li>• WebFetch requires explicit per-domain player approval</li>
-                  <li>• Geolocation requires standard browser permission</li>
                   <li>• AI query requests return <code>not_configured</code> until the player saves a Gemini API key</li>
                   <li>• SDK config returns sanitized data only</li>
                 </ul>
@@ -498,14 +493,6 @@
                 <p class="text-bd-text-muted">Real-world time, timezone, and formatting helpers for time-of-day-aware scenes.</p>
               </router-link>
 
-              <router-link to="/ultrascripts?tab=geolocation" class="block p-4 rounded-lg bg-gradient-to-br from-bd-blue/10 to-transparent border border-bd-blue/30 hover:border-bd-blue/50 transition-colors group">
-                <div class="flex items-center gap-2 mb-1.5">
-                  <MapPin class="w-5 h-5 text-bd-blue" />
-                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-blue transition-colors">Geolocation</h4>
-                </div>
-                <p class="text-bd-text-muted">Player-consented browser coordinates &mdash; powers regional flavor and weather lookups.</p>
-              </router-link>
-
               <router-link to="/ultrascripts?tab=weather" class="block p-4 rounded-lg bg-gradient-to-br from-bd-cyan/10 to-transparent border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">
                 <div class="flex items-center gap-2 mb-1.5">
                   <CloudSun class="w-5 h-5 text-bd-cyan" />
@@ -546,7 +533,7 @@ import {
   ShieldCheck, Monitor, BookOpen, Terminal, Wrench, Lock,
   ArrowUpFromLine, ArrowDownToLine, HeartPulse, Settings,
   CheckCircle2, AlertTriangle, ChevronDown, ChevronUp,
-  BrainCircuit, Clock, MapPin, CloudSun, Wifi, Zap
+  BrainCircuit, Clock, CloudSun, Wifi, Zap
 } from 'lucide-vue-next'
 
 // Guide table of contents sections

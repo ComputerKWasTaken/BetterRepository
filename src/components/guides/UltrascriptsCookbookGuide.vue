@@ -277,7 +277,6 @@ const sourceLinks = [
   { label: 'AI module', summary: 'Async status/query contract with text, schema-backed JSON, and thinking levels.', href: `${sourceBase}/modules/ai` },
   { label: 'SDK module', summary: 'Runtime version and sanitized player configuration.', href: `${sourceBase}/modules/sdk` },
   { label: 'Clock module', summary: 'Time, timezone, and formatting ops.', href: `${sourceBase}/modules/clock` },
-  { label: 'Geolocation module', summary: 'Permission and browser coordinate ops.', href: `${sourceBase}/modules/geolocation` },
   { label: 'Weather module', summary: 'Current conditions and forecast ops.', href: `${sourceBase}/modules/weather` },
   { label: 'Network module', summary: 'Online state and connection quality hints.', href: `${sourceBase}/modules/network` },
   { label: 'System module', summary: 'Device, display, locale, and power hints.', href: `${sourceBase}/modules/system` }

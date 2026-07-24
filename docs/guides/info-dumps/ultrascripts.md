@@ -49,7 +49,6 @@ test suites in `BetterDungeon/tests/aid-scripts/`.
 | `webfetch` | Ops | Consent-gated HTTP and search | `fetch`, `search` |
 | `clock` | Ops | Time, timezone, and format helpers | `now`, `tz`, `format` |
 | `sdk` | Ops | Safe BetterDungeon metadata and config | `version`, `config` |
-| `geolocation` | Ops | Browser permission and current position | `permission`, `getCurrent` |
 | `weather` | Ops | Current weather and forecasts | `current`, `forecast` |
 | `network` | Ops | Browser connectivity hints | `status` |
 | `system` | Ops | Device, browser, locale, screen, power | `info`, `power` |
@@ -177,7 +176,6 @@ Important cross-platform notes:
 - Treat capability as dynamic. Always check heartbeat and module ops instead of
   assuming every player has every module enabled.
 - WebFetch still requires per-origin consent.
-- Geolocation still depends on browser or WebView permission state.
 - The current AI module exposes the Gemini-backed status/query contract, but
   valid query requests return `not_configured` until the player saves a Gemini
   API key.
@@ -196,7 +194,6 @@ BetterRepository now has public Ultrascripts guides for:
 - AI
 - SDK
 - Clock
-- Geolocation
 - Weather
 - Network
 - System
