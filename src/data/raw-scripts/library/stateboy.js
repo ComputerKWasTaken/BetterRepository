@@ -47,13 +47,18 @@ globalThis.Stateboy = function Stateboy(hook, inputText) {
   }
   sb.sheet = serializedSheet;
   sb.lastSyncLiveCount = getStateboyLiveCount();
-  sb.runtimeAvailable = us.available();
-  sb.widgetAvailable = us.has('widget');
-  sb.aiAvailable = us.has('ai', 'status') && us.has('ai', 'query');
 
   requestStateboyAiStatusIfNeeded(us, sb);
+  requestStateboySdkConfigIfNeeded(us, sb);
 
-  if (sb.settings.stateboyEnabled && sb.settings.aiEnabled) {
+  var setup = assessStateboySetup(us, sb.settings);
+  sb.setup = setup;
+  sb.runtimeAvailable = setup.runtimeAvailable;
+  sb.widgetAvailable = setup.canPublishWidget;
+  sb.aiAvailable = setup.canQueryAi;
+  publishStateboySetupWarning(sb, setup);
+
+  if (sb.settings.stateboyEnabled && sb.settings.aiEnabled && setup.canQueryAi) {
     processStateboyAiResponse(us, sb, sheet, stateCard);
   } else {
     sb.pendingAnalysisRequestId = '';
@@ -67,10 +72,12 @@ globalThis.Stateboy = function Stateboy(hook, inputText) {
   }
 
   if (hook === 'context') {
+    text = renderStateboySetupContextWarning(text, setup);
+
     var contextBlock = renderStateboyContextSheet(sheet);
     if (contextBlock) text += '\n\n' + contextBlock;
 
-    if (sb.settings.widgetsEnabled) {
+    if (setup.canPublishWidget) {
       publishStateboyWidget(us, sb, sheet);
     } else {
       clearStateboyWidgetIfNeeded(us, sb);
@@ -78,7 +85,7 @@ globalThis.Stateboy = function Stateboy(hook, inputText) {
   }
 
   if (hook === 'output') {
-    queueStateboyAiAnalysisIfNeeded(us, sb, sheet, text);
+    queueStateboyAiAnalysisIfNeeded(us, sb, sheet, text, setup);
   }
 
   us.commit();
@@ -213,6 +220,9 @@ function initializeStateboyStore(sb) {
   sb.pendingAnalysisLiveCount = Number(sb.pendingAnalysisLiveCount || 0);
   sb.lastQueuedAnalysisLiveCount = Number(sb.lastQueuedAnalysisLiveCount || -1);
   sb.lastAiStatusRequestLiveCount = Number(sb.lastAiStatusRequestLiveCount || -1);
+  sb.lastSdkConfigRequestLiveCount = Number(sb.lastSdkConfigRequestLiveCount || -1);
+  sb.lastSetupWarningCode = typeof sb.lastSetupWarningCode === 'string' ? sb.lastSetupWarningCode : '';
+  sb.lastSetupWarningMessage = typeof sb.lastSetupWarningMessage === 'string' ? sb.lastSetupWarningMessage : '';
   sb.lastObservedStateCardEntry = typeof sb.lastObservedStateCardEntry === 'string' ? sb.lastObservedStateCardEntry : '';
   sb.lastScriptWrittenStateCardEntry = typeof sb.lastScriptWrittenStateCardEntry === 'string' ? sb.lastScriptWrittenStateCardEntry : '';
   sb.hasObservedStateCardEntry = sb.hasObservedStateCardEntry === true;
@@ -964,6 +974,151 @@ function requestStateboyAiStatusIfNeeded(us, sb) {
   us.call('ai', 'status', {});
 }
 
+function requestStateboySdkConfigIfNeeded(us, sb) {
+  var liveCount = getStateboyLiveCount();
+  if (!sb.settings || !sb.settings.stateboyEnabled || !sb.settings.widgetsEnabled) return;
+  if (!us.available() || !us.has('sdk', 'config')) return;
+  if (sb.lastSdkConfigRequestLiveCount === liveCount) return;
+
+  var latestConfig = us.latest('sdk', 'config');
+  var widgetPreference = getStateboyWidgetPreference(latestConfig);
+  if (latestConfig && latestConfig.status === 'ok' && widgetPreference !== false) return;
+
+  sb.lastSdkConfigRequestLiveCount = liveCount;
+  us.call('sdk', 'config', {});
+}
+
+function assessStateboySetup(us, settings) {
+  settings = settings || STATEBOY_DEFAULT_SETTINGS;
+  var runtimeAvailable = us.available();
+  var hasAiStatus = runtimeAvailable && us.has('ai', 'status');
+  var hasAiQuery = runtimeAvailable && us.has('ai', 'query');
+  var hasWidget = runtimeAvailable && us.has('widget');
+  var result = {
+    level: 'ok',
+    code: 'ok',
+    message: '',
+    runtimeAvailable: runtimeAvailable,
+    canQueryAi: false,
+    canPublishWidget: false
+  };
+
+  if (!settings.stateboyEnabled) {
+    result.code = 'stateboy_disabled';
+    return result;
+  }
+
+  if (!runtimeAvailable) {
+    return makeStateboySetupResult(
+      result,
+      'required',
+      'runtime_missing',
+      'Stateboy requires BetterDungeon with Ultrascripts enabled. Install or enable BetterDungeon to use Stateboy AI and Widget features.'
+    );
+  }
+
+  var sdkConfig = us.latest('sdk', 'config');
+  var widgetPreference = getStateboyWidgetPreference(sdkConfig);
+  result.canPublishWidget = settings.widgetsEnabled && hasWidget && widgetPreference !== false;
+
+  if (settings.aiEnabled) {
+    if (!hasAiStatus || !hasAiQuery) {
+      return makeStateboySetupResult(
+        result,
+        'required',
+        'ai_missing',
+        'Stateboy requires the Ultrascripts AI module with ai.status and ai.query. Enable or update the AI module in BetterDungeon.'
+      );
+    }
+
+    var aiStatus = us.latest('ai', 'status');
+    if (aiStatus && aiStatus.status !== 'ok') {
+      return makeStateboySetupResult(
+        result,
+        'required',
+        'ai_status_error',
+        'Stateboy could not confirm that the AI module is ready. Check the AI module configuration in BetterDungeon.'
+      );
+    }
+
+    if (aiStatus && aiStatus.status === 'ok') {
+      if (!aiStatus.data || aiStatus.data.ready !== true) {
+        var aiMessage = 'Stateboy AI is not ready. Configure the AI module in BetterDungeon and add a Gemini API key.';
+        var statusMessage = aiStatus.data && aiStatus.data.message
+          ? String(aiStatus.data.message).replace(/\s+/g, ' ').trim()
+          : '';
+        if (statusMessage && !/api\s*key|configure/i.test(statusMessage)) aiMessage += ' ' + statusMessage;
+        return makeStateboySetupResult(result, 'required', 'ai_not_ready', aiMessage);
+      }
+      result.canQueryAi = true;
+    } else {
+      result.code = 'ai_status_pending';
+    }
+  }
+
+  if (!settings.widgetsEnabled) {
+    return makeStateboySetupResult(
+      result,
+      'advisory',
+      'widget_disabled',
+      'Widgets are disabled in Stateboy Settings. Stateboy works best with Widgets enabled.'
+    );
+  }
+
+  if (!hasWidget || widgetPreference === false) {
+    return makeStateboySetupResult(
+      result,
+      'advisory',
+      'widget_disabled',
+      'Enable the Widget module in BetterDungeon. Stateboy works best with Widget enabled.'
+    );
+  }
+
+  return result;
+}
+
+function makeStateboySetupResult(result, level, code, message) {
+  result.level = level;
+  result.code = code;
+  result.message = message;
+  return result;
+}
+
+function getStateboyWidgetPreference(response) {
+  if (!response || response.status !== 'ok' || !response.data) return undefined;
+  var ultrascripts = response.data.ultrascripts;
+  var preferences = ultrascripts && ultrascripts.modulePreferences;
+  return preferences && typeof preferences.widget === 'boolean'
+    ? preferences.widget
+    : undefined;
+}
+
+function publishStateboySetupWarning(sb, setup) {
+  var code = setup && setup.message ? setup.code : '';
+  var message = setup && setup.message ? setup.message : '';
+
+  if (message) {
+    if (sb.lastSetupWarningCode !== code || sb.lastSetupWarningMessage !== message) {
+      state.message = message;
+    }
+    sb.lastSetupWarningCode = code;
+    sb.lastSetupWarningMessage = message;
+    return;
+  }
+
+  if (sb.lastSetupWarningMessage && state.message === sb.lastSetupWarningMessage) {
+    state.message = '';
+  }
+  sb.lastSetupWarningCode = '';
+  sb.lastSetupWarningMessage = '';
+}
+
+function renderStateboySetupContextWarning(text, setup) {
+  if (!setup || setup.level !== 'required' || !setup.message) return text;
+  var message = String(setup.message).replace(/\s+/g, ' ').trim();
+  return '[Stateboy setup: ' + message + ']\n' + String(text || '');
+}
+
 function processStateboyAiResponse(us, sb, sheet, stateCard) {
   var pendingId = sb.pendingAnalysisRequestId;
   if (!pendingId) return;
@@ -1356,10 +1511,10 @@ function formatStateboyChangeLogLine(entry) {
   ].join(' | ');
 }
 
-function queueStateboyAiAnalysisIfNeeded(us, sb, sheet, outputText) {
+function queueStateboyAiAnalysisIfNeeded(us, sb, sheet, outputText, setup) {
   var liveCount = getStateboyLiveCount();
   if (!sb.settings.aiEnabled || sheet.entries.length === 0) return;
-  if (!us.available() || !us.has('ai', 'query')) return;
+  if (!setup || !setup.canQueryAi) return;
   if (sb.pendingAnalysisRequestId) return;
   if (sb.lastQueuedAnalysisLiveCount === liveCount) return;
 
@@ -1563,5 +1718,8 @@ globalThis.StateboyInternals = {
   renderAiSheet: renderStateboyAiSheet,
   canAiModify: stateboyCanAiModify,
   validateChange: validateStateboyChange,
-  parseValue: parseStateboyValue
+  parseValue: parseStateboyValue,
+  assessSetup: assessStateboySetup,
+  publishSetupWarning: publishStateboySetupWarning,
+  renderSetupContextWarning: renderStateboySetupContextWarning
 };
