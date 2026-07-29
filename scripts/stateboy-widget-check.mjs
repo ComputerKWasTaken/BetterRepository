@@ -160,4 +160,18 @@ assert.deepEqual(
 )
 assertValidWidgetPayload(debugPayload)
 
+const directiveIssueSheet = internals.parseSheet('## Debug\nValue: One [hidden, visible, unknown-flag]')
+const directiveDebugPayload = internals.buildWidgetPayload({
+  settings: { debugMode: true, aiEnabled: true },
+  pendingAnalysisRequestId: '',
+  lastAcceptedSummary: '',
+  lastAiSummary: '',
+  directiveIssues: directiveIssueSheet.directiveIssues
+}, directiveIssueSheet)
+assert.equal(
+  directiveDebugPayload.widgets.some((widget) => widget.id === 'stateboy_directive_issues'),
+  true
+)
+assertValidWidgetPayload(directiveDebugPayload)
+
 console.log('Stateboy Widget checks passed.')

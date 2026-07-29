@@ -38,6 +38,7 @@ globalThis.Stateboy = function Stateboy(hook, inputText) {
 
   sb.settings = settingsResult.settings;
   sb.settingsErrors = settingsResult.errors;
+  sb.directiveIssues = sheet.directiveIssues;
   var observation = observeStateboyCardEntry(sb, stateCardText, serializedSheet);
   if (observation.userEdited) {
     if (sb.settings.changelogEnabled && sb.settings.userModificationChangelogEnabled) {
@@ -183,20 +184,27 @@ var DEFAULT_STATEBOY_GUIDE_CARD = [
   'Stamina: 88% (0-20 exhausted | 21-60 tired | 61-100 steady)',
   '',
   '## State Directives',
-  'Directives are bracket metadata at the end of a category header or state line:',
-  '## Secrets [widget: off, context: off, ai: readonly]',
-  'Secret: Known [widget: off, context: off, ai: readonly]',
+  'Add simple flags in brackets at the end of a category header or state line:',
+  '## Secrets [hidden, locked]',
+  'Public Clue: Found [visible, unlocked]',
+  'Internal Counter: 3 [no-widget]',
+  'Main Quest: Find the Crown [important]',
+  'Poisoned: On [temporary]',
   '',
-  'Supported directive keys:',
-  '- widget: on/off controls Widget visibility only.',
-  '- context: on/off controls normal story context visibility only.',
-  '- ai: on/readonly/off controls whether the AI updater may modify a state.',
+  'Flags:',
+  '- hidden hides the state from story Context and Widget.',
+  '- visible shows it again, overriding an inherited hidden flag.',
+  '- locked prevents AI changes; unlocked overrides an inherited lock.',
+  '- no-widget hides only the Widget; widget shows it again.',
+  '- important marks long-term protected state.',
+  '- temporary marks short-lived state that may later be removed or made permanent.',
   '',
-  'Category directives act as defaults. State directives override the category:',
-  '## Secrets [context: off]',
-  'PublicClue: Found [context: on]',
+  'Category flags act as defaults. State flags override the category:',
+  '## Secrets [hidden, locked]',
+  'Public Clue: Found [visible, unlocked]',
   '',
-  'Directive domains are independent. Hide a state broadly by setting each domain explicitly.',
+  'Do not combine important and temporary. If both appear together, Stateboy ignores both and treats the state as normal.',
+  'Unknown or contradictory flags are ignored. Debug Mode reports them.',
   '',
   '## Custom Scenario States',
   'Scenario creators can define their own default Stateboy states by creating a Stateboy card.',
@@ -224,6 +232,7 @@ var STATEBOY_AI_CHANGELOG_ENTRIES = 20;
 var STATEBOY_NOTES_CHANGELOG_ENTRIES = 40;
 var STATEBOY_WIDGET_LIMIT = 40;
 var STATEBOY_WIDGET_COLORS = ['blue', 'green', 'purple', 'cyan', 'orange', 'yellow', 'red'];
+var STATEBOY_DIRECTIVE_FLAGS = ['hidden', 'visible', 'locked', 'unlocked', 'no-widget', 'widget', 'important', 'temporary'];
 
 function initializeStateboyStore(sb) {
   sb.version = sb.version || 1;
@@ -603,7 +612,7 @@ function normalizeStateboyKey(value) {
 }
 
 function parseStateboySheet(text) {
-  var sheet = { categories: [], entries: [], errors: [] };
+  var sheet = { categories: [], entries: [], errors: [], directiveIssues: [] };
   var current = createStateboyCategory('General', 0);
   var hasCurrent = false;
   var lines = String(text || '').split(/\r?\n/);
@@ -652,11 +661,48 @@ function parseStateboySheet(text) {
     sheet.entries.push(entry);
   }
   if (!hasCurrent) sheet.categories = [];
+  sheet.directiveIssues = collectStateboyDirectiveIssues(sheet);
   return sheet;
 }
 
+function collectStateboyDirectiveIssues(sheet) {
+  var issues = [];
+  var categories = sheet && Array.isArray(sheet.categories) ? sheet.categories : [];
+  for (var i = 0; i < categories.length; i++) {
+    var category = categories[i];
+    appendStateboyDirectiveIssues(issues, category.directives, 'Category ' + category.name);
+    var entries = Array.isArray(category.entries) ? category.entries : [];
+    for (var j = 0; j < entries.length; j++) {
+      appendStateboyDirectiveIssues(
+        issues,
+        entries[j].directives,
+        'State ' + category.name + '.' + entries[j].name
+      );
+    }
+  }
+  return issues;
+}
+
+function appendStateboyDirectiveIssues(target, directives, owner) {
+  var unknown = directives && Array.isArray(directives.unknown) ? directives.unknown : [];
+  var conflicts = directives && Array.isArray(directives.conflicts) ? directives.conflicts : [];
+  for (var i = 0; i < unknown.length; i++) {
+    target.push({ owner: owner, kind: 'unknown', flags: [unknown[i]], message: owner + ': unknown flag "' + unknown[i] + '" ignored.' });
+  }
+  for (var j = 0; j < conflicts.length; j++) {
+    var pair = conflicts[j];
+    var semanticConflict = pair[0] === 'important' && pair[1] === 'temporary';
+    target.push({
+      owner: owner,
+      kind: 'conflict',
+      flags: pair.slice(),
+      message: owner + ': conflicting flags ' + pair.join(' and ') + ' ignored' + (semanticConflict ? '; treated as normal.' : '.')
+    });
+  }
+}
+
 function createStateboyCategory(name, index, directives) {
-  return { name: name, index: index, directives: directives || {}, entries: [] };
+  return { name: name, index: index, directives: directives || createStateboyDirectiveSet(), entries: [] };
 }
 
 function splitStateboyNameValue(line) {
@@ -680,7 +726,7 @@ function stripStateboyDescription(valueText) {
 
 function stripStateboyDirectives(valueText) {
   var value = String(valueText || '').trim();
-  var directives = {};
+  var directives = createStateboyDirectiveSet();
   var match = value.match(/\s+\[([^\[\]]*)\]\s*$/);
   if (match) {
     directives = parseStateboyDirectives(match[1]);
@@ -690,52 +736,76 @@ function stripStateboyDirectives(valueText) {
 }
 
 function parseStateboyDirectives(text) {
-  var directives = {};
+  var directives = createStateboyDirectiveSet();
+  var seen = {};
   var parts = String(text || '').split(',');
   for (var i = 0; i < parts.length; i++) {
     var part = parts[i].trim();
     if (!part) continue;
-    var idx = part.indexOf(':');
-    var rawName = idx >= 0 ? part.slice(0, idx) : part;
-    var rawValue = idx >= 0 ? part.slice(idx + 1) : 'on';
-    var name = normalizeStateboyDirectiveName(rawName);
-    if (!name) continue;
-    directives[name] = parseStateboyDirectiveValue(rawValue);
+    var flag = normalizeStateboyDirectiveFlag(part);
+    if (!flag) {
+      directives.unknown.push(part);
+      continue;
+    }
+    if (!seen[flag]) {
+      directives.flags.push(flag);
+      seen[flag] = true;
+    }
   }
+  directives.conflicts = findStateboyDirectiveConflicts(directives.flags);
   return directives;
 }
 
-function normalizeStateboyDirectiveName(name) {
-  var key = normalizeStateboyKey(name);
-  if (key === 'widget') return 'widget';
-  if (key === 'context') return 'context';
-  if (key === 'ai') return 'ai';
-  return key;
+function createStateboyDirectiveSet() {
+  return { flags: [], unknown: [], conflicts: [] };
 }
 
-function parseStateboyDirectiveValue(value) {
-  var text = String(value || '').trim();
-  var lowered = text.toLowerCase();
-  if (lowered === 'on' || lowered === 'true' || lowered === 'yes' || lowered === 'show' || lowered === 'shown') return true;
-  if (lowered === 'off' || lowered === 'false' || lowered === 'no' || lowered === 'hide' || lowered === 'hidden') return false;
-  if (/^-?\d+(?:\.\d+)?$/.test(text) && isFinite(Number(text))) return Number(text);
-  return text;
+function normalizeStateboyDirectiveFlag(value) {
+  var key = normalizeStateboyKey(value);
+  if (key === 'hidden') return 'hidden';
+  if (key === 'visible') return 'visible';
+  if (key === 'locked') return 'locked';
+  if (key === 'unlocked') return 'unlocked';
+  if (key === 'nowidget') return 'no-widget';
+  if (key === 'widget') return 'widget';
+  if (key === 'important') return 'important';
+  if (key === 'temporary') return 'temporary';
+  return '';
+}
+
+function findStateboyDirectiveConflicts(flags) {
+  var flagSet = makeStateboyDirectiveFlagMap(flags);
+  var conflicts = [];
+  if (flagSet.hidden && flagSet.visible) conflicts.push(['hidden', 'visible']);
+  if (flagSet.locked && flagSet.unlocked) conflicts.push(['locked', 'unlocked']);
+  if (flagSet['no-widget'] && flagSet.widget) conflicts.push(['no-widget', 'widget']);
+  if (flagSet.important && flagSet.temporary) conflicts.push(['important', 'temporary']);
+  return conflicts;
+}
+
+function makeStateboyDirectiveFlagMap(flags) {
+  var map = {};
+  var list = Array.isArray(flags) ? flags : [];
+  for (var i = 0; i < list.length; i++) map[list[i]] = true;
+  return map;
+}
+
+function getCanonicalStateboyDirectiveFlags(directives) {
+  var flags = directives && Array.isArray(directives.flags) ? directives.flags : [];
+  var excluded = {};
+  var conflicts = findStateboyDirectiveConflicts(flags);
+  for (var i = 0; i < conflicts.length; i++) {
+    excluded[conflicts[i][0]] = true;
+    excluded[conflicts[i][1]] = true;
+  }
+  return STATEBOY_DIRECTIVE_FLAGS.filter(function (flag) {
+    return flags.indexOf(flag) !== -1 && !excluded[flag];
+  });
 }
 
 function formatStateboyDirectives(directives) {
-  if (!directives || typeof directives !== 'object') return '';
-  var keys = Object.keys(directives);
-  if (keys.length === 0) return '';
-  keys.sort();
-  return '[' + keys.map(function (key) {
-    return key + ': ' + formatStateboyDirectiveValue(directives[key]);
-  }).join(', ') + ']';
-}
-
-function formatStateboyDirectiveValue(value) {
-  if (typeof value === 'boolean') return value ? 'on' : 'off';
-  if (value === null) return 'null';
-  return String(value);
+  var flags = getCanonicalStateboyDirectiveFlags(directives);
+  return flags.length ? '[' + flags.join(', ') + ']' : '';
 }
 
 function parseStateboyValue(raw) {
@@ -851,7 +921,7 @@ function makeStateboySheetFingerprint(sheet) {
       var entries = category && Array.isArray(category.entries) ? category.entries : [];
       return {
         name: category && category.name ? String(category.name) : '',
-        directives: canonicalizeStateboyFingerprintValue(category && category.directives ? category.directives : {}),
+        directives: getCanonicalStateboyDirectiveFlags(category && category.directives),
         entries: entries.map(function (entry) {
           return {
             category: entry && entry.category ? String(entry.category) : '',
@@ -859,7 +929,7 @@ function makeStateboySheetFingerprint(sheet) {
             type: entry && entry.type ? String(entry.type) : '',
             value: canonicalizeStateboyFingerprintValue(entry ? entry.value : null),
             description: entry && entry.description ? String(entry.description) : '',
-            directives: canonicalizeStateboyFingerprintValue(entry && entry.directives ? entry.directives : {})
+            directives: getCanonicalStateboyDirectiveFlags(entry && entry.directives)
           };
         })
       };
@@ -951,8 +1021,11 @@ function formatStateboyEntryLine(entry, options) {
   options = options || {};
   var line = entry.name + ': ' + formatStateboyValue(entry.type, entry.value);
   var notes = [];
+  var policy = resolveStateboyPolicy(entry);
   if (entry.description) notes.push(entry.description);
-  if (options.markAiReadonly && !stateboyCanAiModify(entry)) notes.push('AI readonly: do not modify');
+  if (options.markAiReadonly && !policy.aiMutable) notes.push('AI readonly: do not modify');
+  if (options.markAiReadonly && policy.important) notes.push('important state');
+  if (options.markAiReadonly && policy.temporary) notes.push('temporary state');
   if (notes.length) line += ' (' + notes.join('; ') + ')';
   if (options.includeDirectives) {
     var directiveText = formatStateboyDirectives(entry.directives);
@@ -961,51 +1034,76 @@ function formatStateboyEntryLine(entry, options) {
   return line;
 }
 
-function getStateboyEffectiveDirective(entry, domain) {
-  var categoryDirectives = entry && entry.categoryDirectives ? entry.categoryDirectives : {};
-  var stateDirectives = entry && entry.directives ? entry.directives : {};
-  var categoryValue = getStateboyDirectiveDomainValue(categoryDirectives, domain);
-  var stateValue = getStateboyDirectiveDomainValue(stateDirectives, domain);
-  return stateValue !== undefined ? stateValue : categoryValue;
+function resolveStateboyPolicy(entry) {
+  var categoryScope = readStateboyDirectiveScope(entry && entry.categoryDirectives);
+  var stateScope = readStateboyDirectiveScope(entry && entry.directives);
+
+  var contextVisible = stateScope.visibility !== undefined
+    ? stateScope.visibility
+    : (categoryScope.visibility !== undefined ? categoryScope.visibility : true);
+
+  var widgetVisible;
+  if (stateScope.widget !== undefined) widgetVisible = stateScope.widget;
+  else if (stateScope.visibility !== undefined) widgetVisible = stateScope.visibility;
+  else if (categoryScope.widget !== undefined) widgetVisible = categoryScope.widget;
+  else if (categoryScope.visibility !== undefined) widgetVisible = categoryScope.visibility;
+  else widgetVisible = true;
+
+  var aiMutable = stateScope.aiMutable !== undefined
+    ? stateScope.aiMutable
+    : (categoryScope.aiMutable !== undefined ? categoryScope.aiMutable : true);
+
+  var semanticScope = stateScope.semanticSpecified ? stateScope : categoryScope;
+  return {
+    contextVisible: contextVisible,
+    widgetVisible: widgetVisible,
+    aiMutable: aiMutable,
+    important: semanticScope.semanticSpecified ? semanticScope.important : false,
+    temporary: semanticScope.semanticSpecified ? semanticScope.temporary : false
+  };
 }
 
-function getStateboyDirectiveDomainValue(directives, domain) {
-  if (!directives || typeof directives !== 'object') return undefined;
-  if (domain === 'widget') return getStateboyWidgetDirectiveValue(directives);
-  if (domain === 'context') return getStateboyOnOffDirectiveValue(directives.context);
-  if (domain === 'ai') return getStateboyAiDirectiveValue(directives.ai);
-  return undefined;
-}
+function readStateboyDirectiveScope(directives) {
+  var flags = directives && Array.isArray(directives.flags) ? directives.flags : [];
+  var flagSet = makeStateboyDirectiveFlagMap(flags);
+  var scope = {
+    visibility: undefined,
+    widget: undefined,
+    aiMutable: undefined,
+    semanticSpecified: false,
+    important: false,
+    temporary: false
+  };
 
-function getStateboyWidgetDirectiveValue(directives) {
-  return getStateboyOnOffDirectiveValue(directives.widget);
-}
+  if (!(flagSet.hidden && flagSet.visible)) {
+    if (flagSet.hidden) scope.visibility = false;
+    else if (flagSet.visible) scope.visibility = true;
+  }
+  if (!(flagSet['no-widget'] && flagSet.widget)) {
+    if (flagSet['no-widget']) scope.widget = false;
+    else if (flagSet.widget) scope.widget = true;
+  }
+  if (!(flagSet.locked && flagSet.unlocked)) {
+    if (flagSet.locked) scope.aiMutable = false;
+    else if (flagSet.unlocked) scope.aiMutable = true;
+  }
 
-function getStateboyOnOffDirectiveValue(value) {
-  if (value === undefined) return undefined;
-  if (value === true || value === false) return value;
-  var text = String(value || '').trim().toLowerCase();
-  if (text === 'on' || text === 'true' || text === 'yes' || text === 'show' || text === 'shown' || text === 'visible') return true;
-  if (text === 'off' || text === 'false' || text === 'no' || text === 'hide' || text === 'hidden' || text === 'invisible') return false;
-  return undefined;
-}
-
-function getStateboyAiDirectiveValue(value) {
-  if (value === undefined) return undefined;
-  if (value === true) return 'on';
-  if (value === false) return 'readonly';
-  var text = String(value || '').trim().toLowerCase().replace(/\s+/g, '');
-  if (text === 'on' || text === 'true' || text === 'yes' || text === 'update' || text === 'editable') return 'on';
-  if (text === 'off' || text === 'false' || text === 'no' || text === 'readonly' || text === 'read-only' || text === 'locked' || text === 'lock') return 'readonly';
-  return undefined;
+  if (flagSet.important || flagSet.temporary) {
+    scope.semanticSpecified = true;
+    if (!(flagSet.important && flagSet.temporary)) {
+      scope.important = !!flagSet.important;
+      scope.temporary = !!flagSet.temporary;
+    }
+  }
+  return scope;
 }
 
 function stateboyShouldShowInContext(entry) {
-  return getStateboyEffectiveDirective(entry, 'context') !== false;
+  return resolveStateboyPolicy(entry).contextVisible;
 }
 
 function stateboyCanAiModify(entry) {
-  return getStateboyEffectiveDirective(entry, 'ai') !== 'readonly';
+  return resolveStateboyPolicy(entry).aiMutable;
 }
 
 function formatStateboyValue(type, value) {
@@ -1772,6 +1870,11 @@ function buildStateboyWidgetPayload(sb, sheet) {
     values.stateboy_summary = {
       content: sb.lastAcceptedSummary || sb.lastAiSummary || 'No accepted updates yet.'
     };
+    var directiveIssueText = formatStateboyDirectiveIssueSummary(sb.directiveIssues);
+    if (directiveIssueText) {
+      widgets.push({ id: 'stateboy_directive_issues', type: 'panel', title: 'Directive Issues' });
+      values.stateboy_directive_issues = { content: directiveIssueText };
+    }
   }
 
   var groups = [];
@@ -1920,8 +2023,18 @@ function makeStateboyObjectWidgetItems(value, color) {
   return items;
 }
 
+function formatStateboyDirectiveIssueSummary(issues) {
+  var list = Array.isArray(issues) ? issues : [];
+  if (list.length === 0) return '';
+  var lines = [];
+  for (var i = 0; i < list.length; i++) {
+    lines.push(String(list[i] && list[i].message || 'Unknown directive issue.'));
+  }
+  return lines.join('\n').slice(0, 512);
+}
+
 function stateboyShouldShowWidget(entry) {
-  return getStateboyEffectiveDirective(entry, 'widget') !== false;
+  return resolveStateboyPolicy(entry).widgetVisible;
 }
 
 function clearStateboyWidgetIfNeeded(us, sb) {
@@ -1937,6 +2050,7 @@ globalThis.StateboyInternals = {
   renderSheet: renderStateboySheet,
   renderContextSheet: renderStateboyContextSheet,
   renderAiSheet: renderStateboyAiSheet,
+  resolvePolicy: resolveStateboyPolicy,
   canAiModify: stateboyCanAiModify,
   validateChange: validateStateboyChange,
   parseValue: parseStateboyValue,
@@ -1946,6 +2060,7 @@ globalThis.StateboyInternals = {
   removeLegacyChangelogCountSettings: removeStateboyLegacyChangelogCountSettings,
   renderRecentChanges: renderStateboyRecentChanges,
   buildAiPrompt: buildStateboyAiPrompt,
+  directiveIssueSummary: formatStateboyDirectiveIssueSummary,
   sheetFingerprint: makeStateboySheetFingerprint,
   observeCardEntry: observeStateboyCardEntry,
   rememberScriptWrite: rememberStateboyScriptWrite,
