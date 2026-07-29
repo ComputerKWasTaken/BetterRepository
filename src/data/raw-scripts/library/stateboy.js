@@ -27,7 +27,12 @@ globalThis.Stateboy = function Stateboy(hook, inputText) {
   var settingsCard = ensureStateboyCard('Stateboy Settings', DEFAULT_STATEBOY_SETTINGS_CARD, 'Stateboy');
   ensureStateboyCard('Stateboy Guide', DEFAULT_STATEBOY_GUIDE_CARD, 'Stateboy');
   var stateCardText = getStateboyCardText(stateCard);
-  var settingsResult = parseStateboySettings(getStateboyCardText(settingsCard));
+  var settingsCardText = getStateboyCardText(settingsCard);
+  var settingsResult = parseStateboySettings(settingsCardText);
+  var migratedSettingsText = removeStateboyLegacyChangelogCountSettings(settingsCardText);
+  if (migratedSettingsText !== settingsCardText) {
+    updateStateboyCard('Stateboy Settings', migratedSettingsText, 'Stateboy');
+  }
   var sheet = parseStateboySheet(stateCardText);
   var serializedSheet = serializeStateboySheetForState(sheet);
 
@@ -44,8 +49,9 @@ globalThis.Stateboy = function Stateboy(hook, inputText) {
     }
     sb.pendingAnalysisRequestId = '';
     sb.pendingAnalysisLiveCount = 0;
+    sb.lastQueuedAnalysisLiveCount = -1;
   }
-  sb.sheet = serializedSheet;
+  if (!observation.staleScriptWrite) sb.sheet = serializedSheet;
   sb.lastSyncLiveCount = getStateboyLiveCount();
 
   requestStateboyAiStatusIfNeeded(us, sb);
@@ -58,9 +64,10 @@ globalThis.Stateboy = function Stateboy(hook, inputText) {
   sb.aiAvailable = setup.canQueryAi;
   publishStateboySetupWarning(sb, setup);
 
-  if (sb.settings.stateboyEnabled && sb.settings.aiEnabled && setup.canQueryAi) {
+  var aiProcessingEnabled = sb.settings.stateboyEnabled && sb.settings.aiEnabled && setup.canQueryAi;
+  if (aiProcessingEnabled && !observation.staleScriptWrite) {
     processStateboyAiResponse(us, sb, sheet, stateCard);
-  } else {
+  } else if (!aiProcessingEnabled) {
     sb.pendingAnalysisRequestId = '';
     sb.pendingAnalysisLiveCount = 0;
   }
@@ -84,7 +91,7 @@ globalThis.Stateboy = function Stateboy(hook, inputText) {
     }
   }
 
-  if (hook === 'output') {
+  if (hook === 'output' && !observation.staleScriptWrite) {
     queueStateboyAiAnalysisIfNeeded(us, sb, sheet, text, setup);
   }
 
@@ -124,13 +131,7 @@ var DEFAULT_STATEBOY_SETTINGS_CARD = [
   '# When On, accepted AI updates are written to Notes and shown to the AI updater.',
   '',
   'User Modification Changelog Enabled: On',
-  '# When On, manual Stateboy card value/add/remove edits are written to Notes and shown to the AI updater.',
-  '',
-  'AI Changelog Entries: 6',
-  '# How many recent changes the AI updater sees.',
-  '',
-  'Notes Changelog Entries: 20',
-  '# How many recent changes are mirrored into the Stateboy card Notes.'
+  '# When On, manual Stateboy card value/add/remove edits are written to Notes and shown to the AI updater.'
 ].join('\n');
 
 var DEFAULT_STATEBOY_GUIDE_CARD = [
@@ -151,16 +152,28 @@ var DEFAULT_STATEBOY_GUIDE_CARD = [
   '',
   '## Value Types',
   'Stateboy guesses each type from how the value is written:',
-  '- JSON: true, false, null, numbers, strings, arrays, and objects.',
   '- Ratio: current/max, such as 20/100.',
   '- Percent: a number followed by %, such as 85%.',
-  '- Boolean: On/Off, True/False, or Yes/No.',
+  '- Boolean: On/Off, True/False, Yes/No, or lowercase true/false.',
   '- Number: any finite number, such as 5 or -3.5.',
-  '- List: comma-separated values, such as Sword, Shield, Potion.',
-  '- String: anything else.',
+  '- List: comma-separated values or a JSON array.',
+  '- Object: a JSON object for structured key/value data.',
+  '- Null: the JSON literal null, meaning no current value.',
+  '- Text: anything else.',
   '',
-  'Use JSON arrays when you want an explicit list with one item:',
+  '## JSON Notation',
+  'JSON is an optional way to write a value, not a separate Stateboy type.',
+  'Stateboy converts each JSON literal into its actual type:',
+  'Active: true (Boolean, exactly like True or On)',
   'Inventory: ["Sword"]',
+  'Profile: {"rank":"Captain","trusted":true}',
+  '',
+  'Use an object when one state genuinely needs related named fields. Prefer separate readable states for information the player should scan quickly.',
+  '',
+  '## Widget Display',
+  'Every visible widget includes its state name. State categories may also appear as dividers when the Widget limit leaves room.',
+  'Colors provide stable visual separation between states; boolean colors still communicate On and Off.',
+  'Empty text, lists, and objects are shown as Empty rather than disappearing. Objects are displayed as structured named fields.',
   '',
   '## Descriptions',
   'Put a description in parentheses after the value:',
@@ -202,12 +215,15 @@ var STATEBOY_DEFAULT_SETTINGS = {
   debugMode: false,
   minimumConfidence: 0.65,
   changelogEnabled: true,
-  userModificationChangelogEnabled: true,
-  aiChangelogEntries: 6,
-  notesChangelogEntries: 20
+  userModificationChangelogEnabled: true
 };
 
 var STATEBOY_PENDING_TURN_LIMIT = 6;
+var STATEBOY_CARD_WRITE_TURN_LIMIT = 2;
+var STATEBOY_AI_CHANGELOG_ENTRIES = 20;
+var STATEBOY_NOTES_CHANGELOG_ENTRIES = 40;
+var STATEBOY_WIDGET_LIMIT = 40;
+var STATEBOY_WIDGET_COLORS = ['blue', 'green', 'purple', 'cyan', 'orange', 'yellow', 'red'];
 
 function initializeStateboyStore(sb) {
   sb.version = sb.version || 1;
@@ -225,6 +241,11 @@ function initializeStateboyStore(sb) {
   sb.lastSetupWarningMessage = typeof sb.lastSetupWarningMessage === 'string' ? sb.lastSetupWarningMessage : '';
   sb.lastObservedStateCardEntry = typeof sb.lastObservedStateCardEntry === 'string' ? sb.lastObservedStateCardEntry : '';
   sb.lastScriptWrittenStateCardEntry = typeof sb.lastScriptWrittenStateCardEntry === 'string' ? sb.lastScriptWrittenStateCardEntry : '';
+  sb.lastObservedStateSheetFingerprint = typeof sb.lastObservedStateSheetFingerprint === 'string' ? sb.lastObservedStateSheetFingerprint : '';
+  sb.lastScriptWrittenStateSheetFingerprint = typeof sb.lastScriptWrittenStateSheetFingerprint === 'string' ? sb.lastScriptWrittenStateSheetFingerprint : '';
+  sb.pendingStateCardWrite = sb.pendingStateCardWrite && typeof sb.pendingStateCardWrite === 'object'
+    ? sb.pendingStateCardWrite
+    : null;
   sb.hasObservedStateCardEntry = sb.hasObservedStateCardEntry === true;
   sb.widgetWasPublished = sb.widgetWasPublished === true;
 }
@@ -530,9 +551,7 @@ function parseStateboySettings(text) {
     debugMode: STATEBOY_DEFAULT_SETTINGS.debugMode,
     minimumConfidence: STATEBOY_DEFAULT_SETTINGS.minimumConfidence,
     changelogEnabled: STATEBOY_DEFAULT_SETTINGS.changelogEnabled,
-    userModificationChangelogEnabled: STATEBOY_DEFAULT_SETTINGS.userModificationChangelogEnabled,
-    aiChangelogEntries: STATEBOY_DEFAULT_SETTINGS.aiChangelogEntries,
-    notesChangelogEntries: STATEBOY_DEFAULT_SETTINGS.notesChangelogEntries
+    userModificationChangelogEnabled: STATEBOY_DEFAULT_SETTINGS.userModificationChangelogEnabled
   };
   var errors = [];
   var lines = String(text || '').split(/\r?\n/);
@@ -549,8 +568,6 @@ function parseStateboySettings(text) {
     else if (key === 'debugmode') settings.debugMode = parseStateboyOnOff(valueText, settings.debugMode);
     else if (key === 'changelogenabled') settings.changelogEnabled = parseStateboyOnOff(valueText, settings.changelogEnabled);
     else if (key === 'usermodificationchangelogenabled') settings.userModificationChangelogEnabled = parseStateboyOnOff(valueText, settings.userModificationChangelogEnabled);
-    else if (key === 'aichangelogentries') settings.aiChangelogEntries = parseStateboyInteger(valueText, settings.aiChangelogEntries, 0, 20);
-    else if (key === 'noteschangelogentries') settings.notesChangelogEntries = parseStateboyInteger(valueText, settings.notesChangelogEntries, 0, 40);
     else if (key === 'minimumconfidence') {
       var n = Number(valueText);
       if (isFinite(n)) settings.minimumConfidence = clampStateboyNumber(n, 0, 1);
@@ -560,17 +577,25 @@ function parseStateboySettings(text) {
   return { settings: settings, errors: errors };
 }
 
+function removeStateboyLegacyChangelogCountSettings(text) {
+  var lines = String(text || '').split(/\r?\n/);
+  var kept = [];
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i];
+    var normalized = normalizeStateboyKey(line.indexOf(':') === -1 ? line : line.slice(0, line.indexOf(':')));
+    var stockHelp = line.trim() === '# How many recent changes the AI updater sees.' ||
+      line.trim() === '# How many recent changes are mirrored into the Stateboy card Notes.';
+    if (normalized === 'aichangelogentries' || normalized === 'noteschangelogentries' || stockHelp) continue;
+    kept.push(line);
+  }
+  return kept.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+}
+
 function parseStateboyOnOff(value, fallback) {
   var normalized = String(value || '').trim().toLowerCase();
   if (normalized === 'on' || normalized === 'true' || normalized === 'yes' || normalized === 'enabled') return true;
   if (normalized === 'off' || normalized === 'false' || normalized === 'no' || normalized === 'disabled') return false;
   return fallback;
-}
-
-function parseStateboyInteger(value, fallback, min, max) {
-  var n = Number(String(value || '').trim());
-  if (!isFinite(n)) return fallback;
-  return Math.round(clampStateboyNumber(n, min, max));
 }
 
 function normalizeStateboyKey(value) {
@@ -816,6 +841,56 @@ function serializeStateboySheetForState(sheet) {
   };
 }
 
+function makeStateboySheetFingerprint(sheet) {
+  // Compare state meaning rather than raw card formatting. Story Card writes
+  // may normalize whitespace or JSON key order between lifecycle hooks.
+  var categories = sheet && Array.isArray(sheet.categories) ? sheet.categories : [];
+  var errors = sheet && Array.isArray(sheet.errors) ? sheet.errors : [];
+  var fingerprint = {
+    categories: categories.map(function (category) {
+      var entries = category && Array.isArray(category.entries) ? category.entries : [];
+      return {
+        name: category && category.name ? String(category.name) : '',
+        directives: canonicalizeStateboyFingerprintValue(category && category.directives ? category.directives : {}),
+        entries: entries.map(function (entry) {
+          return {
+            category: entry && entry.category ? String(entry.category) : '',
+            name: entry && entry.name ? String(entry.name) : '',
+            type: entry && entry.type ? String(entry.type) : '',
+            value: canonicalizeStateboyFingerprintValue(entry ? entry.value : null),
+            description: entry && entry.description ? String(entry.description) : '',
+            directives: canonicalizeStateboyFingerprintValue(entry && entry.directives ? entry.directives : {})
+          };
+        })
+      };
+    }),
+    errors: errors.map(function (error) {
+      return {
+        text: error && error.text ? String(error.text) : '',
+        reason: error && error.reason ? String(error.reason) : ''
+      };
+    })
+  };
+  return JSON.stringify(fingerprint);
+}
+
+function canonicalizeStateboyFingerprintValue(value) {
+  if (Array.isArray(value)) {
+    return value.map(function (item) {
+      return canonicalizeStateboyFingerprintValue(item);
+    });
+  }
+  if (value && typeof value === 'object') {
+    var result = {};
+    var keys = Object.keys(value).sort();
+    for (var i = 0; i < keys.length; i++) {
+      result[keys[i]] = canonicalizeStateboyFingerprintValue(value[keys[i]]);
+    }
+    return result;
+  }
+  return value;
+}
+
 function renderStateboySheet(sheet) {
   return renderStateboySheetWithOptions(sheet, {
     includeDirectives: true,
@@ -825,11 +900,19 @@ function renderStateboySheet(sheet) {
 }
 
 function renderStateboyContextSheet(sheet) {
-  return renderStateboySheetWithOptions(sheet, {
+  var renderedSheet = renderStateboySheetWithOptions(sheet, {
     includeDirectives: false,
     filterEntry: function (entry) { return stateboyShouldShowInContext(entry); },
     markAiReadonly: false
   });
+  if (!renderedSheet) return '';
+  return [
+    '[',
+    "This is the world's current state sheet. Use it as reference and continue the story in your response; do not continue or reproduce the state sheet.",
+    '',
+    renderedSheet,
+    ']'
+  ].join('\n');
 }
 
 function renderStateboyAiSheet(sheet) {
@@ -1116,7 +1199,8 @@ function publishStateboySetupWarning(sb, setup) {
 function renderStateboySetupContextWarning(text, setup) {
   if (!setup || setup.level !== 'required' || !setup.message) return text;
   var message = String(setup.message).replace(/\s+/g, ' ').trim();
-  return '[Stateboy setup: ' + message + ']\n' + String(text || '');
+  var original = String(text || '');
+  return original + (original ? '\n\n' : '') + '[Stateboy setup: ' + message + ']';
 }
 
 function processStateboyAiResponse(us, sb, sheet, stateCard) {
@@ -1293,27 +1377,72 @@ function cloneStateboyValue(value) {
 
 function observeStateboyCardEntry(sb, currentEntry, currentSheet) {
   var previousSheet = sb.sheet;
+  var currentFingerprint = makeStateboySheetFingerprint(currentSheet);
+  var previousFingerprint = sb.lastObservedStateSheetFingerprint;
   var userEdited = false;
+  var pendingWrite = sb.pendingStateCardWrite;
+
+  if (!previousFingerprint && sb.hasObservedStateCardEntry && sb.lastObservedStateCardEntry) {
+    previousFingerprint = makeStateboySheetFingerprint(
+      serializeStateboySheetForState(parseStateboySheet(sb.lastObservedStateCardEntry))
+    );
+    sb.lastObservedStateSheetFingerprint = previousFingerprint;
+  }
+
+  if (pendingWrite) {
+    if (currentFingerprint === pendingWrite.afterFingerprint) {
+      sb.pendingStateCardWrite = null;
+    } else if (
+      currentFingerprint === pendingWrite.beforeFingerprint &&
+      getStateboyLiveCount() <= Number(pendingWrite.writtenLiveCount || 0) + STATEBOY_CARD_WRITE_TURN_LIMIT
+    ) {
+      // updateStoryCard can leave storyCards showing the pre-write snapshot for
+      // later hooks in the same lifecycle. It is not another manual edit.
+      return {
+        userEdited: false,
+        staleScriptWrite: true,
+        previousSheet: previousSheet,
+        currentSheet: currentSheet
+      };
+    } else {
+      sb.pendingStateCardWrite = null;
+    }
+  }
 
   if (!sb.hasObservedStateCardEntry) {
     sb.hasObservedStateCardEntry = true;
-  } else if (currentEntry !== sb.lastObservedStateCardEntry && currentEntry !== sb.lastScriptWrittenStateCardEntry) {
+  } else if (
+    currentFingerprint !== previousFingerprint &&
+    currentFingerprint !== sb.lastScriptWrittenStateSheetFingerprint
+  ) {
     userEdited = true;
   }
 
   sb.lastObservedStateCardEntry = currentEntry;
+  sb.lastObservedStateSheetFingerprint = currentFingerprint;
   return {
     userEdited: userEdited,
+    staleScriptWrite: false,
     previousSheet: previousSheet,
     currentSheet: currentSheet
   };
 }
 
 function rememberStateboyScriptWrite(sb, entry, sheet) {
+  var serializedSheet = serializeStateboySheetForState(sheet);
+  var beforeFingerprint = sb.lastObservedStateSheetFingerprint || makeStateboySheetFingerprint(sb.sheet);
+  var afterFingerprint = makeStateboySheetFingerprint(serializedSheet);
+  sb.pendingStateCardWrite = {
+    beforeFingerprint: beforeFingerprint,
+    afterFingerprint: afterFingerprint,
+    writtenLiveCount: getStateboyLiveCount()
+  };
   sb.lastScriptWrittenStateCardEntry = entry;
+  sb.lastScriptWrittenStateSheetFingerprint = afterFingerprint;
   sb.lastObservedStateCardEntry = entry;
+  sb.lastObservedStateSheetFingerprint = afterFingerprint;
   sb.hasObservedStateCardEntry = true;
-  sb.sheet = serializeStateboySheetForState(sheet);
+  sb.sheet = serializedSheet;
 }
 
 function detectStateboyManualChanges(previousSheet, currentSheet) {
@@ -1463,7 +1592,7 @@ function pushStateboyRejected(sb, name, reason) {
 
 function syncStateboyChangelogToNotes(card, sb) {
   if (!card || !sb || !sb.settings || !sb.settings.changelogEnabled) return;
-  var text = renderStateboyChangelogNotes(sb, sb.settings.notesChangelogEntries);
+  var text = renderStateboyChangelogNotes(sb, STATEBOY_NOTES_CHANGELOG_ENTRIES);
   if (!text) return;
   if (card.description !== text) card.description = text;
   if (Object.prototype.hasOwnProperty.call(card, 'notes') && card.notes !== text) card.notes = text;
@@ -1539,6 +1668,7 @@ function queueStateboyAiAnalysisIfNeeded(us, sb, sheet, outputText, setup) {
 }
 
 function buildStateboyAiPrompt(sb, sheet, outputText) {
+  var currentTurn = getStateboyLiveCount();
   var recent = [];
   var actions = Array.isArray(history) ? history.slice(-8) : [];
   for (var i = 0; i < actions.length; i++) {
@@ -1546,12 +1676,13 @@ function buildStateboyAiPrompt(sb, sheet, outputText) {
     recent.push((action.type || 'action') + ': ' + String(action.text || action.rawText || '').slice(0, 900));
   }
   var recentChanges = sb && sb.settings && sb.settings.changelogEnabled
-    ? renderStateboyRecentChanges(sb, sb.settings.aiChangelogEntries)
+    ? renderStateboyRecentChanges(sb, STATEBOY_AI_CHANGELOG_ENTRIES)
     : '';
 
   var prompt = [
     'You are Stateboy, an AI Dungeon state update assistant.',
     'Your job is to propose state changes based only on the recent story.',
+    'Current turn: ' + currentTurn + '.',
     'Return JSON that follows the provided schema.',
     'Only use operation "set".',
     'Only target states that already exist in the current state sheet.',
@@ -1617,86 +1748,176 @@ function stateboyAiResponseSchema() {
 function publishStateboyWidget(us, sb, sheet) {
   if (!us.available() || !us.has('widget')) return;
 
+  var payload = buildStateboyWidgetPayload(sb, sheet);
+  us.defineWidget({ widgets: payload.widgets });
+  us.publishWidget(payload.values);
+  sb.widgetWasPublished = true;
+}
+
+function buildStateboyWidgetPayload(sb, sheet) {
   var widgets = [];
   var values = {};
 
   if (sb.settings.debugMode) {
     widgets.push(
-      { id: 'stateboy_status', type: 'text', label: 'Stateboy' },
-      { id: 'stateboy_ai', type: 'badge', label: 'AI' },
-      { id: 'stateboy_summary', type: 'text', label: 'Last Update' }
+      { id: 'stateboy_status', type: 'stat', label: 'Stateboy', color: 'blue' },
+      { id: 'stateboy_ai', type: 'stat', label: 'AI' },
+      { id: 'stateboy_summary', type: 'panel', title: 'Last Update' }
     );
     values.stateboy_status = 'Running';
     values.stateboy_ai = {
-      text: sb.settings.aiEnabled ? (sb.pendingAnalysisRequestId ? 'thinking' : 'ready') : 'off',
+      value: sb.settings.aiEnabled ? (sb.pendingAnalysisRequestId ? 'Thinking' : 'Ready') : 'Off',
       color: sb.settings.aiEnabled ? '#22c55e' : '#f59e0b'
     };
-    values.stateboy_summary = sb.lastAcceptedSummary || sb.lastAiSummary || 'No accepted updates yet.';
+    values.stateboy_summary = {
+      content: sb.lastAcceptedSummary || sb.lastAiSummary || 'No accepted updates yet.'
+    };
   }
 
-  for (var i = 0; i < sheet.entries.length; i++) {
-    var entry = sheet.entries[i];
-    var widget = makeStateboyWidget(entry, i);
-    if (!widget) continue;
-    widgets.push(widget.config);
-    values[widget.config.id] = widget.value;
+  var groups = [];
+  var stateWidgetCount = 0;
+  var categories = sheet && Array.isArray(sheet.categories) ? sheet.categories : [];
+  for (var i = 0; i < categories.length; i++) {
+    var category = categories[i];
+    var group = { category: category, widgets: [] };
+    var entries = category && Array.isArray(category.entries) ? category.entries : [];
+    for (var j = 0; j < entries.length; j++) {
+      var entry = entries[j];
+      var entryIndex = isFinite(Number(entry.order)) ? Number(entry.order) : stateWidgetCount;
+      var widget = makeStateboyWidget(entry, entryIndex);
+      if (!widget) continue;
+      group.widgets.push(widget);
+      stateWidgetCount += 1;
+    }
+    if (group.widgets.length > 0) groups.push(group);
   }
 
-  us.defineWidget({ widgets: widgets });
-  us.publishWidget(values);
-  sb.widgetWasPublished = true;
+  var includeCategoryDividers = groups.length > 1 &&
+    widgets.length + stateWidgetCount + groups.length <= STATEBOY_WIDGET_LIMIT;
+
+  for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
+    var currentGroup = groups[groupIndex];
+    if (includeCategoryDividers) {
+      widgets.push({
+        id: ('stateboy_category_' + groupIndex + '_' + normalizeStateboyKey(currentGroup.category.name)).slice(0, 60),
+        type: 'divider',
+        label: makeStateboyWidgetLabel(currentGroup.category.name)
+      });
+    }
+    for (var widgetIndex = 0; widgetIndex < currentGroup.widgets.length; widgetIndex++) {
+      if (widgets.length >= STATEBOY_WIDGET_LIMIT) break;
+      var currentWidget = currentGroup.widgets[widgetIndex];
+      widgets.push(currentWidget.config);
+      values[currentWidget.config.id] = currentWidget.value;
+    }
+    if (widgets.length >= STATEBOY_WIDGET_LIMIT) break;
+  }
+
+  return { widgets: widgets, values: values };
 }
 
 function makeStateboyWidget(entry, index) {
   if (!stateboyShouldShowWidget(entry)) return null;
   var id = ('stateboy_' + index + '_' + normalizeStateboyKey(entry.name)).slice(0, 60);
+  var label = makeStateboyWidgetLabel(entry.name);
+  var color = getStateboyWidgetColor(entry);
   if (entry.type === 'ratio') {
     return {
-      config: { id: id, type: 'bar', label: entry.name, max: entry.value.max || 1, color: '#60a5fa' },
+      config: { id: id, type: 'bar', label: label, max: entry.value.max || 1, color: color },
       value: entry.value.current || 0
     };
   }
   if (entry.type === 'percent') {
     return {
-      config: { id: id, type: 'bar', label: entry.name, max: 100, color: '#22c55e' },
+      config: { id: id, type: 'progress', label: label, max: 100, color: color },
       value: entry.value
     };
   }
   if (entry.type === 'number') {
     return {
-      config: { id: id, type: 'stat', label: entry.name, color: '#a78bfa' },
+      config: { id: id, type: 'stat', label: label, color: color },
       value: entry.value
     };
   }
   if (entry.type === 'boolean') {
     return {
-      config: { id: id, type: 'badge', label: entry.name, color: entry.value ? '#22c55e' : '#f59e0b' },
-      value: { text: entry.value ? 'On' : 'Off', color: entry.value ? '#22c55e' : '#f59e0b' }
+      config: { id: id, type: 'stat', label: label },
+      value: { value: entry.value ? 'On' : 'Off', color: entry.value ? '#22c55e' : '#f59e0b' }
     };
   }
   if (entry.type === 'list') {
-    var items = Array.isArray(entry.value) ? entry.value.map(function (item) { return String(formatStateboyListItem(item)); }) : [];
+    var items = Array.isArray(entry.value) ? entry.value.map(function (item) {
+      return { text: String(formatStateboyListItem(item)).slice(0, 512), color: color };
+    }) : [];
+    if (items.length === 0) items.push({ text: 'Empty', color: color });
     if (items.length <= 6) {
       return {
-        config: { id: id, type: 'taggroup', label: entry.name },
+        config: { id: id, type: 'taggroup', label: label },
         value: { items: items }
       };
     }
+    var listItems = items.slice(0, 11);
+    if (items.length > 11) {
+      listItems.push({ text: '+' + (items.length - 11) + ' more', color: color });
+    }
     return {
-      config: { id: id, type: 'list', label: entry.name },
-      value: items.slice(0, 12).map(function (item) { return { text: item }; })
+      config: { id: id, type: 'list', title: label },
+      value: { items: listItems }
     };
   }
   if (entry.type === 'object') {
     return {
-      config: { id: id, type: 'text', label: entry.name },
-      value: JSON.stringify(entry.value).slice(0, 180)
+      config: { id: id, type: 'panel', title: makeStateboyWidgetLabel(entry.name, ' · Structured Data') },
+      value: { items: makeStateboyObjectWidgetItems(entry.value, color) }
+    };
+  }
+  if (entry.type === 'null') {
+    return {
+      config: { id: id, type: 'stat', label: label, color: color },
+      value: 'No value'
     };
   }
   return {
-    config: { id: id, type: 'text', label: entry.name },
-    value: String(entry.value === undefined || entry.value === null ? '' : entry.value).slice(0, 180)
+    config: { id: id, type: 'panel', title: label },
+    value: {
+      content: String(entry.value === undefined || entry.value === null || entry.value === '' ? 'Empty' : entry.value).slice(0, 512)
+    }
   };
+}
+
+function makeStateboyWidgetLabel(name, suffix) {
+  var ending = String(suffix || '');
+  var available = Math.max(0, 120 - ending.length);
+  return String(name || 'State').slice(0, available) + ending;
+}
+
+function getStateboyWidgetColor(entry) {
+  var identity = String(entry && entry.category || '') + '::' + String(entry && entry.name || '');
+  var hash = 0;
+  for (var i = 0; i < identity.length; i++) {
+    hash = ((hash * 31) + identity.charCodeAt(i)) >>> 0;
+  }
+  return STATEBOY_WIDGET_COLORS[hash % STATEBOY_WIDGET_COLORS.length];
+}
+
+function makeStateboyObjectWidgetItems(value, color) {
+  var objectValue = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+  var keys = Object.keys(objectValue);
+  if (keys.length === 0) return [{ label: 'Object', value: 'Empty', color: color }];
+
+  var visibleKeys = keys.slice(0, 11);
+  var items = visibleKeys.map(function (key) {
+    var display = formatStateboyListItem(objectValue[key]);
+    return {
+      label: String(key).slice(0, 120),
+      value: String(display).slice(0, 512),
+      color: color
+    };
+  });
+  if (keys.length > visibleKeys.length) {
+    items.push({ label: 'More', value: '+' + (keys.length - visibleKeys.length) + ' fields', color: color });
+  }
+  return items;
 }
 
 function stateboyShouldShowWidget(entry) {
@@ -1721,5 +1942,14 @@ globalThis.StateboyInternals = {
   parseValue: parseStateboyValue,
   assessSetup: assessStateboySetup,
   publishSetupWarning: publishStateboySetupWarning,
-  renderSetupContextWarning: renderStateboySetupContextWarning
+  renderSetupContextWarning: renderStateboySetupContextWarning,
+  removeLegacyChangelogCountSettings: removeStateboyLegacyChangelogCountSettings,
+  renderRecentChanges: renderStateboyRecentChanges,
+  buildAiPrompt: buildStateboyAiPrompt,
+  sheetFingerprint: makeStateboySheetFingerprint,
+  observeCardEntry: observeStateboyCardEntry,
+  rememberScriptWrite: rememberStateboyScriptWrite,
+  buildWidgetPayload: buildStateboyWidgetPayload,
+  makeWidget: makeStateboyWidget,
+  widgetColor: getStateboyWidgetColor
 };
