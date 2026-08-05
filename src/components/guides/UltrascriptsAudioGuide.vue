@@ -18,7 +18,7 @@
       <div class="p-3 rounded-lg border border-bd-pink/30 bg-bd-pink/5 flex items-center gap-3">
         <Volume2 class="w-4 h-4 text-bd-pink flex-shrink-0" />
         <p class="text-xs text-bd-text-secondary">
-          <strong class="text-bd-pink">V2.1 preview:</strong> Audio is available in the current BetterDungeon development build. Mobile parity and final loop verification remain in progress.
+          <strong class="text-bd-pink">V2.1 preview:</strong> Audio is available in the current BetterDungeon development build. Mobile parity and final live verification remain in progress.
         </p>
       </div>
 
@@ -27,29 +27,28 @@
           <Volume2 class="w-5 h-5 text-bd-pink" />Audio Module
         </h2>
         <p class="text-bd-text-secondary">
-          Audio is a state module that gives an adventure a persistent ambient loop and optional one-shot synthesized effects. Scripts publish the complete desired state to <code class="text-bd-green">ultrascripts:state:audio</code>.
+          Audio lets scripts play short, synthesized sound effects. A script describes one effect in <code class="text-bd-green">ultrascripts:state:audio</code>, and BetterDungeon generates it locally with Web Audio.
         </p>
         <div class="grid md:grid-cols-2 gap-3 text-xs">
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30">
-            <h3 class="font-semibold text-bd-blue mb-2 flex items-center gap-2"><Music class="w-4 h-4" />Ambient</h3>
-            <p class="text-bd-text-muted">Select one bundled MP3 by track id. It keeps playing until replaced, stopped, disabled, or the adventure changes.</p>
+            <h3 class="font-semibold text-bd-blue mb-2 flex items-center gap-2"><AudioLines class="w-4 h-4" />Oscillators</h3>
+            <p class="text-bd-text-muted">Create sine, square, triangle, or sawtooth tones with an optional pitch sweep.</p>
           </div>
           <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30">
-            <h3 class="font-semibold text-bd-purple mb-2 flex items-center gap-2"><Sparkles class="w-4 h-4" />Effects</h3>
-            <p class="text-bd-text-muted">Describe a bounded oscillator or noise effect. Each new effect id plays once, even if the state card is hydrated repeatedly.</p>
+            <h3 class="font-semibold text-bd-purple mb-2 flex items-center gap-2"><Sparkles class="w-4 h-4" />Noise</h3>
+            <p class="text-bd-text-muted">Generate a bounded noise burst for impacts, static, wind-like hits, and other texture-based effects.</p>
           </div>
         </div>
+        <p class="text-xs text-bd-text-muted">
+          Audio does not play background music, bundled recordings, remote files, or arbitrary audio URLs.
+        </p>
       </section>
 
       <section id="audio-state" class="card space-y-4">
         <h2 class="text-lg font-semibold text-bd-text-primary">State Contract</h2>
-        <p class="text-xs text-bd-text-secondary">Ambient and effect state are independent, so a synthesized sound can play over the current loop.</p>
+        <p class="text-xs text-bd-text-secondary">Every new effect needs a unique <code>id</code>. This prevents card rehydration or page reloads from replaying a stale sound.</p>
         <pre class="p-4 rounded-lg bg-bd-bg-tertiary font-mono text-xs text-bd-green overflow-x-auto">{
   "v": 1,
-  "ambient": {
-    "id": "mystery",
-    "volume": 0.45
-  },
   "effect": {
     "id": "spell-cast-18",
     "waveform": "sine",
@@ -61,35 +60,14 @@
     "volume": 0.7
   }
 }</pre>
-        <div class="grid md:grid-cols-3 gap-3 text-xs">
-          <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle"><code>ambient: null</code><p class="mt-1 text-bd-text-muted">Stops ambient playback.</p></div>
-          <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle"><code>effect: null</code><p class="mt-1 text-bd-text-muted">Requests no new effect.</p></div>
-          <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle"><code>ambient: null</code> + <code>effect: null</code><p class="mt-1 text-bd-text-muted">Stops all active Audio playback.</p></div>
+        <div class="grid md:grid-cols-2 gap-3 text-xs">
+          <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle"><code>effect: null</code><p class="mt-1 text-bd-text-muted">Stops any active effects and requests silence.</p></div>
+          <div class="p-3 rounded bg-bd-bg-primary border border-bd-border-subtle">New unique <code>effect.id</code><p class="mt-1 text-bd-text-muted">Plays the described sound once.</p></div>
         </div>
-      </section>
-
-      <section id="audio-tracks" class="card space-y-4">
-        <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2"><Music class="w-5 h-5 text-bd-blue" />Bundled Tracks</h2>
-        <div class="overflow-x-auto">
-          <table class="w-full text-xs">
-            <thead><tr class="text-left text-bd-text-muted border-b border-bd-border-subtle"><th class="p-2">ID</th><th class="p-2">Mood</th><th class="p-2">Duration</th></tr></thead>
-            <tbody class="text-bd-text-secondary">
-              <tr v-for="track in tracks" :key="track.id" class="border-b border-bd-border-subtle/50">
-                <td class="p-2"><code class="text-bd-green">{{ track.id }}</code></td><td class="p-2">{{ track.mood }}</td><td class="p-2">{{ track.duration }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <pre class="p-4 rounded-lg bg-bd-bg-tertiary font-mono text-xs text-bd-green overflow-x-auto">{
-  "v": 1,
-  "ambient": { "id": "peaceful", "volume": 0.35 },
-  "effect": null
-}</pre>
-        <p class="text-xs text-bd-text-muted">Changing only <code>volume</code> updates the active player without restarting the track. Changing <code>id</code> replaces it.</p>
       </section>
 
       <section id="audio-synth" class="card space-y-4">
-        <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2"><Sparkles class="w-5 h-5 text-bd-purple" />Synthesizer</h2>
+        <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2"><SlidersHorizontal class="w-5 h-5 text-bd-blue" />Synthesizer</h2>
         <div class="overflow-x-auto">
           <table class="w-full text-xs">
             <thead><tr class="text-left text-bd-text-muted border-b border-bd-border-subtle"><th class="p-2">Field</th><th class="p-2">Contract</th></tr></thead>
@@ -99,58 +77,74 @@
           </table>
         </div>
         <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/20 text-xs text-bd-text-secondary">
-          A new effect requires a new <code>id</code>. Reusing an id is intentionally ignored so reloads and state rehydration do not replay stale sounds.
+          <code>frequency</code> and <code>endFrequency</code> do not apply to <code>noise</code>. Attack and release together cannot exceed the total duration.
+        </div>
+      </section>
+
+      <section id="audio-recipes" class="card space-y-4">
+        <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2"><Sparkles class="w-5 h-5 text-bd-purple" />Effect Recipes</h2>
+        <div class="grid lg:grid-cols-3 gap-3 text-xs">
+          <div v-for="recipe in recipes" :key="recipe.name" class="p-3 rounded-lg bg-bd-bg-primary border border-bd-border-subtle space-y-2">
+            <h3 class="font-semibold text-bd-text-primary">{{ recipe.name }}</h3>
+            <p class="text-bd-text-muted">{{ recipe.description }}</p>
+            <pre class="p-2 rounded bg-bd-bg-tertiary text-bd-green overflow-x-auto">{{ recipe.effect }}</pre>
+          </div>
         </div>
       </section>
 
       <section id="audio-lifecycle" class="card space-y-4">
         <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2"><ShieldCheck class="w-5 h-5 text-bd-green" />Lifecycle and Safety</h2>
         <ul class="space-y-2 text-xs text-bd-text-secondary">
-          <li>&middot; Browsers may wait for a click, tap, or key press before allowing playback.</li>
-          <li>&middot; Disabling Audio, removing its state card, or leaving the adventure stops and releases playback.</li>
-          <li>&middot; Unknown track ids and invalid synth parameters are rejected without replacing valid state.</li>
+          <li>&middot; Browsers may wait for a click, tap, or key press before allowing the first effect.</li>
+          <li>&middot; The pending effect is retained and played after Web Audio is unlocked.</li>
+          <li>&middot; Disabling Audio, removing its state card, or leaving the adventure stops and releases active effects.</li>
+          <li>&middot; Invalid waveforms and out-of-bounds parameters are rejected without replacing valid state.</li>
           <li>&middot; Effect duration is limited to 20&ndash;10,000 ms and volume is clamped to 0&ndash;1.</li>
-          <li>&middot; Audio files are bundled with BetterDungeon; scripts cannot provide remote URLs.</li>
+          <li>&middot; Scripts cannot load files, remote URLs, or arbitrary Web Audio graphs.</li>
         </ul>
-        <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/20 text-xs text-bd-text-secondary flex gap-2">
-          <AlertTriangle class="w-4 h-4 text-bd-pink flex-shrink-0 mt-0.5" />
-          <p>The current MP3s were reported as CC0, but their original source, creator, and license records were not retained. Provenance must be recovered or the files replaced before release.</p>
-        </div>
       </section>
     </div>
   </div>
 </template>
 
 <script setup>
-import { Volume2, Music, Sparkles, ShieldCheck, AlertTriangle } from 'lucide-vue-next'
+import { Volume2, AudioLines, Sparkles, SlidersHorizontal, ShieldCheck } from 'lucide-vue-next'
 
 const sections = [
   { id: 'overview', label: 'Overview' },
   { id: 'state', label: 'State Contract' },
-  { id: 'tracks', label: 'Bundled Tracks' },
   { id: 'synth', label: 'Synthesizer' },
+  { id: 'recipes', label: 'Effect Recipes' },
   { id: 'lifecycle', label: 'Lifecycle and Safety' }
-]
-
-const tracks = [
-  { id: 'cavern', mood: 'Cavernous atmosphere', duration: '6:54' },
-  { id: 'cozy', mood: 'Warm and comfortable', duration: '2:40' },
-  { id: 'mystery', mood: 'Uncertain and investigative', duration: '3:39' },
-  { id: 'nature', mood: 'Natural outdoor ambience', duration: '3:43' },
-  { id: 'ominous', mood: 'Dark and threatening', duration: '3:04' },
-  { id: 'peaceful', mood: 'Calm and gentle', duration: '4:32' },
-  { id: 'tension', mood: 'Suspense and pressure', duration: '4:39' }
 ]
 
 const synthFields = [
   { name: 'id', contract: 'Required unique string, at most 160 characters' },
-  { name: 'waveform', contract: 'sine, square, triangle, sawtooth, or noise' },
+  { name: 'waveform', contract: 'sine, square, triangle, sawtooth, or noise; defaults to sine' },
   { name: 'frequency', contract: '20–20,000 Hz; required except for noise' },
   { name: 'endFrequency', contract: 'Optional 20–20,000 Hz pitch-sweep target' },
   { name: 'durationMs', contract: '20–10,000 ms; defaults to 250' },
   { name: 'attackMs', contract: 'Fade-in time; defaults to 5 ms' },
   { name: 'releaseMs', contract: 'Fade-out time; defaults to at most 80 ms' },
   { name: 'volume', contract: 'Clamped to 0–1; defaults to 0.7' }
+]
+
+const recipes = [
+  {
+    name: 'Notification',
+    description: 'A short, clean chime.',
+    effect: '{ "waveform": "sine",\n  "frequency": 880, "durationMs": 180,\n  "releaseMs": 100, "volume": 0.4 }'
+  },
+  {
+    name: 'Energy Sweep',
+    description: 'A rising electronic effect.',
+    effect: '{ "waveform": "sawtooth",\n  "frequency": 180, "endFrequency": 720,\n  "durationMs": 500, "volume": 0.35 }'
+  },
+  {
+    name: 'Impact',
+    description: 'A brief generated-noise hit.',
+    effect: '{ "waveform": "noise",\n  "durationMs": 240, "attackMs": 0,\n  "releaseMs": 220, "volume": 0.35 }'
+  }
 ]
 
 const scrollTo = (id) => {
