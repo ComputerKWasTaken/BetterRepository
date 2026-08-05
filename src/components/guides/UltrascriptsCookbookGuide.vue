@@ -173,7 +173,7 @@
             <div class="grid md:grid-cols-2 gap-3 text-[11px]">
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">No runtime</h4>
-                <p class="text-bd-text-muted">Check <code>bd.us.available()</code>. If false, the heartbeat card is missing or unreadable.</p>
+                <p class="text-bd-text-muted">Check <code>bd.us.available()</code>. If false, the heartbeat is missing, invalid, disabled, or its beat stopped advancing.</p>
               </div>
               <div class="p-3 rounded bg-bd-bg-primary border border-bd-pink/30 space-y-1">
                 <h4 class="font-semibold text-bd-pink text-[12px]">No module</h4>

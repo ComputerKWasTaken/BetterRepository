@@ -21,6 +21,7 @@ globalThis.Stateboy = function Stateboy(hook, inputText) {
 
   var us = createStateboyUltrascriptsSdk();
   bd.stateboyUs = us;
+  us.observeHeartbeat(hook);
   us.tick();
 
   var stateCard = ensureStateboyCard('Stateboy', DEFAULT_STATEBOY_STATE_CARD, 'Stateboy');
@@ -267,6 +268,7 @@ function createStateboyUltrascriptsSdk() {
   store.results = store.results || {};
   store.reqCounter = Number(store.reqCounter || 0);
   store.widget = store.widget || null;
+  if (typeof store.heartbeatAvailable !== 'boolean') store.heartbeatAvailable = false;
 
   function findCard(title) {
     var cards = Array.isArray(storyCards) ? storyCards : [];
@@ -306,6 +308,22 @@ function createStateboyUltrascriptsSdk() {
       } catch (e) {}
     }
     return best;
+  }
+
+  function observeHeartbeat(hook) {
+    if (hook !== 'input') return store.heartbeatAvailable;
+    var hb = heartbeat();
+    var beat = Number(hb && hb.ultrascripts && hb.ultrascripts.beat);
+    var valid = !!(hb && hb.ultrascripts && hb.ultrascripts.enabled &&
+      Number.isFinite(beat) && beat >= 0 && Math.floor(beat) === beat);
+    if (!valid) {
+      store.heartbeatAvailable = false;
+      return false;
+    }
+    store.heartbeatAvailable = store.lastHeartbeatBeat === undefined ||
+      store.lastHeartbeatBeat === null || beat !== store.lastHeartbeatBeat;
+    store.lastHeartbeatBeat = beat;
+    return store.heartbeatAvailable;
   }
 
   function moduleList(hb) {
@@ -472,7 +490,8 @@ function createStateboyUltrascriptsSdk() {
     parseCard: parseCard,
     upsertCard: upsertCard,
     heartbeat: heartbeat,
-    available: function () { return !!heartbeat(); },
+    observeHeartbeat: observeHeartbeat,
+    available: function () { return store.heartbeatAvailable && !!heartbeat(); },
     has: has,
     tick: tick,
     call: call,
@@ -547,9 +566,8 @@ function getStateboyLiveCount() {
 function stateboyHeartbeatScore(hb) {
   if (!hb || !hb.ultrascripts || hb.ultrascripts.protocol !== 1) return -1;
   if (hb.ultrascripts.client !== 'BetterDungeon' || hb.ultrascripts.archived) return -1;
-  var modules = Array.isArray(hb.modules) ? hb.modules.length : (hb.modules && typeof hb.modules === 'object' ? Object.keys(hb.modules).length : 0);
-  var writtenAt = Date.parse(hb.writtenAt || '') || 0;
-  return modules * 10000000000000 + writtenAt;
+  var beat = Number(hb.ultrascripts.beat);
+  return Number.isFinite(beat) && beat >= 0 && Math.floor(beat) === beat ? beat : 0;
 }
 
 function parseStateboySettings(text) {

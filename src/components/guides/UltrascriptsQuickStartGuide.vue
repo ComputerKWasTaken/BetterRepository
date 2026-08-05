@@ -193,7 +193,7 @@
           <div v-if="isGuideSectionExpanded('paste-map')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
             <p>
               AI Dungeon gives you four script tabs. Ultrascripts does not change that model; it gives those scripts a bridge to BetterDungeon. Most
-              scenarios only need Library + Context.
+              scenarios use Library + a tiny Input heartbeat check + whichever modifier owns their feature logic.
             </p>
 
             <div class="overflow-x-auto">
@@ -218,8 +218,8 @@
                   </tr>
                   <tr class="border-b border-bd-border-subtle/50">
                     <td class="py-2 px-2 font-semibold text-bd-amber">Input</td>
-                    <td class="py-2 px-2">Optional command parsing before the model sees player input.</td>
-                    <td class="py-2 px-2">Use sparingly. Empty input or stop returns can error in AI Dungeon.</td>
+                    <td class="py-2 px-2"><code>bd.us.observeHeartbeat()</code>, plus optional command parsing.</td>
+                    <td class="py-2 px-2">Compare the heartbeat beat once per logical turn before other hooks reuse <code>available()</code>.</td>
                   </tr>
                   <tr>
                     <td class="py-2 px-2 font-semibold text-bd-purple">Output</td>
@@ -282,6 +282,10 @@
                     </tr>
                   </thead>
                   <tbody class="text-bd-text-secondary">
+                    <tr class="border-b border-bd-border-subtle/50">
+                      <td class="py-1.5 px-2"><code class="text-bd-green">bd.us.observeHeartbeat()</code></td>
+                      <td class="py-1.5 px-2">Call once from Input. Records whether the heartbeat beat advanced since the previous turn.</td>
+                    </tr>
                     <tr class="border-b border-bd-border-subtle/50">
                       <td class="py-1.5 px-2"><code class="text-bd-green">bd.us.tick()</code></td>
                       <td class="py-1.5 px-2">Reads terminal responses into memory and auto-queues their acks. Call once at the top of each modifier.</td>
@@ -587,6 +591,12 @@ bd.us.defineWidget({
             </div>
 
             <div>
+              <div class="font-mono text-[10px] text-bd-amber font-bold mb-1">Input Modifier</div>
+              <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">// Compare the heartbeat once for this logical turn.
+bd.us.observeHeartbeat();</pre>
+            </div>
+
+            <div>
               <div class="font-mono text-[10px] text-bd-blue font-bold mb-1">Context Modifier</div>
               <pre class="p-3 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">// 1. Sync the SDK with the latest card state.
 bd.us.tick();
@@ -742,6 +752,7 @@ bd.us._pendingRequests = bd.us._pendingRequests || [];
 bd.us._pendingAcks     = bd.us._pendingAcks     || [];
 bd.us._results         = bd.us._results         || {};   // { moduleId: { reqId: response } }
 bd.us._reqCounter      = bd.us._reqCounter      || 0;
+if (typeof bd.us._heartbeatAvailable !== 'boolean') bd.us._heartbeatAvailable = false;
 
 // --- card I/O ---
 bd.us._cardMatches = function (card, title) {
@@ -811,9 +822,8 @@ bd.us.liveCount = function () { return (info && info.actionCount) || 0; };
 bd.us._heartbeatScore = function (hb) {
   if (!hb || !hb.ultrascripts || hb.ultrascripts.protocol !== 1) return -1;
   if (hb.ultrascripts.client !== 'BetterDungeon' || hb.ultrascripts.archived) return -1;
-  var moduleCount = bd.us._moduleList(hb).length;
-  var writtenAt = Date.parse(hb.writtenAt || '') || 0;
-  return moduleCount * 10000000000000 + writtenAt;
+  var beat = Number(hb.ultrascripts.beat);
+  return Number.isFinite(beat) &amp;&amp; beat >= 0 &amp;&amp; Math.floor(beat) === beat ? beat : 0;
 };
 bd.us.heartbeat = function () {
   var cards = bd.us._parseCards('ultrascripts:heartbeat');
@@ -828,7 +838,18 @@ bd.us.heartbeat = function () {
   }
   return best;
 };
-bd.us.available = function () { return !!bd.us.heartbeat(); };
+bd.us.observeHeartbeat = function () {
+  var hb = bd.us.heartbeat();
+  var beat = Number(hb &amp;&amp; hb.ultrascripts &amp;&amp; hb.ultrascripts.beat);
+  var valid = !!(hb &amp;&amp; hb.ultrascripts.enabled &amp;&amp; Number.isFinite(beat) &amp;&amp;
+    beat >= 0 &amp;&amp; Math.floor(beat) === beat);
+  if (!valid) return bd.us._heartbeatAvailable = false;
+  bd.us._heartbeatAvailable = bd.us._lastHeartbeatBeat == null ||
+    beat !== bd.us._lastHeartbeatBeat;
+  bd.us._lastHeartbeatBeat = beat;
+  return bd.us._heartbeatAvailable;
+};
+bd.us.available = function () { return bd.us._heartbeatAvailable &amp;&amp; !!bd.us.heartbeat(); };
 bd.us._moduleList = function (hb) {
   var raw = hb && hb.modules;
   if (Array.isArray(raw)) return raw;

@@ -61,8 +61,8 @@ generation behavior.
 
 ## 4. Reserved cards
 
-- `ultrascripts:heartbeat`: written by BetterDungeon. Discovery surface for
-  protocol, client, current turn, and mounted modules.
+- `ultrascripts:heartbeat`: written by BetterDungeon. Turn-to-turn liveness and
+  discovery surface for protocol, client platform, current turn, and modules.
 - `ultrascripts:state:<name>`: written by scenario scripts. Routed to modules
   that declare matching `stateNames`.
 - `ultrascripts:out`: written by scenario scripts. Request envelope plus acks.
@@ -73,9 +73,14 @@ All production Ultrascripts-owned cards use the Story Card type `Ultrascripts`.
 
 ## 5. Heartbeat detection
 
-The heartbeat is the only discovery surface. Scripts should read it when they
-need to know whether Ultrascripts exists, which modules are mounted, or which
-ops are currently exposed.
+The heartbeat is the only discovery surface. BetterDungeon advances its
+persistent `ultrascripts.beat` counter whenever it refreshes the heartbeat,
+including after every observed generation action. Scripts compare that value in
+the Input hook: a changed beat confirms BetterDungeon remained active through
+the preceding adventure activity; an unchanged beat identifies a stale card.
+Detection is intentionally one turn behind disappearance, allowing an async
+module call to degrade cleanly if the user switches to a client without
+BetterDungeon.
 
 ```js
 function usReadJsonCard(title) {
@@ -95,7 +100,21 @@ function usHeartbeat() {
   return hb;
 }
 
+function usObserveHeartbeatOnInput() {
+  state.__usPresence = state.__usPresence || {};
+  var hb = usHeartbeat();
+  var beat = Number(hb && hb.ultrascripts && hb.ultrascripts.beat);
+  var valid = !!(hb && hb.ultrascripts.enabled && Number.isFinite(beat) &&
+    beat >= 0 && Math.floor(beat) === beat);
+  if (!valid) return state.__usPresence.available = false;
+  state.__usPresence.available = state.__usPresence.lastBeat == null ||
+    beat !== state.__usPresence.lastBeat;
+  state.__usPresence.lastBeat = beat;
+  return state.__usPresence.available;
+}
+
 function usHas(moduleId, opName) {
+  if (!state.__usPresence || !state.__usPresence.available) return false;
   var hb = usHeartbeat();
   var mods = (hb && Array.isArray(hb.modules)) ? hb.modules : [];
   for (var i = 0; i < mods.length; i++) {
@@ -111,6 +130,10 @@ function usHas(moduleId, opName) {
 
 Do not check for `ultrascripts.profile`; the live heartbeat does not include a
 profile field.
+
+Call `usObserveHeartbeatOnInput()` once from the Input hook. Model Context and
+Output hooks should reuse the stored result instead of comparing the same beat
+again.
 
 ## 6. Request/response envelope
 
