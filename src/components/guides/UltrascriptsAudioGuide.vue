@@ -15,13 +15,6 @@
     </aside>
 
     <div class="flex-1 space-y-4 min-w-0">
-      <div class="p-3 rounded-lg border border-bd-pink/30 bg-bd-pink/5 flex items-center gap-3">
-        <Volume2 class="w-4 h-4 text-bd-pink flex-shrink-0" />
-        <p class="text-xs text-bd-text-secondary">
-          <strong class="text-bd-pink">V2.1 preview:</strong> Audio is available in the current BetterDungeon development build. Mobile parity and final live verification remain in progress.
-        </p>
-      </div>
-
       <section id="audio-overview" class="card space-y-4">
         <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
           <Volume2 class="w-5 h-5 text-bd-pink" />Audio Module

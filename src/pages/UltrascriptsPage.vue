@@ -31,7 +31,7 @@
               <strong class="text-bd-green">Shipped</strong>
             </span>
             <span class="text-bd-border-default">|</span>
-            <span><strong class="text-bd-text-primary">8</strong> first-party modules</span>
+            <span><strong class="text-bd-text-primary">9</strong> first-party modules</span>
             <span class="text-bd-border-default">|</span>
             <span>Protocol <strong class="text-bd-text-primary">v1</strong></span>
             <span class="text-bd-border-default">|</span>
@@ -63,7 +63,7 @@
         </button>
       </div>
 
-      <!-- Row 2: Shipped modules plus active V2.1 preview modules -->
+      <!-- Row 2: Shipped modules -->
       <div class="flex flex-wrap gap-1.5 pt-1.5 border-t border-bd-border-subtle">
         <span class="self-center text-[10px] uppercase tracking-widest text-bd-text-muted px-1.5">Modules</span>
         <button
@@ -135,7 +135,7 @@ const foundationTabs = [
   { id: 'authoring',    label: 'Building Modules', icon: Wand2,    dotClass: 'dot--blue',   activeClass: 'us-tab--active-blue'   }
 ]
 
-// Shipped first-party modules plus active V2.1 previews.
+// Shipped first-party modules.
 const moduleTabs = [
   { id: 'widget',   label: 'Widget',   icon: LayoutDashboard, iconClass: 'text-bd-green' },
   { id: 'webfetch',    label: 'WebFetch',    icon: Globe,           iconClass: 'text-bd-blue' },
