@@ -63,7 +63,7 @@
         </button>
       </div>
 
-      <!-- Row 2: Module tabs (one per shipped module) -->
+      <!-- Row 2: Shipped modules plus active V2.1 preview modules -->
       <div class="flex flex-wrap gap-1.5 pt-1.5 border-t border-bd-border-subtle">
         <span class="self-center text-[10px] uppercase tracking-widest text-bd-text-muted px-1.5">Modules</span>
         <button
@@ -95,6 +95,7 @@
     <UltrascriptsWeatherGuide v-if="activeTab === 'weather'" />
     <UltrascriptsNetworkGuide v-if="activeTab === 'network'" />
     <UltrascriptsSystemGuide v-if="activeTab === 'system'" />
+    <UltrascriptsAudioGuide v-if="activeTab === 'audio'" />
   </div>
 </template>
 
@@ -114,9 +115,10 @@ import UltrascriptsClockGuide from '@/components/guides/UltrascriptsClockGuide.v
 import UltrascriptsWeatherGuide from '@/components/guides/UltrascriptsWeatherGuide.vue'
 import UltrascriptsNetworkGuide from '@/components/guides/UltrascriptsNetworkGuide.vue'
 import UltrascriptsSystemGuide from '@/components/guides/UltrascriptsSystemGuide.vue'
+import UltrascriptsAudioGuide from '@/components/guides/UltrascriptsAudioGuide.vue'
 import {
   Compass, Zap, BookOpen, Network, Wand2, LayoutDashboard, Globe, BrainCircuit, Terminal,
-  Clock, CloudSun, Wifi, Cpu, Rocket
+  Clock, CloudSun, Wifi, Cpu, Rocket, Volume2
 } from 'lucide-vue-next'
 
 const route = useRoute()
@@ -133,7 +135,7 @@ const foundationTabs = [
   { id: 'authoring',    label: 'Building Modules', icon: Wand2,    dotClass: 'dot--blue',   activeClass: 'us-tab--active-blue'   }
 ]
 
-// One module tab per shipped first-party module.
+// Shipped first-party modules plus active V2.1 previews.
 const moduleTabs = [
   { id: 'widget',   label: 'Widget',   icon: LayoutDashboard, iconClass: 'text-bd-green' },
   { id: 'webfetch',    label: 'WebFetch',    icon: Globe,           iconClass: 'text-bd-blue' },
@@ -142,7 +144,8 @@ const moduleTabs = [
   { id: 'clock',       label: 'Clock',       icon: Clock,           iconClass: 'text-bd-amber' },
   { id: 'weather',     label: 'Weather',     icon: CloudSun,        iconClass: 'text-bd-cyan' },
   { id: 'network',     label: 'Network',     icon: Wifi,            iconClass: 'text-bd-green' },
-  { id: 'system',      label: 'System',      icon: Cpu,             iconClass: 'text-bd-purple' }
+  { id: 'system',      label: 'System',      icon: Cpu,             iconClass: 'text-bd-purple' },
+  { id: 'audio',       label: 'Audio',       icon: Volume2,         iconClass: 'text-bd-pink' }
 ]
 
 const allTabs = [...foundationTabs, ...moduleTabs]
