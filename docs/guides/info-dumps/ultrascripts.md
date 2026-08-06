@@ -54,10 +54,11 @@ test suites in `BetterDungeon/tests/aid-scripts/`.
 | `ai` | Ops | Gemini-backed async AI query contract | `status`, `query` |
 
 The AI module exposes `ai.status` and asynchronous `ai.query` through Gemini.
-Public docs should teach text output, schema-backed JSON output, and the
-`not_configured` error shown when the player has not saved a Gemini API key. Do
-not document provider aliases, script-facing model settings, or native
-generation behavior.
+Gemini uses stateless Interactions API requests with `store: false`. Public docs
+should teach text output, schema-backed JSON output, `not_configured` when the
+player has not saved a key, and the distinct terminal `safety_blocked` and
+`prohibited_content` errors. Do not document provider aliases, script-facing
+model settings, or native generation payloads.
 
 ## 4. Reserved cards
 
@@ -201,7 +202,8 @@ Important cross-platform notes:
   credential-free public HTTPS `GET`/`HEAD` reads without per-origin prompts.
 - The current AI module exposes the Gemini-backed status/query contract, but
   valid query requests return `not_configured` until the player saves a Gemini
-  API key.
+  API key. Gemini is the only configured V2.1 provider and may return terminal
+  `prohibited_content` errors for explicit content.
 
 ## 9. Public guide coverage
 

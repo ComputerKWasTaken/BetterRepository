@@ -46,7 +46,7 @@
             <p class="text-bd-text-secondary">
               The Ultrascripts <code class="text-bd-green">ai</code> module exposes exactly two operations: <code class="text-bd-green">status</code> and
               asynchronous <code class="text-bd-green">query</code>. It is an asynchronous LLM query system: scripts send a request out, BetterDungeon
-              routes it through the execution layers, and the result comes back on a later turn. The default setup uses Gemini through the
+              routes it through the execution layers, and the result comes back on a later turn. V2.1 uses Gemini through the
               extension background worker, so the player's API key stays out of AI Dungeon page code and scenario scripts.
             </p>
 
@@ -88,6 +88,15 @@
                   Scripts can request plain text or schema-backed JSON. Queries are always asynchronous: a script writes the request to
                   <code class="text-bd-green">ultrascripts:out</code> and reads the terminal response from
                   <code class="text-bd-green">ultrascripts:in:ai</code> on a later turn.
+                </p>
+              </div>
+            </div>
+            <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30">
+              <div class="flex items-start gap-2">
+                <AlertTriangle class="w-4 h-4 text-bd-amber flex-shrink-0 mt-0.5" />
+                <p class="text-xs text-bd-text-secondary">
+                  Gemini is the only configured provider in V2.1 and may reject explicit sexual content under a non-adjustable policy.
+                  Scripts should treat <code class="text-bd-pink">prohibited_content</code> as terminal and continue through a normal fallback path.
                 </p>
               </div>
             </div>
@@ -166,12 +175,17 @@
   },
   "config": {
     "provider": "gemini",
+    "api": "interactions",
+    "apiVersion": "v1",
+    "stateless": true,
+    "adjustableSafety": "provider-default",
     "keyConfigured": true,           // boolean
     "modelMode": "auto",             // "auto" | "manual"
-    "model": "gemini-3.1-flash-lite",
-    "selectedModel": "gemini-3.1-flash-lite",
+    "model": "gemini-3.5-flash-lite",
+    "selectedModel": "gemini-3.5-flash-lite",
     "activeModel": null,             // last successful model, or null
     "fallbackModels": [
+      "gemini-3.5-flash-lite",
       "gemini-3.1-flash-lite",
       "gemma-4-31b-it",
       "gemma-4-26b-a4b-it"
@@ -187,7 +201,7 @@
     "asyncOnly": true
   },
   "executor": {
-    "version": "0.4.0-gemini-meta",
+    "version": "0.5.0-provider-router",
     "promptMaxChars": 12000,
     "backendConfigured": true        // boolean
   },
@@ -230,8 +244,8 @@
     "outputType": "text",
     "promptChars": 43,
     "generatedAtIso": "2026-06-15T20:00:00.000Z",
-    "model": "gemini-3.1-flash-lite",
-    "providerModel": "gemini-3.1-flash-lite",
+    "model": "gemini-3.5-flash-lite",
+    "providerModel": "gemini-3.5-flash-lite-001",
     "thinking": {
       "requestedLevel": "minimal",
       "applied": true,
@@ -240,7 +254,7 @@
     },
     "fallback": {
       "mode": "auto",
-      "attemptedModels": ["gemini-3.1-flash-lite"]
+      "attemptedModels": ["gemini-3.5-flash-lite"]
     },
     "usage": { ... }                  // optional provider usage metadata
   }
@@ -261,12 +275,12 @@
     "thinking": {
       "requestedLevel": "low",
       "applied": true,
-      "family": "gemini-3",
+      "family": "gemma-4",
       "defaulted": false
     },
     "fallback": {
       "mode": "auto",
-      "attemptedModels": ["gemini-3.1-flash-lite", "gemma-4-31b-it"]
+      "attemptedModels": ["gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemma-4-31b-it"]
     }
   }
 }</pre>
@@ -283,7 +297,8 @@
                 <p><code class="text-bd-pink">auth_failed</code> &mdash; the saved API key was rejected.</p>
                 <p><code class="text-bd-pink">rate_limit</code> &mdash; the current model hit a rate limit.</p>
                 <p><code class="text-bd-pink">timeout</code> &mdash; the provider request exceeded the timeout.</p>
-                <p><code class="text-bd-pink">blocked</code> &mdash; the provider refused or blocked the prompt.</p>
+                <p><code class="text-bd-pink">safety_blocked</code> &mdash; Gemini's adjustable safety filter blocked the request. <code>providerReason</code> is <code>SAFETY</code>.</p>
+                <p><code class="text-bd-pink">prohibited_content</code> &mdash; Gemini's non-adjustable content policy blocked the request. <code>providerReason</code> is <code>PROHIBITED_CONTENT</code>.</p>
                 <p><code class="text-bd-pink">invalid_response</code> &mdash; the provider returned malformed output. Shape: <code>{ code, message, retryable, detail? }</code></p>
                 <p><code class="text-bd-pink">backend_failed</code> &mdash; transport or provider failure outside the stable cases above.</p>
               </div>
@@ -370,9 +385,9 @@
 
             <p class="text-bd-text-secondary">
               BetterDungeon translates that single public knob into the controls each active model family actually supports.
-              Gemini 3 style models use <code class="text-bd-green">thinkingLevel</code>. Gemini 2.5 style models use
-              <code class="text-bd-green">thinkingBudget</code>. Gemma 4 behaves like a toggle, so <code class="text-bd-green">minimal</code>
-              leaves thinking off and any non-minimal level maps to <code class="text-bd-green">thinkingLevel: "high"</code>.
+              Gemini 3 and 2.5 models use Interactions <code class="text-bd-green">thinking_level</code>; models that do not accept
+              <code class="text-bd-green">minimal</code> receive <code class="text-bd-green">low</code>. Gemma 4 behaves like a toggle, so <code class="text-bd-green">minimal</code>
+              leaves thinking off and any non-minimal level maps to <code class="text-bd-green">thinking_level: "high"</code>.
             </p>
             <p class="text-bd-text-secondary">
               The completed response includes a normalized <code class="text-bd-green">data.meta.thinking</code> object with
