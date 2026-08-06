@@ -105,8 +105,8 @@ export const ULTRASCRIPTS_GUIDE_SEARCH_ITEMS = [
   {
     id: 'ultrascripts-webfetch',
     name: 'WebFetch Module Guide',
-    description: 'Make consent-gated GET, HEAD, OPTIONS, and search requests safely.',
-    tags: ['ultrascripts', 'guide', 'webfetch', 'http', 'search', 'consent'],
+    description: 'Read small public HTTPS text resources with bounded GET and HEAD requests.',
+    tags: ['ultrascripts', 'guide', 'webfetch', 'https', 'fetch', 'public-data'],
     route: '/ultrascripts',
     tabHint: 'webfetch'
   },

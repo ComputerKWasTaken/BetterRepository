@@ -45,7 +45,7 @@ test suites in `BetterDungeon/tests/aid-scripts/`.
 | Module | Kind | Public role | Ops / state |
 |---|---|---|---|
 | `widget` | State | Dynamic widgets and sidebar UI | `ultrascripts:state:widget` |
-| `webfetch` | Ops | Consent-gated HTTP and search | `fetch`, `search` |
+| `webfetch` | Ops | Bounded public HTTPS text reads | `fetch` |
 | `clock` | Ops | Time, timezone, and format helpers | `now`, `tz`, `format` |
 | `sdk` | Ops | Safe BetterDungeon metadata and config | `version`, `config` |
 | `weather` | Ops | Current weather and forecasts | `current`, `forecast` |
@@ -179,8 +179,8 @@ logic.
 
 - Use heartbeat for availability: runtime present, modules mounted, ops exposed.
 - Use `sdk.version` for BetterDungeon/client version metadata.
-- Use `sdk.config` for sanitized player configuration such as module
-  preferences and WebFetch consent counts.
+- Use `sdk.config` for sanitized player configuration such as feature and
+  module preferences.
 
 The SDK does not expose secrets. API keys are never returned to scripts.
 
@@ -197,7 +197,8 @@ Important cross-platform notes:
 
 - Treat capability as dynamic. Always check heartbeat and module ops instead of
   assuming every player has every module enabled.
-- WebFetch still requires per-origin consent.
+- WebFetch uses its module toggle as the sole control and accepts bounded,
+  credential-free public HTTPS `GET`/`HEAD` reads without per-origin prompts.
 - The current AI module exposes the Gemini-backed status/query contract, but
   valid query requests return `not_configured` until the player saves a Gemini
   API key.

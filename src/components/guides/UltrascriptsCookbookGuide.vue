@@ -255,7 +255,7 @@ const patterns = [
     icon: Globe,
     iconClass: 'text-bd-blue',
     summary: 'Fetch approved external data once, then cache it on plain scenario state.',
-    guidance: 'Check capability before calling <code>webfetch.fetch</code> or <code>webfetch.search</code>, then handle the player consent result.',
+    guidance: 'Check capability before calling <code>webfetch.fetch</code>, then handle blocked targets, timeouts, and offline fallbacks.',
     link: '/ultrascripts?tab=webfetch',
     module: 'WebFetch'
   },
@@ -273,7 +273,7 @@ const patterns = [
 const sourceLinks = [
   { label: 'Core runtime', summary: 'Transport, dispatcher, heartbeat, and shared Ultrascripts services.', href: `${sourceBase}/services/ultrascripts` },
   { label: 'Widget module', summary: 'Widget state publishing and renderer integration.', href: `${sourceBase}/modules/widget` },
-  { label: 'WebFetch module', summary: 'Consent-gated fetch and search ops.', href: `${sourceBase}/modules/webfetch` },
+  { label: 'WebFetch module', summary: 'Bounded public HTTPS text reads.', href: `${sourceBase}/modules/webfetch` },
   { label: 'AI module', summary: 'Async status/query contract with text, schema-backed JSON, and thinking levels.', href: `${sourceBase}/modules/ai` },
   { label: 'SDK module', summary: 'Runtime version and sanitized player configuration.', href: `${sourceBase}/modules/sdk` },
   { label: 'Clock module', summary: 'Time, timezone, and formatting ops.', href: `${sourceBase}/modules/clock` },

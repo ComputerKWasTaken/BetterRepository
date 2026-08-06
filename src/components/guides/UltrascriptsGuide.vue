@@ -117,7 +117,7 @@
                   External Integrations
                 </h3>
                 <p class="text-bd-text-secondary">
-                  WebFetch lets scenarios reach approved external data, while the AI module sends asynchronous text, schema-backed JSON, and thinking-tuned model queries.
+                  WebFetch lets scenarios read small public HTTPS resources, while the AI module sends asynchronous text, schema-backed JSON, and thinking-tuned model queries.
                 </p>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
@@ -144,7 +144,7 @@
                 </div>
                 <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
                   <strong class="text-bd-blue block">WebFetch</strong>
-                  <span class="text-bd-text-muted">Ops: <code class="text-bd-green">fetch</code>, <code class="text-bd-green">search</code></span>
+                  <span class="text-bd-text-muted">Op: <code class="text-bd-green">fetch</code></span>
                 </div>
                 <div class="p-2 rounded bg-bd-bg-primary border border-bd-border-subtle">
                   <strong class="text-bd-purple block">AI</strong>
@@ -342,7 +342,7 @@
         <Transition name="slide">
           <div v-if="isGuideSectionExpanded('security')" class="mt-4 space-y-4 text-xs text-bd-text-secondary">
             <p class="text-bd-text-secondary">
-              Ultrascripts is designed to be ambitious without being invasive. Players control every capability through explicit toggles and consent flows. Scenarios cannot silently claim permissions the player has not granted.
+              Ultrascripts is designed to be ambitious without being invasive. Players control modules through explicit toggles, while BetterDungeon applies capability-specific safety boundaries.
             </p>
 
             <div class="grid md:grid-cols-2 gap-4">
@@ -353,7 +353,7 @@
                 <ul class="space-y-1 text-bd-text-muted">
                   <li>• Master Ultrascripts on/off switch</li>
                   <li>• Per-module enable/disable toggles for all eight modules</li>
-                  <li>• WebFetch domain consent management</li>
+                  <li>• WebFetch module enable/disable control</li>
                   <li>• AI status/query contract toggle</li>
                   <li>• Debug mode for development logging</li>
                 </ul>
@@ -365,7 +365,7 @@
                 </h4>
                 <ul class="space-y-1 text-bd-text-muted">
                   <li>• Gemini API keys stay in BetterDungeon local extension storage and are not exposed to scenario scripts</li>
-                  <li>• WebFetch requires explicit per-domain player approval</li>
+                  <li>• WebFetch is limited to bounded, credential-free public HTTPS reads</li>
                   <li>• AI query requests return <code>not_configured</code> until the player saves a Gemini API key</li>
                   <li>• SDK config returns sanitized data only</li>
                 </ul>
@@ -466,7 +466,7 @@
                   <Globe class="w-5 h-5 text-bd-blue" />
                   <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-blue transition-colors">WebFetch</h4>
                 </div>
-                <p class="text-bd-text-muted">Consent-gated HTTP requests and web search lookups for live external data.</p>
+                <p class="text-bd-text-muted">Bounded, credential-free reads of small public HTTPS resources.</p>
               </router-link>
 
               <router-link to="/ultrascripts?tab=ai" class="block p-4 rounded-lg bg-gradient-to-br from-bd-purple/10 to-transparent border border-bd-purple/30 hover:border-bd-purple/50 transition-colors group">

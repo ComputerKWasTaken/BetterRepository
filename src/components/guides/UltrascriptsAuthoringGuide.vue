@@ -468,7 +468,7 @@ if (window.Ultrascripts?.registry) {
               </div>
               <div class="p-3 rounded-lg bg-bd-pink/10 border border-bd-pink/30">
                 <h4 class="font-semibold text-bd-pink text-[12px] mb-1">idempotent: 'unsafe'</h4>
-                <p class="text-[11px]">External side effects should be marked unsafe unless replay is harmless. Consent-gated ops like <code class="text-bd-green">webfetch.fetch</code> can still need <code class="text-bd-green">completedLiveCount</code> freshness checks.</p>
+                <p class="text-[11px]">External side effects should be marked unsafe unless replay is harmless. Network ops like <code class="text-bd-green">webfetch.fetch</code> can still need <code class="text-bd-green">completedLiveCount</code> freshness checks.</p>
               </div>
             </div>
 
@@ -586,7 +586,7 @@ if (window.Ultrascripts?.registry) {
               </h4>
               <ul class="space-y-0.5 text-[11px] text-bd-text-muted">
                 <li>&middot; <code class="text-bd-green">modules/widget/module.js</code> &mdash; canonical state module with live-count rendering</li>
-                <li>&middot; <code class="text-bd-green">modules/webfetch/module.js</code> &mdash; safe, consent-gated HTTP(S) ops with rate and size bounds</li>
+                <li>&middot; <code class="text-bd-green">modules/webfetch/module.js</code> &mdash; bounded public HTTPS reads with rate, target, and size limits</li>
                 <li>&middot; <code class="text-bd-green">modules/sdk/module.js</code> &mdash; small, safe, metadata-only ops</li>
                 <li>&middot; <code class="text-bd-green">modules/ai/module.js</code> &mdash; async Gemini-backed status/query contract</li>
               </ul>

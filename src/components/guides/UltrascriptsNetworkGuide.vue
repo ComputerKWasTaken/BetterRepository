@@ -200,7 +200,7 @@
                 <div>&middot; <strong>"Is the player online?"</strong> &rarr; Network</div>
                 <div>&middot; <strong>"Fetch this URL"</strong> &rarr; WebFetch</div>
                 <div>&middot; <strong>"How fast is the connection?"</strong> &rarr; Network</div>
-                <div>&middot; <strong>"Search the web"</strong> &rarr; WebFetch <code>search</code></div>
+                <div>&middot; <strong>"Search the web"</strong> &rarr; A purpose-built public search API, read through WebFetch if available</div>
               </div>
             </div>
           </div>

@@ -56,7 +56,6 @@
                   <li>&middot; Ultrascripts protocol version</li>
                   <li>&middot; Feature flags (markdown, notes, etc.)</li>
                   <li>&middot; Module preferences (enabled toggles)</li>
-                  <li>&middot; WebFetch consent counts</li>
                 </ul>
               </div>
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
@@ -169,7 +168,7 @@
                 <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-bd-green/20 text-bd-green">safe</span>
                 <span class="text-[10px] text-bd-text-muted">1500ms timeout</span>
               </div>
-              <p>Returns the full sanitized configuration surface: feature flags, module preferences, and WebFetch consent counts.</p>
+              <p>Returns the full sanitized configuration surface: feature flags and module preferences.</p>
 
               <div class="space-y-1">
                 <h5 class="font-semibold text-bd-text-primary text-[11px]">Request args</h5>
@@ -200,11 +199,6 @@
       "widget": true, "webfetch": true, "clock": true,
       "sdk": true, "weather": true,
       "network": true, "system": true, "ai": true
-    },
-    "webfetch": {
-      "savedOriginCount": 0,     // total origins in allow+deny lists
-      "allowCount": 0,           // origins in allow list
-      "denyCount": 0             // origins in deny list
     }
   }
 }</pre>
@@ -212,7 +206,7 @@
               </div>
 
               <div class="p-2 rounded bg-bd-amber/10 border border-bd-amber/30 text-[11px]">
-                <strong class="text-bd-amber">Security guarantee:</strong> SDK config exposes only safe summaries. Domain allow/deny lists for WebFetch are reported as counts, not as origin strings. No API keys, cookies, or auth tokens are ever exposed.
+                <strong class="text-bd-amber">Security guarantee:</strong> SDK config exposes only safe feature and module preferences. No API keys, cookies, auth tokens, or unrestricted storage data are ever exposed.
               </div>
             </div>
 

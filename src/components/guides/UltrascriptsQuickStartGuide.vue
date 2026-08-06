@@ -163,8 +163,8 @@
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-green/30 space-y-1">
                 <h4 class="font-semibold text-bd-green text-[12px]">Module present, setup incomplete</h4>
                 <p class="text-[11px]">
-                  The player still controls permissions and configuration. Read <code>sdk.config</code> or module-specific status, and handle
-                  consent or configuration errors instead of assuming AI or WebFetch is ready.
+                  The player still controls module availability and configuration. Read <code>sdk.config</code> or module-specific status, and handle
+                  disabled, unavailable, or configuration errors instead of assuming every capability is ready.
                 </p>
               </div>
             </div>
