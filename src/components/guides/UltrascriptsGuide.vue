@@ -352,7 +352,7 @@
                 </h4>
                 <ul class="space-y-1 text-bd-text-muted">
                   <li>• Master Ultrascripts on/off switch</li>
-                  <li>• Per-module enable/disable toggles for all eight modules</li>
+                  <li>• Per-module enable/disable toggles for all nine modules</li>
                   <li>• WebFetch module enable/disable control</li>
                   <li>• AI status/query contract toggle</li>
                   <li>• Debug mode for development logging</li>
@@ -474,7 +474,7 @@
                   <BrainCircuit class="w-5 h-5 text-bd-purple" />
                   <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-purple transition-colors">AI</h4>
                 </div>
-                <p class="text-bd-text-muted">Gemini-backed async status/query contract with text, schema-backed JSON, thinking levels, and automatic rate-limit fallback.</p>
+                <p class="text-bd-text-muted">Provider-neutral async status/query contract with text, schema-backed JSON, thinking levels, and normalized service errors.</p>
               </router-link>
 
               <router-link to="/ultrascripts?tab=sdk" class="block p-4 rounded-lg bg-gradient-to-br from-bd-cyan/10 to-transparent border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">

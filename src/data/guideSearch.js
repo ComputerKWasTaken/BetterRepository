@@ -57,7 +57,7 @@ export const ULTRASCRIPTS_GUIDE_SEARCH_ITEMS = [
   {
     id: 'ultrascripts-overview',
     name: 'Ultrascripts Overview',
-    description: 'The shipped BetterDungeon V2 runtime, eight-module surface, transport, and platform support.',
+    description: 'The shipped BetterDungeon V2.1 runtime, nine-module surface, transport, and platform support.',
     tags: ['ultrascripts', 'guide', 'overview', 'betterdungeon v2', 'modules'],
     route: '/ultrascripts',
     tabHint: 'overview'

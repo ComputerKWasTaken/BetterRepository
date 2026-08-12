@@ -37,7 +37,7 @@ V1.7 refreshes the site around the released BetterDungeon V2 baseline:
 
 - polished navigation, global search, and responsive layouts;
 - thirteen documented Story Card command presets backed by the public seed data;
-- refreshed guides for all eight shipped Ultrascripts modules;
+- refreshed guides for all nine shipped Ultrascripts modules;
 - byte-aligned Enhanced and Required templates with working copy and download controls.
 
 Stateboy appears only as an **unpublished preview**. Its public copy and download

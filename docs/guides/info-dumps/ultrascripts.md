@@ -39,7 +39,7 @@ separate heartbeat subsystem, and no zero-width or TagCipher transport.
 
 ## 3. Module inventory
 
-All eight first-party modules are shipped and covered by dedicated regression
+All nine first-party modules are shipped and covered by dedicated regression
 test suites in `BetterDungeon/tests/aid-scripts/`.
 
 | Module | Kind | Public role | Ops / state |
@@ -51,14 +51,16 @@ test suites in `BetterDungeon/tests/aid-scripts/`.
 | `weather` | Ops | Current weather and forecasts | `current`, `forecast` |
 | `network` | Ops | Browser connectivity hints | `status` |
 | `system` | Ops | Device, browser, locale, screen, power | `info`, `power` |
-| `ai` | Ops | Gemini-backed async AI query contract | `status`, `query` |
+| `ai` | Ops | Provider-neutral async AI query contract | `status`, `query` |
+| `audio` | State | Bounded synthesized sound effects | `ultrascripts:state:audio` |
 
-The AI module exposes `ai.status` and asynchronous `ai.query` through Gemini.
-Gemini uses stateless Interactions API requests with `store: false`. Public docs
+The AI module exposes provider-neutral `ai.status` and asynchronous `ai.query`.
+Players explicitly select Gemini, OpenRouter, or a remote Custom HTTPS service;
+all three use BetterDungeon's unified OpenAI-compatible backend. Public docs
 should teach text output, schema-backed JSON output, `not_configured` when the
-player has not saved a key, and the distinct terminal `safety_blocked` and
-`prohibited_content` errors. Do not document provider aliases, script-facing
-model settings, or native generation payloads.
+selected profile is incomplete, normalized provider errors, and ordinary script
+fallbacks. Do not document provider aliases, script-facing service/model
+settings, or native generation payloads.
 
 ## 4. Reserved cards
 
@@ -200,10 +202,10 @@ Important cross-platform notes:
   assuming every player has every module enabled.
 - WebFetch uses its module toggle as the sole control and accepts bounded,
   credential-free public HTTPS `GET`/`HEAD` reads without per-origin prompts.
-- The current AI module exposes the Gemini-backed status/query contract, but
-  valid query requests return `not_configured` until the player saves a Gemini
-  API key. Gemini is the only configured V2.1 provider and may return terminal
-  `prohibited_content` errors for explicit content.
+- The AI module keeps service selection outside the script contract. Valid query
+  requests return `not_configured` until the player's selected Gemini,
+  OpenRouter, or Custom profile is complete. Content restrictions and supported
+  capabilities vary by service; scripts should branch on normalized errors.
 
 ## 9. Public guide coverage
 

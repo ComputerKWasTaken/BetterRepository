@@ -588,7 +588,7 @@ if (window.Ultrascripts?.registry) {
                 <li>&middot; <code class="text-bd-green">modules/widget/module.js</code> &mdash; canonical state module with live-count rendering</li>
                 <li>&middot; <code class="text-bd-green">modules/webfetch/module.js</code> &mdash; bounded public HTTPS reads with rate, target, and size limits</li>
                 <li>&middot; <code class="text-bd-green">modules/sdk/module.js</code> &mdash; small, safe, metadata-only ops</li>
-                <li>&middot; <code class="text-bd-green">modules/ai/module.js</code> &mdash; async Gemini-backed status/query contract</li>
+                <li>&middot; <code class="text-bd-green">modules/ai/module.js</code> &mdash; provider-neutral asynchronous status/query contract</li>
               </ul>
             </div>
           </div>

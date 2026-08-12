@@ -46,8 +46,8 @@
             <p class="text-bd-text-secondary">
               The Ultrascripts <code class="text-bd-green">ai</code> module exposes exactly two operations: <code class="text-bd-green">status</code> and
               asynchronous <code class="text-bd-green">query</code>. It is an asynchronous LLM query system: scripts send a request out, BetterDungeon
-              routes it through the execution layers, and the result comes back on a later turn. V2.1 uses Gemini through the
-              extension background worker, so the player's API key stays out of AI Dungeon page code and scenario scripts.
+              routes it through the execution layers, and the result comes back on a later turn. The player explicitly selects Gemini,
+              OpenRouter, or a remote Custom HTTPS service. API keys stay out of AI Dungeon page code and scenario scripts.
             </p>
 
             <div class="grid md:grid-cols-3 gap-3 text-xs">
@@ -95,8 +95,8 @@
               <div class="flex items-start gap-2">
                 <AlertTriangle class="w-4 h-4 text-bd-amber flex-shrink-0 mt-0.5" />
                 <p class="text-xs text-bd-text-secondary">
-                  Gemini is the only configured provider in V2.1 and may reject explicit sexual content under a non-adjustable policy.
-                  Scripts should treat <code class="text-bd-pink">prohibited_content</code> as terminal and continue through a normal fallback path.
+                  Provider capabilities and content policies vary. Scripts should branch on normalized errors such as
+                  <code class="text-bd-pink">safety_blocked</code> and <code class="text-bd-pink">prohibited_content</code>, then continue through a normal fallback path.
                 </p>
               </div>
             </div>
@@ -162,8 +162,10 @@
               <div class="space-y-1">
                 <h5 class="font-semibold text-bd-text-primary text-[11px]">Response shape</h5>
                 <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-blue overflow-x-auto leading-relaxed">{
-  "backend": "gemini",               // "gemini" | null
-  "backendLabel": "Gemini",          // string | null
+  "provider": "openai-compatible",   // string | null
+  "providerLabel": "OpenAI-Compatible",
+  "backend": "openai-compatible",    // string | null
+  "backendLabel": "OpenAI-Compatible",
   "ready": true,                     // boolean
   "available": true,                 // boolean (equals ready)
   "phase": "live",                   // "live" | "executor"
@@ -174,17 +176,16 @@
     "thinking": true                 // boolean
   },
   "config": {
-    "provider": "gemini",
-    "api": "interactions",
-    "apiVersion": "v1",
+    "provider": "openai-compatible",
+    "service": "gemini",             // "gemini" | "openrouter" | "custom"
+    "api": "chat-completions",
     "stateless": true,
-    "adjustableSafety": "provider-default",
     "keyConfigured": true,           // boolean
     "modelMode": "auto",             // "auto" | "manual"
     "model": "gemini-3.5-flash-lite",
     "selectedModel": "gemini-3.5-flash-lite",
     "activeModel": null,             // last successful model, or null
-    "fallbackModels": [
+    "fallbackChain": [
       "gemini-3.5-flash-lite",
       "gemini-3.1-flash-lite",
       "gemma-4-31b-it",
@@ -201,14 +202,14 @@
     "asyncOnly": true
   },
   "executor": {
-    "version": "0.5.0-provider-router",
+    "version": "0.6.0-openai-compatible",
     "promptMaxChars": 12000,
-    "backendConfigured": true        // boolean
+    "providerConfigured": true       // boolean
   },
-  "message": "Gemini backend is configured.",
+  "message": "gemini is configured through the OpenAI-compatible endpoint.",
   "checkedAtIso": "2026-06-15T20:00:00.000Z"
 }</pre>
-                <p class="text-[11px] text-bd-text-muted">The <code>config</code> object remains present when no key is configured; in that state <code>keyConfigured</code> and <code>ready</code> are false. Additional diagnostic fields may be present.</p>
+                <p class="text-[11px] text-bd-text-muted">The <code>config</code> object remains present when the selected profile is incomplete; in that state <code>keyConfigured</code> and <code>ready</code> are false. Service-specific diagnostic fields may be present.</p>
               </div>
             </div>
 
@@ -240,7 +241,9 @@
                 <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-blue overflow-x-auto leading-relaxed">{
   "text": "The ancient library hides a sealed archive...",
   "meta": {
-    "backend": "gemini",
+    "provider": "openai-compatible",
+    "backend": "openai-compatible",
+    "service": "gemini",
     "outputType": "text",
     "promptChars": 43,
     "generatedAtIso": "2026-06-15T20:00:00.000Z",
@@ -266,7 +269,9 @@
                 <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-blue overflow-x-auto leading-relaxed">{
   "json": { "inCombat": false },
   "meta": {
-    "backend": "gemini",
+    "provider": "openai-compatible",
+    "backend": "openai-compatible",
+    "service": "gemini",
     "outputType": "json",
     "promptChars": 43,
     "generatedAtIso": "2026-06-15T20:00:00.000Z",
@@ -284,7 +289,7 @@
     }
   }
 }</pre>
-                <p class="text-[11px] text-bd-text-muted">Successful Gemini queries include <code>fallback.mode</code> and <code>fallback.attemptedModels</code>. One attempted model means no step-down occurred; multiple models record an automatic rate-limit fallback.</p>
+                <p class="text-[11px] text-bd-text-muted">Successful queries may include <code>fallback.mode</code> and <code>fallback.attemptedModels</code>. Gemini automatic mode steps down only after rate limits; manual Gemini, OpenRouter, and Custom profiles do not silently change models or services.</p>
               </div>
             </div>
 
@@ -292,17 +297,17 @@
               <h5 class="font-semibold text-bd-text-primary text-[11px]">Error modes</h5>
               <div class="p-2 rounded bg-bd-bg-tertiary border border-bd-pink/20 text-[11px] space-y-0.5">
                 <p><code class="text-bd-pink">unavailable</code> &mdash; executor not loaded or extension runtime unavailable. Retryable.</p>
-                <p><code class="text-bd-pink">not_configured</code> &mdash; no API key saved. Not retryable. Shape: <code>{ code, message, retryable, backend }</code></p>
+                <p><code class="text-bd-pink">not_configured</code> &mdash; the selected service profile is incomplete. Not retryable. Shape: <code>{ code, message, retryable, backend, service? }</code></p>
                 <p><code class="text-bd-pink">invalid_args</code> &mdash; bad query args, missing JSON schema, invalid thinking level, or prompt too long. Shape: <code>{ code, message, retryable, maxChars?, actualChars? }</code></p>
                 <p><code class="text-bd-pink">auth_failed</code> &mdash; the saved API key was rejected.</p>
                 <p><code class="text-bd-pink">rate_limit</code> &mdash; the current model hit a rate limit.</p>
                 <p><code class="text-bd-pink">timeout</code> &mdash; the provider request exceeded the timeout.</p>
-                <p><code class="text-bd-pink">safety_blocked</code> &mdash; Gemini's adjustable safety filter blocked the request. <code>providerReason</code> is <code>SAFETY</code>.</p>
-                <p><code class="text-bd-pink">prohibited_content</code> &mdash; Gemini's non-adjustable content policy blocked the request. <code>providerReason</code> is <code>PROHIBITED_CONTENT</code>.</p>
+                <p><code class="text-bd-pink">safety_blocked</code> &mdash; the selected service's safety or content filter blocked the request.</p>
+                <p><code class="text-bd-pink">prohibited_content</code> &mdash; the selected service reported a distinct non-adjustable policy block.</p>
                 <p><code class="text-bd-pink">invalid_response</code> &mdash; the provider returned malformed output. Shape: <code>{ code, message, retryable, detail? }</code></p>
                 <p><code class="text-bd-pink">backend_failed</code> &mdash; transport or provider failure outside the stable cases above.</p>
               </div>
-              <p class="text-[11px] text-bd-text-muted">Automatic fallback only steps down on rate limiting while the popup is in automatic mode. Manual model mode preserves the player's choice and returns the provider error directly.</p>
+              <p class="text-[11px] text-bd-text-muted">Automatic model step-down applies only to Gemini automatic mode after rate limiting. BetterDungeon never silently sends content through a different service.</p>
             </div>
 
             <div class="p-3 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle">
@@ -384,10 +389,8 @@
             </div>
 
             <p class="text-bd-text-secondary">
-              BetterDungeon translates that single public knob into the controls each active model family actually supports.
-              Gemini 3 and 2.5 models use Interactions <code class="text-bd-green">thinking_level</code>; models that do not accept
-              <code class="text-bd-green">minimal</code> receive <code class="text-bd-green">low</code>. Gemma 4 behaves like a toggle, so <code class="text-bd-green">minimal</code>
-              leaves thinking off and any non-minimal level maps to <code class="text-bd-green">thinking_level: "high"</code>.
+              BetterDungeon translates that single public knob into controls supported by the selected service and model.
+              Gemini profiles expose thinking controls; another compatible service may ignore the hint and report that it was not applied.
             </p>
             <p class="text-bd-text-secondary">
               The completed response includes a normalized <code class="text-bd-green">data.meta.thinking</code> object with

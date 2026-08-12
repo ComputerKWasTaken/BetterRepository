@@ -39,7 +39,7 @@ const PAGE_META = {
   },
   '/ultrascripts': {
     title: 'Ultrascripts - BetterRepository',
-    description: 'BetterDungeon V2\'s shipped eight-module platform: Widget, WebFetch, AI, SDK, Clock, Weather, Network, and System over one Story Card runtime.',
+    description: 'BetterDungeon V2.1\'s shipped nine-module platform: Widget, WebFetch, AI, SDK, Clock, Weather, Network, System, and Audio over one Story Card runtime.',
   },
   '/guides': {
     title: 'Guides - BetterRepository',
