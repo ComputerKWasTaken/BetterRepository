@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "test:chronos": "node scripts/test-chronos.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

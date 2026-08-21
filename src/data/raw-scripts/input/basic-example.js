@@ -8,7 +8,8 @@ const modifier = (text) => {
     // You can modify the state variable to keep track of state throughout the adventure
     state.items = ['sword']
     
-    // Setting state.memory.context will cause that to be used instead of the user set memory
+    // This overwrites visible Plot Essentials on non-Optimized Context models;
+    // state.memory.context cannot be edited while Optimized Context is active.
     state.memory = {context: 'You have a sword.'}
     
     // Setting state.message will set an info message that will be displayed in the game 

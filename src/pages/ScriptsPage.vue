@@ -116,9 +116,9 @@
                 </h3>
                 <ul class="text-sm text-bd-text-secondary space-y-1">
                   <li>• Scripts use <strong>JavaScript</strong> (no async/await)</li>
-                  <li>• Attached to <strong>Scenarios</strong>, not adventures</li>
-                  <li>• Only <strong>Simple Start</strong> and <strong>Character Creator</strong> scenarios can have scripts</li>
-                  <li>• Only the scenario creator can see the scripts</li>
+                  <li>• Scripts can be published, saved, and attached to adventures you own</li>
+                  <li>• Multiple attached scripts run in order with private persistent state</li>
+                  <li>• Script editing remains desktop-only and creator-only</li>
                   <li>• Scripts may be reviewed for moderation</li>
                 </ul>
               </div>
@@ -429,11 +429,14 @@
             </h3>
             <p class="text-sm text-bd-text-secondary mb-2">Persistent object for storing data across turns. Special fields:</p>
             <ul class="text-sm text-bd-text-secondary space-y-1">
-              <li>• <code class="text-bd-cyan">state.memory.context</code> - Added to context beginning (replaces Memory)</li>
-              <li>• <code class="text-bd-cyan">state.memory.authorsNote</code> - Added before last AI response</li>
-              <li>• <code class="text-bd-cyan">state.memory.frontMemory</code> - Added to context end</li>
+              <li>• <code class="text-bd-cyan">state.memory.context</code> - Overwrites visible Plot Essentials; blocked by Optimized Context</li>
+              <li>• <code class="text-bd-cyan">state.memory.authorsNote</code> - Overwrites visible Author's Note; writable with Optimized Context</li>
+              <li>• <code class="text-bd-cyan">state.memory.frontMemory</code> - Added to context end; writable with Optimized Context</li>
               <li>• <code class="text-bd-cyan">state.message</code> - Shown to the player as info message</li>
             </ul>
+            <p class="text-xs text-bd-amber mt-3">
+              Optimized Context text edits also require <code>// @cache-compatible</code> and must append to the complete unchanged prompt. Without it, edits are discarded and the player is notified. The annotation does not unlock <code>state.memory.context</code>.
+            </p>
           </div>
 
           <!-- info -->
@@ -1310,10 +1313,6 @@ modifier(text);</pre>
 
     </template>
 
-    <!-- ==================== BUILDER TAB ==================== -->
-    <template v-if="activeTab === 'builder'">
-      <MultiscriptBuilder />
-    </template>
   </div>
 </template>
 
@@ -1321,7 +1320,6 @@ modifier(text);</pre>
 import { ref, computed, onMounted, nextTick, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ScriptItem from '@/components/ui/ScriptItem.vue'
-import MultiscriptBuilder from '@/components/ui/MultiscriptBuilder.vue'
 import SearchBar from '@/components/ui/SearchBar.vue'
 import { usePreferences } from '@/composables/usePreferences'
 import { 
@@ -1337,7 +1335,7 @@ import {
   BookOpen, GitPullRequest, HelpCircle, Check, Braces, FileCode, 
   Library, ArrowRightToLine, Layers, ArrowLeftToLine, Database, 
   Lightbulb, Wrench, Plus, Search, Bug, ShieldAlert, Eye, RefreshCw, 
-  ExternalLink, Settings, Award, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Blocks, Info, MessageSquare,
+  ExternalLink, Settings, Award, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Info, MessageSquare,
   Star, Rocket, SlidersHorizontal, Zap, X, Github
 } from 'lucide-vue-next'
 
@@ -1347,7 +1345,6 @@ const activeTab = ref('collection')
 
 const tabs = [
   { id: 'collection', label: 'Examples', icon: Layers },
-  { id: 'builder', label: 'Multiscript Builder', icon: Blocks },
 ]
 
 const validTabIds = tabs.map(tab => tab.id)

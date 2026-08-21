@@ -58,6 +58,12 @@
               Scripting in AI Dungeon executes standard <strong>ES6 JavaScript</strong> inside a secure, sandboxed server environment. Scripts intercept player inputs, mutate prompt context streams dynamically, and format output text programmatically.
             </p>
 
+            <div class="p-4 rounded-lg bg-bd-green/10 border border-bd-green/30 text-xs text-bd-text-secondary space-y-2">
+              <h3 class="font-semibold text-bd-green">First-class scripts and native composition</h3>
+              <p>Scripts can be published as their own content type, saved from Discover, and attached to an adventure you own. Scenario scripts are still inherited by new adventures.</p>
+              <p>Multiple scripts run in the order selected by the player. Each receives error isolation and private persistent <code>state</code>, so focused scripts can compose without a generated shared-state dispatcher.</p>
+            </div>
+
             <div class="grid md:grid-cols-3 gap-3 text-xs">
               <div class="p-4 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
                 <h3 class="font-semibold text-bd-text-primary mb-1.5 flex items-center gap-2">
@@ -265,7 +271,7 @@ modifier(text); // CRITICAL: This last wrapper execution call MUST be present!</
                 <div class="space-y-1">
                   <h5 class="font-semibold text-bd-blue font-mono">state.memory</h5>
                   <p class="text-[11px] text-bd-text-muted">
-                    Mutates active Required Elements. You can programmatically alter the active Plot Essentials (`state.memory.context`) or Author's Note (`state.memory.authorsNote`).
+                    Mutates active Required Elements. Assignments write through to the corresponding visible Plot Component. On Optimized Context models, <code>authorsNote</code> and <code>frontMemory</code> remain writable, but <code>context</code> (Plot Essentials) does not.
                   </p>
                   <pre class="p-2 rounded bg-bd-bg-tertiary font-mono text-[10px] text-bd-green">state.memory.authorsNote = "Tense scene.";</pre>
                 </div>
@@ -322,67 +328,41 @@ modifier(text); // CRITICAL: This last wrapper execution call MUST be present!</
               Writing scalable scripts requires clean structural patterns to prevent timing timeouts and syntax crashes.
             </p>
 
-            <!-- Library-Centric Hook Pattern -->
+            <!-- Lifecycle-local composition -->
             <div class="space-y-3">
-              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">The Library-Centric Hook Pattern</h3>
+              <h3 class="font-semibold text-bd-text-primary text-sm border-b border-bd-border-subtle pb-2">Keep lifecycle behavior in its hook</h3>
               <p class="text-xs text-bd-text-secondary">
-                Splitting complex math and logic files across four separate Input/Context/Output files can make debugging difficult. The <strong>Library-Centric Hook Pattern</strong> routes all operations through a single global routing function defined inside the <strong>Library</strong> script:
+                AI Dungeon now composes attached scripts directly. Put Input behavior in <strong>onInput</strong>, model-prompt behavior in <strong>onModelContext</strong>, and output behavior in <strong>onOutput</strong>. Use Library for genuinely shared helpers rather than routing every lifecycle through one global function.
               </p>
               
               <div class="p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle space-y-2">
-                <h4 class="font-semibold text-bd-text-primary">1. Library File Setup</h4>
-                <pre class="p-3 rounded bg-bd-bg-primary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">globalThis.MyScript = function MyScript(hook) {
-  "use strict";
-  // Safely initialize state
-  const S = (state.myScript ||= { hp: 100 });
-
-  if (hook === "input") {
-    // Intercept gold command
-    if (globalThis.text.trim() === ":heal") {
-      S.hp = 100;
-      globalThis.text = ""; // clear input
-      globalThis.stop = true; // halt AI model pass
-      state.message = "HP fully restored!";
-    }
-  }
-  if (hook === "context") {
-    // Inject dynamic HUD at the beginning of prompt context
-    globalThis.text = `[HP: ${S.hp} / 100]\n` + globalThis.text;
-  }
-};</pre>
-              </div>
-
-              <!-- Labeled hook wrappers -->
-              <div class="grid md:grid-cols-3 gap-3 text-[10px] font-mono text-bd-text-secondary">
-                <div class="p-3 rounded bg-bd-bg-tertiary border border-bd-border-subtle/50 space-y-1">
-                  <strong>Input Modifier File</strong>
-                  <pre class="font-bold text-bd-green">const modifier = (text) => {
-  globalThis.text = text;
-  MyScript("input");
-  return { 
-    text: globalThis.text,
-    stop: globalThis.stop 
+                <h4 class="font-semibold text-bd-text-primary">Optimized Context requires append-only opt-in</h4>
+                <p>On cache-efficient models, Context text changes are ignored unless the hook opts in with <code>// @cache-compatible</code>. The returned text must begin with the complete original prompt unchanged; only an appended suffix is accepted.</p>
+                <pre class="p-3 rounded bg-bd-bg-primary font-mono text-[10px] text-bd-green overflow-x-auto leading-relaxed">// @cache-compatible
+const modifier = (text) => {
+  return {
+    text: `${text}\nCurrent scene: ${state.currentScene}`
   };
 };
 modifier(text);</pre>
+              </div>
+
+              <div class="p-3 rounded-lg bg-bd-amber/10 border border-bd-amber/30 text-[11px] text-bd-text-secondary">
+                Prepending, deleting, replacing, reordering, or truncating the prompt invalidates the cache-compatible change. Without the annotation, side effects still run, but Context text changes are discarded on Optimized Context models and AI Dungeon notifies the player.
+              </div>
+
+              <div class="grid md:grid-cols-3 gap-3 text-[11px]">
+                <div class="p-3 rounded-lg bg-bd-red/10 border border-bd-red/30">
+                  <code class="text-bd-red">state.memory.context</code>
+                  <p class="mt-1 text-bd-text-secondary">Blocked while Optimized Context is active, even with the annotation.</p>
                 </div>
-                <div class="p-3 rounded bg-bd-bg-tertiary border border-bd-border-subtle/50 space-y-1">
-                  <strong>Context Modifier File</strong>
-                  <pre class="font-bold text-bd-green">const modifier = (text) => {
-  globalThis.text = text;
-  MyScript("context");
-  return { text: globalThis.text };
-};
-modifier(text);</pre>
+                <div class="p-3 rounded-lg bg-bd-green/10 border border-bd-green/30">
+                  <code class="text-bd-green">state.memory.authorsNote</code>
+                  <p class="mt-1 text-bd-text-secondary">Remains writable with Optimized Context.</p>
                 </div>
-                <div class="p-3 rounded bg-bd-bg-tertiary border border-bd-border-subtle/50 space-y-1">
-                  <strong>Output Modifier File</strong>
-                  <pre class="font-bold text-bd-green">const modifier = (text) => {
-  globalThis.text = text;
-  MyScript("output");
-  return { text: globalThis.text };
-};
-modifier(text);</pre>
+                <div class="p-3 rounded-lg bg-bd-green/10 border border-bd-green/30">
+                  <code class="text-bd-green">state.memory.frontMemory</code>
+                  <p class="mt-1 text-bd-text-secondary">Remains writable with Optimized Context.</p>
                 </div>
               </div>
             </div>

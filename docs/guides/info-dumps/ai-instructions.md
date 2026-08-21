@@ -44,8 +44,10 @@ AI reads on every turn — which gives them outsized influence.
 - **No direct `state.memory` field.** Unlike Plot Essentials
   (`state.memory.context`) and Author's Note (`state.memory.authorsNote`),
   AI Instructions cannot be set through `state.memory`. Scripts must
-  rewrite them by editing the assembled context in the `onModelContext`
-  hook.
+  rewrite the assembled context in `onModelContext` on a non-optimized model.
+  Optimized Context only accepts a cache-compatible suffix appended after the
+  complete unchanged prompt, so it cannot rewrite the original AI Instructions
+  block.
 - **Trimming priority is *medium*.** Per `allocation-rules.md`, when the
   Required Elements budget (~70% of context) is tight, the order is:
   Front Memory and Last Action are always kept full; then Author's Note,
@@ -78,10 +80,11 @@ AI reads on every turn — which gives them outsized influence.
   the canonical docs, but PM docs do **not** publish a per-model table or
   require any special syntax (no XML/role-tag framing is documented).
   Treat instructions as natural-English imperatives and re-test per model.
-- Instructions cannot be set via `state.memory`; scripted modification
-  happens by rewriting the context in `onModelContext` (see Scripts info
-  dump). Plain Story-Card-based runtimes (Ultrascripts) do not edit
-  Instructions directly.
+- Instructions cannot be set via `state.memory`; on non-optimized models,
+  scripts can modify them by rewriting the context in `onModelContext` (see
+  Scripts info dump). Optimized Context forbids that rewrite and only permits
+  an appended suffix from a `// @cache-compatible` hook. Plain Story-Card-based
+  runtimes (Ultrascripts) do not edit Instructions directly.
 - Token budget near the cap: Instructions are Required Elements (medium
   trim priority — see §3). They are trimmed from the end before
   Author's Note and Plot Essentials, but after Story Summary survives or

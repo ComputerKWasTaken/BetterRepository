@@ -1,7 +1,7 @@
 # Scripts — Info Dump
 
 > Full knowledge base for AI Dungeon Scripting (the JavaScript hook
-> system attached to scenarios). The guide
+> system used by scenarios and first-class Script resources). The guide
 > (`src/components/guides/ScriptsGuide.vue`) is a curated subset.
 
 ---
@@ -9,15 +9,16 @@
 ## 1. Definition
 
 Scripts are author-written JavaScript that runs in a sandbox inside the
-AI Dungeon engine on three lifecycle hooks: input modifier, context
-modifier, and output modifier. Scripts attach to **scenarios**, not
-adventures, and only certain scenario types support them.
+AI Dungeon engine on three lifecycle hooks: input modifier, model-context
+modifier, and output modifier. Scripts can be published and saved as their
+own content type, attached directly to owned adventures, or attached to a
+scenario for new adventures to inherit.
 
 ## 2. Source-of-truth references
 
 - Official AI Dungeon scripting documentation.
-- BetterEcosystem Project Management docs (maintained, current through
-  Frontier):
+- BetterEcosystem Project Management docs (maintained alongside the current
+  scripting rollout):
   https://github.com/ComputerKWasTaken/BetterEcosystemProjectManagement/tree/main/docs/01-scripting
 - Repo data: `src/data/scripts.js`, `src/data/raw-scripts/*`.
 - AI Dungeon Discord — Scripts channel.
@@ -31,21 +32,18 @@ adventures, and only certain scenario types support them.
   and `stop` global mirror these.
 - Library code runs **fresh each turn** — there is no persistent function
   scope between turns. Use `state` for anything that must persist.
-- No `async`/`await`. Pure synchronous JS. *(Sandbox resource limits —
-  commonly cited as a ~16 MB memory cap and ~2-second timeout — are not
-  published in the canonical PM docs; treat the exact numbers as
-  community/testing lore, not confirmed spec.)*
-- `state` is persisted between hooks and turns.
+- Every hook runs in an isolated sandbox with a 16 MB memory limit and a
+  2-second execution timeout.
+- `state` is persisted between hooks and turns and is private to each
+  composed script.
 - `state.memory.*` is the mutable bridge to the engine's context-assembly
   system (`context`, `authorsNote`, `frontMemory`); Story Cards are
   mutated through `addStoryCard`/`updateStoryCard`/`removeStoryCard`.
-- Only **Simple Start** and **Character Creator** scenarios may have
-  scripts. **Multiple Choice** scenarios cannot — but their individual
-  **options** can each carry independent scripts.
-- Only the scenario creator can see the scripts. They may be reviewed
-  for moderation before public release.
-- Updating scripts in a published scenario affects **all existing
-  adventures** based on that scenario.
+- Published scripts appear in Discover, libraries, and profile Script tabs.
+- Adventure owners can add saved scripts from Game Settings, toggle them,
+  and reorder them. Changes take effect on the next turn.
+- Scenario creators attach inherited scripts from the scenario Details
+  editor. Script editing remains desktop-only and creator-only.
 
 ## 4. Execution pipeline
 
@@ -63,16 +61,20 @@ Player input
 
 ### 5.1 `state` (read/write, persisted)
 
-- `state.memory.context` — overrides **Plot Essentials** (UI "Memory").
-  Takes priority over the UI-configured value and over the lower-priority
-  `memory.context`.
-- `state.memory.authorsNote` — overrides **Author's Note**. Changes apply
-  to the *next* generation.
+- `state.memory.context` — reads or writes **Plot Essentials** (UI "Memory").
+  Assigning it overwrites the visible Plot Essentials UI value, but the field
+  cannot be edited while Optimized Context is active.
+- `state.memory.authorsNote` — reads or writes **Author's Note**. Assigning it
+  overwrites the visible Author's Note UI value. Changes made in `onOutput`
+  apply to the next generation. It remains writable with Optimized Context.
 - `state.memory.frontMemory` — hidden injection at the very end of the
-  context. Most powerful, often used for "right now" nudges.
-- `state.message` — string shown to the player as a toast (implemented
-  Phoenix, 2026-03-02 update). Use for command confirmations, stats, and
-  surfacing diagnostics.
+  context. Most powerful, often used for "right now" nudges. It remains
+  writable with Optimized Context.
+- `state.message` — string shown to the player as a toast whenever its value
+  differs from the previous turn. Use unique values for temporary status,
+  confirmations, and diagnostics.
+- `state.placeholders` — persisted scenario-start placeholder answers as
+  `{ question, answer }` objects.
 - Custom properties — store strings, numbers, booleans, arrays, nested
   objects. Avoid circular references and methods (serialized between
   turns).
@@ -80,13 +82,16 @@ Player input
 ### 5.2 `info` (read-only metadata)
 
 - `info.actionCount` — total actions in the adventure.
-- `info.characters` — array of characters/players (strings or objects
-  with a `name`).
+- `info.characterNames` — array of player-character names in multiplayer.
 - `info.maxChars` — estimated max characters for context (**onModelContext
   only**).
 - `info.memoryLength` — characters used by memory/Plot Essentials
   (**onModelContext only**).
-- `info.contextTokens` — total tokens in the current context.
+- `info.useCacheEfficient` — whether the active story model uses Optimized
+  Context (**onModelContext only**).
+- `info.storyModel.name` / `info.storyModel.version` — active story-model
+  identity when the lifecycle began.
+- `info.emptyOutputReason` — explanation when model output failed.
 - Writes to `info` have no effect.
 
 ### 5.3 `history` (read-only)
@@ -99,23 +104,36 @@ in-flight action (input/context/output is added after the hook).
 
 ### 5.4 `storyCards` (mutate via functions)
 
-Array of card objects:
-`{ id, title, keys, type, entry, description, createdAt, updatedAt, useForCharacterCreation }`.
+Array of card objects: `{ id, keys, type, entry }`.
 Mutated only through `addStoryCard(keys, entry, type?)` (returns new
-length, or `false` on duplicate keys), `updateStoryCard(index, keys, entry, type)`,
+card index, or `false` on duplicate keys), `updateStoryCard(index, keys, entry, type)`,
 and `removeStoryCard(index)` (both throw if the index doesn't exist).
 See the Story Cards info dump §7.
 
-### 5.5 `memory` (lower-priority Plot Essentials)
+### 5.5 `memory` (Plot Essentials)
 
-`memory.context` is the UI Plot Essentials value; `state.memory.context`
-takes priority over it.
+`memory.context` reflects the UI Plot Essentials value. Assigning
+`state.memory.context` writes through to that Plot Component rather than
+creating a separate hidden override. Optimized Context blocks that assignment.
 
 ## 6. Best practices
 
 - Keep hook bodies fast — the 2-second cap includes JIT warm-up.
 - Treat `state` as your only memory; do not rely on closures or
   module-scope variables.
+- Keep behavior in its matching lifecycle hook. Use Library for shared
+  helpers, not as a router for Input, Context, and Output.
+- Multiple attached scripts already compose in player-selected order and
+  receive private persistent state plus independent error isolation.
+- On Optimized Context models, put `// @cache-compatible` in a Context
+  script that needs to modify model text. Preserve the entire incoming
+  prompt unchanged and append only a suffix; prepends, replacements,
+  deletions, reordering, and truncation are discarded. Without the annotation,
+  Context text alterations are discarded to preserve the cache and the player
+  is notified, although script side effects still run.
+- The annotation governs returned Context text only. It does not unlock
+  `state.memory.context`: on Optimized Context models, `authorsNote` and
+  `frontMemory` are the only writable `state.memory` fields.
 - For Multiple Choice scenarios, share helpers via copy-paste into each
   option's script (there is no shared module system).
 - Test in the same model you target — context-window quirks vary.
@@ -130,15 +148,18 @@ visible to readers.
 
 ## 8. Edge cases
 
-- Errors thrown inside a hook are **not** silently swallowed: the error
-  is logged, the player sees an "Unable to run scenario scripts" message,
-  and generation may proceed with the unmodified text (behavior may vary).
-  Still write `state` mutations atomically and surface your own
-  diagnostics via `state.message`.
+- Scripts are a first-class content type. Players can save published
+  scripts, attach them to owned adventures, toggle them, and reorder them;
+  scenario-attached scripts are inherited by new adventures.
+- Attached guest scripts can read Plot Essentials and Author's Note, but
+  their writes to those fields are discarded. The scenario-owned script
+  retains ownership of its Plot Essentials writes.
+- Script editing remains desktop-only and creator-only.
+- Each composed script has independent error isolation. Still write `state`
+  mutations atomically and surface useful diagnostics via `state.message`.
 - `removeStoryCard` shifts the indexes of all later cards. When removing
   multiple cards, iterate from the highest index down to the lowest.
-- `addStoryCard` sets both `keys` and `title` to the `keys` argument and
-  returns `false` if a card with identical keys already exists.
+- `addStoryCard` returns `false` if a card with identical keys already exists.
 
 ## 9. Legacy / deprecated aliases
 
@@ -163,15 +184,6 @@ Card", UI "Memory" → "Plot Essentials" (the API still uses
 - Exact JS engine version and which ES features are supported (PM docs
   silent).
 - Whether `state` serialization has size caps (PM docs silent).
-- Which scenario types support scripts: this dump states Simple Start and
-  Character Creator (and per-option scripts on Multiple Choice); PM docs
-  do not document scenario-type restrictions, so the specifics are
-  unverified by canonical sources.
-- Sandbox memory/timeout numbers (PM docs silent — see §3).
-- Whether Frontier's "Optimized Context" blocks `onModelContext` edits to
-  the stable/cached prefix on supported models (the Frontier release
-  notes say Optimized Context prevents scripts from modifying the stable
-  parts of the context; PM API docs do not yet describe the mechanism).
 
 ## 11. Intentionally not in the guide
 

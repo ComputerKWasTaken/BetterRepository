@@ -46,8 +46,11 @@ other components.
 | Front Memory | `frontMemory` | Script-only | Hidden text injected at very end of context (not a UI Plot Component) |
 
 > Note: Plot Essentials maps to `state.memory.context` (it is the UI
-> rename of the old "Memory" field). Setting `state.memory.context` from
-> a script overrides the UI-configured Plot Essentials. AI Instructions
+> rename of the old "Memory" field). Assigning `state.memory.context` from
+> a script overwrites the visible Plot Essentials UI value when Optimized
+> Context is not active. Optimized Context blocks this field. Assigning
+> `state.memory.authorsNote` likewise overwrites the visible Author's Note.
+> AI Instructions
 > has **no** direct `state.memory` field; scripts must rewrite it through
 > the `onModelContext` hook.
 
@@ -90,7 +93,12 @@ Frontier's "Optimized Context" setting reorders the context so the most
 stable content (AI Instructions, Plot Essentials, Story Summary, history)
 comes first and the most dynamic content (Memory Bank, Story Cards,
 Author's Note, last action, Front Memory) comes last, maximizing KV-cache
-reuse. See the Frontier release notes and `context-optimization.md`.
+reuse. In this mode, scripts cannot edit `state.memory.context`, while
+`state.memory.authorsNote` and `state.memory.frontMemory` remain writable.
+Context-hook text changes additionally require `// @cache-compatible` and may
+only append to the complete unchanged prompt; otherwise they are discarded and
+the player is notified. See the Frontier release notes and
+`context-optimization.md`.
 
 ## 5. Best practices
 

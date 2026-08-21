@@ -69,9 +69,9 @@ const routes = [
     component: ScriptsPage,
     meta: {
       title: 'Scripts - BetterRepository',
-      description: 'Extend AI Dungeon with custom JavaScript. Ready-to-use scripts, a Multiscript Builder for combining scripts, and a complete scripting API guide.',
+      description: 'Extend AI Dungeon with custom JavaScript. Find ready-to-use scripts and a current scripting API guide for native multi-script adventures.',
       ogTitle: 'Scripts - BetterRepository',
-      ogDescription: 'Custom JavaScript scripts and a Multiscript Builder for AI Dungeon. Ready-to-use scripts, game mechanics, and a complete API reference with lifecycle hooks.',
+      ogDescription: 'Ready-to-use AI Dungeon scripts, game mechanics, native script composition, and a current API reference with lifecycle hooks.',
       path: '/scripts'
     }
   },

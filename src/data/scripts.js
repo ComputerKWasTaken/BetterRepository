@@ -486,6 +486,22 @@ export const SCRIPTS = [
     ultrascriptsMode: 'required'
   },
   {
+    id: 'chronos',
+    name: 'Chronos V2',
+    category: 'ultrascripts-enhanced',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['ultrascripts', 'time', 'calendar', 'widgets', 'context', 'cache-compatible', 'tracking', 'unpublished'],
+    source: 'BetterRepository',
+    description: 'Unpublished preview of a lightweight in-game clock and Gregorian calendar with cache-compatible model context, Widget display, and a vanilla toast fallback.',
+    purpose: 'Keeps story time stable across turns, retries, and Undo without taking over weather or other unrelated simulation systems.',
+    requiresExtension: 'BetterDungeon',
+    ultrascriptsMode: 'enhanced',
+    releaseStatus: 'unpublished',
+    releaseNote: 'Chronos V2 is under active development and will publish alongside BetterDungeon V2.1.'
+  },
+  {
     id: 'stateboy',
     name: 'Stateboy',
     category: 'ultrascripts-required',
@@ -509,7 +525,11 @@ export const SCRIPTS = [
 // Register script contents as lazy raw-text imports. Large community scripts
 // are fetched only when a visitor expands, copies, or downloads that entry.
 const rawScripts = import.meta.glob(
-  ['./raw-scripts/**/*.js', '!./raw-scripts/**/stateboy.js'],
+  [
+    './raw-scripts/**/*.js',
+    '!./raw-scripts/**/chronos.js',
+    '!./raw-scripts/**/stateboy.js'
+  ],
   { query: '?raw', import: 'default' }
 )
 
