@@ -20,8 +20,7 @@ function createAdventure(actionCount = 10, cards = []) {
     state: {},
     storyCards: cards,
     info: { actionCount, maxChars: 12000, memoryLength: 0 },
-    logs: [],
-    randomValues: []
+    logs: []
   }
 
   adventure.addStoryCard = (keys, entry, type = '') => {
@@ -41,10 +40,6 @@ function createAdventure(actionCount = 10, cards = []) {
 }
 
 function runHook(adventure, source, text) {
-  const sandboxMath = Object.create(Math)
-  sandboxMath.random = () => adventure.randomValues.length
-    ? adventure.randomValues.shift()
-    : 0.5
   const sandbox = {
     state: adventure.state,
     storyCards: adventure.storyCards,
@@ -55,8 +50,7 @@ function runHook(adventure, source, text) {
     updateStoryCard: adventure.updateStoryCard,
     removeStoryCard: () => {},
     log: (...args) => adventure.logs.push(args.join(' ')),
-    console: { log: (...args) => adventure.logs.push(args.join(' ')) },
-    Math: sandboxMath
+    console: { log: (...args) => adventure.logs.push(args.join(' ')) }
   }
   const context = vm.createContext(sandbox)
   vm.runInContext(librarySource, context, { filename: 'chronos-library.js' })
@@ -93,7 +87,7 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   const result = runHook(adventure, contextSource, original)
 
   assert.ok(result.text.startsWith(original), 'Context must retain the entire original prefix')
-  assert.match(result.text, /The current in-game time is 8:00 AM on Monday, June 1, 2026/)
+  assert.match(result.text, /The current in-game time is 8:00 AM \(Morning\) on Monday, June 1, 2026/)
   assert.equal(adventure.state.chronos.clock.hour, 8)
   assert.equal(adventure.state.chronos.clock.minute, 0)
   assert.match(adventure.state.message, /Chronos · 8:00 AM/)
@@ -102,7 +96,12 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   assert.match(settingsCard.entry, /Track Time: On/)
   assert.match(settingsCard.entry, /Track Date: On/)
   assert.match(settingsCard.entry, /Current Time: 8:00 AM/)
+  assert.match(settingsCard.entry, /Time Phase: Morning/)
   assert.match(settingsCard.entry, /Current Date: Monday, June 1, 2026/)
+  assert.ok(
+    settingsCard.entry.indexOf('Current Time:') < settingsCard.entry.indexOf('# Settings'),
+    'The live Chronos readout must appear before configuration'
+  )
 
   adventure.info.actionCount = 11
   const next = runHook(adventure, contextSource, original)
@@ -141,7 +140,7 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   adventure.info.actionCount = 23
   const result = runHook(adventure, contextSource, 'Prefix')
 
-  assert.match(result.text, /12:01 AM on Thursday, February 29, 2024/)
+  assert.match(result.text, /12:01 AM \(After Midnight\) on Thursday, February 29, 2024/)
 
   adventure.info.actionCount = 22
   runHook(adventure, contextSource, 'Prefix')
@@ -171,6 +170,7 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   const clockWidget = payload.history['30']['chronos-clock']
   assert.equal(typeof clockWidget.html, 'string')
   assert.match(clockWidget.html, />8:00 AM</)
+  assert.match(clockWidget.html, />Morning</)
   assert.match(clockWidget.html, />Mon, Jun 1, 2026</)
   assert.doesNotMatch(clockWidget.html, /Time:|Date:|🕒|📅/)
 
@@ -182,6 +182,10 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
     2,
     [{ id: 'widget', version: '1.0.0', stateNames: ['widget'] }]
   ).entry
+  findCard(adventure, 'Chronos Settings').entry = findCard(
+    adventure,
+    'Chronos Settings'
+  ).entry.replace('Date Format: Long', 'Date Format: ISO')
   adventure.info.actionCount = 31
   runHook(adventure, inputSource, '/time 9:15 AM')
   runHook(adventure, contextSource, 'Prefix')
@@ -192,6 +196,9 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   )
   const updatedPayload = JSON.parse(findCard(adventure, 'ultrascripts:state:widget').entry)
   assert.match(updatedPayload.history['31']['chronos-clock'].html, />9:15 AM</)
+  assert.match(updatedPayload.history['31']['chronos-clock'].html, />Morning</)
+  assert.match(updatedPayload.history['31']['chronos-clock'].html, />2026-06-01</)
+  assert.doesNotMatch(updatedPayload.history['31']['chronos-clock'].html, /Mon, Jun/)
 
   findCard(adventure, 'ultrascripts:heartbeat').entry = heartbeatCard(
     3,
@@ -206,6 +213,7 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   runHook(adventure, contextSource, 'Prefix')
   const timeOnlyPayload = JSON.parse(findCard(adventure, 'ultrascripts:state:widget').entry)
   assert.match(timeOnlyPayload.history['32']['chronos-clock'].html, />9:17 AM</)
+  assert.match(timeOnlyPayload.history['32']['chronos-clock'].html, />Morning</)
   assert.doesNotMatch(timeOnlyPayload.history['32']['chronos-clock'].html, /Jun 1, 2026/)
 
   findCard(adventure, 'ultrascripts:heartbeat').entry = heartbeatCard(
@@ -304,8 +312,10 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
       '# Chronos Settings',
       'Enabled: On',
       'Paused: Off',
+      'Show Time Phase: Off',
       'Minutes Per Turn: 15',
-      'Clock Format: 24-hour'
+      'Clock Format: 24-hour',
+      'Date Format: ISO'
     ].join('\n')
   }
   const adventure = createAdventure(50, [settings])
@@ -314,6 +324,12 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
 
   assert.match(result.text, /08:00 on Monday, June 1, 2026/)
   assert.match(findCard(adventure, 'Chronos Settings').entry, /Minutes Per Turn: 15/)
+  assert.match(findCard(adventure, 'Chronos Settings').entry, /Date Format: ISO/)
+  assert.match(findCard(adventure, 'Chronos Settings').entry, /Time Phase: Off/)
+  assert.match(findCard(adventure, 'Chronos Settings').entry, /Current Date: 2026-06-01/)
+  assert.match(adventure.state.message, /Chronos · 08:00 · 2026-06-01/)
+  assert.doesNotMatch(adventure.state.message, /Monday/)
+  assert.doesNotMatch(adventure.state.message, /Morning/)
 
   findCard(adventure, 'Chronos Settings').entry = findCard(
     adventure,
@@ -365,26 +381,33 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   result = runHook(adventure, contextSource, 'Prefix')
   assert.match(result.text, /Tuesday, December 31, 2024/)
 
-  adventure.randomValues.push(0.5, 0.5)
   adventure.info.actionCount = 63
-  const sleepInput = runHook(adventure, inputSource, '/sleep')
-  assert.equal(sleepInput.text, 'You settle down to sleep until the following morning.')
+  const advanceInput = runHook(adventure, inputSource, '/advance 8 hours')
+  assert.equal(advanceInput.text, 'You allow 8 hours to pass before continuing.')
   result = runHook(adventure, contextSource, 'Prefix')
-  assert.match(result.text, /7:30 AM on Wednesday, January 1, 2025/)
+  assert.match(result.text, /7:00 AM \(Morning\) on Wednesday, January 1, 2025/)
+  assert.match(adventure.state.message, /advanced 8 hours/)
 
   const retry = runHook(adventure, contextSource, 'Prefix')
-  assert.match(retry.text, /7:30 AM on Wednesday, January 1, 2025/)
-  assert.equal(adventure.state.chronos.clock.hour, 7, 'Retry must not repeat random sleep')
+  assert.match(retry.text, /7:00 AM \(Morning\) on Wednesday, January 1, 2025/)
+  assert.equal(adventure.state.chronos.clock.hour, 7, 'Retry must not repeat /advance')
 
   adventure.info.actionCount = 62
   const undo = runHook(adventure, contextSource, 'Prefix')
-  assert.match(undo.text, /11:00 PM on Tuesday, December 31, 2024/)
+  assert.match(undo.text, /11:00 PM \(Night\) on Tuesday, December 31, 2024/)
 
   adventure.info.actionCount = 63
   runHook(adventure, inputSource, '/time bananas')
   const invalid = runHook(adventure, contextSource, 'Prefix')
   assert.match(invalid.text, /11:00 PM/)
   assert.match(adventure.state.message, /could not read that time/)
+
+  adventure.info.actionCount = 64
+  const invalidAdvanceInput = runHook(adventure, inputSource, '/advance 1 month')
+  assert.equal(invalidAdvanceInput.text, 'You briefly check the Chronos time controls.')
+  const invalidAdvance = runHook(adventure, contextSource, 'Prefix')
+  assert.match(invalidAdvance.text, /11:00 PM/)
+  assert.match(adventure.state.message, /could not read that duration/)
 
   const unrelated = runHook(adventure, inputSource, '/some-other-script command')
   assert.equal(unrelated.text, '/some-other-script command')
@@ -432,7 +455,7 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   adventure.info.actionCount = 69
   runHook(adventure, inputSource, 'Continue.')
   let result = runHook(adventure, contextSource, 'Prefix')
-  assert.match(result.text, /The current in-game time is 8:02 AM\./)
+  assert.match(result.text, /The current in-game time is 8:02 AM \(Morning\)\./)
   assert.doesNotMatch(result.text, /June 1, 2026/)
   assert.match(adventure.state.message, /Chronos · 8:02 AM/)
   assert.doesNotMatch(adventure.state.message, /June 1, 2026/)
@@ -490,14 +513,13 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   const adventure = createAdventure(70)
   runHook(adventure, inputSource, 'Continue.')
   runHook(adventure, contextSource, 'Prefix')
-  adventure.randomValues.push(0.5, 0.5)
   adventure.info.actionCount = 71
-  runHook(adventure, inputSource, '/sleep')
+  runHook(adventure, inputSource, '/advance 2 days')
   const result = runHook(adventure, contextSource, 'Prefix')
   assert.match(
     result.text,
-    /8:30 AM on Tuesday, June 2, 2026/,
-    'A daytime /sleep must still land on the following morning'
+    /8:00 AM \(Morning\) on Wednesday, June 3, 2026/,
+    '/advance must handle whole-day calendar rollover'
   )
 }
 
@@ -536,10 +558,10 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
     minute: 59
   }
   adventure.info.actionCount = 78
-  runHook(adventure, inputSource, '/sleep')
+  runHook(adventure, inputSource, '/advance 1 minute')
   const result = runHook(adventure, contextSource, 'Prefix')
-  assert.match(result.text, /11:59 PM on Friday, December 31, 999999/)
-  assert.match(adventure.state.message, /cannot advance \/sleep beyond the supported calendar limit/)
+  assert.match(result.text, /11:59 PM \(Night\) on Friday, December 31, 999999/)
+  assert.match(adventure.state.message, /cannot advance beyond the supported calendar limit/)
 }
 
 {
@@ -560,6 +582,45 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
     1,
     'Unambiguous month abbreviations should be accepted'
   )
+  assert.equal(
+    runHook(adventure, 'ChronosV2._test.parseAdvance("90 minutes").minutes', ''),
+    90
+  )
+  assert.equal(
+    runHook(adventure, 'ChronosV2._test.parseAdvance("2 wks").minutes', ''),
+    20160
+  )
+  for (const alias of ['adv', 'addtime', 'skiptime', 'fastforward']) {
+    assert.equal(
+      runHook(adventure, `ChronosV2._test.parseCommand("/${alias} 2 hours").name`, ''),
+      'advance'
+    )
+  }
+  assert.equal(runHook(adventure, 'ChronosV2._test.parseAdvance("1 month")', ''), null)
+  assert.equal(runHook(adventure, 'ChronosV2._test.parseAdvance("0 hours")', ''), null)
+
+  adventure.state.chronos.settings.dateFormat = 'American'
+  assert.equal(runHook(adventure, 'ChronosV2.formatDisplayDate()', ''), '06/01/2026')
+  adventure.state.chronos.settings.dateFormat = 'European'
+  assert.equal(runHook(adventure, 'ChronosV2.formatDisplayDate()', ''), '01/06/2026')
+  adventure.state.chronos.settings.dateFormat = 'ISO'
+  assert.equal(runHook(adventure, 'ChronosV2.formatDisplayDate()', ''), '2026-06-01')
+
+  const phases = [
+    [0, 'After Midnight'],
+    [3, 'Predawn'],
+    [5, 'Dawn'],
+    [7, 'Morning'],
+    [10, 'Late Morning'],
+    [12, 'Midday'],
+    [14, 'Afternoon'],
+    [17, 'Evening'],
+    [20, 'Night']
+  ]
+  for (const [hour, phase] of phases) {
+    adventure.state.chronos.clock.hour = hour
+    assert.equal(runHook(adventure, 'ChronosV2.formatTimePhase()', ''), phase)
+  }
 
   adventure.state.chronos.clock = { year: 1900, month: 2, day: 28, hour: 23, minute: 59 }
   runHook(adventure, 'ChronosV2._test.addMinutes(1)', '')

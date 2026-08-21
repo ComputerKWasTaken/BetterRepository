@@ -56,8 +56,10 @@ globalThis.ChronosV2 = (function createChronosV2() {
           paused: false,
           trackTime: true,
           trackDate: true,
+          showTimePhase: true,
           minutesPerTurn: 2,
-          clockFormat: '12-hour'
+          clockFormat: '12-hour',
+          dateFormat: 'Long'
         },
         lastActionCount: currentActionCount(),
         notice: '',
@@ -75,6 +77,9 @@ globalThis.ChronosV2 = (function createChronosV2() {
     if (typeof previous.settings.paused !== 'boolean') previous.settings.paused = false;
     if (typeof previous.settings.trackTime !== 'boolean') previous.settings.trackTime = true;
     if (typeof previous.settings.trackDate !== 'boolean') previous.settings.trackDate = true;
+    if (typeof previous.settings.showTimePhase !== 'boolean') {
+      previous.settings.showTimePhase = true;
+    }
     previous.settings.minutesPerTurn = clampInteger(
       previous.settings.minutesPerTurn,
       0,
@@ -82,6 +87,9 @@ globalThis.ChronosV2 = (function createChronosV2() {
       2
     );
     if (previous.settings.clockFormat !== '24-hour') previous.settings.clockFormat = '12-hour';
+    if (['Long', 'ISO', 'American', 'European'].indexOf(previous.settings.dateFormat) === -1) {
+      previous.settings.dateFormat = 'Long';
+    }
     if (!validInteger(previous.lastActionCount) || Number(previous.lastActionCount) < 0) {
       previous.lastActionCount = currentActionCount();
     } else {
@@ -284,6 +292,30 @@ globalThis.ChronosV2 = (function createChronosV2() {
     return hour + ':' + pad2(clock.minute) + ' ' + suffix;
   }
 
+  function formatTimePhase() {
+    var chronos = initialize();
+    if (!chronos) return '';
+    var hour = chronos.clock.hour;
+    if (hour < 3) return 'After Midnight';
+    if (hour < 5) return 'Predawn';
+    if (hour < 7) return 'Dawn';
+    if (hour < 10) return 'Morning';
+    if (hour < 12) return 'Late Morning';
+    if (hour < 14) return 'Midday';
+    if (hour < 17) return 'Afternoon';
+    if (hour < 20) return 'Evening';
+    return 'Night';
+  }
+
+  function showsTimePhase() {
+    var chronos = initialize();
+    return !!(chronos && chronos.settings.trackTime && chronos.settings.showTimePhase);
+  }
+
+  function formatContextTime() {
+    return formatTime() + (showsTimePhase() ? ' (' + formatTimePhase() + ')' : '');
+  }
+
   function formatDate() {
     var chronos = initialize();
     if (!chronos) return '';
@@ -292,16 +324,41 @@ globalThis.ChronosV2 = (function createChronosV2() {
       MONTH_NAMES[clock.month - 1] + ' ' + clock.day + ', ' + clock.year;
   }
 
+  function formatDisplayDate() {
+    var chronos = initialize();
+    if (!chronos) return '';
+    var clock = chronos.clock;
+    var year = String(clock.year).padStart(4, '0');
+    if (chronos.settings.dateFormat === 'ISO') {
+      return year + '-' + pad2(clock.month) + '-' + pad2(clock.day);
+    }
+    if (chronos.settings.dateFormat === 'American') {
+      return pad2(clock.month) + '/' + pad2(clock.day) + '/' + year;
+    }
+    if (chronos.settings.dateFormat === 'European') {
+      return pad2(clock.day) + '/' + pad2(clock.month) + '/' + year;
+    }
+    return formatDate();
+  }
+
   function formatWidgetDate() {
     var chronos = initialize();
     if (!chronos) return '';
+    if (chronos.settings.dateFormat !== 'Long') return formatDisplayDate();
     var clock = chronos.clock;
     return WEEKDAY_NAMES[weekdayIndex(clock)].slice(0, 3) + ', ' +
       MONTH_NAMES[clock.month - 1].slice(0, 3) + ' ' + clock.day + ', ' + clock.year;
   }
 
   function formatTimestamp() {
-    return formatTime() + ' on ' + formatDate();
+    return formatContextTime() + ' on ' + formatDate();
+  }
+
+  function formatDisplayTimestamp() {
+    var values = [formatTime()];
+    if (showsTimePhase()) values.push(formatTimePhase());
+    values.push(formatDisplayDate());
+    return values.join(' · ');
   }
 
   function hasTrackedDisplay() {
@@ -314,7 +371,10 @@ globalThis.ChronosV2 = (function createChronosV2() {
     if (!chronos) return '';
     var values = [];
     if (chronos.settings.trackTime) values.push(formatTime());
-    if (chronos.settings.trackDate) values.push(shortDate ? formatWidgetDate() : formatDate());
+    if (showsTimePhase()) values.push(formatTimePhase());
+    if (chronos.settings.trackDate) {
+      values.push(shortDate ? formatWidgetDate() : formatDisplayDate());
+    }
     return values.join(' · ');
   }
 
@@ -322,15 +382,22 @@ globalThis.ChronosV2 = (function createChronosV2() {
     var chronos = initialize();
     if (!chronos) return '';
     var content = [];
+    function pushSegment(html) {
+      if (content.length) {
+        content.push('<span aria-hidden="true" style="color:rgba(255,255,255,.28)">·</span>');
+      }
+      content.push(html);
+    }
     if (chronos.settings.trackTime) {
-      content.push('<span style="color:#fbbf24;font-weight:700;font-variant-numeric:tabular-nums">' +
+      pushSegment('<span style="color:#fbbf24;font-weight:700;font-variant-numeric:tabular-nums">' +
         formatTime() + '</span>');
     }
-    if (chronos.settings.trackTime && chronos.settings.trackDate) {
-      content.push('<span aria-hidden="true" style="color:rgba(255,255,255,.28)">·</span>');
+    if (showsTimePhase()) {
+      pushSegment('<span style="color:rgba(255,255,255,.58);font-weight:500">' +
+        formatTimePhase() + '</span>');
     }
     if (chronos.settings.trackDate) {
-      content.push('<span style="color:rgba(255,255,255,.72);font-weight:500">' +
+      pushSegment('<span style="color:rgba(255,255,255,.72);font-weight:500">' +
         formatWidgetDate() + '</span>');
     }
     return '<div title="Current in-game Chronos value" ' +
@@ -346,7 +413,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
       return text + '\n\n[The current in-game time is ' + formatTimestamp() + '.]';
     }
     if (chronos.settings.trackTime) {
-      return text + '\n\n[The current in-game time is ' + formatTime() + '.]';
+      return text + '\n\n[The current in-game time is ' + formatContextTime() + '.]';
     }
     return text + '\n\n[The current in-game date is ' + formatDate() + '.]';
   }
@@ -354,22 +421,25 @@ globalThis.ChronosV2 = (function createChronosV2() {
   function settingsTemplate(settings) {
     var value = settings || initialize().settings;
     return [
-      '# Chronos Settings',
-      '# Chronos tracks a Gregorian in-game clock and calendar.',
-      '# Edit values after the colon. Changes take effect on the next turn.',
+      '# Chronos',
+      '# Current Values (read-only)',
+      'Current Time: ' + (value.trackTime ? formatTime() : 'Hidden'),
+      'Time Phase: ' + (value.trackTime
+        ? (value.showTimePhase ? formatTimePhase() : 'Off')
+        : 'Hidden'),
+      'Current Date: ' + (value.trackDate ? formatDisplayDate() : 'Hidden'),
       '',
+      '# Settings — edit values after the colon',
       'Enabled: ' + (value.enabled ? 'On' : 'Off'),
       'Paused: ' + (value.paused ? 'On' : 'Off'),
       'Track Time: ' + (value.trackTime ? 'On' : 'Off'),
       'Track Date: ' + (value.trackDate ? 'On' : 'Off'),
+      'Show Time Phase: ' + (value.showTimePhase ? 'On' : 'Off'),
       'Minutes Per Turn: ' + value.minutesPerTurn,
       'Clock Format: ' + value.clockFormat,
+      'Date Format: ' + value.dateFormat,
       '',
-      '# Current Chronos Values (read-only)',
-      'Current Time: ' + (value.trackTime ? formatTime() : 'Hidden'),
-      'Current Date: ' + (value.trackDate ? formatDate() : 'Hidden'),
-      '',
-      '# Commands: /time 8:30 AM, /date June 1, 2026, /sleep'
+      '# Commands: /time 8:30 AM, /date June 1, 2026, /advance 2 hours'
     ].join('\n');
   }
 
@@ -388,6 +458,10 @@ globalThis.ChronosV2 = (function createChronosV2() {
     chronos.settings.paused = parseToggle(values.paused, chronos.settings.paused);
     chronos.settings.trackTime = parseToggle(values.tracktime, chronos.settings.trackTime);
     chronos.settings.trackDate = parseToggle(values.trackdate, chronos.settings.trackDate);
+    chronos.settings.showTimePhase = parseToggle(
+      values.showtimephase,
+      chronos.settings.showTimePhase
+    );
     chronos.settings.minutesPerTurn = clampInteger(
       values.minutesperturn,
       0,
@@ -397,6 +471,10 @@ globalThis.ChronosV2 = (function createChronosV2() {
     chronos.settings.clockFormat = parseClockFormat(
       values.clockformat,
       chronos.settings.clockFormat
+    );
+    chronos.settings.dateFormat = parseDateFormat(
+      values.dateformat,
+      chronos.settings.dateFormat
     );
   }
 
@@ -434,6 +512,15 @@ globalThis.ChronosV2 = (function createChronosV2() {
     var normalized = String(value || '').toLowerCase().replace(/\s+/g, '');
     if (normalized === '24' || normalized === '24h' || normalized === '24-hour') return '24-hour';
     if (normalized === '12' || normalized === '12h' || normalized === '12-hour') return '12-hour';
+    return fallback;
+  }
+
+  function parseDateFormat(value, fallback) {
+    var normalized = String(value || '').trim().toLowerCase();
+    if (normalized === 'long') return 'Long';
+    if (normalized === 'iso') return 'ISO';
+    if (normalized === 'american') return 'American';
+    if (normalized === 'european') return 'European';
     return fallback;
   }
 
@@ -492,13 +579,16 @@ globalThis.ChronosV2 = (function createChronosV2() {
     var match = raw.match(/^\/([a-z]+)(?:\s+([\s\S]*))?$/i);
     if (!match) return null;
     var name = match[1].toLowerCase();
-    if (['chronos', 'time', 'date', 'sleep'].indexOf(name) === -1) return null;
+    if (['adv', 'addtime', 'skiptime', 'fastforward'].indexOf(name) !== -1) {
+      name = 'advance';
+    }
+    if (['chronos', 'time', 'date', 'advance'].indexOf(name) === -1) return null;
     return { name: name, argument: String(match[2] || '').trim() };
   }
 
   function validPendingCommand(value) {
     return isRecord(value) &&
-      ['chronos', 'time', 'date', 'sleep'].indexOf(value.name) !== -1 &&
+      ['chronos', 'time', 'date', 'advance'].indexOf(value.name) !== -1 &&
       typeof value.argument === 'string';
   }
 
@@ -509,8 +599,14 @@ globalThis.ChronosV2 = (function createChronosV2() {
     if (!chronos || !command) return { handled: false, text: inputText };
     chronos.pendingCommand = command;
 
-    if (command.name === 'sleep') {
-      return { handled: true, text: 'You settle down to sleep until the following morning.' };
+    if (command.name === 'advance') {
+      var requestedAdvance = parseAdvance(command.argument);
+      return {
+        handled: true,
+        text: requestedAdvance
+          ? 'You allow ' + requestedAdvance.label + ' to pass before continuing.'
+          : 'You briefly check the Chronos time controls.'
+      };
     }
     if (command.name === 'time' && !command.argument) {
       return { handled: true, text: 'You check the current time.' };
@@ -535,13 +631,15 @@ globalThis.ChronosV2 = (function createChronosV2() {
 
     if (command.name === 'chronos') {
       chronos.notice = 'Chronos commands: /time [8:30 AM or 20:30], ' +
-        '/date [June 1, 2026 or 2026-06-01], and /sleep.';
+        '/date [June 1, 2026 or 2026-06-01], and /advance [number] ' +
+        '[minutes, hours, days, or weeks]. Advance aliases: /adv, /addtime, ' +
+        '/skiptime, and /fastforward.';
       return true;
     }
 
     if (command.name === 'time') {
       if (!command.argument) {
-        chronos.notice = 'Chronos time: ' + formatTime() + '.';
+        chronos.notice = 'Chronos time: ' + formatContextTime() + '.';
         return true;
       }
       var parsedTime = parseTime(command.argument);
@@ -551,13 +649,13 @@ globalThis.ChronosV2 = (function createChronosV2() {
       }
       chronos.clock.hour = parsedTime.hour;
       chronos.clock.minute = parsedTime.minute;
-      chronos.notice = 'Chronos set the time to ' + formatTime() + '.';
+      chronos.notice = 'Chronos set the time to ' + formatContextTime() + '.';
       return true;
     }
 
     if (command.name === 'date') {
       if (!command.argument) {
-        chronos.notice = 'Chronos date: ' + formatDate() + '.';
+        chronos.notice = 'Chronos date: ' + formatDisplayDate() + '.';
         return true;
       }
       var parsedDate = parseDate(command.argument);
@@ -568,57 +666,68 @@ globalThis.ChronosV2 = (function createChronosV2() {
       chronos.clock.year = parsedDate.year;
       chronos.clock.month = parsedDate.month;
       chronos.clock.day = parsedDate.day;
-      chronos.notice = 'Chronos set the date to ' + formatDate() + '.';
+      chronos.notice = 'Chronos set the date to ' + formatDisplayDate() + '.';
       return true;
     }
 
-    if (command.name === 'sleep') {
-      if (command.argument) {
-        chronos.notice = 'Chronos /sleep does not take an argument.';
+    if (command.name === 'advance') {
+      var advance = parseAdvance(command.argument);
+      if (!advance) {
+        chronos.notice = 'Chronos could not read that duration. Try /advance 30 minutes, ' +
+          '/advance 4 hours, /advance 3 days, or /advance 2 weeks.';
         return true;
       }
-      if (!sleepUntilMorning()) {
-        chronos.notice = 'Chronos cannot advance /sleep beyond the supported calendar limit.';
+      if (!advanceByMinutes(advance.minutes)) {
+        chronos.notice = 'Chronos cannot advance beyond the supported calendar limit.';
         return true;
       }
-      chronos.notice = 'Chronos advanced to the next morning: ' + formatTimestamp() + '.';
+      chronos.notice = 'Chronos advanced ' + advance.label + ' to ' +
+        formatDisplayTimestamp() + '.';
       return true;
     }
     return false;
   }
 
-  function sleepUntilMorning(randomSource) {
-    var chronos = initialize();
-    if (!chronos) return false;
-    var random = typeof randomSource === 'function' ? randomSource : Math.random;
-    var sleepHours = 6 + randomInteger(0, 3, random);
-    var sleepMinutes = randomInteger(0, 59, random);
-    var start = copyClock(chronos.clock);
-    var nextDay = copyClock(start);
-    nextDay.hour = 0;
-    nextDay.minute = 0;
-    nextDay = clockFromMinuteIndex(clockToMinuteIndex(nextDay) + 1440);
-    if (nextDay.year === start.year && nextDay.month === start.month &&
-        nextDay.day === start.day) return false;
+  function parseAdvance(value) {
+    var match = String(value || '').trim().match(
+      /^(\d+)\s*(minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|wks?|w)$/i
+    );
+    if (!match) return null;
+    var amount = Number(match[1]);
+    if (!validInteger(amount) || amount <= 0) return null;
+    var requestedUnit = match[2].toLowerCase();
+    var unit;
+    var multiplier;
 
-    addMinutes(sleepHours * 60 + sleepMinutes);
-    var landedNextMorning = chronos.clock.year === nextDay.year &&
-      chronos.clock.month === nextDay.month && chronos.clock.day === nextDay.day &&
-      chronos.clock.hour < 12;
-
-    if (!landedNextMorning) {
-      chronos.clock = nextDay;
-      chronos.clock.hour = sleepHours;
-      chronos.clock.minute = sleepMinutes;
+    if (/^(m|mins?|minutes?)$/.test(requestedUnit)) {
+      unit = 'minute';
+      multiplier = 1;
+    } else if (/^(h|hrs?|hours?)$/.test(requestedUnit)) {
+      unit = 'hour';
+      multiplier = 60;
+    } else if (/^(d|days?)$/.test(requestedUnit)) {
+      unit = 'day';
+      multiplier = 1440;
+    } else {
+      unit = 'week';
+      multiplier = 10080;
     }
-    return true;
+
+    var minutes = amount * multiplier;
+    if (!isFinite(minutes) || minutes > maxMinuteIndex()) return null;
+    return {
+      minutes: minutes,
+      label: amount + ' ' + unit + (amount === 1 ? '' : 's')
+    };
   }
 
-  function randomInteger(minimum, maximum, random) {
-    var value = Number(random());
-    if (!isFinite(value)) value = 0;
-    value = Math.max(0, Math.min(0.9999999999999999, value));
-    return minimum + Math.floor(value * (maximum - minimum + 1));
+  function advanceByMinutes(minutes) {
+    var chronos = initialize();
+    if (!chronos) return false;
+    var current = clockToMinuteIndex(chronos.clock);
+    if (minutes <= 0 || minutes > maxMinuteIndex() - current) return false;
+    chronos.clock = clockFromMinuteIndex(current + minutes);
+    return true;
   }
 
   function cardMatches(card, title) {
@@ -870,7 +979,9 @@ globalThis.ChronosV2 = (function createChronosV2() {
     hasNotice: hasNotice,
     hasTrackedDisplay: hasTrackedDisplay,
     formatTime: formatTime,
+    formatTimePhase: formatTimePhase,
     formatDate: formatDate,
+    formatDisplayDate: formatDisplayDate,
     formatWidgetDate: formatWidgetDate,
     formatTimestamp: formatTimestamp,
     enabled: enabled,
@@ -881,7 +992,8 @@ globalThis.ChronosV2 = (function createChronosV2() {
       parseTime: parseTime,
       parseDate: parseDate,
       parseCommand: parseCommand,
-      sleepUntilMorning: sleepUntilMorning,
+      parseAdvance: parseAdvance,
+      advanceByMinutes: advanceByMinutes,
       clockToMinuteIndex: clockToMinuteIndex,
       clockFromMinuteIndex: clockFromMinuteIndex
     }
