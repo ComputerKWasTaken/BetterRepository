@@ -151,27 +151,16 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   const payload = JSON.parse(widgetCard.entry)
   assert.deepEqual(
     payload.manifest.widgets.map(widget => widget.id),
-    ['chronos-time', 'chronos-date']
+    ['chronos-clock']
   )
-  assert.deepEqual(
-    payload.manifest.widgets.map(widget => widget.type),
-    ['badge', 'badge'],
-    'Formatted clock values must use string-backed widgets and never numeric stat coercion'
-  )
-  assert.deepEqual(
-    payload.manifest.widgets.map(widget => ({
-      icon: widget.icon,
-      color: widget.color,
-      variant: widget.variant,
-      align: widget.align
-    })),
-    [
-      { icon: '🕒', color: '#f59e0b', variant: 'solid', align: 'center' },
-      { icon: '📅', color: '#22d3ee', variant: 'outline', align: 'center' }
-    ]
-  )
-  assert.equal(payload.history['30']['chronos-time'], '8:00 AM')
-  assert.equal(payload.history['30']['chronos-date'], 'Monday, June 1, 2026')
+  assert.equal(payload.manifest.widgets[0].type, 'custom')
+  assert.equal(payload.manifest.widgets[0].align, 'center')
+  assert.equal(payload.manifest.widgets[0].style.borderRadius, '999px')
+  const clockWidget = payload.history['30']['chronos-clock']
+  assert.equal(typeof clockWidget.html, 'string')
+  assert.match(clockWidget.html, />8:00 AM</)
+  assert.match(clockWidget.html, />Mon, Jun 1, 2026</)
+  assert.doesNotMatch(clockWidget.html, /Time:|Date:|🕒|📅/)
 
   runHook(adventure, inputSource, 'Retry without a new heartbeat.')
   runHook(adventure, contextSource, 'Prefix')
@@ -190,7 +179,7 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
     'Widget mode should retain one-shot command confirmations'
   )
   const updatedPayload = JSON.parse(findCard(adventure, 'ultrascripts:state:widget').entry)
-  assert.equal(updatedPayload.history['31']['chronos-time'], '9:15 AM')
+  assert.match(updatedPayload.history['31']['chronos-clock'].html, />9:15 AM</)
 }
 
 {
@@ -200,8 +189,20 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
     type: 'Ultrascripts',
     entry: JSON.stringify({
       v: 1,
-      manifest: { widgets: [{ id: 'hp', type: 'bar', label: 'Health', max: 100 }] },
-      history: { '39': { hp: 75 } }
+      manifest: {
+        widgets: [
+          { id: 'hp', type: 'bar', label: 'Health', max: 100 },
+          { id: 'chronos-time', type: 'text' },
+          { id: 'chronos-date', type: 'text' }
+        ]
+      },
+      history: {
+        '39': {
+          hp: 75,
+          'chronos-time': '8:00 AM',
+          'chronos-date': 'Monday, June 1, 2026'
+        }
+      }
     })
   }
   const adventure = createAdventure(40, [
@@ -212,8 +213,10 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   runHook(adventure, contextSource, 'Prefix')
 
   const payload = JSON.parse(findCard(adventure, 'ultrascripts:state:widget').entry)
-  assert.deepEqual(payload.manifest.widgets.map(widget => widget.id), ['hp', 'chronos-time', 'chronos-date'])
+  assert.deepEqual(payload.manifest.widgets.map(widget => widget.id), ['hp', 'chronos-clock'])
   assert.equal(payload.history['40'].hp, 75, 'Chronos must carry forward another script\'s Widget value')
+  assert.equal(payload.history['40']['chronos-time'], undefined)
+  assert.equal(payload.history['40']['chronos-date'], undefined)
 }
 
 {

@@ -22,7 +22,9 @@ globalThis.ChronosV2 = (function createChronosV2() {
     'Sunday', 'Monday', 'Tuesday', 'Wednesday',
     'Thursday', 'Friday', 'Saturday'
   ];
-  var WIDGET_IDS = ['chronos-time', 'chronos-date'];
+  var ACTIVE_WIDGET_ID = 'chronos-clock';
+  var LEGACY_WIDGET_IDS = ['chronos-time', 'chronos-date'];
+  var WIDGET_IDS = [ACTIVE_WIDGET_ID].concat(LEGACY_WIDGET_IDS);
   var MAX_WIDGETS = 40;
   var MAX_CHRONOS_HISTORY = 500;
   var MAX_YEAR = 999999;
@@ -288,8 +290,26 @@ globalThis.ChronosV2 = (function createChronosV2() {
       MONTH_NAMES[clock.month - 1] + ' ' + clock.day + ', ' + clock.year;
   }
 
+  function formatWidgetDate() {
+    var chronos = initialize();
+    if (!chronos) return '';
+    var clock = chronos.clock;
+    return WEEKDAY_NAMES[weekdayIndex(clock)].slice(0, 3) + ', ' +
+      MONTH_NAMES[clock.month - 1].slice(0, 3) + ' ' + clock.day + ', ' + clock.year;
+  }
+
   function formatTimestamp() {
     return formatTime() + ' on ' + formatDate();
+  }
+
+  function widgetHtml() {
+    return '<div title="Current in-game time and date" ' +
+      'style="display:flex;align-items:baseline;gap:8px;white-space:nowrap">' +
+      '<span style="color:#fbbf24;font-weight:700;font-variant-numeric:tabular-nums">' +
+      formatTime() + '</span>' +
+      '<span aria-hidden="true" style="color:rgba(255,255,255,.28)">·</span>' +
+      '<span style="color:rgba(255,255,255,.72);font-weight:500">' +
+      formatWidgetDate() + '</span></div>';
   }
 
   function appendContext(originalText) {
@@ -665,30 +685,30 @@ globalThis.ChronosV2 = (function createChronosV2() {
     var otherWidgets = payload.manifest.widgets.filter(function (widget) {
       return widget && WIDGET_IDS.indexOf(widget.id) === -1;
     });
-    if (otherWidgets.length > MAX_WIDGETS - WIDGET_IDS.length) return false;
+    if (otherWidgets.length > MAX_WIDGETS - 1) return false;
 
     payload.manifest.widgets = otherWidgets.concat([
       {
-        id: 'chronos-time',
-        type: 'badge',
-        label: 'Time',
-        icon: '🕒',
-        color: '#f59e0b',
-        variant: 'solid',
+        id: ACTIVE_WIDGET_ID,
+        type: 'custom',
         align: 'center',
-        tooltip: 'Current in-game time'
-      },
-      {
-        id: 'chronos-date',
-        type: 'badge',
-        label: 'Date',
-        icon: '📅',
-        color: '#22d3ee',
-        variant: 'outline',
-        align: 'center',
-        tooltip: 'Current in-game date'
+        style: {
+          display: 'inline-flex',
+          padding: '5px 10px',
+          borderRadius: '999px',
+          background: 'rgba(20,20,26,.82)',
+          border: '1px solid rgba(255,255,255,.12)',
+          boxShadow: 'none'
+        }
       }
     ]);
+
+    Object.keys(payload.history).forEach(function (key) {
+      var historicalValues = payload.history[key];
+      if (!historicalValues || typeof historicalValues !== 'object') return;
+      LEGACY_WIDGET_IDS.forEach(function (widgetId) { delete historicalValues[widgetId]; });
+      if (Object.keys(historicalValues).length === 0) delete payload.history[key];
+    });
 
     var liveCount = currentActionCount();
     var liveKey = String(liveCount);
@@ -697,8 +717,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
       ? payload.history[liveKey]
       : {};
     var values = Object.assign({}, baseValues, currentValues);
-    values['chronos-time'] = formatTime();
-    values['chronos-date'] = formatDate();
+    values[ACTIVE_WIDGET_ID] = { html: widgetHtml() };
     payload.history[liveKey] = values;
     pruneChronosHistory(payload.history);
     writeCard(WIDGET_CARD, JSON.stringify(payload), 'Ultrascripts');
@@ -794,6 +813,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
     hasNotice: hasNotice,
     formatTime: formatTime,
     formatDate: formatDate,
+    formatWidgetDate: formatWidgetDate,
     formatTimestamp: formatTimestamp,
     enabled: enabled,
     _test: {
