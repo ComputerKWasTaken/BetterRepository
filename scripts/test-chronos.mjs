@@ -93,7 +93,7 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   const result = runHook(adventure, contextSource, original)
 
   assert.ok(result.text.startsWith(original), 'Context must retain the entire original prefix')
-  assert.match(result.text, /Chronos: The current in-game time is 8:00 AM on Monday, June 1, 2026/)
+  assert.match(result.text, /The current in-game time is 8:00 AM on Monday, June 1, 2026/)
   assert.equal(adventure.state.chronos.clock.hour, 8)
   assert.equal(adventure.state.chronos.clock.minute, 0)
   assert.match(adventure.state.message, /Chronos · 8:00 AM/)
@@ -102,10 +102,16 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   adventure.info.actionCount = 11
   const next = runHook(adventure, contextSource, original)
   assert.match(next.text, /8:02 AM/)
+  const nextMessage = adventure.state.message
 
   const retry = runHook(adventure, contextSource, original)
   assert.match(retry.text, /8:02 AM/)
   assert.equal(adventure.state.chronos.clock.minute, 2, 'Retry must not advance the clock twice')
+  assert.notEqual(
+    adventure.state.message,
+    nextMessage,
+    'Toast fallback must remain unique even when the displayed clock is unchanged'
+  )
 
   adventure.info.actionCount = 10
   const undo = runHook(adventure, contextSource, original)
@@ -180,6 +186,24 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   )
   const updatedPayload = JSON.parse(findCard(adventure, 'ultrascripts:state:widget').entry)
   assert.match(updatedPayload.history['31']['chronos-clock'].html, />9:15 AM</)
+
+  findCard(adventure, 'ultrascripts:heartbeat').entry = heartbeatCard(
+    3,
+    [{ id: 'widget', version: '1.0.0', stateNames: ['widget'] }]
+  ).entry
+  findCard(adventure, 'Chronos Settings').entry = findCard(
+    adventure,
+    'Chronos Settings'
+  ).entry.replace('Enabled: On', 'Enabled: Off')
+  adventure.info.actionCount = 32
+  runHook(adventure, inputSource, 'Disable the clock.')
+  runHook(adventure, contextSource, 'Prefix')
+  const clearedPayload = JSON.parse(findCard(adventure, 'ultrascripts:state:widget').entry)
+  assert.deepEqual(clearedPayload.manifest.widgets, [])
+  assert.ok(
+    Object.values(clearedPayload.history).every(values => !values['chronos-clock']),
+    'Disabling Chronos must remove its active Widget values from all history'
+  )
 }
 
 {
@@ -220,6 +244,43 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
 }
 
 {
+  const history = {}
+  for (let actionCount = 0; actionCount < 502; actionCount += 1) {
+    history[String(actionCount)] = {
+      'chronos-clock': { html: `old-${actionCount}` }
+    }
+  }
+  history['0'].hp = 25
+  const widgetState = {
+    id: 150,
+    keys: 'ultrascripts:state:widget',
+    type: 'Ultrascripts',
+    entry: JSON.stringify({
+      v: 1,
+      manifest: {
+        widgets: [
+          { id: 'hp', type: 'bar', label: 'Health', max: 100 },
+          { id: 'chronos-clock', type: 'custom' }
+        ]
+      },
+      history
+    })
+  }
+  const adventure = createAdventure(600, [
+    heartbeatCard(6, [{ id: 'widget', version: '1.0.0', stateNames: ['widget'] }]),
+    widgetState
+  ])
+  runHook(adventure, inputSource, 'Continue.')
+  runHook(adventure, contextSource, 'Prefix')
+
+  const payload = JSON.parse(findCard(adventure, 'ultrascripts:state:widget').entry)
+  const activeHistory = Object.values(payload.history).filter(values => values['chronos-clock'])
+  assert.equal(activeHistory.length, 500, 'Chronos Widget history must remain bounded')
+  assert.equal(payload.history['0'].hp, 25, 'Pruning must preserve another script\'s history')
+  assert.equal(payload.history['0']['chronos-clock'], undefined)
+}
+
+{
   const settings = {
     id: 200,
     keys: 'Chronos Settings',
@@ -244,9 +305,37 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   assert.doesNotMatch(findCard(adventure, 'Chronos Settings').entry, /Apply Changes/)
   assert.doesNotMatch(findCard(adventure, 'Chronos Settings').entry, /New Time/)
 
+  findCard(adventure, 'Chronos Settings').entry = findCard(
+    adventure,
+    'Chronos Settings'
+  ).entry.replace('Minutes Per Turn: 15', 'Minutes Per Turn:')
   adventure.info.actionCount = 51
   const next = runHook(adventure, contextSource, 'Prefix')
   assert.match(next.text, /08:15/)
+  assert.equal(
+    adventure.state.chronos.settings.minutesPerTurn,
+    15,
+    'A blank numeric setting must retain the last safe rate'
+  )
+}
+
+{
+  const adventure = createAdventure(55)
+  runHook(adventure, inputSource, 'Continue.')
+  runHook(adventure, contextSource, 'Prefix')
+
+  adventure.info.actionCount = 56
+  runHook(adventure, inputSource, '/time 9:00 AM')
+  adventure.info.actionCount = 57
+  runHook(adventure, inputSource, 'I changed my mind and keep walking.')
+  const result = runHook(adventure, contextSource, 'Prefix')
+
+  assert.match(result.text, /8:04 AM/)
+  assert.equal(
+    adventure.state.chronos.pendingCommand,
+    null,
+    'A command abandoned before Context must never execute on a later action'
+  )
 }
 
 {
@@ -292,6 +381,35 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
 }
 
 {
+  const settings = {
+    id: 250,
+    keys: 'Chronos Settings',
+    type: 'Chronos',
+    entry: [
+      '# Chronos Settings',
+      'Enabled: On',
+      'Paused: On',
+      'Minutes Per Turn: 15',
+      'Clock Format: 12-hour'
+    ].join('\n')
+  }
+  const adventure = createAdventure(65, [settings])
+  runHook(adventure, inputSource, 'Continue.')
+  runHook(adventure, contextSource, 'Prefix')
+  adventure.info.actionCount = 66
+  runHook(adventure, inputSource, 'Wait.')
+  const paused = runHook(adventure, contextSource, 'Prefix')
+  assert.match(paused.text, /8:00 AM/, 'Paused Chronos must still inform the model')
+
+  settings.entry = settings.entry.replace('Enabled: On', 'Enabled: Off')
+  adventure.info.actionCount = 67
+  runHook(adventure, inputSource, 'Continue.')
+  const disabled = runHook(adventure, contextSource, 'Prefix')
+  assert.equal(disabled.text, 'Prefix', 'Disabled Chronos must not alter model context')
+  assert.equal(adventure.state.chronos.clock.minute, 0)
+}
+
+{
   const adventure = createAdventure(70)
   runHook(adventure, inputSource, 'Continue.')
   runHook(adventure, contextSource, 'Prefix')
@@ -304,6 +422,47 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
     /8:30 AM on Tuesday, June 2, 2026/,
     'A daytime /sleep must still land on the following morning'
   )
+}
+
+{
+  const adventure = createAdventure(75)
+  adventure.state.chronos = {
+    version: 2,
+    clock: [],
+    settings: [],
+    lastActionCount: -100,
+    notice: 42,
+    pendingCommand: { name: 'erase-everything', argument: [] },
+    timeline: [],
+    ultrascripts: []
+  }
+  runHook(adventure, 'ChronosV2.initialize()', '')
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(adventure.state.chronos.clock)),
+    { year: 2026, month: 6, day: 1, hour: 8, minute: 0 }
+  )
+  assert.equal(adventure.state.chronos.lastActionCount, 75)
+  assert.equal(adventure.state.chronos.pendingCommand, null)
+  assert.equal(Array.isArray(adventure.state.chronos.timeline), false)
+  assert.equal(Array.isArray(adventure.state.chronos.ultrascripts), false)
+}
+
+{
+  const adventure = createAdventure(77)
+  runHook(adventure, inputSource, 'Continue.')
+  runHook(adventure, contextSource, 'Prefix')
+  adventure.state.chronos.clock = {
+    year: 999999,
+    month: 12,
+    day: 31,
+    hour: 23,
+    minute: 59
+  }
+  adventure.info.actionCount = 78
+  runHook(adventure, inputSource, '/sleep')
+  const result = runHook(adventure, contextSource, 'Prefix')
+  assert.match(result.text, /11:59 PM on Friday, December 31, 999999/)
+  assert.match(adventure.state.message, /cannot advance \/sleep beyond the supported calendar limit/)
 }
 
 {

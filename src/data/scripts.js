@@ -494,7 +494,7 @@ export const SCRIPTS = [
     essential: false,
     tags: ['ultrascripts', 'time', 'calendar', 'widgets', 'context', 'cache-compatible', 'tracking', 'unpublished'],
     source: 'BetterRepository',
-    description: 'Unpublished preview of a lightweight in-game clock and Gregorian calendar with cache-compatible context, text-safe Widget display, vanilla toast fallback, and simple /time, /date, and /sleep commands.',
+    description: 'Unpublished preview of a lightweight in-game clock and Gregorian calendar with cache-compatible context, a minimalist custom Widget display, vanilla toast fallback, and simple /time, /date, and /sleep commands.',
     purpose: 'Keeps story time stable across ordinary turns, commands, Retry, and Undo without taking over weather or unrelated simulation systems.',
     requiresExtension: 'BetterDungeon',
     ultrascriptsMode: 'enhanced',

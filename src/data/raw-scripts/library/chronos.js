@@ -29,6 +29,10 @@ globalThis.ChronosV2 = (function createChronosV2() {
   var MAX_CHRONOS_HISTORY = 500;
   var MAX_YEAR = 999999;
 
+  function isRecord(value) {
+    return value !== null && typeof value === 'object' && !Array.isArray(value);
+  }
+
   function currentActionCount() {
     var value = typeof info !== 'undefined' && info ? Number(info.actionCount) : 0;
     return isFinite(value) && value >= 0 ? Math.floor(value) : 0;
@@ -39,9 +43,9 @@ globalThis.ChronosV2 = (function createChronosV2() {
   }
 
   function initialize() {
-    if (!globalThis.state || typeof state !== 'object') return null;
+    if (!isRecord(globalThis.state)) return null;
 
-    var previous = state.chronos && typeof state.chronos === 'object'
+    var previous = isRecord(state.chronos)
       ? state.chronos
       : {};
     var legacyClock = {
@@ -76,6 +80,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
         },
         lastActionCount: currentActionCount(),
         notice: '',
+        toastSequence: 0,
         pendingCommand: null,
         timeline: {},
         ultrascripts: {}
@@ -83,8 +88,8 @@ globalThis.ChronosV2 = (function createChronosV2() {
       state.chronos = previous;
     }
 
-    previous.clock = normalizeClock(previous.clock || defaultClock());
-    previous.settings = previous.settings || {};
+    previous.clock = normalizeClock(isRecord(previous.clock) ? previous.clock : defaultClock());
+    previous.settings = isRecord(previous.settings) ? previous.settings : {};
     if (typeof previous.settings.enabled !== 'boolean') previous.settings.enabled = true;
     if (typeof previous.settings.paused !== 'boolean') previous.settings.paused = false;
     previous.settings.minutesPerTurn = clampInteger(
@@ -94,14 +99,23 @@ globalThis.ChronosV2 = (function createChronosV2() {
       2
     );
     if (previous.settings.clockFormat !== '24-hour') previous.settings.clockFormat = '12-hour';
-    if (!validInteger(previous.lastActionCount)) previous.lastActionCount = currentActionCount();
+    if (!validInteger(previous.lastActionCount) || Number(previous.lastActionCount) < 0) {
+      previous.lastActionCount = currentActionCount();
+    } else {
+      previous.lastActionCount = Number(previous.lastActionCount);
+    }
     if (typeof previous.notice !== 'string') previous.notice = '';
-    if (!previous.pendingCommand || typeof previous.pendingCommand !== 'object') {
+    if (!validInteger(previous.toastSequence) || Number(previous.toastSequence) < 0) {
+      previous.toastSequence = 0;
+    } else {
+      previous.toastSequence = Number(previous.toastSequence) % 2;
+    }
+    if (!validPendingCommand(previous.pendingCommand)) {
       previous.pendingCommand = null;
     }
-    if (!previous.timeline || typeof previous.timeline !== 'object') previous.timeline = {};
-    previous.ultrascripts = previous.ultrascripts || {};
-    if (!previous.timeline[String(previous.lastActionCount)]) {
+    if (!isRecord(previous.timeline)) previous.timeline = {};
+    if (!isRecord(previous.ultrascripts)) previous.ultrascripts = {};
+    if (!isRecord(previous.timeline[String(previous.lastActionCount)])) {
       previous.timeline[String(previous.lastActionCount)] = copyClock(previous.clock);
     }
     return previous;
@@ -113,6 +127,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
   }
 
   function clampInteger(value, minimum, maximum, fallback) {
+    if (value === null || String(value).trim() === '') return fallback;
     var number = Number(value);
     if (!isFinite(number)) return fallback;
     number = Math.floor(number);
@@ -225,7 +240,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
 
     if (delta < 0) {
       var snapshot = chronos.timeline[String(actionCount)];
-      if (snapshot) chronos.clock = normalizeClock(snapshot);
+      if (isRecord(snapshot)) chronos.clock = normalizeClock(snapshot);
       else if (chronos.settings.enabled && !chronos.settings.paused) {
         addMinutes(delta * chronos.settings.minutesPerTurn);
       }
@@ -245,7 +260,11 @@ globalThis.ChronosV2 = (function createChronosV2() {
     var keys = Object.keys(chronos.timeline).map(function (key) {
       return { key: key, number: Number(key) };
     }).filter(function (item) {
-      return isFinite(item.number);
+      if (!/^\d+$/.test(item.key) || !isFinite(item.number)) {
+        delete chronos.timeline[item.key];
+        return false;
+      }
+      return true;
     }).sort(function (left, right) {
       return right.number - left.number;
     });
@@ -452,8 +471,15 @@ globalThis.ChronosV2 = (function createChronosV2() {
     return { name: name, argument: String(match[2] || '').trim() };
   }
 
+  function validPendingCommand(value) {
+    return isRecord(value) &&
+      ['chronos', 'time', 'date', 'sleep'].indexOf(value.name) !== -1 &&
+      typeof value.argument === 'string';
+  }
+
   function handleInput(inputText) {
     var chronos = initialize();
+    if (chronos) chronos.pendingCommand = null;
     var command = parseCommand(inputText);
     if (!chronos || !command) return { handled: false, text: inputText };
     chronos.pendingCommand = command;
@@ -526,7 +552,10 @@ globalThis.ChronosV2 = (function createChronosV2() {
         chronos.notice = 'Chronos /sleep does not take an argument.';
         return true;
       }
-      sleepUntilMorning();
+      if (!sleepUntilMorning()) {
+        chronos.notice = 'Chronos cannot advance /sleep beyond the supported calendar limit.';
+        return true;
+      }
       chronos.notice = 'Chronos advanced to the next morning: ' + formatTimestamp() + '.';
       return true;
     }
@@ -535,7 +564,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
 
   function sleepUntilMorning(randomSource) {
     var chronos = initialize();
-    if (!chronos) return;
+    if (!chronos) return false;
     var random = typeof randomSource === 'function' ? randomSource : Math.random;
     var sleepHours = 6 + randomInteger(0, 3, random);
     var sleepMinutes = randomInteger(0, 59, random);
@@ -544,6 +573,8 @@ globalThis.ChronosV2 = (function createChronosV2() {
     nextDay.hour = 0;
     nextDay.minute = 0;
     nextDay = clockFromMinuteIndex(clockToMinuteIndex(nextDay) + 1440);
+    if (nextDay.year === start.year && nextDay.month === start.month &&
+        nextDay.day === start.day) return false;
 
     addMinutes(sleepHours * 60 + sleepMinutes);
     var landedNextMorning = chronos.clock.year === nextDay.year &&
@@ -555,6 +586,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
       chronos.clock.hour = sleepHours;
       chronos.clock.minute = sleepMinutes;
     }
+    return true;
   }
 
   function randomInteger(minimum, maximum, random) {
@@ -669,9 +701,11 @@ globalThis.ChronosV2 = (function createChronosV2() {
     if (!card) return { v: 1, manifest: { widgets: [] }, history: {} };
     try {
       var parsed = JSON.parse(cardText(card) || '{}');
-      if (!parsed || parsed.v !== 1) throw new Error('unsupported Widget state');
-      if (!parsed.manifest || !Array.isArray(parsed.manifest.widgets)) parsed.manifest = { widgets: [] };
-      if (!parsed.history || typeof parsed.history !== 'object') parsed.history = {};
+      if (!isRecord(parsed) || parsed.v !== 1) throw new Error('unsupported Widget state');
+      if (!isRecord(parsed.manifest) || !Array.isArray(parsed.manifest.widgets)) {
+        parsed.manifest = { widgets: [] };
+      }
+      if (!isRecord(parsed.history)) parsed.history = {};
       return parsed;
     } catch (error) {
       return { v: 1, manifest: { widgets: [] }, history: {} };
@@ -704,7 +738,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
 
     Object.keys(payload.history).forEach(function (key) {
       var historicalValues = payload.history[key];
-      if (!historicalValues || typeof historicalValues !== 'object') return;
+      if (!isRecord(historicalValues)) return;
       LEGACY_WIDGET_IDS.forEach(function (widgetId) { delete historicalValues[widgetId]; });
       if (Object.keys(historicalValues).length === 0) delete payload.history[key];
     });
@@ -712,7 +746,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
     var liveCount = currentActionCount();
     var liveKey = String(liveCount);
     var baseValues = nearestWidgetValues(payload.history, liveCount);
-    var currentValues = payload.history[liveKey] && typeof payload.history[liveKey] === 'object'
+    var currentValues = isRecord(payload.history[liveKey])
       ? payload.history[liveKey]
       : {};
     var values = Object.assign({}, baseValues, currentValues);
@@ -733,7 +767,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
     });
     if (!keys.length) return {};
     var value = history[keys[0].key];
-    return value && typeof value === 'object' ? value : {};
+    return isRecord(value) ? value : {};
   }
 
   function pruneChronosHistory(history) {
@@ -746,9 +780,8 @@ globalThis.ChronosV2 = (function createChronosV2() {
     });
     for (var index = MAX_CHRONOS_HISTORY; index < keys.length; index += 1) {
       var values = history[keys[index].key];
-      if (!values || typeof values !== 'object') continue;
-      delete values['chronos-time'];
-      delete values['chronos-date'];
+      if (!isRecord(values)) continue;
+      WIDGET_IDS.forEach(function (widgetId) { delete values[widgetId]; });
       if (Object.keys(values).length === 0) delete history[keys[index].key];
     }
   }
@@ -763,9 +796,8 @@ globalThis.ChronosV2 = (function createChronosV2() {
     });
     Object.keys(payload.history).forEach(function (key) {
       var values = payload.history[key];
-      if (!values || typeof values !== 'object') return;
-      delete values['chronos-time'];
-      delete values['chronos-date'];
+      if (!isRecord(values)) return;
+      WIDGET_IDS.forEach(function (widgetId) { delete values[widgetId]; });
       if (Object.keys(values).length === 0) delete payload.history[key];
     });
     writeCard(WIDGET_CARD, JSON.stringify(payload), 'Ultrascripts');
@@ -775,7 +807,9 @@ globalThis.ChronosV2 = (function createChronosV2() {
     var chronos = initialize();
     if (!chronos) return;
     var prefix = chronos.notice ? chronos.notice + ' ' : '';
-    state.message = prefix + 'Chronos · ' + formatTime() + ' · ' + formatDate();
+    chronos.toastSequence = (chronos.toastSequence + 1) % 2;
+    var uniqueMarker = chronos.toastSequence ? '\u200B' : '\u2060';
+    state.message = prefix + 'Chronos · ' + formatTime() + ' · ' + formatDate() + uniqueMarker;
     chronos.notice = '';
   }
 
