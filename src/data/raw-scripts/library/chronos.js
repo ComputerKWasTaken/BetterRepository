@@ -22,10 +22,10 @@ globalThis.ChronosV2 = (function createChronosV2() {
     'Sunday', 'Monday', 'Tuesday', 'Wednesday',
     'Thursday', 'Friday', 'Saturday'
   ];
-  var WEEKDAY_OFFSETS = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4];
   var WIDGET_IDS = ['chronos-time', 'chronos-date'];
-  var MAX_WIDGETS = 100;
+  var MAX_WIDGETS = 40;
   var MAX_CHRONOS_HISTORY = 500;
+  var MAX_YEAR = 999999;
 
   function currentActionCount() {
     var value = typeof info !== 'undefined' && info ? Number(info.actionCount) : 0;
@@ -33,7 +33,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
   }
 
   function defaultClock() {
-    return { year: 1000, month: 1, day: 1, hour: 8, minute: 0 };
+    return { year: 2026, month: 6, day: 1, hour: 8, minute: 0 };
   }
 
   function initialize() {
@@ -73,8 +73,9 @@ globalThis.ChronosV2 = (function createChronosV2() {
             : '12-hour'
         },
         lastActionCount: currentActionCount(),
-        applyArmed: true,
         notice: '',
+        pendingCommand: null,
+        timeline: {},
         ultrascripts: {}
       };
       state.chronos = previous;
@@ -92,9 +93,15 @@ globalThis.ChronosV2 = (function createChronosV2() {
     );
     if (previous.settings.clockFormat !== '24-hour') previous.settings.clockFormat = '12-hour';
     if (!validInteger(previous.lastActionCount)) previous.lastActionCount = currentActionCount();
-    if (typeof previous.applyArmed !== 'boolean') previous.applyArmed = true;
     if (typeof previous.notice !== 'string') previous.notice = '';
+    if (!previous.pendingCommand || typeof previous.pendingCommand !== 'object') {
+      previous.pendingCommand = null;
+    }
+    if (!previous.timeline || typeof previous.timeline !== 'object') previous.timeline = {};
     previous.ultrascripts = previous.ultrascripts || {};
+    if (!previous.timeline[String(previous.lastActionCount)]) {
+      previous.timeline[String(previous.lastActionCount)] = copyClock(previous.clock);
+    }
     return previous;
   }
 
@@ -112,15 +119,16 @@ globalThis.ChronosV2 = (function createChronosV2() {
 
   function normalizeClock(value) {
     var clock = value || {};
-    var year = clampInteger(clock.year, 1, 999999, 1000);
-    var month = clampInteger(clock.month, 1, 12, 1);
-    var day = clampInteger(clock.day, 1, daysInMonth(year, month), 1);
+    var fallback = defaultClock();
+    var year = clampInteger(clock.year, 1, MAX_YEAR, fallback.year);
+    var month = clampInteger(clock.month, 1, 12, fallback.month);
+    var day = clampInteger(clock.day, 1, daysInMonth(year, month), fallback.day);
     return {
       year: year,
       month: month,
       day: day,
-      hour: clampInteger(clock.hour, 0, 23, 8),
-      minute: clampInteger(clock.minute, 0, 59, 0)
+      hour: clampInteger(clock.hour, 0, 23, fallback.hour),
+      minute: clampInteger(clock.minute, 0, 59, fallback.minute)
     };
   }
 
@@ -133,63 +141,78 @@ globalThis.ChronosV2 = (function createChronosV2() {
     return [4, 6, 9, 11].indexOf(month) !== -1 ? 30 : 31;
   }
 
+  function copyClock(clock) {
+    return {
+      year: clock.year,
+      month: clock.month,
+      day: clock.day,
+      hour: clock.hour,
+      minute: clock.minute
+    };
+  }
+
+  function daysBeforeYear(year) {
+    var previousYear = year - 1;
+    return previousYear * 365 + Math.floor(previousYear / 4) -
+      Math.floor(previousYear / 100) + Math.floor(previousYear / 400);
+  }
+
+  function daysBeforeMonth(year, month) {
+    var total = 0;
+    for (var currentMonth = 1; currentMonth < month; currentMonth += 1) {
+      total += daysInMonth(year, currentMonth);
+    }
+    return total;
+  }
+
+  function clockToMinuteIndex(clock) {
+    var days = daysBeforeYear(clock.year) + daysBeforeMonth(clock.year, clock.month) +
+      clock.day - 1;
+    return days * 1440 + clock.hour * 60 + clock.minute;
+  }
+
+  function maxMinuteIndex() {
+    return (daysBeforeYear(MAX_YEAR + 1) * 1440) - 1;
+  }
+
+  function clockFromMinuteIndex(value) {
+    var minuteIndex = Math.max(0, Math.min(maxMinuteIndex(), Math.trunc(value)));
+    var dayIndex = Math.floor(minuteIndex / 1440);
+    var minuteOfDay = minuteIndex % 1440;
+    var low = 1;
+    var high = MAX_YEAR;
+
+    while (low < high) {
+      var middle = Math.ceil((low + high) / 2);
+      if (daysBeforeYear(middle) <= dayIndex) low = middle;
+      else high = middle - 1;
+    }
+
+    var year = low;
+    var dayOfYear = dayIndex - daysBeforeYear(year);
+    var month = 1;
+    while (dayOfYear >= daysInMonth(year, month)) {
+      dayOfYear -= daysInMonth(year, month);
+      month += 1;
+    }
+
+    return {
+      year: year,
+      month: month,
+      day: dayOfYear + 1,
+      hour: Math.floor(minuteOfDay / 60),
+      minute: minuteOfDay % 60
+    };
+  }
+
   function addMinutes(amount) {
     var chronos = initialize();
     if (!chronos) return;
-    var remaining = Math.trunc(Number(amount) || 0);
-    var clock = chronos.clock;
-
-    while (remaining !== 0) {
-      var minuteOfDay = clock.hour * 60 + clock.minute;
-      var target = minuteOfDay + remaining;
-
-      if (target >= 0 && target < 1440) {
-        clock.hour = Math.floor(target / 60);
-        clock.minute = target % 60;
-        remaining = 0;
-      } else if (target >= 1440) {
-        remaining = target - 1440;
-        clock.hour = 0;
-        clock.minute = 0;
-        addDays(clock, 1);
-      } else {
-        if (clock.year === 1 && clock.month === 1 && clock.day === 1) {
-          clock.hour = 0;
-          clock.minute = 0;
-          remaining = 0;
-        } else {
-          remaining = target;
-          addDays(clock, -1);
-          clock.hour = 24;
-          clock.minute = 0;
-        }
-      }
-    }
-  }
-
-  function addDays(clock, direction) {
-    if (direction > 0) {
-      clock.day += 1;
-      if (clock.day > daysInMonth(clock.year, clock.month)) {
-        clock.day = 1;
-        clock.month += 1;
-        if (clock.month > 12) {
-          clock.month = 1;
-          clock.year += 1;
-        }
-      }
-      return;
-    }
-
-    clock.day -= 1;
-    if (clock.day < 1) {
-      clock.month -= 1;
-      if (clock.month < 1) {
-        clock.month = 12;
-        clock.year = Math.max(1, clock.year - 1);
-      }
-      clock.day = daysInMonth(clock.year, clock.month);
-    }
+    var amountAsNumber = Number(amount);
+    if (!isFinite(amountAsNumber)) return;
+    chronos.clock = clockFromMinuteIndex(
+      clockToMinuteIndex(chronos.clock) + Math.trunc(amountAsNumber)
+    );
   }
 
   function advanceToCurrentAction() {
@@ -198,19 +221,47 @@ globalThis.ChronosV2 = (function createChronosV2() {
     var actionCount = currentActionCount();
     var delta = actionCount - chronos.lastActionCount;
 
-    if (chronos.settings.enabled && !chronos.settings.paused && delta !== 0) {
-      addMinutes(delta * chronos.settings.minutesPerTurn);
+    if (delta < 0) {
+      var snapshot = chronos.timeline[String(actionCount)];
+      if (snapshot) chronos.clock = normalizeClock(snapshot);
+      else if (chronos.settings.enabled && !chronos.settings.paused) {
+        addMinutes(delta * chronos.settings.minutesPerTurn);
+      }
+      discardFutureSnapshots(chronos.timeline, actionCount);
+    } else if (delta > 0 && chronos.settings.enabled && !chronos.settings.paused) {
+      var ordinaryActions = chronos.pendingCommand ? Math.max(0, delta - 1) : delta;
+      addMinutes(ordinaryActions * chronos.settings.minutesPerTurn);
     }
     chronos.lastActionCount = actionCount;
   }
 
+  function recordSnapshot() {
+    var chronos = initialize();
+    if (!chronos) return;
+    var actionCount = currentActionCount();
+    chronos.timeline[String(actionCount)] = copyClock(chronos.clock);
+    var keys = Object.keys(chronos.timeline).map(function (key) {
+      return { key: key, number: Number(key) };
+    }).filter(function (item) {
+      return isFinite(item.number);
+    }).sort(function (left, right) {
+      return right.number - left.number;
+    });
+    for (var index = MAX_CHRONOS_HISTORY; index < keys.length; index += 1) {
+      delete chronos.timeline[keys[index].key];
+    }
+  }
+
+  function discardFutureSnapshots(timeline, actionCount) {
+    Object.keys(timeline || {}).forEach(function (key) {
+      var number = Number(key);
+      if (isFinite(number) && number > actionCount) delete timeline[key];
+    });
+  }
+
   function weekdayIndex(clock) {
-    var year = clock.year;
-    if (clock.month < 3) year -= 1;
-    return (
-      year + Math.floor(year / 4) - Math.floor(year / 100) +
-      Math.floor(year / 400) + WEEKDAY_OFFSETS[clock.month - 1] + clock.day
-    ) % 7;
+    return (daysBeforeYear(clock.year) + daysBeforeMonth(clock.year, clock.month) +
+      clock.day) % 7;
   }
 
   function pad2(value) {
@@ -260,11 +311,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
       'Minutes Per Turn: ' + value.minutesPerTurn,
       'Clock Format: ' + value.clockFormat,
       '',
-      '# To set the live clock, fill either field and change Apply Changes to On.',
-      '# Time accepts 8:30 AM or 20:30. Date accepts January 2, 1000 or 1000-01-02.',
-      'New Time:',
-      'New Date:',
-      'Apply Changes: Off'
+      '# Commands: /time 8:30 AM, /date June 1, 2026, /sleep'
     ].join('\n');
   }
 
@@ -279,6 +326,9 @@ globalThis.ChronosV2 = (function createChronosV2() {
 
     var entry = cardText(card);
     var values = parseSettingsLines(entry);
+    var hasLegacyClockFields = Object.prototype.hasOwnProperty.call(values, 'newtime') ||
+      Object.prototype.hasOwnProperty.call(values, 'newdate') ||
+      Object.prototype.hasOwnProperty.call(values, 'applychanges');
     chronos.settings.enabled = parseToggle(values.enabled, chronos.settings.enabled);
     chronos.settings.paused = parseToggle(values.paused, chronos.settings.paused);
     chronos.settings.minutesPerTurn = clampInteger(
@@ -291,47 +341,9 @@ globalThis.ChronosV2 = (function createChronosV2() {
       values.clockformat,
       chronos.settings.clockFormat
     );
-
-    var apply = parseToggle(values.applychanges, false);
-    if (!apply) {
-      chronos.applyArmed = true;
-      return;
+    if (hasLegacyClockFields) {
+      writeCard(SETTINGS_CARD, settingsTemplate(chronos.settings), card.type || 'Chronos');
     }
-    if (!chronos.applyArmed) return;
-    chronos.applyArmed = false;
-
-    var timeText = String(values.newtime || '').trim();
-    var dateText = String(values.newdate || '').trim();
-    var messages = [];
-    var applied = false;
-
-    if (timeText) {
-      var parsedTime = parseTime(timeText);
-      if (parsedTime) {
-        chronos.clock.hour = parsedTime.hour;
-        chronos.clock.minute = parsedTime.minute;
-        applied = true;
-      } else {
-        messages.push('New Time was invalid');
-      }
-    }
-    if (dateText) {
-      var parsedDate = parseDate(dateText);
-      if (parsedDate) {
-        chronos.clock.year = parsedDate.year;
-        chronos.clock.month = parsedDate.month;
-        chronos.clock.day = parsedDate.day;
-        applied = true;
-      } else {
-        messages.push('New Date was invalid');
-      }
-    }
-    if (!timeText && !dateText) messages.push('no new time or date was provided');
-
-    chronos.lastActionCount = currentActionCount();
-    if (applied) messages.unshift('clock updated');
-    chronos.notice = 'Chronos ' + messages.join('; ') + '.';
-    writeCard(SETTINGS_CARD, resetApplyFields(entry), card.type || 'Chronos');
   }
 
   function parseSettingsLines(entry) {
@@ -361,10 +373,10 @@ globalThis.ChronosV2 = (function createChronosV2() {
   }
 
   function parseTime(value) {
-    var match = String(value || '').trim().match(/^(\d{1,2}):(\d{2})\s*([ap]m)?$/i);
+    var match = String(value || '').trim().match(/^(\d{1,2})(?::(\d{2}))?\s*([ap]m)?$/i);
     if (!match) return null;
     var hour = Number(match[1]);
-    var minute = Number(match[2]);
+    var minute = match[2] === undefined ? 0 : Number(match[2]);
     var meridiem = String(match[3] || '').toLowerCase();
     if (minute < 0 || minute > 59) return null;
     if (meridiem) {
@@ -391,8 +403,12 @@ globalThis.ChronosV2 = (function createChronosV2() {
       day = Number(iso[3]);
     } else if (monthName) {
       year = Number(monthName[3]);
+      var requestedMonth = monthName[1].toLowerCase();
       month = MONTH_NAMES.map(function (name) { return name.toLowerCase(); })
-        .indexOf(monthName[1].toLowerCase()) + 1;
+        .findIndex(function (name) {
+          return name === requestedMonth ||
+            (requestedMonth.length >= 3 && name.indexOf(requestedMonth) === 0);
+        }) + 1;
       day = Number(monthName[2]);
     } else {
       return null;
@@ -403,28 +419,130 @@ globalThis.ChronosV2 = (function createChronosV2() {
     return { year: year, month: month, day: day };
   }
 
-  function resetApplyFields(entry) {
-    var found = { time: false, date: false, apply: false };
-    var lines = String(entry || '').split(/\r?\n/).map(function (line) {
-      var key = line.indexOf(':') === -1
-        ? ''
-        : line.slice(0, line.indexOf(':')).toLowerCase().replace(/[^a-z0-9]/g, '');
-      if (key === 'newtime') {
-        found.time = true;
-        return 'New Time:';
+  function parseCommand(inputText) {
+    var raw = String(inputText || '').trim()
+      .replace(/^>\s*You(?:\s+say)?\s*"?/i, '')
+      .replace(/[".]+\s*$/, '')
+      .trim();
+    var match = raw.match(/^\/([a-z]+)(?:\s+([\s\S]*))?$/i);
+    if (!match) return null;
+    var name = match[1].toLowerCase();
+    if (name === 'settime') name = 'time';
+    if (name === 'setdate') name = 'date';
+    if (['chronos', 'time', 'date', 'sleep'].indexOf(name) === -1) return null;
+    return { name: name, argument: String(match[2] || '').trim() };
+  }
+
+  function handleInput(inputText) {
+    var chronos = initialize();
+    var command = parseCommand(inputText);
+    if (!chronos || !command) return { handled: false, text: inputText };
+    chronos.pendingCommand = command;
+
+    if (command.name === 'sleep') {
+      return { handled: true, text: 'You settle down to sleep until the following morning.' };
+    }
+    if (command.name === 'time' && !command.argument) {
+      return { handled: true, text: 'You check the current time.' };
+    }
+    if (command.name === 'date' && !command.argument) {
+      return { handled: true, text: 'You check the current date.' };
+    }
+    if (command.name === 'time') {
+      return { handled: true, text: 'You establish the current time before continuing.' };
+    }
+    if (command.name === 'date') {
+      return { handled: true, text: 'You establish the current date before continuing.' };
+    }
+    return { handled: true, text: 'You briefly review the Chronos clock controls.' };
+  }
+
+  function applyPendingCommand() {
+    var chronos = initialize();
+    if (!chronos || !chronos.pendingCommand) return false;
+    var command = chronos.pendingCommand;
+    chronos.pendingCommand = null;
+
+    if (command.name === 'chronos') {
+      chronos.notice = 'Chronos commands: /time [8:30 AM or 20:30], ' +
+        '/date [June 1, 2026 or 2026-06-01], and /sleep.';
+      return true;
+    }
+
+    if (command.name === 'time') {
+      if (!command.argument) {
+        chronos.notice = 'Chronos time: ' + formatTime() + '.';
+        return true;
       }
-      if (key === 'newdate') {
-        found.date = true;
-        return 'New Date:';
+      var parsedTime = parseTime(command.argument);
+      if (!parsedTime) {
+        chronos.notice = 'Chronos could not read that time. Try /time 8:30 AM or /time 20:30.';
+        return true;
       }
-      if (key === 'applychanges') {
-        found.apply = true;
-        return 'Apply Changes: Off';
+      chronos.clock.hour = parsedTime.hour;
+      chronos.clock.minute = parsedTime.minute;
+      chronos.notice = 'Chronos set the time to ' + formatTime() + '.';
+      return true;
+    }
+
+    if (command.name === 'date') {
+      if (!command.argument) {
+        chronos.notice = 'Chronos date: ' + formatDate() + '.';
+        return true;
       }
-      return line;
-    });
-    if (!found.time || !found.date || !found.apply) return settingsTemplate(initialize().settings);
-    return lines.join('\n');
+      var parsedDate = parseDate(command.argument);
+      if (!parsedDate) {
+        chronos.notice = 'Chronos could not read that date. Try /date June 1, 2026 or /date 2026-06-01.';
+        return true;
+      }
+      chronos.clock.year = parsedDate.year;
+      chronos.clock.month = parsedDate.month;
+      chronos.clock.day = parsedDate.day;
+      chronos.notice = 'Chronos set the date to ' + formatDate() + '.';
+      return true;
+    }
+
+    if (command.name === 'sleep') {
+      if (command.argument) {
+        chronos.notice = 'Chronos /sleep does not take an argument.';
+        return true;
+      }
+      sleepUntilMorning();
+      chronos.notice = 'Chronos advanced to the next morning: ' + formatTimestamp() + '.';
+      return true;
+    }
+    return false;
+  }
+
+  function sleepUntilMorning(randomSource) {
+    var chronos = initialize();
+    if (!chronos) return;
+    var random = typeof randomSource === 'function' ? randomSource : Math.random;
+    var sleepHours = 6 + randomInteger(0, 3, random);
+    var sleepMinutes = randomInteger(0, 59, random);
+    var start = copyClock(chronos.clock);
+    var nextDay = copyClock(start);
+    nextDay.hour = 0;
+    nextDay.minute = 0;
+    nextDay = clockFromMinuteIndex(clockToMinuteIndex(nextDay) + 1440);
+
+    addMinutes(sleepHours * 60 + sleepMinutes);
+    var landedNextMorning = chronos.clock.year === nextDay.year &&
+      chronos.clock.month === nextDay.month && chronos.clock.day === nextDay.day &&
+      chronos.clock.hour < 12;
+
+    if (!landedNextMorning) {
+      chronos.clock = nextDay;
+      chronos.clock.hour = sleepHours;
+      chronos.clock.minute = sleepMinutes;
+    }
+  }
+
+  function randomInteger(minimum, maximum, random) {
+    var value = Number(random());
+    if (!isFinite(value)) value = 0;
+    value = Math.max(0, Math.min(0.9999999999999999, value));
+    return minimum + Math.floor(value * (maximum - minimum + 1));
   }
 
   function cardMatches(card, title) {
@@ -550,8 +668,26 @@ globalThis.ChronosV2 = (function createChronosV2() {
     if (otherWidgets.length > MAX_WIDGETS - WIDGET_IDS.length) return false;
 
     payload.manifest.widgets = otherWidgets.concat([
-      { id: 'chronos-time', type: 'stat', label: 'Time', color: '#fbbf24' },
-      { id: 'chronos-date', type: 'text', label: 'Date' }
+      {
+        id: 'chronos-time',
+        type: 'badge',
+        label: 'Time',
+        icon: '🕒',
+        color: '#f59e0b',
+        variant: 'solid',
+        align: 'center',
+        tooltip: 'Current in-game time'
+      },
+      {
+        id: 'chronos-date',
+        type: 'badge',
+        label: 'Date',
+        icon: '📅',
+        color: '#22d3ee',
+        variant: 'outline',
+        align: 'center',
+        tooltip: 'Current in-game date'
+      }
     ]);
 
     var liveCount = currentActionCount();
@@ -644,7 +780,10 @@ globalThis.ChronosV2 = (function createChronosV2() {
   return {
     initialize: initialize,
     syncSettings: syncSettings,
+    handleInput: handleInput,
     advanceToCurrentAction: advanceToCurrentAction,
+    applyPendingCommand: applyPendingCommand,
+    recordSnapshot: recordSnapshot,
     appendContext: appendContext,
     observeHeartbeat: observeHeartbeat,
     widgetAvailable: widgetAvailable,
@@ -662,7 +801,11 @@ globalThis.ChronosV2 = (function createChronosV2() {
       isLeapYear: isLeapYear,
       daysInMonth: daysInMonth,
       parseTime: parseTime,
-      parseDate: parseDate
+      parseDate: parseDate,
+      parseCommand: parseCommand,
+      sleepUntilMorning: sleepUntilMorning,
+      clockToMinuteIndex: clockToMinuteIndex,
+      clockFromMinuteIndex: clockFromMinuteIndex
     }
   };
 })();

@@ -5,10 +5,13 @@ const modifier = (text) => {
   ChronosV2.initialize();
   ChronosV2.syncSettings();
   ChronosV2.advanceToCurrentAction();
+  ChronosV2.applyPendingCommand();
+  ChronosV2.recordSnapshot();
 
   if (!ChronosV2.enabled()) {
     ChronosV2.clearWidget();
-    ChronosV2.clearToast();
+    if (ChronosV2.hasNotice()) ChronosV2.publishToast();
+    else ChronosV2.clearToast();
     return { text };
   }
 
