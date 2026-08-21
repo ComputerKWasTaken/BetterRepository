@@ -499,7 +499,7 @@ export const SCRIPTS = [
     requiresExtension: 'BetterDungeon',
     ultrascriptsMode: 'enhanced',
     releaseStatus: 'unpublished',
-    releaseNote: 'Chronos V2 is under active development and will publish alongside BetterDungeon V2.1.'
+    releaseNote: 'Chronos V2 is complete and will publish alongside BetterDungeon V2.1.'
   },
   {
     id: 'stateboy',
