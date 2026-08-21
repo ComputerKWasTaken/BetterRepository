@@ -314,8 +314,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
 
   function appendContext(originalText) {
     var text = String(originalText || '');
-    var suffix = '\n\n[Chronos: The current in-game time is ' + formatTimestamp() +
-      '. Treat this timestamp as authoritative for temporal continuity.]';
+    var suffix = '\n\n[The current in-game time is ' + formatTimestamp() + '.]';
     return text + suffix;
   }
 
