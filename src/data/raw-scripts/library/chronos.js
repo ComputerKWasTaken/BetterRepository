@@ -23,8 +23,6 @@ globalThis.ChronosV2 = (function createChronosV2() {
     'Thursday', 'Friday', 'Saturday'
   ];
   var ACTIVE_WIDGET_ID = 'chronos-clock';
-  var LEGACY_WIDGET_IDS = ['chronos-time', 'chronos-date'];
-  var WIDGET_IDS = [ACTIVE_WIDGET_ID].concat(LEGACY_WIDGET_IDS);
   var MAX_WIDGETS = 40;
   var MAX_CHRONOS_HISTORY = 500;
   var MAX_YEAR = 999999;
@@ -48,35 +46,18 @@ globalThis.ChronosV2 = (function createChronosV2() {
     var previous = isRecord(state.chronos)
       ? state.chronos
       : {};
-    var legacyClock = {
-      year: previous.year,
-      month: previous.month,
-      day: previous.day,
-      hour: previous.hour,
-      minute: previous.minute
-    };
-    var hasLegacyClock = validInteger(legacyClock.year) &&
-      validInteger(legacyClock.month) && validInteger(legacyClock.day) &&
-      validInteger(legacyClock.hour) && validInteger(legacyClock.minute);
 
     if (previous.version !== VERSION || !previous.clock) {
       previous = {
         version: VERSION,
-        clock: normalizeClock(hasLegacyClock ? legacyClock : defaultClock()),
+        clock: defaultClock(),
         settings: {
-          enabled: previous.config && typeof previous.config.enabled === 'boolean'
-            ? previous.config.enabled
-            : true,
-          paused: !!previous.paused,
-          minutesPerTurn: clampInteger(
-            previous.config && previous.config.minutesPerTurn,
-            0,
-            1440,
-            2
-          ),
-          clockFormat: previous.config && previous.config.use12HourFormat === false
-            ? '24-hour'
-            : '12-hour'
+          enabled: true,
+          paused: false,
+          trackTime: true,
+          trackDate: true,
+          minutesPerTurn: 2,
+          clockFormat: '12-hour'
         },
         lastActionCount: currentActionCount(),
         notice: '',
@@ -92,6 +73,8 @@ globalThis.ChronosV2 = (function createChronosV2() {
     previous.settings = isRecord(previous.settings) ? previous.settings : {};
     if (typeof previous.settings.enabled !== 'boolean') previous.settings.enabled = true;
     if (typeof previous.settings.paused !== 'boolean') previous.settings.paused = false;
+    if (typeof previous.settings.trackTime !== 'boolean') previous.settings.trackTime = true;
+    if (typeof previous.settings.trackDate !== 'boolean') previous.settings.trackDate = true;
     previous.settings.minutesPerTurn = clampInteger(
       previous.settings.minutesPerTurn,
       0,
@@ -321,20 +304,51 @@ globalThis.ChronosV2 = (function createChronosV2() {
     return formatTime() + ' on ' + formatDate();
   }
 
+  function hasTrackedDisplay() {
+    var chronos = initialize();
+    return !!(chronos && (chronos.settings.trackTime || chronos.settings.trackDate));
+  }
+
+  function formatTrackedDisplay(shortDate) {
+    var chronos = initialize();
+    if (!chronos) return '';
+    var values = [];
+    if (chronos.settings.trackTime) values.push(formatTime());
+    if (chronos.settings.trackDate) values.push(shortDate ? formatWidgetDate() : formatDate());
+    return values.join(' · ');
+  }
+
   function widgetHtml() {
-    return '<div title="Current in-game time and date" ' +
+    var chronos = initialize();
+    if (!chronos) return '';
+    var content = [];
+    if (chronos.settings.trackTime) {
+      content.push('<span style="color:#fbbf24;font-weight:700;font-variant-numeric:tabular-nums">' +
+        formatTime() + '</span>');
+    }
+    if (chronos.settings.trackTime && chronos.settings.trackDate) {
+      content.push('<span aria-hidden="true" style="color:rgba(255,255,255,.28)">·</span>');
+    }
+    if (chronos.settings.trackDate) {
+      content.push('<span style="color:rgba(255,255,255,.72);font-weight:500">' +
+        formatWidgetDate() + '</span>');
+    }
+    return '<div title="Current in-game Chronos value" ' +
       'style="display:flex;align-items:baseline;gap:8px;white-space:nowrap;transform:translateY(3px)">' +
-      '<span style="color:#fbbf24;font-weight:700;font-variant-numeric:tabular-nums">' +
-      formatTime() + '</span>' +
-      '<span aria-hidden="true" style="color:rgba(255,255,255,.28)">·</span>' +
-      '<span style="color:rgba(255,255,255,.72);font-weight:500">' +
-      formatWidgetDate() + '</span></div>';
+      content.join('') + '</div>';
   }
 
   function appendContext(originalText) {
+    var chronos = initialize();
     var text = String(originalText || '');
-    var suffix = '\n\n[The current in-game time is ' + formatTimestamp() + '.]';
-    return text + suffix;
+    if (!chronos || !chronos.settings.enabled || !hasTrackedDisplay()) return text;
+    if (chronos.settings.trackTime && chronos.settings.trackDate) {
+      return text + '\n\n[The current in-game time is ' + formatTimestamp() + '.]';
+    }
+    if (chronos.settings.trackTime) {
+      return text + '\n\n[The current in-game time is ' + formatTime() + '.]';
+    }
+    return text + '\n\n[The current in-game date is ' + formatDate() + '.]';
   }
 
   function settingsTemplate(settings) {
@@ -346,8 +360,14 @@ globalThis.ChronosV2 = (function createChronosV2() {
       '',
       'Enabled: ' + (value.enabled ? 'On' : 'Off'),
       'Paused: ' + (value.paused ? 'On' : 'Off'),
+      'Track Time: ' + (value.trackTime ? 'On' : 'Off'),
+      'Track Date: ' + (value.trackDate ? 'On' : 'Off'),
       'Minutes Per Turn: ' + value.minutesPerTurn,
       'Clock Format: ' + value.clockFormat,
+      '',
+      '# Current Chronos Values (read-only)',
+      'Current Time: ' + (value.trackTime ? formatTime() : 'Hidden'),
+      'Current Date: ' + (value.trackDate ? formatDate() : 'Hidden'),
       '',
       '# Commands: /time 8:30 AM, /date June 1, 2026, /sleep'
     ].join('\n');
@@ -364,11 +384,10 @@ globalThis.ChronosV2 = (function createChronosV2() {
 
     var entry = cardText(card);
     var values = parseSettingsLines(entry);
-    var hasLegacyClockFields = Object.prototype.hasOwnProperty.call(values, 'newtime') ||
-      Object.prototype.hasOwnProperty.call(values, 'newdate') ||
-      Object.prototype.hasOwnProperty.call(values, 'applychanges');
     chronos.settings.enabled = parseToggle(values.enabled, chronos.settings.enabled);
     chronos.settings.paused = parseToggle(values.paused, chronos.settings.paused);
+    chronos.settings.trackTime = parseToggle(values.tracktime, chronos.settings.trackTime);
+    chronos.settings.trackDate = parseToggle(values.trackdate, chronos.settings.trackDate);
     chronos.settings.minutesPerTurn = clampInteger(
       values.minutesperturn,
       0,
@@ -379,9 +398,17 @@ globalThis.ChronosV2 = (function createChronosV2() {
       values.clockformat,
       chronos.settings.clockFormat
     );
-    if (hasLegacyClockFields) {
-      writeCard(SETTINGS_CARD, settingsTemplate(chronos.settings), card.type || 'Chronos');
-    }
+  }
+
+  function publishStoryCard() {
+    var chronos = initialize();
+    if (!chronos) return;
+    var card = findCard(SETTINGS_CARD);
+    writeCard(
+      SETTINGS_CARD,
+      settingsTemplate(chronos.settings),
+      card && card.type ? card.type : 'Chronos'
+    );
   }
 
   function parseSettingsLines(entry) {
@@ -465,8 +492,6 @@ globalThis.ChronosV2 = (function createChronosV2() {
     var match = raw.match(/^\/([a-z]+)(?:\s+([\s\S]*))?$/i);
     if (!match) return null;
     var name = match[1].toLowerCase();
-    if (name === 'settime') name = 'time';
-    if (name === 'setdate') name = 'date';
     if (['chronos', 'time', 'date', 'sleep'].indexOf(name) === -1) return null;
     return { name: name, argument: String(match[2] || '').trim() };
   }
@@ -716,7 +741,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
     if (!widgetAvailable()) return false;
     var payload = readWidgetPayload();
     var otherWidgets = payload.manifest.widgets.filter(function (widget) {
-      return widget && WIDGET_IDS.indexOf(widget.id) === -1;
+      return widget && widget.id !== ACTIVE_WIDGET_ID;
     });
     if (otherWidgets.length > MAX_WIDGETS - 1) return false;
 
@@ -735,13 +760,6 @@ globalThis.ChronosV2 = (function createChronosV2() {
         }
       }
     ]);
-
-    Object.keys(payload.history).forEach(function (key) {
-      var historicalValues = payload.history[key];
-      if (!isRecord(historicalValues)) return;
-      LEGACY_WIDGET_IDS.forEach(function (widgetId) { delete historicalValues[widgetId]; });
-      if (Object.keys(historicalValues).length === 0) delete payload.history[key];
-    });
 
     var liveCount = currentActionCount();
     var liveKey = String(liveCount);
@@ -781,7 +799,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
     for (var index = MAX_CHRONOS_HISTORY; index < keys.length; index += 1) {
       var values = history[keys[index].key];
       if (!isRecord(values)) continue;
-      WIDGET_IDS.forEach(function (widgetId) { delete values[widgetId]; });
+      delete values[ACTIVE_WIDGET_ID];
       if (Object.keys(values).length === 0) delete history[keys[index].key];
     }
   }
@@ -792,12 +810,12 @@ globalThis.ChronosV2 = (function createChronosV2() {
     if (!card) return;
     var payload = readWidgetPayload();
     payload.manifest.widgets = payload.manifest.widgets.filter(function (widget) {
-      return widget && WIDGET_IDS.indexOf(widget.id) === -1;
+      return widget && widget.id !== ACTIVE_WIDGET_ID;
     });
     Object.keys(payload.history).forEach(function (key) {
       var values = payload.history[key];
       if (!isRecord(values)) return;
-      WIDGET_IDS.forEach(function (widgetId) { delete values[widgetId]; });
+      delete values[ACTIVE_WIDGET_ID];
       if (Object.keys(values).length === 0) delete payload.history[key];
     });
     writeCard(WIDGET_CARD, JSON.stringify(payload), 'Ultrascripts');
@@ -806,10 +824,15 @@ globalThis.ChronosV2 = (function createChronosV2() {
   function publishToast() {
     var chronos = initialize();
     if (!chronos) return;
-    var prefix = chronos.notice ? chronos.notice + ' ' : '';
+    var parts = [];
+    if (chronos.notice) parts.push(chronos.notice);
+    if (chronos.settings.enabled && hasTrackedDisplay()) {
+      parts.push('Chronos · ' + formatTrackedDisplay(false));
+    }
+    if (!parts.length) return;
     chronos.toastSequence = (chronos.toastSequence + 1) % 2;
     var uniqueMarker = chronos.toastSequence ? '\u200B' : '\u2060';
-    state.message = prefix + 'Chronos · ' + formatTime() + ' · ' + formatDate() + uniqueMarker;
+    state.message = parts.join(' ') + uniqueMarker;
     chronos.notice = '';
   }
 
@@ -832,6 +855,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
   return {
     initialize: initialize,
     syncSettings: syncSettings,
+    publishStoryCard: publishStoryCard,
     handleInput: handleInput,
     advanceToCurrentAction: advanceToCurrentAction,
     applyPendingCommand: applyPendingCommand,
@@ -844,6 +868,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
     publishToast: publishToast,
     clearToast: clearToast,
     hasNotice: hasNotice,
+    hasTrackedDisplay: hasTrackedDisplay,
     formatTime: formatTime,
     formatDate: formatDate,
     formatWidgetDate: formatWidgetDate,

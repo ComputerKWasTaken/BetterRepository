@@ -7,8 +7,16 @@ const modifier = (text) => {
   ChronosV2.advanceToCurrentAction();
   ChronosV2.applyPendingCommand();
   ChronosV2.recordSnapshot();
+  ChronosV2.publishStoryCard();
 
   if (!ChronosV2.enabled()) {
+    ChronosV2.clearWidget();
+    if (ChronosV2.hasNotice()) ChronosV2.publishToast();
+    else ChronosV2.clearToast();
+    return { text };
+  }
+
+  if (!ChronosV2.hasTrackedDisplay()) {
     ChronosV2.clearWidget();
     if (ChronosV2.hasNotice()) ChronosV2.publishToast();
     else ChronosV2.clearToast();
