@@ -304,7 +304,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
 
   function widgetHtml() {
     return '<div title="Current in-game time and date" ' +
-      'style="display:flex;align-items:baseline;gap:8px;white-space:nowrap">' +
+      'style="display:flex;align-items:baseline;gap:8px;white-space:nowrap;transform:translateY(3px)">' +
       '<span style="color:#fbbf24;font-weight:700;font-variant-numeric:tabular-nums">' +
       formatTime() + '</span>' +
       '<span aria-hidden="true" style="color:rgba(255,255,255,.28)">·</span>' +
