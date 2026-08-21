@@ -30,7 +30,7 @@ separate heartbeat subsystem, and no zero-width or TagCipher transport.
 - `Project Management/ultrascripts/reference/script-contract.md`
 - `Project Management/ultrascripts/reference/sdk.md`
 - `Project Management/ultrascripts/reference/verification.md`
-- `Project Management/ultrascripts/planning/docs-sync.md`
+- `Project Management/ultrascripts/planning/current-roadmap.md`
 - `BetterDungeon/services/ultrascripts/core.js`
 - `BetterDungeon/services/ultrascripts/envelope.js`
 - `BetterDungeon/services/ultrascripts/ops-dispatcher.js`
