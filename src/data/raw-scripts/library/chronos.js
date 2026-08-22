@@ -47,7 +47,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
       ? state.chronos
       : {};
 
-    if (previous.version !== VERSION || !previous.clock) {
+    if (previous.version !== VERSION) {
       previous = {
         version: VERSION,
         clock: defaultClock(),
@@ -439,6 +439,8 @@ globalThis.ChronosV2 = (function createChronosV2() {
       'Clock Format: ' + value.clockFormat,
       'Date Format: ' + value.dateFormat,
       '',
+      '# Formats: 12-hour or 24-hour; Long, ISO (YYYY-MM-DD),',
+      '# American (MM/DD/YYYY), or European (DD/MM/YYYY)',
       '# Commands: /time 8:30 AM, /date June 1, 2026, /advance 2 hours'
     ].join('\n');
   }
@@ -509,18 +511,22 @@ globalThis.ChronosV2 = (function createChronosV2() {
   }
 
   function parseClockFormat(value, fallback) {
-    var normalized = String(value || '').toLowerCase().replace(/\s+/g, '');
-    if (normalized === '24' || normalized === '24h' || normalized === '24-hour') return '24-hour';
-    if (normalized === '12' || normalized === '12h' || normalized === '12-hour') return '12-hour';
+    var normalized = String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (['24', '24h', '24hour', 'military'].indexOf(normalized) !== -1) return '24-hour';
+    if (['12', '12h', '12hour', 'ampm'].indexOf(normalized) !== -1) return '12-hour';
     return fallback;
   }
 
   function parseDateFormat(value, fallback) {
-    var normalized = String(value || '').trim().toLowerCase();
-    if (normalized === 'long') return 'Long';
-    if (normalized === 'iso') return 'ISO';
-    if (normalized === 'american') return 'American';
-    if (normalized === 'european') return 'European';
+    var normalized = String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (['long', 'written', 'monthdayyear'].indexOf(normalized) !== -1) return 'Long';
+    if (['iso', 'iso8601', 'yyyymmdd'].indexOf(normalized) !== -1) return 'ISO';
+    if (['american', 'us', 'mdy', 'mmddyyyy'].indexOf(normalized) !== -1) {
+      return 'American';
+    }
+    if (['european', 'eu', 'dmy', 'ddmmyyyy'].indexOf(normalized) !== -1) {
+      return 'European';
+    }
     return fallback;
   }
 
@@ -542,9 +548,13 @@ globalThis.ChronosV2 = (function createChronosV2() {
   }
 
   function parseDate(value) {
-    var raw = String(value || '').trim();
+    var raw = String(value || '').trim().replace(
+      /^(?:Sun(?:day)?|Mon(?:day)?|Tue(?:sday)?|Wed(?:nesday)?|Thu(?:rsday)?|Fri(?:day)?|Sat(?:urday)?)\s*,\s*/i,
+      ''
+    );
     var iso = raw.match(/^(\d{1,6})-(\d{1,2})-(\d{1,2})$/);
     var monthName = raw.match(/^([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{1,6})$/);
+    var numeric = raw.match(/^(\d{1,2})[/.](\d{1,2})[/.](\d{1,6})$/);
     var year;
     var month;
     var day;
@@ -562,6 +572,28 @@ globalThis.ChronosV2 = (function createChronosV2() {
             (requestedMonth.length >= 3 && name.indexOf(requestedMonth) === 0);
         }) + 1;
       day = Number(monthName[2]);
+    } else if (numeric) {
+      year = Number(numeric[3]);
+      var first = Number(numeric[1]);
+      var second = Number(numeric[2]);
+      var chronos = initialize();
+      var preferredFormat = chronos ? chronos.settings.dateFormat : 'Long';
+
+      if (preferredFormat === 'American') {
+        month = first;
+        day = second;
+      } else if (preferredFormat === 'European') {
+        day = first;
+        month = second;
+      } else if (first > 12 && second <= 12) {
+        day = first;
+        month = second;
+      } else if (second > 12 && first <= 12) {
+        month = first;
+        day = second;
+      } else {
+        return null;
+      }
     } else {
       return null;
     }
@@ -837,18 +869,19 @@ globalThis.ChronosV2 = (function createChronosV2() {
       var parsed = JSON.parse(cardText(card) || '{}');
       if (!isRecord(parsed) || parsed.v !== 1) throw new Error('unsupported Widget state');
       if (!isRecord(parsed.manifest) || !Array.isArray(parsed.manifest.widgets)) {
-        parsed.manifest = { widgets: [] };
+        throw new Error('invalid Widget manifest');
       }
-      if (!isRecord(parsed.history)) parsed.history = {};
+      if (!isRecord(parsed.history)) throw new Error('invalid Widget history');
       return parsed;
     } catch (error) {
-      return { v: 1, manifest: { widgets: [] }, history: {} };
+      return null;
     }
   }
 
   function publishWidget() {
     if (!widgetAvailable()) return false;
     var payload = readWidgetPayload();
+    if (!payload) return false;
     var otherWidgets = payload.manifest.widgets.filter(function (widget) {
       return widget && widget.id !== ACTIVE_WIDGET_ID;
     });
@@ -918,6 +951,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
     var card = findCard(WIDGET_CARD);
     if (!card) return;
     var payload = readWidgetPayload();
+    if (!payload) return;
     payload.manifest.widgets = payload.manifest.widgets.filter(function (widget) {
       return widget && widget.id !== ACTIVE_WIDGET_ID;
     });
