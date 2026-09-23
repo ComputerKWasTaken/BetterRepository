@@ -396,21 +396,38 @@ globalThis.ChronosV2 = (function createChronosV2() {
     var delta = actionCount - chronos.lastActionCount;
 
     if (delta < 0) {
-      var snapshot = chronos.timeline[String(actionCount)];
+      var snapshot = chronos.timeline[String(actionCount)] ||
+        latestSnapshotAtOrBefore(chronos.timeline, actionCount);
       if (isRecord(snapshot)) {
         chronos.clock = normalizeClock(isRecord(snapshot.clock) ? snapshot.clock : snapshot);
         chronos.weather = isRecord(snapshot.weather)
           ? normalizeWeatherState(snapshot.weather, chronos.clock)
           : createWeatherState(chronos.clock, chronos.settings.trackWeather);
       } else if (chronos.settings.enabled && !chronos.settings.paused) {
-        addMinutes(delta * chronos.settings.minutesPerTurn);
+        addMinutes(-chronos.settings.minutesPerTurn);
       }
       discardFutureSnapshots(chronos.timeline, actionCount);
-    } else if (delta > 0 && chronos.settings.enabled && !chronos.settings.paused) {
-      var ordinaryActions = chronos.pendingCommand ? Math.max(0, delta - 1) : delta;
-      addMinutes(ordinaryActions * chronos.settings.minutesPerTurn);
+    } else if (delta > 0 && chronos.settings.enabled && !chronos.settings.paused &&
+        !chronos.pendingCommand) {
+      // actionCount includes player actions, AI output, and other platform
+      // actions. One new Context update represents one Chronos turn.
+      addMinutes(chronos.settings.minutesPerTurn);
     }
     chronos.lastActionCount = actionCount;
+  }
+
+  function latestSnapshotAtOrBefore(timeline, actionCount) {
+    var best = null;
+    var bestCount = -1;
+    Object.keys(timeline).forEach(function (key) {
+      if (!/^\d+$/.test(key) || !isRecord(timeline[key])) return;
+      var count = Number(key);
+      if (count <= actionCount && count > bestCount) {
+        best = timeline[key];
+        bestCount = count;
+      }
+    });
+    return best;
   }
 
   function recordSnapshot() {

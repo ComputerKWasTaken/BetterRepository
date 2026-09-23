@@ -477,12 +477,53 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   runHook(adventure, inputSource, 'I changed my mind and keep walking.')
   const result = runHook(adventure, contextSource, 'Prefix')
 
-  assert.match(result.text, /8:04 AM/)
+  assert.match(result.text, /8:02 AM/)
   assert.equal(
     adventure.state.chronos.pendingCommand,
     null,
     'A command abandoned before Context must never execute on a later action'
   )
+}
+
+{
+  // AI Dungeon can add several action records for one visible turn.
+  const adventure = createAdventure(0)
+  runHook(adventure, inputSource, '/chronos')
+  runHook(adventure, contextSource, 'Prefix')
+  const initialWeather = JSON.parse(JSON.stringify(adventure.state.chronos.weather))
+
+  adventure.info.actionCount = 3
+  runHook(adventure, inputSource, '/date 2026-12-21')
+  runHook(adventure, contextSource, 'Prefix')
+  assert.equal(adventure.state.chronos.clock.hour, 8)
+  assert.equal(adventure.state.chronos.clock.minute, 0)
+  assert.equal(adventure.state.chronos.clock.month, 12)
+
+  adventure.info.actionCount = 6
+  runHook(adventure, inputSource, '/time 9:30 AM')
+  runHook(adventure, contextSource, 'Prefix')
+  const beforeOrdinaryTurn = JSON.parse(JSON.stringify(adventure.state.chronos.weather))
+
+  adventure.info.actionCount = 9
+  runHook(adventure, inputSource, 'Continue.')
+  runHook(adventure, contextSource, 'Prefix')
+  assert.equal(adventure.state.chronos.clock.hour, 9)
+  assert.equal(adventure.state.chronos.clock.minute, 32, 'One visible turn adds one time step')
+  const afterOrdinaryTurn = JSON.parse(JSON.stringify(adventure.state.chronos.weather))
+
+  runHook(adventure, contextSource, 'Prefix')
+  assert.equal(adventure.state.chronos.clock.minute, 32, 'Retry adds no time')
+  assert.deepEqual(JSON.parse(JSON.stringify(adventure.state.chronos.weather)), afterOrdinaryTurn)
+
+  adventure.info.actionCount = 8
+  runHook(adventure, contextSource, 'Prefix')
+  assert.equal(adventure.state.chronos.clock.minute, 30)
+  assert.deepEqual(JSON.parse(JSON.stringify(adventure.state.chronos.weather)), beforeOrdinaryTurn)
+
+  adventure.info.actionCount = 2
+  runHook(adventure, contextSource, 'Prefix')
+  assert.equal(adventure.state.chronos.clock.month, 6)
+  assert.deepEqual(JSON.parse(JSON.stringify(adventure.state.chronos.weather)), initialWeather)
 }
 
 {
