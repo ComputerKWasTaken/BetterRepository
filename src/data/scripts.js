@@ -492,14 +492,12 @@ export const SCRIPTS = [
     difficulty: 'intermediate',
     impact: 'medium',
     essential: false,
-    tags: ['ultrascripts', 'time', 'calendar', 'widgets', 'context', 'cache-compatible', 'tracking', 'unpublished'],
+    tags: ['ultrascripts', 'time', 'calendar', 'weather', 'seasons', 'widgets', 'context', 'cache-compatible', 'tracking'],
     source: 'BetterRepository',
-    description: 'A lightweight time and calendar tracker for AI Dungeon with Widget support and simple slash commands.',
-    purpose: 'Keeps story time stable across ordinary turns, commands, Retry, and Undo without taking over weather or unrelated simulation systems.',
-    requiresExtension: 'BetterDungeon',
+    description: 'A time, calendar, and seasonal weather tracker for AI Dungeon with Widget support and simple slash commands.',
+    purpose: 'Keeps story time and season-aware weather stable across ordinary turns, commands, Retry, and Undo.',
     ultrascriptsMode: 'enhanced',
-    releaseStatus: 'unpublished',
-    releaseNote: 'Chronos V2 is complete and will publish alongside BetterDungeon V2.1.'
+    releaseNote: 'Chronos V2 now includes optional seasonal weather tracking with a Markov chain, visible in context, settings, and Widget displays.'
   },
   {
     id: 'stateboy',
@@ -527,7 +525,6 @@ export const SCRIPTS = [
 const rawScripts = import.meta.glob(
   [
     './raw-scripts/**/*.js',
-    '!./raw-scripts/**/chronos.js',
     '!./raw-scripts/**/stateboy.js'
   ],
   { query: '?raw', import: 'default' }

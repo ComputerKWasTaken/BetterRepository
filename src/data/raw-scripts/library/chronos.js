@@ -1,16 +1,16 @@
 // ============================================================
 // LIBRARY - Chronos V2
 // ============================================================
-// A lightweight in-game clock and Gregorian calendar for AI Dungeon.
+// An in-game clock, Gregorian calendar, and seasonal weather for AI Dungeon.
 //
-// Chronos owns only time and date. It does not simulate weather, seasons,
-// astronomy, or real-world time. Lifecycle behavior stays in the matching
+// Chronos owns time, date, and simple seasonal weather, without simulating
+// astronomy or real-world time. Lifecycle behavior stays in the matching
 // Input and Context files; this Library file contains shared helpers only.
 
 globalThis.ChronosV2 = (function createChronosV2() {
   'use strict';
 
-  var VERSION = 2;
+  var VERSION = 3;
   var SETTINGS_CARD = 'Chronos Settings';
   var WIDGET_CARD = 'ultrascripts:state:widget';
   var HEARTBEAT_CARD = 'ultrascripts:heartbeat';
@@ -26,6 +26,14 @@ globalThis.ChronosV2 = (function createChronosV2() {
   var MAX_WIDGETS = 40;
   var MAX_CHRONOS_HISTORY = 500;
   var MAX_YEAR = 999999;
+  var WEATHER_PROFILES = {
+    Spring: [30, 35, 35, 0],
+    Summer: [60, 25, 15, 0],
+    Autumn: [25, 35, 40, 0],
+    Winter: [10, 25, 20, 45]
+  };
+  var WEATHER_NAMES = ['Sunny', 'Cloudy', 'Rain', 'Snow'];
+  var WEATHER_STAY_CHANCE = 0.97;
 
   function isRecord(value) {
     return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -47,7 +55,8 @@ globalThis.ChronosV2 = (function createChronosV2() {
       ? state.chronos
       : {};
 
-    if (previous.version !== VERSION) {
+    var upgradingV2 = previous.version === 2;
+    if (previous.version !== VERSION && !upgradingV2) {
       previous = {
         version: VERSION,
         clock: defaultClock(),
@@ -56,6 +65,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
           paused: false,
           trackTime: true,
           trackDate: true,
+          trackWeather: true,
           showTimePhase: true,
           minutesPerTurn: 2,
           clockFormat: '12-hour',
@@ -66,9 +76,12 @@ globalThis.ChronosV2 = (function createChronosV2() {
         toastSequence: 0,
         pendingCommand: null,
         timeline: {},
+        weather: null,
         ultrascripts: {}
       };
       state.chronos = previous;
+    } else if (upgradingV2) {
+      previous.version = VERSION;
     }
 
     previous.clock = normalizeClock(isRecord(previous.clock) ? previous.clock : defaultClock());
@@ -77,6 +90,9 @@ globalThis.ChronosV2 = (function createChronosV2() {
     if (typeof previous.settings.paused !== 'boolean') previous.settings.paused = false;
     if (typeof previous.settings.trackTime !== 'boolean') previous.settings.trackTime = true;
     if (typeof previous.settings.trackDate !== 'boolean') previous.settings.trackDate = true;
+    if (typeof previous.settings.trackWeather !== 'boolean') {
+      previous.settings.trackWeather = true;
+    }
     if (typeof previous.settings.showTimePhase !== 'boolean') {
       previous.settings.showTimePhase = true;
     }
@@ -106,8 +122,15 @@ globalThis.ChronosV2 = (function createChronosV2() {
     }
     if (!isRecord(previous.timeline)) previous.timeline = {};
     if (!isRecord(previous.ultrascripts)) previous.ultrascripts = {};
+    if (upgradingV2) {
+      migrateLegacyWeather(previous);
+    } else if (!isRecord(previous.weather)) {
+      previous.weather = createWeatherState(previous.clock, previous.settings.trackWeather);
+    } else {
+      previous.weather = normalizeWeatherState(previous.weather, previous.clock);
+    }
     if (!isRecord(previous.timeline[String(previous.lastActionCount)])) {
-      previous.timeline[String(previous.lastActionCount)] = copyClock(previous.clock);
+      previous.timeline[String(previous.lastActionCount)] = makeSnapshot(previous);
     }
     return previous;
   }
@@ -157,6 +180,149 @@ globalThis.ChronosV2 = (function createChronosV2() {
       hour: clock.hour,
       minute: clock.minute
     };
+  }
+
+  function sameClock(left, right) {
+    return left.year === right.year && left.month === right.month &&
+      left.day === right.day && left.hour === right.hour &&
+      left.minute === right.minute;
+  }
+
+  function seasonForClock(clock) {
+    var date = clock.month * 100 + clock.day;
+    if (date >= 1221 || date < 320) return 'Winter';
+    if (date >= 922) return 'Autumn';
+    if (date >= 621) return 'Summer';
+    return 'Spring';
+  }
+
+  function validWeatherName(value) {
+    return WEATHER_NAMES.indexOf(value) !== -1;
+  }
+
+  function seedWeatherRandom() {
+    return (Math.floor(Math.random() * 4294967296) >>> 0) || 0x6d2b79f5;
+  }
+
+  function nextWeatherRandom(weather) {
+    var value = weather.randomState >>> 0;
+    value ^= value << 13;
+    value ^= value >>> 17;
+    value ^= value << 5;
+    weather.randomState = value >>> 0;
+    return weather.randomState / 4294967296;
+  }
+
+  function drawWeather(weather, season) {
+    var weights = WEATHER_PROFILES[season];
+    var choice = nextWeatherRandom(weather) * 100;
+    var cumulative = 0;
+    for (var index = 0; index < weights.length; index += 1) {
+      cumulative += weights[index];
+      if (choice < cumulative) return WEATHER_NAMES[index];
+    }
+    return 'Rain';
+  }
+
+  function stepWeather(weather, clock) {
+    var season = seasonForClock(clock);
+    if (!validWeatherName(weather.condition) ||
+        (weather.condition === 'Snow' && season !== 'Winter') ||
+        nextWeatherRandom(weather) >= WEATHER_STAY_CHANCE) {
+      weather.condition = drawWeather(weather, season);
+    }
+    weather.clock = copyClock(clock);
+  }
+
+  function copyWeatherState(weather) {
+    return {
+      condition: weather.condition,
+      randomState: weather.randomState,
+      clock: copyClock(weather.clock)
+    };
+  }
+
+  function createWeatherState(clock, enabled) {
+    var weather = {
+      condition: null,
+      randomState: seedWeatherRandom(),
+      clock: copyClock(clock)
+    };
+    if (enabled) stepWeather(weather, clock);
+    return weather;
+  }
+
+  function normalizeWeatherState(value, clock) {
+    var randomState = Number(value.randomState);
+    var weatherClock = isRecord(value.clock) ? normalizeClock(value.clock) : copyClock(clock);
+    return {
+      condition: validWeatherName(value.condition) &&
+        (value.condition !== 'Snow' || seasonForClock(weatherClock) === 'Winter')
+        ? value.condition : null,
+      randomState: validInteger(randomState) && randomState > 0 &&
+        randomState <= 4294967295 ? randomState : seedWeatherRandom(),
+      clock: weatherClock
+    };
+  }
+
+  function makeSnapshot(chronos) {
+    return {
+      clock: copyClock(chronos.clock),
+      // The snapshot clock is also the weather clock after every update.
+      weather: {
+        condition: chronos.weather.condition,
+        randomState: chronos.weather.randomState
+      }
+    };
+  }
+
+  function migrateLegacyWeather(chronos) {
+    var keys = Object.keys(chronos.timeline).filter(function (key) {
+      return /^\d+$/.test(key) && isRecord(chronos.timeline[key]);
+    }).sort(function (left, right) {
+      return Number(left) - Number(right);
+    });
+    var weather = {
+      condition: null,
+      randomState: seedWeatherRandom(),
+      clock: copyClock(chronos.clock)
+    };
+    var activeWeather = null;
+    keys.forEach(function (key) {
+      var oldSnapshot = chronos.timeline[key];
+      var clock = normalizeClock(isRecord(oldSnapshot.clock)
+        ? oldSnapshot.clock : oldSnapshot);
+      if (!validWeatherName(weather.condition) || !sameClock(weather.clock, clock)) {
+        stepWeather(weather, clock);
+      }
+      chronos.timeline[key] = makeSnapshot({ clock: clock, weather: weather });
+      if (Number(key) === chronos.lastActionCount) {
+        activeWeather = copyWeatherState(weather);
+      }
+    });
+    chronos.weather = activeWeather || createWeatherState(
+      chronos.clock,
+      chronos.settings.trackWeather
+    );
+    if (activeWeather && !sameClock(chronos.weather.clock, chronos.clock)) {
+      stepWeather(chronos.weather, chronos.clock);
+    }
+    if (!chronos.settings.trackWeather) chronos.weather.condition = null;
+    chronos.timeline[String(chronos.lastActionCount)] = makeSnapshot(chronos);
+  }
+
+  function advanceWeather() {
+    var chronos = initialize();
+    if (!chronos) return;
+    if (!chronos.settings.enabled || !chronos.settings.trackWeather) {
+      chronos.weather.condition = null;
+      chronos.weather.clock = copyClock(chronos.clock);
+      return;
+    }
+    if (!validWeatherName(chronos.weather.condition) ||
+        !sameClock(chronos.weather.clock, chronos.clock)) {
+      stepWeather(chronos.weather, chronos.clock);
+    }
   }
 
   function daysBeforeYear(year) {
@@ -231,8 +397,12 @@ globalThis.ChronosV2 = (function createChronosV2() {
 
     if (delta < 0) {
       var snapshot = chronos.timeline[String(actionCount)];
-      if (isRecord(snapshot)) chronos.clock = normalizeClock(snapshot);
-      else if (chronos.settings.enabled && !chronos.settings.paused) {
+      if (isRecord(snapshot)) {
+        chronos.clock = normalizeClock(isRecord(snapshot.clock) ? snapshot.clock : snapshot);
+        chronos.weather = isRecord(snapshot.weather)
+          ? normalizeWeatherState(snapshot.weather, chronos.clock)
+          : createWeatherState(chronos.clock, chronos.settings.trackWeather);
+      } else if (chronos.settings.enabled && !chronos.settings.paused) {
         addMinutes(delta * chronos.settings.minutesPerTurn);
       }
       discardFutureSnapshots(chronos.timeline, actionCount);
@@ -247,7 +417,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
     var chronos = initialize();
     if (!chronos) return;
     var actionCount = currentActionCount();
-    chronos.timeline[String(actionCount)] = copyClock(chronos.clock);
+    chronos.timeline[String(actionCount)] = makeSnapshot(chronos);
     var keys = Object.keys(chronos.timeline).map(function (key) {
       return { key: key, number: Number(key) };
     }).filter(function (item) {
@@ -363,7 +533,8 @@ globalThis.ChronosV2 = (function createChronosV2() {
 
   function hasTrackedDisplay() {
     var chronos = initialize();
-    return !!(chronos && (chronos.settings.trackTime || chronos.settings.trackDate));
+    return !!(chronos && (chronos.settings.trackTime || chronos.settings.trackDate ||
+      (chronos.settings.trackWeather && validWeatherName(chronos.weather.condition))));
   }
 
   function formatTrackedDisplay(shortDate) {
@@ -375,51 +546,73 @@ globalThis.ChronosV2 = (function createChronosV2() {
     if (chronos.settings.trackDate) {
       values.push(shortDate ? formatWidgetDate() : formatDisplayDate());
     }
+    if (chronos.settings.trackWeather && validWeatherName(chronos.weather.condition)) {
+      values.push(seasonForClock(chronos.clock));
+      values.push(chronos.weather.condition);
+    }
     return values.join(' · ');
   }
 
   function widgetHtml() {
     var chronos = initialize();
     if (!chronos) return '';
-    var content = [];
-    function pushSegment(html) {
-      if (content.length) {
-        content.push('<span aria-hidden="true" style="color:rgba(255,255,255,.28)">·</span>');
-      }
-      content.push(html);
+    var groups = [];
+    function group(parts) {
+      groups.push('<span style="display:inline-flex;align-items:baseline;gap:6px;white-space:nowrap">' +
+        parts.join('<span aria-hidden="true" style="color:rgba(255,255,255,.28)">·</span>') +
+        '</span>');
     }
+    var time = [];
     if (chronos.settings.trackTime) {
-      pushSegment('<span style="color:#fbbf24;font-weight:700;font-variant-numeric:tabular-nums">' +
+      time.push('<span style="color:#fbbf24;font-weight:700;font-variant-numeric:tabular-nums">' +
         formatTime() + '</span>');
     }
     if (showsTimePhase()) {
-      pushSegment('<span style="color:rgba(255,255,255,.58);font-weight:500">' +
+      time.push('<span style="color:rgba(255,255,255,.58);font-weight:500">' +
         formatTimePhase() + '</span>');
     }
+    if (time.length) group(time);
     if (chronos.settings.trackDate) {
-      pushSegment('<span style="color:rgba(255,255,255,.72);font-weight:500">' +
-        formatWidgetDate() + '</span>');
+      group(['<span style="color:rgba(255,255,255,.72);font-weight:500">' +
+        formatWidgetDate() + '</span>']);
     }
-    return '<div title="Current in-game Chronos value" ' +
-      'style="display:flex;align-items:baseline;gap:8px;white-space:nowrap;transform:translateY(3px)">' +
-      content.join('') + '</div>';
+    if (chronos.settings.trackWeather && validWeatherName(chronos.weather.condition)) {
+      group([
+        '<span style="color:rgba(255,255,255,.58);font-weight:500">' +
+          seasonForClock(chronos.clock) + '</span>',
+        '<span style="color:#93c5fd;font-weight:600">' +
+          chronos.weather.condition + '</span>'
+      ]);
+    }
+    return '<div title="Current in-game time, date and weather" ' +
+      'style="display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;' +
+      'column-gap:12px;row-gap:2px;max-width:100%;transform:translateY(3px)">' +
+      groups.join('') + '</div>';
   }
 
   function appendContext(originalText) {
     var chronos = initialize();
     var text = String(originalText || '');
     if (!chronos || !chronos.settings.enabled || !hasTrackedDisplay()) return text;
+    var facts = [];
     if (chronos.settings.trackTime && chronos.settings.trackDate) {
-      return text + '\n\n[The current in-game time is ' + formatTimestamp() + '.]';
+      facts.push('The current in-game time is ' + formatTimestamp() + '.');
+    } else if (chronos.settings.trackTime) {
+      facts.push('The current in-game time is ' + formatContextTime() + '.');
+    } else if (chronos.settings.trackDate) {
+      facts.push('The current in-game date is ' + formatDate() + '.');
     }
-    if (chronos.settings.trackTime) {
-      return text + '\n\n[The current in-game time is ' + formatContextTime() + '.]';
+    if (chronos.settings.trackWeather && validWeatherName(chronos.weather.condition)) {
+      facts.push('The current in-game weather is ' + chronos.weather.condition +
+        ' in ' + seasonForClock(chronos.clock) + '.');
     }
-    return text + '\n\n[The current in-game date is ' + formatDate() + '.]';
+    return facts.length ? text + '\n\n[' + facts.join(' ') + ']' : text;
   }
 
   function settingsTemplate(settings) {
     var value = settings || initialize().settings;
+    var chronos = initialize();
+    var showsWeather = value.trackWeather && validWeatherName(chronos.weather.condition);
     return [
       '# Chronos',
       '# Current Values (read-only)',
@@ -428,12 +621,15 @@ globalThis.ChronosV2 = (function createChronosV2() {
         ? (value.showTimePhase ? formatTimePhase() : 'Off')
         : 'Hidden'),
       'Current Date: ' + (value.trackDate ? formatDisplayDate() : 'Hidden'),
+      'Current Season: ' + (showsWeather ? seasonForClock(chronos.clock) : 'Hidden'),
+      'Current Weather: ' + (showsWeather ? chronos.weather.condition : 'Hidden'),
       '',
       '# Settings — edit values after the colon',
       'Enabled: ' + (value.enabled ? 'On' : 'Off'),
       'Paused: ' + (value.paused ? 'On' : 'Off'),
       'Track Time: ' + (value.trackTime ? 'On' : 'Off'),
       'Track Date: ' + (value.trackDate ? 'On' : 'Off'),
+      'Track Weather: ' + (value.trackWeather ? 'On' : 'Off'),
       'Show Time Phase: ' + (value.showTimePhase ? 'On' : 'Off'),
       'Minutes Per Turn: ' + value.minutesPerTurn,
       'Clock Format: ' + value.clockFormat,
@@ -441,6 +637,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
       '',
       '# Formats: 12-hour or 24-hour; Long, ISO (YYYY-MM-DD),',
       '# American (MM/DD/YYYY), or European (DD/MM/YYYY)',
+      '# Weather follows Northern Hemisphere seasons; turn it off for custom climates.',
       '# Commands: /time 8:30 AM, /date June 1, 2026, /advance 2 hours'
     ].join('\n');
   }
@@ -460,6 +657,15 @@ globalThis.ChronosV2 = (function createChronosV2() {
     chronos.settings.paused = parseToggle(values.paused, chronos.settings.paused);
     chronos.settings.trackTime = parseToggle(values.tracktime, chronos.settings.trackTime);
     chronos.settings.trackDate = parseToggle(values.trackdate, chronos.settings.trackDate);
+    var wasTrackingWeather = chronos.settings.trackWeather;
+    chronos.settings.trackWeather = parseToggle(
+      values.trackweather,
+      chronos.settings.trackWeather
+    );
+    if (!chronos.settings.trackWeather || !wasTrackingWeather) {
+      chronos.weather.condition = null;
+      chronos.weather.clock = copyClock(chronos.clock);
+    }
     chronos.settings.showTimePhase = parseToggle(
       values.showtimephase,
       chronos.settings.showTimePhase
@@ -665,7 +871,8 @@ globalThis.ChronosV2 = (function createChronosV2() {
       chronos.notice = 'Chronos commands: /time [8:30 AM or 20:30], ' +
         '/date [June 1, 2026 or 2026-06-01], and /advance [number] ' +
         '[minutes, hours, days, or weeks]. Advance aliases: /adv, /addtime, ' +
-        '/skiptime, and /fastforward.';
+        '/skiptime, and /fastforward. Edit the Chronos Settings Story Card ' +
+        'to adjust time, date, and seasonal weather tracking.';
       return true;
     }
 
@@ -980,7 +1187,10 @@ globalThis.ChronosV2 = (function createChronosV2() {
   }
 
   function clearToast() {
-    if (Object.prototype.hasOwnProperty.call(state, 'message')) delete state.message;
+    if (typeof state.message === 'string' &&
+        /^Chronos\b[\s\S]*[\u200B\u2060]$/.test(state.message)) {
+      delete state.message;
+    }
     var chronos = initialize();
     if (chronos) chronos.notice = '';
   }
@@ -1002,6 +1212,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
     handleInput: handleInput,
     advanceToCurrentAction: advanceToCurrentAction,
     applyPendingCommand: applyPendingCommand,
+    advanceWeather: advanceWeather,
     recordSnapshot: recordSnapshot,
     appendContext: appendContext,
     observeHeartbeat: observeHeartbeat,
@@ -1029,7 +1240,10 @@ globalThis.ChronosV2 = (function createChronosV2() {
       parseAdvance: parseAdvance,
       advanceByMinutes: advanceByMinutes,
       clockToMinuteIndex: clockToMinuteIndex,
-      clockFromMinuteIndex: clockFromMinuteIndex
+      clockFromMinuteIndex: clockFromMinuteIndex,
+      seasonForClock: seasonForClock,
+      drawWeather: drawWeather,
+      stepWeather: stepWeather
     }
   };
 })();

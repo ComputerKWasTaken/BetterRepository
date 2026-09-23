@@ -101,6 +101,7 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
 
   assert.ok(result.text.startsWith(original), 'Context must retain the entire original prefix')
   assert.match(result.text, /The current in-game time is 8:00 AM \(Morning\) on Monday, June 1, 2026/)
+  assert.match(result.text, /The current in-game weather is (Sunny|Cloudy|Rain) in Spring/)
   assert.equal(adventure.state.chronos.clock.hour, 8)
   assert.equal(adventure.state.chronos.clock.minute, 0)
   assert.match(adventure.state.message, /Chronos · 8:00 AM/)
@@ -108,9 +109,13 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   assert.ok(settingsCard, 'Chronos should create its compact settings card')
   assert.match(settingsCard.entry, /Track Time: On/)
   assert.match(settingsCard.entry, /Track Date: On/)
+  assert.match(settingsCard.entry, /Track Weather: On/)
   assert.match(settingsCard.entry, /Current Time: 8:00 AM/)
   assert.match(settingsCard.entry, /Time Phase: Morning/)
   assert.match(settingsCard.entry, /Current Date: Monday, June 1, 2026/)
+  assert.match(settingsCard.entry, /Current Season: Spring/)
+  assert.match(settingsCard.entry, /Current Weather: (Sunny|Cloudy|Rain)/)
+  assert.match(settingsCard.entry, /Weather follows Northern Hemisphere seasons/)
   assert.ok(
     settingsCard.entry.indexOf('Current Time:') < settingsCard.entry.indexOf('# Settings'),
     'The live Chronos readout must appear before configuration'
@@ -185,7 +190,18 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   assert.match(clockWidget.html, />8:00 AM</)
   assert.match(clockWidget.html, />Morning</)
   assert.match(clockWidget.html, />Mon, Jun 1, 2026</)
+  assert.match(clockWidget.html, />Spring</)
+  assert.match(clockWidget.html, />(Sunny|Cloudy|Rain)</)
+  assert.match(clockWidget.html, /flex-wrap:wrap/, 'The Widget should fit narrow displays')
   assert.doesNotMatch(clockWidget.html, /Time:|Date:|🕒|📅/)
+
+  adventure.state.message = 'A message from another script.'
+  runHook(adventure, contextSource, 'Prefix')
+  assert.equal(
+    adventure.state.message,
+    'A message from another script.',
+    'Widget cleanup must leave another script\'s toast alone'
+  )
 
   runHook(adventure, inputSource, 'Retry without a new heartbeat.')
   runHook(adventure, contextSource, 'Prefix')
@@ -516,6 +532,11 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
 
   const unrelated = runHook(adventure, inputSource, '/some-other-script command')
   assert.equal(unrelated.text, '/some-other-script command')
+
+  adventure.info.actionCount = 65
+  runHook(adventure, inputSource, '/chronos')
+  runHook(adventure, contextSource, 'Prefix')
+  assert.match(adventure.state.message, /Chronos Settings Story Card/)
 }
 
 {
@@ -584,8 +605,8 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   adventure.info.actionCount = 71
   runHook(adventure, inputSource, 'Continue.')
   result = runHook(adventure, contextSource, 'Prefix')
-  assert.equal(result.text, 'Prefix')
-  assert.equal(adventure.state.message, undefined)
+  assert.match(result.text, /^Prefix\n\n\[The current in-game weather is (Sunny|Cloudy|Rain) in Spring\.\]$/)
+  assert.match(adventure.state.message, /Chronos · Spring · (Sunny|Cloudy|Rain)/)
   assert.equal(
     adventure.state.chronos.clock.minute,
     6,
@@ -647,6 +668,9 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   )
   assert.equal(adventure.state.chronos.lastActionCount, 75)
   assert.equal(adventure.state.chronos.pendingCommand, null)
+  assert.equal(adventure.state.chronos.version, 3)
+  assert.equal(adventure.state.chronos.settings.trackWeather, true)
+  assert.match(adventure.state.chronos.weather.condition, /^(Sunny|Cloudy|Rain)$/)
   assert.equal(Array.isArray(adventure.state.chronos.timeline), false)
   assert.equal(Array.isArray(adventure.state.chronos.ultrascripts), false)
 }
@@ -682,6 +706,7 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   assert.equal(adventure.state.chronos.settings.minutesPerTurn, 17)
   assert.equal(adventure.state.chronos.settings.clockFormat, '24-hour')
   assert.equal(adventure.state.chronos.settings.dateFormat, 'European')
+  assert.equal(adventure.state.chronos.settings.trackWeather, true)
   assert.equal(
     adventure.state.chronos.settings.paused,
     true,
@@ -818,6 +843,228 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
     { year: 4321, month: 7, day: 19, hour: 13, minute: 37 },
     'Large forward and backward jumps must round-trip exactly'
   )
+}
+
+{
+  const adventure = createAdventure(81)
+  runHook(adventure, 'ChronosV2.initialize()', '')
+  const season = (month, day) => runHook(
+    adventure,
+    `ChronosV2._test.seasonForClock({ month: ${month}, day: ${day} })`,
+    ''
+  )
+  assert.equal(season(3, 19), 'Winter')
+  assert.equal(season(3, 20), 'Spring')
+  assert.equal(season(6, 20), 'Spring')
+  assert.equal(season(6, 21), 'Summer')
+  assert.equal(season(9, 21), 'Summer')
+  assert.equal(season(9, 22), 'Autumn')
+  assert.equal(season(12, 20), 'Autumn')
+  assert.equal(season(12, 21), 'Winter')
+
+  const profiles = {
+    Spring: [0.30, 0.35, 0.35, 0],
+    Summer: [0.60, 0.25, 0.15, 0],
+    Autumn: [0.25, 0.35, 0.40, 0],
+    Winter: [0.10, 0.25, 0.20, 0.45]
+  }
+  for (const [name, expected] of Object.entries(profiles)) {
+    const counts = runHook(adventure, `(() => {
+      const weather = { condition: null, randomState: 123456789, clock: state.chronos.clock }
+      const counts = { Sunny: 0, Cloudy: 0, Rain: 0, Snow: 0 }
+      for (let index = 0; index < 10000; index += 1) {
+        counts[ChronosV2._test.drawWeather(weather, '${name}')] += 1
+      }
+      return counts
+    })()`, '')
+    for (const [index, condition] of ['Sunny', 'Cloudy', 'Rain', 'Snow'].entries()) {
+      assert.ok(
+        Math.abs(counts[condition] / 10000 - expected[index]) < 0.025,
+        `${name} ${condition} should follow its seasonal weight`
+      )
+    }
+    if (name !== 'Winter') assert.equal(counts.Snow, 0)
+  }
+
+  const stable = { condition: 'Cloudy', randomState: 1, clock: { year: 2026, month: 6, day: 1 } }
+  adventure.state.weatherFixture = stable
+  runHook(adventure, 'ChronosV2._test.stepWeather(state.weatherFixture, state.chronos.clock)', '')
+  assert.equal(stable.condition, 'Cloudy')
+  assert.equal(stable.randomState, 270369)
+  delete adventure.state.weatherFixture
+}
+
+{
+  const adventure = createAdventure(90)
+  runHook(adventure, inputSource, 'Begin.')
+  runHook(adventure, contextSource, 'Prefix')
+  adventure.state.chronos.weather.condition = 'Cloudy'
+  adventure.state.chronos.weather.randomState = 15916
+  adventure.state.chronos.timeline['90'].weather = JSON.parse(
+    JSON.stringify(adventure.state.chronos.weather)
+  )
+
+  adventure.info.actionCount = 91
+  const first = runHook(adventure, contextSource, 'Prefix')
+  assert.match(first.text, /weather is Sunny in Spring/)
+  assert.equal(adventure.state.chronos.weather.randomState, 1098966295)
+  const weatherAfterAdvance = JSON.parse(JSON.stringify(adventure.state.chronos.weather))
+
+  const retry = runHook(adventure, contextSource, 'Prefix')
+  assert.match(retry.text, /weather is Sunny in Spring/)
+  assert.deepEqual(JSON.parse(JSON.stringify(adventure.state.chronos.weather)), weatherAfterAdvance)
+
+  adventure.info.actionCount = 90
+  runHook(adventure, contextSource, 'Prefix')
+  assert.equal(adventure.state.chronos.weather.condition, 'Cloudy')
+  assert.equal(adventure.state.chronos.weather.randomState, 15916)
+
+  adventure.info.actionCount = 91
+  runHook(adventure, contextSource, 'Prefix')
+  assert.deepEqual(JSON.parse(JSON.stringify(adventure.state.chronos.weather)), weatherAfterAdvance)
+}
+
+{
+  const adventure = createAdventure(95)
+  runHook(adventure, inputSource, 'Begin.')
+  runHook(adventure, contextSource, 'Prefix')
+  adventure.state.chronos.weather.condition = 'Cloudy'
+  adventure.state.chronos.weather.randomState = 1
+  adventure.info.actionCount = 96
+  runHook(adventure, inputSource, '/advance 8 weeks')
+  const advanced = runHook(adventure, contextSource, 'Prefix')
+  assert.match(advanced.text, /weather is Cloudy in Summer/)
+  assert.equal(adventure.state.chronos.weather.randomState, 270369)
+  assert.equal(adventure.state.chronos.clock.month, 7)
+
+  adventure.info.actionCount = 97
+  runHook(adventure, inputSource, '/date December 21, 2026')
+  const winter = runHook(adventure, contextSource, 'Prefix')
+  assert.match(winter.text, /in Winter/)
+  assert.equal(adventure.state.chronos.weather.randomState, 67634689)
+
+  adventure.state.chronos.weather.condition = 'Snow'
+  adventure.state.chronos.weather.randomState = 1
+  adventure.info.actionCount = 98
+  runHook(adventure, inputSource, '/date March 20, 2027')
+  const spring = runHook(adventure, contextSource, 'Prefix')
+  assert.match(spring.text, /weather is Sunny in Spring/)
+  assert.notEqual(adventure.state.chronos.weather.condition, 'Snow')
+  assert.equal(adventure.state.chronos.weather.randomState, 270369)
+
+  adventure.state.chronos.weather.randomState = 1
+  adventure.info.actionCount = 99
+  runHook(adventure, inputSource, '/time 9:30 AM')
+  const changedTime = runHook(adventure, contextSource, 'Prefix')
+  assert.match(changedTime.text, /9:30 AM/)
+  assert.equal(adventure.state.chronos.weather.randomState, 270369)
+  adventure.info.actionCount = 100
+  runHook(adventure, inputSource, '/time 9:30 AM')
+  runHook(adventure, contextSource, 'Prefix')
+  assert.equal(
+    adventure.state.chronos.weather.randomState,
+    270369,
+    'Setting the clock to its existing value must not step the weather chain'
+  )
+}
+
+{
+  const adventure = createAdventure(110)
+  runHook(adventure, inputSource, 'Begin.')
+  runHook(adventure, contextSource, 'Prefix')
+  const randomBeforeDisable = adventure.state.chronos.weather.randomState
+  setSetting(adventure, 'Track Weather', 'Off')
+  adventure.info.actionCount = 111
+  const disabled = runHook(adventure, contextSource, 'Prefix')
+  assert.doesNotMatch(disabled.text, /weather|Spring/)
+  assert.doesNotMatch(adventure.state.message, /Spring|Sunny|Cloudy|Rain|Snow/)
+  assert.match(findCard(adventure, 'Chronos Settings').entry, /Track Weather: Off/)
+  assert.match(findCard(adventure, 'Chronos Settings').entry, /Current Weather: Hidden/)
+  assert.match(findCard(adventure, 'Chronos Settings').entry, /Current Season: Hidden/)
+  assert.equal(adventure.state.chronos.weather.condition, null)
+
+  adventure.info.actionCount = 112
+  runHook(adventure, contextSource, 'Prefix')
+  assert.equal(adventure.state.chronos.weather.randomState, randomBeforeDisable)
+  setSetting(adventure, 'Track Weather', 'On')
+  adventure.info.actionCount = 113
+  const enabled = runHook(adventure, contextSource, 'Prefix')
+  assert.match(enabled.text, /weather is (Sunny|Cloudy|Rain) in Spring/)
+  assert.match(findCard(adventure, 'Chronos Settings').entry, /Current Season: Spring/)
+  assert.notEqual(adventure.state.chronos.weather.randomState, randomBeforeDisable)
+
+  setSetting(adventure, 'Track Weather', 'Off')
+  setSetting(adventure, 'Track Time', 'Off')
+  setSetting(adventure, 'Track Date', 'Off')
+  adventure.info.actionCount = 114
+  const fullyHidden = runHook(adventure, contextSource, 'Prefix')
+  assert.equal(fullyHidden.text, 'Prefix')
+  assert.equal(adventure.state.message, undefined)
+}
+
+{
+  const adventure = createAdventure(120, [
+    heartbeatCard(1, [{ id: 'widget', version: '1.0.0', stateNames: ['widget'] }])
+  ])
+  runHook(adventure, inputSource, 'Begin.')
+  runHook(adventure, contextSource, 'Prefix')
+  setSetting(adventure, 'Track Weather', 'Off')
+  findCard(adventure, 'ultrascripts:heartbeat').entry = heartbeatCard(
+    2,
+    [{ id: 'widget', version: '1.0.0', stateNames: ['widget'] }]
+  ).entry
+  adventure.info.actionCount = 121
+  runHook(adventure, inputSource, 'Continue.')
+  runHook(adventure, contextSource, 'Prefix')
+  const payload = JSON.parse(findCard(adventure, 'ultrascripts:state:widget').entry)
+  const html = payload.history['121']['chronos-clock'].html
+  assert.match(html, />8:02 AM</)
+  assert.doesNotMatch(html, /Spring|Sunny|Cloudy|Rain|Snow/)
+}
+
+{
+  const adventure = createAdventure(132, [{
+    id: 200,
+    keys: 'Chronos Settings',
+    type: 'Chronos',
+    entry: 'Enabled: On\nTrack Time: Off\nTrack Date: On\nMinutes Per Turn: 5'
+  }])
+  adventure.state.chronos = {
+    version: 2,
+    clock: { year: 2026, month: 12, day: 21, hour: 8, minute: 10 },
+    settings: { enabled: true, paused: false, trackTime: false, trackDate: true,
+      minutesPerTurn: 5, clockFormat: '24-hour', dateFormat: 'ISO' },
+    lastActionCount: 132,
+    notice: '',
+    toastSequence: 0,
+    pendingCommand: null,
+    timeline: {
+      130: { year: 2026, month: 12, day: 20, hour: 8, minute: 0 },
+      131: { year: 2026, month: 12, day: 21, hour: 8, minute: 5 },
+      132: { year: 2026, month: 12, day: 21, hour: 8, minute: 10 }
+    },
+    ultrascripts: {}
+  }
+  runHook(adventure, 'ChronosV2.initialize()', '')
+  assert.equal(adventure.state.chronos.version, 3)
+  assert.equal(adventure.state.chronos.settings.minutesPerTurn, 5)
+  assert.equal(adventure.state.chronos.settings.trackTime, false)
+  assert.equal(adventure.state.chronos.settings.trackWeather, true)
+  for (const key of ['130', '131', '132']) {
+    const snapshot = adventure.state.chronos.timeline[key]
+    assert.ok(snapshot.clock && snapshot.weather)
+    assert.equal(typeof snapshot.weather.randomState, 'number')
+  }
+  const earlierWeather = JSON.parse(JSON.stringify(adventure.state.chronos.timeline['131'].weather))
+  assert.equal(earlierWeather.clock, undefined, 'History should store its clock once')
+  adventure.info.actionCount = 131
+  const undo = runHook(adventure, contextSource, 'Prefix')
+  assert.match(undo.text, /Monday, December 21, 2026/)
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(adventure.state.chronos.weather)),
+    { ...earlierWeather, clock: JSON.parse(JSON.stringify(adventure.state.chronos.timeline['131'].clock)) }
+  )
+  assert.match(findCard(adventure, 'Chronos Settings').entry, /Track Weather: On/)
 }
 
 console.log('Chronos V2 tests passed')

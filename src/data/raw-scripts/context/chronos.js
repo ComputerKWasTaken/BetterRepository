@@ -6,6 +6,7 @@ const modifier = (text) => {
   ChronosV2.syncSettings();
   ChronosV2.advanceToCurrentAction();
   ChronosV2.applyPendingCommand();
+  ChronosV2.advanceWeather();
   ChronosV2.recordSnapshot();
   ChronosV2.publishStoryCard();
 

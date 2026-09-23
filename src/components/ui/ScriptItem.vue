@@ -111,6 +111,10 @@
             </div>
           </div>
         </div>
+        <div v-else-if="script.releaseNote" class="p-4 border-b border-bd-border-subtle">
+          <p class="text-xs uppercase tracking-wider font-medium text-bd-text-muted">Latest update</p>
+          <p class="text-sm text-bd-text-secondary mt-2">{{ script.releaseNote }}</p>
+        </div>
 
         <div v-if="isLoading" class="p-4 border-b border-bd-border-subtle text-sm text-bd-text-muted flex items-center gap-2">
           <span class="w-4 h-4 border-2 border-bd-accent-primary/30 border-t-bd-accent-primary rounded-full animate-spin" />
