@@ -494,10 +494,10 @@ export const SCRIPTS = [
     essential: false,
     tags: ['ultrascripts', 'time', 'calendar', 'weather', 'seasons', 'widgets', 'context', 'cache-compatible', 'tracking'],
     source: 'BetterRepository',
-    description: 'A time, calendar, and seasonal weather tracker for AI Dungeon with Widget support and simple slash commands.',
+    description: 'A time, calendar, and seasonal weather tracker for AI Dungeon with a clear Settings card, year-only date changes, and Widget support.',
     purpose: 'Keeps story time and season-aware weather stable across ordinary turns, commands, Retry, and Undo.',
     ultrascriptsMode: 'enhanced',
-    releaseNote: 'Chronos V2 now includes optional seasonal weather tracking with a Markov chain, visible in context, settings, and Widget displays.'
+    releaseNote: 'Chronos now accepts a year by itself in /date, simplifies its Settings card, and gives clock and weather separate space in the Widget.'
   },
   {
     id: 'stateboy',

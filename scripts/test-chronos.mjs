@@ -117,7 +117,7 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   assert.match(settingsCard.entry, /Current Weather: (Sunny|Cloudy|Rain)/)
   assert.match(settingsCard.entry, /Weather follows Northern Hemisphere seasons/)
   assert.ok(
-    settingsCard.entry.indexOf('Current Time:') < settingsCard.entry.indexOf('# Settings'),
+    settingsCard.entry.indexOf('Current Time:') < settingsCard.entry.indexOf('Settings ('),
     'The live Chronos readout must appear before configuration'
   )
 
@@ -184,7 +184,7 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   )
   assert.equal(payload.manifest.widgets[0].type, 'custom')
   assert.equal(payload.manifest.widgets[0].align, 'center')
-  assert.equal(payload.manifest.widgets[0].style.borderRadius, '999px')
+  assert.equal(payload.manifest.widgets[0].style.borderRadius, '14px')
   const clockWidget = payload.history['30']['chronos-clock']
   assert.equal(typeof clockWidget.html, 'string')
   assert.match(clockWidget.html, />8:00 AM</)
@@ -377,14 +377,15 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   runHook(adventure, inputSource, 'Continue.')
   const result = runHook(adventure, contextSource, 'Prefix')
 
-  assert.match(result.text, /08:00 on Monday, June 1, 2026/)
+  assert.match(result.text, /08:00 \(Morning\) on Monday, June 1, 2026/)
   assert.match(findCard(adventure, 'Chronos Settings').entry, /Minutes Per Turn: 15/)
   assert.match(findCard(adventure, 'Chronos Settings').entry, /Date Format: ISO/)
-  assert.match(findCard(adventure, 'Chronos Settings').entry, /Time Phase: Off/)
+  assert.match(findCard(adventure, 'Chronos Settings').entry, /Time Phase: Morning/)
+  assert.doesNotMatch(findCard(adventure, 'Chronos Settings').entry, /Show Time Phase:/)
+  assert.doesNotMatch(findCard(adventure, 'Chronos Settings').entry, /Paused:/)
   assert.match(findCard(adventure, 'Chronos Settings').entry, /Current Date: 2026-06-01/)
-  assert.match(adventure.state.message, /Chronos · 08:00 · 2026-06-01/)
+  assert.match(adventure.state.message, /Chronos · 08:00 · Morning · 2026-06-01/)
   assert.doesNotMatch(adventure.state.message, /Monday/)
-  assert.doesNotMatch(adventure.state.message, /Morning/)
 
   findCard(adventure, 'Chronos Settings').entry = findCard(
     adventure,
@@ -404,7 +405,6 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   const adventure = createAdventure(52)
   runHook(adventure, inputSource, 'Continue.')
   runHook(adventure, contextSource, 'Prefix')
-  setSetting(adventure, 'Paused', 'On')
   setSetting(adventure, 'Clock Format', '24 hour')
   setSetting(adventure, 'Date Format', 'MM/DD/YYYY')
 
@@ -598,8 +598,9 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   runHook(adventure, contextSource, 'Prefix')
   adventure.info.actionCount = 66
   runHook(adventure, inputSource, 'Wait.')
-  const paused = runHook(adventure, contextSource, 'Prefix')
-  assert.match(paused.text, /8:00 AM/, 'Paused Chronos must still inform the model')
+  const unpaused = runHook(adventure, contextSource, 'Prefix')
+  assert.match(unpaused.text, /8:15 AM/, 'Retired Paused settings must not freeze Chronos')
+  assert.doesNotMatch(findCard(adventure, 'Chronos Settings').entry, /Paused:/)
 
   findCard(adventure, 'Chronos Settings').entry = findCard(
     adventure,
@@ -609,7 +610,7 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   runHook(adventure, inputSource, 'Continue.')
   const disabled = runHook(adventure, contextSource, 'Prefix')
   assert.equal(disabled.text, 'Prefix', 'Disabled Chronos must not alter model context')
-  assert.equal(adventure.state.chronos.clock.minute, 0)
+  assert.equal(adventure.state.chronos.clock.minute, 15)
 }
 
 {
@@ -748,11 +749,8 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
   assert.equal(adventure.state.chronos.settings.clockFormat, '24-hour')
   assert.equal(adventure.state.chronos.settings.dateFormat, 'European')
   assert.equal(adventure.state.chronos.settings.trackWeather, true)
-  assert.equal(
-    adventure.state.chronos.settings.paused,
-    true,
-    'Repairing one damaged field must preserve valid same-version settings'
-  )
+  assert.equal(adventure.state.chronos.settings.paused, undefined)
+  assert.equal(adventure.state.chronos.settings.showTimePhase, undefined)
 }
 
 {

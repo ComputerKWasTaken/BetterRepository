@@ -62,11 +62,9 @@ globalThis.ChronosV2 = (function createChronosV2() {
         clock: defaultClock(),
         settings: {
           enabled: true,
-          paused: false,
           trackTime: true,
           trackDate: true,
           trackWeather: true,
-          showTimePhase: true,
           minutesPerTurn: 2,
           clockFormat: '12-hour',
           dateFormat: 'Long'
@@ -87,15 +85,13 @@ globalThis.ChronosV2 = (function createChronosV2() {
     previous.clock = normalizeClock(isRecord(previous.clock) ? previous.clock : defaultClock());
     previous.settings = isRecord(previous.settings) ? previous.settings : {};
     if (typeof previous.settings.enabled !== 'boolean') previous.settings.enabled = true;
-    if (typeof previous.settings.paused !== 'boolean') previous.settings.paused = false;
+    delete previous.settings.paused;
     if (typeof previous.settings.trackTime !== 'boolean') previous.settings.trackTime = true;
     if (typeof previous.settings.trackDate !== 'boolean') previous.settings.trackDate = true;
     if (typeof previous.settings.trackWeather !== 'boolean') {
       previous.settings.trackWeather = true;
     }
-    if (typeof previous.settings.showTimePhase !== 'boolean') {
-      previous.settings.showTimePhase = true;
-    }
+    delete previous.settings.showTimePhase;
     previous.settings.minutesPerTurn = clampInteger(
       previous.settings.minutesPerTurn,
       0,
@@ -403,11 +399,11 @@ globalThis.ChronosV2 = (function createChronosV2() {
         chronos.weather = isRecord(snapshot.weather)
           ? normalizeWeatherState(snapshot.weather, chronos.clock)
           : createWeatherState(chronos.clock, chronos.settings.trackWeather);
-      } else if (chronos.settings.enabled && !chronos.settings.paused) {
+      } else if (chronos.settings.enabled) {
         addMinutes(-chronos.settings.minutesPerTurn);
       }
       discardFutureSnapshots(chronos.timeline, actionCount);
-    } else if (delta > 0 && chronos.settings.enabled && !chronos.settings.paused &&
+    } else if (delta > 0 && chronos.settings.enabled &&
         !chronos.pendingCommand) {
       // actionCount includes player actions, AI output, and other platform
       // actions. One new Context update represents one Chronos turn.
@@ -496,7 +492,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
 
   function showsTimePhase() {
     var chronos = initialize();
-    return !!(chronos && chronos.settings.trackTime && chronos.settings.showTimePhase);
+    return !!(chronos && chronos.settings.trackTime);
   }
 
   function formatContextTime() {
@@ -573,38 +569,35 @@ globalThis.ChronosV2 = (function createChronosV2() {
   function widgetHtml() {
     var chronos = initialize();
     if (!chronos) return '';
-    var groups = [];
-    function group(parts) {
-      groups.push('<span style="display:inline-flex;align-items:baseline;gap:6px;white-space:nowrap">' +
-        parts.join('<span aria-hidden="true" style="color:rgba(255,255,255,.28)">·</span>') +
-        '</span>');
-    }
-    var time = [];
+    var sections = [];
+    var clockLines = [];
     if (chronos.settings.trackTime) {
-      time.push('<span style="color:#fbbf24;font-weight:700;font-variant-numeric:tabular-nums">' +
-        formatTime() + '</span>');
+      clockLines.push('<span style="display:flex;align-items:baseline;gap:7px;white-space:nowrap">' +
+        '<span style="color:#fbbf24;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums">' +
+        formatTime() + '</span>' +
+        '<span style="color:rgba(255,255,255,.58);font-size:11px;font-weight:500">' +
+        formatTimePhase() + '</span></span>');
     }
-    if (showsTimePhase()) {
-      time.push('<span style="color:rgba(255,255,255,.58);font-weight:500">' +
-        formatTimePhase() + '</span>');
-    }
-    if (time.length) group(time);
     if (chronos.settings.trackDate) {
-      group(['<span style="color:rgba(255,255,255,.72);font-weight:500">' +
-        formatWidgetDate() + '</span>']);
+      clockLines.push('<span style="color:rgba(255,255,255,.72);font-size:11px;' +
+        'font-weight:500;white-space:nowrap">' + formatWidgetDate() + '</span>');
+    }
+    if (clockLines.length) {
+      sections.push('<span style="display:flex;flex-direction:column;align-items:flex-start;' +
+        'gap:1px;min-width:0">' + clockLines.join('') + '</span>');
     }
     if (chronos.settings.trackWeather && validWeatherName(chronos.weather.condition)) {
-      group([
-        '<span style="color:rgba(255,255,255,.58);font-weight:500">' +
-          seasonForClock(chronos.clock) + '</span>',
-        '<span style="color:#93c5fd;font-weight:600">' +
-          chronos.weather.condition + '</span>'
-      ]);
+      sections.push('<span style="display:flex;flex-direction:column;align-items:flex-start;' +
+        'gap:1px;padding:4px 8px;border-radius:9px;background:rgba(147,197,253,.09);' +
+        'border:1px solid rgba(147,197,253,.15);white-space:nowrap">' +
+        '<span style="color:rgba(255,255,255,.55);font-size:10px;font-weight:600;' +
+        'letter-spacing:.04em">' + seasonForClock(chronos.clock) + '</span>' +
+        '<span style="color:#93c5fd;font-size:12px;font-weight:650">' +
+        chronos.weather.condition + '</span></span>');
     }
     return '<div title="Current in-game time, date and weather" ' +
-      'style="display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;' +
-      'column-gap:12px;row-gap:2px;max-width:100%;transform:translateY(3px)">' +
-      groups.join('') + '</div>';
+      'style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;' +
+      'column-gap:12px;row-gap:5px;max-width:100%">' + sections.join('') + '</div>';
   }
 
   function appendContext(originalText) {
@@ -632,30 +625,33 @@ globalThis.ChronosV2 = (function createChronosV2() {
     var showsWeather = value.trackWeather && validWeatherName(chronos.weather.condition);
     return [
       '# Chronos',
-      '# Current Values (read-only)',
+      'Current Values (read-only)',
+      '---',
       'Current Time: ' + (value.trackTime ? formatTime() : 'Hidden'),
-      'Time Phase: ' + (value.trackTime
-        ? (value.showTimePhase ? formatTimePhase() : 'Off')
-        : 'Hidden'),
+      'Time Phase: ' + (value.trackTime ? formatTimePhase() : 'Hidden'),
       'Current Date: ' + (value.trackDate ? formatDisplayDate() : 'Hidden'),
       'Current Season: ' + (showsWeather ? seasonForClock(chronos.clock) : 'Hidden'),
       'Current Weather: ' + (showsWeather ? chronos.weather.condition : 'Hidden'),
+      '---',
       '',
-      '# Settings — edit values after the colon',
+      'Commands:',
+      '/time 8:30 AM',
+      '/date June 1, 2026 or /date 2026 (year only keeps the current month and day)',
+      '/advance 2 hours',
+      '',
+      'Settings (edit values after the colon)',
+      '---',
       'Enabled: ' + (value.enabled ? 'On' : 'Off'),
-      'Paused: ' + (value.paused ? 'On' : 'Off'),
       'Track Time: ' + (value.trackTime ? 'On' : 'Off'),
       'Track Date: ' + (value.trackDate ? 'On' : 'Off'),
       'Track Weather: ' + (value.trackWeather ? 'On' : 'Off'),
-      'Show Time Phase: ' + (value.showTimePhase ? 'On' : 'Off'),
       'Minutes Per Turn: ' + value.minutesPerTurn,
       'Clock Format: ' + value.clockFormat,
       'Date Format: ' + value.dateFormat,
       '',
-      '# Formats: 12-hour or 24-hour; Long, ISO (YYYY-MM-DD),',
-      '# American (MM/DD/YYYY), or European (DD/MM/YYYY)',
-      '# Weather follows Northern Hemisphere seasons; turn it off for custom climates.',
-      '# Commands: /time 8:30 AM, /date June 1, 2026, /advance 2 hours'
+      '(Formats: 12-hour or 24-hour; Long, ISO (YYYY-MM-DD),',
+      'American (MM/DD/YYYY), or European (DD/MM/YYYY))',
+      '(Weather follows Northern Hemisphere seasons; turn it off for custom climates.)'
     ].join('\n');
   }
 
@@ -671,7 +667,6 @@ globalThis.ChronosV2 = (function createChronosV2() {
     var entry = cardText(card);
     var values = parseSettingsLines(entry);
     chronos.settings.enabled = parseToggle(values.enabled, chronos.settings.enabled);
-    chronos.settings.paused = parseToggle(values.paused, chronos.settings.paused);
     chronos.settings.trackTime = parseToggle(values.tracktime, chronos.settings.trackTime);
     chronos.settings.trackDate = parseToggle(values.trackdate, chronos.settings.trackDate);
     var wasTrackingWeather = chronos.settings.trackWeather;
@@ -683,10 +678,6 @@ globalThis.ChronosV2 = (function createChronosV2() {
       chronos.weather.condition = null;
       chronos.weather.clock = copyClock(chronos.clock);
     }
-    chronos.settings.showTimePhase = parseToggle(
-      values.showtimephase,
-      chronos.settings.showTimePhase
-    );
     chronos.settings.minutesPerTurn = clampInteger(
       values.minutesperturn,
       0,
@@ -775,6 +766,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
       /^(?:Sun(?:day)?|Mon(?:day)?|Tue(?:sday)?|Wed(?:nesday)?|Thu(?:rsday)?|Fri(?:day)?|Sat(?:urday)?)\s*,\s*/i,
       ''
     );
+    var yearOnly = raw.match(/^(\d{1,6})$/);
     var iso = raw.match(/^(\d{1,6})-(\d{1,2})-(\d{1,2})$/);
     var monthName = raw.match(/^([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{1,6})$/);
     var numeric = raw.match(/^(\d{1,2})[/.](\d{1,2})[/.](\d{1,6})$/);
@@ -782,7 +774,12 @@ globalThis.ChronosV2 = (function createChronosV2() {
     var month;
     var day;
 
-    if (iso) {
+    if (yearOnly) {
+      year = Number(yearOnly[1]);
+      var currentClock = initialize().clock;
+      month = currentClock.month;
+      day = currentClock.day;
+    } else if (iso) {
       year = Number(iso[1]);
       month = Number(iso[2]);
       day = Number(iso[3]);
@@ -821,7 +818,7 @@ globalThis.ChronosV2 = (function createChronosV2() {
       return null;
     }
 
-    if (year < 1 || month < 1 || month > 12) return null;
+    if (year < 1 || year > MAX_YEAR || month < 1 || month > 12) return null;
     if (day < 1 || day > daysInMonth(year, month)) return null;
     return { year: year, month: month, day: day };
   }
@@ -886,7 +883,8 @@ globalThis.ChronosV2 = (function createChronosV2() {
 
     if (command.name === 'chronos') {
       chronos.notice = 'Chronos commands: /time [8:30 AM or 20:30], ' +
-        '/date [June 1, 2026 or 2026-06-01], and /advance [number] ' +
+        '/date [June 1, 2026, 2026-06-01, or just 2026 to keep the month and day], ' +
+        'and /advance [number] ' +
         '[minutes, hours, days, or weeks]. Advance aliases: /adv, /addtime, ' +
         '/skiptime, and /fastforward. Edit the Chronos Settings Story Card ' +
         'to adjust time, date, and seasonal weather tracking.';
@@ -916,7 +914,17 @@ globalThis.ChronosV2 = (function createChronosV2() {
       }
       var parsedDate = parseDate(command.argument);
       if (!parsedDate) {
-        chronos.notice = 'Chronos could not read that date. Try /date June 1, 2026 or /date 2026-06-01.';
+        var requestedYear = /^\d{1,6}$/.test(command.argument)
+          ? Number(command.argument) : null;
+        if (requestedYear && requestedYear <= MAX_YEAR &&
+            chronos.clock.month === 2 && chronos.clock.day === 29 &&
+            !isLeapYear(requestedYear)) {
+          chronos.notice = 'Chronos cannot keep February 29 in ' + requestedYear +
+            '. Enter a full date, such as /date February 28, ' + requestedYear + '.';
+        } else {
+          chronos.notice = 'Chronos could not read that date. Try /date June 1, 2026, ' +
+            '/date 2026-06-01, or /date 2026.';
+        }
         return true;
       }
       chronos.clock.year = parsedDate.year;
@@ -1118,8 +1126,8 @@ globalThis.ChronosV2 = (function createChronosV2() {
         align: 'center',
         style: {
           display: 'inline-flex',
-          padding: '5px 10px',
-          borderRadius: '999px',
+          padding: '7px 11px',
+          borderRadius: '14px',
           background: 'rgba(20,20,26,.82)',
           border: '1px solid rgba(255,255,255,.12)',
           boxShadow: 'none'
