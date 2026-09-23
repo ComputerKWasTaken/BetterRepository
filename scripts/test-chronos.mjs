@@ -486,6 +486,110 @@ assert.match(contextSource, /^\/\/ @cache-compatible\r?\n/)
 }
 
 {
+  const adventure = createAdventure(160)
+  runHook(adventure, inputSource, 'Begin.')
+  runHook(adventure, contextSource, 'Prefix')
+  let actionCount = 160
+  const enter = command => {
+    adventure.info.actionCount = ++actionCount
+    runHook(adventure, inputSource, command)
+    return runHook(adventure, contextSource, 'Prefix')
+  }
+
+  enter('/date October 20, 1347')
+  enter('/date June 1')
+  assert.deepEqual(JSON.parse(JSON.stringify(adventure.state.chronos.clock)), {
+    year: 1347, month: 6, day: 1, hour: 8, minute: 0
+  })
+
+  enter('/date 12/5')
+  assert.equal(adventure.state.chronos.clock.month, 12)
+  assert.equal(adventure.state.chronos.clock.day, 5)
+  assert.equal(adventure.state.chronos.clock.year, 1347)
+
+  setSetting(adventure, 'Date Format', 'European')
+  enter('/date 12/5')
+  assert.equal(adventure.state.chronos.clock.month, 5)
+  assert.equal(adventure.state.chronos.clock.day, 12)
+  assert.equal(adventure.state.chronos.clock.year, 1347)
+
+  enter('/date February 29')
+  assert.match(adventure.state.message, /could not read that date/)
+  assert.equal(adventure.state.chronos.clock.month, 5)
+  assert.equal(adventure.state.chronos.clock.day, 12)
+
+  const beforeWeather = JSON.parse(JSON.stringify(adventure.state.chronos.weather))
+  const snow = enter('/weather Snow')
+  assert.match(adventure.state.message, /set the weather to Snow/)
+  assert.match(snow.text, /in-game weather is Snow in Spring/)
+  assert.match(findCard(adventure, 'Chronos Settings').entry, /Current Weather: Snow/)
+  assert.equal(adventure.state.chronos.weather.randomState, beforeWeather.randomState)
+  assert.equal(adventure.state.chronos.weather.manual, true)
+  assert.deepEqual(JSON.parse(JSON.stringify(adventure.state.chronos.clock)), {
+    year: 1347, month: 5, day: 12, hour: 8, minute: 0
+  })
+  const manualSnow = JSON.parse(JSON.stringify(adventure.state.chronos.weather))
+  runHook(adventure, contextSource, 'Prefix')
+  assert.deepEqual(JSON.parse(JSON.stringify(adventure.state.chronos.weather)), manualSnow)
+
+  const winter = enter('/weather Winter')
+  assert.match(winter.text, /in-game weather is Snow in Winter/)
+  assert.match(findCard(adventure, 'Chronos Settings').entry, /Current Season: Winter/)
+  const manualWinter = JSON.parse(JSON.stringify(adventure.state.chronos.weather))
+
+  const nextTurn = enter('Continue.')
+  assert.match(nextTurn.text, /in-game weather is (Sunny|Cloudy|Rain) in Spring/)
+  assert.equal(adventure.state.chronos.clock.minute, 2)
+  assert.equal(adventure.state.chronos.weather.manual, false)
+  assert.equal(adventure.state.chronos.weather.manualSeason, null)
+  const weatherAfterStep = JSON.parse(JSON.stringify(adventure.state.chronos.weather))
+  adventure.info.actionCount = actionCount - 1
+  runHook(adventure, contextSource, 'Prefix')
+  assert.deepEqual(JSON.parse(JSON.stringify(adventure.state.chronos.weather)), manualWinter)
+  adventure.info.actionCount = actionCount
+  runHook(adventure, contextSource, 'Prefix')
+  assert.deepEqual(JSON.parse(JSON.stringify(adventure.state.chronos.weather)), weatherAfterStep)
+
+  setSetting(adventure, 'Track Weather', 'Off')
+  enter('/weather Rain')
+  assert.match(adventure.state.message, /Turn on Chronos and Track Weather/)
+  assert.doesNotMatch(adventure.state.message, /in Spring|Sunny|Cloudy|Rain|Snow/)
+  assert.equal(adventure.state.chronos.weather.condition, null)
+
+  setSetting(adventure, 'Track Weather', 'On')
+  setSetting(adventure, 'Minutes Per Turn', '0')
+  enter('/weather Autumn')
+  assert.match(findCard(adventure, 'Chronos Settings').entry, /Current Season: Autumn/)
+  enter('Continue.')
+  assert.equal(adventure.state.chronos.clock.minute, 2)
+  assert.equal(adventure.state.chronos.weather.manualSeason, 'Autumn')
+  assert.equal(adventure.state.chronos.settings.minutesPerTurn, 0)
+  assert.match(findCard(adventure, 'Chronos Settings').entry, /0 to stop automatic clock advancement/)
+  enter('/advance 1 hour')
+  assert.equal(adventure.state.chronos.clock.minute, 2)
+  assert.equal(adventure.state.chronos.clock.hour, 9)
+  assert.equal(adventure.state.chronos.weather.manualSeason, null)
+  assert.match(findCard(adventure, 'Chronos Settings').entry, /Current Season: Spring/)
+}
+
+{
+  const adventure = createAdventure(175, [
+    heartbeatCard(1, [{ id: 'widget', version: '1.0.0', stateNames: ['widget'] }])
+  ])
+  runHook(adventure, inputSource, 'Begin.')
+  runHook(adventure, contextSource, 'Prefix')
+  findCard(adventure, 'ultrascripts:heartbeat').entry = heartbeatCard(
+    2,
+    [{ id: 'widget', version: '1.0.0', stateNames: ['widget'] }]
+  ).entry
+  adventure.info.actionCount = 176
+  runHook(adventure, inputSource, '/weather Winter')
+  runHook(adventure, contextSource, 'Prefix')
+  const payload = JSON.parse(findCard(adventure, 'ultrascripts:state:widget').entry)
+  assert.match(payload.history['176']['chronos-clock'].html, />Winter</)
+}
+
+{
   // AI Dungeon can add several action records for one visible turn.
   const adventure = createAdventure(0)
   runHook(adventure, inputSource, '/chronos')
