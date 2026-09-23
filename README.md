@@ -13,7 +13,7 @@
 <p align="center">
   <a href="#what-you-can-find">What's Here</a> •
   <a href="#want-to-contribute">Contribute</a> •
-  <a href="https://betterrepository.netlify.app/credits">Credits</a> •
+  <a href="https://better-repository.netlify.app/credits">Credits</a> •
   <a href="#for-developers">For Developers</a>
 </p>
 
