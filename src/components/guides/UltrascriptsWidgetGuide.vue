@@ -157,7 +157,7 @@
             <div class="grid md:grid-cols-2 gap-3">
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-blue/30 space-y-1">
                 <h4 class="font-semibold text-bd-blue text-[12px]">manifest.widgets[]</h4>
-                <p class="text-[11px] text-bd-text-muted">Declared <strong>once</strong>. Each entry has a stable <code>id</code> (referenced by history), a <code>type</code>, and any type-specific configuration (label, color, max, etc.).</p>
+                <p class="text-[11px] text-bd-text-muted">Declared <strong>once</strong>. Each entry has a stable <code>id</code> (referenced by history), a <code>type</code>, and any type-specific configuration (label, color, max, etc.). Widgets default to <code>align: "center"</code>; use <code>"left"</code> or <code>"right"</code> only when needed.</p>
               </div>
               <div class="p-3 rounded-lg bg-bd-bg-primary border border-bd-purple/30 space-y-1">
                 <h4 class="font-semibold text-bd-purple text-[12px]">history[liveCount]</h4>
