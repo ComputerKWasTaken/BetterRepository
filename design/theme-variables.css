@@ -197,13 +197,9 @@
   /* =============================================================
      14. COMPONENT — BUTTONS
      ============================================================= */
-  --bd-btn-primary-bg:       linear-gradient(135deg,
-                              var(--bd-accent-primary) 0%,
-                              var(--bd-accent-secondary) 100%);
-  --bd-btn-primary-hover:    linear-gradient(135deg,
-                              var(--bd-accent-light) 0%,
-                              var(--bd-accent-primary) 100%);
-  --bd-btn-primary-shadow:   var(--bd-shadow-glow-xl);
+  --bd-btn-primary-bg:       var(--bd-accent-primary);
+  --bd-btn-primary-hover:    var(--bd-accent-light);
+  --bd-btn-primary-shadow:   var(--bd-shadow-sm);
   --bd-btn-secondary-bg:     rgba(255, 255, 255, 0.08);
   --bd-btn-secondary-hover:  rgba(255, 255, 255, 0.12);
   --bd-btn-danger-bg:        var(--bd-error-bg);

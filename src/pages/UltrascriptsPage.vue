@@ -2,11 +2,7 @@
   <div ref="pageRoot" class="space-y-8">
     <!-- Page Header with animated hero -->
     <header class="ultrascripts-hero relative overflow-hidden rounded-2xl py-12 px-6">
-      <!-- Animated background orbs -->
       <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none" aria-hidden="true">
-        <div class="hero-orb hero-orb--purple" />
-        <div class="hero-orb hero-orb--cyan" />
-        <div class="hero-orb hero-orb--green" />
       </div>
 
       <div class="relative z-10 flex items-start gap-4 flex-wrap">
@@ -281,41 +277,9 @@ watch(activeTab, () => {
   border: 1px solid var(--bd-border-subtle);
 }
 
-.hero-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.3;
-  pointer-events: none;
-}
 
-.hero-orb--purple {
-  width: 240px;
-  height: 240px;
-  background: var(--bd-purple);
-  top: -50px;
-  right: -30px;
-  animation: float 9s ease-in-out infinite;
-}
 
-.hero-orb--cyan {
-  width: 180px;
-  height: 180px;
-  background: var(--bd-cyan);
-  bottom: -40px;
-  left: 8%;
-  animation: float 11s ease-in-out infinite reverse;
-}
 
-.hero-orb--green {
-  width: 140px;
-  height: 140px;
-  background: var(--bd-green);
-  top: 15%;
-  left: 45%;
-  animation: float 13s ease-in-out infinite 2s;
-  opacity: 0.18;
-}
 
 /* === Tab Bar === */
 .ultrascripts-tab-bar {

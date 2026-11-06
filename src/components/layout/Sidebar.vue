@@ -22,7 +22,7 @@
       <div class="p-6 border-b border-bd-border-subtle flex items-center justify-between gap-3">
         <div class="flex items-center gap-3 min-w-0">
           <router-link to="/" class="flex-shrink-0 group" @click="closeMobile" aria-label="BetterRepository home">
-            <div class="w-10 h-10 rounded-lg overflow-hidden shadow-glow">
+            <div class="w-10 h-10 rounded-lg overflow-hidden">
               <img src="/betterrepository_logo.png" alt="BetterRepository" class="w-full h-full object-cover" />
             </div>
           </router-link>

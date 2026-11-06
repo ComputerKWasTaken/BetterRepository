@@ -254,16 +254,11 @@ body {
   pointer-events: none;
 }
 
-.hero-orb,
 .animate-float,
 .animate-pulse,
 .animate-pulse *,
 .animate-scaleIn {
   animation: none !important;
-}
-
-.hero-orb {
-  display: none !important;
 }
 
 :is(.home-section, .credits-section, .contribute-section, .eco-section) {

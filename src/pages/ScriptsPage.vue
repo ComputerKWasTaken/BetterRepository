@@ -2,10 +2,6 @@
   <div class="space-y-8">
     <!-- Page Header with animated hero -->
     <header class="scripts-hero relative overflow-hidden rounded-2xl py-10 px-6">
-      <!-- Animated background orbs -->
-      <div class="hero-orb hero-orb--cyan" aria-hidden="true" />
-      <div class="hero-orb hero-orb--blue" aria-hidden="true" />
-
       <div class="relative z-10 flex items-center gap-4">
         <div class="w-12 h-12 rounded-xl bg-bd-cyan/20 flex items-center justify-center animate-float flex-shrink-0">
           <Code class="w-6 h-6 text-bd-cyan" />
@@ -1729,31 +1725,8 @@ const clearFilters = () => {
   border: 1px solid var(--bd-border-subtle);
 }
 
-.hero-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.3;
-  pointer-events: none;
-}
 
-.hero-orb--cyan {
-  width: 220px;
-  height: 220px;
-  background: var(--bd-cyan);
-  top: -40px;
-  right: -20px;
-  animation: float 8s ease-in-out infinite;
-}
 
-.hero-orb--blue {
-  width: 160px;
-  height: 160px;
-  background: var(--bd-blue);
-  bottom: -30px;
-  left: 5%;
-  animation: float 10s ease-in-out infinite reverse;
-}
 
 /* === Hide scrollbar on category jump nav === */
 .scrollbar-hide {

@@ -37,7 +37,7 @@
     <main id="main-content" class="flex-1 min-w-0 overflow-x-hidden lg:ml-64 pt-14 lg:pt-0" tabindex="-1">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         <!-- V2 Announcement Banner (temporary — remove when V2 ships) -->
-        <div class="mb-6 rounded-xl border border-bd-accent-primary/30 bg-gradient-to-r from-bd-accent-primary/10 via-bd-purple/10 to-bd-cyan/10 px-4 py-3 flex items-start gap-3">
+        <div class="mb-6 rounded-xl border border-bd-accent-primary/30 bg-bd-accent-primary/10 px-4 py-3 flex items-start gap-3">
           <Sparkles class="w-5 h-5 text-bd-accent-light shrink-0 mt-0.5" />
           <p class="text-sm text-bd-text-secondary leading-relaxed">
             <span class="font-semibold text-bd-text-primary">BetterRepository V2 is in the works.</span>

@@ -2,10 +2,6 @@
   <div class="space-y-8">
     <!-- Page Header with animated hero -->
     <header class="credits-hero relative overflow-hidden rounded-2xl text-center py-12 px-6">
-      <!-- Animated background orbs -->
-      <div class="hero-orb hero-orb--orange" aria-hidden="true" />
-      <div class="hero-orb hero-orb--purple" aria-hidden="true" />
-
       <div class="relative z-10">
         <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-bd-accent-primary/20 to-bd-amber/20 mb-4 animate-float">
           <Award class="w-8 h-8 text-bd-accent-primary" />
@@ -252,31 +248,8 @@ onUnmounted(() => {
   border: 1px solid var(--bd-border-subtle);
 }
 
-.hero-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.35;
-  pointer-events: none;
-}
 
-.hero-orb--orange {
-  width: 240px;
-  height: 240px;
-  background: var(--bd-accent-primary);
-  top: -50px;
-  right: -30px;
-  animation: float 8s ease-in-out infinite;
-}
 
-.hero-orb--purple {
-  width: 180px;
-  height: 180px;
-  background: var(--bd-purple);
-  bottom: -40px;
-  left: 5%;
-  animation: float 10s ease-in-out infinite reverse;
-}
 
 /* === Section reveal animation === */
 .credits-section {

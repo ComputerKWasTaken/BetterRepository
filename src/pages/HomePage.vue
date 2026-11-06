@@ -1,14 +1,7 @@
 <template>
   <div class="space-y-8">
-    <!-- Hero Section with animated gradient backdrop -->
+    <!-- Hero Section -->
     <section class="hero-section relative rounded-2xl py-14 px-6 text-center">
-      <!-- Orb container with overflow-hidden so orbs clip without affecting the search dropdown -->
-      <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none" aria-hidden="true">
-        <div class="hero-orb hero-orb--orange" />
-        <div class="hero-orb hero-orb--purple" />
-        <div class="hero-orb hero-orb--cyan" />
-      </div>
-
       <!-- Content -->
       <div class="relative z-10">
         <!-- Logo & Branding -->
@@ -35,7 +28,6 @@
              One search experience everywhere; this input opens it. -->
         <div class="max-w-lg mx-auto relative">
           <div class="relative group">
-            <div class="absolute -inset-0.5 bg-gradient-to-r from-bd-accent-primary/20 via-bd-purple/20 to-bd-cyan/20 rounded-xl opacity-0 group-focus-within:opacity-100 blur transition-opacity duration-300" />
             <div class="relative z-[2]">
               <div class="absolute left-4 top-1/2 -translate-y-1/2 z-[3] pointer-events-none">
                 <Search class="w-5 h-5 text-bd-text-muted" />
@@ -75,12 +67,9 @@
           class="category-card group"
           :style="{ animationDelay: `${idx * 80}ms` }"
         >
-          <!-- Gradient border glow on hover -->
-          <div class="absolute -inset-px rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" :class="category.glowClass" />
-
-          <div class="relative bg-bd-bg-secondary rounded-xl p-4 flex items-start gap-4 h-full">
+          <div class="relative bg-bd-bg-secondary border border-bd-border-subtle group-hover:border-bd-border-default transition-colors rounded-xl p-4 flex items-start gap-4 h-full">
             <div 
-              class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg"
+              class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
               :class="category.bgClass"
             >
               <component :is="category.icon" class="w-5 h-5" :class="category.iconClass" />
@@ -108,7 +97,7 @@
         <div 
           v-for="(stat, idx) in stats" 
           :key="stat.label" 
-          class="card text-center py-5 group hover:border-bd-accent-primary/20 hover:shadow-glow"
+          class="card text-center py-5 group hover:border-bd-accent-primary/20"
           :style="{ animationDelay: `${idx * 100}ms` }"
         >
           <div class="flex items-center justify-center mb-2">
@@ -124,7 +113,7 @@
     <section ref="creditsRef" :class="['home-section', { 'is-visible': visibleSections.credits }]">
       <div class="card relative overflow-hidden">
         <!-- Decorative gradient -->
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-accent-primary via-bd-purple to-bd-cyan" />
+        <div class="absolute top-0 left-0 w-full h-0.5 bg-bd-accent-primary/70" />
 
         <div class="flex items-center justify-between mb-4 pt-1">
           <div class="flex items-center gap-2.5">
@@ -241,7 +230,6 @@ const resourceCategories = [
     count: INSTRUCTIONS.length,
     bgClass: 'bg-bd-amber/20',
     iconClass: 'text-bd-amber',
-    glowClass: 'bg-gradient-to-br from-bd-amber/40 to-bd-amber/10',
   },
   { 
     path: '/plot-components', 
@@ -251,7 +239,6 @@ const resourceCategories = [
     count: TEMPLATES.length,
     bgClass: 'bg-bd-blue/20',
     iconClass: 'text-bd-blue',
-    glowClass: 'bg-gradient-to-br from-bd-blue/40 to-bd-blue/10',
   },
   { 
     path: '/story-cards', 
@@ -261,7 +248,6 @@ const resourceCategories = [
     count: STORY_CARDS.length + STORY_CARD_TEMPLATES.length,
     bgClass: 'bg-bd-purple/20',
     iconClass: 'text-bd-purple',
-    glowClass: 'bg-gradient-to-br from-bd-purple/40 to-bd-purple/10',
   },
   { 
     path: '/scripts', 
@@ -271,7 +257,6 @@ const resourceCategories = [
     count: SCRIPTS.length,
     bgClass: 'bg-bd-cyan/20',
     iconClass: 'text-bd-cyan',
-    glowClass: 'bg-gradient-to-br from-bd-cyan/40 to-bd-cyan/10',
   },
 ]
 
@@ -292,40 +277,9 @@ const stats = [
   border: 1px solid var(--bd-border-subtle);
 }
 
-.hero-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.35;
-  pointer-events: none;
-}
 
-.hero-orb--orange {
-  width: 280px;
-  height: 280px;
-  background: var(--bd-accent-primary);
-  top: -60px;
-  right: -40px;
-  animation: float 8s ease-in-out infinite;
-}
 
-.hero-orb--purple {
-  width: 200px;
-  height: 200px;
-  background: var(--bd-purple);
-  bottom: -40px;
-  left: 10%;
-  animation: float 10s ease-in-out infinite reverse;
-}
 
-.hero-orb--cyan {
-  width: 160px;
-  height: 160px;
-  background: var(--bd-cyan);
-  top: 20%;
-  left: -30px;
-  animation: float 12s ease-in-out infinite 2s;
-}
 
 /* === Category cards with gradient border trick === */
 .category-card {

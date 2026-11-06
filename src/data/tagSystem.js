@@ -34,37 +34,37 @@ export const TAG_SYSTEM = {
     core: 'anti-repetition',
     aliases: ['no-echo', 'no-repeat', 'anti-echo', 'no-parroting', 'repetition', 'variety'],
     description: 'Prevents the AI from repeating content',
-    color: 'red'
+    color: 'gray'
   },
   style: {
     core: 'style',
     aliases: ['prose', 'writing', 'literary', 'artistic', 'natural', 'direct', 'concise', 'minimal', 'subtlety', 'subtle', 'cinematic', 'narrative', 'show-dont-tell', 'subtext'],
     description: 'Writing style and prose quality',
-    color: 'blue'
+    color: 'gray'
   },
   pacing: {
     core: 'pacing',
     aliases: ['flow', 'rhythm', 'tempo', 'speed', 'momentum', 'beats', 'slow-burn', 'cliffhanger'],
     description: 'Story pacing and narrative flow',
-    color: 'cyan'
+    color: 'gray'
   },
   dialogue: {
     core: 'dialogue',
     aliases: ['speech', 'conversation', 'talking', 'speaking', 'verbal', 'voice', 'communication', 'banter'],
     description: 'Character dialogue and conversation',
-    color: 'green'
+    color: 'gray'
   },
   tone: {
     core: 'tone',
     aliases: ['mood', 'atmosphere', 'vibe', 'feeling', 'serious', 'gentle', 'atmospheric'],
     description: 'Overall tone and mood',
-    color: 'purple'
+    color: 'gray'
   },
   description: {
     core: 'description',
     aliases: ['detail', 'imagery', 'visuals', 'sensory', 'detailed', 'visual', 'appearance'],
     description: 'Descriptive writing and imagery',
-    color: 'teal'
+    color: 'gray'
   },
 
   // --- Character & Behavior ---
@@ -72,25 +72,25 @@ export const TAG_SYSTEM = {
     core: 'personality',
     aliases: ['character', 'behavior', 'traits', 'depth', 'nuance', 'characterization', 'development', 'growth', 'mannerisms'],
     description: 'Character personality and depth',
-    color: 'purple'
+    color: 'gray'
   },
   'npc-behavior': {
     core: 'npc-behavior',
     aliases: ['npc', 'characters', 'npcs', 'cast'],
     description: 'How NPCs act and behave',
-    color: 'indigo'
+    color: 'gray'
   },
   emotions: {
     core: 'emotions',
     aliases: ['feelings', 'emotional', 'sentiment', 'affect', 'emotion'],
     description: 'Emotional expression and reactions',
-    color: 'pink'
+    color: 'gray'
   },
   relationships: {
     core: 'relationships',
     aliases: ['romance', 'connection', 'bonds', 'dynamics'],
     description: 'Character relationships and connections',
-    color: 'rose'
+    color: 'gray'
   },
 
   // --- Story & World ---
@@ -98,31 +98,31 @@ export const TAG_SYSTEM = {
     core: 'consistency',
     aliases: ['continuity', 'coherence', 'lore', 'canon'],
     description: 'Story and world consistency',
-    color: 'green'
+    color: 'gray'
   },
   knowledge: {
     core: 'knowledge',
     aliases: ['metagaming', 'awareness', 'information', 'omniscience', 'context'],
     description: 'Character knowledge and information',
-    color: 'blue'
+    color: 'gray'
   },
   consequences: {
     core: 'consequences',
     aliases: ['stakes', 'risk', 'danger', 'outcomes', 'results', 'dangerous', 'escalation', 'conflict'],
     description: 'Actions and their consequences',
-    color: 'orange'
+    color: 'gray'
   },
   difficulty: {
     core: 'difficulty',
     aliases: ['challenge', 'hardcore', 'casual', 'easy', 'hard'],
     description: 'Game/story difficulty level',
-    color: 'red'
+    color: 'gray'
   },
   immersion: {
     core: 'immersion',
     aliases: ['immersive', 'realism', 'believable', 'grounded', 'realistic', 'no-break'],
     description: 'Story immersion and believability',
-    color: 'emerald'
+    color: 'gray'
   },
 
   // --- Genres ---
@@ -130,31 +130,31 @@ export const TAG_SYSTEM = {
     core: 'fantasy',
     aliases: ['magic', 'magical', 'epic', 'mythical', 'high-fantasy', 'high-magic', 'low-magic'],
     description: 'Fantasy genre elements',
-    color: 'violet'
+    color: 'gray'
   },
   scifi: {
     core: 'scifi',
     aliases: ['science-fiction', 'futuristic', 'space', 'technology', 'cyberpunk'],
     description: 'Science fiction elements',
-    color: 'cyan'
+    color: 'gray'
   },
   horror: {
     core: 'horror',
     aliases: ['dark', 'terror', 'scary', 'dread', 'creepy'],
     description: 'Horror genre elements',
-    color: 'slate'
+    color: 'gray'
   },
   romance: {
     core: 'romance',
     aliases: ['romantic', 'love', 'relationship'],
     description: 'Romance genre elements',
-    color: 'pink'
+    color: 'gray'
   },
   thriller: {
     core: 'thriller',
     aliases: ['suspense', 'tension', 'exciting', 'fast-paced'],
     description: 'Thriller/action elements',
-    color: 'orange'
+    color: 'gray'
   },
 
   // --- Roles & POV ---
@@ -162,13 +162,13 @@ export const TAG_SYSTEM = {
     core: 'role',
     aliases: ['persona', 'identity', 'author', 'novelist', 'storyteller', 'narrator'],
     description: 'AI role and persona',
-    color: 'amber'
+    color: 'gray'
   },
   pov: {
     core: 'pov',
     aliases: ['perspective', 'tense', 'first-person', 'second-person', 'third-person', 'viewpoint'],
     description: 'Point of view and tense',
-    color: 'sky'
+    color: 'gray'
   },
 
   // --- Control & Formatting ---
@@ -176,7 +176,7 @@ export const TAG_SYSTEM = {
     core: 'control',
     aliases: ['agency', 'autonomy', 'freedom', 'restriction', 'restraint', 'prohibition', 'strict', 'rules', 'limits', 'player-choice', 'user-input', 'sandbox', 'user-control', 'user-driven', 'player-driven'],
     description: 'Player/character control level',
-    color: 'yellow'
+    color: 'gray'
   },
   formatting: {
     core: 'formatting',
@@ -190,19 +190,19 @@ export const TAG_SYSTEM = {
     core: 'setting',
     aliases: ['world', 'environment', 'location', 'era', 'period', 'geography'],
     description: 'World and setting details',
-    color: 'emerald'
+    color: 'gray'
   },
   modern: {
     core: 'modern',
     aliases: ['contemporary', 'present-day', 'current'],
     description: 'Modern/contemporary settings',
-    color: 'slate'
+    color: 'gray'
   },
   historical: {
     core: 'historical',
     aliases: ['period', 'victorian', 'medieval', '19th-century', 'feudal'],
     description: 'Historical settings',
-    color: 'amber'
+    color: 'gray'
   },
 
   // --- Special ---
@@ -210,25 +210,25 @@ export const TAG_SYSTEM = {
     core: 'complete',
     aliases: ['set', 'bundle', 'package', 'full', 'comprehensive'],
     description: 'Complete instruction sets',
-    color: 'amber'
+    color: 'gray'
   },
   'thinking-mode': {
     core: 'thinking-mode',
     aliases: ['analytical', 'deliberate', 'thoughtful', 'thinking'],
     description: 'Thinking mode activation',
-    color: 'blue'
+    color: 'gray'
   },
   combat: {
     core: 'combat',
     aliases: ['fighting', 'battle', 'action', 'tactical'],
     description: 'Combat and action systems',
-    color: 'red'
+    color: 'gray'
   },
   mystery: {
     core: 'mystery',
     aliases: ['investigation', 'detective', 'clues', 'secrets'],
     description: 'Mystery and investigation elements',
-    color: 'indigo'
+    color: 'gray'
   },
 
   // --- Content Rating ---
@@ -242,7 +242,7 @@ export const TAG_SYSTEM = {
     core: 'tracking',
     aliases: ['state', 'memory', 'time', 'clock', 'stats', 'timeline', 'reputation', 'summary', 'memories', 'status', 'calendar'],
     description: 'State, time, and progress tracking',
-    color: 'indigo'
+    color: 'gray'
   },
 
   // --- Added in the V2 normalization ---
@@ -250,19 +250,19 @@ export const TAG_SYSTEM = {
     core: 'meta',
     aliases: ['ooc', 'out-of-character', 'authors-note'],
     description: 'Meta and out-of-character communication handling',
-    color: 'slate'
+    color: 'gray'
   },
   concept: {
     core: 'concept',
     aliases: ['system'],
     description: 'World concepts and systems: magic systems, technologies, rules of the world',
-    color: 'teal'
+    color: 'gray'
   },
   creature: {
     core: 'creature',
     aliases: ['monster', 'wildlife', 'undead', 'species', 'nonhuman', 'bestiary'],
     description: 'Creatures, monsters, and nonhuman beings',
-    color: 'green'
+    color: 'gray'
   },
 
   // --- Content Types ---
@@ -270,19 +270,19 @@ export const TAG_SYSTEM = {
     core: 'template',
     aliases: ['starter', 'base', 'foundation', 'boilerplate'],
     description: 'Starter templates and foundations',
-    color: 'blue'
+    color: 'gray'
   },
   example: {
     core: 'example',
     aliases: ['sample', 'demo', 'reference'],
     description: 'Example content for reference',
-    color: 'cyan'
+    color: 'gray'
   },
   worldbuilding: {
     core: 'worldbuilding',
     aliases: ['lore', 'world', 'setting-creation', 'culture'],
     description: 'World and setting creation',
-    color: 'emerald'
+    color: 'gray'
   },
 
   // --- Character Types ---
@@ -290,19 +290,19 @@ export const TAG_SYSTEM = {
     core: 'character',
     aliases: ['npc', 'person', 'individual'],
     description: 'Character-related content',
-    color: 'purple'
+    color: 'gray'
   },
   companion: {
     core: 'companion',
     aliases: ['ally', 'party-member', 'friend', 'companions'],
     description: 'Companion and ally content',
-    color: 'green'
+    color: 'gray'
   },
   antagonist: {
     core: 'antagonist',
     aliases: ['villain', 'enemy', 'rival', 'enemies', 'villains'],
     description: 'Antagonist and villain content',
-    color: 'red'
+    color: 'gray'
   },
 
   // --- Location Types ---
@@ -310,7 +310,7 @@ export const TAG_SYSTEM = {
     core: 'location',
     aliases: ['place', 'area', 'region'],
     description: 'Location and place content',
-    color: 'teal'
+    color: 'gray'
   },
 
   // --- Item Types ---
@@ -318,7 +318,7 @@ export const TAG_SYSTEM = {
     core: 'item',
     aliases: ['object', 'equipment', 'gear', 'items', 'inventory', 'weapon'],
     description: 'Item and equipment content',
-    color: 'amber'
+    color: 'gray'
   },
 
   // --- Organization Types ---
@@ -326,7 +326,7 @@ export const TAG_SYSTEM = {
     core: 'faction',
     aliases: ['organization', 'group', 'guild', 'order', 'politics', 'political', 'factions', 'groups'],
     description: 'Faction and organization content',
-    color: 'indigo'
+    color: 'gray'
   }
 }
 

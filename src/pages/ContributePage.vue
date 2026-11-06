@@ -4,9 +4,6 @@
     <header class="contribute-hero relative overflow-hidden rounded-2xl text-center py-14 px-6">
       <!-- Animated background orbs (matches HomePage triple-orb style) -->
       <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none" aria-hidden="true">
-        <div class="hero-orb hero-orb--orange" />
-        <div class="hero-orb hero-orb--purple" />
-        <div class="hero-orb hero-orb--cyan" />
       </div>
 
       <div class="relative z-10">
@@ -32,7 +29,7 @@
         <div 
           v-for="(stat, idx) in impactStats" 
           :key="stat.label" 
-          class="card text-center py-5 group hover:border-bd-accent-primary/20 hover:shadow-glow"
+          class="card text-center py-5 group hover:border-bd-accent-primary/20"
           :style="{ animationDelay: `${idx * 100}ms` }"
         >
           <div class="flex items-center justify-center mb-2">
@@ -744,40 +741,9 @@ onUnmounted(() => {
   border: 1px solid var(--bd-border-subtle);
 }
 
-.hero-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.35;
-  pointer-events: none;
-}
 
-.hero-orb--orange {
-  width: 260px;
-  height: 260px;
-  background: var(--bd-accent-primary);
-  top: -50px;
-  right: -30px;
-  animation: float 8s ease-in-out infinite;
-}
 
-.hero-orb--purple {
-  width: 200px;
-  height: 200px;
-  background: var(--bd-purple);
-  bottom: -40px;
-  left: 5%;
-  animation: float 10s ease-in-out infinite reverse;
-}
 
-.hero-orb--cyan {
-  width: 140px;
-  height: 140px;
-  background: var(--bd-cyan);
-  top: 30%;
-  left: -20px;
-  animation: float 12s ease-in-out infinite 2s;
-}
 
 /* === Section reveal animation === */
 .contribute-section {
