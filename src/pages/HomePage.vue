@@ -171,105 +171,6 @@
       </div>
     </section>
 
-    <!-- What's New Section -->
-    <section ref="whatsNewRef" id="whats-new" :class="['home-section', { 'is-visible': visibleSections.whatsNew }]">
-      <div class="card relative overflow-hidden">
-        <!-- Top accent bar -->
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-accent-primary via-bd-purple to-bd-cyan" />
-
-        <div class="pt-1">
-          <div class="flex items-center justify-between mb-5">
-            <div class="flex items-center gap-2.5">
-              <Megaphone class="w-5 h-5 text-bd-accent-primary" />
-              <h2 class="text-lg font-semibold text-bd-text-primary">What's New in <span class="text-gradient">V1.7</span></h2>
-            </div>
-            <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-bd-accent-primary/15 text-bd-accent-light">Latest</span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <!-- Design Refresh -->
-            <div class="whats-new-card group" style="animation-delay: 0ms">
-              <div class="flex items-center gap-3 mb-3">
-                <div class="w-9 h-9 rounded-lg bg-bd-amber/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-amber/25 transition-colors">
-                  <LayoutDashboard class="w-4 h-4 text-bd-amber" />
-                </div>
-                <h3 class="font-semibold text-sm text-bd-text-primary">Design Refresh</h3>
-              </div>
-              <ul class="space-y-1.5 text-sm text-bd-text-secondary">
-                <li class="flex items-start gap-2">
-                  <Sparkles class="w-3 h-3 text-bd-amber flex-shrink-0 mt-1" />
-                  <span>Refined visual system, cards, navigation, and resource browsing</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <Search class="w-3 h-3 text-bd-amber flex-shrink-0 mt-1" />
-                  <span>Polished search and layout behavior across the public resource hub</span>
-                </li>
-              </ul>
-            </div>
-
-            <!-- Story Card Command Presets -->
-            <div class="whats-new-card group" style="animation-delay: 80ms">
-              <div class="flex items-center gap-3 mb-3">
-                <div class="w-9 h-9 rounded-lg bg-bd-purple/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-purple/25 transition-colors">
-                  <Drama class="w-4 h-4 text-bd-purple" />
-                </div>
-                <h3 class="font-semibold text-sm text-bd-text-primary">Story Card Command Presets</h3>
-                <span class="ml-auto text-[10px] px-2 py-0.5 rounded-full font-medium bg-bd-green/20 text-bd-green">New</span>
-              </div>
-              <ul class="space-y-1.5 text-sm text-bd-text-secondary">
-                <li class="flex items-start gap-2">
-                  <Settings class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
-                  <span>Copy-ready presets for AI Dungeon's Story Card Command tab</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <Bookmark class="w-3 h-3 text-bd-purple flex-shrink-0 mt-1" />
-                  <span>Expanded preset docs for formatting, prompts, and safer card generation</span>
-                </li>
-              </ul>
-            </div>
-
-            <!-- Ultrascripts Guides -->
-            <div class="whats-new-card group" style="animation-delay: 160ms">
-              <div class="flex items-center gap-3 mb-3">
-                <div class="w-9 h-9 rounded-lg bg-bd-green/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-green/25 transition-colors">
-                  <Rocket class="w-4 h-4 text-bd-green" />
-                </div>
-                <h3 class="font-semibold text-sm text-bd-text-primary">Ultrascripts Guides</h3>
-              </div>
-              <ul class="space-y-1.5 text-sm text-bd-text-secondary">
-                <li class="flex items-start gap-2">
-                  <ArrowLeftRight class="w-3 h-3 text-bd-green flex-shrink-0 mt-1" />
-                  <span>Updated BetterDungeon V2 docs for Widget, SDK, modules, and templates</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <Code class="w-3 h-3 text-bd-green flex-shrink-0 mt-1" />
-                  <span>Enhanced and Required templates now match BetterDungeon V2; Stateboy remains clearly marked unpublished</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- CTA -->
-          <div class="mt-5 pt-4 border-t border-bd-border-subtle flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-            <router-link
-              to="/story-cards?tab=presets"
-              class="inline-flex items-center gap-2 text-sm font-medium text-bd-purple hover:text-bd-purple/80 transition-colors"
-            >
-              Browse Command Presets
-              <ArrowRight class="w-3.5 h-3.5" />
-            </router-link>
-            <router-link
-              to="/ultrascripts"
-              class="inline-flex items-center gap-2 text-sm font-medium text-bd-green hover:text-bd-green/80 transition-colors"
-            >
-              Read Ultrascripts Guides
-              <ArrowRight class="w-3.5 h-3.5" />
-            </router-link>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Resource Categories with gradient accent borders -->
     <section ref="categoriesRef" :class="['home-section', { 'is-visible': visibleSections.categories }]">
       <div class="section-header mb-5">
@@ -330,37 +231,6 @@
       </div>
     </section>
 
-    <!-- Quick Start Cards with subtle gradient overlays -->
-    <section ref="quickStartRef" :class="['home-section', { 'is-visible': visibleSections.quickStart }]">
-      <div class="section-header mb-5">
-        <Sparkles class="w-4 h-4" />
-        <span>Get Started</span>
-      </div>
-
-      <div class="grid grid-cols-1 gap-4">
-
-        <!-- Contribute -->
-        <div class="card group relative overflow-hidden hover:border-bd-purple/30">
-          <div class="absolute top-0 right-0 w-24 h-24 bg-bd-purple/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
-          <div class="relative">
-            <div class="flex items-center gap-3 mb-3">
-              <div class="w-10 h-10 rounded-xl bg-bd-purple/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-purple/25 transition-colors">
-                <GitPullRequest class="w-5 h-5 text-bd-purple" />
-              </div>
-              <h3 class="font-semibold text-bd-text-primary">Share Your Work</h3>
-            </div>
-            <p class="text-sm text-bd-text-secondary mb-4 leading-relaxed">
-              Share your own creations with the community.
-            </p>
-            <router-link to="/contribute" class="inline-flex items-center gap-1.5 text-sm font-medium text-bd-purple hover:text-bd-purple/80 transition-colors">
-              Submit Creation
-              <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-            </router-link>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Credits Section with refined styling -->
     <section ref="creditsRef" :class="['home-section', { 'is-visible': visibleSections.credits }]">
       <div class="card relative overflow-hidden">
@@ -415,23 +285,17 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, reactive, nextTick } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { ref, computed, onMounted, onUnmounted, reactive } from 'vue'
+import { useRouter } from 'vue-router'
 import { INSTRUCTIONS, CATEGORIES } from '@/data/aiInstructions'
 import { TEMPLATES } from '@/data/plotComponents'
 import { STORY_CARDS, STORY_CARD_TEMPLATES } from '@/data/storyCards'
 import { SCRIPTS } from '@/data/scripts'
 import { useGlobalSearch } from '@/composables/useGlobalSearch'
 import { MAJOR_CONTRIBUTORS as majorContributors } from '@/data/contributors'
-import {
-  Search, LayoutGrid, Lightbulb, ScrollText, Heart, Sparkles, ArrowRight,
-  GitPullRequest, MessageCircle, ExternalLink, Bookmark, Drama, Code,
-  Award, Users, ChevronRight, Package, Layers, LayoutDashboard, Infinity, X,
-  Megaphone, Settings, Rocket, ArrowLeftRight, Cog, BookOpen
-} from 'lucide-vue-next'
+import { Search, LayoutGrid, ScrollText, Heart, Bookmark, Drama, Code, Award, Users, ChevronRight, Package, Layers, LayoutDashboard, Infinity, X, Rocket, Cog, BookOpen } from 'lucide-vue-next'
 
 const router = useRouter()
-const route = useRoute()
 
 // --- Platform detection for keyboard hint ---
 const isMac = navigator.userAgent.includes('Mac')
@@ -443,17 +307,13 @@ const searchInputRef = ref(null)
 const searchContainerRef = ref(null)
 
 // --- Section refs for IntersectionObserver staggered reveal ---
-const whatsNewRef = ref(null)
 const categoriesRef = ref(null)
 const statsRef = ref(null)
-const quickStartRef = ref(null)
 const creditsRef = ref(null)
 
 const visibleSections = reactive({
-  whatsNew: false,
   categories: false,
   stats: false,
-  quickStart: false,
   credits: false,
 })
 
@@ -465,10 +325,8 @@ onMounted(() => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const el = entry.target
-          if (el === whatsNewRef.value) visibleSections.whatsNew = true
-          else if (el === categoriesRef.value) visibleSections.categories = true
+          if (el === categoriesRef.value) visibleSections.categories = true
           else if (el === statsRef.value) visibleSections.stats = true
-          else if (el === quickStartRef.value) visibleSections.quickStart = true
           else if (el === creditsRef.value) visibleSections.credits = true
           observer.unobserve(el)
         }
@@ -477,22 +335,11 @@ onMounted(() => {
     { threshold: 0.15 }
   )
 
-  const refs = [whatsNewRef, categoriesRef, statsRef, quickStartRef, creditsRef]
+  const refs = [categoriesRef, statsRef, creditsRef]
   refs.forEach((r) => { if (r.value) observer.observe(r.value) })
 
   // Close search results when clicking outside
   document.addEventListener('mousedown', handleClickOutside)
-
-  // Scroll to What's New section if coming from sidebar link
-  if (route.query.section === 'whats-new') {
-    nextTick(() => {
-      const el = document.getElementById('whats-new')
-      if (el) {
-        visibleSections.whatsNew = true
-        setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
-      }
-    })
-  }
 })
 
 onUnmounted(() => {
@@ -666,20 +513,6 @@ const handleClickOutside = (e) => {
 .home-section.is-visible {
   opacity: 1;
   transform: translateY(0);
-}
-
-/* === What's New cards === */
-.whats-new-card {
-  padding: 1rem;
-  border-radius: 0.75rem;
-  background: var(--bd-bg-primary);
-  border: 1px solid var(--bd-border-subtle);
-  transition: border-color 0.2s ease, transform 0.2s ease;
-}
-
-.whats-new-card:hover {
-  border-color: var(--bd-border-default);
-  transform: translateY(-1px);
 }
 
 /* === Contributor chips === */

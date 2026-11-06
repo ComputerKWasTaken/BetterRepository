@@ -30,9 +30,6 @@
             <router-link to="/" class="text-lg font-semibold text-bd-text-primary hover:text-bd-accent-light transition-colors" @click="closeMobile">
               BetterRepository
             </router-link>
-            <div class="flex items-center gap-2">
-              <router-link to="/?section=whats-new" class="text-xs text-bd-text-muted hover:text-bd-accent-primary transition-colors" @click="closeMobile">v1.7</router-link>
-            </div>
           </div>
         </div>
         <!-- Close button (mobile only) -->
@@ -54,7 +51,7 @@
         >
           <Search class="w-4 h-4" />
           <span>Search everything</span>
-          <kbd class="ml-auto text-[10px] text-bd-text-muted">Ctrl K</kbd>
+          <kbd class="ml-auto text-[10px] text-bd-text-muted hidden sm:inline-block">Ctrl K</kbd>
         </button>
       </div>
 
