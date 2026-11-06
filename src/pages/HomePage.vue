@@ -27,7 +27,7 @@
         </div>
 
         <p class="text-bd-text-secondary max-w-xl mx-auto mb-8 leading-relaxed">
-          A curated collection of AI Instructions, Plot Components, Story Cards, Scripts, and Guides.
+          A curated collection of AI Instructions, Plot Components, Story Cards, and Scripts.
           Everything you need to craft <span class="text-gradient font-semibold">better adventures</span>.
         </p>
 
@@ -43,8 +43,8 @@
                 ref="searchInputRef"
                 v-model="searchState.query.value"
                 type="text"
-                placeholder="Search resources, presets, and guides..."
-                aria-label="Search all BetterRepository resources and guides"
+                placeholder="Search resources and presets..."
+                aria-label="Search all BetterRepository resources"
                 class="input pl-12 pr-12 py-3.5 bg-bd-bg-secondary/80 backdrop-blur-card"
                 @focus="showResults = true"
                 @keydown.escape="showResults = false"
@@ -263,13 +263,6 @@
               Read Ultrascripts Guides
               <ArrowRight class="w-3.5 h-3.5" />
             </router-link>
-            <router-link
-              to="/guides"
-              class="inline-flex items-center gap-2 text-sm font-medium text-bd-amber hover:text-bd-amber/80 transition-colors"
-            >
-              View Guides
-              <ArrowRight class="w-3.5 h-3.5" />
-            </router-link>
           </div>
         </div>
       </div>
@@ -342,26 +335,7 @@
         <span>Get Started</span>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <!-- New Users -->
-        <div class="card group relative overflow-hidden hover:border-bd-green/30">
-          <div class="absolute top-0 right-0 w-24 h-24 bg-bd-green/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
-          <div class="relative">
-            <div class="flex items-center gap-3 mb-3">
-              <div class="w-10 h-10 rounded-xl bg-bd-green/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-green/25 transition-colors">
-                <Lightbulb class="w-5 h-5 text-bd-green" />
-              </div>
-              <h3 class="font-semibold text-bd-text-primary">New to AI Dungeon?</h3>
-            </div>
-            <p class="text-sm text-bd-text-secondary mb-4 leading-relaxed">
-              Check out the Guides to learn how AI Instructions, Plot Components, Story Cards, and Scripts work.
-            </p>
-            <router-link to="/guides" class="inline-flex items-center gap-1.5 text-sm font-medium text-bd-green hover:text-bd-green/80 transition-colors">
-              Read the Guides
-              <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-            </router-link>
-          </div>
-        </div>
+      <div class="grid grid-cols-1 gap-4">
 
         <!-- Contribute -->
         <div class="card group relative overflow-hidden hover:border-bd-purple/30">
@@ -374,36 +348,12 @@
               <h3 class="font-semibold text-bd-text-primary">Share Your Work</h3>
             </div>
             <p class="text-sm text-bd-text-secondary mb-4 leading-relaxed">
-              Read the Guides to learn the ropes, then share your own creations with the community.
+              Share your own creations with the community.
             </p>
             <router-link to="/contribute" class="inline-flex items-center gap-1.5 text-sm font-medium text-bd-purple hover:text-bd-purple/80 transition-colors">
               Submit Creation
               <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </router-link>
-          </div>
-        </div>
-
-        <!-- Discord -->
-        <div class="card group relative overflow-hidden hover:border-bd-cyan/30">
-          <div class="absolute top-0 right-0 w-24 h-24 bg-bd-cyan/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
-          <div class="relative">
-            <div class="flex items-center gap-3 mb-3">
-              <div class="w-10 h-10 rounded-xl bg-bd-cyan/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-cyan/25 transition-colors">
-                <MessageCircle class="w-5 h-5 text-bd-cyan" />
-              </div>
-              <h3 class="font-semibold text-bd-text-primary">Join Community</h3>
-            </div>
-            <p class="text-sm text-bd-text-secondary mb-4 leading-relaxed">
-              Connect with other players, share creations, and get help.
-            </p>
-            <a 
-              href="https://discord.com/invite/HB2YBZYjyf" 
-              target="_blank"
-              class="inline-flex items-center gap-1.5 text-sm font-medium text-bd-cyan hover:text-bd-cyan/80 transition-colors"
-            >
-              Join Discord
-              <ExternalLink class="w-3.5 h-3.5" />
-            </a>
           </div>
         </div>
       </div>

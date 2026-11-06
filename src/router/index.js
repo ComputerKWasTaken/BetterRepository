@@ -9,9 +9,7 @@ import StoryCardsPage from '@/pages/StoryCardsPage.vue'
 import ScriptsPage from '@/pages/ScriptsPage.vue'
 import UltrascriptsPage from '@/pages/UltrascriptsPage.vue'
 import ContributePage from '@/pages/ContributePage.vue'
-import EcosystemPage from '@/pages/EcosystemPage.vue'
 import CreditsPage from '@/pages/CreditsPage.vue'
-import GuidesPage from '@/pages/GuidesPage.vue'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
 
 const routes = [
@@ -88,18 +86,6 @@ const routes = [
     }
   },
   {
-    path: '/guides',
-    name: 'Guides',
-    component: GuidesPage,
-    meta: {
-      title: 'Guides - BetterRepository',
-      description: 'Comprehensive guides for AI Dungeon covering AI Instructions, Plot Components, Story Cards, Scripts, Symbols & Commands, and Advanced Settings.',
-      ogTitle: 'Guides - BetterRepository',
-      ogDescription: 'Everything you need to master AI Dungeon. In-depth guides on AI Instructions, Plot Components, Story Cards, Scripting, Symbols & Commands, and Advanced Settings.',
-      path: '/guides'
-    }
-  },
-  {
     path: '/contribute',
     name: 'Contribute',
     component: ContributePage,
@@ -109,18 +95,6 @@ const routes = [
       ogTitle: 'Contribute to BetterRepository',
       ogDescription: 'Share your AI Dungeon knowledge with the community. Submit guides, templates, scripts, or report improvements. Every contribution makes a difference.',
       path: '/contribute'
-    }
-  },
-  {
-    path: '/ecosystem',
-    name: 'Ecosystem',
-    component: EcosystemPage,
-    meta: {
-      title: 'The "Better" Ecosystem - BetterRepository',
-      description: 'A suite of open-source tools designed to enhance AI Dungeon. Discover BetterRepository, BetterDungeon, and more community-built projects.',
-      ogTitle: 'The "Better" Ecosystem',
-      ogDescription: 'Open-source tools for AI Dungeon. BetterRepository for curated content, BetterDungeon browser extension for QOL features, and more.',
-      path: '/ecosystem'
     }
   },
   {

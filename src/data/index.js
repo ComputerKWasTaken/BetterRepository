@@ -123,9 +123,3 @@ export {
   updateCategoryCounts
 } from './scripts.js'
 
-// Advanced Settings
-export {
-  MODEL_PRESETS,
-  getPresetById,
-  getPresetDisplayName
-} from './advancedSettings.js'

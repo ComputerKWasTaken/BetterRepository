@@ -1,57 +1,7 @@
-// Search-only index for guide destinations. Guide content remains in the Vue
-// components; this compact index makes every primary guide and Ultrascripts
-// module discoverable from global search.
+// Search-only index for Ultrascripts guide destinations. Guide content remains
+// in the Vue components; this compact index makes every Ultrascripts module
+// discoverable from global search.
 
-export const GUIDE_SEARCH_ITEMS = [
-  {
-    id: 'guide-ai-instructions',
-    name: 'AI Instructions Guide',
-    description: 'Write clear behavior, style, pacing, and narrative instructions for AI Dungeon.',
-    tags: ['guide', 'instructions', 'writing', 'style', 'pacing'],
-    route: '/guides',
-    tabHint: 'ai-instructions'
-  },
-  {
-    id: 'guide-plot-components',
-    name: 'Plot Components Guide',
-    description: 'Choose and structure Plot Essentials, Author’s Note, Story Summary, and related context.',
-    tags: ['guide', 'plot', 'context', 'authors note', 'story summary'],
-    route: '/guides',
-    tabHint: 'plot-components'
-  },
-  {
-    id: 'guide-story-cards',
-    name: 'Story Cards Guide',
-    description: 'Build reliable triggers, entries, command presets, and import-ready Story Cards.',
-    tags: ['guide', 'story cards', 'triggers', 'command presets'],
-    route: '/guides',
-    tabHint: 'story-cards'
-  },
-  {
-    id: 'guide-scripts',
-    name: 'Scripts Guide',
-    description: 'Understand AI Dungeon script hooks, state, APIs, safe patterns, and Ultrascripts migration.',
-    tags: ['guide', 'scripts', 'javascript', 'hooks', 'state'],
-    route: '/guides',
-    tabHint: 'scripts'
-  },
-  {
-    id: 'guide-symbols-commands',
-    name: 'Symbols & Commands Guide',
-    description: 'Use AI Dungeon action symbols, input modes, and BetterDungeon command behavior.',
-    tags: ['guide', 'symbols', 'commands', 'do', 'say', 'story'],
-    route: '/guides',
-    tabHint: 'symbols-commands'
-  },
-  {
-    id: 'guide-advanced-settings',
-    name: 'Advanced Settings Guide',
-    description: 'Tune generation settings and model presets with practical tradeoffs.',
-    tags: ['guide', 'advanced settings', 'models', 'temperature', 'generation'],
-    route: '/guides',
-    tabHint: 'advanced-settings'
-  }
-]
 
 export const ULTRASCRIPTS_GUIDE_SEARCH_ITEMS = [
   {

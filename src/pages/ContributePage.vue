@@ -21,7 +21,7 @@
           Every guide, every template, every script started as someone's contribution.
         </p>
         <p class="text-sm text-bd-text-muted max-w-md mx-auto">
-          New here? Check out the <router-link to="/guides" class="text-bd-accent-primary hover:text-bd-accent-light transition-colors font-medium">Guides</router-link> first to learn the ropes. Ready to share? Just paste and submit.
+          Ready to share? Just paste and submit.
         </p>
       </div>
     </header>
@@ -64,7 +64,7 @@
             </div>
             <p class="text-sm text-bd-text-secondary leading-relaxed">
               New players discover AI Dungeon every day. Your contribution could be the thing that turns a confused
-              newcomer into a confident storyteller. Start by reading the <router-link to="/guides" class="text-bd-green hover:text-bd-green/80 font-medium transition-colors">Guides</router-link> to see what's already covered.
+              newcomer into a confident storyteller.
             </p>
           </div>
         </div>
@@ -486,28 +486,6 @@
               </a>
             </div>
           </div>
-
-          <!-- Discord -->
-          <div class="alt-card group">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-bd-discord/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
-            <div class="relative">
-              <div class="flex items-center gap-3 mb-2">
-                <MessageCircle class="w-5 h-5 text-bd-discord" />
-                <h3 class="font-medium text-bd-text-primary">Discord</h3>
-              </div>
-              <p class="text-sm text-bd-text-secondary mb-3 leading-relaxed">
-                Share in the AI Dungeon Discord and ping me to add it.
-              </p>
-              <a 
-                href="https://discord.gg/aidungeon" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                class="inline-flex items-center gap-1.5 text-sm font-medium text-bd-discord hover:text-bd-discord/80 transition-colors"
-              >
-                Join Discord <ExternalLink class="w-3 h-3" />
-              </a>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -557,10 +535,6 @@
               <Send class="w-4 h-4" />
               Submit a Contribution
             </button>
-            <router-link to="/guides" class="btn btn-secondary">
-              <BookOpen class="w-4 h-4" />
-              Read the Guides
-            </router-link>
             <router-link to="/credits" class="btn btn-secondary">
               <Award class="w-4 h-4" />
               See Who's Contributed

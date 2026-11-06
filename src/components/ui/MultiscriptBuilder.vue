@@ -133,17 +133,6 @@
             </div>
             <p class="text-[10px] text-bd-text-muted">At each hook, the dispatcher calls every script in order. Each script only executes the code for that hook.</p>
           </div>
-
-          <!-- Learn More link -->
-          <div class="flex items-center justify-center pt-1">
-            <router-link
-              to="/guides?section=scripts&expand=hook-pattern"
-              class="inline-flex items-center gap-1.5 text-xs font-medium text-bd-accent-primary hover:text-bd-accent-light transition-colors"
-            >
-              Learn more about scripting in the Guides
-              <ArrowRight class="w-3 h-3" />
-            </router-link>
-          </div>
         </div>
       </Transition>
     </div>

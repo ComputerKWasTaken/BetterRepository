@@ -236,15 +236,15 @@ body {
   }
 }
 
-/* === BetterEcosystem Design Consolidation === */
-:is(.hero-section, .ai-hero, .plot-hero, .sc-hero, .scripts-hero, .guides-hero, .ultrascripts-hero, .credits-hero, .contribute-hero, .eco-hero) {
+/* === Design Consolidation === */
+:is(.hero-section, .ai-hero, .plot-hero, .sc-hero, .scripts-hero, .ultrascripts-hero, .credits-hero, .contribute-hero) {
   background: var(--bd-bg-secondary) !important;
   border: 1px solid var(--bd-border-subtle) !important;
   border-radius: var(--bd-radius-2xl) !important;
   box-shadow: none !important;
 }
 
-:is(.hero-section, .ai-hero, .plot-hero, .sc-hero, .scripts-hero, .guides-hero, .ultrascripts-hero, .credits-hero, .contribute-hero, .eco-hero)::before {
+:is(.hero-section, .ai-hero, .plot-hero, .sc-hero, .scripts-hero, .ultrascripts-hero, .credits-hero, .contribute-hero)::before {
   content: "";
   position: absolute;
   inset: 0 auto auto 0;

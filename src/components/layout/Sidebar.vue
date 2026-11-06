@@ -101,27 +101,6 @@
             <span>Contribute</span>
             </router-link>
 
-          <router-link 
-            to="/ecosystem"
-            class="nav-link"
-            :class="{ 'active': isActive('/ecosystem') }"
-            @click="closeMobile"
-          >
-            <Sparkles class="w-4 h-4" />
-            <span>Ecosystem</span>
-          </router-link>
-          
-          <a 
-            href="https://discord.com/invite/HB2YBZYjyf" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            class="nav-link"
-          >
-            <MessageCircle class="w-4 h-4" />
-            <span>Discord</span>
-            <ExternalLink class="w-3 h-3 ml-auto opacity-50" />
-          </a>
-
           <a
             href="https://ko-fi.com/computerk"
             target="_blank"
@@ -149,8 +128,8 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { 
-  LayoutGrid, ScrollText, Bookmark, Drama, Code, BookOpen, Rocket,
-  Link2, GitPullRequest, MessageCircle, ExternalLink, Heart, Coffee, Sparkles, X, Search
+  LayoutGrid, ScrollText, Bookmark, Drama, Code, Rocket,
+  Link2, GitPullRequest, ExternalLink, Heart, Coffee, X, Search
 } from 'lucide-vue-next'
 
 const props = defineProps({
@@ -221,7 +200,6 @@ const mainNavItems = [
   { path: '/story-cards', label: 'Story Cards', icon: Drama, count: null },
   { path: '/scripts', label: 'Scripts', icon: Code, count: null },
   { path: '/ultrascripts', label: 'Ultrascripts', icon: Rocket, count: null },
-  { path: '/guides', label: 'Guides', icon: BookOpen, count: null },
 ]
 
 const isActive = (path) => {

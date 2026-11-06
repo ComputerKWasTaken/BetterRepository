@@ -174,15 +174,6 @@
               <GitPullRequest class="w-4 h-4" />
               Become a Contributor
             </router-link>
-            <a 
-              href="https://discord.com/invite/HB2YBZYjyf" 
-              target="_blank"
-              class="btn btn-secondary"
-            >
-              <MessageCircle class="w-4 h-4" />
-              Join the Community
-              <ExternalLink class="w-3 h-3" />
-            </a>
           </div>
         </div>
       </div>
