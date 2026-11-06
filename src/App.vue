@@ -66,18 +66,20 @@ import { Menu, Search, Sparkles } from 'lucide-vue-next'
 import Sidebar from '@/components/layout/Sidebar.vue'
 import ToastContainer from '@/components/ui/ToastContainer.vue'
 import SearchOverlay from '@/components/ui/SearchOverlay.vue'
+import { useSearchOverlayState } from '@/composables/useSearchOverlayState'
 
 // Mobile sidebar state
 const sidebarOpen = ref(false)
 
-// Global search overlay state
-const searchOpen = ref(false)
+// Global search overlay state (shared singleton: the sidebar, mobile
+// header, homepage hero, and this shortcut all drive the same overlay)
+const { isOpen: searchOpen, toggleSearch } = useSearchOverlayState()
 
 // Ctrl+K / Cmd+K keyboard shortcut
 const handleKeydown = (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
     e.preventDefault()
-    searchOpen.value = !searchOpen.value
+    toggleSearch()
   }
   if (e.key === 'Escape') {
     sidebarOpen.value = false
