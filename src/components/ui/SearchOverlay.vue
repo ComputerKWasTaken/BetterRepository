@@ -3,6 +3,7 @@
     <Transition name="overlay">
       <div 
         v-if="isOpen"
+        ref="rootRef"
         class="fixed inset-0 flex items-start justify-center sm:pt-[20vh] sm:px-4"
         style="z-index: var(--bd-z-modal)"
       >
@@ -18,7 +19,7 @@
           role="dialog"
           aria-modal="true"
           aria-labelledby="global-search-title"
-          class="relative w-full max-w-lg h-[100dvh] sm:h-auto flex flex-col bg-bd-bg-secondary sm:border border-bd-border-default sm:rounded-xl shadow-xl overflow-hidden animate-scaleIn"
+          class="relative w-full max-w-lg h-full sm:h-auto flex flex-col bg-bd-bg-secondary sm:border border-bd-border-default sm:rounded-xl shadow-xl overflow-hidden animate-scaleIn"
         >
           <h2 id="global-search-title" class="sr-only">Search BetterRepository</h2>
           <!-- Search input -->
@@ -161,6 +162,7 @@ const router = useRouter()
 const searchState = useGlobalSearch({ debounceMs: 150, maxPerGroup: 4 })
 const inputRef = ref(null)
 const panelRef = ref(null)
+const rootRef = ref(null)
 
 // --- Keyboard list navigation ---
 const highlightGroupId = ref(null)
@@ -226,6 +228,10 @@ const selectHighlighted = () => {
   )
   if (current) {
     navigateToResult(current.group, current.result)
+  } else {
+    // Nothing highlighted (the usual case on touch devices): dismiss the
+    // on-screen keyboard so the results are fully visible and tappable.
+    inputRef.value?.blur()
   }
 }
 
@@ -271,6 +277,33 @@ const close = () => {
   emit('close')
 }
 
+// On touch devices, keep the overlay sized to the *visual* viewport so the
+// results list always sits above the on-screen keyboard. iOS Safari ignores
+// the resizes-content viewport flag, so track visualViewport directly.
+let vvCleanup = null
+const trackVisualViewport = () => {
+  const vv = window.visualViewport
+  const root = rootRef.value
+  if (!vv || !root) return
+  const update = () => {
+    root.style.height = `${vv.height}px`
+    root.style.top = `${vv.offsetTop}px`
+  }
+  update()
+  vv.addEventListener('resize', update)
+  vv.addEventListener('scroll', update)
+  vvCleanup = () => {
+    vv.removeEventListener('resize', update)
+    vv.removeEventListener('scroll', update)
+    root.style.height = ''
+    root.style.top = ''
+  }
+}
+const stopTrackingVisualViewport = () => {
+  vvCleanup?.()
+  vvCleanup = null
+}
+
 // Auto-focus input and lock body scroll when opened
 watch(() => props.isOpen, async (open) => {
   if (open) {
@@ -286,8 +319,11 @@ watch(() => props.isOpen, async (open) => {
     // keyboard reliably, so leave focus to the user there.
     if (window.matchMedia('(pointer: fine)').matches) {
       inputRef.value?.focus()
+    } else {
+      trackVisualViewport()
     }
   } else {
+    stopTrackingVisualViewport()
     // Only unlock if sidebar is not open (requires coordination with sidebar state)
     // For now, emit an event or use a global scroll lock manager
     document.body.style.overflow = ''
@@ -296,6 +332,7 @@ watch(() => props.isOpen, async (open) => {
 
 // Cleanup on unmount
 onUnmounted(() => {
+  stopTrackingVisualViewport()
   document.body.style.overflow = ''
 })
 </script>
