@@ -3,8 +3,8 @@
     <!-- Page Header - animated hero -->
     <header class="plot-hero relative overflow-hidden rounded-2xl py-10 px-6">
       <div class="relative z-10 flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl bg-bd-blue/20 flex items-center justify-center animate-float flex-shrink-0">
-          <Bookmark class="w-6 h-6 text-bd-blue" />
+        <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/15 flex items-center justify-center flex-shrink-0">
+          <Bookmark class="w-6 h-6 text-bd-accent-primary" />
         </div>
         <div>
           <h1 class="text-2xl md:text-3xl font-bold text-bd-text-primary tracking-tight">
@@ -736,11 +736,11 @@
     <!-- ==================== TEMPLATES TAB ==================== -->
     <template v-if="activeTab === 'templates'">
       <!-- Templates Introduction -->
-      <div class="card bg-gradient-to-r from-bd-blue/10 to-bd-green/10 border-bd-blue/30 relative overflow-hidden animate-fade-in">
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-blue via-bd-green to-bd-cyan" />
+      <div class="card border-bd-border-subtle relative overflow-hidden animate-fade-in">
+        <div class="absolute top-0 left-0 w-full h-0.5 bg-bd-accent-primary/70" />
         <div class="flex items-start gap-4 pt-1">
-          <div class="w-12 h-12 rounded-xl bg-bd-blue/20 flex items-center justify-center flex-shrink-0">
-            <Layers class="w-6 h-6 text-bd-blue" />
+          <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/15 flex items-center justify-center flex-shrink-0">
+            <Layers class="w-6 h-6 text-bd-accent-primary" />
           </div>
           <div class="flex-1">
             <h2 class="text-lg font-semibold text-bd-text-primary mb-1">Plot Component Templates</h2>

@@ -37,7 +37,7 @@
     <div class="flex-1 space-y-4 min-w-0">
 
       <!-- ===================== GET STARTED CTA (top of overview) ===================== -->
-      <div class="rounded-xl p-5 border border-bd-amber/40 bg-gradient-to-br from-bd-amber/10 via-bd-purple/5 to-bd-green/10">
+      <div class="rounded-xl p-5 border border-bd-border-subtle bg-bd-bg-tertiary">
         <div class="flex items-start gap-4 flex-wrap">
           <div class="w-11 h-11 rounded-xl bg-bd-amber/20 flex items-center justify-center flex-shrink-0">
             <Zap class="w-5 h-5 text-bd-amber" />
@@ -183,7 +183,7 @@
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Wrench class="w-5 h-5 text-bd-amber" />
+            <Wrench class="w-5 h-5 text-bd-accent-primary" />
             How To Use These Docs
           </h2>
           <ChevronDown
@@ -242,7 +242,7 @@
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <GitMerge class="w-5 h-5 text-bd-blue" />
+            <GitMerge class="w-5 h-5 text-bd-accent-primary" />
             Story Card Transport
           </h2>
           <ChevronDown
@@ -330,7 +330,7 @@
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <ShieldCheck class="w-5 h-5 text-bd-green" />
+            <ShieldCheck class="w-5 h-5 text-bd-accent-primary" />
             Security &amp; Player Consent
           </h2>
           <ChevronDown
@@ -382,7 +382,7 @@
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <Monitor class="w-5 h-5 text-bd-cyan" />
+            <Monitor class="w-5 h-5 text-bd-accent-primary" />
             Platform Support
           </h2>
           <ChevronDown
@@ -437,7 +437,7 @@
           class="w-full flex items-center justify-between text-left"
         >
           <h2 class="text-lg font-semibold text-bd-text-primary flex items-center gap-2">
-            <BookOpen class="w-5 h-5 text-bd-amber" />
+            <BookOpen class="w-5 h-5 text-bd-accent-primary" />
             Module Deep-Dive Guides
           </h2>
           <ChevronDown
@@ -453,66 +453,66 @@
             </p>
 
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
-              <router-link to="/ultrascripts?tab=widget" class="block p-4 rounded-lg bg-gradient-to-br from-bd-green/10 to-transparent border border-bd-green/30 hover:border-bd-green/50 transition-colors group">
+              <router-link to="/ultrascripts?tab=widget" class="block p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle hover:border-bd-border-default transition-colors group">
                 <div class="flex items-center gap-2 mb-1.5">
-                  <LayoutDashboard class="w-5 h-5 text-bd-green" />
-                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-green transition-colors">Widget</h4>
+                  <LayoutDashboard class="w-5 h-5 text-bd-accent-primary" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-accent-light transition-colors">Widget</h4>
                 </div>
                 <p class="text-bd-text-muted">Dynamic UI widgets &mdash; HP bars, stat grids, quest trackers, dashboards.</p>
               </router-link>
 
-              <router-link to="/ultrascripts?tab=webfetch" class="block p-4 rounded-lg bg-gradient-to-br from-bd-blue/10 to-transparent border border-bd-blue/30 hover:border-bd-blue/50 transition-colors group">
+              <router-link to="/ultrascripts?tab=webfetch" class="block p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle hover:border-bd-border-default transition-colors group">
                 <div class="flex items-center gap-2 mb-1.5">
-                  <Globe class="w-5 h-5 text-bd-blue" />
-                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-blue transition-colors">WebFetch</h4>
+                  <Globe class="w-5 h-5 text-bd-accent-primary" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-accent-light transition-colors">WebFetch</h4>
                 </div>
                 <p class="text-bd-text-muted">Bounded, credential-free reads of small public HTTPS resources.</p>
               </router-link>
 
-              <router-link to="/ultrascripts?tab=ai" class="block p-4 rounded-lg bg-gradient-to-br from-bd-purple/10 to-transparent border border-bd-purple/30 hover:border-bd-purple/50 transition-colors group">
+              <router-link to="/ultrascripts?tab=ai" class="block p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle hover:border-bd-border-default transition-colors group">
                 <div class="flex items-center gap-2 mb-1.5">
-                  <BrainCircuit class="w-5 h-5 text-bd-purple" />
-                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-purple transition-colors">AI</h4>
+                  <BrainCircuit class="w-5 h-5 text-bd-accent-primary" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-accent-light transition-colors">AI</h4>
                 </div>
                 <p class="text-bd-text-muted">Provider-neutral async status/query contract with text, schema-backed JSON, thinking levels, and normalized service errors.</p>
               </router-link>
 
-              <router-link to="/ultrascripts?tab=sdk" class="block p-4 rounded-lg bg-gradient-to-br from-bd-cyan/10 to-transparent border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">
+              <router-link to="/ultrascripts?tab=sdk" class="block p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle hover:border-bd-border-default transition-colors group">
                 <div class="flex items-center gap-2 mb-1.5">
-                  <Terminal class="w-5 h-5 text-bd-cyan" />
-                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-cyan transition-colors">SDK</h4>
+                  <Terminal class="w-5 h-5 text-bd-accent-primary" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-accent-light transition-colors">SDK</h4>
                 </div>
                 <p class="text-bd-text-muted">Version + sanitized config introspection. Adapt your scenario to the player's setup.</p>
               </router-link>
 
-              <router-link to="/ultrascripts?tab=clock" class="block p-4 rounded-lg bg-gradient-to-br from-bd-amber/10 to-transparent border border-bd-amber/30 hover:border-bd-amber/50 transition-colors group">
+              <router-link to="/ultrascripts?tab=clock" class="block p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle hover:border-bd-border-default transition-colors group">
                 <div class="flex items-center gap-2 mb-1.5">
-                  <Clock class="w-5 h-5 text-bd-amber" />
-                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-amber transition-colors">Clock</h4>
+                  <Clock class="w-5 h-5 text-bd-accent-primary" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-accent-light transition-colors">Clock</h4>
                 </div>
                 <p class="text-bd-text-muted">Real-world time, timezone, and formatting helpers for time-of-day-aware scenes.</p>
               </router-link>
 
-              <router-link to="/ultrascripts?tab=weather" class="block p-4 rounded-lg bg-gradient-to-br from-bd-cyan/10 to-transparent border border-bd-cyan/30 hover:border-bd-cyan/50 transition-colors group">
+              <router-link to="/ultrascripts?tab=weather" class="block p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle hover:border-bd-border-default transition-colors group">
                 <div class="flex items-center gap-2 mb-1.5">
-                  <CloudSun class="w-5 h-5 text-bd-cyan" />
-                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-cyan transition-colors">Weather</h4>
+                  <CloudSun class="w-5 h-5 text-bd-accent-primary" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-accent-light transition-colors">Weather</h4>
                 </div>
                 <p class="text-bd-text-muted">Open-Meteo current conditions and forecasts for weather-reactive scenarios.</p>
               </router-link>
 
-              <router-link to="/ultrascripts?tab=network" class="block p-4 rounded-lg bg-gradient-to-br from-bd-green/10 to-transparent border border-bd-green/30 hover:border-bd-green/50 transition-colors group">
+              <router-link to="/ultrascripts?tab=network" class="block p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle hover:border-bd-border-default transition-colors group">
                 <div class="flex items-center gap-2 mb-1.5">
-                  <Wifi class="w-5 h-5 text-bd-green" />
-                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-green transition-colors">Network</h4>
+                  <Wifi class="w-5 h-5 text-bd-accent-primary" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-accent-light transition-colors">Network</h4>
                 </div>
                 <p class="text-bd-text-muted">Online state and connection hints for graceful offline fallbacks.</p>
               </router-link>
 
-              <router-link to="/ultrascripts?tab=system" class="block p-4 rounded-lg bg-gradient-to-br from-bd-purple/10 to-transparent border border-bd-purple/30 hover:border-bd-purple/50 transition-colors group">
+              <router-link to="/ultrascripts?tab=system" class="block p-4 rounded-lg bg-bd-bg-tertiary border border-bd-border-subtle hover:border-bd-border-default transition-colors group">
                 <div class="flex items-center gap-2 mb-1.5">
-                  <Cpu class="w-5 h-5 text-bd-purple" />
-                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-purple transition-colors">System</h4>
+                  <Cpu class="w-5 h-5 text-bd-accent-primary" />
+                  <h4 class="font-semibold text-bd-text-primary group-hover:text-bd-accent-light transition-colors">System</h4>
                 </div>
                 <p class="text-bd-text-muted">Device, display, locale, and battery hints &mdash; for platform-adaptive widget layouts.</p>
               </router-link>

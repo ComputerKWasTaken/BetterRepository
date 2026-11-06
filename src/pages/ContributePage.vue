@@ -7,7 +7,7 @@
       </div>
 
       <div class="relative z-10">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-bd-accent-primary/20 to-bd-purple/20 mb-4 animate-float">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-bd-accent-primary/15 mb-4">
           <GitPullRequest class="w-8 h-8 text-bd-accent-primary" />
         </div>
         <h1 class="text-2xl md:text-3xl font-bold text-bd-text-primary mb-3 tracking-tight">
@@ -24,7 +24,7 @@
     </header>
 
     <!-- Community Impact Stats: social proof through numbers -->
-    <section ref="statsRef" :class="['contribute-section', { 'is-visible': visibleSections.stats }]">
+    <section>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div 
           v-for="(stat, idx) in impactStats" 
@@ -42,7 +42,7 @@
     </section>
 
     <!-- Why Contribute? Motivation cards -->
-    <section ref="whyRef" :class="['contribute-section', { 'is-visible': visibleSections.why }]">
+    <section>
       <div class="section-header mb-5">
         <Heart class="w-4 h-4" />
         <span>Why Contribute?</span>
@@ -51,7 +51,6 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- Help Others -->
         <div class="card group relative overflow-hidden hover:border-bd-green/30">
-          <div class="absolute top-0 right-0 w-24 h-24 bg-bd-green/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
           <div class="relative">
             <div class="flex items-center gap-3 mb-3">
               <div class="w-10 h-10 rounded-xl bg-bd-green/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-green/25 transition-colors">
@@ -68,7 +67,6 @@
 
         <!-- Keep It Current -->
         <div class="card group relative overflow-hidden hover:border-bd-amber/30">
-          <div class="absolute top-0 right-0 w-24 h-24 bg-bd-amber/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
           <div class="relative">
             <div class="flex items-center gap-3 mb-3">
               <div class="w-10 h-10 rounded-xl bg-bd-amber/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-amber/25 transition-colors">
@@ -85,7 +83,6 @@
 
         <!-- Get Recognized -->
         <div class="card group relative overflow-hidden hover:border-bd-purple/30">
-          <div class="absolute top-0 right-0 w-24 h-24 bg-bd-purple/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
           <div class="relative">
             <div class="flex items-center gap-3 mb-3">
               <div class="w-10 h-10 rounded-xl bg-bd-purple/15 flex items-center justify-center flex-shrink-0 group-hover:bg-bd-purple/25 transition-colors">
@@ -103,9 +100,9 @@
     </section>
 
     <!-- Submit a Contribution: inline Netlify Form -->
-    <section id="submission-form" ref="easyRef" :class="['contribute-section', { 'is-visible': visibleSections.easy }]">
+    <section id="submission-form">
       <div class="card-elevated border-2 border-bd-accent-primary/30 relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-accent-primary via-bd-purple to-bd-cyan" />
+        <div class="absolute top-0 left-0 w-full h-0.5 bg-bd-accent-primary/70" />
 
         <!-- Form header -->
         <div class="flex items-start gap-4 pt-1 mb-5">
@@ -280,7 +277,7 @@
     </section>
 
     <!-- What Can You Submit: content types + beyond content -->
-    <section ref="submitRef" :class="['contribute-section', { 'is-visible': visibleSections.submit }]">
+    <section>
       <div class="card">
         <div class="section-header mb-4">
           <Layers class="w-4 h-4" />
@@ -290,8 +287,8 @@
         <!-- Content types -->
         <div class="grid md:grid-cols-2 gap-3 mb-5">
           <div class="submit-tile group hover:border-bd-amber/40">
-            <div class="w-9 h-9 rounded-lg bg-bd-amber/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-              <ScrollText class="w-4 h-4 text-bd-amber" />
+            <div class="w-9 h-9 rounded-lg bg-bd-accent-primary/15 flex items-center justify-center flex-shrink-0 transition-transform">
+              <ScrollText class="w-4 h-4 text-bd-accent-primary" />
             </div>
             <div>
               <span class="font-medium text-bd-text-primary">AI Instructions</span>
@@ -299,8 +296,8 @@
             </div>
           </div>
           <div class="submit-tile group hover:border-bd-blue/40">
-            <div class="w-9 h-9 rounded-lg bg-bd-blue/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-              <Bookmark class="w-4 h-4 text-bd-blue" />
+            <div class="w-9 h-9 rounded-lg bg-bd-accent-primary/15 flex items-center justify-center flex-shrink-0 transition-transform">
+              <Bookmark class="w-4 h-4 text-bd-accent-primary" />
             </div>
             <div>
               <span class="font-medium text-bd-text-primary">Plot Components</span>
@@ -308,8 +305,8 @@
             </div>
           </div>
           <div class="submit-tile group hover:border-bd-purple/40">
-            <div class="w-9 h-9 rounded-lg bg-bd-purple/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-              <Drama class="w-4 h-4 text-bd-purple" />
+            <div class="w-9 h-9 rounded-lg bg-bd-accent-primary/15 flex items-center justify-center flex-shrink-0 transition-transform">
+              <Drama class="w-4 h-4 text-bd-accent-primary" />
             </div>
             <div>
               <span class="font-medium text-bd-text-primary">Story Cards</span>
@@ -317,8 +314,8 @@
             </div>
           </div>
           <div class="submit-tile group hover:border-bd-cyan/40">
-            <div class="w-9 h-9 rounded-lg bg-bd-cyan/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-              <Code class="w-4 h-4 text-bd-cyan" />
+            <div class="w-9 h-9 rounded-lg bg-bd-accent-primary/15 flex items-center justify-center flex-shrink-0 transition-transform">
+              <Code class="w-4 h-4 text-bd-accent-primary" />
             </div>
             <div>
               <span class="font-medium text-bd-text-primary">Scripts</span>
@@ -352,7 +349,7 @@
     </section>
 
     <!-- Quick Checklist -->
-    <section ref="checklistRef" :class="['contribute-section', { 'is-visible': visibleSections.checklist }]">
+    <section>
       <div class="card">
         <div class="flex items-center gap-2 mb-4">
           <CheckCircle class="w-5 h-5 text-bd-success" />
@@ -383,7 +380,7 @@
     </section>
 
     <!-- Example Submission -->
-    <section ref="exampleRef" :class="['contribute-section', { 'is-visible': visibleSections.example }]">
+    <section>
       <div class="card-elevated border border-bd-border">
         <div class="flex items-center gap-2 mb-4">
           <FileText class="w-5 h-5 text-bd-accent-primary" />
@@ -412,9 +409,9 @@
     </section>
 
     <!-- Contributor Spotlight: social proof showing real names -->
-    <section ref="spotlightRef" :class="['contribute-section', { 'is-visible': visibleSections.spotlight }]">
+    <section>
       <div class="card relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-accent-primary via-bd-purple to-bd-cyan" />
+        <div class="absolute top-0 left-0 w-full h-0.5 bg-bd-accent-primary/70" />
 
         <div class="flex items-center justify-between mb-4 pt-1">
           <div class="flex items-center gap-2.5">
@@ -455,7 +452,7 @@
     </section>
 
     <!-- Alternative Methods -->
-    <section ref="altRef" :class="['contribute-section', { 'is-visible': visibleSections.alt }]">
+    <section>
       <div class="card">
         <div class="flex items-center gap-2 mb-4">
           <GitMerge class="w-5 h-5 text-bd-text-muted" />
@@ -464,7 +461,6 @@
         <div class="grid md:grid-cols-2 gap-4">
           <!-- Pull Request -->
           <div class="alt-card group">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-bd-text-primary/3 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
             <div class="relative">
               <div class="flex items-center gap-3 mb-2">
                 <Github class="w-5 h-5 text-bd-text-primary" />
@@ -488,7 +484,7 @@
     </section>
 
     <!-- FAQ: address common hesitations -->
-    <section ref="faqRef" :class="['contribute-section', { 'is-visible': visibleSections.faq }]">
+    <section>
       <div class="card">
         <div class="section-header mb-4">
           <HelpCircle class="w-4 h-4" />
@@ -517,9 +513,8 @@
     </section>
 
     <!-- Final CTA: strong closing push -->
-    <section ref="ctaRef" :class="['contribute-section', { 'is-visible': visibleSections.cta }]">
+    <section>
       <div class="card-elevated text-center relative overflow-hidden border-2 border-bd-accent-primary/20">
-        <div class="absolute inset-0 bg-gradient-to-t from-bd-accent-primary/5 via-transparent to-bd-purple/5 pointer-events-none" />
         <div class="relative">
           <Sparkles class="w-10 h-10 text-bd-accent-primary mx-auto mb-3" />
           <h2 class="text-xl font-bold text-bd-text-primary mb-2">Ready to Contribute?</h2>
@@ -675,63 +670,10 @@ const toggleFaq = (idx) => {
   expandedFaq.value = expandedFaq.value === idx ? null : idx
 }
 
-// --- Section refs for IntersectionObserver staggered reveal ---
-const statsRef = ref(null)
-const whyRef = ref(null)
-const easyRef = ref(null)
-const submitRef = ref(null)
-const checklistRef = ref(null)
-const exampleRef = ref(null)
-const spotlightRef = ref(null)
-const altRef = ref(null)
-const faqRef = ref(null)
-const ctaRef = ref(null)
 
-const visibleSections = reactive({
-  stats: false,
-  why: false,
-  easy: false,
-  submit: false,
-  checklist: false,
-  example: false,
-  spotlight: false,
-  alt: false,
-  faq: false,
-  cta: false,
-})
 
-let observer = null
 
-onMounted(() => {
-  observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const el = entry.target
-          if (el === statsRef.value) visibleSections.stats = true
-          else if (el === whyRef.value) visibleSections.why = true
-          else if (el === easyRef.value) visibleSections.easy = true
-          else if (el === submitRef.value) visibleSections.submit = true
-          else if (el === checklistRef.value) visibleSections.checklist = true
-          else if (el === exampleRef.value) visibleSections.example = true
-          else if (el === spotlightRef.value) visibleSections.spotlight = true
-          else if (el === altRef.value) visibleSections.alt = true
-          else if (el === faqRef.value) visibleSections.faq = true
-          else if (el === ctaRef.value) visibleSections.cta = true
-          observer.unobserve(el)
-        }
-      })
-    },
-    { threshold: 0.15 }
-  )
 
-  const refs = [statsRef, whyRef, easyRef, submitRef, checklistRef, exampleRef, spotlightRef, altRef, faqRef, ctaRef]
-  refs.forEach((r) => { if (r.value) observer.observe(r.value) })
-})
-
-onUnmounted(() => {
-  if (observer) observer.disconnect()
-})
 </script>
 
 <style scoped>
@@ -745,17 +687,7 @@ onUnmounted(() => {
 
 
 
-/* === Section reveal animation === */
-.contribute-section {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
 
-.contribute-section.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
 
 /* === Form labels === */
 .form-label {

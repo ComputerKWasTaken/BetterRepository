@@ -66,8 +66,8 @@
     <!-- ==================== DIRECTIVE SECTION (top) ==================== -->
     <div class="space-y-4">
       <!-- Directive Header -->
-      <div class="card bg-gradient-to-r from-bd-purple/10 to-bd-blue/10 border-bd-purple/30 relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-purple via-bd-accent-primary to-bd-blue" />
+      <div class="card border-bd-border-subtle relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-0.5 bg-bd-accent-primary/70" />
         <div class="flex items-start gap-4">
           <div class="w-10 h-10 rounded-xl bg-bd-purple/20 flex items-center justify-center flex-shrink-0">
             <Crown class="w-5 h-5 text-bd-purple" />
@@ -250,8 +250,8 @@
     <!-- ==================== COMPONENTS SECTION (bottom) ==================== -->
     <div class="space-y-4">
       <!-- Components Header -->
-      <div class="card bg-gradient-to-r from-bd-blue/10 to-bd-green/10 border-bd-blue/30 relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-blue via-bd-accent-primary to-bd-green" />
+      <div class="card border-bd-border-subtle relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-0.5 bg-bd-accent-primary/70" />
         <div class="flex items-start gap-4">
           <div class="w-10 h-10 rounded-xl bg-bd-blue/20 flex items-center justify-center flex-shrink-0">
             <Layers class="w-5 h-5 text-bd-blue" />

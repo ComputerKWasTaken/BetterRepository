@@ -3,8 +3,8 @@
     <!-- Page Header with animated hero -->
     <header class="scripts-hero relative overflow-hidden rounded-2xl py-10 px-6">
       <div class="relative z-10 flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl bg-bd-cyan/20 flex items-center justify-center animate-float flex-shrink-0">
-          <Code class="w-6 h-6 text-bd-cyan" />
+        <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/15 flex items-center justify-center flex-shrink-0">
+          <Code class="w-6 h-6 text-bd-accent-primary" />
         </div>
         <div>
           <h1 class="text-2xl md:text-3xl font-bold text-bd-text-primary tracking-tight">
@@ -904,7 +904,7 @@ modifier(text);</pre>
 
       <!-- Ultrascripts Cross-Link -->
       <section id="guide-ultrascripts" class="card">
-        <div class="p-4 rounded-lg bg-gradient-to-r from-bd-accent-primary/10 to-bd-purple/10 border border-bd-accent-primary/30">
+        <div class="p-4 rounded-lg bg-bd-accent-primary/10 border border-bd-accent-primary/30">
           <h3 class="font-semibold text-bd-text-primary mb-2 flex items-center gap-2">
             <Terminal class="w-4 h-4 text-bd-accent-primary" />
             Beyond vanilla scripting: Ultrascripts
@@ -1009,11 +1009,11 @@ modifier(text);</pre>
     <template v-if="activeTab === 'collection'">
 
       <!-- Collection Introduction -->
-      <div class="card bg-gradient-to-r from-bd-cyan/10 to-bd-blue/10 border-bd-cyan/30 relative overflow-hidden animate-fade-in">
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-cyan via-bd-blue to-bd-purple" />
+      <div class="card border-bd-border-subtle relative overflow-hidden animate-fade-in">
+        <div class="absolute top-0 left-0 w-full h-0.5 bg-bd-accent-primary/70" />
         <div class="flex items-start gap-4 pt-1">
-          <div class="w-12 h-12 rounded-xl bg-bd-cyan/20 flex items-center justify-center flex-shrink-0">
-            <Code class="w-6 h-6 text-bd-cyan" />
+          <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/15 flex items-center justify-center flex-shrink-0">
+            <Code class="w-6 h-6 text-bd-accent-primary" />
           </div>
           <div class="flex-1">
             <h2 class="text-lg font-semibold text-bd-text-primary mb-1">Script Collection</h2>

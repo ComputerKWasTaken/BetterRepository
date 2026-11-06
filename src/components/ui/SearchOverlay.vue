@@ -19,7 +19,7 @@
           role="dialog"
           aria-modal="true"
           aria-labelledby="global-search-title"
-          class="relative w-full max-w-lg h-full sm:h-auto flex flex-col bg-bd-bg-secondary sm:border border-bd-border-default sm:rounded-xl shadow-xl overflow-hidden animate-scaleIn"
+          class="relative w-full max-w-lg h-full sm:h-auto flex flex-col bg-bd-bg-secondary sm:border border-bd-border-default sm:rounded-xl shadow-xl overflow-hidden"
         >
           <h2 id="global-search-title" class="sr-only">Search BetterRepository</h2>
           <!-- Search input -->

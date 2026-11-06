@@ -9,7 +9,7 @@
           <img 
             src="/betterrepository_logo.png" 
             alt="BetterRepository" 
-            class="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-lg animate-float"
+            class="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-lg"
           />
           <div class="text-left">
             <h1 class="text-3xl md:text-4xl font-bold text-bd-text-primary tracking-tight">
@@ -53,7 +53,7 @@
     </section>
 
     <!-- Resource Categories with gradient accent borders -->
-    <section ref="categoriesRef" :class="['home-section', { 'is-visible': visibleSections.categories }]">
+    <section>
       <div class="section-header mb-5">
         <LayoutGrid class="w-4 h-4" />
         <span>Browse Resources</span>
@@ -92,7 +92,7 @@
     </section>
 
     <!-- Quick Stats with icons and animated entrance -->
-    <section ref="statsRef" :class="['home-section', { 'is-visible': visibleSections.stats }]">
+    <section>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div 
           v-for="(stat, idx) in stats" 
@@ -110,7 +110,7 @@
     </section>
 
     <!-- Credits Section with refined styling -->
-    <section ref="creditsRef" :class="['home-section', { 'is-visible': visibleSections.credits }]">
+    <section>
       <div class="card relative overflow-hidden">
         <!-- Decorative gradient -->
         <div class="absolute top-0 left-0 w-full h-0.5 bg-bd-accent-primary/70" />
@@ -155,7 +155,7 @@
     <!-- Footer -->
     <footer class="text-center py-5 border-t border-bd-border-subtle">
       <p class="text-xs text-bd-text-muted flex items-center justify-center gap-1.5">
-        Made with <Heart class="w-3 h-3 text-bd-error animate-pulse" /> by 
+        Made with <Heart class="w-3 h-3 text-bd-error" /> by 
         <span class="text-bd-text-secondary font-medium">computerK</span>
       </p>
     </footer>
@@ -179,42 +179,10 @@ const isMac = navigator.userAgent.includes('Mac')
 // --- Global search overlay (shared) ---
 const { openSearch } = useSearchOverlayState()
 
-// --- Section refs for IntersectionObserver staggered reveal ---
-const categoriesRef = ref(null)
-const statsRef = ref(null)
-const creditsRef = ref(null)
 
-const visibleSections = reactive({
-  categories: false,
-  stats: false,
-  credits: false,
-})
 
-let observer = null
 
-onMounted(() => {
-  observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const el = entry.target
-          if (el === categoriesRef.value) visibleSections.categories = true
-          else if (el === statsRef.value) visibleSections.stats = true
-          else if (el === creditsRef.value) visibleSections.credits = true
-          observer.unobserve(el)
-        }
-      })
-    },
-    { threshold: 0.15 }
-  )
 
-  const refs = [categoriesRef, statsRef, creditsRef]
-  refs.forEach((r) => { if (r.value) observer.observe(r.value) })
-})
-
-onUnmounted(() => {
-  if (observer) observer.disconnect()
-})
 
 // --- Data ---
 const totalItems = computed(() => 
@@ -228,8 +196,8 @@ const resourceCategories = [
     icon: ScrollText,
     description: 'Rules and guidelines for AI behavior, writing style, and narrative control.',
     count: INSTRUCTIONS.length,
-    bgClass: 'bg-bd-amber/20',
-    iconClass: 'text-bd-amber',
+    bgClass: 'bg-bd-accent-primary/15',
+    iconClass: 'text-bd-accent-primary',
   },
   { 
     path: '/plot-components', 
@@ -237,8 +205,8 @@ const resourceCategories = [
     icon: Bookmark,
     description: "Author's Notes, Plot Essentials, and Story Summary templates.",
     count: TEMPLATES.length,
-    bgClass: 'bg-bd-blue/20',
-    iconClass: 'text-bd-blue',
+    bgClass: 'bg-bd-accent-primary/15',
+    iconClass: 'text-bd-accent-primary',
   },
   { 
     path: '/story-cards', 
@@ -246,8 +214,8 @@ const resourceCategories = [
     icon: Drama,
     description: 'Templates for Story Cards, including characters, locations, factions, abilities, and more.',
     count: STORY_CARDS.length + STORY_CARD_TEMPLATES.length,
-    bgClass: 'bg-bd-purple/20',
-    iconClass: 'text-bd-purple',
+    bgClass: 'bg-bd-accent-primary/15',
+    iconClass: 'text-bd-accent-primary',
   },
   { 
     path: '/scripts', 
@@ -255,8 +223,8 @@ const resourceCategories = [
     icon: Code,
     description: 'JavaScript examples for game systems, tracking, and automation.',
     count: SCRIPTS.length,
-    bgClass: 'bg-bd-cyan/20',
-    iconClass: 'text-bd-cyan',
+    bgClass: 'bg-bd-accent-primary/15',
+    iconClass: 'text-bd-accent-primary',
   },
 ]
 
@@ -281,28 +249,15 @@ const stats = [
 
 
 
-/* === Category cards with gradient border trick === */
+/* === Category cards === */
 .category-card {
   position: relative;
   border-radius: 0.75rem;
   transition: transform 0.25s ease;
 }
 
-.category-card:hover {
-  transform: translateY(-2px);
-}
 
-/* === Section reveal animation === */
-.home-section {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
 
-.home-section.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
 
 /* === Contributor chips === */
 .contributor-chip {

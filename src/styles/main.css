@@ -236,12 +236,12 @@ body {
   }
 }
 
-/* === Design Consolidation === */
+/* === Heroes (V2 quiet theme) === */
 :is(.hero-section, .ai-hero, .plot-hero, .sc-hero, .scripts-hero, .ultrascripts-hero, .credits-hero, .contribute-hero) {
-  background: var(--bd-bg-secondary) !important;
-  border: 1px solid var(--bd-border-subtle) !important;
-  border-radius: var(--bd-radius-2xl) !important;
-  box-shadow: none !important;
+  background: var(--bd-bg-secondary);
+  border: 1px solid var(--bd-border-subtle);
+  border-radius: var(--bd-radius-2xl);
+  box-shadow: none;
 }
 
 :is(.hero-section, .ai-hero, .plot-hero, .sc-hero, .scripts-hero, .ultrascripts-hero, .credits-hero, .contribute-hero)::before {
@@ -252,68 +252,6 @@ body {
   height: 1px;
   background: var(--bd-gradient-accent-bar);
   pointer-events: none;
-}
-
-.animate-float,
-.animate-pulse,
-.animate-pulse *,
-.animate-scaleIn {
-  animation: none !important;
-}
-
-:is(.home-section, .credits-section, .contribute-section, .eco-section) {
-  opacity: 1 !important;
-  transform: none !important;
-  transition: none !important;
-}
-
-:is(.card, .card-elevated).bg-gradient-to-r,
-:is(.card, .card-elevated).bg-gradient-to-br,
-:is(.card, .card-elevated) > .bg-gradient-to-r:first-child,
-:is(.card, .card-elevated) > .bg-gradient-to-br:first-child {
-  background: var(--bd-gradient-accent-bar) !important;
-}
-
-:is(.card, .card-elevated).bg-gradient-to-r,
-:is(.card, .card-elevated).bg-gradient-to-br {
-  background: var(--bd-bg-secondary) !important;
-}
-
-:is(.guide-tab--active-amber, .guide-tab--active-blue, .guide-tab--active-purple, .guide-tab--active-cyan, .us-tab--active-amber, .us-tab--active-blue, .us-tab--active-purple, .us-tab--active-cyan, .us-tab--active-green) {
-  background: var(--bd-accent-muted) !important;
-  border-color: var(--bd-border-accent) !important;
-  color: var(--bd-accent-light) !important;
-}
-
-:is(.guide-tab--active, .us-tab--active) :is(.guide-tab__dot, .us-tab__dot) {
-  background: var(--bd-accent-primary) !important;
-  box-shadow: none !important;
-}
-
-header [class*="bg-gradient-to"] {
-  background-image: none !important;
-  background-color: var(--bd-accent-muted) !important;
-}
-
-[class*="bg-gradient-to"]:not(.text-gradient) {
-  background-image: none !important;
-}
-
-:is([class*="top-0"][class*="left-0"][class*="h-1"], [class*="top-0"][class*="left-0"][class*="w-full"][class*="h-1"])[class*="bg-gradient-to"] {
-  background: var(--bd-gradient-accent-bar) !important;
-}
-
-.absolute[class*="blur"] {
-  display: none !important;
-}
-
-:is(.category-card, .project-card, .whats-new-card, .submit-tile, .beyond-tile, .checklist-item, .alt-card, .workflow-step):hover {
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-.group:hover :is(.group-hover\:scale-110, .group-hover\:scale-150, .group-hover\:translate-x-1, .group-hover\:translate-x-0\.5) {
-  transform: none !important;
 }
 
 /* === Transitions === */

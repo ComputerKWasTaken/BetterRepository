@@ -3,7 +3,7 @@
     <!-- Page Header with animated hero -->
     <header class="credits-hero relative overflow-hidden rounded-2xl text-center py-12 px-6">
       <div class="relative z-10">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-bd-accent-primary/20 to-bd-amber/20 mb-4 animate-float">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-bd-accent-primary/15 mb-4">
           <Award class="w-8 h-8 text-bd-accent-primary" />
         </div>
         <h1 class="text-2xl md:text-3xl font-bold text-bd-text-primary mb-2 tracking-tight">
@@ -16,9 +16,9 @@
     </header>
 
     <!-- Introduction -->
-    <section ref="introRef" :class="['credits-section', { 'is-visible': visibleSections.intro }]">
+    <section>
       <div class="card-elevated border-2 border-bd-accent-primary/30 relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-accent-primary via-bd-purple to-bd-cyan" />
+        <div class="absolute top-0 left-0 w-full h-0.5 bg-bd-accent-primary/70" />
         <p class="text-bd-text-secondary text-center leading-relaxed pt-1">
           The community members listed below have contributed invaluable guides, resources, and knowledge 
           that directly shaped the comprehensive guides you see here. Their pioneering work in the 
@@ -28,10 +28,10 @@
     </section>
 
     <!-- Major Contributors -->
-    <section ref="majorRef" :class="['credits-section', { 'is-visible': visibleSections.major }]">
+    <section>
       <div class="card relative overflow-hidden">
         <div class="flex items-center gap-3 mb-4">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-bd-accent-primary/20 to-bd-purple/20 flex items-center justify-center">
+          <div class="w-10 h-10 rounded-xl bg-bd-accent-primary/15 flex items-center justify-center">
             <Star class="w-5 h-5 text-bd-accent-primary" />
           </div>
           <div>
@@ -53,7 +53,7 @@
     </section>
 
     <!-- Contributors by Category -->
-    <section ref="categoryRef" :class="['credits-section', { 'is-visible': visibleSections.category }]">
+    <section>
       <div class="space-y-4">
         <div class="section-header">
           <Users class="w-4 h-4" />
@@ -63,7 +63,7 @@
         <!-- AI Instructions Contributors -->
         <div class="card group hover:border-bd-amber/30 transition-colors">
           <div class="flex items-center gap-3 mb-4">
-            <div class="w-9 h-9 rounded-lg bg-bd-amber/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div class="w-9 h-9 rounded-lg bg-bd-amber/20 flex items-center justify-center transition-transform">
               <ScrollText class="w-4 h-4 text-bd-amber" />
             </div>
             <div>
@@ -86,7 +86,7 @@
         <!-- Plot Components Contributors -->
         <div class="card group hover:border-bd-blue/30 transition-colors">
           <div class="flex items-center gap-3 mb-4">
-            <div class="w-9 h-9 rounded-lg bg-bd-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div class="w-9 h-9 rounded-lg bg-bd-blue/20 flex items-center justify-center transition-transform">
               <Bookmark class="w-4 h-4 text-bd-blue" />
             </div>
             <div>
@@ -109,7 +109,7 @@
         <!-- Story Cards Contributors -->
         <div class="card group hover:border-bd-purple/30 transition-colors">
           <div class="flex items-center gap-3 mb-4">
-            <div class="w-9 h-9 rounded-lg bg-bd-purple/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div class="w-9 h-9 rounded-lg bg-bd-purple/20 flex items-center justify-center transition-transform">
               <Drama class="w-4 h-4 text-bd-purple" />
             </div>
             <div>
@@ -132,7 +132,7 @@
         <!-- Scripting Contributors -->
         <div class="card group hover:border-bd-cyan/30 transition-colors">
           <div class="flex items-center gap-3 mb-4">
-            <div class="w-9 h-9 rounded-lg bg-bd-cyan/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div class="w-9 h-9 rounded-lg bg-bd-cyan/20 flex items-center justify-center transition-transform">
               <Code class="w-4 h-4 text-bd-cyan" />
             </div>
             <div>
@@ -155,11 +155,10 @@
     </section>
 
     <!-- Community Thank You -->
-    <section ref="thanksRef" :class="['credits-section', { 'is-visible': visibleSections.thanks }]">
+    <section>
       <div class="card text-center relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-t from-bd-error/5 to-transparent pointer-events-none" />
         <div class="relative">
-          <Heart class="w-10 h-10 text-bd-error mx-auto mb-3 animate-pulse" />
+          <Heart class="w-10 h-10 text-bd-error mx-auto mb-3" />
           <h2 class="text-lg font-semibold text-bd-text-primary mb-2">And the Entire AI Dungeon Community</h2>
           <p class="text-bd-text-secondary max-w-md mx-auto mb-4 leading-relaxed">
             Thank you to everyone who has shared their knowledge, answered questions, and helped make 
@@ -178,7 +177,7 @@
     <!-- Made By -->
     <footer class="text-center py-5 border-t border-bd-border-subtle">
       <p class="text-xs text-bd-text-muted flex items-center justify-center gap-1.5">
-        Made with <Heart class="w-3 h-3 text-bd-error animate-pulse" /> by 
+        Made with <Heart class="w-3 h-3 text-bd-error" /> by 
         <span class="text-bd-text-secondary font-medium">computerK</span>
       </p>
     </footer>
@@ -199,45 +198,10 @@ import {
   SCRIPTING_CONTRIBUTORS as scriptingContributors
 } from '@/data/contributors'
 
-// --- Section refs for IntersectionObserver staggered reveal ---
-const introRef = ref(null)
-const majorRef = ref(null)
-const categoryRef = ref(null)
-const thanksRef = ref(null)
 
-const visibleSections = reactive({
-  intro: false,
-  major: false,
-  category: false,
-  thanks: false,
-})
 
-let observer = null
 
-onMounted(() => {
-  observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const el = entry.target
-          if (el === introRef.value) visibleSections.intro = true
-          else if (el === majorRef.value) visibleSections.major = true
-          else if (el === categoryRef.value) visibleSections.category = true
-          else if (el === thanksRef.value) visibleSections.thanks = true
-          observer.unobserve(el)
-        }
-      })
-    },
-    { threshold: 0.15 }
-  )
 
-  const refs = [introRef, majorRef, categoryRef, thanksRef]
-  refs.forEach((r) => { if (r.value) observer.observe(r.value) })
-})
-
-onUnmounted(() => {
-  if (observer) observer.disconnect()
-})
 
 </script>
 
@@ -251,17 +215,7 @@ onUnmounted(() => {
 
 
 
-/* === Section reveal animation === */
-.credits-section {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
 
-.credits-section.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
 
 /* === Contributor chips === */
 .contributor-chip {

@@ -225,22 +225,14 @@
   /* =============================================================
      17. COMPONENT — TOASTS
      ============================================================= */
-  --bd-toast-success-bg:   linear-gradient(135deg,
-                            rgba(74, 222, 128, 0.95) 0%,
-                            rgba(34, 197, 94, 0.95) 100%);
-  --bd-toast-error-bg:     linear-gradient(135deg,
-                            rgba(248, 113, 113, 0.95) 0%,
-                            rgba(239, 68, 68, 0.95) 100%);
-  --bd-toast-info-bg:      linear-gradient(135deg,
-                            rgba(59, 130, 246, 0.95) 0%,
-                            rgba(37, 99, 235, 0.95) 100%);
+  --bd-toast-success-bg:   rgba(34, 197, 94, 0.95);
+  --bd-toast-error-bg:     rgba(239, 68, 68, 0.95);
+  --bd-toast-info-bg:      rgba(59, 130, 246, 0.95);
 
   /* =============================================================
      18. COMPONENT — LOADING
      ============================================================= */
-  --bd-loading-bg:         linear-gradient(180deg,
-                            rgba(30, 30, 40, 0.95) 0%,
-                            rgba(20, 20, 28, 0.98) 100%);
+  --bd-loading-bg:         rgba(15, 14, 17, 0.97);
   --bd-loading-spinner:    var(--bd-accent-primary);
   --bd-loading-overlay-bg: rgba(10, 10, 15, 0.9);
 

@@ -3,8 +3,8 @@
     <!-- Page Header with animated hero -->
     <header class="ai-hero relative overflow-hidden rounded-2xl py-10 px-6">
       <div class="relative z-10 flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl bg-bd-amber/20 flex items-center justify-center animate-float flex-shrink-0">
-          <ScrollText class="w-6 h-6 text-bd-amber" />
+        <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/15 flex items-center justify-center flex-shrink-0">
+          <ScrollText class="w-6 h-6 text-bd-accent-primary" />
         </div>
         <div>
           <h1 class="text-2xl md:text-3xl font-bold text-bd-text-primary tracking-tight">
@@ -39,11 +39,11 @@
     <template v-if="activeTab === 'sets'">
       <div class="space-y-6 animate-fade-in">
         <!-- Sets Introduction -->
-        <div class="card bg-gradient-to-r from-bd-amber/10 to-bd-orange/10 border-bd-amber/30 relative overflow-hidden">
-          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-amber via-bd-accent-primary to-bd-orange" />
+        <div class="card border-bd-border-subtle relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-0.5 bg-bd-accent-primary/70" />
           <div class="flex items-start gap-4">
-            <div class="w-12 h-12 rounded-xl bg-bd-amber/20 flex items-center justify-center flex-shrink-0">
-              <Layers class="w-6 h-6 text-bd-amber" />
+            <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/15 flex items-center justify-center flex-shrink-0">
+              <Layers class="w-6 h-6 text-bd-accent-primary" />
             </div>
             <div class="flex-1">
               <h2 class="text-lg font-semibold text-bd-text-primary mb-1">Pre-Built Instruction Sets</h2>
@@ -1623,11 +1623,11 @@
     <template v-if="activeTab === 'collection'">
       
       <!-- Collection Introduction -->
-      <div class="card bg-gradient-to-r from-bd-purple/10 to-bd-blue/10 border-bd-purple/30 relative overflow-hidden animate-fade-in">
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bd-purple via-bd-blue to-bd-cyan" />
+      <div class="card border-bd-border-subtle relative overflow-hidden animate-fade-in">
+        <div class="absolute top-0 left-0 w-full h-0.5 bg-bd-accent-primary/70" />
         <div class="flex items-start gap-4 pt-1">
-          <div class="w-12 h-12 rounded-xl bg-bd-purple/20 flex items-center justify-center flex-shrink-0">
-            <PenTool class="w-6 h-6 text-bd-purple" />
+          <div class="w-12 h-12 rounded-xl bg-bd-accent-primary/15 flex items-center justify-center flex-shrink-0">
+            <PenTool class="w-6 h-6 text-bd-accent-primary" />
           </div>
           <div class="flex-1">
             <h2 class="text-lg font-semibold text-bd-text-primary mb-1">Instruction Components</h2>
@@ -1866,7 +1866,7 @@
               <!-- Group header - clickable banner -->
               <button 
                 @click="toggleGroup(item.groupId)"
-                class="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-bd-purple/10 to-bd-blue/10 hover:from-bd-purple/20 hover:to-bd-blue/20 transition-all text-left border-b border-bd-purple/20"
+                class="w-full flex items-center gap-3 px-4 py-3 bg-bd-bg-tertiary hover:bg-bd-bg-elevated transition-all text-left border-b border-bd-border-subtle"
               >
                 <div class="w-8 h-8 rounded-lg bg-bd-purple/20 flex items-center justify-center flex-shrink-0">
                   <Layers class="w-4 h-4 text-bd-purple" />

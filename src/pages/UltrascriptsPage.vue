@@ -6,7 +6,7 @@
       </div>
 
       <div class="relative z-10 flex items-start gap-4 flex-wrap">
-        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-bd-purple/25 to-bd-cyan/20 flex items-center justify-center animate-float flex-shrink-0 shadow-lg shadow-bd-purple/10">
+        <div class="w-14 h-14 rounded-2xl bg-bd-accent-primary/15 flex items-center justify-center flex-shrink-0">
           <Rocket class="w-7 h-7 text-bd-purple" />
         </div>
         <div class="flex-1 min-w-0">
@@ -327,11 +327,11 @@ watch(activeTab, () => {
   transition: all 0.2s ease;
 }
 
-.dot--purple { background: var(--bd-purple); }
-.dot--cyan { background: var(--bd-cyan); }
-.dot--amber { background: var(--bd-amber); }
-.dot--green { background: var(--bd-green); }
-.dot--blue { background: var(--bd-blue); }
+.dot--x { background: var(--bd-accent-primary); }
+.dot--x { background: var(--bd-accent-primary); }
+.dot--x { background: var(--bd-accent-primary); }
+.dot--x { background: var(--bd-accent-primary); }
+.dot--x { background: var(--bd-accent-primary); }
 
 .us-tab--inactive .us-tab__dot {
   opacity: 0.4;

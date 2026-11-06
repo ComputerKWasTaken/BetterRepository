@@ -2,8 +2,7 @@
   <div class="flex flex-col items-center justify-center text-center py-20 sm:py-32">
     <!-- Animated 404 badge -->
     <div class="relative mb-8">
-      <div class="absolute -inset-6 bg-bd-accent-primary/10 rounded-full blur-2xl animate-pulse" />
-      <div class="relative w-28 h-28 rounded-2xl bg-gradient-to-br from-bd-accent-primary/20 to-bd-purple/20 border border-bd-border-subtle flex items-center justify-center animate-float">
+      <div class="relative w-28 h-28 rounded-2xl bg-bd-accent-primary/15 border border-bd-border-subtle flex items-center justify-center">
         <span class="text-5xl font-bold text-gradient tracking-tight">404</span>
       </div>
     </div>
