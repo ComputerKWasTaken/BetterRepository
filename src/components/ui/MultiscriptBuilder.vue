@@ -256,7 +256,9 @@
           <div v-if="addMode === 'library'" class="space-y-3">
             <div class="relative">
               <input
-                v-model="librarySearch"
+                :value="librarySearch"
+                @input="librarySearch = $event.target.value"
+                @compositionend="librarySearch = $event.target.value"
                 type="text"
                 placeholder="Search scripts..."
                 class="input text-sm w-full pl-9"

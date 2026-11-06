@@ -283,7 +283,9 @@
             <div class="relative">
               <Search class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-bd-text-muted" />
               <input
-                v-model="searchQuery"
+                :value="searchQuery"
+                @input="searchQuery = $event.target.value"
+                @compositionend="searchQuery = $event.target.value"
                 type="text"
                 placeholder="Search components..."
                 class="input pl-10 text-sm"

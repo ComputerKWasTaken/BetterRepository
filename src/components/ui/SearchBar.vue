@@ -4,11 +4,12 @@
       <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-bd-text-muted" />
       <input 
         ref="inputRef"
-        v-model="localQuery"
+        :value="localQuery"
         type="text"
         :placeholder="placeholder"
         class="input pl-12 pr-10"
         @input="handleInput"
+        @compositionend="handleInput"
         @keyup.enter="handleEnter"
         @keydown.down.prevent="navigateSuggestions(1)"
         @keydown.up.prevent="navigateSuggestions(-1)"
@@ -227,7 +228,12 @@ watch(filteredSuggestions, () => {
   selectedIndex.value = -1
 })
 
-const handleInput = () => {
+// Read the field value directly instead of relying on v-model: Vue's
+// v-model ignores input events while a mobile keyboard (e.g. Gboard) is
+// composing a word, which made live search stall on letters until a
+// word-committing key (space, punctuation, enter) was pressed.
+const handleInput = (e) => {
+  localQuery.value = e.target.value
   emit('update:modelValue', localQuery.value)
   showSuggestions.value = true
 }

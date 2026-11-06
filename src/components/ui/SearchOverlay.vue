@@ -27,7 +27,9 @@
             <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-bd-text-muted pointer-events-none" />
             <input
               ref="inputRef"
-              v-model="searchState.query.value"
+              :value="searchState.query.value"
+@input="searchState.query.value = $event.target.value"
+                            @compositionend="searchState.query.value = $event.target.value"
               type="text"
               enterkeyhint="search"
               autocomplete="off"

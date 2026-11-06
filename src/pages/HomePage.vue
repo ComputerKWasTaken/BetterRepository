@@ -41,7 +41,9 @@
               </div>
               <input 
                 ref="searchInputRef"
-                v-model="searchState.query.value"
+                :value="searchState.query.value"
+@input="searchState.query.value = $event.target.value"
+                              @compositionend="searchState.query.value = $event.target.value"
                 type="text"
                 placeholder="Search resources and presets..."
                 aria-label="Search all BetterRepository resources"
