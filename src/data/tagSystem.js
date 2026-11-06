@@ -32,37 +32,37 @@ export const TAG_SYSTEM = {
   // --- Writing Mechanics ---
   'anti-repetition': {
     core: 'anti-repetition',
-    aliases: ['no-echo', 'no-repeat', 'anti-echo', 'no-parroting', 'repetition'],
+    aliases: ['no-echo', 'no-repeat', 'anti-echo', 'no-parroting', 'repetition', 'variety'],
     description: 'Prevents the AI from repeating content',
     color: 'red'
   },
   style: {
     core: 'style',
-    aliases: ['prose', 'writing', 'literary', 'artistic'],
+    aliases: ['prose', 'writing', 'literary', 'artistic', 'natural', 'direct', 'concise', 'minimal', 'subtlety', 'subtle', 'cinematic', 'narrative', 'show-dont-tell', 'subtext'],
     description: 'Writing style and prose quality',
     color: 'blue'
   },
   pacing: {
     core: 'pacing',
-    aliases: ['flow', 'rhythm', 'tempo', 'speed', 'momentum'],
+    aliases: ['flow', 'rhythm', 'tempo', 'speed', 'momentum', 'beats', 'slow-burn', 'cliffhanger'],
     description: 'Story pacing and narrative flow',
     color: 'cyan'
   },
   dialogue: {
     core: 'dialogue',
-    aliases: ['speech', 'conversation', 'talking', 'speaking', 'verbal'],
+    aliases: ['speech', 'conversation', 'talking', 'speaking', 'verbal', 'voice', 'communication', 'banter'],
     description: 'Character dialogue and conversation',
     color: 'green'
   },
   tone: {
     core: 'tone',
-    aliases: ['mood', 'atmosphere', 'vibe', 'feeling'],
+    aliases: ['mood', 'atmosphere', 'vibe', 'feeling', 'serious', 'gentle', 'atmospheric'],
     description: 'Overall tone and mood',
     color: 'purple'
   },
   description: {
     core: 'description',
-    aliases: ['detail', 'imagery', 'visuals', 'sensory'],
+    aliases: ['detail', 'imagery', 'visuals', 'sensory', 'detailed', 'visual', 'appearance'],
     description: 'Descriptive writing and imagery',
     color: 'teal'
   },
@@ -70,7 +70,7 @@ export const TAG_SYSTEM = {
   // --- Character & Behavior ---
   personality: {
     core: 'personality',
-    aliases: ['character', 'behavior', 'traits', 'depth', 'nuance'],
+    aliases: ['character', 'behavior', 'traits', 'depth', 'nuance', 'characterization', 'development', 'growth', 'mannerisms'],
     description: 'Character personality and depth',
     color: 'purple'
   },
@@ -82,7 +82,7 @@ export const TAG_SYSTEM = {
   },
   emotions: {
     core: 'emotions',
-    aliases: ['feelings', 'emotional', 'sentiment', 'affect'],
+    aliases: ['feelings', 'emotional', 'sentiment', 'affect', 'emotion'],
     description: 'Emotional expression and reactions',
     color: 'pink'
   },
@@ -102,13 +102,13 @@ export const TAG_SYSTEM = {
   },
   knowledge: {
     core: 'knowledge',
-    aliases: ['metagaming', 'awareness', 'information', 'omniscience'],
+    aliases: ['metagaming', 'awareness', 'information', 'omniscience', 'context'],
     description: 'Character knowledge and information',
     color: 'blue'
   },
   consequences: {
     core: 'consequences',
-    aliases: ['stakes', 'risk', 'danger', 'outcomes', 'results'],
+    aliases: ['stakes', 'risk', 'danger', 'outcomes', 'results', 'dangerous', 'escalation', 'conflict'],
     description: 'Actions and their consequences',
     color: 'orange'
   },
@@ -120,7 +120,7 @@ export const TAG_SYSTEM = {
   },
   immersion: {
     core: 'immersion',
-    aliases: ['immersive', 'realism', 'believable', 'grounded'],
+    aliases: ['immersive', 'realism', 'believable', 'grounded', 'realistic', 'no-break'],
     description: 'Story immersion and believability',
     color: 'emerald'
   },
@@ -128,7 +128,7 @@ export const TAG_SYSTEM = {
   // --- Genres ---
   fantasy: {
     core: 'fantasy',
-    aliases: ['magic', 'magical', 'epic', 'mythical'],
+    aliases: ['magic', 'magical', 'epic', 'mythical', 'high-fantasy', 'high-magic', 'low-magic'],
     description: 'Fantasy genre elements',
     color: 'violet'
   },
@@ -174,13 +174,13 @@ export const TAG_SYSTEM = {
   // --- Control & Formatting ---
   control: {
     core: 'control',
-    aliases: ['agency', 'autonomy', 'freedom', 'restriction'],
+    aliases: ['agency', 'autonomy', 'freedom', 'restriction', 'restraint', 'prohibition', 'strict', 'rules', 'limits', 'player-choice', 'user-input', 'sandbox', 'user-control', 'user-driven', 'player-driven'],
     description: 'Player/character control level',
     color: 'yellow'
   },
   formatting: {
     core: 'formatting',
-    aliases: ['format', 'output', 'structure', 'layout'],
+    aliases: ['format', 'output', 'structure', 'layout', 'structured', 'input-formatting', 'no-markdown'],
     description: 'Output formatting and structure',
     color: 'gray'
   },
@@ -188,7 +188,7 @@ export const TAG_SYSTEM = {
   // --- Settings ---
   setting: {
     core: 'setting',
-    aliases: ['world', 'environment', 'location', 'era', 'period'],
+    aliases: ['world', 'environment', 'location', 'era', 'period', 'geography'],
     description: 'World and setting details',
     color: 'emerald'
   },
@@ -208,13 +208,13 @@ export const TAG_SYSTEM = {
   // --- Special ---
   complete: {
     core: 'complete',
-    aliases: ['set', 'bundle', 'package', 'full'],
+    aliases: ['set', 'bundle', 'package', 'full', 'comprehensive'],
     description: 'Complete instruction sets',
     color: 'amber'
   },
   'thinking-mode': {
     core: 'thinking-mode',
-    aliases: ['analytical', 'deliberate', 'thoughtful'],
+    aliases: ['analytical', 'deliberate', 'thoughtful', 'thinking'],
     description: 'Thinking mode activation',
     color: 'blue'
   },
@@ -229,6 +229,40 @@ export const TAG_SYSTEM = {
     aliases: ['investigation', 'detective', 'clues', 'secrets'],
     description: 'Mystery and investigation elements',
     color: 'indigo'
+  },
+
+  // --- Content Rating ---
+  nsfw: {
+    core: 'nsfw',
+    aliases: ['adult', 'explicit'],
+    description: 'Adult and NSFW content',
+    color: 'pink'
+  },
+  tracking: {
+    core: 'tracking',
+    aliases: ['state', 'memory', 'time', 'clock', 'stats', 'timeline', 'reputation', 'summary', 'memories', 'status', 'calendar'],
+    description: 'State, time, and progress tracking',
+    color: 'indigo'
+  },
+
+  // --- Added in the V2 normalization ---
+  meta: {
+    core: 'meta',
+    aliases: ['ooc', 'out-of-character', 'authors-note'],
+    description: 'Meta and out-of-character communication handling',
+    color: 'slate'
+  },
+  concept: {
+    core: 'concept',
+    aliases: ['system'],
+    description: 'World concepts and systems: magic systems, technologies, rules of the world',
+    color: 'teal'
+  },
+  creature: {
+    core: 'creature',
+    aliases: ['monster', 'wildlife', 'undead', 'species', 'nonhuman', 'bestiary'],
+    description: 'Creatures, monsters, and nonhuman beings',
+    color: 'green'
   },
 
   // --- Content Types ---
@@ -246,7 +280,7 @@ export const TAG_SYSTEM = {
   },
   worldbuilding: {
     core: 'worldbuilding',
-    aliases: ['lore', 'world', 'setting-creation'],
+    aliases: ['lore', 'world', 'setting-creation', 'culture'],
     description: 'World and setting creation',
     color: 'emerald'
   },
@@ -260,13 +294,13 @@ export const TAG_SYSTEM = {
   },
   companion: {
     core: 'companion',
-    aliases: ['ally', 'party-member', 'friend'],
+    aliases: ['ally', 'party-member', 'friend', 'companions'],
     description: 'Companion and ally content',
     color: 'green'
   },
   antagonist: {
     core: 'antagonist',
-    aliases: ['villain', 'enemy', 'rival'],
+    aliases: ['villain', 'enemy', 'rival', 'enemies', 'villains'],
     description: 'Antagonist and villain content',
     color: 'red'
   },
@@ -282,7 +316,7 @@ export const TAG_SYSTEM = {
   // --- Item Types ---
   item: {
     core: 'item',
-    aliases: ['object', 'equipment', 'gear'],
+    aliases: ['object', 'equipment', 'gear', 'items', 'inventory', 'weapon'],
     description: 'Item and equipment content',
     color: 'amber'
   },
@@ -290,7 +324,7 @@ export const TAG_SYSTEM = {
   // --- Organization Types ---
   faction: {
     core: 'faction',
-    aliases: ['organization', 'group', 'guild', 'order'],
+    aliases: ['organization', 'group', 'guild', 'order', 'politics', 'political', 'factions', 'groups'],
     description: 'Faction and organization content',
     color: 'indigo'
   }
