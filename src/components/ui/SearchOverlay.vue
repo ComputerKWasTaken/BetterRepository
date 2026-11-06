@@ -3,7 +3,7 @@
     <Transition name="overlay">
       <div 
         v-if="isOpen"
-        class="fixed inset-0 flex items-start justify-center pt-[15vh] sm:pt-[20vh] px-4"
+        class="fixed inset-0 flex items-start justify-center sm:pt-[20vh] sm:px-4"
         style="z-index: var(--bd-z-modal)"
       >
         <!-- Backdrop -->
@@ -18,7 +18,7 @@
           role="dialog"
           aria-modal="true"
           aria-labelledby="global-search-title"
-          class="relative w-full max-w-lg bg-bd-bg-secondary border border-bd-border-default rounded-xl shadow-xl overflow-hidden animate-scaleIn"
+          class="relative w-full max-w-lg h-[100dvh] sm:h-auto flex flex-col bg-bd-bg-secondary sm:border border-bd-border-default sm:rounded-xl shadow-xl overflow-hidden animate-scaleIn"
         >
           <h2 id="global-search-title" class="sr-only">Search BetterRepository</h2>
           <!-- Search input -->
@@ -28,6 +28,10 @@
               ref="inputRef"
               v-model="searchState.query.value"
               type="text"
+              enterkeyhint="search"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
               placeholder="Search resources and presets..."
               aria-label="Search all BetterRepository resources"
               class="w-full bg-transparent pl-12 pr-20 py-4 text-bd-text-primary placeholder-bd-text-muted focus:outline-none text-base"
@@ -43,14 +47,15 @@
             <!-- Shortcut hint / close -->
             <button
               @click="close"
-              class="absolute right-3 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded text-[10px] font-medium text-bd-text-muted bg-bd-bg-tertiary border border-bd-border-subtle hover:text-bd-text-secondary transition-colors"
+              aria-label="Close search"
+              class="absolute right-2 top-1/2 -translate-y-1/2 p-2.5 rounded-lg text-bd-text-muted hover:text-bd-text-primary hover:bg-bd-bg-tertiary transition-colors"
             >
-              ESC
+              <X class="w-5 h-5" />
             </button>
           </div>
 
           <!-- Results area -->
-          <div class="max-h-[360px] overflow-y-auto search-overlay-scroll">
+          <div class="flex-1 min-h-0 sm:flex-none sm:max-h-[360px] overflow-y-auto search-overlay-scroll">
             <!-- Results -->
             <template v-if="searchState.hasQuery.value && searchState.results.value.totalCount > 0">
               <div
@@ -119,13 +124,13 @@
 
             <!-- Initial state (no query) -->
             <div v-else-if="!searchState.hasQuery.value" class="px-6 py-8 text-center">
-              <p class="text-sm text-bd-text-muted">Search resources, Story Card presets, and every guide</p>
+              <p class="text-sm text-bd-text-muted">Search AI Instructions, Plot Components, Story Cards, Scripts, and presets</p>
             </div>
           </div>
 
           <!-- Footer -->
           <div class="px-4 py-2.5 border-t border-bd-border-subtle flex items-center justify-between text-[10px] text-bd-text-muted">
-            <div class="flex items-center gap-3">
+            <div class="hidden sm:flex items-center gap-3">
               <span class="flex items-center gap-1"><kbd class="kbd">↑↓</kbd> navigate</span>
               <span class="flex items-center gap-1"><kbd class="kbd">↵</kbd> select</span>
               <span class="flex items-center gap-1"><kbd class="kbd">esc</kbd> close</span>
@@ -144,7 +149,7 @@
 import { ref, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useGlobalSearch } from '@/composables/useGlobalSearch'
-import { Search, ChevronRight, ScrollText, Layers, Bookmark, Drama, Code, Cog, BookOpen, Rocket } from 'lucide-vue-next'
+import { Search, ChevronRight, ScrollText, Layers, Bookmark, Drama, Code, Cog, BookOpen, Rocket, X } from 'lucide-vue-next'
 
 const props = defineProps({
   isOpen: { type: Boolean, default: false }
@@ -274,7 +279,14 @@ watch(() => props.isOpen, async (open) => {
     highlightGroupId.value = null
     highlightIdx.value = -1
     await nextTick()
-    inputRef.value?.focus()
+    // Auto-focus only on devices with a fine pointer (mouse/trackpad).
+    // On touch devices, programmatic focus can leave the input focused
+    // without opening the on-screen keyboard (notably iOS Safari), which
+    // makes search feel softlocked. A direct tap on the input opens the
+    // keyboard reliably, so leave focus to the user there.
+    if (window.matchMedia('(pointer: fine)').matches) {
+      inputRef.value?.focus()
+    }
   } else {
     // Only unlock if sidebar is not open (requires coordination with sidebar state)
     // For now, emit an event or use a global scroll lock manager
