@@ -776,7 +776,7 @@ export const STORY_CARD_COMMAND_PRESETS = [
     difficulty: 'intermediate',
     impact: 'high',
     essential: false,
-    tags: [],
+    tags: ['template', 'formatting'],
     source: 'AI Dungeon Community',
     description: 'Optimized for high context-density. Uses telegraphic prose to pack maximum facts into minimum tokens.',
     useCase: 'Excellent for complex or long-running adventures where token budget is extremely tight.',
