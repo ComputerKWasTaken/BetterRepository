@@ -526,20 +526,46 @@ export const SCRIPTS = [
     purpose: 'Adds plot-aware story card insertion, a parent card system, an event system, and choice-context cards on top of standard Story Cards.'
   },
   {
-    id: 'stateboy',
-    name: 'Stateboy',
-    category: 'ultrascripts-required',
+    id: 'living-characters',
+    name: 'LivingCharacters',
+    category: 'game-systems',
     difficulty: 'advanced',
     impact: 'high',
     essential: false,
-    tags: ['tracking'],
-    source: 'BetterRepository',
-    description: 'Unpublished preview of readable, AI-assisted state management using Stateboy cards, guarded AI updates, State Directives, and a Widget dashboard.',
-    purpose: 'Tracks the current Stateboy source for alignment and review. Copy and download actions remain withheld until the dedicated Stateboy release stage.',
-    requiresExtension: 'BetterDungeon',
-    ultrascriptsMode: 'required',
-    releaseStatus: 'unpublished',
-    releaseNote: 'Stateboy is not part of BetterRepository V1.7. It will be published in its own release stage after V1.7.'
+    tags: ['character'],
+    source: 'Community',
+    author: 'kerjava',
+    description: 'An autonomous social engine for NPCs: Life Cards give characters social pressure, momentum, and lives that continue off-screen, plus optional player-facing Thought Cards.',
+    purpose: 'Makes NPCs act like people with their own agendas instead of props waiting on the player. GitHub is the single source of truth for the current version.',
+    githubUrl: 'https://github.com/LivingNarratives/LivingCharacters'
+  },
+  {
+    id: 'autonamer',
+    name: 'AutoNamer',
+    category: 'utilities',
+    difficulty: 'beginner',
+    impact: 'low',
+    essential: false,
+    tags: ['character'],
+    source: 'Community',
+    author: '_fritz_',
+    description: "A scenario-turned-tool designed to help you name characters. Your input will be understood as a character's description, and the AI will attempt to give them a fitting name (and explain it's choice).",
+    purpose: 'Runs as an AI Dungeon scenario: describe a character, get a fitting name along with the reasoning.',
+    scenarioLink: 'https://play.aidungeon.com/scenario/hVuudIiz4wOA/autonamer'
+  },
+  {
+    id: 'verbalised-sampling',
+    name: "Xilmanaath's Verbalised Sampling",
+    category: 'utilities',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['style'],
+    source: 'Community',
+    author: 'chotto_guroi',
+    description: 'Helps AID think more creatively by guiding it away from tropes or the "most common answer".',
+    purpose: "A verbalized sampling technique delivered as a scenario: the AI reasons through candidate directions and picks a less obvious one. Works better than simply prompting 'don't use tropes', though it can lead to strange narrative choices.",
+    scenarioLink: 'https://play.aidungeon.com/scenario/4iv6BegZVMg8/improving-ai-writing-verbalized-sampling?published=true'
   }
 ]
 
@@ -550,8 +576,7 @@ export const SCRIPTS = [
 // are fetched only when a visitor expands, copies, or downloads that entry.
 const rawScripts = import.meta.glob(
   [
-    './raw-scripts/**/*.js',
-    '!./raw-scripts/**/stateboy.js'
+    './raw-scripts/**/*.js'
   ],
   { query: '?raw', import: 'default' }
 )
