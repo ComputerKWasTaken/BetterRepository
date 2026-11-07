@@ -576,7 +576,8 @@ export const SCRIPTS = [
 // are fetched only when a visitor expands, copies, or downloads that entry.
 const rawScripts = import.meta.glob(
   [
-    './raw-scripts/**/*.js'
+    './raw-scripts/**/*.js',
+    '!./raw-scripts/**/stateboy.js'
   ],
   { query: '?raw', import: 'default' }
 )
