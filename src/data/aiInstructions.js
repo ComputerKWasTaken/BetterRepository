@@ -5598,6 +5598,36 @@ export const COMPONENTS = [
     description: 'Sex with nonhuman creatures.',
     purpose: 'Unusual anatomy, primal instincts.',
     content: `- Write intimate scenes involving monstrous or inhuman partners with emphasis on alien anatomy, primal behavior, and size differences.`
+  },
+  {
+    id: 'no-its-not-x-its-y',
+    name: "No 'Its not X, its Y'",
+    category: 'writing-style',
+    difficulty: 'beginner',
+    impact: 'low',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['style', 'anti-repetition'],
+    models: ['All Models'],
+    author: 'CraserTin',
+    description: "Avoids the phrase 'Its not X, its Y' and any variant of it.",
+    purpose: 'Bans the negative-positive parallelism pattern so the AI stops framing things as antithesis.',
+    content: `- No negative-positive parralelism / antithesis phrasing`
+  },
+  {
+    id: 'minimal-crowd-reactions',
+    name: 'Minimal crowd reactions',
+    category: 'narrative',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    placement: 'ai-instructions',
+    tags: ['character'],
+    models: ['All Models'],
+    author: 'Number19mouseinbakedbeans',
+    description: 'Minimises AI focus on crowd reactions over individual character reactions.',
+    purpose: 'Keeps scenes anchored on the player and main characters instead of cutting away to bystander reactions.',
+    content: `- Use crowd reactions sparingly. Keep the scene focused between the player and main characters.`
   }
 ]
 

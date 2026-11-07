@@ -500,6 +500,32 @@ export const SCRIPTS = [
     releaseNote: 'Chronos now accepts dates without a year, lets /weather temporarily set weather or season, and explains how to stop automatic clock advancement.'
   },
   {
+    id: 'trait-dictionary',
+    name: 'TraitDictionary',
+    category: 'utilities',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['meta'],
+    source: 'Community',
+    author: '_fritz_',
+    description: 'Allows you to write story cards with [traits] that can be defined elsewhere, saving character usage.',
+    purpose: 'Define a trait once in a TraitDictionary story card, then reference it as [trait] in other cards; the Input hook caches the definitions and the Context hook expands them inline.'
+  },
+  {
+    id: 'story-card-extension',
+    name: 'Story Card Extension',
+    category: 'utilities',
+    difficulty: 'advanced',
+    impact: 'high',
+    essential: false,
+    tags: ['meta'],
+    source: 'Community',
+    author: 'Kenflesh',
+    description: 'Expands the use of Story Cards. Useful for both scenario creators and players.',
+    purpose: 'Adds plot-aware story card insertion, a parent card system, an event system, and choice-context cards on top of standard Story Cards.'
+  },
+  {
     id: 'stateboy',
     name: 'Stateboy',
     category: 'ultrascripts-required',

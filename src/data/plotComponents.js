@@ -802,6 +802,21 @@ Green (yes): [Acts/themes you want]
 Yellow (carefully): [Things okay sometimes]
 Red (never): [Hard limits]`
   },
+  {
+    id: 'authors-note-autonomous-combat',
+    name: 'Autonomous and realistic Combat',
+    category: 'authors-note',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    tags: ['combat'],
+    useCase: 'Combat scenes where NPCs should act on their own initiative.',
+    description: 'NPCs and enemies strike first, follow up with combo attacks, and coordinate group attacks.',
+    purpose: 'Stops enemies waiting politely for the player to move: they initiate, chain attacks, and attack together.',
+    content: `- All characters and enemies can attack and strike first to initiate and engage in combat
+- All characters and enemies in groups can attack simultaneously and together if they wish to, allowing for coordination
+- All Characters and enemies follow up with combo attacks and chain attacks in combat after landing or trying to land an initial attack`
+  }
 
 ]
 

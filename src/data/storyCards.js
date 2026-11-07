@@ -409,6 +409,25 @@ export const STORY_CARDS = [
     useCase: 'Establishing technological rules and limitations for your setting.',
     triggers: 'Aether Engine,aether,the engines',
     entry: `Aether Engines power the machines of the modern age. They draw energy from aether, a luminous gas mined from deep underground. Engines range from small devices that power tools to massive constructs that drive airships. Aether is expensive and controlled by the Mining Consortium. Prolonged exposure to raw aether causes "the Glow", a wasting sickness that turns skin translucent before death. Engine workers rarely live past forty.`
+  },
+  {
+    id: 'image-generator',
+    name: 'Image Generator',
+    category: 'concept',
+    difficulty: 'beginner',
+    impact: 'medium',
+    essential: false,
+    tags: ['meta', 'concept'],
+    source: 'Community',
+    author: 'Shenanigans',
+    description: 'Builds an image-generation prompt from the current scene when the player types :image, ready to paste into a third-party image generator.',
+    useCase: 'Getting scene-accurate image prompts out of a story for external image tools.',
+    triggers: ':image',
+    entry: `Whenever the player enters the phrase ":image" pause the story, generate a prompt to be used on an image generator. Use recent memory to describe the characters age, body type and looks. Then what they are their are currently wearing, location, position and any physical acts.
+This takes place outside of the story, no time will pass and no tokens used. The characters will be unaware of this step.`,
+    credit: {
+      author: 'Shenanigans'
+    }
   }
 ]
 
@@ -717,6 +736,61 @@ export const STORY_CARD_TEMPLATES = [
     useCase: 'Creating detailed political factions with clear ideologies, leadership, and support bases.',
     triggers: '[Political Party Name],the [ideology] party',
     entry: `[Political Party Name] is a [Political Leaning: Right-Wing, Centrist, Far-Left, etc.] Political Party operating in [Country Name], formed in [Party Formation Year: early 2026, 1989, late 2019]. It is led by [Party Leader] who is a [Gender, Ethnicity, Religion, etc.], and is a committed [Ideology: National Conservative, Social Liberal, Marxist-Leninist]. They have approximately [Number of Supporters] Supporters, predominantly among [Supporting Groups: the working class, students, Christians, etc] and its membership is currently [Growing, Declining, Stagnant, etc]. [Aesthetics and symbols: Its supporters wear black military uniforms, It flies a hammer and sickle with a sword through it, etc.]`,
+    credit: {
+      author: 'Number19mouseinbakedbeans'
+    }
+  },
+  {
+    id: 'template-military-unit',
+    name: 'Military Unit / Squad Template',
+    category: 'faction',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['faction', 'template'],
+    description: 'A detailed template for a military unit or squad: composition, equipment, logistics, and operational history.',
+    useCase: 'Creating structured military units with a chain of command and a service record.',
+    triggers: '[Unit Name]',
+    entry: `Unit Name/Designation:
+Unit Type: (e.g., Starfighter Squadron, Infiltration Commandos, Heavy Infantry, Guerrilla Cell)
+Size/Scale: (e.g., Squad, Platoon, Company, Legion)
+Affiliation:
+Base of Operations:
+
+COMPOSITION AND COMPLEMENT
+Commanding Officer:
+Sub-Units/Elements:
+Specialist Roles: (e.g., Heavy gunner, tech specialist, medic, sniper)
+Recruitment Source/Training:
+Standard Personality/Ethos:
+
+EQUIPMENT AND LOGISTICS
+Standard Armor Issue:
+Primary Blaster/Weaponry:
+Heavy/Support Weapons:
+Specialized Combat Gear:
+Assigned Transports/Vehicles:
+
+OPERATIONAL HISTORY
+Founding Date:
+Famous Campaigns:
+Notable Victories:`,
+    credit: {
+      author: 'Nathan Evans Jr'
+    }
+  },
+  {
+    id: 'template-detailed-nation',
+    name: 'Detailed Nation Template',
+    category: 'faction',
+    difficulty: 'intermediate',
+    impact: 'medium',
+    essential: false,
+    tags: ['faction', 'template'],
+    description: 'A Detailed Nation Template for Politics and Military scenarios.',
+    useCase: 'Building nations with a government, leadership, borders, and war or peace status for political scenarios.',
+    triggers: '[Nation Name]',
+    entry: `[Nation Name] is a [Government type (Parliamentary Republic, Kingdom, Military Government)] located in [Region]. Its capital is [Capital City]. It is [Independence (Fully independent, dependent ally to Stronger Nation)]. It is led by [Leader Name] of [Ruling organization (Party Name, the Royal Guard)]. It borders [Country 1 to the East, Country 2 to the North]. It is [Landlocked, an island nation]. It is [at peace, at war with Country 1, in a state of civil war]. [Other details, sanction status, predecessor states, notable cities]`,
     credit: {
       author: 'Number19mouseinbakedbeans'
     }
